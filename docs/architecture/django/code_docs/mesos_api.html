@@ -359,34 +359,6 @@
 </dd></dl>
 
 <dl class="function">
-<dt id="mesos_api.api.get_slave_task_directory">
-<code class="descclassname">mesos_api.api.</code><code class="descname">get_slave_task_directory</code><span class="sig-paren">(</span><em>hostname</em>, <em>port</em>, <em>task_id</em><span class="sig-paren">)</span><a class="headerlink" href="#mesos_api.api.get_slave_task_directory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Queries the Mesos slave REST API to get the directory for the stdout and stderr files for the given task</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>hostname</strong> (<em>str</em>) &#8211; The hostname of the slave</li>
-<li><strong>port</strong> (<em>int</em>) &#8211; The port of the slave</li>
-<li><strong>task_id</strong> (<em>str</em>) &#8211; The ID of the Mesos task</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The directory on the slave, possibly None</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">str</p>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><strong>MesosError</strong> &#8211; If the task cannot be found</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
 <dt id="mesos_api.api.get_slave_task_file">
 <code class="descclassname">mesos_api.api.</code><code class="descname">get_slave_task_file</code><span class="sig-paren">(</span><em>hostname</em>, <em>port</em>, <em>task_dir</em>, <em>file_name</em><span class="sig-paren">)</span><a class="headerlink" href="#mesos_api.api.get_slave_task_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Queries the Mesos slave REST API to get the specified file from the given task directory</p>

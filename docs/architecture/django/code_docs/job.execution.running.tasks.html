@@ -474,18 +474,13 @@ this method cannot determine an error cause, None will be returned.</p>
 
 <dl class="method">
 <dt id="job.execution.running.tasks.base_task.Task.running">
-<code class="descname">running</code><span class="sig-paren">(</span><em>when</em>, <em>stdout_url</em>, <em>stderr_url</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.running.tasks.base_task.Task.running" title="Permalink to this definition">¶</a></dt>
+<code class="descname">running</code><span class="sig-paren">(</span><em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.running.tasks.base_task.Task.running" title="Permalink to this definition">¶</a></dt>
 <dd><p>Marks this task as having started running</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The time that the task started running</li>
-<li><strong>stdout_url</strong> (<em>str</em>) &#8211; The URL for the task&#8217;s stdout logs</li>
-<li><strong>stderr_url</strong> (<em>str</em>) &#8211; The URL for the task&#8217;s stderr logs</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The time that the task started running</td>
 </tr>
 </tbody>
 </table>
@@ -552,7 +547,7 @@ this method cannot determine an error cause, None will be returned.</p>
 
 <dl class="method">
 <dt id="job.execution.running.tasks.job_task.JobTask.running">
-<code class="descname">running</code><span class="sig-paren">(</span><em>when</em>, <em>stdout_url</em>, <em>stderr_url</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.running.tasks.job_task.JobTask.running" title="Permalink to this definition">¶</a></dt>
+<code class="descname">running</code><span class="sig-paren">(</span><em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.running.tasks.job_task.JobTask.running" title="Permalink to this definition">¶</a></dt>
 <dd><p>See <a class="reference internal" href="#job.execution.running.tasks.base_task.Task.running" title="job.execution.running.tasks.base_task.Task.running"><code class="xref py py-meth docutils literal"><span class="pre">job.execution.running.tasks.base_task.Task.running()</span></code></a></p>
 </dd></dl>
 
@@ -587,7 +582,7 @@ this method cannot determine an error cause, None will be returned.</p>
 
 <dl class="method">
 <dt id="job.execution.running.tasks.post_task.PostTask.running">
-<code class="descname">running</code><span class="sig-paren">(</span><em>when</em>, <em>stdout_url</em>, <em>stderr_url</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.running.tasks.post_task.PostTask.running" title="Permalink to this definition">¶</a></dt>
+<code class="descname">running</code><span class="sig-paren">(</span><em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.running.tasks.post_task.PostTask.running" title="Permalink to this definition">¶</a></dt>
 <dd><p>See <a class="reference internal" href="#job.execution.running.tasks.base_task.Task.running" title="job.execution.running.tasks.base_task.Task.running"><code class="xref py py-meth docutils literal"><span class="pre">job.execution.running.tasks.base_task.Task.running()</span></code></a></p>
 </dd></dl>
 
@@ -622,7 +617,7 @@ this method cannot determine an error cause, None will be returned.</p>
 
 <dl class="method">
 <dt id="job.execution.running.tasks.pre_task.PreTask.running">
-<code class="descname">running</code><span class="sig-paren">(</span><em>when</em>, <em>stdout_url</em>, <em>stderr_url</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.running.tasks.pre_task.PreTask.running" title="Permalink to this definition">¶</a></dt>
+<code class="descname">running</code><span class="sig-paren">(</span><em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.running.tasks.pre_task.PreTask.running" title="Permalink to this definition">¶</a></dt>
 <dd><p>See <a class="reference internal" href="#job.execution.running.tasks.base_task.Task.running" title="job.execution.running.tasks.base_task.Task.running"><code class="xref py py-meth docutils literal"><span class="pre">job.execution.running.tasks.base_task.Task.running()</span></code></a></p>
 </dd></dl>
 
@@ -648,38 +643,6 @@ this method cannot determine an error cause, None will be returned.</p>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The task&#8217;s exit code</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.execution.running.tasks.results.TaskResults.stderr">
-<code class="descname">stderr</code><a class="headerlink" href="#job.execution.running.tasks.results.TaskResults.stderr" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the task&#8217;s stderr log contents, possibly None</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The task&#8217;s stderr log contents</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.execution.running.tasks.results.TaskResults.stdout">
-<code class="descname">stdout</code><a class="headerlink" href="#job.execution.running.tasks.results.TaskResults.stdout" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the task&#8217;s stdout log contents, possibly None</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The task&#8217;s stdout log contents</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
 </tr>
 </tbody>
 </table>

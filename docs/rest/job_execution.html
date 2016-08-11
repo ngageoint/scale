@@ -585,14 +585,6 @@ and is updated when any needed pre-job steps are run.</td>
 <td>JSON Object</td>
 <td>An interface description for all the possible job results meta-data.</td>
 </tr>
-<tr class="row-even"><td>current_stdout_url</td>
-<td>URL</td>
-<td>The URL of the standard output log for the execution.</td>
-</tr>
-<tr class="row-odd"><td>current_stderr_url</td>
-<td>URL</td>
-<td>The URL of the standard error log for the job execution.</td>
-</tr>
 <tr class="row-even"><td>results_manifest</td>
 <td>JSON Object</td>
 <td>An interface description for all the actual job results meta-data.</td>
@@ -672,8 +664,6 @@ and is updated when any needed pre-job steps are run.</td>
         <span class="p">],</span>
         <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span>
     <span class="p">},</span>
-    <span class="s2">&quot;current_stdout_url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host/out.txt&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;current_stderr_url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host/error.txt&quot;</span><span class="p">,</span>
     <span class="s2">&quot;results_manifest&quot;</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;output_data&quot;</span><span class="o">:</span> <span class="p">[],</span>
         <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.1&quot;</span><span class="p">,</span>
@@ -704,121 +694,127 @@ completed. These additional calls can add some overhead and processing so care s
 with high frequency.</td>
 </tr>
 <tr class="row-odd"><td colspan="3"><dl class="first last docutils">
+<dt><strong>DEPRECATED</strong> This interface is deprecated in favor of the stdout/stderr/combined interfaces below.</dt>
+<dd>It is being maintened for access to old job executions and will be removed in a future release.</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-even"><td colspan="3"><dl class="first last docutils">
 <dt><strong>GET</strong> /job-executions/{id}/logs/</dt>
 <dd>Where {id} is the unique identifier of an existing model.</dd>
 </dl>
 </td>
 </tr>
-<tr class="row-even"><td colspan="3"><strong>Successful Response</strong></td>
+<tr class="row-odd"><td colspan="3"><strong>Successful Response</strong></td>
 </tr>
-<tr class="row-odd"><td><strong>Status</strong></td>
+<tr class="row-even"><td><strong>Status</strong></td>
 <td colspan="2">200 OK</td>
 </tr>
-<tr class="row-even"><td><strong>Content Type</strong></td>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
 <td colspan="2"><em>application/json</em></td>
 </tr>
-<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
+<tr class="row-even"><td colspan="3"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-even"><td>id</td>
+<tr class="row-odd"><td>id</td>
 <td>Integer</td>
 <td>The unique identifier of the model. Can be passed to the details API call.
 (See <a class="reference internal" href="#rest-job-execution-details"><span>Job Execution Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>status</td>
+<tr class="row-even"><td>status</td>
 <td>String</td>
 <td>The status of the job execution.
 Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
 </tr>
-<tr class="row-even"><td>command_arguments</td>
+<tr class="row-odd"><td>command_arguments</td>
 <td>String</td>
 <td>The argument string to execute on the command line for this job execution.
 This field is populated when the job execution is scheduled to run on a node
 and is updated when any needed pre-job steps are run.</td>
 </tr>
-<tr class="row-odd"><td>timeout</td>
+<tr class="row-even"><td>timeout</td>
 <td>Integer</td>
 <td>The maximum amount of time this job can run before being killed (in seconds).</td>
 </tr>
-<tr class="row-even"><td>pre_started</td>
+<tr class="row-odd"><td>pre_started</td>
 <td>ISO-8601 Datetime</td>
 <td>When the pre-job steps were started on a node.</td>
 </tr>
-<tr class="row-odd"><td>pre_completed</td>
+<tr class="row-even"><td>pre_completed</td>
 <td>ISO-8601 Datetime</td>
 <td>When the pre-job steps were completed on a node.</td>
 </tr>
-<tr class="row-even"><td>pre_exit_code</td>
+<tr class="row-odd"><td>pre_exit_code</td>
 <td>Integer</td>
 <td>The exit code of the pre-steps job process for this job execution.</td>
 </tr>
-<tr class="row-odd"><td>job_started</td>
+<tr class="row-even"><td>job_started</td>
 <td>ISO-8601 Datetime</td>
 <td>When the actual job started running on a node.</td>
 </tr>
-<tr class="row-even"><td>job_completed</td>
+<tr class="row-odd"><td>job_completed</td>
 <td>ISO-8601 Datetime</td>
 <td>When the actual job completed running on a node.</td>
 </tr>
-<tr class="row-odd"><td>job_exit_code</td>
+<tr class="row-even"><td>job_exit_code</td>
 <td>Integer</td>
 <td>The exit code of the main job process for this job execution.</td>
 </tr>
-<tr class="row-even"><td>post_started</td>
+<tr class="row-odd"><td>post_started</td>
 <td>ISO-8601 Datetime</td>
 <td>When the post-job steps were started on a node.</td>
 </tr>
-<tr class="row-odd"><td>post_completed</td>
+<tr class="row-even"><td>post_completed</td>
 <td>ISO-8601 Datetime</td>
 <td>When the post-job steps were completed on a node.</td>
 </tr>
-<tr class="row-even"><td>post_exit_code</td>
+<tr class="row-odd"><td>post_exit_code</td>
 <td>Integer</td>
 <td>The exit code of the post-steps job process for this job execution.</td>
 </tr>
-<tr class="row-odd"><td>created</td>
+<tr class="row-even"><td>created</td>
 <td>ISO-8601 Datetime</td>
 <td>When the associated database model was initially created.</td>
 </tr>
-<tr class="row-even"><td>queued</td>
+<tr class="row-odd"><td>queued</td>
 <td>ISO-8601 Datetime</td>
 <td>When the job was added to the queue for this run and went to QUEUED status.</td>
 </tr>
-<tr class="row-odd"><td>started</td>
+<tr class="row-even"><td>started</td>
 <td>ISO-8601 Datetime</td>
 <td>When the job was scheduled and went to RUNNING status.</td>
 </tr>
-<tr class="row-even"><td>ended</td>
+<tr class="row-odd"><td>ended</td>
 <td>ISO-8601 Datetime</td>
 <td>When the job execution ended. (FAILED, COMPLETED, or CANCELED)</td>
 </tr>
-<tr class="row-odd"><td>last_modified</td>
+<tr class="row-even"><td>last_modified</td>
 <td>ISO-8601 Datetime</td>
 <td>When the associated database model was last saved.</td>
 </tr>
-<tr class="row-even"><td>job</td>
+<tr class="row-odd"><td>job</td>
 <td>JSON Object</td>
 <td>The job that is associated with the execution.
 (See <a class="reference internal" href="job.html#rest-job-details"><span>Job Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>node</td>
+<tr class="row-even"><td>node</td>
 <td>JSON Object</td>
 <td>The node that ran the execution.
 (See <a class="reference internal" href="node.html#rest-node-details"><span>Node Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td>error</td>
+<tr class="row-odd"><td>error</td>
 <td>JSON Object</td>
 <td>The last error that was recorded for the execution.
 (See <a class="reference internal" href="error.html#rest-error-details"><span>Error Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>stdout</td>
+<tr class="row-even"><td>stdout</td>
 <td>String</td>
 <td>Contents of stdout.</td>
 </tr>
-<tr class="row-even"><td>stderr</td>
+<tr class="row-odd"><td>stderr</td>
 <td>String</td>
 <td>Contents of stderr.</td>
 </tr>
-<tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
     <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;COMPLETED&quot;</span><span class="p">,</span>
     <span class="s2">&quot;command_arguments&quot;</span><span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
@@ -880,6 +876,88 @@ and is updated when any needed pre-job steps are run.</td>
 </pre></div>
 </div>
 </td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils" id="rest-specified-job-execution-logs">
+<colgroup>
+<col width="18%" />
+<col width="16%" />
+<col width="66%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="3"><strong>Specific Job Execution Logs</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="3">Returns just job execution logs for stdout, stderr, or a combined view.
+This will return the text of the stdout, stderr, or a combined view of both logs.
+More advanced log polling can be accomplished by directly querying the elasticsearch database.</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><dl class="first last docutils">
+<dt><strong>GET</strong> /job-executions/{id}/logs/stdout/</dt>
+<dd>Where {id} is the unique identifier of an existing model.</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-even"><td colspan="3"><dl class="first last docutils">
+<dt><strong>GET</strong> /job-executions/{id}/logs/stderr/</dt>
+<dd>Where {id} is the unique identifier of an existing model.</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><dl class="first last docutils">
+<dt><strong>GET</strong> /job-executions/{id}/logs/combined/</dt>
+<dd>Where {id} is the unique identifier of an existing model.</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>Request Header Fields</strong></td>
+</tr>
+<tr class="row-odd"><td>Accept</td>
+<td>String</td>
+<td>Should be <em>application/json</em>, <em>text/plain</em>, or <em>text/html</em>.
+<em>application/json</em> will return the raw Elasticsearch results.
+<em>text/plain</em> will return the log entries, one per line, as UTF-8.
+<em>text/html</em> will return a simple HTML document with stdout/stderr CSS
+classes to distinguish stdout and stderr. stderr will be
+colored red by default.</td>
+</tr>
+<tr class="row-even"><td>If-Modified-Since</td>
+<td>HTTP Date</td>
+<td>If new log data exists after the specified date, return as normal, otherwise
+return <em>304 Not Modified</em></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="2">304 Not Modified</td>
+</tr>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
+<td colspan="2">No content returned</td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>Return description</strong></td>
+</tr>
+<tr class="row-odd"><td colspan="3">No log data newer than the specified date is available.</td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>Status</strong>           | 200 OK</td>
+</tr>
+<tr class="row-odd"><td colspan="3"><strong>Header Fields</strong></td>
+</tr>
+<tr class="row-even"><td>Content-Type</td>
+<td colspan="2">content type as requested</td>
+</tr>
+<tr class="row-odd"><td>Last-Modified</td>
+<td colspan="2">The latest timestamp in the returned log entries</td>
+</tr>
+<tr class="row-even"><td colspan="3"><strong>Return description</strong></td>
+</tr>
+<tr class="row-odd"><td colspan="3">If the requested encoding is <em>application/json</em> the raw Elasticsearch results are returned.
+If the requested encoding is <em>text/plain</em> then the plain text of the requested log will be returned. This will be the
+complete text from the requested timestamp or the complete log since start of execution by default.
+If <em>text/html</em> is requested as a valid encoding then each line of the log in the combined output will be wrapped in a
+<em>div</em> element with a <em>class</em> of <em>stdout</em> or <em>stderr</em> as appropriate. This can be used to modify the color or rendering
+style to distinguish error and standard output.</td>
 </tr>
 </tbody>
 </table>

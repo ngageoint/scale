@@ -140,6 +140,14 @@ job.migrations.0017_auto_20160426_1556 module
     :undoc-members:
     :show-inheritance:
 
+job.migrations.0018_auto_20160804_1402 module
+---------------------------------------------
+
+.. automodule:: job.migrations.0018_auto_20160804_1402
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

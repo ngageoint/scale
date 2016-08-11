@@ -217,8 +217,43 @@
 </dd></dl>
 
 </div>
-<div class="section" id="scheduler-management-commands-scale-scheduler-module">
-<h2>scheduler.management.commands.scale_scheduler module<a class="headerlink" href="#scheduler-management-commands-scale-scheduler-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-scheduler.management.commands.scale_scheduler">
+<span id="scheduler-management-commands-scale-scheduler-module"></span><h2>scheduler.management.commands.scale_scheduler module<a class="headerlink" href="#module-scheduler.management.commands.scale_scheduler" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="scheduler.management.commands.scale_scheduler.Command">
+<em class="property">class </em><code class="descclassname">scheduler.management.commands.scale_scheduler.</code><code class="descname">Command</code><a class="headerlink" href="#scheduler.management.commands.scale_scheduler.Command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.management.base.BaseCommand</span></code></p>
+<p>Command that launches the Scale scheduler</p>
+<dl class="method">
+<dt id="scheduler.management.commands.scale_scheduler.Command.handle">
+<code class="descname">handle</code><span class="sig-paren">(</span><em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.management.commands.scale_scheduler.Command.handle" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <code class="xref py py-meth docutils literal"><span class="pre">django.core.management.base.BaseCommand.handle()</span></code>.</p>
+<p>This method starts the scheduler.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.management.commands.scale_scheduler.Command.help">
+<code class="descname">help</code><em class="property"> = u'Launches the Scale scheduler'</em><a class="headerlink" href="#scheduler.management.commands.scale_scheduler.Command.help" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.management.commands.scale_scheduler.Command.option_list">
+<code class="descname">option_list</code><em class="property"> = (&lt;Option at 0x2aeb515201b8: -v/--verbosity&gt;, &lt;Option at 0x2aeb515202d8: --settings&gt;, &lt;Option at 0x2aeb51520320: --pythonpath&gt;, &lt;Option at 0x2aeb51520368: --traceback&gt;, &lt;Option at 0x2aeb515203f8: --no-color&gt;, &lt;Option at 0x2aeb68c9acf8: -m/--master&gt;)</em><a class="headerlink" href="#scheduler.management.commands.scale_scheduler.Command.option_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="scheduler.management.commands.scale_scheduler.Command.run_scheduler">
+<code class="descname">run_scheduler</code><span class="sig-paren">(</span><em>mesos_master</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.management.commands.scale_scheduler.Command.run_scheduler" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="scheduler.management.commands.scale_scheduler.MesosSchedulerDriver">
+<em class="property">class </em><code class="descclassname">scheduler.management.commands.scale_scheduler.</code><code class="descname">MesosSchedulerDriver</code><span class="sig-paren">(</span><em>*args</em>, <em>**kargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.management.commands.scale_scheduler.MesosSchedulerDriver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-scheduler.management.commands">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-scheduler.management.commands" title="Permalink to this headline">¶</a></h2>

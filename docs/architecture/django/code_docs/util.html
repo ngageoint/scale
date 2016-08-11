@@ -401,6 +401,29 @@ Unlike the standard Django 1.8 function, this only accepts ISO 8601 durations.</
 <p>Converts a model to a lightweight place holder object with only an identifier to REST output</p>
 </dd></dl>
 
+<dl class="class">
+<dt id="util.rest.PlainTextRenderer">
+<em class="property">class </em><code class="descclassname">util.rest.</code><code class="descname">PlainTextRenderer</code><a class="headerlink" href="#util.rest.PlainTextRenderer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.renderers.BaseRenderer</span></code></p>
+<p>A django rest framework renderer which encodes a string using the requested character set
+and returns is as text/plain.</p>
+<dl class="attribute">
+<dt id="util.rest.PlainTextRenderer.format">
+<code class="descname">format</code><em class="property"> = u'txt'</em><a class="headerlink" href="#util.rest.PlainTextRenderer.format" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="util.rest.PlainTextRenderer.media_type">
+<code class="descname">media_type</code><em class="property"> = u'text/plain'</em><a class="headerlink" href="#util.rest.PlainTextRenderer.media_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.rest.PlainTextRenderer.render">
+<code class="descname">render</code><span class="sig-paren">(</span><em>data</em>, <em>media_type=None</em>, <em>renderer_context=None</em><span class="sig-paren">)</span><a class="headerlink" href="#util.rest.PlainTextRenderer.render" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 <dl class="exception">
 <dt id="util.rest.ReadOnly">
 <em class="property">exception </em><code class="descclassname">util.rest.</code><code class="descname">ReadOnly</code><span class="sig-paren">(</span><em>detail=None</em><span class="sig-paren">)</span><a class="headerlink" href="#util.rest.ReadOnly" title="Permalink to this definition">¶</a></dt>

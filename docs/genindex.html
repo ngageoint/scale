@@ -320,12 +320,12 @@
   <dt><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.node.NodeOffers.add_offer">add_offer() (scheduler.offer.node.NodeOffers method)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/job.configuration.data.html#job.configuration.data.job_data.JobData.add_output">add_output() (job.configuration.data.job_data.JobData method)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/job.configuration.interface.html#job.configuration.interface.job_interface.JobInterface.add_output_to_connection">add_output_to_connection() (job.configuration.interface.job_interface.JobInterface method)</a>
   </dt>
@@ -446,14 +446,6 @@
 
       
   <dt><a href="architecture/django/code_docs/product.html#product.models.ProductFile.ancestors">ancestors (product.models.ProductFile attribute)</a>
-  </dt>
-
-      
-  <dt><a href="architecture/django/code_docs/job.html#job.models.JobExecution.append_stderr">append_stderr() (job.models.JobExecution method)</a>
-  </dt>
-
-      
-  <dt><a href="architecture/django/code_docs/job.html#job.models.JobExecution.append_stdout">append_stdout() (job.models.JobExecution method)</a>
   </dt>
 
       
@@ -640,6 +632,10 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/scheduler.management.commands.html#scheduler.management.commands.scale_scheduler.Command">(class in scheduler.management.commands.scale_scheduler)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_delete_file.Command">(class in storage.management.commands.scale_delete_file)</a>
   </dt>
 
@@ -781,15 +777,19 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/job.configuration.configuration.html#job.configuration.configuration.job_configuration.JobConfiguration.configure_workspace_docker_params">configure_workspace_docker_params() (job.configuration.configuration.job_configuration.JobConfiguration method)</a>
+  <dt><a href="architecture/django/code_docs/job.configuration.configuration.html#job.configuration.configuration.job_configuration.JobConfiguration.configure_logging_docker_params">configure_logging_docker_params() (job.configuration.configuration.job_configuration.JobConfiguration method)</a>
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/job.execution.running.tasks.html#job.execution.running.tasks.base_task.Task.consider_general_error">consider_general_error() (job.execution.running.tasks.base_task.Task method)</a>
+  <dt><a href="architecture/django/code_docs/job.configuration.configuration.html#job.configuration.configuration.job_configuration.JobConfiguration.configure_workspace_docker_params">configure_workspace_docker_params() (job.configuration.configuration.job_configuration.JobConfiguration method)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="architecture/django/code_docs/job.execution.running.tasks.html#job.execution.running.tasks.base_task.Task.consider_general_error">consider_general_error() (job.execution.running.tasks.base_task.Task method)</a>
+  </dt>
+
       
   <dt><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.manager.OfferManager.consider_new_job_exe">consider_new_job_exe() (scheduler.offer.manager.OfferManager method)</a>
   </dt>
@@ -1265,6 +1265,10 @@
 
         
   <dt><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0017_auto_20160426_1556.Migration.dependencies">(job.migrations.0017_auto_20160426_1556.Migration attribute)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0018_auto_20160804_1402.Migration.dependencies">(job.migrations.0018_auto_20160804_1402.Migration attribute)</a>
   </dt>
 
         
@@ -1957,6 +1961,10 @@
 
       </dl></dd>
       
+  <dt><a href="architecture/django/code_docs/util.html#util.rest.PlainTextRenderer.format">format (util.rest.PlainTextRenderer attribute)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/util.html#util.middleware.MultipleProxyMiddleware.FORWARDED_FOR_FIELDS">FORWARDED_FOR_FIELDS (util.middleware.MultipleProxyMiddleware attribute)</a>
   </dt>
 
@@ -2567,6 +2575,14 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/job.html#job.models.JobExecution.get_log_json">get_log_json() (job.models.JobExecution method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/job.html#job.models.JobExecution.get_log_text">get_log_text() (job.models.JobExecution method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/job.html#job.models.JobExecutionManager.get_logs">get_logs() (job.models.JobExecutionManager method)</a>
   </dt>
 
@@ -2588,6 +2604,8 @@
   </dt>
 
       </dl></dd>
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/metrics.html#metrics.registry.get_metrics_type">get_metrics_type() (in module metrics.registry)</a>
   </dt>
@@ -2610,8 +2628,6 @@
   </dt>
 
       </dl></dd>
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/metrics.html#metrics.registry.get_metrics_types">get_metrics_types() (in module metrics.registry)</a>
   </dt>
@@ -3229,10 +3245,6 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.api.get_slave_task_directory">get_slave_task_directory() (in module mesos_api.api)</a>
-  </dt>
-
-      
   <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.api.get_slave_task_file">get_slave_task_file() (in module mesos_api.api)</a>
   </dt>
 
@@ -3456,6 +3468,10 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/scheduler.management.commands.html#scheduler.management.commands.scale_scheduler.Command.handle">(scheduler.management.commands.scale_scheduler.Command method)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_delete_file.Command.handle">(storage.management.commands.scale_delete_file.Command method)</a>
   </dt>
 
@@ -3547,6 +3563,10 @@
 
         
   <dt><a href="architecture/django/code_docs/scheduler.management.commands.html#scheduler.management.commands.load_all_data.Command.help">(scheduler.management.commands.load_all_data.Command attribute)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/scheduler.management.commands.html#scheduler.management.commands.scale_scheduler.Command.help">(scheduler.management.commands.scale_scheduler.Command attribute)</a>
   </dt>
 
         
@@ -4429,6 +4449,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/job.migrations.html#module-job.migrations.0018_auto_20160804_1402">job.migrations.0018_auto_20160804_1402 (module)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/job.html#module-job.models">job.models (module)</a>
   </dt>
 
@@ -4812,6 +4836,10 @@
 
       
   <dt><a href="architecture/django/code_docs/job.html#job.serializers.JobExecutionSerializer.NodeBaseSerializer">JobExecutionSerializer.NodeBaseSerializer (class in job.serializers)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/job.html#job.views.JobExecutionSpecificLogView">JobExecutionSpecificLogView (class in job.views)</a>
   </dt>
 
       
@@ -5369,6 +5397,10 @@
 
       </dl></dd>
       
+  <dt><a href="architecture/django/code_docs/util.html#util.rest.PlainTextRenderer.media_type">media_type (util.rest.PlainTextRenderer attribute)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/mesos_api.html#module-mesos_api">mesos_api (module)</a>
   </dt>
 
@@ -5394,6 +5426,10 @@
 
       
   <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.api.MesosError">MesosError</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/scheduler.management.commands.html#scheduler.management.commands.scale_scheduler.MesosSchedulerDriver">MesosSchedulerDriver (class in scheduler.management.commands.scale_scheduler)</a>
   </dt>
 
       
@@ -5532,12 +5568,12 @@
   <dt><a href="architecture/django/code_docs/error.html#error.models.Error.metricserror_set">metricserror_set (error.models.Error attribute)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/metrics.html#metrics.serializers.MetricsErrorDetailsSerializer">MetricsErrorDetailsSerializer (class in metrics.serializers)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/metrics.html#metrics.serializers.MetricsErrorDetailsSerializer.ErrorBaseSerializer">MetricsErrorDetailsSerializer.ErrorBaseSerializer (class in metrics.serializers)</a>
   </dt>
@@ -5781,6 +5817,10 @@
 
         
   <dt><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0017_auto_20160426_1556.Migration">(class in job.migrations.0017_auto_20160426_1556)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0018_auto_20160804_1402.Migration">(class in job.migrations.0018_auto_20160804_1402)</a>
   </dt>
 
         
@@ -6708,6 +6748,10 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0018_auto_20160804_1402.Migration.operations">(job.migrations.0018_auto_20160804_1402.Migration attribute)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0001_initial.Migration.operations">(metrics.migrations.0001_initial.Migration attribute)</a>
   </dt>
 
@@ -6910,6 +6954,10 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/scheduler.management.commands.html#scheduler.management.commands.scale_scheduler.Command.option_list">(scheduler.management.commands.scale_scheduler.Command attribute)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_upload_file.Command.option_list">(storage.management.commands.scale_upload_file.Command attribute)</a>
   </dt>
 
@@ -7083,6 +7131,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/util.html#util.rest.PlainTextRenderer">PlainTextRenderer (class in util.rest)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/metrics.html#metrics.models.PlotBigIntegerField">PlotBigIntegerField (class in metrics.models)</a>
   </dt>
 
@@ -7232,12 +7284,12 @@
   <dt><a href="architecture/django/code_docs/job.html#job.models.JobExecutionManager.pre_steps_command_arguments">pre_steps_command_arguments() (job.models.JobExecutionManager method)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/job.execution.running.tasks.html#job.execution.running.tasks.pre_task.PreTask">PreTask (class in job.execution.running.tasks.pre_task)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/product.html#product.queue_processor.ProductProcessor.process_completed">process_completed() (product.queue_processor.ProductProcessor method)</a>
   </dt>
@@ -8436,11 +8488,21 @@
   <dt><a href="architecture/django/code_docs/port.html#port.views.DownloadRenderer.render">render() (port.views.DownloadRenderer method)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/util.html#util.rest.PlainTextRenderer.render">(util.rest.PlainTextRenderer method)</a>
+  </dt>
+
+      </dl></dd>
       
-  <dt><a href="architecture/django/code_docs/port.html#port.views.ConfigurationDownloadView.renderer_classes">renderer_classes (port.views.ConfigurationDownloadView attribute)</a>
+  <dt><a href="architecture/django/code_docs/job.html#job.views.JobExecutionSpecificLogView.renderer_classes">renderer_classes (job.views.JobExecutionSpecificLogView attribute)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/port.html#port.views.ConfigurationDownloadView.renderer_classes">(port.views.ConfigurationDownloadView attribute)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/port.html#port.views.ConfigurationUploadView.renderer_classes">(port.views.ConfigurationUploadView attribute)</a>
   </dt>
@@ -8520,6 +8582,10 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/job.html#job.views.JobExecutionSpecificLogView.retrieve">(job.views.JobExecutionSpecificLogView method)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/metrics.html#metrics.views.MetricDetailsView.retrieve">(metrics.views.MetricDetailsView method)</a>
   </dt>
 
@@ -8590,6 +8656,10 @@
   </dt>
 
       </dl></dd>
+      
+  <dt><a href="architecture/django/code_docs/scheduler.management.commands.html#scheduler.management.commands.scale_scheduler.Command.run_scheduler">run_scheduler() (scheduler.management.commands.scale_scheduler.Command method)</a>
+  </dt>
+
       
   <dt><a href="architecture/django/code_docs/shared_resource.html#shared_resource.models.SharedResourceManager.runnable_job_types">runnable_job_types() (shared_resource.models.SharedResourceManager method)</a>
   </dt>
@@ -8770,6 +8840,10 @@
 
       
   <dt><a href="architecture/django/code_docs/scheduler.management.commands.html#module-scheduler.management.commands.load_all_data">scheduler.management.commands.load_all_data (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/scheduler.management.commands.html#module-scheduler.management.commands.scale_scheduler">scheduler.management.commands.scale_scheduler (module)</a>
   </dt>
 
       
@@ -9367,10 +9441,6 @@
 
         
   <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJob.setUp">(job.test.test_models.TestJob method)</a>
-  </dt>
-
-        
-  <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobExecution.setUp">(job.test.test_models.TestJobExecution method)</a>
   </dt>
 
         
@@ -10096,6 +10166,8 @@
   <dt><a href="architecture/django/code_docs/source.html#module-source.serializers">source.serializers (module)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/source.html#module-source.serializers_extra">source.serializers_extra (module)</a>
   </dt>
@@ -10104,8 +10176,6 @@
   <dt><a href="architecture/django/code_docs/source.test.html#module-source.test">source.test (module)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/source.test.configuration.html#module-source.test.configuration">source.test.configuration (module)</a>
   </dt>
@@ -10286,14 +10356,6 @@
 
       
   <dt><a href="architecture/django/code_docs/scheduler.html#scheduler.views.StatusView">StatusView (class in scheduler.views)</a>
-  </dt>
-
-      
-  <dt><a href="architecture/django/code_docs/job.execution.running.tasks.html#job.execution.running.tasks.results.TaskResults.stderr">stderr (job.execution.running.tasks.results.TaskResults attribute)</a>
-  </dt>
-
-      
-  <dt><a href="architecture/django/code_docs/job.execution.running.tasks.html#job.execution.running.tasks.results.TaskResults.stdout">stdout (job.execution.running.tasks.results.TaskResults attribute)</a>
   </dt>
 
       
@@ -10776,30 +10838,6 @@
 
       
   <dt><a href="architecture/django/code_docs/util.test.html#util.test.test_retry.TestRetry.test_always_fail_no_decorator_args">test_always_fail_no_decorator_args() (util.test.test_retry.TestRetry method)</a>
-  </dt>
-
-      
-  <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobExecution.test_append_stderr_initial">test_append_stderr_initial() (job.test.test_models.TestJobExecution method)</a>
-  </dt>
-
-      
-  <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobExecution.test_append_stderr_join">test_append_stderr_join() (job.test.test_models.TestJobExecution method)</a>
-  </dt>
-
-      
-  <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobExecution.test_append_stderr_none">test_append_stderr_none() (job.test.test_models.TestJobExecution method)</a>
-  </dt>
-
-      
-  <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobExecution.test_append_stdout_initial">test_append_stdout_initial() (job.test.test_models.TestJobExecution method)</a>
-  </dt>
-
-      
-  <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobExecution.test_append_stdout_join">test_append_stdout_join() (job.test.test_models.TestJobExecution method)</a>
-  </dt>
-
-      
-  <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobExecution.test_append_stdout_none">test_append_stdout_none() (job.test.test_models.TestJobExecution method)</a>
   </dt>
 
       
@@ -13292,8 +13330,6 @@
   <dt><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_post">test_parse_int_post() (util.test.test_rest.TestRest method)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_zero">test_parse_int_zero() (util.test.test_rest.TestRest method)</a>
   </dt>
@@ -13306,6 +13342,8 @@
   <dt><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_parse_stdout_required">test_parse_stdout_required() (job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps method)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_string">test_parse_string() (util.test.test_rest.TestRest method)</a>
   </dt>
@@ -14962,10 +15000,6 @@
 
       
   <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobDetailsView">TestJobDetailsView (class in job.test.test_views)</a>
-  </dt>
-
-      
-  <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobExecution">TestJobExecution (class in job.test.test_models)</a>
   </dt>
 
       
