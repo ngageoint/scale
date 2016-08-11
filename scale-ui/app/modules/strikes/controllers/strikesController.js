@@ -116,8 +116,10 @@
         };
 
         vm.addDataType = function () {
-            vm.activeStrikeIngestFile.data_types.push(vm.dataType);
-            vm.dataType = '';
+            if (vm.dataType) {
+                vm.activeStrikeIngestFile.data_types.push(vm.dataType);
+                vm.dataType = '';
+            }
         };
 
         vm.removeDataType = function (dataType) {

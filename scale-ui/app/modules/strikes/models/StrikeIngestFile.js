@@ -5,8 +5,8 @@
         var StrikeIngestFile = function (filename_regex, data_types, new_workspace, new_file_path) {
             this.filename_regex = filename_regex;
             this.data_types = data_types || [];
-            this.new_workspace = new_workspace;
-            this.new_file_path = new_file_path;
+            this.new_workspace = new_workspace || '';
+            this.new_file_path = new_file_path || '';
         };
 
         StrikeIngestFile.prototype = {

@@ -101,7 +101,7 @@
             <form name="ingestFileForm" novalidate ng-if="vm.mode === 'edit' || vm.mode === 'add'">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title"><b>Strike Ingest Files</b> <span ng-if="vm.activeStrike.configuration.files_to_ingest.length === 0">(at least 1 is required)</span></h3>
+                        <h3 class="panel-title"><b>Ingest File Rules</b> <span ng-if="vm.activeStrike.configuration.files_to_ingest.length === 0">(at least 1 is required)</span></h3>
                     </div>
                     <div class="panel-body">
                         <!-- scif = (S)trike (C)onfig (I)ngest (F)ile -->
@@ -114,7 +114,7 @@
                                 </div>
                             </div>
                             <div class="col-xs-6">
-                                <div class="form-group" ng-class="{ 'has-error': vm.activeStrikeIngestFile.data_types.length === 0 }">
+                                <div class="form-group">
                                     <label for="scifDataTypes">Data Types</label>
                                     <div class="input-group">
                                         <input id="scifDataTypes" name="scifDataTypes" type="text" class="form-control" ng-model="vm.dataType" placeholder="Data Types">
@@ -132,24 +132,24 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-6">
-                                <div class="form-group" ng-class="{ 'has-error': ingestFileForm.scifNewWorkspace.$invalid }">
+                                <div class="form-group">
                                     <label for="scifNewWorkspace">New Workspace</label>
-                                    <input id="scifNewWorkspace" name="scifNewWorkspace" type="text" class="form-control" ng-model="vm.activeStrikeIngestFile.new_workspace" placeholder="New Workspace" required>
+                                    <input id="scifNewWorkspace" name="scifNewWorkspace" type="text" class="form-control" ng-model="vm.activeStrikeIngestFile.new_workspace" placeholder="New Workspace">
                                 </div>
                             </div>
                             <div class="col-xs-6">
-                                <div class="form-group" ng-class="{ 'has-error': ingestFileForm.scifNewFilePath.$invalid }">
+                                <div class="form-group">
                                     <label for="scifNewFilePath">New File Path</label>
-                                    <input id="scifNewFilePath" name="scifNewFilePath" type="text" class="form-control" ng-model="vm.activeStrikeIngestFile.new_file_path" placeholder="New File Path" required>
+                                    <input id="scifNewFilePath" name="scifNewFilePath" type="text" class="form-control" ng-model="vm.activeStrikeIngestFile.new_file_path" placeholder="New File Path">
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-xs-4 col-xs-offset-4">
-                                <button class="btn btn-default btn-block margin-bottom-md" ng-click="vm.addStrikeIngestFile()" ng-disabled="ingestFileForm.$invalid || vm.activeStrikeIngestFile.data_types.length === 0"><i class="fa fa-plus"></i> Add File to Configuration</button>
+                                <button class="btn btn-default btn-block margin-bottom-md" ng-click="vm.addStrikeIngestFile()" ng-disabled="ingestFileForm.$invalid"><i class="fa fa-plus"></i> Add Rule to Configuration</button>
                             </div>
                         </div>
-                        <b class="margin-bottom-md">Current Files</b>
+                        <b class="margin-bottom-md">Current Rules</b>
                         <p ng-if="vm.activeStrike.configuration.files_to_ingest.length === 0">No files in configuration.</p>
                         <div ng-if="vm.activeStrike.configuration.files_to_ingest.length > 0">
                             <ul ng-repeat="file in vm.activeStrike.configuration.files_to_ingest" class="list-unstyled">
