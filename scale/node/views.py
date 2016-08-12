@@ -50,7 +50,6 @@ class NodeDetailsView(GenericAPIView):
     queryset = Node.objects.all()
     serializer_class = NodeDetailsSerializer
     update_fields = ('pause_reason', 'is_paused', 'is_active')
-    required_fields = ('hostname', 'port', 'is_paused', 'is_active')
 
     def get(self, request, node_id):
         """Gets node info
