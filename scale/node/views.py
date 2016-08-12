@@ -62,29 +62,7 @@ class NodeDetailsView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        # Fetch the basic node attributes
-        try:
-            node = Node.objects.get_details(node_id)
-        except Node.DoesNotExist:
-            raise Http404
-        serializer = self.get_serializer(node)
-        result = serializer.data
-
-        # Attempt to fetch resource usage for the node
-        resources = None
-        try:
-            sched = Scheduler.objects.get_master()
-            slave_info = mesos_api.get_slave(sched.master_hostname, sched.master_port, node.slave_id, True)
-            if slave_info and slave_info.total:
-                resources = slave_info.to_dict()['resources']
-        except:
-            logger.exception('Unable to fetch slave resource usage')
-        if resources:
-            result['resources'] = resources
-        else:
-            result['disconnected'] = True
-
-        return Response(result)
+        return Response(self._get_node_details(node_id))
 
     def patch(self, request, node_id):
         """Modify node info with a subset of fields
@@ -111,6 +89,13 @@ class NodeDetailsView(GenericAPIView):
 
         Node.objects.update_node(dict(request.data), node_id=node_id)
 
+        result = self._get_node_details(node_id)
+
+        return Response(result, status=status.HTTP_200_OK,
+                        headers={'Location': request.build_absolute_uri()})
+
+    def _get_node_details(self, node_id):
+
         # Fetch the basic node attributes
         try:
             node = Node.objects.get_details(node_id)
@@ -133,9 +118,7 @@ class NodeDetailsView(GenericAPIView):
         else:
             result['disconnected'] = True
 
-        return Response(result, status=status.HTTP_200_OK,
-                        headers={'Location': request.build_absolute_uri()})
-
+        return result
 
 class NodesStatusView(ListAPIView):
     """This view is the endpoint for retrieving overall node status information."""
