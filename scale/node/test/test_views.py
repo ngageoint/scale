@@ -108,8 +108,11 @@ class TestNodeDetailsView(TransactionTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_update_node_success(self):
+    @patch('mesos_api.api.get_slave')
+    def test_update_node_success(self, mock_get_slave):
         '''Test successfully calling the Update Node method.'''
+        mock_get_slave.return_value = SlaveInfo(self.node2.hostname, self.node2.port,
+                                                HardwareResources(4., 2048., 40000.))
 
         url = '/nodes/%d/' % self.node2.id
         data = {'is_paused': True, 'pause_reason': 'Test reason'}
@@ -119,9 +122,19 @@ class TestNodeDetailsView(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         self.assertEqual(data['is_paused'], True)
         self.assertEqual(data['pause_reason'], data['pause_reason'])
-    
-    def test_update_node_unpause(self):
+        self.assertIn('hostname', data)
+        self.assertEqual(data['hostname'], self.node2.hostname)
+        self.assertEqual(data['resources']['total']['cpus'], 4.)
+        self.assertEqual(data['resources']['total']['mem'], 2048.)
+        self.assertEqual(data['resources']['total']['disk'], 40000.)
+        self.assertEqual(data['job_exes_running'], [])
+        self.assertNotIn('disconnected', data)
+
+    @patch('mesos_api.api.get_slave')
+    def test_update_node_unpause(self, mock_get_slave):
         '''Tests unpausing the node and specifying a reason.'''
+        mock_get_slave.return_value = SlaveInfo(self.node2.hostname, self.node2.port,
+                                                HardwareResources(4., 2048., 40000.))
         
         url = '/nodes/%d/' % self.node2.id
         data = {'is_paused': False, 'pause_reason': 'Test reason'}
@@ -131,6 +144,13 @@ class TestNodeDetailsView(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         self.assertEqual(data['is_paused'], False)
         self.assertIsNone(data['pause_reason'])
+        self.assertIn('hostname', data)
+        self.assertEqual(data['hostname'], self.node2.hostname)
+        self.assertEqual(data['resources']['total']['cpus'], 4.)
+        self.assertEqual(data['resources']['total']['mem'], 2048.)
+        self.assertEqual(data['resources']['total']['disk'], 40000.)
+        self.assertEqual(data['job_exes_running'], [])
+        self.assertNotIn('disconnected', data)
 
     def test_update_node_not_found(self):
         '''Test calling the Update Node method with a bad node id.'''
