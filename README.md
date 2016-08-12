@@ -42,7 +42,7 @@ are available to a wider audience or are restricted to a private workspace for t
 
 Docker Images
 =============
-The scale and scale-web docker images support a number of environment variables which setup the local_settings file.
+The scale docker image supports a number of environment variables which setup the local_settings file.
 Alternatively, your own local_settings.py can be volume mounted into `/opt/scale/scale/local_settings.py`
 
 | Env Var                  | Default Value                   | Meaning                                  |
@@ -58,10 +58,17 @@ Alternatively, your own local_settings.py can be volume mounted into `/opt/scale
 | SCALE_DB_PASS            | 'postgres'                      | database login password                  |
 | SCALE_DB_HOST            | use link to `db` or 'localhost' | database host name                       |
 | SCALE_DB_PORT            | use link to `db` or '5432'      | database port                            |
+| SCALE_LOGGING_ADDRESS    | None                            | Logstash URL.                            |
 | MESOS_MASTER_URL         | 'zk://localhost:2181/scale'     | Mesos master location                    |
 | SCALE_ZK_URL             | None                            | Scale master location                    |
 | SCALE_DOCKER_IMAGE       | 'geoint/scale'                  | Scale docker image name                  |
 | CONFIG_URI               | None                            | A URI or URL to docker credentials file  |
+| ENABLE_GUNICORN          | False                           | Start the RESTful API server             |
+| ENABLE_HTTPD             | False                           | Start the Apache HTTP server             |
+| DEPLOY_DB                | False                           | Start the database container in DC/OS    |
+| DEPLOY_LOGGING           | False                           | Start the logstash container in DC/OS    |
+| INIT_DB                  | False                           | Init the db (migrat, load, etc.)         |
+| LOAD_COUNTRY_DATA        | False                           | Load country borders into the database.  |
 
 Quick Start
 ===========
