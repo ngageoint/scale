@@ -5,14 +5,16 @@ from datetime import datetime
 
 import django.core.urlresolvers as urlresolvers
 import rest_framework.status as status
+from django.conf import settings
 from django.db import transaction
-from django.http.response import Http404
+from django.http.response import Http404, HttpResponse
 from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView, RetrieveAPIView
+from rest_framework.renderers import StaticHTMLRenderer, JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 import trigger.handler as trigger_handler
-import util.rest as rest_util
+import json
 from job.configuration.data.exceptions import InvalidConnection
 from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
@@ -26,6 +28,8 @@ from job.serializers import (JobDetailsSerializer, JobSerializer, JobTypeDetails
 from models import Job, JobExecution, JobType
 from queue.models import Queue
 from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerType
+import util.parse
+import util.rest as rest_util
 from util.rest import BadParameter
 
 logger = logging.getLogger(__name__)
@@ -666,3 +670,56 @@ class JobExecutionLogView(RetrieveAPIView):
 
         serializer = self.get_serializer(job_exe)
         return Response(serializer.data)
+
+
+class JobExecutionSpecificLogView(RetrieveAPIView):
+    """This view is the endpoint for viewing the text of specific job execution logs"""
+    renderer_classes = (JSONRenderer, rest_util.PlainTextRenderer, StaticHTMLRenderer)
+
+    def retrieve(self, request, job_exe_id, log_id):
+        """Gets job execution log specified.
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param job_exe_id: the job execution id
+        :type job_exe_id: int
+        :param log_id: the log name to get (stdout, stderr, or combined)
+        :type log_id: str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        try:
+            job_exe = JobExecution.objects.get_logs(job_exe_id)
+        except JobExecution.DoesNotExist:
+            raise Http404
+
+        include_stdout = include_stderr = True
+        if log_id == "stdout":
+            include_stderr = False
+        elif log_id == "stderr":
+            include_stdout = False
+
+        since = request.META.get('HTTP_IF_MODIFIED_SINCE', '')
+        if len(since) > 0:
+            since = util.parse.datetime.datetime.strptime(since, "%a, %d %b %Y %X %Z")
+        else:
+            since = None
+
+        if request.accepted_renderer.format == 'json':
+            logs, last_modified = job_exe.get_log_json(include_stdout, include_stderr, since)
+        elif request.accepted_renderer.format == 'txt':
+            logs, last_modified = job_exe.get_log_text(include_stdout, include_stderr, since, False)
+        elif request.accepted_renderer.format == 'html':
+            logs, last_modified = job_exe.get_log_text(include_stdout, include_stderr, since, True)
+            if logs is not None:
+                logs = '<html><head><style>.stdout {} .stderr {color: red;}</style></head><body>' + logs + '</body></html>'
+        else:
+            return HttpResponse("%s is not a valid content type request." % request.accepted_renderer.content_type,
+                                content_type="text/plain", status=406)
+
+        if logs is None:
+            rsp = HttpResponse(status=304)
+        else:
+            rsp = Response(data=logs)
+        rsp["Last-Modified"] = last_modified.strftime("%a, %d %b %Y %X %Z")
+        return rsp

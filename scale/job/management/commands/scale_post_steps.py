@@ -106,7 +106,7 @@ class Command(BaseCommand):
 
         job_interface = job_exe.get_job_interface()
         job_data = job_exe.job.get_job_data()
-        stdout_and_stderr = (job_exe.stdout or '') + '\n' + (job_exe.stderr or '')
+        stdout_and_stderr = job_exe.get_log_text()
 
         with transaction.atomic():
             job_results, results_manifest = job_interface.perform_post_steps(job_exe, job_data, stdout_and_stderr)

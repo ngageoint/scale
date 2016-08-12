@@ -9,7 +9,6 @@ from django.conf import settings
 logger = logging.getLogger(__name__)
 
 
-
 def create_mesos_task(task):
     """Creates and returns a Mesos task from a Scale task
 

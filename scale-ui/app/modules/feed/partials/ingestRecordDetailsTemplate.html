@@ -18,6 +18,9 @@
             </div>
         </div>
     </div>
+    <div class="col-xs-12 col-md-6">
+        <div ng-if="vm.ingestRecord.products && vm.ingestRecord.products.length > 0"><scale-file-ancestry-tree source="vm.ingestRecord"></scale-file-ancestry-tree></div>
+    </div>
 </div>
 <div class="row">
     <div class="col-xs-12">
@@ -42,6 +45,9 @@
                 <td>{{ vm.calculateFileSize(product.file_size) }}</td>
                 <td>{{ product.created }}</td>
                 <td>{{ product.last_modified }}</td>
+            </tr>
+            <tr ng-if="!vm.ingestRecord.products || vm.ingestRecord.products.length === 0">
+                <td colspan="5">No Products generated from this file</td>
             </tr>
             </tbody>
         </table>

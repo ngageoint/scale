@@ -83,6 +83,16 @@
                 }
                 return false;
             },
+            getMediaTypeHtml: function(mediaType){
+                var iconHtml = '<i class="fa ' + 'fa-file' + '"></i>';
+                if(mediaType){
+                    var ic = _.find(scaleConfig.mediaTypes, {mimeType: mediaType})
+                    if(ic){
+                        iconHtml = '<i class="fa ' + ic.icon + '"></i>';
+                    }
+                }
+                return iconHtml;
+            },
             getVersion: function () {
                 var d = $q.defer();
 

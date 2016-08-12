@@ -9,13 +9,17 @@ from optparse import make_option
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from mesos.interface import mesos_pb2
-from mesos.native import MesosSchedulerDriver
+try:
+    from mesos.native import MesosSchedulerDriver
+except ImportError:
+    # ensure there are not undefined errors when generating docs on a system without mesos bindings
+    class MesosSchedulerDriver(object):
+        def __init__(self, *args, **kargs):
+            pass
 
 from scheduler.scale_scheduler import ScaleScheduler
 
 logger = logging.getLogger(__name__)
-
-
 
 #TODO: make these command options
 MESOS_CHECKPOINT = False

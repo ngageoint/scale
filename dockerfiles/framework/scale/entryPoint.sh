@@ -15,14 +15,14 @@ then
   gosu root sed -i '/Listen 80/ aListen '${PORT0} /etc/httpd/conf/httpd.conf
 fi
 
-echo "${SCALE_DB_HOST}:${SCALE_DB_PORT}:*:${SCALE_DB_USER}:${SCALE_DB_PASS}" >> ~/.pgpass
-chmod 0600 ~/.pgpass
 
 if [[ ${DEPLOY_DB} == 'true' ]]
 then
     export SCALE_DB_PORT=$(./deployDb.py)
     echo "DATABASE_PORT: ${SCALE_DB_PORT}"
 fi
+echo "${SCALE_DB_HOST}:${SCALE_DB_PORT}:*:${SCALE_DB_USER}:${SCALE_DB_PASS}" >> ~/.pgpass
+chmod 0600 ~/.pgpass
 
 # wait for postgres database to spin up
 CHECK1="0"
@@ -40,6 +40,14 @@ while [[ "$CHECK1" = "0" ]]; do
     CHECK1="1"
   fi
 done
+
+if [[ ${DEPLOY_LOGGING} == 'true' ]]
+then
+    IFS=$" " read -r SCALE_LOGGING_ADDRESS SCALE_ELASTICSEARCH_URL <<< $(./deployElk.py)
+    export SCALE_LOGGING_ADDRESS SCALE_ELASTICSEARCH_URL
+    echo "LOGGING ADDRESS: ${SCALE_LOGGING_ADDRESS}"
+    echo "ELASTICSEARCH URL: ${SCALE_ELASTICSEARCH_URL}"
+fi
 
 if [[ ${INIT_DB} == 'true' ]]
 then

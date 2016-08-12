@@ -19,6 +19,9 @@ ALLOWED_HOSTS = [os.environ.get('SCALE_ALLOWED_HOSTS', '*')]
 STATIC_ROOT = os.environ.get('SCALE_STATIC_ROOT', 'static/')
 STATIC_URL = os.environ.get('SCALE_STATIC_URL', '/scale/static/')
 
+LOGGING_ADDRESS = os.environ.get('SCALE_LOGGING_ADDRESS', LOGGING_ADDRESS)
+ELASTICSEARCH_URL = os.environ.get('SCALE_ELASTICSEARCH_URL', ELASTICSEARCH_URL)
+
 DB_HOST = os.environ.get('SCALE_DB_HOST', '')
 if DB_HOST == '':
         DB_HOST = os.environ.get('DB_PORT_5432_TCP_ADDR', '')

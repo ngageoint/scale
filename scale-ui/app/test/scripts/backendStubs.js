@@ -281,8 +281,8 @@
         });
         
         // Job execution logs
-        var jobExecutionLogsOverrideUrl = 'test/data/jobExecutionLog.json';
-        var jobExecutionLogRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'job-executions/.*/logs/', 'i');
+        var jobExecutionLogsOverrideUrl = 'test/data/jobExecutionLogCombined.json';
+        var jobExecutionLogRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'job-executions/.*/logs/combined/', 'i');
         $httpBackend.whenGET(jobExecutionLogRegex).respond(function () {
             return getSync(jobExecutionLogsOverrideUrl);
         });
@@ -377,6 +377,9 @@
         var nodeOverrideUrl = 'test/data/node.json';
         var nodeRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'nodes/.*/', 'i');
         $httpBackend.whenGET(nodeRegex).respond(function () {
+            return getSync(nodeOverrideUrl);
+        });
+        $httpBackend.whenPATCH(nodeRegex).respond(function () {
             return getSync(nodeOverrideUrl);
         });
 
