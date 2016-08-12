@@ -66,10 +66,7 @@
                 // poller only gets notified of success responses.
                 var jobExecutionLogResource = $resource(url,{},{
                     get:{
-                        method:'GET',
-                        headers:{
-                            Accept: 'text/html'
-                        }
+                        method:'GET'
                     }
                 });
 

@@ -31,7 +31,7 @@
       "port": 7400,
       "slave_id": "b004b6ef-eaa0-4d3a-a24c-699837fb4549",
       "is_paused": false,
-      "is_paused_errors": false,
+      "is_paused_errors": true,
       "is_active": true,
       "created": "2016-04-09T07:16:54Z",
       "last_modified": "2015-07-22T04:27:42Z"

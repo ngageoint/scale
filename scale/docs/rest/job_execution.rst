@@ -517,8 +517,8 @@ These services provide access to information about "all", "currently running" an
 |                      |                   | *application/json* will return the raw Elasticsearch results.                  |
 |                      |                   | *text/plain* will return the log entries, one per line, as UTF-8.              |
 |                      |                   | *text/html* will return a simple HTML document with stdout/stderr CSS          |
-|                      |                   |             classes to distinguish stdout and stderr. stderr will be           |
-|                      |                   |             colored red by default.                                            |
+|                      |                   | classes to distinguish stdout and stderr. stderr will be                       |
+|                      |                   | colored red by default.                                                        |
 +----------------------+-------------------+--------------------------------------------------------------------------------+
 | If-Modified-Since    | HTTP Date         | If new log data exists after the specified date, return as normal, otherwise   |
 |                      |                   | return *304 Not Modified*                                                      |
@@ -548,5 +548,5 @@ These services provide access to information about "all", "currently running" an
 | complete text from the requested timestamp or the complete log since start of execution by default.                       |
 | If *text/html* is requested as a valid encoding then each line of the log in the combined output will be wrapped in a     |
 | *div* element with a *class* of *stdout* or *stderr* as appropriate. This can be used to modify the color or rendering    |
-| style to distinguish error and standard output.                                                                            |
+| style to distinguish error and standard output.                                                                           |
 +---------------------------------------------------------------------------------------------------------------------------+

@@ -2,19 +2,17 @@
     'use strict';
 
     angular.module('scaleApp').service('nodeService', function ($http, $q, $resource, scaleConfig, Node, NodeStatus, poller, pollerFactory) {
-        /*var totalNodes = 5;
-
-        var getTotalNodes = function () {
-            return totalNodes;
+        var getNodesParams = function (page, page_size, started, ended, order, include_inactive, url) {
+            return {
+                page: page,
+                page_size: page_size,
+                started: started,
+                ended: ended,
+                order: order,
+                include_inactive: include_inactive,
+                url: url
+            };
         };
-
-        var setTotalNodes = function () {
-            totalNodes = Math.floor(Math.random() * (20 - 1 + 1)) + 1;
-        };
-
-        setInterval(function () {
-            setTotalNodes();
-        }, 3100);*/
 
         var getNodeStatusParams = function (page, page_size, started, ended) {
             var params = {};
@@ -28,34 +26,15 @@
         };
 
         return {
-            getNodes: function () {
-                var nodesResource = $resource(scaleConfig.urls.apiPrefix + 'nodes/'),
+            getNodes: function (params) {
+                params = params || getNodesParams();
+                params.url = params.url ? params.url : scaleConfig.urls.apiPrefix + 'nodes/';
+
+                var nodesResource = $resource(params.url, params),
                     nodesPoller = pollerFactory.newPoller(nodesResource, scaleConfig.pollIntervals.nodes);
 
                 return nodesPoller.promise.then(null, null, function (data) {
                     if (data.$resolved) {
-                        /*var returnResult = {
-                            $resolved: true,
-                            nodes: []
-                        };
-                        var newData = {};
-                        for (var i = 0; i < getTotalNodes(); i++) {
-                            newData = {
-                                "id": i,
-                                "hostname": "node" + i + ".local",
-                                "port": 5051,
-                                "slave_id": "20150616-103050-1800454536-5050-6193-S2",
-                                "total_cpus": 2.0,
-                                "total_mem": 6793.0,
-                                "total_disk": 94639.0,
-                                "is_paused": false,
-                                "created": "2015-06-15T17:18:52.414Z",
-                                "last_modified": "2015-06-15T17:18:52.414Z"
-                            };
-                            returnResult.nodes.push(newData);
-                        }
-                        result = returnResult;*/
-
                         data.results = Node.transformer(data.results);
                     } else {
                         nodesPoller.stop();
@@ -63,14 +42,21 @@
                     return data;
                 });
             },
-            getNodesOnce: function () {
+            getNodesOnce: function (params) {
+                params = params || getNodesParams();
                 var d = $q.defer();
-                $http.get(scaleConfig.urls.apiPrefix + 'nodes/').success(function (data) {
+
+                $http({
+                    url: params.url ? params.url : scaleConfig.urls.apiPrefix + 'nodes/',
+                    method: 'GET',
+                    params: params
+                }).success(function (data) {
                     var returnData = Node.transformer(data.nodes);
                     d.resolve(returnData);
                 }).error(function (error) {
                     d.reject(error);
                 });
+
                 return d.promise;
             },
             getNode: function (slaveId) {
@@ -91,22 +77,6 @@
 
                 return nodeStatusPoller.promise.then(null, null, function (data) {
                     if (data.$resolved) {
-                        /*var returnResult = {
-                            $resolved: true,
-                            node_stats: []
-                        };
-                        var newData = {};
-                        for (var i = 0; i < getTotalNodes(); i++) {
-                            newData = {
-                                "hostname": "node" + i + ".local",
-                                "jobs_completed": Math.floor(Math.random() * (100 - 20 + 1)) + 20,
-                                "system_failures": Math.floor(Math.random() * (20 - 0 + 1)) + 0,
-                                "id": i
-                            };
-                            returnResult.node_stats.push(newData);
-                        }
-                        result = returnResult;*/
-
                         data.results = NodeStatus.transformer(data.results);
                     } else {
                         nodeStatusPoller.stop();

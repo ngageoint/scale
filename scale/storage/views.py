@@ -60,7 +60,7 @@ class WorkspacesView(ListCreateAPIView):
         description = rest_util.parse_string(request, 'description', required=False)
         json_config = rest_util.parse_dict(request, 'json_config')
         base_url = rest_util.parse_string(request, 'base_url', required=False)
-        is_active = rest_util.parse_string(request, 'is_active', required=False)
+        is_active = rest_util.parse_bool(request, 'is_active', default_value=True, required=False)
 
         try:
             workspace = Workspace.objects.create_workspace(name, title, description, json_config, base_url, is_active)

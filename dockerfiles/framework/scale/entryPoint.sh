@@ -43,8 +43,10 @@ done
 
 if [[ ${DEPLOY_LOGGING} == 'true' ]]
 then
-    export SCALE_LOGGING_ADDRESS=$(./deployElk.py)
+    IFS=$" " read -r SCALE_LOGGING_ADDRESS SCALE_ELASTICSEARCH_URL <<< $(./deployElk.py)
+    export SCALE_LOGGING_ADDRESS SCALE_ELASTICSEARCH_URL
     echo "LOGGING ADDRESS: ${SCALE_LOGGING_ADDRESS}"
+    echo "ELASTICSEARCH URL: ${SCALE_ELASTICSEARCH_URL}"
 fi
 
 if [[ ${INIT_DB} == 'true' ]]

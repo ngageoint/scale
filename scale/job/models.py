@@ -1422,6 +1422,25 @@ class JobExecution(models.Model):
                 "query": {
                     "bool": {
                         "must": [
+                            {"match": {"tag": "%d_job" % self.pk}}
+                        ]
+                    }
+                },
+                "_source": ["@timestamp", "message", "level", "tag"]
+            }
+        if not include_stdout and not include_stderr:
+            return None, util.parse.datetime.datetime.utcnow()
+        elif include_stdout and not include_stderr:
+            q["query"]["bool"]["must"].append({"match": {"level": 6}})
+        elif include_stderr and not include_stdout:
+            q["query"]["bool"]["must"].append({"match": {"level": 3}})
+        if since is not None:
+            q["query"]["bool"]["must"].append({"range": {"@timestamp": {"gt": since.isoformat()}}})
+        q = {
+                "size": 10000,
+                "query": {
+                    "bool": {
+                        "must": [
                             {"match": {"tag": "%d_job" % job_exe.pk}}
                         ]
                     }
@@ -1437,6 +1456,10 @@ class JobExecution(models.Model):
         if since is not None:
             q["query"]["bool"]["must"].append({"range": {"@timestamp": {"gt": since.isoformat()}}})
 
+        esr = urllib2.urlopen(
+            urllib2.Request(settings.ELASTICSEARCH_URL+"/_search",
+                            data=json.dumps(q),
+                            headers={"Accept": "application/json", "Content-type": "application/json"}))
         esr = urllib2.urlopen(
             urllib2.Request(settings.ELASTICSEARCH_URL,
                             data=json.dumps(q),

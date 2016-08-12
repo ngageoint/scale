@@ -30,6 +30,7 @@ EXPOSE 5051
 # SCALE_DOCKER_IMAGE
 # DCOS_PACKAGE_FRAMEWORK_NAME
 # PORT0
+# CONFIG_URI
 
 # build arg to set the version qualifier. This should be blank for a
 # release build. Otherwise it is typically a build number or git hash.

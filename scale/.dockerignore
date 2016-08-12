@@ -1,5 +1,4 @@
 pip/
 logs/*
-scale/local_settings_*.py*
 build.xml
 README.txt
