@@ -566,129 +566,6 @@ database but mesos does not have a corresponding active slave.</td>
 </div>
 </td>
 </tr>
-<tr class="row-even"><td colspan="3"><strong>Error Responses</strong></td>
-</tr>
-<tr class="row-odd"><td><strong>Status</strong></td>
-<td colspan="2">404 NOT FOUND</td>
-</tr>
-<tr class="row-even"><td><strong>Content Type</strong></td>
-<td colspan="2"><em>text/plain</em></td>
-</tr>
-<tr class="row-odd"><td colspan="3">The specified slave_id does not exist in the database.</td>
-</tr>
-</tbody>
-</table>
-<table border="1" class="docutils">
-<colgroup>
-<col width="17%" />
-<col width="16%" />
-<col width="67%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head" colspan="3"><strong>Replace Node</strong></th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td colspan="3">Replaces node data with specified data</td>
-</tr>
-<tr class="row-odd"><td colspan="3"><dl class="first last docutils">
-<dt><strong>PUT</strong> /nodes/{id}/</dt>
-<dd>Where {id} is the unique identifier of an existing model.
-All fields are required and additional fields are not tolerated.</dd>
-</dl>
-</td>
-</tr>
-<tr class="row-even"><td><strong>Content Type</strong></td>
-<td colspan="2"><em>application/json</em></td>
-</tr>
-<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
-</tr>
-<tr class="row-even"><td>hostname</td>
-<td>String</td>
-<td>The full domain-qualified hostname of the node.</td>
-</tr>
-<tr class="row-odd"><td>port</td>
-<td>Integer</td>
-<td>The port being used by the executor on this node.</td>
-</tr>
-<tr class="row-even"><td>pause_reason</td>
-<td>String</td>
-<td>The reason this node is paused if is_paused is true. If is_paused is false
-this field will be set to null. This should provide a brief description
-for user display.</td>
-</tr>
-<tr class="row-odd"><td>is_paused</td>
-<td>Boolean</td>
-<td>True if the node is paused and will not accept new jobs for execution.
-Remaining tasks for a previously executing job will complete.</td>
-</tr>
-<tr class="row-even"><td colspan="3"><strong>Successful Response</strong></td>
-</tr>
-<tr class="row-odd"><td><strong>Status</strong></td>
-<td colspan="2">201 CREATED</td>
-</tr>
-<tr class="row-even"><td><strong>Location</strong></td>
-<td colspan="2">URL pointing to the details for the node (should be the same as the request URL)</td>
-</tr>
-<tr class="row-odd"><td><strong>Content Type</strong></td>
-<td colspan="2"><em>application/json</em></td>
-</tr>
-<tr class="row-even"><td colspan="3">Response format is identical to GET but contains the updated data.</td>
-</tr>
-<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
-</tr>
-<tr class="row-even"><td>hostname</td>
-<td>String</td>
-<td>The full domain-qualified hostname of the node.</td>
-</tr>
-<tr class="row-odd"><td>port</td>
-<td>Integer</td>
-<td>The port being used by the executor on this node.</td>
-</tr>
-<tr class="row-even"><td>slave_id</td>
-<td>String</td>
-<td>The slave ID used by Mesos for the node.</td>
-</tr>
-<tr class="row-odd"><td>pause_reason</td>
-<td>String</td>
-<td>The reason this node is paused if is_paused is true. This is a descriptive
-field for presentation to the user.</td>
-</tr>
-<tr class="row-even"><td>is_paused</td>
-<td>Boolean</td>
-<td>True if the node is paused and will not accept new jobs for execution.
-Remaining tasks for a previously executing job will complete.</td>
-</tr>
-<tr class="row-odd"><td>is_paused_errors</td>
-<td>Boolean</td>
-<td>True if the node was automatically paused due to a high error rate.</td>
-</tr>
-<tr class="row-even"><td>created</td>
-<td>ISO-8601 Datetime</td>
-<td>When the associated database model was initially created.</td>
-</tr>
-<tr class="row-odd"><td>last_modified</td>
-<td>ISO-8601 Datetime</td>
-<td>When the associated database model was last saved.</td>
-</tr>
-<tr class="row-even"><td colspan="3"><strong>Error Responses</strong></td>
-</tr>
-<tr class="row-odd"><td><strong>Status</strong></td>
-<td colspan="2">400 BAD REQUEST</td>
-</tr>
-<tr class="row-even"><td><strong>Content Type</strong></td>
-<td colspan="2"><em>text/plain</em></td>
-</tr>
-<tr class="row-odd"><td colspan="3">Bad update fields were specified, either unexpected fields or there were missing fields. An error message lists them.</td>
-</tr>
-<tr class="row-even"><td><strong>Status</strong></td>
-<td colspan="2">404 NOT FOUND</td>
-</tr>
-<tr class="row-odd"><td><strong>Content Type</strong></td>
-<td colspan="2"><em>text/plain</em></td>
-</tr>
-<tr class="row-even"><td colspan="3">The specified slave_id does not exist in the database.</td>
-</tr>
 </tbody>
 </table>
 <table border="1" class="docutils">
@@ -716,14 +593,6 @@ All fields are optional and additional fields are not tolerated.</dd>
 </tr>
 <tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-even"><td>hostname</td>
-<td>String</td>
-<td>(Optional) The full domain-qualified hostname of the node.</td>
-</tr>
-<tr class="row-odd"><td>port</td>
-<td>Integer</td>
-<td>(Optional) The port being used by the executor on this node.</td>
-</tr>
 <tr class="row-even"><td>pause_reason</td>
 <td>String</td>
 <td>(Optional) The reason this node is paused if is_paused is true. If is_paused
@@ -738,17 +607,19 @@ for execution. Remaining tasks for a previously executing job will complete.</td
 <tr class="row-even"><td colspan="3"><strong>Successful Response</strong></td>
 </tr>
 <tr class="row-odd"><td><strong>Status</strong></td>
-<td colspan="2">201 CREATED</td>
+<td colspan="2">200 OK</td>
 </tr>
-<tr class="row-even"><td><strong>Location</strong></td>
-<td colspan="2">URL pointing to the details for the node (should be the same as the request URL).</td>
-</tr>
-<tr class="row-odd"><td><strong>Content Type</strong></td>
+<tr class="row-even"><td><strong>Content Type</strong></td>
 <td colspan="2"><em>application/json</em></td>
 </tr>
-<tr class="row-even"><td colspan="3">Response format is identical to GET but contains the updated data.</td>
+<tr class="row-odd"><td colspan="3">Response format is identical to GET but contains the updated data.</td>
 </tr>
-<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
+<tr class="row-even"><td colspan="3"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-odd"><td>id</td>
+<td>Integer</td>
+<td>The unique identifier of the model. Can be passed to the details API call.
+(See <a class="reference internal" href="#rest-node-details"><span>Node Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>hostname</td>
 <td>String</td>
@@ -762,40 +633,197 @@ for execution. Remaining tasks for a previously executing job will complete.</td
 <td>String</td>
 <td>The slave ID used by Mesos for the node.</td>
 </tr>
-<tr class="row-odd"><td>is_paused</td>
+<tr class="row-odd"><td>pause_reason</td>
+<td>String</td>
+<td>The reason this node is paused if is_paused is true. This is a descriptive
+field for presentation to the user.</td>
+</tr>
+<tr class="row-even"><td>is_paused</td>
 <td>Boolean</td>
 <td>True if the node is paused and will not accept new jobs for execution.
 Remaining tasks for a previously executing job will complete.</td>
 </tr>
-<tr class="row-even"><td>is_paused_errors</td>
+<tr class="row-odd"><td>is_paused_errors</td>
 <td>Boolean</td>
 <td>True if the node was automatically paused due to a high error rate.</td>
 </tr>
-<tr class="row-odd"><td>created</td>
+<tr class="row-even"><td>is_active</td>
+<td>Boolean</td>
+<td>True if the node is actively participating in the cluster.</td>
+</tr>
+<tr class="row-odd"><td>archived</td>
+<td>ISO-8601 Datetime</td>
+<td>(Optional) When the node was removed (is_active == False) from the cluster.</td>
+</tr>
+<tr class="row-even"><td>created</td>
 <td>ISO-8601 Datetime</td>
 <td>When the associated database model was initially created.</td>
+</tr>
+<tr class="row-odd"><td>last_offer</td>
+<td>ISO-8601 Datetime</td>
+<td>When the node last received an offer from Mesos.</td>
 </tr>
 <tr class="row-even"><td>last_modified</td>
 <td>ISO-8601 Datetime</td>
 <td>When the associated database model was last saved.</td>
 </tr>
-<tr class="row-odd"><td colspan="3"><strong>Error Responses</strong></td>
+<tr class="row-odd"><td>resources</td>
+<td>JSON Object</td>
+<td>(Optional) Information about the hardware resources of the node
+NOTE: Resource information may not always be available</td>
 </tr>
-<tr class="row-even"><td><strong>Status</strong></td>
-<td colspan="2">400 BAD REQUEST</td>
+<tr class="row-even"><td>.total</td>
+<td>JSON Object</td>
+<td>The total hardware resources for the node</td>
 </tr>
-<tr class="row-odd"><td><strong>Content Type</strong></td>
-<td colspan="2"><em>text/plain</em></td>
+<tr class="row-odd"><td>..cpus</td>
+<td>Float</td>
+<td>The total number of CPUs at this node</td>
 </tr>
-<tr class="row-even"><td colspan="3">Unexpected fields were specified. An error message lists them. Or no fields were specified.</td>
+<tr class="row-even"><td>..mem</td>
+<td>Float</td>
+<td>The total amount of RAM in MiB at this node</td>
 </tr>
-<tr class="row-odd"><td><strong>Status</strong></td>
-<td colspan="2">404 NOT FOUND</td>
+<tr class="row-odd"><td>..disk</td>
+<td>Float</td>
+<td>The total amount of disk space in MiB at this node</td>
 </tr>
-<tr class="row-even"><td><strong>Content Type</strong></td>
-<td colspan="2"><em>text/plain</em></td>
+<tr class="row-even"><td>.scheduled</td>
+<td>JSON Object</td>
+<td>The scheduled hardware resources for the node</td>
 </tr>
-<tr class="row-odd"><td colspan="3">The specified slave_id does not exist in the database.</td>
+<tr class="row-odd"><td>..cpus</td>
+<td>Float</td>
+<td>The scheduled number of CPUs at this node</td>
+</tr>
+<tr class="row-even"><td>..mem</td>
+<td>Float</td>
+<td>The scheduled amount of RAM in MiB at this node</td>
+</tr>
+<tr class="row-odd"><td>..disk</td>
+<td>Float</td>
+<td>The scheduled amount of disk space in MiB at this node</td>
+</tr>
+<tr class="row-even"><td>.used</td>
+<td>JSON Object</td>
+<td>The used hardware resources for all nodes in the cluster
+NOTE: Real-time resource usage is not currently available and will be all zero</td>
+</tr>
+<tr class="row-odd"><td>..cpus</td>
+<td>Float</td>
+<td>The used number of CPUs at this node</td>
+</tr>
+<tr class="row-even"><td>..mem</td>
+<td>Float</td>
+<td>The used amount of RAM in MiB at this node</td>
+</tr>
+<tr class="row-odd"><td>..disk</td>
+<td>Float</td>
+<td>The used amount of disk space in MiB at this node</td>
+</tr>
+<tr class="row-even"><td>disconnected</td>
+<td>Boolean</td>
+<td>(Optional) If present and true, there is an active Node entry in the scale
+database but mesos does not have a corresponding active slave.</td>
+</tr>
+<tr class="row-odd"><td>.job_exes_running</td>
+<td>Array</td>
+<td>A list of job executions currently running on the node.
+(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span>Job Execution Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="s2">&quot;hostname&quot;</span><span class="o">:</span> <span class="s2">&quot;host.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;port&quot;</span><span class="o">:</span> <span class="mi">5051</span><span class="p">,</span>
+    <span class="s2">&quot;slave_id&quot;</span><span class="o">:</span> <span class="s2">&quot;20150616-103057-1800454536-5050-6193-S2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;is_paused_errors&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="s2">&quot;archived&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-15T17:18:52.414Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;last_offer&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-17T20:05:16.041Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;job_exes_running&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;RUNNING&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;command_arguments&quot;</span><span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;timeout&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;pre_started&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;pre_completed&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;pre_exit_code&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;job_started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T18:32:34.295Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;job_completed&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;job_exit_code&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;post_started&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;post_completed&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;post_exit_code&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T18:32:33.862Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;queued&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T18:32:33.833Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T18:32:34.040Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ended&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T18:32:34.389Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;job&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+                    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-clock&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Scale Clock&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Performs Scale system functions that need to be executed periodically&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;author_name&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                    <span class="s2">&quot;author_url&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                    <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                    <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                    <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                    <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                    <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                    <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f013&quot;</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;job_type_rev&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;RUNNING&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;num_exes&quot;</span><span class="o">:</span> <span class="mi">19</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;node&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">7</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;cpus_scheduled&quot;</span><span class="o">:</span> <span class="mf">1.0</span><span class="p">,</span>
+            <span class="s2">&quot;mem_scheduled&quot;</span><span class="o">:</span> <span class="mf">1024.0</span><span class="p">,</span>
+            <span class="s2">&quot;disk_in_scheduled&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+            <span class="s2">&quot;disk_out_scheduled&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+            <span class="s2">&quot;disk_total_scheduled&quot;</span><span class="o">:</span> <span class="mf">0.0</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;resources&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;total&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;cpus&quot;</span><span class="o">:</span> <span class="mf">16.0</span><span class="p">,</span>
+            <span class="s2">&quot;mem&quot;</span><span class="o">:</span> <span class="mf">63305.0</span><span class="p">,</span>
+            <span class="s2">&quot;disk&quot;</span><span class="o">:</span> <span class="mf">131485.0</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;scheduled&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;cpus&quot;</span><span class="o">:</span> <span class="mf">12.0</span><span class="p">,</span>
+            <span class="s2">&quot;mem&quot;</span><span class="o">:</span> <span class="mf">35392.0</span><span class="p">,</span>
+            <span class="s2">&quot;disk&quot;</span><span class="o">:</span> <span class="mf">131408.0</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;used&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;cpus&quot;</span><span class="o">:</span> <span class="mf">16.0</span><span class="p">,</span>
+            <span class="s2">&quot;mem&quot;</span><span class="o">:</span> <span class="mf">63305.0</span><span class="p">,</span>
+            <span class="s2">&quot;disk&quot;</span><span class="o">:</span> <span class="mf">131485.0</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
 </tr>
 </tbody>
 </table>

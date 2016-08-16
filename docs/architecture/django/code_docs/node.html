@@ -678,38 +678,9 @@ populated for types of ERROR status values.</li>
 </table>
 </dd></dl>
 
-<dl class="method">
-<dt id="node.views.NodeDetailsView.put">
-<code class="descname">put</code><span class="sig-paren">(</span><em>request</em>, <em>node_id</em><span class="sig-paren">)</span><a class="headerlink" href="#node.views.NodeDetailsView.put" title="Permalink to this definition">¶</a></dt>
-<dd><p>Modify node info by replacing an object</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
-<li><strong>node_id</strong> (<em>str</em>) &#8211; The ID for the node.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="node.views.NodeDetailsView.queryset">
 <code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#node.views.NodeDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="node.views.NodeDetailsView.required_fields">
-<code class="descname">required_fields</code><em class="property"> = (u'hostname', u'port', u'is_paused', u'is_active')</em><a class="headerlink" href="#node.views.NodeDetailsView.required_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -720,7 +691,7 @@ populated for types of ERROR status values.</li>
 
 <dl class="attribute">
 <dt id="node.views.NodeDetailsView.update_fields">
-<code class="descname">update_fields</code><em class="property"> = (u'hostname', u'port', u'pause_reason', u'is_paused', u'is_active')</em><a class="headerlink" href="#node.views.NodeDetailsView.update_fields" title="Permalink to this definition">¶</a></dt>
+<code class="descname">update_fields</code><em class="property"> = (u'pause_reason', u'is_paused', u'is_active')</em><a class="headerlink" href="#node.views.NodeDetailsView.update_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

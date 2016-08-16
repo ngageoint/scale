@@ -278,50 +278,39 @@ These services provide access to information about the nodes.
 |       }                                                                                                                 |
 |   }                                                                                                                     |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **Error Responses**                                                                                                     |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| **Status**         | 404 NOT FOUND                                                                                      |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| **Content Type**   | *text/plain*                                                                                       |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| The specified slave_id does not exist in the database.                                                                  |
-+--------------------+----------------------------------------------------------------------------------------------------+
 
 +-------------------------------------------------------------------------------------------------------------------------+
-| **Replace Node**                                                                                                        |
+| **Update Node**                                                                                                         |
 +=========================================================================================================================+
-| Replaces node data with specified data                                                                                  |
+| Update one or more fields in an existing node.                                                                          |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **PUT** /nodes/{id}/                                                                                                    |
-|         Where {id} is the unique identifier of an existing model.                                                       |
-|         All fields are required and additional fields are not tolerated.                                                |
+| **PATCH** /nodes/{id}/                                                                                                  |
+|           Where {id} is the unique identifier of an existing model.                                                     |
+|           All fields are optional and additional fields are not tolerated.                                              |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| hostname           | String            | The full domain-qualified hostname of the node.                                |
+| pause_reason       | String            | (Optional) The reason this node is paused if is_paused is true. If is_paused   |
+|                    |                   | is false, this field will be set to null. This should provide a brief          |
+|                    |                   | description for user display.                                                  |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| port               | Integer           | The port being used by the executor on this node.                              |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| pause_reason       | String            | The reason this node is paused if is_paused is true. If is_paused is false     |
-|                    |                   | this field will be set to null. This should provide a brief description        |
-|                    |                   | for user display.                                                              |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| is_paused          | Boolean           | True if the node is paused and will not accept new jobs for execution.         |
-|                    |                   | Remaining tasks for a previously executing job will complete.                  |
+| is_paused          | Boolean           | (Optional) True if the node is paused and will not accept new jobs             |
+|                    |                   | for execution. Remaining tasks for a previously executing job will complete.   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
-| **Status**         | 201 CREATED                                                                                        |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| **Location**       | URL pointing to the details for the node (should be the same as the request URL)                   |
+| **Status**         | 200 OK                                                                                             |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | Response format is identical to GET but contains the updated data.                                                      |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| id                 | Integer           | The unique identifier of the model. Can be passed to the details API call.     |
+|                    |                   | (See :ref:`Node Details <rest_node_details>`)                                  |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | hostname           | String            | The full domain-qualified hostname of the node.                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -337,90 +326,143 @@ These services provide access to information about the nodes.
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | is_paused_errors   | Boolean           | True if the node was automatically paused due to a high error rate.            |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| created            | ISO-8601 Datetime | When the associated database model was initially created.                      |
+| is_active          | Boolean           | True if the node is actively participating in the cluster.                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                             |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| **Error Responses**                                                                                                     |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| **Status**         | 400 BAD REQUEST                                                                                    |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| **Content Type**   | *text/plain*                                                                                       |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| Bad update fields were specified, either unexpected fields or there were missing fields. An error message lists them.   |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| **Status**         | 404 NOT FOUND                                                                                      |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| **Content Type**   | *text/plain*                                                                                       |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| The specified slave_id does not exist in the database.                                                                  |
-+--------------------+----------------------------------------------------------------------------------------------------+
-
-+-------------------------------------------------------------------------------------------------------------------------+
-| **Update Node**                                                                                                         |
-+=========================================================================================================================+
-| Update one or more fields in an existing node.                                                                          |
-+-------------------------------------------------------------------------------------------------------------------------+
-| **PATCH** /nodes/{id}/                                                                                                  |
-|           Where {id} is the unique identifier of an existing model.                                                     |
-|           All fields are optional and additional fields are not tolerated.                                              |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| **Content Type**   | *application/json*                                                                                 |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| **JSON Fields**                                                                                                         |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| hostname           | String            | (Optional) The full domain-qualified hostname of the node.                     |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| port               | Integer           | (Optional) The port being used by the executor on this node.                   |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| pause_reason       | String            | (Optional) The reason this node is paused if is_paused is true. If is_paused   |
-|                    |                   | is false, this field will be set to null. This should provide a brief          |
-|                    |                   | description for user display.                                                  |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| is_paused          | Boolean           | (Optional) True if the node is paused and will not accept new jobs             |
-|                    |                   | for execution. Remaining tasks for a previously executing job will complete.   |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| **Successful Response**                                                                                                 |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| **Status**         | 201 CREATED                                                                                        |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| **Location**       | URL pointing to the details for the node (should be the same as the request URL).                  |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| **Content Type**   | *application/json*                                                                                 |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| Response format is identical to GET but contains the updated data.                                                      |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| **JSON Fields**                                                                                                         |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| hostname           | String            | The full domain-qualified hostname of the node.                                |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| port               | Integer           | The port being used by the executor on this node.                              |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| slave_id           | String            | The slave ID used by Mesos for the node.                                       |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| is_paused          | Boolean           | True if the node is paused and will not accept new jobs for execution.         |
-|                    |                   | Remaining tasks for a previously executing job will complete.                  |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
-| is_paused_errors   | Boolean           | True if the node was automatically paused due to a high error rate.            |
+| archived           | ISO-8601 Datetime | (Optional) When the node was removed (is_active == False) from the cluster.    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | created            | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
+| last_offer         | ISO-8601 Datetime | When the node last received an offer from Mesos.                               |
++--------------------+-------------------+--------------------------------------------------------------------------------+
 | last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| **Error Responses**                                                                                                     |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| **Status**         | 400 BAD REQUEST                                                                                    |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| **Content Type**   | *text/plain*                                                                                       |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| Unexpected fields were specified. An error message lists them. Or no fields were specified.                             |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| **Status**         | 404 NOT FOUND                                                                                      |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| **Content Type**   | *text/plain*                                                                                       |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| The specified slave_id does not exist in the database.                                                                  |
-+--------------------+----------------------------------------------------------------------------------------------------+
+| resources          | JSON Object       | (Optional) Information about the hardware resources of the node                |
+|                    |                   | NOTE: Resource information may not always be available                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .total             | JSON Object       | The total hardware resources for the node                                      |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| ..cpus             | Float             | The total number of CPUs at this node                                          |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| ..mem              | Float             | The total amount of RAM in MiB at this node                                    |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| ..disk             | Float             | The total amount of disk space in MiB at this node                             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .scheduled         | JSON Object       | The scheduled hardware resources for the node                                  |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| ..cpus             | Float             | The scheduled number of CPUs at this node                                      |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| ..mem              | Float             | The scheduled amount of RAM in MiB at this node                                |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| ..disk             | Float             | The scheduled amount of disk space in MiB at this node                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .used              | JSON Object       | The used hardware resources for all nodes in the cluster                       |
+|                    |                   | NOTE: Real-time resource usage is not currently available and will be all zero |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| ..cpus             | Float             | The used number of CPUs at this node                                           |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| ..mem              | Float             | The used amount of RAM in MiB at this node                                     |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| ..disk             | Float             | The used amount of disk space in MiB at this node                              |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| disconnected       | Boolean           | (Optional) If present and true, there is an active Node entry in the scale     |
+|                    |                   | database but mesos does not have a corresponding active slave.                 |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .job_exes_running  | Array             | A list of job executions currently running on the node.                        |
+|                    |                   | (See :ref:`Job Execution Details <rest_job_execution_details>`)                |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .. code-block:: javascript                                                                                              |
+|                                                                                                                         |
+|   {                                                                                                                     |
+|       "id": 4,                                                                                                          |
+|       "hostname": "host.com",                                                                                           |
+|       "port": 5051,                                                                                                     |
+|       "slave_id": "20150616-103057-1800454536-5050-6193-S2",                                                            |
+|       "is_paused": false,                                                                                               |
+|       "is_paused_errors": false,                                                                                        |
+|       "is_active": true,                                                                                                |
+|       "archived": null,                                                                                                 |
+|       "created": "2015-06-15T17:18:52.414Z",                                                                            |
+|       "last_offer": null,                                                                                               |
+|       "last_modified": "2015-06-17T20:05:16.041Z",                                                                      |
+|       "job_exes_running": [                                                                                             |
+|           {                                                                                                             |
+|               "id": 1,                                                                                                  |
+|               "status": "RUNNING",                                                                                      |
+|               "command_arguments": "",                                                                                  |
+|               "timeout": 0,                                                                                             |
+|               "pre_started": null,                                                                                      |
+|               "pre_completed": null,                                                                                    |
+|               "pre_exit_code": null,                                                                                    |
+|               "job_started": "2015-08-28T18:32:34.295Z",                                                                |
+|               "job_completed": null,                                                                                    |
+|               "job_exit_code": null,                                                                                    |
+|               "post_started": null,                                                                                     |
+|               "post_completed": null,                                                                                   |
+|               "post_exit_code": null,                                                                                   |
+|               "created": "2015-08-28T18:32:33.862Z",                                                                    |
+|               "queued": "2015-08-28T18:32:33.833Z",                                                                     |
+|               "started": "2015-08-28T18:32:34.040Z",                                                                    |
+|               "ended": null,                                                                                            |
+|               "last_modified": "2015-08-28T18:32:34.389Z",                                                              |
+|               "job": {                                                                                                  |
+|                   "id": 1,                                                                                              |
+|                   "job_type": {                                                                                         |
+|                       "id": 3,                                                                                          |
+|                       "name": "scale-clock",                                                                            |
+|                       "version": "1.0",                                                                                 |
+|                       "title": "Scale Clock",                                                                           |
+|                       "description": "Performs Scale system functions that need to be executed periodically",           |
+|                       "category": "system",                                                                             |
+|                       "author_name": null,                                                                              |
+|                       "author_url": null,                                                                               |
+|                       "is_system": true,                                                                                |
+|                       "is_long_running": true,                                                                          |
+|                       "is_active": true,                                                                                |
+|                       "is_operational": true,                                                                           |
+|                       "is_paused": false,                                                                               |
+|                       "icon_code": "f013"                                                                               |
+|                   },                                                                                                    |
+|                   "job_type_rev": {                                                                                     |
+|                       "id": 5,                                                                                          |
+|                   },                                                                                                    |
+|                   "event": {                                                                                            |
+|                       "id": 1                                                                                           |
+|                   },                                                                                                    |
+|                   "error": null,                                                                                        |
+|                   "status": "RUNNING",                                                                                  |
+|                   "priority": 1,                                                                                        |
+|                   "num_exes": 19                                                                                        |
+|               },                                                                                                        |
+|               "node": {                                                                                                 |
+|                   "id": 7                                                                                               |
+|               },                                                                                                        |
+|               "error": null,                                                                                            |
+|               "cpus_scheduled": 1.0,                                                                                    |
+|               "mem_scheduled": 1024.0,                                                                                  |
+|               "disk_in_scheduled": 0.0,                                                                                 |
+|               "disk_out_scheduled": 0.0,                                                                                |
+|               "disk_total_scheduled": 0.0                                                                               |
+|           }                                                                                                             |
+|       ],                                                                                                                |
+|       "resources": {                                                                                                    |
+|           "total": {                                                                                                    |
+|               "cpus": 16.0,                                                                                             |
+|               "mem": 63305.0,                                                                                           |
+|               "disk": 131485.0                                                                                          |
+|           },                                                                                                            |
+|           "scheduled": {                                                                                                |
+|               "cpus": 12.0,                                                                                             |
+|               "mem": 35392.0,                                                                                           |
+|               "disk": 131408.0                                                                                          |
+|           },                                                                                                            |
+|           "used": {                                                                                                     |
+|               "cpus": 16.0,                                                                                             |
+|               "mem": 63305.0,                                                                                           |
+|               "disk": 131485.0                                                                                          |
+|           }                                                                                                             |
+|       }                                                                                                                 |
+|   }                                                                                                                     |
++--------------------+-------------------+--------------------------------------------------------------------------------+
 
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Nodes Status**                                                                                                        |
