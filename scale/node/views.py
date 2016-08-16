@@ -49,8 +49,7 @@ class NodeDetailsView(GenericAPIView):
     """This view is the endpoint for viewing and modifying a node"""
     queryset = Node.objects.all()
     serializer_class = NodeDetailsSerializer
-    update_fields = ('hostname', 'port', 'pause_reason', 'is_paused', 'is_active')
-    required_fields = ('hostname', 'port', 'is_paused', 'is_active')
+    update_fields = ('pause_reason', 'is_paused', 'is_active')
 
     def get(self, request, node_id):
         """Gets node info
@@ -63,60 +62,7 @@ class NodeDetailsView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        # Fetch the basic node attributes
-        try:
-            node = Node.objects.get_details(node_id)
-        except Node.DoesNotExist:
-            raise Http404
-        serializer = self.get_serializer(node)
-        result = serializer.data
-
-        # Attempt to fetch resource usage for the node
-        resources = None
-        try:
-            sched = Scheduler.objects.get_master()
-            slave_info = mesos_api.get_slave(sched.master_hostname, sched.master_port, node.slave_id, True)
-            if slave_info and slave_info.total:
-                resources = slave_info.to_dict()['resources']
-        except:
-            logger.exception('Unable to fetch slave resource usage')
-        if resources:
-            result['resources'] = resources
-        else:
-            result['disconnected'] = True
-
-        return Response(result)
-
-    def put(self, request, node_id):
-        """Modify node info by replacing an object
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :param node_id: The ID for the node.
-        :type node_id: str
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
-        missing = filter(lambda x, y=request.data.keys(): x not in y, self.required_fields)
-        if len(missing):
-            return Response('Missing required fields: %s' % ', '.join(missing), status=status.HTTP_400_BAD_REQUEST)
-
-        extra = filter(lambda x, y=self.update_fields: x not in y, request.data.keys())
-        if len(extra):
-            return Response('Unexpected fields: %s' % ', '.join(extra), status=status.HTTP_400_BAD_REQUEST)
-
-        try:
-            Node.objects.get(id=node_id)
-        except Node.DoesNotExist:
-            raise Http404
-
-        Node.objects.update_node(dict(request.data), node_id=node_id)
-
-        node = Node.objects.get(id=node_id)
-        serializer = NodeSerializer(node)
-        return Response(serializer.data, status=status.HTTP_201_CREATED,
-                        headers={'Location': request.build_absolute_uri()})
+        return Response(self._get_node_details(node_id))
 
     def patch(self, request, node_id):
         """Modify node info with a subset of fields
@@ -142,11 +88,36 @@ class NodeDetailsView(GenericAPIView):
             raise Http404
 
         Node.objects.update_node(dict(request.data), node_id=node_id)
-        node = Node.objects.get_details(node_id)
-        serializer = NodeSerializer(node)
-        return Response(serializer.data, status=status.HTTP_201_CREATED,
-                        headers={'Location': request.build_absolute_uri()})
 
+        result = self._get_node_details(node_id)
+
+        return Response(result, status=status.HTTP_200_OK)
+
+    def _get_node_details(self, node_id):
+
+        # Fetch the basic node attributes
+        try:
+            node = Node.objects.get_details(node_id)
+        except Node.DoesNotExist:
+            raise Http404
+        serializer = self.get_serializer(node)
+        result = serializer.data
+
+        # Attempt to fetch resource usage for the node
+        resources = None
+        try:
+            sched = Scheduler.objects.get_master()
+            slave_info = mesos_api.get_slave(sched.master_hostname, sched.master_port, node.slave_id, True)
+            if slave_info and slave_info.total:
+                resources = slave_info.to_dict()['resources']
+        except:
+            logger.exception('Unable to fetch slave resource usage')
+        if resources:
+            result['resources'] = resources
+        else:
+            result['disconnected'] = True
+
+        return result
 
 class NodesStatusView(ListAPIView):
     """This view is the endpoint for retrieving overall node status information."""
