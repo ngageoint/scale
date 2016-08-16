@@ -32,9 +32,16 @@
                 }
 
                 _.merge(scaleConfig, scaleConfigLocal);
+
+                // add function for getApiPrefix
+                scaleConfig.getUrlPrefix = function(serviceName){
+                    return scaleConfig.urls.overrides && scaleConfig.urls.overrides[serviceName] ? scaleConfig.urls.overrides[serviceName] : scaleConfig.urls.apiPrefix;
+                }
             }
 
             return scaleConfig;
         }
+
+
     });
 })();
