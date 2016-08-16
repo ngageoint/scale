@@ -33,7 +33,7 @@
                 var d = $q.defer();
                 var params = getFeedParams(params);
                 $http({
-                    url: scaleConfig.urls.apiPrefix + 'ingests/status/',
+                    url: scaleConfig.getUrlPrefix('ingests') + 'ingests/status/',
                     method: 'GET',
                     params: params
                 }).success(function (data) {
@@ -47,7 +47,7 @@
                 var d = $q.defer();
                 var params = getIngestsParams(params);
                 $http({
-                    url: scaleConfig.urls.apiPrefix + 'ingests/',
+                    url: scaleConfig.getUrlPrefix('ingests') + 'ingests/',
                     method: 'GET',
                     params: params
                 }).success(function (data) {
