@@ -91,8 +91,7 @@ class NodeDetailsView(GenericAPIView):
 
         result = self._get_node_details(node_id)
 
-        return Response(result, status=status.HTTP_200_OK,
-                        headers={'Location': request.build_absolute_uri()})
+        return Response(result, status=status.HTTP_200_OK)
 
     def _get_node_details(self, node_id):
 
