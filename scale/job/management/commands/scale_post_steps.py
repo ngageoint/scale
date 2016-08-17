@@ -14,6 +14,7 @@ from job.execution.cleanup import cleanup_job_exe
 from job.models import JobExecution
 from storage.exceptions import NfsError
 from util.retry import retry_database_query
+from job.configuration.results.exceptions import InvalidResultsManifest, ResultsManifestAndInterfaceDontMatch
 
 
 logger = logging.getLogger(__name__)
@@ -25,10 +26,14 @@ DB_EXIT_CODE = 2
 DB_OP_EXIT_CODE = 3
 IO_EXIT_CODE = 4
 NFS_EXIT_CODE = 5
+IV_MF_CODE = 6
+MI_OP_CODE = 7
 EXIT_CODE_DICT = {DB_EXIT_CODE, Error.objects.get_database_error,
                   DB_OP_EXIT_CODE, Error.objects.get_database_operation_error,
                   IO_EXIT_CODE, Error.objects.get_filesystem_error,
-                  NFS_EXIT_CODE, Error.objects.get_nfs_error}
+                  NFS_EXIT_CODE, Error.objects.get_nfs_error,
+                  IV_MF_CODE, Error.objects.get_invalid_manifest_error,
+                  MI_OP_CODE, Error.objects.get_missing_output_error}
 
 
 class Command(BaseCommand):
@@ -71,6 +76,10 @@ class Command(BaseCommand):
                 exit_code = NFS_EXIT_CODE
             elif isinstance(ex, IOError):
                 exit_code = IO_EXIT_CODE
+            elif isinstance(ex, InvalidResultsManifest):
+                exit_code = IV_MF_CODE
+            elif isinstance(ex, ResultsManifestAndInterfaceDontMatch):
+                exit_code = MI_OP_CODE
             sys.exit(exit_code)
 
         logger.info('Command completed: scale_post_steps')

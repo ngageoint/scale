@@ -59,6 +59,22 @@ class ErrorManager(models.Manager):
         """
         return self.get_builtin_error('nfs')
 
+    def get_invalid_manifest_error(self):
+        """Returns the error for invalid results manifest
+
+                :returns: The invalid results error
+                :rtype: :class:`error.models.Error`
+                """
+        return self.get_builtin_error('invalid-results-manifest')
+
+    def get_missing_output_error(self):
+        """Returns the error for missing a required output
+
+                :returns: The missing output error
+                :rtype: :class:`error.models.Error`
+                """
+        return self.get_builtin_error('missing-required-output')
+
     def get_unknown_error(self):
         """Returns the error for an unknown cause
 
