@@ -996,21 +996,19 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
 
         name = 'my-job-type'
         version = '1.0'
-        is_paused = False
-        new_is_paused = True
         trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=job_test_utils.MOCK_TYPE,
                                                               configuration=self.trigger_config.get_dict())
-        job_type = JobType.objects.create_job_type(name, version, self.job_interface, trigger_rule, is_paused=is_paused)
+        job_type = JobType.objects.create_job_type(name, version, self.job_interface, trigger_rule, is_paused=False)
         job_type.is_system = True
         job_type.save()
 
         # Call test
-        JobType.objects.edit_job_type(job_type.id, is_paused=new_is_paused)
+        JobType.objects.edit_job_type(job_type.id, is_paused=True)
 
         # Check results
         job_type = JobType.objects.select_related('trigger_rule').get(pk=job_type.id)
         # No change
-        self.assertEqual(job_type.is_paused, new_is_paused)
+        self.assertEqual(job_type.is_paused, True)
 
     def test_uneditable_field(self):
         """Tests calling JobTypeManager.edit_job_type() to change an uneditable field"""
