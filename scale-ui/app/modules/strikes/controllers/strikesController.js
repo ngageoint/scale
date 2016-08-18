@@ -9,6 +9,7 @@
         vm.scaleConfig = scaleConfig;
         vm.strikes = [];
         vm.workspaces = [];
+        vm.newWorkspaces = [];
         vm.activeWorkspace = {};
         vm.localStrikes = [];
         vm.activeStrike = new Strike();
@@ -131,6 +132,7 @@
         var getWorkspaces = function () {
             workspacesService.getWorkspaces().then(function (data) {
                 vm.workspaces = data;
+                vm.newWorkspaces = data;
             }).catch(function (error) {
                 console.log(error);
             }).finally(function () {
@@ -215,6 +217,12 @@
                 return;
             }
             getWorkspaceDetails(newValue.id);
+            vm.newWorkspaces = [];
+            _.forEach(vm.workspaces, function (workspace) {
+                if (!angular.equals(workspace, newValue)) {
+                    vm.newWorkspaces.push(workspace);
+                }
+            });
         });
     });
 })();

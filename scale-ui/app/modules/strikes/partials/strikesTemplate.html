@@ -134,7 +134,7 @@
                             <div class="col-xs-6">
                                 <div class="form-group">
                                     <label for="scifNewWorkspace">New Workspace</label>
-                                    <input id="scifNewWorkspace" name="scifNewWorkspace" type="text" class="form-control" ng-model="vm.activeStrikeIngestFile.new_workspace" placeholder="New Workspace">
+                                    <select id="scifNewWorkspace" name="scifNewWorkspace" class="form-control" ng-model="vm.activeStrikeIngestFile.new_workspace" ng-options="w as w.title for w in vm.newWorkspaces"></select>
                                 </div>
                             </div>
                             <div class="col-xs-6">
