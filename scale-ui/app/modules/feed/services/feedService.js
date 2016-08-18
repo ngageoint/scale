@@ -62,7 +62,7 @@
                 params = params || getSourceParams();
                 var d = $q.defer();
                 $http({
-                    url: scaleConfig.urls.apiPrefix + 'sources/',
+                    url: scaleConfig.getUrlPrefix('sources') + 'sources/',
                     method: 'GET',
                     params: params
                 }).success(function (data) {
@@ -75,7 +75,7 @@
             getSourceDetails: function (id) {
                 var d = $q.defer();
                 $http({
-                    url: scaleConfig.urls.apiPrefix + 'sources/' + id + '/',
+                    url: scaleConfig.getUrlPrefix('sources') + 'sources/' + id + '/',
                     method: 'GET'
                 }).success(function (data) {
                     d.resolve(data);
