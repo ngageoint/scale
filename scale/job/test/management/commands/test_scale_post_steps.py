@@ -115,7 +115,7 @@ class TestPostJobSteps(TestCase):
     @patch('job.management.commands.scale_post_steps.sys.exit')
     @patch('job.management.commands.scale_post_steps.JobExecution.objects')
     def test_scale_post_steps_invalid_manifest_error(self, mock_job_exe_manager, mock_sys_exit):
-        """Tests executing scale_post_steps when an IO error occurs."""
+        """Tests executing scale_post_steps when an invalid manifest occurs."""
 
         # Set up mocks
         mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.get_job_interface.return_value.perform_post_steps.side_effect = InvalidResultsManifest()
@@ -130,7 +130,7 @@ class TestPostJobSteps(TestCase):
     @patch('job.management.commands.scale_post_steps.sys.exit')
     @patch('job.management.commands.scale_post_steps.JobExecution.objects')
     def test_scale_post_steps_missing_manifest_output_error(self, mock_job_exe_manager, mock_sys_exit):
-        """Tests executing scale_post_steps when an IO error occurs."""
+        """Tests executing scale_post_steps when a missing output manifest occurs."""
 
         # Set up mocks
         mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.get_job_interface.return_value.perform_post_steps.side_effect = ResultsManifestAndInterfaceDontMatch()
