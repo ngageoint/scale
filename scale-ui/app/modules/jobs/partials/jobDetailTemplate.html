@@ -1,7 +1,7 @@
 <ais-header name="'Job Detail'" show-subnav="true" subnav-links="vm.subnavLinks" loading="vm.loadingJobDetail"></ais-header>
 <div class="pull-right">
-    <span ng-show="!vm.readonly && (vm.job.status === 'FAILED' || vm.job.status === 'CANCELED')"><button class="btn btn-default btn-failed" ng-click="vm.requeueJob(job.id)"><i class="fa fa-repeat"></i> Requeue</button></span>
-    <span ng-show="!vm.readonly && vm.job.status !== 'COMPLETED' && vm.job.status !== 'CANCELED'"><button ng-click="vm.cancelJob(job)" class="btn btn-default"><i class="fa fa-ban"></i> Cancel</button></span>
+    <span ng-show="!vm.readonly && (vm.job.status === 'FAILED' || vm.job.status === 'CANCELED')"><button class="btn btn-default btn-failed" ng-click="vm.requeueJob(vm.job.id)"><i class="fa fa-repeat"></i> Requeue</button></span>
+    <span ng-show="!vm.readonly && vm.job.status !== 'COMPLETED' && vm.job.status !== 'CANCELED'"><button ng-click="vm.cancelJob(vm.job)" class="btn btn-default"><i class="fa fa-ban"></i> Cancel</button></span>
 </div>
 <ul class="nav nav-tabs" role="tablist">
     <li class="active"><a data-target="#details" data-toggle="tab">Job ID: {{ vm.job.id }}</a></li>
