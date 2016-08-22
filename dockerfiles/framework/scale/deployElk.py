@@ -5,6 +5,7 @@ This script executes Marathon tasks for the logging stack is meant for use with 
 """
 import requests, os, json, time
 
+
 def run():
     # get the elasticsearch API endpoints
     es_url = os.environ.get('SCALE_ELASTICSEARCH_URL', "http://elasticsearch.marathon.mesos:31105")
@@ -20,7 +21,7 @@ def run():
       "instances": 1,
       "container": {
         "docker": {
-          "image": "logstash",
+          "image": "%s",
           "network": "HOST"
         },
         "type": "DOCKER",
@@ -38,7 +39,7 @@ def run():
       "labels": {},
       "healthChecks": []
     }
-    ''' % ('\\", \\"'.join(endpoints),)
+    ''' % (os.environ.get('LOGSTASH_DOCKER_IMAGE', "logstash"), '\\", \\"'.join(endpoints))
 
     r = requests.post('http://marathon.mesos:8080/v2/apps/', data=marathon)
     while int(json.loads(requests.get('http://marathon.mesos:8080/v2/apps/scale-logstash').text)['app']['tasksRunning']) == 0:

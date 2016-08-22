@@ -13,6 +13,7 @@ EXPOSE 5051
 # DEPLOY_LOGGING to start up the logstash system
 # INIT_DB to initialize the database (migrate, load, etc.)
 # LOAD_COUNTRY_DATA to load country borders fixture into the database (don't select this if you have custom country data)
+# LOGSTASH_DOCKER_IMAGE the name of the DOcker image for logstash
 # SCALE_SECRET_KEY
 # SCALE_DEBUG
 # SCALE_API_URL
