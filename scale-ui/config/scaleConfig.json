@@ -200,6 +200,9 @@
 
         "urls": {
             "apiPrefix": "/api/",
+            "overrides": {
+                "ingests": "/api/"
+            },
             "documentation": "/docs"
         },
 

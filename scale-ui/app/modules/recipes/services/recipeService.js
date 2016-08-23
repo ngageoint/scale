@@ -34,7 +34,7 @@
                 var d = $q.defer();
 
                 $http({
-                    url: scaleConfig.urls.apiPrefix + 'recipe-types/',
+                    url: scaleConfig.getUrlPrefix('recipe-types') + 'recipe-types/',
                     method: 'GET',
                     params: params
                 }).success(function (data) {
@@ -50,7 +50,7 @@
             getRecipeTypeDetail: function (id) {
               var d = $q.defer();
 
-              $http.get(scaleConfig.urls.apiPrefix + 'recipe-types/' + id + '/').success(function (data) {
+              $http.get(scaleConfig.getUrlPrefix('recipe-types') + 'recipe-types/' + id + '/').success(function (data) {
                   var returnData = RecipeTypeDetail.transformer(data);
                   d.resolve(returnData);
               });
@@ -62,7 +62,7 @@
                 var d = $q.defer();
 
                 $http({
-                    url: params.url ? params.url : scaleConfig.urls.apiPrefix + 'recipes/',
+                    url: params.url ? params.url : scaleConfig.getUrlPrefix('recipes') + 'recipes/',
                     method: 'GET',
                     params: params
                 }).success(function (data) {
@@ -77,7 +77,7 @@
 
             getRecipeDetails: function (id) {
                 var d = $q.defer();
-                $http.get(scaleConfig.urls.apiPrefix + 'recipes/' + id + '/').success(function (data) {
+                $http.get(scaleConfig.getUrlPrefix('recipes') + 'recipes/' + id + '/').success(function (data) {
                     var result = RecipeDetails.transformer(data);
                     d.resolve(result);
                 }).error(function (error) {
@@ -91,13 +91,13 @@
                 var cleanRecipeType = RecipeTypeValidation.transformer(recipeType);
 
                 if (!cleanRecipeType.id) {
-                    $http.post(scaleConfig.urls.apiPrefix + 'recipe-types/', cleanRecipeType).success(function (result) {
+                    $http.post(scaleConfig.getUrlPrefix('recipe-types') + 'recipe-types/', cleanRecipeType).success(function (result) {
                         d.resolve(result);
                     }).error(function(error){
                         d.reject(error);
                     });
                 } else {
-                    $http.patch(scaleConfig.urls.apiPrefix + 'recipe-types/' + cleanRecipeType.id + '/', cleanRecipeType).success(function (result) {
+                    $http.patch(scaleConfig.getUrlPrefix('recipe-types') + 'recipe-types/' + cleanRecipeType.id + '/', cleanRecipeType).success(function (result) {
                         recipeType = result;
                         d.resolve(recipeType);
                     }).error(function(error){
@@ -112,7 +112,7 @@
                 var d = $q.defer();
                 var cleanRecipeType = RecipeTypeValidation.transformer(recipeType);
 
-                $http.post(scaleConfig.urls.apiPrefix + 'recipe-types/validation/', cleanRecipeType).success(function (result) {
+                $http.post(scaleConfig.getUrlPrefix('recipe-types') + 'recipe-types/validation/', cleanRecipeType).success(function (result) {
                     d.resolve(result);
                 }).error(function(error){
                     d.reject(error);

@@ -24,7 +24,7 @@
                 var d = $q.defer();
 
                 $http({
-                    url: scaleConfig.urls.apiPrefix + 'job-executions/',
+                    url: scaleConfig.getUrlPrefix('job-executions') + 'job-executions/',
                     method: 'GET',
                     params: params
                 }).success(function (data) {
@@ -38,7 +38,7 @@
             getJobExecutionDetails: function (id) {
                 var d = $q.defer();
 
-                $http.get(scaleConfig.urls.apiPrefix + 'job-executions/' + id + '/').success(function (data) {
+                $http.get(scaleConfig.getUrlPrefix('job-executions') + 'job-executions/' + id + '/').success(function (data) {
                     d.resolve(JobExecution.transformer(data));
                 }).error(function (error) {
                     d.reject(error);
@@ -50,7 +50,7 @@
 
                 $http({
                     method: 'GET',
-                    url: scaleConfig.urls.apiPrefix + 'job-executions/' + execId + '/logs/combined/'
+                    url: scaleConfig.getUrlPrefix('job-executions') + 'job-executions/' + execId + '/logs/combined/'
                 }).success(function (data) {
                     d.resolve(data);
                 }).error(function (error) {
@@ -59,7 +59,7 @@
                 return d.promise;
             },
             getLog: function(execId){
-                var url = url || scaleConfig.urls.apiPrefix + 'job-executions/' + execId + '/logs/combined/';
+                var url = url || scaleConfig.getUrlPrefix('job-executions') + 'job-executions/' + execId + '/logs/combined/';
 
                 // Update view. Since a promise can only be resolved or rejected once but we want
                 // to keep track of all requests, poller service uses the notifyCallback. By default

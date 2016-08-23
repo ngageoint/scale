@@ -44,7 +44,7 @@
                 //     order: order || ['name','version']
                 // };
 
-                var jobTypesResource = $resource(scaleConfig.urls.apiPrefix + 'job-types/', params),
+                var jobTypesResource = $resource(scaleConfig.getUrlPrefix('job-types') + 'job-types/', params),
                     jobTypesPoller = pollerFactory.newPoller(jobTypesResource, scaleConfig.pollIntervals.jobTypes);
 
                 return jobTypesPoller.promise.then(null, null, function (data) {
@@ -96,7 +96,7 @@
                 var d = $q.defer();
 
                 $http({
-                    url: scaleConfig.urls.apiPrefix + 'job-types/',
+                    url: scaleConfig.getUrlPrefix('job-types') + 'job-types/',
                     method: 'GET',
                     params: params
                 }).success(function (data) {
@@ -110,7 +110,7 @@
             getJobTypeStatus: function (params) {
                 params = params || getJobTypeStatusParams();
 
-                var jobTypeStatusResource = $resource(scaleConfig.urls.apiPrefix + 'job-types/status/', params),
+                var jobTypeStatusResource = $resource(scaleConfig.getUrlPrefix('job-types') + 'job-types/status/', params),
                     jobTypeStatusPoller = pollerFactory.newPoller(jobTypeStatusResource, scaleConfig.pollIntervals.jobTypeStatus);
 
                 return jobTypeStatusPoller.promise.then(null, null, function (data) {
@@ -149,7 +149,7 @@
                 params = params || getJobTypeStatusParams();
 
                 $http({
-                    url: scaleConfig.urls.apiPrefix + 'job-types/status/',
+                    url: scaleConfig.getUrlPrefix('job-types') + 'job-types/status/',
                     method: 'GET',
                     params: params
                 }).success(function (data) {
@@ -162,7 +162,7 @@
             },
             getJobTypeDetails: function (id) {
                 var d = $q.defer();
-                $http.get(scaleConfig.urls.apiPrefix + 'job-types/' + id + '/').success(function (data) {
+                $http.get(scaleConfig.getUrlPrefix('job-types') + 'job-types/' + id + '/').success(function (data) {
                     d.resolve(JobTypeDetails.transformer(data));
                 }).error(function (error) {
                     d.reject(error);
@@ -180,7 +180,7 @@
                 var d = $q.defer();
 
                 $http({
-                    url: scaleConfig.urls.apiPrefix + 'job-types/' + data.id + '/',
+                    url: scaleConfig.getUrlPrefix('job-types') + 'job-types/' + data.id + '/',
                     method: 'PATCH',
                     data: updatedData
                 }).success(function (result) {
