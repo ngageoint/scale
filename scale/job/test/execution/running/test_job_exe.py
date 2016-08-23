@@ -45,7 +45,7 @@ class TestRunningJobExecution(TestCase):
 
         # Pre-task running
         pre_task_started = now() - timedelta(minutes=5)  # Lots of time so now() called at completion is in future
-        running_job_exe.task_running(pre_task_id, pre_task_started)
+        running_job_exe.task_start(pre_task_id, pre_task_started)
         self.assertFalse(running_job_exe.is_finished())
         self.assertFalse(running_job_exe.is_next_task_ready())
 
@@ -135,7 +135,7 @@ class TestRunningJobExecution(TestCase):
 
         # Pre-task running
         pre_task_started = now() - timedelta(minutes=5)  # Lots of time so now() called at completion is in future
-        running_job_exe.task_running(pre_task_id, pre_task_started)
+        running_job_exe.task_start(pre_task_id, pre_task_started)
         self.assertFalse(running_job_exe.is_finished())
         self.assertFalse(running_job_exe.is_next_task_ready())
 
