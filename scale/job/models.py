@@ -1715,7 +1715,7 @@ class JobTypeManager(models.Manager):
         job_type = JobType.objects.select_for_update().get(pk=job_type_id)
         if job_type.is_system:
             if len(kwargs) > 1 or 'is_paused' not in kwargs:
-                raise Exception('You can only modify the is_paused field for a System Job')
+                raise InvalidJobField('You can only modify the is_paused field for a System Job')
 
         if interface:
             # New job interface, validate all existing recipes
