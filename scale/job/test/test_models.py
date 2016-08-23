@@ -988,7 +988,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
 
         # Check results
         job_type = JobType.objects.select_related('trigger_rule').get(pk=job_type.id)
-        # No change
+        # No Change
         self.assertEqual(job_type.title, title)
 
     def test_pause_system_job_type(self):
@@ -1007,7 +1007,6 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
 
         # Check results
         job_type = JobType.objects.select_related('trigger_rule').get(pk=job_type.id)
-        # No change
         self.assertEqual(job_type.is_paused, True)
 
     def test_uneditable_field(self):
