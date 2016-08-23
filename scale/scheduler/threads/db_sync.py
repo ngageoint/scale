@@ -15,7 +15,6 @@ from job.models import JobExecution
 logger = logging.getLogger(__name__)
 
 
-
 class DatabaseSyncThread(object):
     """This class manages the database sync background thread for the scheduler"""
 
