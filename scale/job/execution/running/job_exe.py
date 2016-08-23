@@ -6,6 +6,7 @@ import threading
 from datetime import datetime, timedelta
 
 from django.db import transaction
+from django.utils.timezone import now
 
 from error.models import Error
 from job.execution.running.tasks.job_task import JobTask
@@ -224,7 +225,7 @@ class RunningJobExecution(object):
                     task.refresh_cached_values(job_exe)
             if not remaining_tasks:
                 from queue.models import Queue
-                Queue.objects.handle_job_completion(self._id, task_results.when)
+                Queue.objects.handle_job_completion(self._id, now())
 
         with self._lock:
             if self._current_task and self._current_task.id == task_results.task_id:
@@ -247,7 +248,7 @@ class RunningJobExecution(object):
         with transaction.atomic():
             error = current_task.fail(task_results, error)
             from queue.models import Queue
-            Queue.objects.handle_job_failure(self._id, task_results.when, error)
+            Queue.objects.handle_job_failure(self._id, now(), error)
 
             # TODO: move this somewhere else and refactor it
             from scheduler.models import Scheduler
