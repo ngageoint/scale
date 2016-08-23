@@ -1065,8 +1065,6 @@ class TestJobTypeDetailsView(TestCase):
 
     def test_edit_system_job_pause(self):
         """Tests pausing a system job"""
-        trigger_config = self.trigger_config.copy()
-        trigger_config['condition']['media_type'] = 'application/json'
 
         url = '/job-types/%d/' % self.job_type.id
         json_data = {
@@ -1086,9 +1084,6 @@ class TestJobTypeDetailsView(TestCase):
 
     def test_edit_system_job_invalid_field(self):
         """Tests updating an invalid system job field"""
-        trigger_config = self.trigger_config.copy()
-        trigger_config['condition']['media_type'] = 'application/json'
-
         url = '/job-types/%d/' % self.job_type.id
         json_data = {
             'title': 'Invalid title change'
@@ -1096,7 +1091,6 @@ class TestJobTypeDetailsView(TestCase):
         self.job_type.is_system = True
         self.job_type.save()
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
-        result = json.loads(response.content)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
