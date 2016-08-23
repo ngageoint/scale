@@ -1063,6 +1063,37 @@ class TestJobTypeDetailsView(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_edit_system_job_pause(self):
+        """Tests pausing a system job"""
+
+        url = '/job-types/%d/' % self.job_type.id
+        json_data = {
+            'is_paused': True
+        }
+        self.job_type.is_system = True
+        self.job_type.save()
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(result['id'], self.job_type.id)
+        self.assertEqual(result['title'], self.job_type.title)
+        self.assertEqual(result['revision_num'], 1)
+        self.assertIsNotNone(result['interface'])
+        self.assertEqual(result['is_paused'], True)
+
+    def test_edit_system_job_invalid_field(self):
+        """Tests updating an invalid system job field"""
+        url = '/job-types/%d/' % self.job_type.id
+        json_data = {
+            'title': 'Invalid title change'
+        }
+        self.job_type.is_system = True
+        self.job_type.save()
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
 
 class TestJobTypesValidationView(TransactionTestCase):
     """Tests related to the job-types validation endpoint"""
