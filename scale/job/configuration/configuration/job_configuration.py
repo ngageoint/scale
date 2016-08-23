@@ -284,13 +284,13 @@ class JobConfiguration(object):
         if settings.LOGGING_ADDRESS is not None:
             self.add_pre_task_docker_param(DockerParam('log-driver', 'gelf'))
             self.add_pre_task_docker_param(DockerParam('log-opt', 'gelf-address=%s' % settings.LOGGING_ADDRESS))
-            self.add_pre_task_docker_param(DockerParam('log-opt', 'tag=%d_pre' % job_exe_id))
+            self.add_pre_task_docker_param(DockerParam('log-opt', 'tag=scale_%d_pre' % job_exe_id))
             self.add_job_task_docker_param(DockerParam('log-driver', 'gelf'))
             self.add_job_task_docker_param(DockerParam('log-opt', 'gelf-address=%s' % settings.LOGGING_ADDRESS))
-            self.add_job_task_docker_param(DockerParam('log-opt', 'tag=%d_job' % job_exe_id))
+            self.add_job_task_docker_param(DockerParam('log-opt', 'tag=scale_%d_job' % job_exe_id))
             self.add_post_task_docker_param(DockerParam('log-driver', 'gelf'))
             self.add_post_task_docker_param(DockerParam('log-opt', 'gelf-address=%s' % settings.LOGGING_ADDRESS))
-            self.add_post_task_docker_param(DockerParam('log-opt', 'tag=%d_post' % job_exe_id))
+            self.add_post_task_docker_param(DockerParam('log-opt', 'tag=scale_%d_post' % job_exe_id))
             # Post task needs ElasticSearch URL to grab logs for old artifact registration
             self.add_post_task_docker_param(DockerParam('env', 'SCALE_ELASTICSEARCH_URL=%s'
                                                         % settings.ELASTICSEARCH_URL))

@@ -1458,35 +1458,41 @@ class JobExecution(models.Model):
         :type since: :class:`datetime.datetime` or None
         :rtype: tuple of (dict, :class:`datetime.datetime`) with the results or None and the last modified timestamp
         """
+
         q = {
-                "size": 10000,
-                "query": {
-                    "bool": {
-                        "must": [
-                            {"match": {"tag": "%d_job" % self.pk}}
-                        ]
+                'size': 10000,
+                'query': {
+                    'bool': {
+                        'must': [],
+                        'should': [
+                            {'match': {'tag': 'scale_%d_pre' % self.pk}},
+                            {'match': {'tag': 'scale_%d_job' % self.pk}},
+                            {'match': {'tag': 'scale_%d_post' % self.pk}}
+                        ],
+                        'minimum_should_match': 1
                     }
                 },
-                "_source": ["@timestamp", "message", "level", "tag"]
+                'sort': [{'@timestamp': 'asc'}],
+                '_source': ['@timestamp', 'message', 'level', 'tag']
             }
         if not include_stdout and not include_stderr:
             return None, util.parse.datetime.datetime.utcnow()
         elif include_stdout and not include_stderr:
-            q["query"]["bool"]["must"].append({"match": {"level": 6}})
+            q['query']['bool']['must'].append({'match': {'level': 6}})
         elif include_stderr and not include_stdout:
-            q["query"]["bool"]["must"].append({"match": {"level": 3}})
+            q['query']['bool']['must'].append({'match': {'level': 3}})
         if since is not None:
-            q["query"]["bool"]["must"].append({"range": {"@timestamp": {"gt": since.isoformat()}}})
+            q['query']['bool']['must'].append({'range': {'@timestamp': {'gt': since.isoformat()}}})
 
         esr = urllib2.urlopen(
-            urllib2.Request(settings.ELASTICSEARCH_URL+"/_search",
+            urllib2.Request(settings.ELASTICSEARCH_URL+'/_search',
                             data=json.dumps(q),
-                            headers={"Accept": "application/json", "Content-type": "application/json"}))
+                            headers={'Accept': 'application/json', 'Content-type': 'application/json'}))
 
         hits = json.loads(esr.read())
-        if hits["hits"]["total"] == 0:
+        if hits['hits']['total'] == 0:
             return None, util.parse.datetime.datetime.utcnow()
-        last_modified = max([util.parse.parse_datetime(h["_source"]["@timestamp"]) for h in hits["hits"]["hits"]])
+        last_modified = max([util.parse.parse_datetime(h['_source']['@timestamp']) for h in hits['hits']['hits']])
         return hits, last_modified
 
     def get_log_text(self, include_stdout=True, include_stderr=True, since=None, html=False):
@@ -1507,14 +1513,14 @@ class JobExecution(models.Model):
         if hits is None:
             return None, last_modified
         if html:
-            d = ""
-            for h in hits["hits"]["hits"]:
-                cls = "stdout"
-                if h["_source"]["level"] <= 3:
-                    cls = "stderr"
-                d += '<div class="%s">%s</div>\n' % (cls, django.utils.html.escape(h["_source"]["message"]))
+            d = ''
+            for h in hits['hits']['hits']:
+                cls = 'stdout'
+                if h['_source']['level'] <= 3:
+                    cls = 'stderr'
+                d += '<div class="%s">%s</div>\n' % (cls, django.utils.html.escape(h['_source']['message']))
             return d, last_modified
-        return "\n".join(h["_source"]["message"] for h in hits["hits"]["hits"]), last_modified
+        return '\n'.join(h['_source']['message'] for h in hits['hits']['hits']), last_modified
 
     class Meta(object):
         """Meta information for the database"""
