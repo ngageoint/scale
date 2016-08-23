@@ -44,8 +44,8 @@ class TestRunningJobExecution(TestCase):
         self.assertFalse(running_job_exe.is_next_task_ready())
 
         # Pre-task running
-        pre_task_started = now()
-        running_job_exe.task_start(pre_task_id, pre_task_started)
+        pre_task_started = now() - timedelta(minutes=5)  # Lots of time so now() called at completion is in future
+        running_job_exe.task_running(pre_task_id, pre_task_started)
         self.assertFalse(running_job_exe.is_finished())
         self.assertFalse(running_job_exe.is_next_task_ready())
 
@@ -116,7 +116,7 @@ class TestRunningJobExecution(TestCase):
         self.assertEqual(post_task_completed, job_exe.post_completed)
         self.assertEqual(3, job_exe.post_exit_code)
         self.assertEqual('COMPLETED', job_exe.status)
-        self.assertEqual(post_task_completed, job_exe.ended)
+        self.assertGreater(job_exe.ended, post_task_completed)
 
     def test_failed_normal_job_execution(self):
         """Tests running through a normal job execution that fails"""
@@ -134,8 +134,8 @@ class TestRunningJobExecution(TestCase):
         self.assertFalse(running_job_exe.is_next_task_ready())
 
         # Pre-task running
-        pre_task_started = now()
-        running_job_exe.task_start(pre_task_id, pre_task_started)
+        pre_task_started = now() - timedelta(minutes=5)  # Lots of time so now() called at completion is in future
+        running_job_exe.task_running(pre_task_id, pre_task_started)
         self.assertFalse(running_job_exe.is_finished())
         self.assertFalse(running_job_exe.is_next_task_ready())
 
@@ -154,7 +154,7 @@ class TestRunningJobExecution(TestCase):
         self.assertEqual(1, job_exe.pre_exit_code)
         self.assertEqual('FAILED', job_exe.status)
         self.assertEqual(error.id, job_exe.error_id)
-        self.assertEqual(pre_task_failed, job_exe.ended)
+        self.assertGreater(job_exe.ended, pre_task_failed)
 
     def test_timed_out_job_execution(self):
         """Tests running through a job execution that times out"""

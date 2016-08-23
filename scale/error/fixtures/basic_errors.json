@@ -5,7 +5,7 @@
         "fields": {
             "name": "unknown",
             "title": "Unknown",
-            "description": "The cause of this failure is unknown. System administrators should investigate this failure to determine the root cause and make sure it is correctly tracked in the future.",
+            "description": "The cause of this failure is unknown. Please report this error to the Scale development team at https://github.com/ngageoint/scale so they can determine the root cause and make sure it is correctly identified in the future.",
             "category": "SYSTEM",
             "is_builtin": true,
             "created": "2015-03-11T00:00:00.0Z",
