@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('strikesController', function ($scope, $route, $location, $routeParams, Strike, StrikeIngestFile, scaleConfig, navService, strikeService, workspacesService, scaleService, stateService, userService, toastr) {
+    angular.module('scaleApp').controller('strikesController', function ($scope, $route, $location, $routeParams, Strike, StrikeIngestFile, scaleConfig, navService, subnavService, strikeService, workspacesService, scaleService, stateService, userService, toastr) {
         var vm = this,
             currStrike = {};
 
@@ -29,7 +29,7 @@
             // revert any changes to the strike
             vm.activeStrike = Strike.transformer(_.cloneDeep(currStrike));
             if ($routeParams.id === '0') {
-                $location.path('/strikes');
+                $location.path('/feed/strikes');
             }
         };
 
@@ -55,7 +55,7 @@
             _.forEach(vm.localStrikes, function (strike) {
                 localStorage.removeItem('strike' + strike.id);
             });
-            $location.path('/strikes');
+            $location.path('/feed/strikes');
         };
 
         vm.newStrike = function () {
@@ -64,7 +64,7 @@
         };
 
         vm.loadStrike = function (id) {
-            $location.path('strikes/' + id);
+            $location.path('feed/strikes/' + id);
         };
 
         var getWarningsHtml = function (warnings) {
@@ -198,7 +198,8 @@
                     });
                 }
             }
-            navService.updateLocation('strikes');
+            navService.updateLocation('feed');
+            subnavService.setCurrentPath('feed/strikes');
         };
 
         initialize();

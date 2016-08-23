@@ -156,10 +156,10 @@
                 controllerAs: 'vm',
                 templateUrl: 'modules/workspaces/partials/workspacesTemplate.html'
             })
-            .when('/strikes/:id?', {
+            .when('/feed/strikes/:id?', {
                 controller: 'strikesController',
                 controllerAs: 'vm',
-                templateUrl: 'modules/strikes/partials/strikesTemplate.html'
+                templateUrl: 'modules/feed/partials/strikesTemplate.html'
             })
             .otherwise({
                 redirectTo: '/'
