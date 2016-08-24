@@ -238,7 +238,7 @@ class ScaleScheduler(MesosScheduler):
 
         task_id = status.task_id.value
         job_exe_id = RunningJobExecution.get_job_exe_id(task_id)
-        logger.info('Status update for task %s: %s', task_id, utils.status_to_string(status.state))
+        logger.info('Status update for task %s: %s', task_id, utils.get_status_state(status))
 
         # Since we have a status update for this task, remove it from reconciliation set
         self._recon_thread.remove_task_id(task_id)

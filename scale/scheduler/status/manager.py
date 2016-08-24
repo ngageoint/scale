@@ -4,6 +4,10 @@ from __future__ import unicode_literals
 import logging
 import threading
 
+from job.models import TaskUpdate
+from mesos_api.utils import create_task_update_model
+from util.retry import retry_database_query
+
 
 logger = logging.getLogger(__name__)
 
@@ -50,13 +54,24 @@ class StatusManager(object):
         models = []
         count = 0
         for status_update in status_updates:
-            model = None  # TODO: convert status update to a model
-            models.append(model)
-            count += 1
+            try:
+                models.append(create_task_update_model(status_update))
+                count += 1
+            except:
+                logger.exception('Failed to create database model for task status update')
             if count >= StatusManager.MAX_BATCH_SIZE:
-                # TODO: bulk create the models with retrying
+                self._bulk_save(models)
                 models = []
                 count = 0
         if models:
-            # TODO: bulk create the models with retrying
-            pass
+            self._bulk_save(models)
+
+    @retry_database_query
+    def _bulk_save(self, models):
+        """Performs a bulk save of the given task update models
+
+        :param models: The list of task update models
+        :type models: [:class:`job.models.TaskUpdate`]
+        """
+
+        TaskUpdate.objects.bulk_create(models)
