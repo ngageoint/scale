@@ -63,5 +63,32 @@
             "created": "2016-04-13T00:00:00.0Z",
             "last_modified": "2016-04-13T00:00:00.0Z"
         }
+    },
+    {
+        "model": "error.Error",
+        "pk": null,
+        "fields": {
+            "name": "invalid-results-manifest",
+            "title": "Algorithm Failure",
+            "description": "The output files from the result manifest are invalid. This could mean either duplicate output names were found, no output files were found, or both 'file' and 'files' object were found in the output_data",
+            "category": "ALGORITHM",
+            "is_builtin": true,
+            "created": "2016-08-24T00:00:00.0Z",
+            "last_modified": "2016-08-24T00:00:00.0Z"
+        }
+    },
+    {
+        "model": "error.Error",
+        "pk": null,
+        "fields": {
+            "name": "missing-required-output",
+            "title": "Algorithm Failure",
+            "description": "The output_data parameter is missing from the results manifest file",
+            "category": "ALGORITHM",
+            "is_builtin": true,
+            "created": "2016-08-24T00:00:00.0Z",
+            "last_modified": "2016-08-24T00:00:00.0Z"
+        }
     }
+
 ]
