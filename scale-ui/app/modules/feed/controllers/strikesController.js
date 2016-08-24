@@ -129,15 +129,15 @@
             });
         };
 
-        var getWorkspaces = function () {
-            workspacesService.getWorkspaces().then(function (data) {
-                vm.workspaces = data;
-                vm.newWorkspaces = data;
-            }).catch(function (error) {
-                console.log(error);
-            }).finally(function () {
-                vm.loading = false;
-            });
+        vm.updateWorkspace = function () {
+            if (vm.activeStrike) {
+                var workspaceObj = _.find(vm.workspaces, {name: vm.activeStrike.configuration.workspace});
+                if (workspaceObj) {
+                    vm.newWorkspaces = _.cloneDeep(vm.workspaces);
+                    _.remove(vm.newWorkspaces, workspaceObj);
+                    getWorkspaceDetails(workspaceObj.id);
+                }
+            }
         };
 
         var getWorkspaceDetails = function (id) {
@@ -148,7 +148,21 @@
                     vm.activeStrike.configuration.monitor.type = 'dir-watcher';
                 } else if (vm.activeWorkspace.json_config.broker.type === 's3') {
                     vm.activeStrike.configuration.monitor.type = 's3';
+                } else {
+                    vm.activeStrike.configuration.monitor.type = null;
                 }
+            }).catch(function (error) {
+                console.log(error);
+            }).finally(function () {
+                vm.loading = false;
+            });
+        };
+
+        var getWorkspaces = function () {
+            workspacesService.getWorkspaces().then(function (data) {
+                vm.workspaces = data;
+                vm.newWorkspaces = data;
+                vm.updateWorkspace();
             }).catch(function (error) {
                 console.log(error);
             }).finally(function () {
@@ -211,19 +225,6 @@
                 containerMaxHeight = viewport.height - offset + 60;
 
             vm.containerStyle = 'height: ' + containerMaxHeight + 'px; max-height: ' + containerMaxHeight + 'px;';
-        });
-
-        $scope.$watchCollection('vm.activeStrike.configuration.workspace', function (newValue, oldValue) {
-            if (angular.equals(newValue, oldValue)) {
-                return;
-            }
-            getWorkspaceDetails(newValue.id);
-            vm.newWorkspaces = [];
-            _.forEach(vm.workspaces, function (workspace) {
-                if (!angular.equals(workspace, newValue)) {
-                    vm.newWorkspaces.push(workspace);
-                }
-            });
         });
     });
 })();

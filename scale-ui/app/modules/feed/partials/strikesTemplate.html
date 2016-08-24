@@ -71,7 +71,7 @@
                         <div class="col-xs-12 col-md-6">
                             <div class="form-group" ng-class="{ 'has-error': strikesForm.scWorkspace.$invalid }">
                                 <label for="scWorkspace">Workspace</label>
-                                <select id="scWorkspace" name="scWorkspace" class="form-control" ng-model="vm.activeStrike.configuration.workspace" ng-options="w as w.title for w in vm.workspaces" required></select>
+                                <select id="scWorkspace" name="scWorkspace" class="form-control" ng-model="vm.activeStrike.configuration.workspace" ng-options="w.name as w.title for w in vm.workspaces" ng-change="vm.updateWorkspace()" required></select>
                             </div>
                         </div>
                     </div>

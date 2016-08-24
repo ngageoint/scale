@@ -37,8 +37,8 @@
         "version": "1.0",
         "workspace": "rs",
         "monitor": {
-            "type": "s3",
-            "sqs_name": "my-sqs"
+            "type": "dir-watcher",
+            "transfer_suffix": "my-transfer-suffix"
         },
         "files_to_ingest": [{
             "filename_regex": ".*txt",
