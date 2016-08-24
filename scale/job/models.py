@@ -2299,3 +2299,42 @@ class JobTypeRevision(models.Model):
         """meta information for the db"""
         db_table = 'job_type_revision'
         unique_together = ('job_type', 'revision_num')
+
+
+class TaskUpdate(models.Model):
+    """Represents a status update received for a job execution task
+
+    :keyword job_exe: The job execution that the task belongs to
+    :type job_exe: :class:`django.db.models.ForeignKey`
+    :keyword task_id: The task ID
+    :type task_id: :class:`django.db.models.CharField`
+    :keyword status: The status of the task
+    :type status: :class:`django.db.models.CharField`
+
+    :keyword timestamp: When the status update occurred (may be None)
+    :type timestamp: :class:`django.db.models.DateTimeField`
+    :keyword source: An optional source of the task status update
+    :type source: :class:`django.db.models.CharField`
+    :keyword reason: An optional reason for the task status update
+    :type reason: :class:`django.db.models.CharField`
+    :keyword message: An optional message related to the task status update
+    :type message: :class:`django.db.models.TextField`
+
+    :keyword created: When the task update was saved in the database
+    :type created: :class:`django.db.models.DateTimeField`
+    """
+
+    job_exe = models.ForeignKey('job.JobExecution', on_delete=models.PROTECT)
+    task_id = models.CharField(max_length=50)
+    status = models.CharField(max_length=50)
+
+    timestamp = models.DateTimeField(blank=True, null=True)
+    source = models.CharField(blank=True, max_length=50)
+    reason = models.CharField(blank=True, max_length=50)
+    message = models.TextField(blank=True)
+
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta(object):
+        """Meta information for the database"""
+        db_table = 'task_update'
