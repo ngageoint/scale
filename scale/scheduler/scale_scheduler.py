@@ -34,7 +34,6 @@ from scheduler.threads.schedule import SchedulingThread
 logger = logging.getLogger(__name__)
 
 
-
 class ScaleScheduler(MesosScheduler):
     """Mesos scheduler for the Scale framework"""
 
