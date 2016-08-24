@@ -66,7 +66,7 @@
         "occurred": "2016-05-15T17:27:31.467Z"
     },
     "error": null,
-    "status": "COMPLETED",
+    "status": "FAILED",
     "priority": 210,
     "num_exes": 1,
     "timeout": 1800,
@@ -130,7 +130,7 @@
     "job_exes": [
         {
             "id": 14552,
-            "status": "COMPLETED",
+            "status": "FAILED",
             "command_arguments": "${input_file} ${job_output_dir}",
             "timeout": 1800,
             "pre_started": "2016-05-15T17:27:32.435Z",
@@ -153,7 +153,16 @@
             "node": {
                 "id": 1
             },
-            "error": null
+            "error": {
+                "id": 1,
+                "name": "unknown",
+                "title": "Unknown",
+                "description": "The error that caused the failure is unknown.",
+                "category": "SYSTEM",
+                "is_builtin": true,
+                "created": "2015-03-11T00:00:00Z",
+                "last_modified": "2015-03-11T00:00:00Z"
+            }
         }
     ],
     "inputs": [

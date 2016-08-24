@@ -427,7 +427,7 @@
                 "occurred": "2016-05-06T21:16:09Z"
             },
             "error": null,
-            "status": "BLOCKED",
+            "status": "FAILED",
             "priority": 80,
             "num_exes": 43,
             "timeout": 2361,
