@@ -30,7 +30,7 @@
                 field: 'hostname',
                 displayName: 'Hostname',
                 enableFiltering: false,
-                cellTemplate: '<div class="ui-grid-cell-contents"><div class="pull-right" ng-show="!grid.appScope.vm.readonly && grid.appScope.vm.nodeStatus.length > 0"><button class="btn btn-xs btn-default" ng-click="grid.appScope.vm.pauseNode(row.entity.id)"><i class="fa" ng-class="{ \'fa-pause\': !row.entity.is_paused && !row.entity.is_paused_errors, \'fa-play\': row.entity.is_paused || row.entity.is_paused_errors }"></i></button></div> {{ row.entity.hostname }}</div>'
+                cellTemplate: '<div class="ui-grid-cell-contents"><div class="pull-right" ng-show="!grid.appScope.vm.readonly && grid.appScope.vm.nodeStatus.length > 0"><button class="btn btn-xs btn-default" ng-click="grid.appScope.vm.pauseNode(row.entity)"><i class="fa" ng-class="{ \'fa-pause\': !row.entity.is_paused, \'fa-play\': row.entity.is_paused }"></i></button></div> {{ row.entity.hostname }}</div>'
             },
             {
                 field: 'is_online',
@@ -57,20 +57,27 @@
 
         vm.gridOptions.columnDefs = vm.colDefs;
 
-        vm.pauseNode = function (id) {
+        vm.pauseNode = function (entity) {
             $scope.pauseReason = '';
             vm.actionClicked = true;
+            var id = entity.id;
             var nodeStatus = _.find(vm.nodeStatus, { node: { id: id } });
+            var curr_state = entity.is_paused;
 
             $scope.updateReason = function (value) {
                 $scope.pauseReason = value;
             };
 
             var pauseResume = function () {
+
                 nodeStatus.pauseResumeCell($scope.pauseReason).then(function (result) {
                     var node = _.find(vm.gridOptions.data, { id: result.id });
-                    node.is_paused = result.is_paused;
-                    if (node.isPaused()) {
+                    entity.is_paused = result.is_paused;
+                    nodeStatus.node.is_paused = entity.is_paused;
+                    entity.statusLabel = vm.getStatusLabel(nodeStatus);
+                    if (curr_state === entity.is_paused) {
+                        toastr.warning(entity.hostname + ' Status Unchanged');
+                    } else if (entity.is_paused) {
                         toastr.info(node.hostname + ' Paused');
                     } else {
                         toastr.info(node.hostname + ' Resumed');
@@ -215,6 +222,7 @@
                 var status = _.find(newValue, { node: { id: node.id } });
                 if (status) {
                     node.status = status;
+                    console.log('status changed');
                     node.statusLabel = vm.getStatusLabel(status);
                 }
             });

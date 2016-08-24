@@ -28,7 +28,7 @@
         };
 
         // Ingests Status
-        var ingestsStatusRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'ingests/status/', 'i');
+        var ingestsStatusRegex = new RegExp('^' + scaleConfig.getUrlPrefix('ingests') + 'ingests/status/', 'i');
         $httpBackend.whenGET(ingestsStatusRegex).respond(function () {
             var strikes = JSON.parse(getSync('test/data/ingestStrikes.json')[1]),
                 startDate = moment.utc().subtract(1, 'w').startOf('d').toISOString(),
@@ -71,7 +71,7 @@
 
         // Ingests
         var ingestsOverrideUrl = 'test/data/ingests.json';
-        var ingestsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'ingests/', 'i');
+        var ingestsRegex = new RegExp('^' + scaleConfig.getUrlPrefix('ingests') + 'ingests/', 'i');
         $httpBackend.whenGET(ingestsRegex).respond(function (method, url) {
             var urlParams = getUrlParams(url),
                 returnObj = getSync(ingestsOverrideUrl),
@@ -122,7 +122,7 @@
 
         // Source details
         var sourceDetailsOverrideUrl = 'test/data/sourceDetails.json';
-        var sourceDetailsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'sources/.*/', 'i');
+        var sourceDetailsRegex = new RegExp('^' + scaleConfig.getUrlPrefix('sources') + 'sources/.*/', 'i');
         $httpBackend.whenGET(sourceDetailsRegex).respond(function (method, url) {
             // // get the jobType.id from the url
             // url = url.toString();
@@ -133,7 +133,7 @@
         
         // Sources
         var sourcesOverrideUrl = 'test/data/sources.json';
-        var sourcesRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'sources/', 'i');
+        var sourcesRegex = new RegExp('^' + scaleConfig.getUrlPrefix('sources') + 'sources/', 'i');
         $httpBackend.whenGET(sourcesRegex).respond(function (method, url) {
             //return getSync(sourcesOverrideUrl);
             var urlParams = getUrlParams(url),
@@ -157,7 +157,7 @@
         });
 
         // Job load
-        var jobLoadRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'load/', 'i');
+        var jobLoadRegex = new RegExp('^' + scaleConfig.getUrlPrefix('load') + 'load/', 'i');
         $httpBackend.whenGET(jobLoadRegex).respond(function () {
             var numHours = moment.utc().endOf('d').diff(moment.utc().subtract(7, 'd').startOf('d'), 'h');
             var startTime = moment.utc().subtract(7, 'd').startOf('d');
@@ -193,7 +193,7 @@
 
         // Jobs
         var jobsOverrideUrl = 'test/data/jobs.json';
-        var jobsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'jobs/', 'i');
+        var jobsRegex = new RegExp('^' + scaleConfig.getUrlPrefix('jobs') + 'jobs/', 'i');
         $httpBackend.whenGET(jobsRegex).respond(function (method, url) {
             var urlParams = getUrlParams(url),
                 returnObj = getSync(jobsOverrideUrl),
@@ -230,21 +230,21 @@
 
         // Job type status
         var jobTypeStatusOverrideUrl = 'test/data/jobTypeStatus.json';
-        var jobTypeStatusRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'job-types/status/', 'i');
+        var jobTypeStatusRegex = new RegExp('^' + scaleConfig.getUrlPrefix('job-types') + 'job-types/status/', 'i');
         $httpBackend.whenGET(jobTypeStatusRegex).respond(function () {
             return getSync(jobTypeStatusOverrideUrl);
         });
 
         // Running job types
         var runningJobsOverrideUrl = 'test/data/runningJobs.json';
-        var runningJobsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'job-types/running/', 'i');
+        var runningJobsRegex = new RegExp('^' + scaleConfig.getUrlPrefix('job-types') + 'job-types/running/', 'i');
         $httpBackend.whenGET(runningJobsRegex).respond(function () {
             return getSync(runningJobsOverrideUrl);
         });
 
         // Job Type Details
         var jobTypeDetailsOverrideUrl = 'test/data/job-types/jobType1.json';
-        var jobTypeDetailsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'job-types/.*/', 'i');
+        var jobTypeDetailsRegex = new RegExp('^' + scaleConfig.getUrlPrefix('job-types') + 'job-types/.*/', 'i');
         $httpBackend.whenGET(jobTypeDetailsRegex).respond(function (method, url) {
             // get the jobType.id from the url
             url = url.toString();
@@ -255,7 +255,7 @@
 
         // Job types
         var jobTypesOverrideUrl = 'test/data/jobTypes.json';
-        var jobTypesRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'job-types/', 'i');
+        var jobTypesRegex = new RegExp('^' + scaleConfig.getUrlPrefix('job-types') + 'job-types/', 'i');
         $httpBackend.whenGET(jobTypesRegex).respond(function (method, url) {
             var urlParams = getUrlParams(url),
                 returnObj = getSync(jobTypesOverrideUrl),
@@ -282,7 +282,7 @@
         
         // Job execution logs
         var jobExecutionLogsOverrideUrl = 'test/data/jobExecutionLogCombined.json';
-        var jobExecutionLogRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'job-executions/.*/logs/combined/', 'i');
+        var jobExecutionLogRegex = new RegExp('^' + scaleConfig.getUrlPrefix('job-executions') + 'job-executions/.*/logs/combined/', 'i');
         $httpBackend.whenGET(jobExecutionLogRegex).respond(function () {
             return getSync(jobExecutionLogsOverrideUrl);
         });
@@ -290,7 +290,7 @@
 
         // Metrics Plot Data Detail
         //var metricsPlotDataOverrideUrl = 'test/data/metricsJobTypesPlotData.json';
-        var metricsPlotDataRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'metrics/.*/.*/','i');
+        var metricsPlotDataRegex = new RegExp('^' + scaleConfig.getUrlPrefix('metrics') + 'metrics/.*/.*/','i');
         $httpBackend.whenGET(metricsPlotDataRegex).respond(function (method, url) {
             var urlParams = getUrlParams(url),
                 random = 0;
@@ -346,7 +346,7 @@
         });
 
         // Metrics Detail
-        var metricsDetailRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'metrics/.*/','i');
+        var metricsDetailRegex = new RegExp('^' + scaleConfig.getUrlPrefix('metrics') + 'metrics/.*/','i');
         $httpBackend.whenGET(metricsDetailRegex).respond(function (method, url) {
             var urlArr = url.split('/'),
                 detailType = urlArr[urlArr.length - 2];
@@ -361,21 +361,21 @@
 
         // Metrics
         var metricsOverrideUrl = 'test/data/metrics.json';
-        var metricsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'metrics/','i');
+        var metricsRegex = new RegExp('^' + scaleConfig.getUrlPrefix('metrics') + 'metrics/','i');
         $httpBackend.whenGET(metricsRegex).respond(function () {
             return getSync(metricsOverrideUrl);
         });
 
         // Node status
         var nodeStatusOverrideUrl = 'test/data/nodeStatus.json';
-        var nodeStatusRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'nodes/status/', 'i');
+        var nodeStatusRegex = new RegExp('^' + scaleConfig.getUrlPrefix('nodes') + 'nodes/status/', 'i');
         $httpBackend.whenGET(nodeStatusRegex).respond(function () {
             return getSync(nodeStatusOverrideUrl);
         });
 
         // Node details
         var nodeOverrideUrl = 'test/data/node.json';
-        var nodeRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'nodes/.*/', 'i');
+        var nodeRegex = new RegExp('^' + scaleConfig.getUrlPrefix('nodes') + 'nodes/.*/', 'i');
         $httpBackend.whenGET(nodeRegex).respond(function () {
             return getSync(nodeOverrideUrl);
         });
@@ -385,21 +385,21 @@
 
         // Nodes
         var nodesOverrideUrl = 'test/data/nodes.json';
-        var nodesRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'nodes/', 'i');
+        var nodesRegex = new RegExp('^' + scaleConfig.getUrlPrefix('nodes') + 'nodes/', 'i');
         $httpBackend.whenGET(nodesRegex).respond(function () {
             return getSync(nodesOverrideUrl);
         });
 
         // Queue Status service
         var queueStatusOverrideUrl = 'test/data/queueStatus.json';
-        var queueStatusRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'queue/status/', 'i');
+        var queueStatusRegex = new RegExp('^' + scaleConfig.getUrlPrefix('queue') + 'queue/status/', 'i');
         $httpBackend.whenGET(queueStatusRegex).respond(function () {
             return getSync(queueStatusOverrideUrl);
         });
         
         // Recipe Details
         var recipeDetailsOverrideUrl = 'test/data/recipeDetails.json';
-        var recipeDetailsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'recipes/.*/', 'i');
+        var recipeDetailsRegex = new RegExp('^' + scaleConfig.getUrlPrefix('recipes') + 'recipes/.*/', 'i');
         $httpBackend.whenGET(recipeDetailsRegex).respond(function (method, url) {
             // get the recipeDetail.id from the url
             url = url.toString();
@@ -410,7 +410,7 @@
 
         // Recipes service
         var recipesOverrideUrl = 'test/data/recipes.json';
-        var recipesRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'recipes/', 'i');
+        var recipesRegex = new RegExp('^' + scaleConfig.getUrlPrefix('recipes') + 'recipes/', 'i');
         $httpBackend.whenGET(recipesRegex).respond(function (method, url) {
             var urlParams = getUrlParams(url),
                 returnObj = getSync(recipesOverrideUrl),
@@ -441,14 +441,14 @@
 
         // Recipe type validation service
         var recipeTypeValidationOverrideUrl = 'test/data/recipeTypeValidationSuccess.json';
-        var recipeTypeValidationRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'recipe-types/validation/', 'i');
+        var recipeTypeValidationRegex = new RegExp('^' + scaleConfig.getUrlPrefix('recipe-types') + 'recipe-types/validation/', 'i');
         $httpBackend.whenPOST(recipeTypeValidationRegex).respond(function () {
             return getSync(recipeTypeValidationOverrideUrl);
         });
 
         // Recipe Type Details
         var recipeTypeDetailsOverrideUrl = 'test/data/recipe-types/recipeType1.json';
-        var recipeTypeDetailsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'recipe-types/.*/', 'i');
+        var recipeTypeDetailsRegex = new RegExp('^' + scaleConfig.getUrlPrefix('recipe-types') + 'recipe-types/.*/', 'i');
         $httpBackend.whenGET(recipeTypeDetailsRegex).respond(function (method, url) {
             // get the recipeType.id from the url
             url = url.toString();
@@ -465,7 +465,7 @@
 
         // Recipe Types service
         var recipeTypesOverrideUrl = 'test/data/recipeTypes.json';
-        var recipeTypesRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'recipe-types/', 'i');
+        var recipeTypesRegex = new RegExp('^' + scaleConfig.getUrlPrefix('recipe-types') + 'recipe-types/', 'i');
         $httpBackend.whenGET(recipeTypesRegex).respond(function (method, url) {
             var urlParams = getUrlParams(url),
                 returnObj = getSync(recipeTypesOverrideUrl),
@@ -491,7 +491,7 @@
         });
 
         // Save Recipe Type
-        var recipeTypeSaveRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'recipe-types/', 'i');
+        var recipeTypeSaveRegex = new RegExp('^' + scaleConfig.getUrlPrefix('recipe-types') + 'recipe-types/', 'i');
         $httpBackend.whenPOST(recipeTypeSaveRegex).respond(function (method, url, data) {
             var recipeJobTypes = [],
                 recipeJobTypesDetails = [],
@@ -528,7 +528,7 @@
 
         // Status service
         var statusOverrideUrl = 'test/data/status.json';
-        var statusRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'status/', 'i');
+        var statusRegex = new RegExp('^' + scaleConfig.getUrlPrefix('status') + 'status/', 'i');
         $httpBackend.whenGET(statusRegex).respond(function () {
             return getSync(statusOverrideUrl);
         });
@@ -542,7 +542,7 @@
 
         // Workspace Details
         var workspaceDetailsOverrideUrl = 'test/data/workspaces/workspace1.json';
-        var workspaceDetailsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'workspaces/.*/', 'i');
+        var workspaceDetailsRegex = new RegExp('^' + scaleConfig.getUrlPrefix('workspaces') + 'workspaces/.*/', 'i');
         $httpBackend.whenGET(workspaceDetailsRegex).respond(function (method, url) {
             // get the workspace.id from the url
             url = url.toString();
@@ -560,13 +560,13 @@
 
         // Workspaces
         var workspacesOverrideUrl = 'test/data/workspaces.json';
-        var workspacesRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'workspaces/', 'i');
+        var workspacesRegex = new RegExp('^' + scaleConfig.getUrlPrefix('workspaces') + 'workspaces/', 'i');
         $httpBackend.whenGET(workspacesRegex).respond(function () {
             return getSync(workspacesOverrideUrl);
         });
 
         // Save Workspace
-        var getReturn = function (data, id) {
+        var getWorkspaceReturn = function (data, id) {
             var workspace = JSON.parse(data);
 
             return {
@@ -584,17 +584,69 @@
                 json_config: workspace.json_config
             };
         };
-        var workspaceCreateRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'workspaces/', 'i');
+        var workspaceCreateRegex = new RegExp('^' + scaleConfig.getUrlPrefix('workspaces') + 'workspaces/', 'i');
         $httpBackend.whenPOST(workspaceCreateRegex).respond(function (method, url, data) {
-            var returnWorkspace = getReturn(data);
+            var returnWorkspace = getWorkspaceReturn(data);
             return [200, JSON.stringify(returnWorkspace), {}];
         });
         $httpBackend.whenPATCH(workspaceDetailsRegex).respond(function (method, url, data) {
             // get the workspace.id from the url
             url = url.toString();
             var id = url.substring(url.substring(0,url.lastIndexOf('/')).lastIndexOf('/')+1,url.length-1);
-            var returnWorkspace = getReturn(data, id);
+            var returnWorkspace = getWorkspaceReturn(data, id);
             return [200, JSON.stringify(returnWorkspace), {}];
+        });
+
+        // Strike Details
+        var strikeDetailsOverrideUrl = 'test/data/strikes/strike1.json';
+        var strikeDetailsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'strikes/.*/', 'i');
+        $httpBackend.whenGET(strikeDetailsRegex).respond(function (method, url) {
+            // get the strike.id from the url
+            url = url.toString();
+            var id = url.substring(url.substring(0,url.lastIndexOf('/')).lastIndexOf('/')+1,url.length-1);
+            strikeDetailsOverrideUrl = 'test/data/strikes/strike' + id + '.json';
+            var returnValue = getSync(strikeDetailsOverrideUrl);
+            if (returnValue[0] !== 200) {
+                returnValue = localStorage.getItem('strike' + id);
+                return [200, JSON.parse(returnValue), {}];
+            } else {
+                return returnValue;
+            }
+        });
+
+        // Strikes
+        var strikesOverrideUrl = 'test/data/strikes.json';
+        var strikesRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'strikes/', 'i');
+        $httpBackend.whenGET(strikesRegex).respond(function () {
+            return getSync(strikesOverrideUrl);
+        });
+
+        // Save Strike
+        var getStrikeReturn = function (data, id) {
+            var strike = JSON.parse(data);
+
+            return {
+                id: id || Math.floor(Math.random() * (10000 - 5 + 1)) + 5,
+                name: strike.name,
+                title: strike.title,
+                description: strike.description,
+                job: null,
+                created: new Date().toISOString(),
+                last_modified: new Date().toISOString(),
+                configuration: strike.configuration
+            };
+        };
+        var strikeCreateRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'strikes/', 'i');
+        $httpBackend.whenPOST(strikeCreateRegex).respond(function (method, url, data) {
+            var returnStrike = getStrikeReturn(data);
+            return [200, JSON.stringify(returnStrike), {}];
+        });
+        $httpBackend.whenPATCH(strikeDetailsRegex).respond(function (method, url, data) {
+            // get the strike.id from the url
+            url = url.toString();
+            var id = url.substring(url.substring(0,url.lastIndexOf('/')).lastIndexOf('/')+1,url.length-1);
+            var returnStrike = getStrikeReturn(data, id);
+            return [200, JSON.stringify(returnStrike), {}];
         });
 
         // For everything else, don't mock

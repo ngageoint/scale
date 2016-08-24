@@ -28,7 +28,7 @@
         return {
             getNodes: function (params) {
                 params = params || getNodesParams();
-                params.url = params.url ? params.url : scaleConfig.urls.apiPrefix + 'nodes/';
+                params.url = params.url ? params.url : scaleConfig.getUrlPrefix('nodes') + 'nodes/';
 
                 var nodesResource = $resource(params.url, params),
                     nodesPoller = pollerFactory.newPoller(nodesResource, scaleConfig.pollIntervals.nodes);
@@ -47,7 +47,7 @@
                 var d = $q.defer();
 
                 $http({
-                    url: params.url ? params.url : scaleConfig.urls.apiPrefix + 'nodes/',
+                    url: params.url ? params.url : scaleConfig.getUrlPrefix('nodes') + 'nodes/',
                     method: 'GET',
                     params: params
                 }).success(function (data) {
@@ -61,7 +61,7 @@
             },
             getNode: function (slaveId) {
                 var d = $q.defer();
-                $http.get(scaleConfig.urls.apiPrefix + 'nodes/' + slaveId + '/').success(function (data) {
+                $http.get(scaleConfig.getUrlPrefix('nodes') + 'nodes/' + slaveId + '/').success(function (data) {
                     var returnData = Node.transformer(data);
                     d.resolve(returnData);
                 }).error(function (error) {
@@ -72,7 +72,7 @@
             getNodeStatus: function (page, page_size, started, ended) {
                 var params = getNodeStatusParams(page, page_size, started, ended);
 
-                var nodeStatusResource = $resource(scaleConfig.urls.apiPrefix + 'nodes/status/', params),
+                var nodeStatusResource = $resource(scaleConfig.getUrlPrefix('nodes') + 'nodes/status/', params),
                     nodeStatusPoller = pollerFactory.newPoller(nodeStatusResource, scaleConfig.pollIntervals.nodeStatus);
 
                 return nodeStatusPoller.promise.then(null, null, function (data) {
@@ -88,7 +88,7 @@
                 var d = $q.defer();
                 var params = getNodeStatusParams(page, page_size, started, ended);
                 $http({
-                    url: scaleConfig.urls.apiPrefix + 'nodes/status/',
+                    url: scaleConfig.getUrlPrefix('nodes') + 'nodes/status/',
                     method: 'GET',
                     params: params
                 }).success(function (data) {

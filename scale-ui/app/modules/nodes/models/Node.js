@@ -34,7 +34,7 @@
                 return this.hostname;
             },
             isPaused: function () {
-                return !(!this.is_paused && !this.is_paused_errors);
+                return this.is_paused;
             }
         };
 

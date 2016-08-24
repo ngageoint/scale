@@ -1,0 +1,50 @@
+{
+    "id": 1,
+    "name": "landsat",
+    "title": "Landsat",
+    "description": "Landsat strike process",
+    "job": {
+        "id": 7,
+        "job_type": {
+            "id": 2,
+            "name": "scale-strike",
+            "version": "1.0",
+            "title": "Scale Strike",
+            "description": "Monitors a directory for incoming source files to ingest",
+            "category": "system",
+            "author_name": null,
+            "author_url": null,
+            "is_system": true,
+            "is_long_running": true,
+            "is_active": true,
+            "is_operational": true,
+            "is_paused": false,
+            "icon_code": "f0e7"
+        },
+        "job_type_rev": {
+            "id": 2
+        },
+        "event": {
+            "id": 1
+        },
+        "status": "RUNNING",
+        "priority": 10,
+        "num_exes": 1
+    },
+    "created": "2015-10-05T21:26:04.876Z",
+    "last_modified": "2015-10-05T21:26:04.876Z",
+    "configuration": {
+        "version": "1.0",
+        "workspace": "rs",
+        "monitor": {
+            "type": "dir-watcher",
+            "transfer_suffix": "my-transfer-suffix"
+        },
+        "files_to_ingest": [{
+            "filename_regex": ".*txt",
+            "data_types": [],
+            "new_workspace": "",
+            "new_file_path": ""
+        }]
+    }
+}

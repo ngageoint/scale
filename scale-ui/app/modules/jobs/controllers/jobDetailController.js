@@ -26,7 +26,7 @@
                 animation: true,
                 templateUrl: 'showLog.html',
                 scope: $scope,
-                windowClass: 'log-modal-window'
+                size: 'lg'
             });
         };
 

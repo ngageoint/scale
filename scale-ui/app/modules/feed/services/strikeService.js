@@ -1,11 +1,11 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').service('workspacesService', function ($http, $q, $resource, scaleConfig) {
+    angular.module('scaleApp').service('strikeService', function ($http, $q, $resource, scaleConfig) {
         return {
-            getWorkspaces: function () {
+            getStrikes: function () {
                 var d = $q.defer();
-                var url = scaleConfig.getUrlPrefix('workspaces') + 'workspaces/';
+                var url = scaleConfig.urls.apiPrefix + 'strikes/';
 
                 $http({
                     url: url,
@@ -18,9 +18,9 @@
                 });
                 return d.promise;
             },
-            getWorkspaceDetails: function (id) {
+            getStrikeDetails: function (id) {
                 var d = $q.defer();
-                var url = scaleConfig.getUrlPrefix('workspaces') + 'workspaces/' + id + '/';
+                var url = scaleConfig.urls.apiPrefix + 'strikes/' + id + '/';
 
                 $http({
                     url: url,
@@ -33,11 +33,11 @@
                 return d.promise;
 
             },
-            validateWorkspace: function (workspace) {
+            validateStrike: function (workspace) {
                 var d = $q.defer();
-                var cleanWorkspace = workspace.clean();
+                var cleanStrike = strike.clean();
 
-                $http.post(scaleConfig.getUrlPrefix('workspaces') + 'workspaces/validation/', cleanWorkspace).success(function (result) {
+                $http.post(scaleConfig.urls.apiPrefix + 'strikes/validation/', cleanStrike).success(function (result) {
                     d.resolve(result);
                 }).error(function(error){
                     d.reject(error);
@@ -45,19 +45,19 @@
 
                 return d.promise;
             },
-            saveWorkspace: function (workspace) {
+            saveStrike: function (strike) {
                 var d = $q.defer();
 
-                if (!workspace.id) {
-                    $http.post(scaleConfig.getUrlPrefix('workspaces') + 'workspaces/', workspace.clean()).success(function (result) {
+                if (!strike.id) {
+                    $http.post(scaleConfig.urls.apiPrefix + 'strikes/', strike.clean()).success(function (result) {
                         d.resolve(result);
                     }).error(function (error) {
                         d.reject(error);
                     });
                 } else {
-                    $http.patch(scaleConfig.getUrlPrefix('workspaces') + 'workspaces/' + workspace.id + '/', workspace.clean()).success(function (result) {
-                        workspace = result;
-                        d.resolve(workspace);
+                    $http.patch(scaleConfig.urls.apiPrefix + 'strikes/' + strike.id + '/', strike.clean()).success(function (result) {
+                        strike = result;
+                        d.resolve(strike);
                     }).error(function (error) {
                         d.reject(error);
                     });
