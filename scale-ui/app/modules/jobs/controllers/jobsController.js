@@ -138,7 +138,7 @@
                     animation: true,
                     templateUrl: 'showLog.html',
                     scope: $scope,
-                    size: 'lg'
+                    windowClass: 'log-modal-window'
                 });
             });
         };
