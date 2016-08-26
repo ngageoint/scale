@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import logging
+import os
 import ssl
 import time
 from collections import namedtuple
@@ -11,10 +12,11 @@ from botocore.client import Config
 from botocore.exceptions import ClientError
 
 import storage.settings as settings
-from storage.brokers.broker import Broker
+from storage.brokers.broker import Broker, BrokerVolume
 from storage.brokers.exceptions import InvalidBrokerConfiguration
 from storage.configuration.workspace_configuration import ValidationWarning
 from storage.exceptions import FileDoesNotExist
+from util.command import execute_command_line
 
 logger = logging.getLogger(__name__)
 
@@ -50,9 +52,21 @@ class S3Broker(Broker):
 
         with S3Client(self._credentials) as client:
             for file_download in file_downloads:
-                s3_object = client.get_object(self._bucket_name, file_download.file.file_path)
+                # If file supports partial mount and volume is configured attempt sym-link
+                if file_download.file.partial and self._volume:
+                    logger.debug('Partial S3 file accessed by mounted bucket.')
+                    path_to_download = os.path.join(volume_path, file_download.file.file_path)
 
-                self._download_file(s3_object, file_download.file, file_download.local_path)
+                    # Create symlink to the file in the host mount
+                    logger.info('Creating link %s -> %s', file_download.local_path, path_to_download)
+                    execute_command_line(['ln', '-s', path_to_download, file_download.local_path])
+                # Fall-back to default S3 file download
+                else:
+                    s3_object = client.get_object(self._bucket_name, file_download.file.file_path)
+
+                    self._download_file(s3_object, file_download.file, file_download.local_path)
+
+
 
     def load_configuration(self, config):
         """See :meth:`storage.brokers.broker.Broker.load_configuration`"""
@@ -63,6 +77,11 @@ class S3Broker(Broker):
         if 'credentials' in config:
             credentials_dict = config['credentials']
             self._credentials = S3Credentials(credentials_dict['access_key_id'], credentials_dict['secret_access_key'])
+
+        if 'host_path' in config:
+            volume = BrokerVolume(None, config['host_path'])
+            volume.host = True
+            self._volume = volume
 
     def move_files(self, volume_path, file_moves):
         """See :meth:`storage.brokers.broker.Broker.move_files`"""
@@ -105,6 +124,10 @@ class S3Broker(Broker):
             if 'secret_access_key' not in credentials_dict or not credentials_dict['secret_access_key']:
                 raise InvalidBrokerConfiguration('S3 broker requires "secret_access_key" to be populated')
             credentials = S3Credentials(credentials_dict['access_key_id'], credentials_dict['secret_access_key'])
+
+        if 'host_path' in config:
+            # TODO: Can we do some validation here to ensure path is valid?
+            pass
 
         # Check whether the bucket can actually be accessed
         with S3Client(credentials) as client:
