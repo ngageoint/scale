@@ -15,7 +15,7 @@ from storage.exceptions import NfsError
 from trigger.models import TriggerEvent
 from job.configuration.results.job_results import JobResults
 from job.configuration.results.results_manifest.results_manifest import ResultsManifest
-from job.configuration.results.exceptions import InvalidResultsManifest, ResultsManifestAndInterfaceDontMatch
+from job.configuration.results.exceptions import InvalidResultsManifest, MissingRequiredOutput
 
 JOB_RESULTS = JobResults()
 RESULTS_MANIFEST = ResultsManifest()
@@ -133,7 +133,7 @@ class TestPostJobSteps(TestCase):
         """Tests executing scale_post_steps when a missing output manifest occurs."""
 
         # Set up mocks
-        mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.get_job_interface.return_value.perform_post_steps.side_effect = ResultsManifestAndInterfaceDontMatch()
+        mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.get_job_interface.return_value.perform_post_steps.side_effect = MissingRequiredOutput()
 
         # Call method to test
         cmd = PostCommand()

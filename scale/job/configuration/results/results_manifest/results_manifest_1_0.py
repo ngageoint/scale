@@ -8,8 +8,8 @@ import logging
 
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
-from job.configuration.results.exceptions import InvalidResultsManifest,\
-    ResultsManifestAndInterfaceDontMatch
+from job.configuration.results.exceptions import InvalidResultsManifest, \
+    MissingRequiredOutput
 
 logger = logging.getLogger(__name__)
 
@@ -188,16 +188,16 @@ class ResultsManifest(object):
             for file_name, (is_multiple, is_required) in output_file_definitions.items():
                 if file_name not in file_entry_map:
                     if is_required:
-                        raise ResultsManifestAndInterfaceDontMatch
+                        raise MissingRequiredOutput
                     else:
                         continue
 
                 manifest_file_entry = file_entry_map[file_name]
                 if is_multiple and u'paths' not in manifest_file_entry:
-                    raise ResultsManifestAndInterfaceDontMatch
+                    raise MissingRequiredOutput
                 if not is_multiple and u'path' not in manifest_file_entry:
-                    raise ResultsManifestAndInterfaceDontMatch
-        except ResultsManifestAndInterfaceDontMatch as ex:
+                    raise MissingRequiredOutput
+        except MissingRequiredOutput as ex:
             msg = ('output_file_definitions did not match expected manifest\n'
                    'manifest: %s\n'
                    'output_definitions:%s\n'

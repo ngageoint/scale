@@ -10,8 +10,8 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 import job.configuration.results.results_manifest.results_manifest_1_0 as previous_manifest
-from job.configuration.results.exceptions import InvalidResultsManifest,\
-    ResultsManifestAndInterfaceDontMatch
+from job.configuration.results.exceptions import InvalidResultsManifest, \
+    MissingRequiredOutput, MissingMultipleFileOutputParameter, MissingSingleFileOutputParameter
 
 logger = logging.getLogger(__name__)
 
@@ -300,16 +300,16 @@ class ResultsManifest(object):
             for file_name, (is_multiple, is_required) in output_file_definitions.items():
                 if file_name not in file_entry_map:
                     if is_required:
-                        raise ResultsManifestAndInterfaceDontMatch
+                        raise MissingRequiredOutput
                     else:
                         continue
 
                 manifest_file_entry = file_entry_map[file_name]
                 if is_multiple and u'files' not in manifest_file_entry:
-                    raise ResultsManifestAndInterfaceDontMatch
+                    raise MissingMultipleFileOutputParameter
                 if not is_multiple and u'file' not in manifest_file_entry:
-                    raise ResultsManifestAndInterfaceDontMatch
-        except ResultsManifestAndInterfaceDontMatch as ex:
+                    raise MissingSingleFileOutputParameter
+        except MissingRequiredOutput as ex:
             msg = ('output_file_definitions did not match expected manifest\n'
                    'manifest: %s\n'
                    'output_definitions:%s\n'

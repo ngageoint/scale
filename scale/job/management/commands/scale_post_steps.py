@@ -14,7 +14,7 @@ from job.execution.cleanup import cleanup_job_exe
 from job.models import JobExecution
 from storage.exceptions import NfsError
 from util.retry import retry_database_query
-from job.configuration.results.exceptions import InvalidResultsManifest, ResultsManifestAndInterfaceDontMatch
+from job.configuration.results.exceptions import InvalidResultsManifest, MissingRequiredOutput, MissingSingleFileOutputParameter, MissingMultipleFileOutputParameter
 
 
 logger = logging.getLogger(__name__)
@@ -78,7 +78,11 @@ class Command(BaseCommand):
                 exit_code = IO_EXIT_CODE
             elif isinstance(ex, InvalidResultsManifest):
                 exit_code = IV_MF_CODE
-            elif isinstance(ex, ResultsManifestAndInterfaceDontMatch):
+            elif isinstance(ex, MissingRequiredOutput):
+                exit_code = MI_OP_CODE
+            elif isinstance(ex, MissingMultipleFileOutputParameter):
+                exit_code = MI_OP_CODE
+            elif isinstance(ex, MissingSingleFileOutputParameter):
                 exit_code = MI_OP_CODE
             sys.exit(exit_code)
 

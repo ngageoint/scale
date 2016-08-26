@@ -69,7 +69,7 @@
         "pk": null,
         "fields": {
             "name": "invalid-results-manifest",
-            "title": "Algorithm Failure",
+            "title": "Invalid Results Manifest",
             "description": "The output files from the result manifest are invalid. This could mean either duplicate output names were found, no output files were found, or both 'file' and 'files' object were found in the output_data",
             "category": "ALGORITHM",
             "is_builtin": true,
@@ -82,7 +82,7 @@
         "pk": null,
         "fields": {
             "name": "missing-required-output",
-            "title": "Algorithm Failure",
+            "title": "Missing Required Output",
             "description": "The output_data parameter is missing from the results manifest file",
             "category": "ALGORITHM",
             "is_builtin": true,
