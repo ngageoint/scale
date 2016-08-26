@@ -306,8 +306,10 @@ class ResultsManifest(object):
 
                 manifest_file_entry = file_entry_map[file_name]
                 if is_multiple and u'files' not in manifest_file_entry:
+                    logger.exception('expected multiple output files but did not find a files parameter in the result manifest')
                     raise MissingMultipleFileOutputParameter
                 if not is_multiple and u'file' not in manifest_file_entry:
+                    logger.exception('expected single file output but did not find a file parameter in the result manifest')
                     raise MissingSingleFileOutputParameter
         except MissingRequiredOutput as ex:
             msg = ('output_file_definitions did not match expected manifest\n'
