@@ -4,8 +4,8 @@
         <div class="col-xs-12 margin-bottom-md" ng-show="execution.status !== 'FAILED'">
             <span class="label {{ execution.status.toLowerCase() }}">{{ execution.status }}</span>
         </div>
-        <div class="col-xs-12">
-            <div class="panel panel-error" ng-show="execution.status === 'FAILED'">
+        <div class="col-xs-12 col-md-6">
+            <div class="panel panel-sm panel-error" ng-show="execution.status === 'FAILED'">
                 <div class="panel-heading">
                     <div class="panel-title">
                         <strong>{{ execution.error.category }} Error: {{ execution.error.title }}</strong>
