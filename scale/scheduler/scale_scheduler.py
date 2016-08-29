@@ -255,9 +255,9 @@ class ScaleScheduler(MesosScheduler):
                 if status.state == mesos_pb2.TASK_RUNNING:
                     running_job_exe.task_running(task_id, results.when)
                 elif status.state == mesos_pb2.TASK_FINISHED:
-                    running_job_exe.task_complete(results)
-                    if results.exit_code is None or not type(results.exit_code) is type(int):
+                    if results.exit_code is None:
                         results.exit_code = 0
+                    running_job_exe.task_complete(results)
                 elif status.state == mesos_pb2.TASK_LOST:
                     running_job_exe.task_fail(results, Error.objects.get_builtin_error('mesos-lost'))
                 elif status.state in [mesos_pb2.TASK_ERROR, mesos_pb2.TASK_FAILED, mesos_pb2.TASK_KILLED]:
