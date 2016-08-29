@@ -699,18 +699,25 @@ class JobExecutionSpecificLogView(RetrieveAPIView):
         elif log_id == "stderr":
             include_stdout = False
 
+        started = rest_util.parse_timestamp(request, 'started', required=False)
         since = request.META.get('HTTP_IF_MODIFIED_SINCE', '')
         if len(since) > 0:
             since = util.parse.datetime.datetime.strptime(since, "%a, %d %b %Y %X %Z")
         else:
             since = None
 
+        if since is not None and started != since:
+            logs, last_modified = job_exec.get_log_json(include_stdout, include_stderr, since)
+            if logs is None:
+                rsp = HttpResponse(status=304)
+                rsp["Last-Modified"] = last_modified.strftime("%a, %d %b %Y %X %Z")
+                return rsp
         if request.accepted_renderer.format == 'json':
-            logs, last_modified = job_exe.get_log_json(include_stdout, include_stderr, since)
+            logs, last_modified = job_exe.get_log_json(include_stdout, include_stderr, started)
         elif request.accepted_renderer.format == 'txt':
-            logs, last_modified = job_exe.get_log_text(include_stdout, include_stderr, since, False)
+            logs, last_modified = job_exe.get_log_text(include_stdout, include_stderr, started, False)
         elif request.accepted_renderer.format == 'html':
-            logs, last_modified = job_exe.get_log_text(include_stdout, include_stderr, since, True)
+            logs, last_modified = job_exe.get_log_text(include_stdout, include_stderr, started, True)
             if logs is not None:
                 logs = '<html><head><style>.stdout {} .stderr {color: red;}</style></head><body>' + logs + '</body></html>'
         else:
