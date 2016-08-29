@@ -139,6 +139,9 @@ class JobInterface(previous_interface.JobInterface):
 
         self._output_file_manifest_dict = {}  # str->bool
 
+
+        self._populate_default_values()
+
         if self.definition['version'] != SCHEMA_VERSION:
             self.convert_interface(definition)
 
@@ -146,8 +149,6 @@ class JobInterface(previous_interface.JobInterface):
             validate(definition, JOB_INTERFACE_SCHEMA)
         except ValidationError as validation_error:
             raise InvalidInterfaceDefinition(validation_error)
-
-        self._populate_default_values()
 
         self._check_param_name_uniqueness()
         self._validate_command_arguments()
@@ -171,7 +172,7 @@ class JobInterface(previous_interface.JobInterface):
         if u'input_data' in converted:
             for inputs in converted['input_data']:
                 if inputs['type'] in ('file', 'files'):
-                    # Default value should be True for partial
-                    inputs['partial'] = True
+                    # Default value should be False for partial
+                    inputs['partial'] = False
 
         return converted

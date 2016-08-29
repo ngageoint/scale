@@ -174,7 +174,8 @@ class JobInterface(object):
                 media_types = []
                 if 'media_type' in output_data and output_data['media_type']:
                     media_types.append(output_data['media_type'])
-                job_conn.add_input_file(input_name, multiple, media_types, optional)
+                # TODO: How do we want to handle down-stream partial handling? Setting to False presently
+                job_conn.add_input_file(input_name, multiple, media_types, optional, False)
 
     def add_workspace_to_data(self, job_data, workspace_id):
         """Adds the given workspace ID to the given job data for every output in this job interface
