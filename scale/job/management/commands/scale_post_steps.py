@@ -106,10 +106,12 @@ class Command(BaseCommand):
 
         job_interface = job_exe.get_job_interface()
         job_data = job_exe.job.get_job_data()
+        stdout_and_stderr = None
         try:
-            stdout_and_stderr = job_exe.get_log_text()
+            stdout_and_stderr, _last_modified = job_exe.get_log_text()
         except:
             logger.exception('Failed to retrieve job execution logs')
+        if stdout_and_stderr is None:
             stdout_and_stderr = ''
 
         with transaction.atomic():

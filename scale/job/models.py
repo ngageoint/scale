@@ -1471,15 +1471,19 @@ class JobExecution(models.Model):
         hits, last_modified = self.get_log_json(include_stdout, include_stderr, since)
         if hits is None:
             return None, last_modified
+        valid_hits = []  # Make sure hits have the required message field
+        for h in hits['hits']['hits']:
+            if 'message' in h['_source']:
+                valid_hits.append(h)
         if html:
             d = ''
-            for h in hits['hits']['hits']:
+            for h in valid_hits:
                 cls = 'stdout'
                 if h['_source']['level'] <= 3:
                     cls = 'stderr'
                 d += '<div class="%s">%s</div>\n' % (cls, django.utils.html.escape(h['_source']['message']))
             return d, last_modified
-        return '\n'.join(h['_source']['message'] for h in hits['hits']['hits']), last_modified
+        return '\n'.join(h['_source']['message'] for h in valid_hits), last_modified
 
     class Meta(object):
         """Meta information for the database"""
