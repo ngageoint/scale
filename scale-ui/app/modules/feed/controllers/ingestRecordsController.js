@@ -111,7 +111,6 @@
 
         vm.filterResults = function () {
             stateService.setIngestsParams(vm.ingestsParams);
-            vm.loading = true;
             vm.getIngests();
         };
 
@@ -198,6 +197,14 @@
                 vm.ingestsParams.ended = value.toISOString();
                 vm.filterResults();
             }
+        });
+
+        $scope.$watch('vm.searchText', function(value){
+           if(!vm.loading){
+               vm.ingestsParams.file_name = value;
+               console.log(value);
+               vm.filterResults();
+           }
         });
 
         $scope.$watchCollection('vm.stateService.getIngestsColDefs()', function (newValue, oldValue) {
