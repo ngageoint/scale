@@ -300,6 +300,9 @@ class ResultsManifest(object):
             for file_name, (is_multiple, is_required) in output_file_definitions.items():
                 if file_name not in file_entry_map:
                     if is_required:
+                        msg = ('expected file name was not found in the the file_entry_map\n'
+                               'file_name: %s')
+                        logger.exception(msg, file_name)
                         raise MissingRequiredOutput
                     else:
                         continue
