@@ -72,7 +72,7 @@ class TestJobInterfaceConvert(TestCase):
         job_interface = JobInterface.convert_interface(self.job_interface_dict)
         self.assertEqual(job_interface['version'], '1.1')
         self.assertIn('partial', job_interface['input_data'][0])
-        self.assertTrue(job_interface['input_data'][0]['partial'])
+        self.assertFalse(job_interface['input_data'][0]['partial'])
 
 
 class TestJobInterfacePostSteps(TestCase):

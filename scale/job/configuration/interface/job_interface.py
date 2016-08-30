@@ -3,12 +3,14 @@ from __future__ import unicode_literals
 
 import json
 import logging
+import os
 
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 from job.configuration.interface import job_interface_1_0 as previous_interface
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
+from job.execution.container import SCALE_JOB_EXE_INPUT_PATH
 
 
 logger = logging.getLogger(__name__)
@@ -140,7 +142,8 @@ class JobInterface(previous_interface.JobInterface):
         self._output_file_manifest_dict = {}  # str->bool
 
 
-        self._populate_default_values()
+        if 'version' not in self.definition:
+            self.definition['version'] = SCHEMA_VERSION
 
         if self.definition['version'] != SCHEMA_VERSION:
             self.convert_interface(definition)
@@ -149,6 +152,8 @@ class JobInterface(previous_interface.JobInterface):
             validate(definition, JOB_INTERFACE_SCHEMA)
         except ValidationError as validation_error:
             raise InvalidInterfaceDefinition(validation_error)
+
+        self._populate_default_values()
 
         self._check_param_name_uniqueness()
         self._validate_command_arguments()
@@ -176,3 +181,23 @@ class JobInterface(previous_interface.JobInterface):
                     inputs['partial'] = False
 
         return converted
+
+
+    def _create_retrieve_files_dict(self):
+        """creates parameter folders and returns the dict needed to call
+        :classmethod:`job.configuration.data.job_data.JobData.retrieve_files_dict`
+
+        :return: a dictionary representing the files to retrieve
+        :rtype:  dist of str->tuple with input_name->(is_multiple, input_path)
+        """
+
+        retrieve_files_dict = {}
+        for input_data in self.definition['input_data']:
+            input_name = input_data['name']
+            input_type = input_data['type']
+            if input_type in ['file', 'files']:
+                is_multiple = input_type == 'files'
+                partial = input_data['partial']
+                input_path = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name)
+                retrieve_files_dict[input_name] = (is_multiple, input_path, partial)
+        return retrieve_files_dict

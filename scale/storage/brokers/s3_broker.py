@@ -53,7 +53,7 @@ class S3Broker(Broker):
         with S3Client(self._credentials) as client:
             for file_download in file_downloads:
                 # If file supports partial mount and volume is configured attempt sym-link
-                if file_download.file.partial and self._volume:
+                if file_download.partial and self._volume:
                     logger.debug('Partial S3 file accessed by mounted bucket.')
                     path_to_download = os.path.join(volume_path, file_download.file.file_path)
 
