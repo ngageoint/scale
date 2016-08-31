@@ -125,10 +125,6 @@ class S3Broker(Broker):
                 raise InvalidBrokerConfiguration('S3 broker requires "secret_access_key" to be populated')
             credentials = S3Credentials(credentials_dict['access_key_id'], credentials_dict['secret_access_key'])
 
-        if 'host_path' in config:
-            # TODO: Can we do some validation here to ensure path is valid?
-            pass
-
         # Check whether the bucket can actually be accessed
         with S3Client(credentials) as client:
             try:
