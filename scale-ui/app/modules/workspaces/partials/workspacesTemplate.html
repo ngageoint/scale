@@ -39,14 +39,17 @@
                             <dd>{{ vm.activeWorkspace.json_config.broker.type.toUpperCase() }}</dd>
                             <dt ng-if="vm.activeWorkspace.json_config.broker.type === 'nfs'">NFS Path:</dt>
                             <dd ng-if="vm.activeWorkspace.json_config.broker.type === 'nfs'">{{ vm.activeWorkspace.json_config.broker.nfs_path }}</dd>
-                            <dt ng-if="vm.activeWorkspace.json_config.broker.type === 'host'">Host Path:</dt>
-                            <dd ng-if="vm.activeWorkspace.json_config.broker.type === 'host'">{{ vm.activeWorkspace.json_config.broker.host_path }}</dd>
+                            <dt ng-if="vm.activeWorkspace.json_config.broker.type === 'host' || vm.activeWorkspace.json_config.broker.type === 's3'">Host Path:</dt>
+                            <dd ng-if="vm.activeWorkspace.json_config.broker.type === 'host' || vm.activeWorkspace.json_config.broker.type === 's3'">{{ vm.activeWorkspace.json_config.broker.host_path }}</dd>
+                            <dt ng-if="vm.activeWorkspace.json_config.broker.type === 's3'">Region Name Override:</dt>
+                            <dd ng-if="vm.activeWorkspace.json_config.broker.type === 's3'">{{ vm.activeWorkspace.json_config.broker.region_name }}</dd>
                             <dt ng-if="vm.activeWorkspace.json_config.broker.type === 's3'">Bucket Name:</dt>
                             <dd ng-if="vm.activeWorkspace.json_config.broker.type === 's3'">{{ vm.activeWorkspace.json_config.broker.bucket_name }}</dd>
                             <dt ng-if="vm.activeWorkspace.json_config.broker.type === 's3'">Access Key ID:</dt>
                             <dd ng-if="vm.activeWorkspace.json_config.broker.type === 's3'">{{ vm.activeWorkspace.json_config.broker.credentials.access_key_id }}</dd>
                             <dt ng-if="vm.activeWorkspace.json_config.broker.type === 's3'">Secret Access Key:</dt>
                             <dd ng-if="vm.activeWorkspace.json_config.broker.type === 's3'">{{ vm.activeWorkspace.json_config.broker.credentials.secret_access_key }}</dd>
+
                         </dl>
                     </div>
                     <div ng-if="vm.mode === 'edit' || vm.mode === 'add'">
@@ -117,10 +120,14 @@
                                     <input id="nfs_path" name="nfs_path" type="text" class="form-control" placeholder="NFS Path" ng-model="vm.activeWorkspace.json_config.broker.nfs_path" required>
                                     <p ng-show="workspacesForm.nfs_path.$invalid && !workspacesForm.nfs_path.$pristine" class="help-block">NFS Path is required.</p>
                                 </div>
-                                <div class="form-group" ng-class="{ 'has-error': workspacesForm.host_path.$invalid }" ng-if="vm.activeWorkspace.json_config.broker.type === 'host'">
+                                <div class="form-group" ng-class="{ 'has-error': workspacesForm.host_path.$invalid }" ng-if="vm.activeWorkspace.json_config.broker.type === 'host' || vm.activeWorkspace.json_config.broker.type === 's3'">
                                     <label for="host_path">Host Path</label>
-                                    <input id="host_path" name="host_path" type="text" class="form-control" placeholder="Host Path" ng-model="vm.activeWorkspace.json_config.broker.host_path" required>
+                                    <input id="host_path" name="host_path" type="text" class="form-control" placeholder="Host Path" ng-model="vm.activeWorkspace.json_config.broker.host_path" ng-required="vm.activeWorkspace.json_config.broker.type === 'host'">
                                     <p ng-show="workspacesForm.host_path.$invalid && !workspacesForm.host_path.$pristine" class="help-block">Host Path is required.</p>
+                                </div>
+                                <div class="form-group" ng-if="vm.activeWorkspace.json_config.broker.type === 's3'">
+                                    <label for="region_name">Region Name Override</label>
+                                    <input id="region_name" type="text" class="form-control" placeholder="Region Name Override" ng-model="vm.activeWorkspace.json_config.broker.region_name">
                                 </div>
                                 <div class="form-group" ng-if="vm.activeWorkspace.json_config.broker.type === 's3'">
                                     <label for="bucket_name">Bucket Name</label>
