@@ -46,8 +46,8 @@ class TestScheduler(TransactionTestCase):
     def testRegistration(self, mock_thread_start, mock_initializer):
         my_scheduler, driver, master_info = self._get_registered_scheduler_driver_master()
         self.assertTrue(mock_initializer.called,'initializer should be called on registration')
-        self.assertEqual(mock_thread_start.call_count, 3,
-                        'reconciliation and job kill threads should be started (2 != %d)' % mock_thread_start.call_count)
+        self.assertEqual(mock_thread_start.call_count, 4,
+                        'reconciliation and job kill threads should be started (4 != %d)' % mock_thread_start.call_count)
 
     @patch('scheduler.scale_scheduler.ScaleScheduler._reconcile_running_jobs')
     def test_reregistration_triggers_reconciliation(self, mock_reconcile_running_jobs):
