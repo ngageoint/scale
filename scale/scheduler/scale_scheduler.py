@@ -277,7 +277,8 @@ class ScaleScheduler(MesosScheduler):
                     self._job_exe_manager.remove_job_exe(job_exe_id)
             else:
                 # Scheduler doesn't have any knowledge of this job execution
-                Queue.objects.handle_job_failure(job_exe_id, now(), Error.objects.get_builtin_error('scheduler-lost'))
+                Queue.objects.handle_job_failure(job_exe_id, now(), [],
+                                                 Error.objects.get_builtin_error('scheduler-lost'))
         except Exception:
             logger.exception('Error handling status update for job execution: %s', job_exe_id)
             # Error handling status update, add task so it can be reconciled
@@ -425,7 +426,8 @@ class ScaleScheduler(MesosScheduler):
                     task_ids.append(task.id)
             else:
                 # Fail any executions that the scheduler has lost
-                Queue.objects.handle_job_failure(job_exe.id, now(), Error.objects.get_builtin_error('scheduler-lost'))
+                Queue.objects.handle_job_failure(job_exe.id, now(), [],
+                                                 Error.objects.get_builtin_error('scheduler-lost'))
 
         # Send task IDs to reconciliation thread
         self._recon_thread.add_task_ids(task_ids)

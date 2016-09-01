@@ -25,10 +25,10 @@ DB_EXIT_CODE = 2
 DB_OP_EXIT_CODE = 3
 IO_EXIT_CODE = 4
 NFS_EXIT_CODE = 5
-EXIT_CODE_DICT = {DB_EXIT_CODE, Error.objects.get_database_error,
-                  DB_OP_EXIT_CODE, Error.objects.get_database_operation_error,
-                  IO_EXIT_CODE, Error.objects.get_filesystem_error,
-                  NFS_EXIT_CODE, Error.objects.get_nfs_error}
+EXIT_CODE_DICT = {DB_EXIT_CODE: Error.objects.get_database_error,
+                  DB_OP_EXIT_CODE: Error.objects.get_database_operation_error,
+                  IO_EXIT_CODE: Error.objects.get_filesystem_error,
+                  NFS_EXIT_CODE: Error.objects.get_nfs_error}
 
 
 class Command(BaseCommand):

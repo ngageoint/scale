@@ -2334,9 +2334,9 @@ class TaskUpdate(models.Model):
     status = models.CharField(max_length=50)
 
     timestamp = models.DateTimeField(blank=True, null=True)
-    source = models.CharField(blank=True, max_length=50)
-    reason = models.CharField(blank=True, max_length=50)
-    message = models.TextField(blank=True)
+    source = models.CharField(blank=True, max_length=50, null=True)
+    reason = models.CharField(blank=True, max_length=50, null=True)
+    message = models.TextField(blank=True, null=True)
 
     created = models.DateTimeField(auto_now_add=True)
 

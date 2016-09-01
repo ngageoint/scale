@@ -3,6 +3,7 @@ import re
 from datetime import datetime, timedelta
 
 from django.utils.timezone import utc
+from google.protobuf.internal import enum_type_wrapper
 from mesos.interface import mesos_pb2
 
 from job.execution.running.job_exe import RunningJobExecution
@@ -11,6 +12,8 @@ from job.models import TaskUpdate
 
 EPOCH = datetime.utcfromtimestamp(0).replace(tzinfo=utc)
 EXIT_CODE_PATTERN = re.compile(r'exited with status ([\-0-9]+)')
+REASON_ENUM_WRAPPER = enum_type_wrapper.EnumTypeWrapper(mesos_pb2._TASKSTATUS_REASON)
+SOURCE_ENUM_WRAPPER = enum_type_wrapper.EnumTypeWrapper(mesos_pb2._TASKSTATUS_SOURCE)
 
 
 def create_task_update_model(status):
@@ -58,8 +61,8 @@ def get_status_reason(status):
     :rtype: string
     """
 
-    if hasattr(status, 'reason') and status.reason:
-        return mesos_pb2.Reason.Name(status.reason)
+    if hasattr(status, 'reason') and status.reason is not None:
+        return REASON_ENUM_WRAPPER.Name(status.reason)
 
     return None
 
@@ -73,8 +76,8 @@ def get_status_source(status):
     :rtype: string
     """
 
-    if hasattr(status, 'source') and status.source:
-        return mesos_pb2.Source.Name(status.source)
+    if hasattr(status, 'source') and status.source is not None:
+        return SOURCE_ENUM_WRAPPER.Name(status.source)
 
     return None
 
