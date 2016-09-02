@@ -103,7 +103,9 @@ def _create_docker_task(task):
     arguments = task.command_arguments.split(" ")
     for argument in arguments:
         mesos_task.command.arguments.append(argument)
-    mesos_task.command.uris.add().value = settings.CONFIG_URI
+
+    if settings.CONFIG_URI:
+        mesos_task.command.uris.add().value = settings.CONFIG_URI
 
     mesos_task.container.docker.network = mesos_pb2.ContainerInfo.DockerInfo.Network.Value('BRIDGE')
     mesos_task.container.docker.force_pull_image = True
