@@ -25,10 +25,10 @@ DB_EXIT_CODE = 2
 DB_OP_EXIT_CODE = 3
 IO_EXIT_CODE = 4
 NFS_EXIT_CODE = 5
-EXIT_CODE_DICT = {DB_EXIT_CODE, Error.objects.get_database_error,
-                  DB_OP_EXIT_CODE, Error.objects.get_database_operation_error,
-                  IO_EXIT_CODE, Error.objects.get_filesystem_error,
-                  NFS_EXIT_CODE, Error.objects.get_nfs_error}
+EXIT_CODE_DICT = {DB_EXIT_CODE: Error.objects.get_database_error,
+                  DB_OP_EXIT_CODE: Error.objects.get_database_operation_error,
+                  IO_EXIT_CODE: Error.objects.get_filesystem_error,
+                  NFS_EXIT_CODE: Error.objects.get_nfs_error}
 
 
 class Command(BaseCommand):
@@ -106,10 +106,12 @@ class Command(BaseCommand):
 
         job_interface = job_exe.get_job_interface()
         job_data = job_exe.job.get_job_data()
+        stdout_and_stderr = None
         try:
-            stdout_and_stderr = job_exe.get_log_text()
+            stdout_and_stderr, _last_modified = job_exe.get_log_text()
         except:
             logger.exception('Failed to retrieve job execution logs')
+        if stdout_and_stderr is None:
             stdout_and_stderr = ''
 
         with transaction.atomic():
