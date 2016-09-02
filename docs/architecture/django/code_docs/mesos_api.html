@@ -517,6 +517,114 @@
 <span id="mesos-api-utils-module"></span><h2>mesos_api.utils module<a class="headerlink" href="#module-mesos_api.utils" title="Permalink to this headline">¶</a></h2>
 <p>Provides utility functions for handling Mesos</p>
 <dl class="function">
+<dt id="mesos_api.utils.create_task_update_model">
+<code class="descclassname">mesos_api.utils.</code><code class="descname">create_task_update_model</code><span class="sig-paren">(</span><em>status</em><span class="sig-paren">)</span><a class="headerlink" href="#mesos_api.utils.create_task_update_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates and returns a task update model for the given Mesos task status</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> (<code class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskStatus</span></code>) &#8211; The task status</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The task update model</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.html#job.models.TaskUpdate" title="job.models.TaskUpdate"><code class="xref py py-class docutils literal"><span class="pre">job.models.TaskUpdate</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mesos_api.utils.get_status_message">
+<code class="descclassname">mesos_api.utils.</code><code class="descname">get_status_message</code><span class="sig-paren">(</span><em>status</em><span class="sig-paren">)</span><a class="headerlink" href="#mesos_api.utils.get_status_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the message of the given Mesos task status, possibly None</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> (<code class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskStatus</span></code>) &#8211; The task status</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The task status message</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mesos_api.utils.get_status_reason">
+<code class="descclassname">mesos_api.utils.</code><code class="descname">get_status_reason</code><span class="sig-paren">(</span><em>status</em><span class="sig-paren">)</span><a class="headerlink" href="#mesos_api.utils.get_status_reason" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the reason of the given Mesos task status, possibly None</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> (<code class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskStatus</span></code>) &#8211; The task status</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The task status reason</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mesos_api.utils.get_status_source">
+<code class="descclassname">mesos_api.utils.</code><code class="descname">get_status_source</code><span class="sig-paren">(</span><em>status</em><span class="sig-paren">)</span><a class="headerlink" href="#mesos_api.utils.get_status_source" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the source of the given Mesos task status, possibly None</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> (<code class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskStatus</span></code>) &#8211; The task status</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The task status source</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mesos_api.utils.get_status_state">
+<code class="descclassname">mesos_api.utils.</code><code class="descname">get_status_state</code><span class="sig-paren">(</span><em>status</em><span class="sig-paren">)</span><a class="headerlink" href="#mesos_api.utils.get_status_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the state of the given Mesos task status, possibly None</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> (<code class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskStatus</span></code>) &#8211; The task status</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The task status state</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="mesos_api.utils.get_status_task_id">
+<code class="descclassname">mesos_api.utils.</code><code class="descname">get_status_task_id</code><span class="sig-paren">(</span><em>status</em><span class="sig-paren">)</span><a class="headerlink" href="#mesos_api.utils.get_status_task_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the task ID of the given Mesos task status</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> (<code class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskStatus</span></code>) &#8211; The task status</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The task ID</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="mesos_api.utils.get_status_timestamp">
 <code class="descclassname">mesos_api.utils.</code><code class="descname">get_status_timestamp</code><span class="sig-paren">(</span><em>status</em><span class="sig-paren">)</span><a class="headerlink" href="#mesos_api.utils.get_status_timestamp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the timestamp of the given Mesos task status, possibly None</p>
@@ -553,24 +661,6 @@
 </dd></dl>
 
 <dl class="function">
-<dt id="mesos_api.utils.status_to_string">
-<code class="descclassname">mesos_api.utils.</code><code class="descname">status_to_string</code><span class="sig-paren">(</span><em>status</em><span class="sig-paren">)</span><a class="headerlink" href="#mesos_api.utils.status_to_string" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts the given Mesos status to a string</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> (<em>int</em>) &#8211; The status</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The status as a string</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
 <dt id="mesos_api.utils.string_to_TaskStatusCode">
 <code class="descclassname">mesos_api.utils.</code><code class="descname">string_to_TaskStatusCode</code><span class="sig-paren">(</span><em>status</em><span class="sig-paren">)</span><a class="headerlink" href="#mesos_api.utils.string_to_TaskStatusCode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts the given Mesos status string to an integer</p>
@@ -578,7 +668,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> (<em>str</em>) &#8211; The status as a string</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> (<em>string</em>) &#8211; The status as a string</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The status as an integer</td>
 </tr>

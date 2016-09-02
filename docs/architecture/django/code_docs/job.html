@@ -334,6 +334,7 @@
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0016_auto_20160421_1553">job.migrations.0016_auto_20160421_1553 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0017_auto_20160426_1556">job.migrations.0017_auto_20160426_1556 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0018_auto_20160804_1402">job.migrations.0018_auto_20160804_1402 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0019_taskupdate">job.migrations.0019_taskupdate module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -1294,6 +1295,11 @@ determine any Docker parameters that might be required by this job execution&#82
 <dd><p>A placeholder class that provides a way to set the attribute on the model.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="job.models.JobExecution.taskupdate_set">
+<code class="descclassname">JobExecution.</code><code class="descname">taskupdate_set</code><a class="headerlink" href="#job.models.JobExecution.taskupdate_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="job.models.JobExecution.uses_docker">
 <code class="descclassname">JobExecution.</code><code class="descname">uses_docker</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobExecution.uses_docker" title="Permalink to this definition">¶</a></dt>
@@ -1578,45 +1584,6 @@ schedule it on, and the resources it will be given</li>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference internal" href="#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>]</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.models.JobExecutionManager.task_ended">
-<code class="descname">task_ended</code><span class="sig-paren">(</span><em>job_exe_id</em>, <em>task</em>, <em>when</em>, <em>exit_code</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobExecutionManager.task_ended" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates the given job execution to reflect that the given task has ended</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>job_exe_id</strong> (<em>int</em>) &#8211; The job execution ID</li>
-<li><strong>task</strong> (<em>string</em>) &#8211; Indicates which task, either &#8216;pre&#8217;, &#8216;job&#8217;, or &#8216;post&#8217;</li>
-<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The time that the task ended</li>
-<li><strong>exit_code</strong> (<em>int</em>) &#8211; The task exit code, possibly None</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.models.JobExecutionManager.task_started">
-<code class="descname">task_started</code><span class="sig-paren">(</span><em>job_exe_id</em>, <em>task</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobExecutionManager.task_started" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates the given job execution to reflect that the given task has started</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>job_exe_id</strong> (<em>int</em>) &#8211; The job execution ID</li>
-<li><strong>task</strong> (<em>string</em>) &#8211; Indicates which task, either &#8216;pre&#8217;, &#8216;job&#8217;, or &#8216;post&#8217;</li>
-<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The time that the task started</li>
-</ul>
 </td>
 </tr>
 </tbody>
@@ -2736,6 +2703,63 @@ populated for types of ERROR status values.</li>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="class">
+<dt id="job.models.TaskUpdate">
+<em class="property">class </em><code class="descclassname">job.models.</code><code class="descname">TaskUpdate</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.TaskUpdate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
+<p>Represents a status update received for a job execution task</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>job_exe</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The job execution that the task belongs to</li>
+<li><strong>task_id</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The task ID</li>
+<li><strong>status</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The status of the task</li>
+<li><strong>timestamp</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the status update occurred (may be None)</li>
+<li><strong>source</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; An optional source of the task status update</li>
+<li><strong>reason</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; An optional reason for the task status update</li>
+<li><strong>message</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.TextField</span></code>) &#8211; An optional message related to the task status update</li>
+<li><strong>created</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the task update was saved in the database</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="exception">
+<dt id="job.models.TaskUpdate.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#job.models.TaskUpdate.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="job.models.TaskUpdate.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descclassname">TaskUpdate.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#job.models.TaskUpdate.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.models.TaskUpdate.get_next_by_created">
+<code class="descclassname">TaskUpdate.</code><code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.TaskUpdate.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.models.TaskUpdate.get_previous_by_created">
+<code class="descclassname">TaskUpdate.</code><code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.TaskUpdate.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.models.TaskUpdate.job_exe">
+<code class="descclassname">TaskUpdate.</code><code class="descname">job_exe</code><a class="headerlink" href="#job.models.TaskUpdate.job_exe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.models.TaskUpdate.objects">
+<code class="descclassname">TaskUpdate.</code><code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#job.models.TaskUpdate.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </div>

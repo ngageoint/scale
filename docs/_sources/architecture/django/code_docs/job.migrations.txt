@@ -148,6 +148,14 @@ job.migrations.0018_auto_20160804_1402 module
     :undoc-members:
     :show-inheritance:
 
+job.migrations.0019_taskupdate module
+-------------------------------------
+
+.. automodule:: job.migrations.0019_taskupdate
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

@@ -377,6 +377,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/scheduler.status.html#scheduler.status.manager.StatusManager.add_status_update">add_status_update() (scheduler.status.manager.StatusManager method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.recon.ReconciliationThread.add_task_ids">add_task_ids() (scheduler.threads.recon.ReconciliationThread method)</a>
   </dt>
 
@@ -670,14 +674,6 @@
 
       <dd><dl>
         
-  <dt><a href="architecture/django/code_docs/job.execution.running.tasks.html#job.execution.running.tasks.job_task.JobTask.complete">(job.execution.running.tasks.job_task.JobTask method)</a>
-  </dt>
-
-        
-  <dt><a href="architecture/django/code_docs/job.execution.running.tasks.html#job.execution.running.tasks.post_task.PostTask.complete">(job.execution.running.tasks.post_task.PostTask method)</a>
-  </dt>
-
-        
   <dt><a href="architecture/django/code_docs/job.execution.running.tasks.html#job.execution.running.tasks.pre_task.PreTask.complete">(job.execution.running.tasks.pre_task.PreTask method)</a>
   </dt>
 
@@ -784,12 +780,12 @@
   <dt><a href="architecture/django/code_docs/job.configuration.configuration.html#job.configuration.configuration.job_configuration.JobConfiguration.configure_workspace_docker_params">configure_workspace_docker_params() (job.configuration.configuration.job_configuration.JobConfiguration method)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/job.execution.running.tasks.html#job.execution.running.tasks.base_task.Task.consider_general_error">consider_general_error() (job.execution.running.tasks.base_task.Task method)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.manager.OfferManager.consider_new_job_exe">consider_new_job_exe() (scheduler.offer.manager.OfferManager method)</a>
   </dt>
@@ -810,6 +806,10 @@
   </dt>
 
       </dl></dd>
+      
+  <dt><a href="architecture/django/code_docs/scheduler.status.html#scheduler.status.manager.StatusManager.COUNT_WARNING_THRESHOLD">COUNT_WARNING_THRESHOLD (scheduler.status.manager.StatusManager attribute)</a>
+  </dt>
+
       
   <dt><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.countries">countries (storage.models.ScaleFile attribute)</a>
   </dt>
@@ -1045,6 +1045,10 @@
 
       </dl></dd>
       
+  <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.utils.create_task_update_model">create_task_update_model() (in module mesos_api.utils)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/trigger.test.html#trigger.test.utils.create_trigger_event">create_trigger_event() (in module trigger.test.utils)</a>
   </dt>
 
@@ -1269,6 +1273,10 @@
 
         
   <dt><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0018_auto_20160804_1402.Migration.dependencies">(job.migrations.0018_auto_20160804_1402.Migration attribute)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0019_taskupdate.Migration.dependencies">(job.migrations.0019_taskupdate.Migration attribute)</a>
   </dt>
 
         
@@ -2604,8 +2612,6 @@
   </dt>
 
       </dl></dd>
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/metrics.html#metrics.registry.get_metrics_type">get_metrics_type() (in module metrics.registry)</a>
   </dt>
@@ -2632,6 +2638,8 @@
   <dt><a href="architecture/django/code_docs/metrics.html#metrics.registry.get_metrics_types">get_metrics_types() (in module metrics.registry)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/error.html#error.handlers.DatabaseLogHandler.get_model">get_model() (error.handlers.DatabaseLogHandler method)</a>
   </dt>
@@ -2689,6 +2697,10 @@
 
         
   <dt><a href="architecture/django/code_docs/job.html#job.models.JobTypeRevision.get_next_by_created">(job.models.JobTypeRevision method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/job.html#job.models.TaskUpdate.get_next_by_created">(job.models.TaskUpdate method)</a>
   </dt>
 
         
@@ -2957,6 +2969,10 @@
 
         
   <dt><a href="architecture/django/code_docs/job.html#job.models.JobTypeRevision.get_previous_by_created">(job.models.JobTypeRevision method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/job.html#job.models.TaskUpdate.get_previous_by_created">(job.models.TaskUpdate method)</a>
   </dt>
 
         
@@ -3301,6 +3317,26 @@
 
       </dl></dd>
       
+  <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.utils.get_status_message">get_status_message() (in module mesos_api.utils)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.utils.get_status_reason">get_status_reason() (in module mesos_api.utils)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.utils.get_status_source">get_status_source() (in module mesos_api.utils)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.utils.get_status_state">get_status_state() (in module mesos_api.utils)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.utils.get_status_task_id">get_status_task_id() (in module mesos_api.utils)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.utils.get_status_timestamp">get_status_timestamp() (in module mesos_api.utils)</a>
   </dt>
 
@@ -3508,14 +3544,22 @@
   <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.api.HardwareResources">HardwareResources (class in mesos_api.api)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.node.NodeOffers.has_accepted_job_exes">has_accepted_job_exes() (scheduler.offer.node.NodeOffers method)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="architecture/django/code_docs/job.execution.running.tasks.html#job.execution.running.tasks.base_task.Task.has_ended">has_ended (job.execution.running.tasks.base_task.Task attribute)</a>
+  </dt>
+
       
   <dt><a href="architecture/django/code_docs/util.html#util.rest.has_params">has_params() (in module util.rest)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/job.execution.running.tasks.html#job.execution.running.tasks.base_task.Task.has_started">has_started (job.execution.running.tasks.base_task.Task attribute)</a>
   </dt>
 
       
@@ -3846,12 +3890,12 @@
   <dt><a href="architecture/django/code_docs/ingest.html#module-ingest.urls">ingest.urls (module)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/ingest.html#module-ingest.views">ingest.views (module)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.Strike.ingest_set">ingest_set (ingest.models.Strike attribute)</a>
   </dt>
@@ -4106,10 +4150,6 @@
 
       
   <dt><a href="architecture/django/code_docs/job.html#job.models.Job.is_ready_to_requeue">is_ready_to_requeue (job.models.Job attribute)</a>
-  </dt>
-
-      
-  <dt><a href="architecture/django/code_docs/job.execution.running.tasks.html#job.execution.running.tasks.base_task.Task.is_running">is_running (job.execution.running.tasks.base_task.Task attribute)</a>
   </dt>
 
       
@@ -4453,6 +4493,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/job.migrations.html#module-job.migrations.0019_taskupdate">job.migrations.0019_taskupdate (module)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/job.html#module-job.models">job.models (module)</a>
   </dt>
 
@@ -4595,10 +4639,14 @@
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="architecture/django/code_docs/product.html#product.models.FileAncestryLink.job_exe">job_exe (product.models.FileAncestryLink attribute)</a>
+  <dt><a href="architecture/django/code_docs/job.html#job.models.TaskUpdate.job_exe">job_exe (job.models.TaskUpdate attribute)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/product.html#product.models.FileAncestryLink.job_exe">(product.models.FileAncestryLink attribute)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/product.html#product.models.ProductFile.job_exe">(product.models.ProductFile attribute)</a>
   </dt>
@@ -5379,6 +5427,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/scheduler.status.html#scheduler.status.manager.StatusManager.MAX_BATCH_SIZE">MAX_BATCH_SIZE (scheduler.status.manager.StatusManager attribute)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.schedule.SchedulingThread.MAX_NEW_JOB_EXES">MAX_NEW_JOB_EXES (scheduler.threads.schedule.SchedulingThread attribute)</a>
   </dt>
 
@@ -5821,6 +5873,10 @@
 
         
   <dt><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0018_auto_20160804_1402.Migration">(class in job.migrations.0018_auto_20160804_1402)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0019_taskupdate.Migration">(class in job.migrations.0019_taskupdate)</a>
   </dt>
 
         
@@ -6548,6 +6604,10 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/job.html#job.models.TaskUpdate.objects">(job.models.TaskUpdate attribute)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsError.objects">(metrics.models.MetricsError attribute)</a>
   </dt>
 
@@ -6749,6 +6809,10 @@
 
         
   <dt><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0018_auto_20160804_1402.Migration.operations">(job.migrations.0018_auto_20160804_1402.Migration attribute)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0019_taskupdate.Migration.operations">(job.migrations.0019_taskupdate.Migration attribute)</a>
   </dt>
 
         
@@ -7167,6 +7231,24 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/job.execution.running.tasks.html#job.execution.running.tasks.base_task.Task.populate_job_exe_model">populate_job_exe_model() (job.execution.running.tasks.base_task.Task method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/job.execution.running.tasks.html#job.execution.running.tasks.job_task.JobTask.populate_job_exe_model">(job.execution.running.tasks.job_task.JobTask method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/job.execution.running.tasks.html#job.execution.running.tasks.post_task.PostTask.populate_job_exe_model">(job.execution.running.tasks.post_task.PostTask method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/job.execution.running.tasks.html#job.execution.running.tasks.pre_task.PreTask.populate_job_exe_model">(job.execution.running.tasks.pre_task.PreTask method)</a>
+  </dt>
+
+      </dl></dd>
+      
   <dt><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0004_auto_20160711_1058.Migration.populate_new_workspace">populate_new_workspace() (ingest.migrations.0004_auto_20160711_1058.Migration method)</a>
   </dt>
 
@@ -7526,6 +7608,10 @@
 
       
   <dt><a href="architecture/django/code_docs/product.html#product.models.ProductFileManager.publish_products">publish_products() (product.models.ProductFileManager method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/scheduler.status.html#scheduler.status.manager.StatusManager.push_to_database">push_to_database() (scheduler.status.manager.StatusManager method)</a>
   </dt>
 
   </dl></td>
@@ -8264,12 +8350,12 @@
   <dt><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeJob">RecipeJob (class in recipe.models)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeJob.DoesNotExist">RecipeJob.DoesNotExist</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeJob.MultipleObjectsReturned">RecipeJob.MultipleObjectsReturned</a>
   </dt>
@@ -8533,10 +8619,14 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/job.html#job.models.Job.results">results (job.models.Job attribute)</a>
+  <dt><a href="architecture/django/code_docs/job.execution.running.tasks.html#job.execution.running.tasks.base_task.Task.results">results (job.execution.running.tasks.base_task.Task attribute)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/job.html#job.models.Job.results">(job.models.Job attribute)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/job.html#job.models.JobExecution.results">(job.models.JobExecution attribute)</a>
   </dt>
@@ -8647,6 +8737,10 @@
   <dt><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.schedule.SchedulingThread.run">(scheduler.threads.schedule.SchedulingThread method)</a>
   </dt>
 
+        
+  <dt><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.status.StatusUpdateThread.run">(scheduler.threads.status.StatusUpdateThread method)</a>
+  </dt>
+
       </dl></dd>
       
   <dt><a href="architecture/django/code_docs/scheduler.management.commands.html#scheduler.management.commands.scale_scheduler.Command.run_scheduler">run_scheduler() (scheduler.management.commands.scale_scheduler.Command method)</a>
@@ -8656,24 +8750,6 @@
   <dt><a href="architecture/django/code_docs/shared_resource.html#shared_resource.models.SharedResourceManager.runnable_job_types">runnable_job_types() (shared_resource.models.SharedResourceManager method)</a>
   </dt>
 
-      
-  <dt><a href="architecture/django/code_docs/job.execution.running.tasks.html#job.execution.running.tasks.base_task.Task.running">running() (job.execution.running.tasks.base_task.Task method)</a>
-  </dt>
-
-      <dd><dl>
-        
-  <dt><a href="architecture/django/code_docs/job.execution.running.tasks.html#job.execution.running.tasks.job_task.JobTask.running">(job.execution.running.tasks.job_task.JobTask method)</a>
-  </dt>
-
-        
-  <dt><a href="architecture/django/code_docs/job.execution.running.tasks.html#job.execution.running.tasks.post_task.PostTask.running">(job.execution.running.tasks.post_task.PostTask method)</a>
-  </dt>
-
-        
-  <dt><a href="architecture/django/code_docs/job.execution.running.tasks.html#job.execution.running.tasks.pre_task.PreTask.running">(job.execution.running.tasks.pre_task.PreTask method)</a>
-  </dt>
-
-      </dl></dd>
       
   <dt><a href="architecture/django/code_docs/job.execution.running.html#job.execution.running.job_exe.RunningJobExecution">RunningJobExecution (class in job.execution.running.job_exe)</a>
   </dt>
@@ -8887,6 +8963,14 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/scheduler.status.html#module-scheduler.status">scheduler.status (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/scheduler.status.html#module-scheduler.status.manager">scheduler.status.manager (module)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/scheduler.sync.html#module-scheduler.sync">scheduler.sync (module)</a>
   </dt>
 
@@ -8976,6 +9060,10 @@
 
       
   <dt><a href="architecture/django/code_docs/scheduler.threads.html#module-scheduler.threads.schedule">scheduler.threads.schedule (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/scheduler.threads.html#module-scheduler.threads.status">scheduler.threads.status (module)</a>
   </dt>
 
       
@@ -10117,6 +10205,10 @@
   <dt><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.schedule.SchedulingThread.shutdown">(scheduler.threads.schedule.SchedulingThread method)</a>
   </dt>
 
+        
+  <dt><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.status.StatusUpdateThread.shutdown">(scheduler.threads.status.StatusUpdateThread method)</a>
+  </dt>
+
       </dl></dd>
       
   <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.api.SlaveInfo">SlaveInfo (class in mesos_api.api)</a>
@@ -10321,7 +10413,15 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/job.execution.running.tasks.html#job.execution.running.tasks.base_task.Task.start">start() (job.execution.running.tasks.base_task.Task method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/job.execution.running.html#job.execution.running.job_exe.RunningJobExecution.start_next_task">start_next_task() (job.execution.running.job_exe.RunningJobExecution method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/job.execution.running.tasks.html#job.execution.running.tasks.base_task.Task.started">started (job.execution.running.tasks.base_task.Task attribute)</a>
   </dt>
 
       
@@ -10335,15 +10435,19 @@
 
       </dl></dd>
       
-  <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.utils.status_to_string">status_to_string() (in module mesos_api.utils)</a>
-  </dt>
-
-      
   <dt><a href="architecture/django/code_docs/job.configuration.data.html#job.configuration.data.exceptions.StatusError">StatusError</a>
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/scheduler.status.html#scheduler.status.manager.StatusManager">StatusManager (class in scheduler.status.manager)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/scheduler.html#scheduler.scale_scheduler.ScaleScheduler.statusUpdate">statusUpdate() (scheduler.scale_scheduler.ScaleScheduler method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.status.StatusUpdateThread">StatusUpdateThread (class in scheduler.threads.status)</a>
   </dt>
 
       
@@ -10709,10 +10813,6 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/job.html#job.models.JobExecutionManager.task_ended">task_ended() (job.models.JobExecutionManager method)</a>
-  </dt>
-
-      
   <dt><a href="architecture/django/code_docs/job.execution.running.html#job.execution.running.job_exe.RunningJobExecution.task_fail">task_fail() (job.execution.running.job_exe.RunningJobExecution method)</a>
   </dt>
 
@@ -10731,15 +10831,27 @@
 
       </dl></dd>
       
-  <dt><a href="architecture/django/code_docs/job.execution.running.html#job.execution.running.job_exe.RunningJobExecution.task_running">task_running() (job.execution.running.job_exe.RunningJobExecution method)</a>
-  </dt>
-
-      
-  <dt><a href="architecture/django/code_docs/job.html#job.models.JobExecutionManager.task_started">task_started() (job.models.JobExecutionManager method)</a>
+  <dt><a href="architecture/django/code_docs/job.execution.running.html#job.execution.running.job_exe.RunningJobExecution.task_start">task_start() (job.execution.running.job_exe.RunningJobExecution method)</a>
   </dt>
 
       
   <dt><a href="architecture/django/code_docs/job.execution.running.tasks.html#job.execution.running.tasks.results.TaskResults">TaskResults (class in job.execution.running.tasks.results)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/job.html#job.models.TaskUpdate">TaskUpdate (class in job.models)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/job.html#job.models.TaskUpdate.DoesNotExist">TaskUpdate.DoesNotExist</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/job.html#job.models.TaskUpdate.MultipleObjectsReturned">TaskUpdate.MultipleObjectsReturned</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/job.html#job.models.JobExecution.taskupdate_set">taskupdate_set (job.models.JobExecution attribute)</a>
   </dt>
 
       
@@ -13326,12 +13438,12 @@
   <dt><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_optional">test_parse_int_optional() (util.test.test_rest.TestRest method)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_post">test_parse_int_post() (util.test.test_rest.TestRest method)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_zero">test_parse_int_zero() (util.test.test_rest.TestRest method)</a>
   </dt>
@@ -15619,6 +15731,10 @@
       <dd><dl>
         
   <dt><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.recon.ReconciliationThread.THROTTLE">(scheduler.threads.recon.ReconciliationThread attribute)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.status.StatusUpdateThread.THROTTLE">(scheduler.threads.status.StatusUpdateThread attribute)</a>
   </dt>
 
       </dl></dd>

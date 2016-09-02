@@ -1,0 +1,22 @@
+scheduler.status package
+========================
+
+Submodules
+----------
+
+scheduler.status.manager module
+-------------------------------
+
+.. automodule:: scheduler.status.manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: scheduler.status
+    :members:
+    :undoc-members:
+    :show-inheritance:

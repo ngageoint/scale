@@ -10,6 +10,7 @@ Subpackages
     scheduler.management
     scheduler.migrations
     scheduler.offer
+    scheduler.status
     scheduler.sync
     scheduler.test
     scheduler.threads
