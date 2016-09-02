@@ -25,7 +25,9 @@ class Task(object):
         """
 
         self._task_id = task_id
-        self._task_name = 'Scale %s %s (%s)' % (job_exe.job.job_type.title, job_exe.job.job_type.version, task_id)
+        self._task_name = '%s %s' % (job_exe.job.job_type.title, job_exe.job.job_type.version)
+        if not job_exe.is_system:
+            self._task_name = 'Scale %s' % self._task_name
         self._has_started = False
         self._started = None
         self._has_ended = False
