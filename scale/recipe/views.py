@@ -292,12 +292,12 @@ class RecipeDetailsView(RetrieveAPIView):
     serializer_class = RecipeDetailsSerializer
 
     def retrieve(self, request, recipe_id):
-        """Retrieves the details for a recipe type and return them in JSON form
+        """Retrieves the details for a recipe and returns it in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
-        :param id: The id of the recipe type
-        :type id: int encoded as a str
+        :param recipe_id: The id of the recipe
+        :type recipe_id: int encoded as a str
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
@@ -307,4 +307,33 @@ class RecipeDetailsView(RetrieveAPIView):
             raise Http404
 
         serializer = self.get_serializer(recipe)
+        return Response(serializer.data)
+
+
+class RecipeReprocessView(APIView):
+    """This view is the endpoint for scheduling a reprocess of a recipe"""
+    queryset = Recipe.objects.all()
+    serializer_class = RecipeDetailsSerializer
+
+    def post(self, request, recipe_id):
+        """Schedules a recipe for reprocessing and returns it in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param recipe_id: The id of the recipe
+        :type recipe_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        job_names = rest_util.parse_string_list(request, 'job_name', required=False)
+        all_jobs = rest_util.parse_bool(request, 'all_jobs', required=False)
+
+        try:
+            new_recipe = Recipe.objects.reprocess_recipe(recipe_id, job_names, all_jobs)
+            new_recipe = Recipe.objects.get_details(new_recipe.id)
+        except Recipe.DoesNotExist:
+            raise Http404
+
+        serializer = self.get_serializer(new_recipe)
         return Response(serializer.data)

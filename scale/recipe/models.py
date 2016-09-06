@@ -8,6 +8,7 @@ from django.db import models, transaction
 from job.models import Job, JobType
 from recipe.configuration.data.recipe_data import RecipeData
 from recipe.configuration.definition.recipe_definition import RecipeDefinition
+from recipe.handlers.graph_delta import RecipeGraphDelta
 from recipe.handlers.handler import RecipeHandler
 from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
 from storage.models import ScaleFile
@@ -323,6 +324,55 @@ class RecipeManager(models.Manager):
         jobs = jobs.select_related('job', 'job__job_type', 'job__event', 'job__error')
         recipe.jobs = jobs
         return recipe
+
+    @transaction.atomic
+    def reprocess_recipe(self, recipe_id, job_names, all_jobs=False):
+        """Schedules an existing recipe for re-processing. All requested jobs, jobs that have changed in the latest
+        revision, and any of their dependent jobs will be re-processed. All database changes occur in an atomic
+        transaction.
+
+        :param recipe_id: The identifier of the recipe to re-process.
+        :type recipe_id: int
+        :param job_names: A list of job names from the recipe that should be forced to re-process even if the latest
+            recipe revision left them unchanged. If none are passed, then only jobs that changed are scheduled.
+        :type job_names: [string]
+        :param all_jobs: Indicates all jobs should be forced to re-process even if the latest recipe revision left them
+            unchanged. This is a convenience for passing all the individual names in the job_names parameter and this
+            parameter will override any values passed there.
+        :type all_jobs: bool
+        :returns: The new recipe that was created for re-processing.
+        :rtype: :class:`recipe.models.Recipe`
+        """
+
+        # Determine the old recipe graph
+        prev_recipe = Recipe.objects.select_related('event', 'recipe_type').get(pk=recipe_id)
+        prev_graph = prev_recipe.get_recipe_definition().get_graph()
+
+        # Populate the list of all job names in the recipe as a shortcut
+        if all_jobs:
+            job_names = prev_graph.get_topological_order()
+
+        # Determine the current recipe graph
+        current_revision = RecipeTypeRevision.objects.filter(
+            recipe_type=prev_recipe.recipe_type
+        ).order_by(['-revision_num'])[0]
+        current_graph = current_revision.get_recipe_definition().get_graph()
+
+        # Compute the job differences between recipe revisions including forced ones
+        graph_delta = RecipeGraphDelta(prev_graph, current_graph)
+        for job_name in job_names:
+            graph_delta.reprocess_identical_node(job_name)
+        changed_nodes = graph_delta.get_changed_nodes()
+
+        # Get a lock on old jobs that will be superseded
+        prev_jobs = RecipeJob.objects.select_related('job').select_for_update().filter(
+            recipe=prev_recipe, job_name__in=changed_nodes.values())
+        prev_jobs_dict = {r.job_name: r.job for r in prev_jobs}
+
+        # Create the new recipe while superseding the old one
+        handler = Recipe.objects.create_recipe(current_revision.recipe_type, prev_recipe.event,
+                                               prev_recipe.get_recipe_data(), prev_recipe, graph_delta, prev_jobs_dict)
+        return handler.recipe
 
     def _get_recipe_handlers(self, recipe_ids):
         """Returns the handlers for the given recipe IDs. If a given recipe ID is not valid it will not be included in
