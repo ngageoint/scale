@@ -5,11 +5,10 @@ import logging
 import os
 import ssl
 import time
-from collections import namedtuple
-
 from boto3.session import Session
 from botocore.client import Config
 from botocore.exceptions import ClientError
+from collections import namedtuple
 
 import storage.settings as settings
 from storage.brokers.broker import Broker, BrokerVolume
@@ -19,8 +18,6 @@ from storage.exceptions import FileDoesNotExist
 from util.command import execute_command_line
 
 logger = logging.getLogger(__name__)
-
-S3Credentials = namedtuple('S3Credentials', ['access_key_id', 'secret_access_key'])
 
 
 class S3Broker(Broker):
@@ -76,9 +73,7 @@ class S3Broker(Broker):
         self._region_name = getattr(config, 'region_name', None)
 
         # TODO Change credentials to use an encrypted store key reference
-        if 'credentials' in config:
-            credentials_dict = config['credentials']
-            self._credentials = S3Credentials(credentials_dict['access_key_id'], credentials_dict['secret_access_key'])
+        self._credentials = instantiate_credentials_from_config(config)
 
         if 'host_path' in config:
             volume = BrokerVolume(None, config['host_path'])
@@ -117,18 +112,15 @@ class S3Broker(Broker):
         warnings = []
         if 'bucket_name' not in config or not config['bucket_name']:
             raise InvalidBrokerConfiguration('S3 broker requires "bucket_name" to be populated')
+        region_name = getattr(config, 'region_name', None)
 
-        credentials = None
-        if 'credentials' in config and config['credentials']:
-            credentials_dict = config['credentials']
-            if 'access_key_id' not in credentials_dict or not credentials_dict['access_key_id']:
-                raise InvalidBrokerConfiguration('S3 broker requires "access_key_id" to be populated')
-            if 'secret_access_key' not in credentials_dict or not credentials_dict['secret_access_key']:
-                raise InvalidBrokerConfiguration('S3 broker requires "secret_access_key" to be populated')
-            credentials = S3Credentials(credentials_dict['access_key_id'], credentials_dict['secret_access_key'])
+        try:
+            credentials = instantiate_credentials_from_config(config)
+        except InvalidAWSConfiguration, ex:
+            raise InvalidBrokerConfiguration('S3 broker %s' % ex)
 
         # Check whether the bucket can actually be accessed
-        with S3Client(credentials, self._region_name) as client:
+        with S3Client(credentials, region_name) as client:
             try:
                 client.get_bucket(config['bucket_name'])
             except ClientError:
@@ -256,91 +248,3 @@ class S3Broker(Broker):
                     raise
                 time.sleep(settings.S3_RETRY_DELAY * attempt)
                 logger.exception('Retrying S3 upload attempt: %i', attempt + 1)
-
-
-class S3Client(object):
-    """Manages automatically creating and destroying clients to the S3 service."""
-
-    def __init__(self, credentials=None, region_name=None):
-        """Constructor
-
-        :param credentials: Authentication values needed to access S3 storage. If no credentials are passed, then IAM
-            role-based access is assumed.
-        :type credentials: :class:`storage.brokers.s3_broker.S3Credentials`
-        :param region_name: The AWS region the S3 bucket resides in.
-        :type region_name: string
-        """
-
-        self.credentials = credentials
-        self.region_name = region_name
-        self._client = None
-
-    def __enter__(self):
-        """Callback handles creating a new client for S3 access."""
-
-        logger.debug('Setting up S3 client...')
-        session_args = {
-            'region_name': settings.S3_REGION,
-        }
-        if self.credentials:
-            session_args['aws_access_key_id'] = self.credentials.access_key_id
-            session_args['aws_secret_access_key'] = self.credentials.secret_access_key
-        if self.region_name:
-            session_args['region_name'] = self.region_name
-        self._session = Session(**session_args)
-
-        s3_args = {
-            'addressing_style': settings.S3_ADDRESSING_STYLE,
-        }
-        self._client = self._session.client('s3', config=Config(s3=s3_args))
-        self._resource = self._session.resource('s3', config=Config(s3=s3_args))
-        return self
-
-    def __exit__(self, type, value, traceback):
-        """Callback handles destroying an existing client to S3."""
-        pass
-
-    def get_bucket(self, bucket_name, validate=True):
-        """Gets a reference to an S3 bucket with the given identifier.
-
-        :param bucket_name: The unique name of the bucket to retrieve.
-        :type bucket_name: string
-        :param validate: Whether to perform a request that verifies the bucket actually exists.
-        :type validate: bool
-        :returns: The bucket object for the given name.
-        :rtype: :class:`boto3.s3.Bucket`
-
-        :raises :class:`botocore.exceptions.ClientError`: If the bucket fails to validate.
-        """
-
-        logger.debug('Accessing S3 bucket: %s', bucket_name)
-        if validate:
-            self._client.head_bucket(Bucket=bucket_name)
-        return self._resource.Bucket(bucket_name)
-
-    def get_object(self, bucket_name, key_name, validate=True):
-        """Gets a reference to an S3 object with the given identifier.
-
-        :param bucket_name: The unique name of the bucket to retrieve.
-        :type bucket_name: string
-        :param key_name: The unique name of the object to retrieve that is associated with a file.
-        :type key_name: string
-        :param validate: Whether to perform a request that verifies the object actually exists.
-        :type validate: bool
-        :returns: The S3 object for the given name.
-        :rtype: :class:`boto3.s3.Object`
-
-        :raises :class:`botocore.exceptions.ClientError`: If the request is invalid.
-        :raises :class:`storage.exceptions.FileDoesNotExist`: If the file is not found in the bucket.
-        """
-        s3_object = self._resource.Object(bucket_name, key_name)
-
-        try:
-            if validate:
-                s3_object.get()
-        except ClientError as err:
-            error_code = err.response['ResponseMetadata']['HTTPStatusCode']
-            if error_code == 404:
-                raise FileDoesNotExist('Unable to access remote file: %s %s' % (bucket_name, key_name))
-            raise
-        return s3_object

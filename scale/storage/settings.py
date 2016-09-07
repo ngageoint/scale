@@ -7,7 +7,6 @@ S3_STORAGE_CLASS = getattr(settings, 'S3_STORAGE_CLASS', 'STANDARD')  # (STANDAR
 S3_SERVER_SIDE_ENCRYPTION = getattr(settings, 'S3_SERVER_SIDE_ENCRYPTION', None)  # (None, AES256)
 
 # Defined to allow local mock S3 service
-S3_REGION = getattr(settings, 'S3_REGION', None)  # (us-east-1, us-west-1, us-west-2)
 S3_ADDRESSING_STYLE = getattr(settings, 'S3_ADDRESSING_STYLE', 'auto')
 
 # Max number of retries for recoverable download errors
