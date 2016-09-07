@@ -9,7 +9,8 @@ from mock import MagicMock, Mock, call, mock_open, patch
 import storage.test.utils as storage_test_utils
 from storage.brokers.broker import FileDownload, FileMove, FileUpload
 from storage.brokers.exceptions import InvalidBrokerConfiguration
-from storage.brokers.s3_broker import S3Broker, S3Client
+from storage.brokers.s3_broker import S3Broker
+from util.aws import S3Client
 
 
 class TestS3Broker(TestCase):
@@ -28,7 +29,7 @@ class TestS3Broker(TestCase):
             },
         })
 
-    @patch('storage.brokers.s3_broker.S3Client')
+    @patch('util.aws.S3Client')
     def test_delete_files(self, mock_client_class):
         """Tests deleting files successfully"""
 
@@ -55,7 +56,7 @@ class TestS3Broker(TestCase):
         self.assertTrue(file_2.is_deleted)
         self.assertIsNotNone(file_2.deleted)
 
-    @patch('storage.brokers.s3_broker.S3Client')
+    @patch('util.aws.S3Client')
     def test_download_files(self, mock_client_class):
         """Tests downloading files successfully"""
 
@@ -86,7 +87,7 @@ class TestS3Broker(TestCase):
         self.assertTrue(s3_object_1.download_file.called)
         self.assertTrue(s3_object_2.download_file.called)
 
-    @patch('storage.brokers.s3_broker.S3Client')
+    @patch('util.aws.S3Client')
     # Patching in s3_broker as opposed to util.commmand because patch is bypassed on function from import
     @patch('storage.brokers.s3_broker.execute_command_line')
     def test_host_link_files(self, mock_execute, mock_client_class):
@@ -135,7 +136,7 @@ class TestS3Broker(TestCase):
         self.assertEqual(broker._credentials.access_key_id, 'ABC')
         self.assertEqual(broker._credentials.secret_access_key, '123')
 
-    @patch('storage.brokers.s3_broker.S3Client')
+    @patch('util.aws.S3Client')
     def test_move_files(self, mock_client_class):
         """Tests moving files successfully"""
 
@@ -170,7 +171,7 @@ class TestS3Broker(TestCase):
         self.assertEqual(file_1.file_path, new_workspace_path_1)
         self.assertEqual(file_2.file_path, new_workspace_path_2)
 
-    @patch('storage.brokers.s3_broker.S3Client')
+    @patch('util.aws.S3Client')
     def test_upload_files(self, mock_client_class):
         """Tests uploading files successfully"""
 

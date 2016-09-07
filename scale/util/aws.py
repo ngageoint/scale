@@ -1,6 +1,15 @@
 """Utility functions for testing AWS credentials and access to required resources"""
+import logging
+from collections import namedtuple
 
-from util.exceptions import InvalidAWSCredentials
+from boto3 import Session
+from botocore.config import Config
+from botocore.exceptions import ClientError
+from django.conf import settings
+
+from util.exceptions import InvalidAWSCredentials, QueueNotFound, FileDoesNotExist
+
+logger = logging.getLogger(__name__)
 
 AWSCredentials = namedtuple('AWSCredentials', ['access_key_id', 'secret_access_key'])
 
@@ -32,6 +41,8 @@ class AWSClient(object):
         """Callback handles creating a new client for AWS access."""
 
         logger.debug('Setting up AWS client...')
+
+        session_args = {}
         if self.credentials:
             session_args['aws_access_key_id'] = self.credentials.access_key_id
             session_args['aws_secret_access_key'] = self.credentials.secret_access_key
@@ -115,7 +126,7 @@ class S3Client(AWSClient):
         :param region_name: The AWS region the resource resides in.
         :type region_name: string
         """
-        config = Config(s3={'addressing_style': settings.S3_ADDRESSING_STYLE})
+        config = Config(s3={'addressing_style': getattr(settings, 'S3_ADDRESSING_STYLE', 'auto')})
         super(S3Client, self).__init__('s3', config, credentials, region_name)
 
     def get_bucket(self, bucket_name, validate=True):

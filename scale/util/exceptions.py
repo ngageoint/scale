@@ -1,8 +1,9 @@
 """Defines utility exceptions"""
 
 
-class RollbackTransaction(Exception):
-    """Exception that can be thrown and swallowed to explicitly rollback a transaction"""
+class FileDoesNotExist(Exception):
+    """Exception indicating an attempt was made to access a file that no longer exists
+    """
 
     pass
 
@@ -15,5 +16,11 @@ class InvalidAWSCredentials(Exception):
 
 class QueueNotFound(Exception):
     """Exception indicating AWS SQS queue could not be found by name"""
+
+    pass
+
+
+class RollbackTransaction(Exception):
+    """Exception that can be thrown and swallowed to explicitly rollback a transaction"""
 
     pass

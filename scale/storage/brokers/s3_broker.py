@@ -5,16 +5,15 @@ import logging
 import os
 import ssl
 import time
-from boto3.session import Session
-from botocore.client import Config
+
 from botocore.exceptions import ClientError
-from collections import namedtuple
 
 import storage.settings as settings
 from storage.brokers.broker import Broker, BrokerVolume
 from storage.brokers.exceptions import InvalidBrokerConfiguration
 from storage.configuration.workspace_configuration import ValidationWarning
-from storage.exceptions import FileDoesNotExist
+from util.aws import S3Client, AWSClient
+
 from util.command import execute_command_line
 
 logger = logging.getLogger(__name__)
@@ -73,7 +72,7 @@ class S3Broker(Broker):
         self._region_name = getattr(config, 'region_name', None)
 
         # TODO Change credentials to use an encrypted store key reference
-        self._credentials = instantiate_credentials_from_config(config)
+        self._credentials = AWSClient.instantiate_credentials_from_config(config)
 
         if 'host_path' in config:
             volume = BrokerVolume(None, config['host_path'])
@@ -114,10 +113,7 @@ class S3Broker(Broker):
             raise InvalidBrokerConfiguration('S3 broker requires "bucket_name" to be populated')
         region_name = getattr(config, 'region_name', None)
 
-        try:
-            credentials = instantiate_credentials_from_config(config)
-        except InvalidAWSConfiguration, ex:
-            raise InvalidBrokerConfiguration('S3 broker %s' % ex)
+        credentials = AWSClient.instantiate_credentials_from_config(config)
 
         # Check whether the bucket can actually be accessed
         with S3Client(credentials, region_name) as client:

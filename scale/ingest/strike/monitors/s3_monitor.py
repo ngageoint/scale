@@ -4,13 +4,15 @@ from __future__ import unicode_literals
 import json
 import logging
 import os
+import warnings
 
-import boto3
+from botocore.exceptions import ClientError
 
+from ingest.strike.configuration.strike_configuration import ValidationWarning
 from ingest.strike.monitors.exceptions import (InvalidMonitorConfiguration, S3NoDataNotificationError,
                                                SQSNotificationError)
 from ingest.strike.monitors.monitor import Monitor
-
+from util.aws import AWSClient, SQSClient
 
 logger = logging.getLogger(__name__)
 
@@ -58,7 +60,7 @@ class S3Monitor(Monitor):
         self._sqs_name = configuration['sqs_name']
         self._region_name = getattr(configuration, 'region_name', None)
         # TODO Change credentials to use an encrypted store key reference
-        self._credentials = instantiate_credentials_from_config(configuration)
+        self._credentials = AWSClient.instantiate_credentials_from_config(configuration)
 
 
     def run(self):
@@ -112,23 +114,19 @@ class S3Monitor(Monitor):
             raise InvalidMonitorConfiguration('sqs_name must be a string')
         if not configuration['sqs_name']:
             raise InvalidMonitorConfiguration('sqs_name must be a non-empty string')
-        if not configuration['']:
-            raise InvalidMonitorConfiguration('sqs_name must be a non-empty string')
 
         # If credentials exist, validate them.
-        credentials = AWSClient.instantiate_credentials_from_config(config)
+        credentials = AWSClient.instantiate_credentials_from_config(configuration)
 
-        region_name = getattr(config, 'region_name', None)
+        region_name = getattr(configuration, 'region_name', None)
 
         # Check whether the bucket can actually be accessed
         with SQSClient(credentials, region_name) as client:
             try:
-                client.get_queue_url(config['sqs_name'])
+                client.get_queue_url(configuration['sqs_name'])
             except ClientError:
                 warnings.append(ValidationWarning('sqs_access',
                                                   'Unable to access SQS. Check the name, region and credentials.'))
-
-
 
     def _process_s3_notification(self, message):
         """Extracts an S3 notification object from SQS message body and calls on to ingest.
