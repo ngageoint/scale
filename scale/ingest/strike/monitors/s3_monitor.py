@@ -69,6 +69,8 @@ class S3Monitor(Monitor):
 
         logger.info('Running experimental S3 Strike processor')
 
+        self.reload_configuration()
+
         with SQSClient(self._credentials, self._region_name) as client:
             queue_url = client.get_queue_url(self._sqs_name)
 
