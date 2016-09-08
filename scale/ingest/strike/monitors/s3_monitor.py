@@ -70,16 +70,15 @@ class S3Monitor(Monitor):
         logger.info('Running experimental S3 Strike processor')
 
         with SQSClient(self._credentials, self._region_name) as client:
-            queue_url = client.get_queue_url(self._sqs_name)
+            queue = client.get_queue_by_name(self._sqs_name)
 
             # Loop endlessly polling SQS queue
             while self._running:
                 # For each new file we receive a notification about:
                 logger.info('Beginning long-poll against queue with wait time of %s seconds.' % self.wait_time)
-                messages = client.get_messages(queue_url,
-                                               self.messages_per_request,
-                                               self.wait_time,
-                                               self.visibility_timeout)
+                messages = queue.receive_messages(MaxNumberOfMessages=self.messages_per_request,
+                                                  WaitTimeSeconds=self.wait_time,
+                                                  VisibilityTimeout=self.visibility_timeout)
 
                 for message in messages:
                     try:

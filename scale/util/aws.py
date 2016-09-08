@@ -81,39 +81,16 @@ class SQSClient(AWSClient):
         """
         super(SQSClient, self).__init__('sqs', None, credentials, region_name)
 
-    def get_queue_url(self, queue_name):
-        """Gets the url to an SQS queue by the given name
+    def get_queue_by_name(self, queue_name):
+        """Gets a SQS queue by the given name
 
         :param queue_name: The unique name of the SQS queue
         :type queue_name: string
-        :return:
+        :return: Queue resource to perform queue operations
+        :rtype: :class:`boto3.sqs.Queue`
         """
 
-        queues = self._client.list_queues(QueueNamePrefix=queue_name)
-
-        if 'QueueUrls' in queues and len(queues['QueueUrls']) == 1:
-            return queues['QueueUrls'][0]
-
-        raise QueueNotFound
-
-    def get_messages(self, queue_url, message_count=1, wait_time=0, visibility_timeout=30):
-        """Retrieve messages given a queue URL
-
-        :param queue_url: The URL of the Amazon SQS queue to take action on. Queue URLs are case-sensitive.
-        :type queue_url: string
-        :param message_count: The maximum number of messages to return. Values can be from 1 to 10.
-        :type message_count: int
-        :param wait_time: Time to long poll in seconds. An integer from 0 to 20 (seconds).
-        :type wait_time: int
-        :param visibility_timeout: The visibility timeout for the queue. An integer from 0 to 43200 (12 hours).
-        :type visibility_timeout: int
-        :return: messages
-        :rtype: dict
-        """
-        return self._client.receive_messages(QueueUrl=queue_url,
-                                             MaxNumberOfMessages=message_count,
-                                             WaitTimeSeconds=wait_time,
-                                             VisibilityTimeout=visibility_timeout)
+        return self._resource.get_queue_by_name(QueueName=queue_name)
 
 
 class S3Client(AWSClient):
