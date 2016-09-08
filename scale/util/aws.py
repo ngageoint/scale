@@ -91,8 +91,8 @@ class SQSClient(AWSClient):
 
         queues = self._client.list_queues(QueueNamePrefix=queue_name)
 
-        if len(queues) == 1:
-            return queues[0]
+        if 'QueueUrls' in queues and len(queues['QueueUrls']) == 1:
+            return queues['QueueUrls'][0]
 
         raise QueueNotFound
 

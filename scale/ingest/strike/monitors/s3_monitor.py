@@ -58,7 +58,7 @@ class S3Monitor(Monitor):
         """
 
         self._sqs_name = configuration['sqs_name']
-        self._region_name = getattr(configuration, 'region_name', None)
+        self._region_name = configuration.get('region_name')
         # TODO Change credentials to use an encrypted store key reference
         self._credentials = AWSClient.instantiate_credentials_from_config(configuration)
 
@@ -68,8 +68,6 @@ class S3Monitor(Monitor):
         """
 
         logger.info('Running experimental S3 Strike processor')
-
-        self.reload_configuration()
 
         with SQSClient(self._credentials, self._region_name) as client:
             queue_url = client.get_queue_url(self._sqs_name)
