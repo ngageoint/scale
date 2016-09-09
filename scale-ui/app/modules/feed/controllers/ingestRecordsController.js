@@ -33,7 +33,7 @@
             timezone: '+000'
         };
         vm.ingestData = [];
-        vm.searchText = '';
+        vm.searchText = vm.ingestsParams.file_name || '';
         vm.gridOptions = gridFactory.defaultGridOptions();
         vm.gridOptions.paginationCurrentPage = vm.ingestsParams.page || 1;
         vm.gridOptions.paginationPageSize = vm.ingestsParams.page_size || vm.gridOptions.paginationPageSize;
@@ -199,10 +199,9 @@
             }
         });
 
-        $scope.$watch('vm.searchText', function(value){
-           if(!vm.loading){
+        $scope.$watch('vm.searchText', function (value) {
+           if (!vm.loading){
                vm.ingestsParams.file_name = value;
-               console.log(value);
                vm.filterResults();
            }
         });
