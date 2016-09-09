@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('ingestRecordsController', function ($scope, $location, scaleConfig, scaleService, stateService, feedService, navService, subnavService, gridFactory) {
+    angular.module('scaleApp').controller('ingestRecordsController', function ($scope, $location, $timeout, scaleConfig, scaleService, stateService, feedService, navService, subnavService, gridFactory) {
         subnavService.setCurrentPath('feed/ingests');
 
         var vm = this;
@@ -35,9 +35,12 @@
         vm.ingestData = [];
         vm.searchText = vm.ingestsParams.file_name || '';
         vm.gridOptions = gridFactory.defaultGridOptions();
-        vm.gridOptions.paginationCurrentPage = vm.ingestsParams.page || 1;
-        vm.gridOptions.paginationPageSize = vm.ingestsParams.page_size || vm.gridOptions.paginationPageSize;
         vm.gridOptions.data = [];
+
+        $timeout(function () {
+            vm.gridOptions.paginationCurrentPage = vm.ingestsParams.page || 1;
+            vm.gridOptions.paginationPageSize = vm.ingestsParams.page_size || vm.gridOptions.paginationPageSize;
+        });
 
         vm.refreshData = function () {
             var filteredData = _.filter(vm.ingestData, function (d) {
