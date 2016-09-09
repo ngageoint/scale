@@ -22,6 +22,7 @@ from scheduler.initialize import initialize_system
 from scheduler.models import Scheduler
 from scheduler.offer.manager import OfferManager
 from scheduler.offer.offer import ResourceOffer
+from scheduler.status.manager import StatusManager
 from scheduler.sync.job_type_manager import JobTypeManager
 from scheduler.sync.node_manager import NodeManager
 from scheduler.sync.scheduler_manager import SchedulerManager
@@ -29,10 +30,10 @@ from scheduler.sync.workspace_manager import WorkspaceManager
 from scheduler.threads.db_sync import DatabaseSyncThread
 from scheduler.threads.recon import ReconciliationThread
 from scheduler.threads.schedule import SchedulingThread
+from scheduler.threads.status import StatusUpdateThread
 
 
 logger = logging.getLogger(__name__)
-
 
 
 class ScaleScheduler(MesosScheduler):
@@ -58,11 +59,13 @@ class ScaleScheduler(MesosScheduler):
         self._node_manager = NodeManager()
         self._offer_manager = OfferManager()
         self._scheduler_manager = SchedulerManager()
+        self._status_manager = StatusManager()
         self._workspace_manager = WorkspaceManager()
 
         self._db_sync_thread = None
         self._recon_thread = None
         self._scheduling_thread = None
+        self._status_thread = None
 
     def registered(self, driver, frameworkId, masterInfo):
         """
@@ -107,6 +110,11 @@ class ScaleScheduler(MesosScheduler):
         scheduling_thread = threading.Thread(target=self._scheduling_thread.run)
         scheduling_thread.daemon = True
         scheduling_thread.start()
+
+        self._status_thread = StatusUpdateThread(self._status_manager)
+        status_thread = threading.Thread(target=self._status_thread.run)
+        status_thread.daemon = True
+        status_thread.start()
 
         self._reconcile_running_jobs()
 
@@ -237,9 +245,10 @@ class ScaleScheduler(MesosScheduler):
 
         started = now()
 
+        self._status_manager.add_status_update(status)
         task_id = status.task_id.value
         job_exe_id = RunningJobExecution.get_job_exe_id(task_id)
-        logger.info('Status update for task %s: %s', task_id, utils.status_to_string(status.state))
+        logger.info('Status update for task %s: %s', task_id, utils.get_status_state(status))
 
         # Since we have a status update for this task, remove it from reconciliation set
         self._recon_thread.remove_task_id(task_id)
@@ -253,8 +262,10 @@ class ScaleScheduler(MesosScheduler):
                 results.when = utils.get_status_timestamp(status)
                 # Apply status update to running job execution
                 if status.state == mesos_pb2.TASK_RUNNING:
-                    running_job_exe.task_running(task_id, results.when)
+                    running_job_exe.task_start(task_id, results.when)
                 elif status.state == mesos_pb2.TASK_FINISHED:
+                    if results.exit_code is None:
+                        results.exit_code = 0
                     running_job_exe.task_complete(results)
                 elif status.state == mesos_pb2.TASK_LOST:
                     running_job_exe.task_fail(results, Error.objects.get_builtin_error('mesos-lost'))
@@ -266,7 +277,8 @@ class ScaleScheduler(MesosScheduler):
                     self._job_exe_manager.remove_job_exe(job_exe_id)
             else:
                 # Scheduler doesn't have any knowledge of this job execution
-                Queue.objects.handle_job_failure(job_exe_id, now(), Error.objects.get_builtin_error('scheduler-lost'))
+                Queue.objects.handle_job_failure(job_exe_id, now(), [],
+                                                 Error.objects.get_builtin_error('scheduler-lost'))
         except Exception:
             logger.exception('Error handling status update for job execution: %s', job_exe_id)
             # Error handling status update, add task so it can be reconciled
@@ -394,6 +406,7 @@ class ScaleScheduler(MesosScheduler):
         self._db_sync_thread.shutdown()
         self._recon_thread.shutdown()
         self._scheduling_thread.shutdown()
+        self._status_thread.shutdown()
 
     def _reconcile_running_jobs(self):
         """Looks up all currently running jobs in the database and sets them up to be reconciled with Mesos"""
@@ -413,7 +426,8 @@ class ScaleScheduler(MesosScheduler):
                     task_ids.append(task.id)
             else:
                 # Fail any executions that the scheduler has lost
-                Queue.objects.handle_job_failure(job_exe.id, now(), Error.objects.get_builtin_error('scheduler-lost'))
+                Queue.objects.handle_job_failure(job_exe.id, now(), [],
+                                                 Error.objects.get_builtin_error('scheduler-lost'))
 
         # Send task IDs to reconciliation thread
         self._recon_thread.add_task_ids(task_ids)

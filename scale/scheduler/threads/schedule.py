@@ -19,7 +19,6 @@ from util.retry import retry_database_query
 logger = logging.getLogger(__name__)
 
 
-
 class SchedulingThread(object):
     """This class manages the scheduling background thread for the scheduler"""
 
