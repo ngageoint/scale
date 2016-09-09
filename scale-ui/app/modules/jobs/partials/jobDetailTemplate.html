@@ -33,6 +33,7 @@
                         <tr><td>Type:</td><td><a ng-href="#/jobs/types/{{ vm.job.job_type.id }}"><span ng-bind-html="vm.job.job_type.getIcon()"></span> {{ vm.job.job_type.title }} {{ vm.job.job_type.version }}</a></td></tr>
                         <tr ng-show="vm.job.recipes"><td>Recipe:</td><td><a ng-href="#/recipes/recipe/{{ vm.job.recipes[0].id }}">{{ vm.job.recipes[0].recipe_type.title }} {{ vm.job.recipes[0].recipe_type.version }}</a></td></tr>
                         <tr><td>Status:</td><td><div class="label {{ vm.job.getStatusClass() }}">{{ vm.job.status }}</div></td></tr>
+                        <tr><td>Duration:</td><td>{{ vm.job.getDuration() }}</td></tr>
                         <tr><td>Trigger:</td><td>{{ vm.job.event.type }} {{ vm.triggerOccurred }}</td></tr>
                         <tr><td>Priority:</td><td>{{ vm.job.priority }}</td></tr>
                         <tr><td>Created:</td><td>{{ vm.job.created }}</td></tr>
@@ -172,6 +173,8 @@
             <thead>
                 <tr>
                     <th>Status</th>
+                    <th>Exit Code</th>
+                    <th>Node</th>
                     <th>Created</th>
                     <th>Queued</th>
                     <th>Started</th>
@@ -183,6 +186,8 @@
             <tbody>
                 <tr class="link" ng-repeat="execution in vm.job.job_exes">
                     <td ng-click="vm.showExecutionDetails(execution.id)">{{ execution.status }}</td>
+                    <td ng-click="vm.showExecutionDetails(execution.id)">{{ execution.job_exit_code }}</td>
+                    <td><a ng-href="#/nodes/{{ execution.node.id }}">{{ execution.node.id }}</td>
                     <td ng-click="vm.showExecutionDetails(execution.id)">{{ execution.created_formatted }}</td>
                     <td ng-click="vm.showExecutionDetails(execution.id)">{{ execution.queued_formatted }}</td>
                     <td ng-click="vm.showExecutionDetails(execution.id)">{{ execution.started_formatted }}</td>
