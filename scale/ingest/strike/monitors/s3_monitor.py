@@ -117,7 +117,7 @@ class S3Monitor(Monitor):
         # If credentials exist, validate them.
         credentials = AWSClient.instantiate_credentials_from_config(configuration)
 
-        region_name = getattr(configuration, 'region_name', None)
+        region_name = configuration.get('region_name')
 
         # Check whether the bucket can actually be accessed
         with SQSClient(credentials, region_name) as client:

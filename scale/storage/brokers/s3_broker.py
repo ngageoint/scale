@@ -63,13 +63,11 @@ class S3Broker(Broker):
 
                     self._download_file(s3_object, file_download.file, file_download.local_path)
 
-
-
     def load_configuration(self, config):
         """See :meth:`storage.brokers.broker.Broker.load_configuration`"""
 
         self._bucket_name = config['bucket_name']
-        self._region_name = getattr(config, 'region_name', None)
+        self._region_name = config.get('region_name')
 
         # TODO Change credentials to use an encrypted store key reference
         self._credentials = AWSClient.instantiate_credentials_from_config(config)
@@ -111,7 +109,7 @@ class S3Broker(Broker):
         warnings = []
         if 'bucket_name' not in config or not config['bucket_name']:
             raise InvalidBrokerConfiguration('S3 broker requires "bucket_name" to be populated')
-        region_name = getattr(config, 'region_name', None)
+        region_name = config.get('region_name')
 
         credentials = AWSClient.instantiate_credentials_from_config(config)
 
