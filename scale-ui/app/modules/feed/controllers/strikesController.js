@@ -87,10 +87,10 @@
                     toastr['success']('Strike is valid.');
                 }
             }).catch(function (error) {
-                if (error.detail) {
+                if (error && error.detail) {
                     toastr['error'](error.detail);
                 } else {
-                    toastr['error'](error);
+                    toastr['error']('Error validating strike');
                 }
             }).finally(function () {
                 vm.loading = false;
