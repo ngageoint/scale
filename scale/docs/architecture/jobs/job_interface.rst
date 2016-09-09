@@ -20,7 +20,7 @@ defined as follows:
 .. code-block:: javascript
 
    {
-      "version": "1.0",
+      "version": "1.1",
       "command": "python make_geotiff.py",
       "command_arguments": "${image} ${georeference_data} ${job_output_dir}",
       "input_data": [
@@ -59,7 +59,7 @@ please refer to the Job Interface Specification below.
 
 .. _architecture_jobs_interface_spec:
 
-Job Interface Specification Version 1.0
+Job Interface Specification Version 1.1
 -------------------------------------------------------------------------------
 
 A valid job interface is a JSON document with the following structure:
@@ -80,6 +80,7 @@ A valid job interface is a JSON document with the following structure:
             "name": STRING,
             "type": "file",
             "required": true|false,
+            "partial": true|false,
             "media_types": [
                STRING,
                STRING
@@ -180,6 +181,16 @@ A valid job interface is a JSON document with the following structure:
                 will be prevented from being passed to the algorithm. If not provided, the *media_types* field defaults
                 to an empty list and all media types are accepted for the input.
 
+            **partial**: JSON Boolean
+
+                The *partial* field is optional and indicates whether this job input can be expected to be only used in
+                in a limited manner. This field enables jobs to indicate exceedingly large files that may merely be
+                linked into the job context instead of copied. The primary use case is when large files are stored in
+                S3 or similar remote location, but the job only needs to extract metadata or consume limited portions of
+                input file. The *partial* field *and* the input workspace must be configured to support this operation.
+                If either configuration is incorrect the standard behavior of data retrieval will be performed. The
+                *partial* field defaults to *false*.
+
         **files**
 
             A "files" input is a list of one or more files that is provided to the algorithm. When the algorithm is
@@ -193,6 +204,16 @@ A valid job interface is a JSON document with the following structure:
                 media types for any files being passed in the input. Any file that does not match one of the listed
                 media types will be prevented from being passed to the algorithm. If not provided, the *media_types*
                 field defaults to an empty list and all media types are accepted for the input.
+
+            **partial**: JSON Boolean
+
+                The *partial* field is optional and indicates whether this job input can be expected to be only used in
+                in a limited manner. This field enables jobs to indicate exceedingly large files that may merely be
+                linked into the job context instead of copied. The primary use case is when large files are stored in
+                S3 or similar remote location, but the job only needs to extract metadata or consume limited portions of
+                input file. The *partial* field *and* the input workspace must be configured to support this operation.
+                If either configuration is incorrect the standard behavior of data retrieval will be performed. The
+                *partial* field defaults to *false*.
 
 **output_data**: JSON array
 

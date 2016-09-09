@@ -183,7 +183,9 @@ Example S3 broker configuration:
          "credentials": {
             "access_key_id": "AKIAIOSFODNN7EXAMPLE",
             "secret_access_key": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
-         }
+         },
+         "host_path": "/my_bucket",
+         "region_name": "us-east-1"
       }
    }
 
@@ -210,3 +212,17 @@ The S3 broker requires the following additional fields in its configuration:
 
         The *secret_access_key* is a generated token that the system can use to prove it should be able to make requests
         on behalf of the associated IAM account without requiring the actual password used by that account.
+
+**host_path**: JSON string
+
+    The *host_path* is an optional string that adds S3 workspace support for locally mounted buckets and partial file
+    read-only access. If a FUSE file system (such as s3fs or goofys) mounts the S3 bucket the *host_path* location on
+    all nodes, an alternative to downloading large files is available to jobs that use only portions of a file. The job
+    interface *must* indicate *partial* equal to *true* for any input files to take advantage of *host_path*. Only read
+    operations are performed using the mount, all write operations will be done for the entire file.
+
+**region_name**: JSON string
+
+    The *region_name* is an optional string that specifies the AWS region where the S3 bucket is located. This is not
+    always required, as environment variables or configuration files could set the default region, but it is a highly
+    recommended setting for explicitly indicating the bucket region.
