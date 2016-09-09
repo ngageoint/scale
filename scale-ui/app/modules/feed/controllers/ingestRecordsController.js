@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('ingestRecordsController', function ($scope, $location, scaleConfig, scaleService, stateService, feedService, navService, subnavService, gridFactory) {
+    angular.module('scaleApp').controller('ingestRecordsController', function ($scope, $location, $timeout, scaleConfig, scaleService, stateService, feedService, navService, subnavService, gridFactory) {
         subnavService.setCurrentPath('feed/ingests');
 
         var vm = this;
@@ -33,11 +33,14 @@
             timezone: '+000'
         };
         vm.ingestData = [];
-        vm.searchText = '';
+        vm.searchText = vm.ingestsParams.file_name || '';
         vm.gridOptions = gridFactory.defaultGridOptions();
-        vm.gridOptions.paginationCurrentPage = vm.ingestsParams.page || 1;
-        vm.gridOptions.paginationPageSize = vm.ingestsParams.page_size || vm.gridOptions.paginationPageSize;
         vm.gridOptions.data = [];
+
+        $timeout(function () {
+            vm.gridOptions.paginationCurrentPage = vm.ingestsParams.page || 1;
+            vm.gridOptions.paginationPageSize = vm.ingestsParams.page_size || vm.gridOptions.paginationPageSize;
+        });
 
         vm.refreshData = function () {
             var filteredData = _.filter(vm.ingestData, function (d) {
@@ -111,7 +114,6 @@
 
         vm.filterResults = function () {
             stateService.setIngestsParams(vm.ingestsParams);
-            vm.loading = true;
             vm.getIngests();
         };
 
@@ -198,6 +200,13 @@
                 vm.ingestsParams.ended = value.toISOString();
                 vm.filterResults();
             }
+        });
+
+        $scope.$watch('vm.searchText', function (value) {
+           if (!vm.loading){
+               vm.ingestsParams.file_name = value;
+               vm.filterResults();
+           }
         });
 
         $scope.$watchCollection('vm.stateService.getIngestsColDefs()', function (newValue, oldValue) {
