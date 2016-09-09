@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 import json
 import logging
 import os
-import warnings
 
 from botocore.exceptions import ClientError
 
@@ -107,6 +106,7 @@ class S3Monitor(Monitor):
         """See :meth:`ingest.strike.monitors.monitor.Monitor.validate_configuration`
         """
 
+        warnings = []
         if 'sqs_name' not in configuration:
             raise InvalidMonitorConfiguration('sqs_name is required for s3 monitor')
         if not isinstance(configuration['sqs_name'], basestring):
@@ -122,10 +122,12 @@ class S3Monitor(Monitor):
         # Check whether the bucket can actually be accessed
         with SQSClient(credentials, region_name) as client:
             try:
-                client.get_queue_url(configuration['sqs_name'])
+                client.get_queue_by_name(configuration['sqs_name'])
             except ClientError:
                 warnings.append(ValidationWarning('sqs_access',
                                                   'Unable to access SQS. Check the name, region and credentials.'))
+
+        return warnings
 
     def _process_s3_notification(self, message):
         """Extracts an S3 notification object from SQS message body and calls on to ingest.

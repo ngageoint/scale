@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+from util.aws import SQSClient
+
 import django
 from django.test import TestCase
 from mock import MagicMock, Mock, patch
@@ -48,8 +50,4 @@ class TestS3Monitor(TestCase):
             'sqs_name': 'my-sqs'
         }
 
-        mock_client = MagicMock()
-        mock_client_class.return_value.__enter__ = Mock(return_value=mock_client)
-
-        S3Monitor().validate_configuration(config)
         S3Monitor().validate_configuration(config)

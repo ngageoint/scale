@@ -7,7 +7,7 @@ from botocore.config import Config
 from botocore.exceptions import ClientError
 from django.conf import settings
 
-from util.exceptions import InvalidAWSCredentials, QueueNotFound, FileDoesNotExist
+from util.exceptions import InvalidAWSCredentials, FileDoesNotExist
 
 logger = logging.getLogger(__name__)
 
@@ -79,7 +79,7 @@ class SQSClient(AWSClient):
         :param region_name: The AWS region the resource resides in.
         :type region_name: string
         """
-        super(SQSClient, self).__init__('sqs', None, credentials, region_name)
+        AWSClient.__init__(self, 'sqs', None, credentials, region_name)
 
     def get_queue_by_name(self, queue_name):
         """Gets a SQS queue by the given name
@@ -104,7 +104,7 @@ class S3Client(AWSClient):
         :type region_name: string
         """
         config = Config(s3={'addressing_style': getattr(settings, 'S3_ADDRESSING_STYLE', 'auto')})
-        super(S3Client, self).__init__('s3', config, credentials, region_name)
+        AWSClient.__init__(self, 's3', config, credentials, region_name)
 
     def get_bucket(self, bucket_name, validate=True):
         """Gets a reference to an S3 bucket with the given identifier.

@@ -14,12 +14,6 @@ class InvalidAWSCredentials(Exception):
     pass
 
 
-class QueueNotFound(Exception):
-    """Exception indicating AWS SQS queue could not be found by name"""
-
-    pass
-
-
 class RollbackTransaction(Exception):
     """Exception that can be thrown and swallowed to explicitly rollback a transaction"""
 
