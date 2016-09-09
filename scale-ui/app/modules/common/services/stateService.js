@@ -93,7 +93,8 @@
                 started: data.started ? data.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
                 ended: data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
                 order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['-ingest_started'],
-                status: data.status ? data.status : null
+                status: data.status ? data.status : null,
+                file_name: data.file_name ? data.file_name : null
             };
         };
 

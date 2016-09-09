@@ -45,7 +45,10 @@
         // public methods
         JobDetails.prototype = {
             getDuration: function () {
-                return scaleService.calculateDuration(this.created, this.last_modified);
+                var start = this.started,
+                    end = this.ended ? this.ended : moment.utc().toISOString();
+
+                return scaleService.calculateDuration(start, end);
             },
             getLatestExecution: function(){
                 if (this.num_exes > 0 ) {
