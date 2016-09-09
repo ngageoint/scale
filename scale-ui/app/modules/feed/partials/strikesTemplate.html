@@ -110,7 +110,7 @@
                                 <div class="form-group" ng-class="{ 'has-error': ingestFileForm.scifFilenameRegex.$invalid }">
                                     <label for="scifFilenameRegex">Filename Regex</label>
                                     <input id="scifFilenameRegex" name="scifFilenameRegex" type="text" class="form-control" ng-model="vm.activeStrikeIngestFile.filename_regex" placeholder="Filename Regex" required>
-                                    <p class="help-block">A regular expression to check against the names of newly copied files</p>
+                                    <p class="help-block">A regular expression to check against the names of newly copied files (required)</p>
                                 </div>
                             </div>
                             <div class="col-xs-6">
@@ -127,6 +127,7 @@
                                             <li ng-repeat="dataType in vm.activeStrikeIngestFile.data_types"><span class="label label-default strike-data-type" ng-click="vm.removeDataType(dataType)">{{ dataType }} <i class="fa fa-close"></i></span></li>
                                         </ul>
                                     </div>
+                                    <p class="help-block">Any file that matches the corresponding file name regular expression will have these data type strings "tagged" with the file (optional)</p>
                                 </div>
                             </div>
                         </div>
@@ -135,12 +136,14 @@
                                 <div class="form-group">
                                     <label for="scifNewWorkspace">New Workspace</label>
                                     <select id="scifNewWorkspace" name="scifNewWorkspace" class="form-control" ng-model="vm.activeStrikeIngestFile.new_workspace" ng-options="w as w.title for w in vm.newWorkspaces"></select>
+                                    <p class="help-block">New workspace to which the file should be copied (optional)</p>
                                 </div>
                             </div>
                             <div class="col-xs-6">
                                 <div class="form-group">
                                     <label for="scifNewFilePath">New File Path</label>
                                     <input id="scifNewFilePath" name="scifNewFilePath" type="text" class="form-control" ng-model="vm.activeStrikeIngestFile.new_file_path" placeholder="New File Path">
+                                    <p class="help-block">String that specifies a new relative path for storing new files (optional)</p>
                                 </div>
                             </div>
                         </div>
