@@ -15,7 +15,6 @@ from job.models import JobExecution
 logger = logging.getLogger(__name__)
 
 
-
 class DatabaseSyncThread(object):
     """This class manages the database sync background thread for the scheduler"""
 
@@ -127,7 +126,10 @@ class DatabaseSyncThread(object):
             task_to_kill = None
 
             if job_exe_model.status == 'CANCELED':
-                task_to_kill = running_job_exe.execution_canceled()
+                try:
+                    task_to_kill = running_job_exe.execution_canceled()
+                except DatabaseError:
+                    logger.exception('Error canceling job execution %i', running_job_exe.id)
             elif job_exe_model.is_timed_out(right_now):
                 try:
                     task_to_kill = running_job_exe.execution_timed_out(right_now)

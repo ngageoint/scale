@@ -13,7 +13,6 @@ from mesos.interface import mesos_pb2
 logger = logging.getLogger(__name__)
 
 
-
 class ReconciliationThread(object):
     """This class manages the reconciliation background thread for the scheduler"""
 
