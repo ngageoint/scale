@@ -41,7 +41,7 @@ class TestS3Monitor(TestCase):
         }
         self.assertRaises(InvalidMonitorConfiguration, S3Monitor().validate_configuration, config)
 
-    @patch('util.aws.SQSClient')
+    @patch('ingest.strike.monitors.s3_monitor.SQSClient')
     def test_validate_configuration_success(self, mock_client_class):
         """Tests calling S3Monitor.validate_configuration() successfully"""
 

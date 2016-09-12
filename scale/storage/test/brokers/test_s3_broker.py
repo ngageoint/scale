@@ -29,7 +29,7 @@ class TestS3Broker(TestCase):
             },
         })
 
-    @patch('util.aws.S3Client')
+    @patch('storage.brokers.s3_broker.S3Client')
     def test_delete_files(self, mock_client_class):
         """Tests deleting files successfully"""
 
@@ -56,7 +56,7 @@ class TestS3Broker(TestCase):
         self.assertTrue(file_2.is_deleted)
         self.assertIsNotNone(file_2.deleted)
 
-    @patch('util.aws.S3Client')
+    @patch('storage.brokers.s3_broker.S3Client')
     def test_download_files(self, mock_client_class):
         """Tests downloading files successfully"""
 
@@ -87,8 +87,9 @@ class TestS3Broker(TestCase):
         self.assertTrue(s3_object_1.download_file.called)
         self.assertTrue(s3_object_2.download_file.called)
 
-    @patch('util.aws.S3Client')
-    # Patching in s3_broker as opposed to util.commmand because patch is bypassed on function from import
+    # Patching in storage.brokers.s3_broker as opposed to util.aws / util.command because patch must be applied where
+    # import is made, not on source
+    @patch('storage.brokers.s3_broker.S3Client')
     @patch('storage.brokers.s3_broker.execute_command_line')
     def test_host_link_files(self, mock_execute, mock_client_class):
         """Tests sym-linking files successfully"""
@@ -136,7 +137,7 @@ class TestS3Broker(TestCase):
         self.assertEqual(broker._credentials.access_key_id, 'ABC')
         self.assertEqual(broker._credentials.secret_access_key, '123')
 
-    @patch('util.aws.S3Client')
+    @patch('storage.brokers.s3_broker.S3Client')
     def test_move_files(self, mock_client_class):
         """Tests moving files successfully"""
 
@@ -171,7 +172,7 @@ class TestS3Broker(TestCase):
         self.assertEqual(file_1.file_path, new_workspace_path_1)
         self.assertEqual(file_2.file_path, new_workspace_path_2)
 
-    @patch('util.aws.S3Client')
+    @patch('storage.brokers.s3_broker.S3Client')
     def test_upload_files(self, mock_client_class):
         """Tests uploading files successfully"""
 
