@@ -7,6 +7,9 @@ import requests, os, json, time
 
 
 def run():
+    # attempt to delete an old instance..if it doesn't exists it will error but we don't care so we ignore it
+    requests.delete('http://marathon.mesos:8080/v2/apps/scale-logstash')
+
     # get the Logstash container API endpoints
     logstash_image = os.getenv('LOGSTASH_DOCKER_IMAGE', 'geoint/dcos-logstash:2.4')
     marathon = {
