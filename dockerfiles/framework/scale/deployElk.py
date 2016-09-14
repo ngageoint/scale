@@ -28,8 +28,7 @@ def run():
       "container": {
         "docker": {
           "image": "%s",
-          "network": "HOST",
-          "forcePullImage": true
+          "network": "HOST"
         },
         "type": "DOCKER",
         "volumes": []
