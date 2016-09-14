@@ -6,7 +6,10 @@ This script executes a Marathon tasks for the postgis database and is meant for 
 import requests, os, json, time
 
 def run():
-    r = requests.get('http://marathon.mesos:8080/v2/apps/')
+    if os.environ.get('INIT_DB', False):
+        # attempt to delete an old instance..if it doesn't exists it will error but we don't care so we ignore it
+        requests.delete('http://marathon.mesos:8080/v2/apps/'+cfg['scaleDBHost'])
+
     cfg = {
         'scaleDBName': os.environ.get('SCALE_DB_NAME', 'scale'),
         'scaleDBHost': os.environ.get('SCALE_DB_HOST', 'scale-db.marathon.slave.mesos').split(".")[0],
@@ -25,8 +28,7 @@ def run():
     marathon = '''{"id": "/%(scaleDBHost)s",
                  "instances": 1,
                  "constraints": [["hostname","UNIQUE"]],
-                 "container": {"docker": {"forcePullImage": true,
-                                          "image": "%(dockerImage)s",
+                 "container": {"docker": {"image": "%(dockerImage)s",
                                           "network": "BRIDGE",
                                           "portMappings": [{"containerPort": 5432, "hostPort": 0}],
                                           "privileged": false},
