@@ -14,6 +14,9 @@ def run():
         config_uri = '"' + config_uri + '"'  # Config URI needs quotes to be inserted into JSON string
     endpoints = [x['http_address'] for x in json.loads(requests.get(es_url+'/v1/tasks').text)]
 
+    # attempt to delete an old instance..if it doesn't exists it will error but we don't care so we ignore it
+    requests.delete('http://marathon.mesos:8080/v2/apps/scale-logstash')
+
     marathon = '''
     {
       "id": "scale-logstash",
