@@ -13,7 +13,7 @@ from recipe.handlers.handler import RecipeHandler
 from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
 from storage.models import ScaleFile
 from trigger.configuration.exceptions import InvalidTriggerType
-from trigger.models import TriggerRule
+from trigger.models import TriggerEvent, TriggerRule
 
 
 # IMPORTANT NOTE: Locking order
@@ -345,7 +345,7 @@ class RecipeManager(models.Manager):
         """
 
         # Determine the old recipe graph
-        prev_recipe = Recipe.objects.select_related('event', 'recipe_type').get(pk=recipe_id)
+        prev_recipe = Recipe.objects.select_related('recipe_type').get(pk=recipe_id)
         prev_graph = prev_recipe.get_recipe_definition().get_graph()
 
         # Populate the list of all job names in the recipe as a shortcut
@@ -353,10 +353,8 @@ class RecipeManager(models.Manager):
             job_names = prev_graph.get_topological_order()
 
         # Determine the current recipe graph
-        current_revision = RecipeTypeRevision.objects.filter(
-            recipe_type=prev_recipe.recipe_type
-        ).order_by(['-revision_num'])[0]
-        current_graph = current_revision.get_recipe_definition().get_graph()
+        current_type = prev_recipe.recipe_type
+        current_graph = current_type.get_recipe_definition().get_graph()
 
         # Compute the job differences between recipe revisions including forced ones
         graph_delta = RecipeGraphDelta(prev_graph, current_graph)
@@ -364,14 +362,22 @@ class RecipeManager(models.Manager):
             graph_delta.reprocess_identical_node(job_name)
         changed_nodes = graph_delta.get_changed_nodes()
 
-        # Get a lock on old jobs that will be superseded
-        prev_jobs = RecipeJob.objects.select_related('job').select_for_update().filter(
-            recipe=prev_recipe, job_name__in=changed_nodes.values())
-        prev_jobs_dict = {r.job_name: r.job for r in prev_jobs}
+        # Get the old recipe jobs that will be superseded
+        prev_recipe_jobs = RecipeJob.objects.filter(recipe=prev_recipe, job_name__in=changed_nodes.values())
+
+        # Acquire model locks
+        superseded_recipe = Recipe.objects.select_for_update().get(pk=prev_recipe.id)
+        prev_jobs = Job.objects.select_for_update().filter(pk__in=[rj.job_id for rj in prev_recipe_jobs])
+        prev_jobs_dict = {j.id: j for j in prev_jobs}
+        superseded_jobs = {rj.job_name: prev_jobs_dict[rj.job_id] for rj in prev_recipe_jobs}
+
+        # Create an event to represent this request
+        description = {'recipe_id': recipe_id}
+        event = TriggerEvent.objects.create_trigger_event('REPROCESS_RECIPE', None, description, timezone.now())
 
         # Create the new recipe while superseding the old one
-        handler = Recipe.objects.create_recipe(current_revision.recipe_type, prev_recipe.event,
-                                               prev_recipe.get_recipe_data(), prev_recipe, graph_delta, prev_jobs_dict)
+        handler = Recipe.objects.create_recipe(current_type, event, prev_recipe.get_recipe_data(), superseded_recipe,
+                                               graph_delta, superseded_jobs)
         return handler.recipe
 
     def _get_recipe_handlers(self, recipe_ids):
