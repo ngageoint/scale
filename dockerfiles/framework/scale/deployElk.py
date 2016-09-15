@@ -8,7 +8,7 @@ import requests, os, json, time
 
 def run():
     # get the Logstash container API endpoints
-    logstash_image = os.getenv('LOGSTASH_DOCKER_IMAGE', 'appliedis/dcos-logstash:2.4')
+    logstash_image = os.getenv('LOGSTASH_DOCKER_IMAGE', 'geoint/dcos-logstash:2.4')
     marathon = {
       'id': 'scale-logstash',
       'cpus': 0.5,
