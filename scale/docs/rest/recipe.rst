@@ -427,16 +427,21 @@ These services provide access to information about recipes.
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| job_name           | String            | Optional | The name of a job within the recipe definition that should be       |
+| job_names          | Array[String]     | Optional | The name of jobs within the recipe definition that should be        |
 |                    |                   |          | included in the reprocessing request, even when the definition for  |
-|                    |                   |          | the job has not changed between recipe type revisions.              |
-|                    |                   |          | Duplicate it to filter by multiple values.                          |
+|                    |                   |          | those jobs has not changed between recipe type revisions.           |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | all_jobs           | Boolean           | Optional | A flag that indicates all jobs in the recipe should be reprocessed, |
 |                    |                   |          | even when the recipe type definitions are identical. This option    |
 |                    |                   |          | overrides any job_name parameters and is typically used to re-run   |
 |                    |                   |          | jobs that failed due to temporary errors.                           |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
+| .. code-block:: javascript                                                                                              |
+|                                                                                                                         |
+|    {                                                                                                                    |
+|        "all_jobs": true                                                                                                 |
+|    }                                                                                                                    |
++-------------------------------------------------------------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Status**         | 201 CREATED                                                                                        |

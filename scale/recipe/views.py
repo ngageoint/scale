@@ -327,7 +327,7 @@ class RecipeReprocessView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        job_names = rest_util.parse_string_list(request, 'job_name', required=False)
+        job_names = rest_util.parse_string_list(request, 'job_names', required=False)
         all_jobs = rest_util.parse_bool(request, 'all_jobs', required=False)
 
         try:

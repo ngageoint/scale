@@ -811,7 +811,7 @@ class TestRecipesView(TransactionTestCase):
 
         url = '/recipes/%i/reprocess/' % self.recipe1.id
         json_data = {
-            'job_name': 'kml',
+            'job_names': ['kml'],
         }
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         results = json.loads(response.content)
