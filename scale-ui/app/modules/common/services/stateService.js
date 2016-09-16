@@ -20,8 +20,8 @@
             // set defaults
             data.page = data.page || 1;
             data.page_size = data.page_size || 25;
-            data.started = data.started || moment.utc().subtract(1, 'weeks').startOf('d').toISOString();
-            data.ended = data.ended || moment.utc().endOf('d').toISOString();
+            data.started = data.started || null;
+            data.ended = data.ended || null;
             data.order = data.order ? Array.isArray(data.order) ? data.order : [data.order] : null;
             data.status = data.status || null;
             // check for params in querystring, and update as necessary
@@ -93,7 +93,8 @@
                 started: data.started ? data.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
                 ended: data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
                 order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['-ingest_started'],
-                status: data.status ? data.status : null
+                status: data.status ? data.status : null,
+                file_name: data.file_name ? data.file_name : null
             };
         };
 
@@ -101,8 +102,6 @@
             return {
                 page: data.page ? parseInt(data.page) : 1,
                 page_size: data.page_size ? parseInt(data.page_size) : 25,
-                started: data.started ? data.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
-                ended: data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
                 order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['hostname'],
                 include_inactive: data.include_inactive ? data.include_inactive : null
             };

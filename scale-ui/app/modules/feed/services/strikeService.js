@@ -33,7 +33,7 @@
                 return d.promise;
 
             },
-            validateStrike: function (workspace) {
+            validateStrike: function (strike) {
                 var d = $q.defer();
                 var cleanStrike = strike.clean();
 
