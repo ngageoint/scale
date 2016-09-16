@@ -8,16 +8,13 @@ import urllib
 import requests
 from requests.exceptions import RequestException
 
-ES_TASKS = '%s/v1/tasks' % os.getenv('ELASTICSEARCH_URL', 'http://elasticsearch.marathon.mesos:31105')
+
+ES_URLS = os.getenv('ELASTICSEARCH_URLS').split(',')
 SLEEP_TIME = float(os.getenv('SLEEP_TIME', 30))
 TEMPLATE_URI = os.getenv('TEMPLATE_URI', None)
 
 CONF_FILE = '/opt/watchdog/logstash.conf'
 
-if TEMPLATE_URI:
-    print('Attempting template update from %s...' % TEMPLATE_URI)
-    urllib.urlretrieve(TEMPLATE_URI, '%s-template' % CONF_FILE)
-    print('Template update complete.')
 
 def update_endpoints(endpoints):
     print('ElasticSearch endpoints found: %s' % json.dumps(endpoints))
@@ -33,16 +30,29 @@ def update_endpoints(endpoints):
     else:
         print('No update needed. Present config is up-to-date.')
 
-        
+# ensure this doesn't try and run if imported
+if __name__ == '__main__':
+    if TEMPLATE_URI:
+        print('Attempting template update from %s...' % TEMPLATE_URI)
+        urllib.urlretrieve(TEMPLATE_URI, '%s-template' % CONF_FILE)
+        print('Template update complete.')
 
-# Loop endlessly monitoring Elasticsearch cluster. Supervisor will SIGKILL us if container stops
-while True:
-    try:
-        response = requests.get(ES_TASKS)
-        endpoints = [x['http_address'] for x in json.loads(response.text)]
-        update_endpoints(endpoints)
-    except RequestException:
-        print('Unable to get ElasticSearch tasks from %s' % ES_TASKS)
-        traceback.print_exc()
+    # Loop endlessly monitoring Elasticsearch cluster. Supervisor will SIGKILL us if container stops
+    while True:
+        try:
+            es_service = '_nodes/_all/http,settings'
+            response = requests.get('%s/%s' % (ES_URLS[0], es_service))
+            endpoints = []
+            for key, node in json.loads(response.text)['nodes'].iteritems():
+                if node['settings']['node']['data'] == 'true':
+                    endpoints.append(node['http_address'])
+                else:
+                    print('Non-data node filtered out: %s' % node['http_address'])
+            update_endpoints(endpoints)
+        except RequestException:
+            print('Unable to get ElasticSearch tasks from %s' % ES_URLS[0])
+            traceback.print_exc()
+            print('Rotating ElasticSearch endpoints for next try')
+            ES_URLS = ES_URLS[1:] + ES_URLS[:1]
 
-    time.sleep(SLEEP_TIME)
+        time.sleep(SLEEP_TIME)
