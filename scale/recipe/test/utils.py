@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import job.test.utils as job_test_utils
 import trigger.test.utils as trigger_test_utils
+from recipe.configuration.definition.recipe_definition import RecipeDefinition
 from recipe.configuration.data.recipe_data import RecipeData
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.handlers.graph import RecipeGraph
@@ -131,6 +132,12 @@ def create_recipe_type(name=None, version=None, title=None, description=None, de
     RecipeTypeRevision.objects.create_recipe_type_revision(recipe_type)
 
     return recipe_type
+
+
+def edit_recipe_type(recipe_type, definition):
+    """Updates the definition of a recipe type, including creating a new revision for unit testing
+    """
+    RecipeType.objects.edit_recipe_type(recipe_type.id, None, None, RecipeDefinition(definition), None, False)
 
 
 def create_recipe(recipe_type=None, data=None, event=None):

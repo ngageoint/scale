@@ -8,6 +8,7 @@ from django.db import models, transaction
 from job.models import Job, JobType
 from recipe.configuration.data.recipe_data import RecipeData
 from recipe.configuration.definition.recipe_definition import RecipeDefinition
+from recipe.exceptions import CreateRecipeError, ReprocessError, SupersedeError
 from recipe.handlers.graph_delta import RecipeGraphDelta
 from recipe.handlers.handler import RecipeHandler
 from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
@@ -62,13 +63,16 @@ class RecipeManager(models.Manager):
         :returns: A handler for the new recipe
         :rtype: :class:`recipe.handlers.handler.RecipeHandler`
 
+        :raises :class:`recipe.exceptions.CreateRecipeError`: If general recipe parameters are invalid
+        :raises :class:`recipe.exceptions.SupersedeError`: If the superseded parameters are invalid
+        :raises :class:`recipe.exceptions.ReprocessError`: If recipe cannot be reprocessed
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe data is invalid
         """
 
         if not recipe_type.is_active:
-            raise Exception('Recipe type is no longer active')
+            raise CreateRecipeError('Recipe type is no longer active')
         if event is None:
-            raise Exception('Event that triggered recipe creation is required')
+            raise CreateRecipeError('Event that triggered recipe creation is required')
 
         recipe = Recipe()
         recipe.recipe_type = recipe_type
@@ -86,7 +90,7 @@ class RecipeManager(models.Manager):
             # Use data from superseded recipe
             data = superseded_recipe.get_recipe_data()
             if not delta:
-                raise Exception('Cannot supersede a recipe without delta')
+                raise SupersedeError('Cannot supersede a recipe without delta')
 
             # New recipe references superseded recipe
             root_id = superseded_recipe.root_superseded_recipe_id
@@ -96,7 +100,7 @@ class RecipeManager(models.Manager):
             recipe.superseded_recipe = superseded_recipe
         else:
             if delta:
-                raise Exception('delta must be provided with a superseded recipe')
+                raise SupersedeError('delta must be provided with a superseded recipe')
 
         # Validate recipe data and save recipe
         recipe_definition.validate_data(data)
@@ -125,6 +129,8 @@ class RecipeManager(models.Manager):
         :type superseded_jobs: {string: :class:`job.models.Job`}
         :returns: The list of newly created recipe_job models (without id field populated)
         :rtype: [:class:`recipe.models.RecipeJob`]
+
+        :raises :class:`recipe.exceptions.ReprocessError`: If recipe cannot be reprocessed
         """
 
         recipe_jobs_to_create = []
@@ -136,7 +142,7 @@ class RecipeManager(models.Manager):
 
             if delta:  # Look at changes from recipe we are superseding
                 if not delta.can_be_reprocessed:
-                    raise Exception('Cannot reprocess recipe')
+                    raise ReprocessError('Cannot reprocess recipe')
                 if job_name in delta.get_identical_nodes():  # Identical jobs should be copied
                     copied_job = superseded_jobs[delta.get_identical_nodes()[job_name]]
                     recipe_job = RecipeJob()
@@ -326,7 +332,7 @@ class RecipeManager(models.Manager):
         return recipe
 
     @transaction.atomic
-    def reprocess_recipe(self, recipe_id, job_names, all_jobs=False):
+    def reprocess_recipe(self, recipe_id, job_names=None, all_jobs=False):
         """Schedules an existing recipe for re-processing. All requested jobs, jobs that have changed in the latest
         revision, and any of their dependent jobs will be re-processed. All database changes occur in an atomic
         transaction.
@@ -340,12 +346,12 @@ class RecipeManager(models.Manager):
             unchanged. This is a convenience for passing all the individual names in the job_names parameter and this
             parameter will override any values passed there.
         :type all_jobs: bool
-        :returns: The new recipe that was created for re-processing.
-        :rtype: :class:`recipe.models.Recipe`
+        :returns: A handler for the new recipe
+        :rtype: :class:`recipe.handlers.handler.RecipeHandler`
         """
 
         # Determine the old recipe graph
-        prev_recipe = Recipe.objects.select_related('recipe_type').get(pk=recipe_id)
+        prev_recipe = Recipe.objects.select_related('recipe_type', 'recipe_type_rev').get(pk=recipe_id)
         prev_graph = prev_recipe.get_recipe_definition().get_graph()
 
         # Populate the list of all job names in the recipe as a shortcut
@@ -356,29 +362,32 @@ class RecipeManager(models.Manager):
         current_type = prev_recipe.recipe_type
         current_graph = current_type.get_recipe_definition().get_graph()
 
+        # Make sure that something is different to reprocess
+        if current_type.revision_num == prev_recipe.recipe_type_rev.revision_num and not job_names:
+            raise ReprocessError('Superseded jobs must be specified when the recipe type has not changed')
+
         # Compute the job differences between recipe revisions including forced ones
         graph_delta = RecipeGraphDelta(prev_graph, current_graph)
-        for job_name in job_names:
-            graph_delta.reprocess_identical_node(job_name)
-        changed_nodes = graph_delta.get_changed_nodes()
+        if job_names:
+            for job_name in job_names:
+                graph_delta.reprocess_identical_node(job_name)
 
         # Get the old recipe jobs that will be superseded
-        prev_recipe_jobs = RecipeJob.objects.filter(recipe=prev_recipe, job_name__in=changed_nodes.values())
+        prev_recipe_jobs = RecipeJob.objects.filter(recipe=prev_recipe)
 
         # Acquire model locks
-        superseded_recipe = Recipe.objects.select_for_update().get(pk=prev_recipe.id)
+        superseded_recipe = Recipe.objects.select_for_update().get(pk=recipe_id)
         prev_jobs = Job.objects.select_for_update().filter(pk__in=[rj.job_id for rj in prev_recipe_jobs])
         prev_jobs_dict = {j.id: j for j in prev_jobs}
         superseded_jobs = {rj.job_name: prev_jobs_dict[rj.job_id] for rj in prev_recipe_jobs}
 
         # Create an event to represent this request
-        description = {'recipe_id': recipe_id}
+        description = {'recipe_id': recipe_id, 'job_names': job_names}
         event = TriggerEvent.objects.create_trigger_event('REPROCESS_RECIPE', None, description, timezone.now())
 
         # Create the new recipe while superseding the old one
-        handler = Recipe.objects.create_recipe(current_type, event, prev_recipe.get_recipe_data(), superseded_recipe,
-                                               graph_delta, superseded_jobs)
-        return handler.recipe
+        return Recipe.objects.create_recipe(current_type, event, prev_recipe.get_recipe_data(), superseded_recipe,
+                                            graph_delta, superseded_jobs)
 
     def _get_recipe_handlers(self, recipe_ids):
         """Returns the handlers for the given recipe IDs. If a given recipe ID is not valid it will not be included in

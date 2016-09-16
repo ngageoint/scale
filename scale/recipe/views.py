@@ -16,6 +16,7 @@ from recipe.models import Recipe, RecipeType
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.configuration.definition.exceptions import InvalidDefinition
 from recipe.configuration.definition.recipe_definition import RecipeDefinition
+from recipe.exceptions import ReprocessError
 from recipe.serializers import (RecipeDetailsSerializer, RecipeSerializer, RecipeTypeDetailsSerializer,
                                 RecipeTypeSerializer)
 from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerType
@@ -310,7 +311,7 @@ class RecipeDetailsView(RetrieveAPIView):
         return Response(serializer.data)
 
 
-class RecipeReprocessView(APIView):
+class RecipeReprocessView(GenericAPIView):
     """This view is the endpoint for scheduling a reprocess of a recipe"""
     queryset = Recipe.objects.all()
     serializer_class = RecipeDetailsSerializer
@@ -330,10 +331,17 @@ class RecipeReprocessView(APIView):
         all_jobs = rest_util.parse_bool(request, 'all_jobs', required=False)
 
         try:
-            new_recipe = Recipe.objects.reprocess_recipe(recipe_id, job_names, all_jobs)
-            new_recipe = Recipe.objects.get_details(new_recipe.id)
+            handler = Recipe.objects.reprocess_recipe(recipe_id, job_names, all_jobs)
+        except Recipe.DoesNotExist:
+            raise Http404
+        except ReprocessError:
+            raise BadParameter('Job names must be requested when the recipe type has not changed')
+
+        try:
+            new_recipe = Recipe.objects.get_details(handler.recipe.id)
         except Recipe.DoesNotExist:
             raise Http404
 
+        url = urlresolvers.reverse('recipe_type_details_view', args=[new_recipe.id])
         serializer = self.get_serializer(new_recipe)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))

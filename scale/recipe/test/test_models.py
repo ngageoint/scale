@@ -15,6 +15,7 @@ from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.configuration.data.recipe_data import RecipeData
 from recipe.configuration.definition.exceptions import InvalidDefinition
 from recipe.configuration.definition.recipe_definition import RecipeDefinition
+from recipe.exceptions import ReprocessError
 from recipe.handlers.graph_delta import RecipeGraphDelta
 from recipe.models import Recipe, RecipeJob, RecipeType, RecipeTypeRevision
 from trigger.models import TriggerRule
@@ -593,6 +594,201 @@ class TestRecipeManagerCreateRecipe(TransactionTestCase):
         self.assertTrue(new_recipe_job_2.is_original)
         self.assertIsNone(new_recipe_job_2.job.superseded_job_id)
         self.assertIsNone(new_recipe_job_2.job.root_superseded_job_id)
+
+
+class TestRecipeManagerReprocessRecipe(TransactionTestCase):
+
+    def setUp(self):
+        django.setup()
+
+        self.workspace = storage_test_utils.create_workspace()
+
+        self.file = storage_test_utils.create_file()
+
+        configuration = {
+            'version': '1.0',
+            'condition': {
+                'media_type': 'text/plain',
+            },
+            'data': {
+                'input_data_name': 'Recipe Input',
+                'workspace_name': self.workspace.name,
+            }
+        }
+        self.rule = trigger_test_utils.create_trigger_rule(configuration=configuration)
+        self.event = trigger_test_utils.create_trigger_event(rule=self.rule)
+
+        interface_1 = {
+            'version': '1.0',
+            'command': 'my_command',
+            'command_arguments': 'args',
+            'input_data': [{
+                'name': 'Test Input 1',
+                'type': 'file',
+                'media_types': ['text/plain'],
+            }],
+            'output_data': [{
+                'name': 'Test Output 1',
+                'type': 'files',
+                'media_type': 'image/png',
+            }]}
+        self.job_type_1 = job_test_utils.create_job_type(interface=interface_1)
+
+        interface_2 = {
+            'version': '1.0',
+            'command': 'my_command',
+            'command_arguments': 'args',
+            'input_data': [{
+                'name': 'Test Input 2',
+                'type': 'files',
+                'media_types': ['image/png', 'image/tiff'],
+            }],
+            'output_data': [{
+                'name': 'Test Output 2',
+                'type': 'file',
+            }]}
+        self.job_type_2 = job_test_utils.create_job_type(interface=interface_2)
+
+        definition = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'Recipe Input',
+                'type': 'file',
+                'media_types': ['text/plain'],
+            }],
+            'jobs': [{
+                'name': 'Job 1',
+                'job_type': {
+                    'name': self.job_type_1.name,
+                    'version': self.job_type_1.version,
+                },
+                'recipe_inputs': [{
+                    'recipe_input': 'Recipe Input',
+                    'job_input': 'Test Input 1',
+                }]
+            }, {
+                'name': 'Job 2',
+                'job_type': {
+                    'name': self.job_type_2.name,
+                    'version': self.job_type_2.version,
+                },
+                'dependencies': [{
+                    'name': 'Job 1',
+                    'connections': [{
+                        'output': 'Test Output 1',
+                        'input': 'Test Input 2',
+                    }]
+                }]
+            }]
+        }
+        RecipeDefinition(definition).validate_job_interfaces()
+        self.recipe_type = recipe_test_utils.create_recipe_type(definition=definition, trigger_rule=self.rule)
+
+        self.data = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'Recipe Input',
+                'file_id': self.file.id,
+            }],
+            'workspace_id': self.workspace.id,
+        }
+
+    def test_forced_all_job(self):
+        """Tests reprocessing a recipe without any changes by forcing all jobs."""
+
+        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, event=self.event,
+                                               data=RecipeData(self.data))
+
+        new_handler = Recipe.objects.reprocess_recipe(handler.recipe.id, all_jobs=True)
+
+        # Make sure the recipe jobs get created with the correct job types
+        recipe_job_1 = RecipeJob.objects.get(recipe_id=new_handler.recipe.id, job_name='Job 1')
+        recipe_job_2 = RecipeJob.objects.get(recipe_id=new_handler.recipe.id, job_name='Job 2')
+        self.assertEqual(recipe_job_1.job.job_type.id, self.job_type_1.id)
+        self.assertEqual(recipe_job_2.job.job_type.id, self.job_type_2.id)
+
+    def test_forced_specific_job(self):
+        """Tests reprocessing a recipe without any changes by forcing a single job."""
+
+        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, event=self.event,
+                                               data=RecipeData(self.data))
+
+        new_handler = Recipe.objects.reprocess_recipe(handler.recipe.id, ['Job 1'])
+
+        # Make sure the recipe jobs get created with the correct job types
+        recipe_job_1 = RecipeJob.objects.get(recipe_id=new_handler.recipe.id, job_name='Job 1')
+        self.assertEqual(recipe_job_1.job.job_type.id, self.job_type_1.id)
+
+    def test_no_changes(self):
+        """Tests reprocessing a recipe that has not changed without specifying any jobs throws an error."""
+
+        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, event=self.event,
+                                               data=RecipeData(self.data))
+
+        self.assertRaises(ReprocessError, Recipe.objects.reprocess_recipe, handler.recipe.id)
+
+    def test_different_recipe_type(self):
+        """Tests reprocessing a recipe that was updated to a new revision since it originally ran."""
+
+        interface_3 = {
+            'version': '1.0',
+            'command': 'my_command',
+            'command_arguments': 'args',
+            'input_data': [{
+                'name': 'Test Input 3',
+                'type': 'files',
+                'media_types': ['image/tiff'],
+            }],
+            'output_data': [{
+                'name': 'Test Output 3',
+                'type': 'file',
+            }]}
+        job_type_3 = job_test_utils.create_job_type(interface=interface_3)
+        new_definition = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'Recipe Input',
+                'type': 'file',
+                'media_types': ['text/plain'],
+            }],
+            'jobs': [{
+                'name': 'Job 1',
+                'job_type': {
+                    'name': self.job_type_1.name,
+                    'version': self.job_type_1.version,
+                },
+                'recipe_inputs': [{
+                    'recipe_input': 'Recipe Input',
+                    'job_input': 'Test Input 1',
+                }]
+            }, {
+                'name': 'Job 3',
+                'job_type': {
+                    'name': job_type_3.name,
+                    'version': job_type_3.version,
+                },
+                'dependencies': [{
+                    'name': 'Job 1',
+                    'connections': [{
+                        'output': 'Test Output 1',
+                        'input': 'Test Input 3',
+                    }]
+                }]
+            }]
+        }
+
+        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, event=self.event,
+                                               data=RecipeData(self.data))
+        recipe = Recipe.objects.get(id=handler.recipe.id)
+        recipe_test_utils.edit_recipe_type(self.recipe_type, new_definition)
+
+        new_handler = Recipe.objects.reprocess_recipe(recipe.id)
+
+        # Make sure the recipe jobs get created with the correct job types
+        recipe_job_1 = RecipeJob.objects.get(recipe_id=new_handler.recipe.id, job_name='Job 1')
+        recipe_job_3 = RecipeJob.objects.get(recipe_id=new_handler.recipe.id, job_name='Job 3')
+        self.assertEqual(recipe_job_1.job.job_type.id, self.job_type_1.id)
+        self.assertEqual(recipe_job_3.job.job_type.id, job_type_3.id)
 
 
 class TestRecipePopulateJobs(TransactionTestCase):
