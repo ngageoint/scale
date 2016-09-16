@@ -1443,12 +1443,8 @@ class JobExecution(models.Model):
         if since is not None:
             q['query']['bool']['must'].append({'range': {'@timestamp': {'gt': since.isoformat()}}})
 
-        esr = urllib2.urlopen(
-            urllib2.Request(settings.ELASTICSEARCH_URL+'/_search',
-                            data=json.dumps(q),
-                            headers={'Accept': 'application/json', 'Content-type': 'application/json'}))
+        hits = settings.ELASTICSEARCH.search(index='_all', body=q)
 
-        hits = json.loads(esr.read())
         if hits['hits']['total'] == 0:
             return None, util.parse.datetime.datetime.utcnow()
         last_modified = max([util.parse.parse_datetime(h['_source']['@timestamp']) for h in hits['hits']['hits']])
