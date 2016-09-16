@@ -41,6 +41,7 @@ if __name__ == '__main__':
     while True:
         try:
             es_service = '_nodes/_all/http,settings'
+            # Only query the first ES from the first node in the list... if it goes sideways, we rotate list anyway
             response = requests.get('%s/%s' % (ES_URLS[0], es_service))
             endpoints = []
             for key, node in json.loads(response.text)['nodes'].iteritems():
@@ -48,11 +49,12 @@ if __name__ == '__main__':
                     endpoints.append(node['http_address'])
                 else:
                     print('Non-data node filtered out: %s' % node['http_address'])
+            ES_URLS = ['http://%s' % x for x in endpoints]
             update_endpoints(endpoints)
         except RequestException:
-            print('Unable to get ElasticSearch tasks from %s' % ES_URLS[0])
+            print('Unable to get ElasticSearch nodes from %s' % ES_URLS[0])
             traceback.print_exc()
-            print('Rotating ElasticSearch endpoints for next try')
+            print('Rotating ElasticSearch endpoints for next try...')
             ES_URLS = ES_URLS[1:] + ES_URLS[:1]
 
         time.sleep(SLEEP_TIME)
