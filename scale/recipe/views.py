@@ -342,6 +342,6 @@ class RecipeReprocessView(GenericAPIView):
         except Recipe.DoesNotExist:
             raise Http404
 
-        url = urlresolvers.reverse('recipe_type_details_view', args=[new_recipe.id])
+        url = urlresolvers.reverse('recipe_details_view', args=[new_recipe.id])
         serializer = self.get_serializer(new_recipe)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))

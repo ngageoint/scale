@@ -384,8 +384,8 @@ class RecipeManager(models.Manager):
         superseded_jobs = {rj.job_name: prev_jobs_dict[rj.job_id] for rj in prev_recipe_jobs}
 
         # Create an event to represent this request
-        description = {'recipe_id': recipe_id, 'job_names': job_names}
-        event = TriggerEvent.objects.create_trigger_event('REPROCESS_RECIPE', None, description, timezone.now())
+        description = {'user': 'Anonymous'}
+        event = TriggerEvent.objects.create_trigger_event('USER', None, description, timezone.now())
 
         # Create the new recipe while superseding the old one
         return Recipe.objects.create_recipe(current_type, event, prev_recipe.get_recipe_data(), superseded_recipe,

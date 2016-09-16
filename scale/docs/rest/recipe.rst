@@ -414,11 +414,11 @@ These services provide access to information about recipes.
 .. _rest_recipe_reprocess:
 
 +-------------------------------------------------------------------------------------------------------------------------+
-| **Reprocess Recipe**                                                                                                    |
+| **Re-process Recipe**                                                                                                   |
 +=========================================================================================================================+
 | Creates a new recipe using its latest type revision by superseding an existing recipe and associated jobs.              |
 | Note that if the recipe type definition has not changed since the recipe was created, then one or more job names must be|
-| specified to force the recipe to be reprocessed.                                                                        |
+| specified to force the recipe to be re-processed.                                                                       |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **POST** /recipes/{id}/reprocess/                                                                                       |
 |          Where {id} is the unique identifier of an existing model.                                                      |
@@ -428,13 +428,13 @@ These services provide access to information about recipes.
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | job_names          | Array[String]     | Optional | The name of jobs within the recipe definition that should be        |
-|                    |                   |          | included in the reprocessing request, even when the definition for  |
+|                    |                   |          | included in the re-processing request, even when the definition for |
 |                    |                   |          | those jobs has not changed between recipe type revisions.           |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| all_jobs           | Boolean           | Optional | A flag that indicates all jobs in the recipe should be reprocessed, |
+| all_jobs           | Boolean           | Optional | A flag that indicates all jobs in the recipe should be re-processed,|
 |                    |                   |          | even when the recipe type definitions are identical. This option    |
-|                    |                   |          | overrides any job_name parameters and is typically used to re-run   |
-|                    |                   |          | jobs that failed due to temporary errors.                           |
+|                    |                   |          | overrides any job_name parameters and is typically used to          |
+|                    |                   |          | re-process previously completed jobs with new algorithm updates.    |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
@@ -445,6 +445,8 @@ These services provide access to information about recipes.
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Status**         | 201 CREATED                                                                                        |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Location**       | URL pointing to the details for the newly created recipe                                           |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
