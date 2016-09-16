@@ -417,10 +417,26 @@ These services provide access to information about recipes.
 | **Reprocess Recipe**                                                                                                    |
 +=========================================================================================================================+
 | Creates a new recipe using its latest type revision by superseding an existing recipe and associated jobs.              |
+| Note that if the recipe type definition has not changed since the recipe was created, then one or more job names must be|
+| specified to force the recipe to be reprocessed.                                                                        |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **POST** /recipes/{id}/reprocess/                                                                                       |
 |          Where {id} is the unique identifier of an existing model.                                                      |
-+-------------------------------------------------------------------------------------------------------------------------+
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| job_name           | String            | Optional | The name of a job within the recipe definition that should be       |
+|                    |                   |          | included in the reprocessing request, even when the definition for  |
+|                    |                   |          | the job has not changed between recipe type revisions.              |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| all_jobs           | Boolean           | Optional | A flag that indicates all jobs in the recipe should be reprocessed, |
+|                    |                   |          | even when the recipe type definitions are identical. This option    |
+|                    |                   |          | overrides any job_name parameters and is typically used to re-run   |
+|                    |                   |          | jobs that failed due to temporary errors.                           |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Status**         | 201 CREATED                                                                                        |
