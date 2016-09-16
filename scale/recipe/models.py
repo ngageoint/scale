@@ -56,7 +56,8 @@ class RecipeManager(models.Manager):
         :param delta: If not None, represents the changes between the old recipe to supersede and the new recipe
         :type delta: :class:`recipe.handlers.graph_delta.RecipeGraphDelta`
         :param superseded_jobs: If not None, represents the job models (stored by job name) of the old recipe to
-            supersede
+            supersede. This mapping must include all jobs created by the previous recipe, not just the ones that will
+            actually be replaced by the new recipe definition.
         :type superseded_jobs: {string: :class:`job.models.Job`}
         :returns: A handler for the new recipe
         :rtype: :class:`recipe.handlers.handler.RecipeHandler`
@@ -120,7 +121,8 @@ class RecipeManager(models.Manager):
         :param delta: If not None, represents the changes between the old recipe to supersede and the new recipe
         :type delta: :class:`recipe.handlers.graph_delta.RecipeGraphDelta`
         :param superseded_jobs: If not None, represents the job models (stored by job name) of the old recipe to
-            supersede
+            supersede. This mapping must include all jobs created by the previous recipe, not just the ones that will
+            actually be replaced by the new recipe definition.
         :type superseded_jobs: {string: :class:`job.models.Job`}
         :returns: The list of newly created recipe_job models (without id field populated)
         :rtype: [:class:`recipe.models.RecipeJob`]
