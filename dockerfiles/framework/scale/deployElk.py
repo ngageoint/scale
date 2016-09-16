@@ -10,8 +10,16 @@ def run():
     # attempt to delete an old instance..if it doesn't exists it will error but we don't care so we ignore it
     requests.delete('http://marathon.mesos:8080/v2/apps/scale-logstash')
 
+    es_urls = os.getenv('SCALE_ELASTICSEARCH_URL')
+    # if ELASTICSEARCH_URL is not set, assume we are running within DCOS and attempt to query Elastic scheduler
+    if not es_urls or not len(es_urls.strip()):
+        response = requests.get('http://elasticsearch.marathon.mesos:31105/v1/tasks')
+        endpoints = ['http://%s' % x['http_address'] for x in json.loads(response.text)]
+        es_urls = ','.join(endpoints)
+        es_urls = endpoints[0]
+
     # get the Logstash container API endpoints
-    logstash_image = os.getenv('LOGSTASH_DOCKER_IMAGE', 'geoint/dcos-logstash:2.4')
+    logstash_image = os.getenv('LOGSTASH_DOCKER_IMAGE', 'geoint/logstash-elastic-ha')
     marathon = {
       'id': 'scale-logstash',
       'cpus': 0.5,
@@ -33,7 +41,9 @@ def run():
           'protocol': 'udp'
         }
       ],
-      'env': {},
+      'env': {
+        'ELASTICSEARCH_URLS': es_urls
+      },
       'labels': {},
       'healthChecks': [],
       'uris': []
@@ -41,12 +51,8 @@ def run():
 
     # Capture any passed-in environment variables that are relevant to Logstash container.
     CONFIG_URI = os.getenv('CONFIG_URI')
-    ELASTICSEARCH_URL = os.getenv('SCALE_ELASTICSEARCH_URL')
     SLEEP_TIME = os.getenv('LOGSTASH_WATCHDOG_SLEEP_TIME')
     TEMPLATE_URI = os.getenv('LOGSTASH_TEMPLATE_URI')
-
-    if ELASTICSEARCH_URL:
-        marathon['env']['ELASTICSEARCH_URL'] = ELASTICSEARCH_URL
 
     if SLEEP_TIME:
         marathon['env']['SLEEP_TIME'] = SLEEP_TIME
@@ -64,7 +70,7 @@ def run():
         time.sleep(5)
     logstashPort = json.loads(requests.get('http://marathon.mesos:8080/v2/apps/scale-logstash').text)['app']['tasks'][0]['ports'][0]
     print('udp://scale-logstash.marathon.mesos:%s'%(logstashPort,))
-
+    print(es_urls)
 
 if __name__ == '__main__':
     # ensure this doesn't try and run if imported
