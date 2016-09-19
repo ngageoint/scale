@@ -216,10 +216,10 @@ The S3 broker requires the following additional fields in its configuration:
 **host_path**: JSON string
 
     The *host_path* is an optional string that adds S3 workspace support for locally mounted buckets and partial file
-    read-only access. If a FUSE file system (such as s3fs or goofys) mounts the S3 bucket the *host_path* location on
+    read-only access. If a FUSE file system (such as s3fs or goofys) mounts the S3 bucket at the *host_path* location on
     all nodes, an alternative to downloading large files is available to jobs that use only portions of a file. The job
     interface *must* indicate *partial* equal to *true* for any input files to take advantage of *host_path*. Only read
-    operations are performed using the mount, all write operations will be done for the entire file.
+    operations are performed using the mount, all write operations will use the S3 REST API.
 
 **region_name**: JSON string
 
