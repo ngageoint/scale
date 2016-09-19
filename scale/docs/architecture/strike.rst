@@ -193,7 +193,7 @@ Example S3 monitor configuration:
        ]
    }
 
-The S3 monitor requires one additional field in its configuration:
+The S3 monitor has the following additional fields in its configuration:
 
 **sqs_name**: JSON string
 
