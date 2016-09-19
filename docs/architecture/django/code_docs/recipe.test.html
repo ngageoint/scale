@@ -113,6 +113,7 @@
 <li class="toctree-l4 current"><a class="reference internal" href="recipe.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.apps">recipe.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.exceptions">recipe.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.models">recipe.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.serializers">recipe.serializers module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="recipe.html#module-recipe.urls">recipe.urls module</a></li>
@@ -318,6 +319,41 @@ has one identical node, and deletes another node to replace it with a new one.</
 <dt id="recipe.test.test_models.TestRecipeManagerCreateRecipe.test_successful_supersede_same_recipe_type">
 <code class="descname">test_successful_supersede_same_recipe_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerCreateRecipe.test_successful_supersede_same_recipe_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling RecipeManager.create_recipe() to supersede a recipe with the same recipe type.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.test.test_models.TestRecipeManagerReprocessRecipe">
+<em class="property">class </em><code class="descclassname">recipe.test.test_models.</code><code class="descname">TestRecipeManagerReprocessRecipe</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerReprocessRecipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<dl class="method">
+<dt id="recipe.test.test_models.TestRecipeManagerReprocessRecipe.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerReprocessRecipe.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_different_recipe_type">
+<code class="descname">test_different_recipe_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_different_recipe_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests reprocessing a recipe that was updated to a new revision since it originally ran.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_forced_all_job">
+<code class="descname">test_forced_all_job</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_forced_all_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests reprocessing a recipe without any changes by forcing all jobs.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_forced_specific_job">
+<code class="descname">test_forced_specific_job</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_forced_specific_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests reprocessing a recipe without any changes by forcing a single job.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_no_changes">
+<code class="descname">test_no_changes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_no_changes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests reprocessing a recipe that has not changed without specifying any jobs throws an error.</p>
 </dd></dl>
 
 </dd></dl>
@@ -602,6 +638,24 @@ has one identical node, and deletes another node to replace it with a new one.</
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="recipe.test.test_views.TestRecipesView.test_no_changes">
+<code class="descname">test_no_changes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipesView.test_no_changes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests reprocessing a recipe that has not changed without specifying any jobs throws an error.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipesView.test_reprocess_all_jobs">
+<code class="descname">test_reprocess_all_jobs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipesView.test_reprocess_all_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests reprocessing all jobs in an existing recipe</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipesView.test_reprocess_job">
+<code class="descname">test_reprocess_job</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipesView.test_reprocess_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests reprocessing one job in an existing recipe</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="recipe.test.test_views.TestRecipesView.test_successful_all">
 <code class="descname">test_successful_all</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipesView.test_successful_all" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests getting recipes</p>
@@ -776,6 +830,12 @@ has one identical node, and deletes another node to replace it with a new one.</
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="function">
+<dt id="recipe.test.utils.edit_recipe_type">
+<code class="descclassname">recipe.test.utils.</code><code class="descname">edit_recipe_type</code><span class="sig-paren">(</span><em>recipe_type</em>, <em>definition</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.edit_recipe_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the definition of a recipe type, including creating a new revision for unit testing</p>
 </dd></dl>
 
 </div>

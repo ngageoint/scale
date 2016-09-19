@@ -113,6 +113,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-recipe.apps">recipe.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-recipe.exceptions">recipe.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-recipe.models">recipe.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-recipe.serializers">recipe.serializers module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-recipe.urls">recipe.urls module</a></li>
@@ -319,6 +320,31 @@
 <code class="descname">verbose_name</code><em class="property"> = u'Recipe'</em><a class="headerlink" href="#recipe.apps.RecipeConfig.verbose_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.exceptions">
+<span id="recipe-exceptions-module"></span><h2>recipe.exceptions module<a class="headerlink" href="#module-recipe.exceptions" title="Permalink to this headline">¶</a></h2>
+<p>Defines exceptions that can occur when interacting with recipes and recipe types</p>
+<dl class="exception">
+<dt id="recipe.exceptions.CreateRecipeError">
+<em class="property">exception </em><code class="descclassname">recipe.exceptions.</code><code class="descname">CreateRecipeError</code><a class="headerlink" href="#recipe.exceptions.CreateRecipeError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Exception indicating that a recipe cannot be created</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="recipe.exceptions.ReprocessError">
+<em class="property">exception </em><code class="descclassname">recipe.exceptions.</code><code class="descname">ReprocessError</code><a class="headerlink" href="#recipe.exceptions.ReprocessError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Exception indicating that a reprocessing request cannot be completed</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="recipe.exceptions.SupersedeError">
+<em class="property">exception </em><code class="descclassname">recipe.exceptions.</code><code class="descname">SupersedeError</code><a class="headerlink" href="#recipe.exceptions.SupersedeError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Exception indicating that a recipe cannot be superseded</p>
 </dd></dl>
 
 </div>
@@ -595,7 +621,8 @@ superseded_recipe model. All database changes occur in an atomic transaction.</p
 <li><strong>superseded_recipe</strong> (<a class="reference internal" href="#recipe.models.Recipe" title="recipe.models.Recipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></code></a>) &#8211; The recipe that the created recipe is superseding, possibly None</li>
 <li><strong>delta</strong> (<a class="reference internal" href="recipe.handlers.html#recipe.handlers.graph_delta.RecipeGraphDelta" title="recipe.handlers.graph_delta.RecipeGraphDelta"><code class="xref py py-class docutils literal"><span class="pre">recipe.handlers.graph_delta.RecipeGraphDelta</span></code></a>) &#8211; If not None, represents the changes between the old recipe to supersede and the new recipe</li>
 <li><strong>superseded_jobs</strong> ({string: <a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>}) &#8211; If not None, represents the job models (stored by job name) of the old recipe to
-supersede</li>
+supersede. This mapping must include all jobs created by the previous recipe, not just the ones that will
+actually be replaced by the new recipe definition.</li>
 </ul>
 </td>
 </tr>
@@ -607,7 +634,10 @@ supersede</li>
 </tr>
 </tbody>
 </table>
-<p>:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeData" title="recipe.configuration.data.exceptions.InvalidRecipeData"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeData</span></code></a>: If the recipe data is invalid</p>
+<p>:raises <a class="reference internal" href="#recipe.exceptions.CreateRecipeError" title="recipe.exceptions.CreateRecipeError"><code class="xref py py-class docutils literal"><span class="pre">recipe.exceptions.CreateRecipeError</span></code></a>: If general recipe parameters are invalid
+:raises <a class="reference internal" href="#recipe.exceptions.SupersedeError" title="recipe.exceptions.SupersedeError"><code class="xref py py-class docutils literal"><span class="pre">recipe.exceptions.SupersedeError</span></code></a>: If the superseded parameters are invalid
+:raises <a class="reference internal" href="#recipe.exceptions.ReprocessError" title="recipe.exceptions.ReprocessError"><code class="xref py py-class docutils literal"><span class="pre">recipe.exceptions.ReprocessError</span></code></a>: If recipe cannot be reprocessed
+:raises <a class="reference internal" href="recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeData" title="recipe.configuration.data.exceptions.InvalidRecipeData"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.data.exceptions.InvalidRecipeData</span></code></a>: If the recipe data is invalid</p>
 </dd></dl>
 
 <dl class="method">
@@ -711,6 +741,36 @@ Handlers will not be returned for jobs that are not in a recipe or for recipes t
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#recipe.models.Recipe" title="recipe.models.Recipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></code></a>]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.models.RecipeManager.reprocess_recipe">
+<code class="descname">reprocess_recipe</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.reprocess_recipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Schedules an existing recipe for re-processing. All requested jobs, jobs that have changed in the latest
+revision, and any of their dependent jobs will be re-processed. All database changes occur in an atomic
+transaction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>recipe_id</strong> (<em>int</em>) &#8211; The identifier of the recipe to re-process.</li>
+<li><strong>job_names</strong> (<em>[string]</em>) &#8211; A list of job names from the recipe that should be forced to re-process even if the latest
+recipe revision left them unchanged. If none are passed, then only jobs that changed are scheduled.</li>
+<li><strong>all_jobs</strong> (<em>bool</em>) &#8211; Indicates all jobs should be forced to re-process even if the latest recipe revision left them
+unchanged. This is a convenience for passing all the individual names in the job_names parameter and this
+parameter will override any values passed there.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A handler for the new recipe</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="recipe.handlers.html#recipe.handlers.handler.RecipeHandler" title="recipe.handlers.handler.RecipeHandler"><code class="xref py py-class docutils literal"><span class="pre">recipe.handlers.handler.RecipeHandler</span></code></a></p>
 </td>
 </tr>
 </tbody>
@@ -1295,14 +1355,14 @@ model.</p>
 <dl class="method">
 <dt id="recipe.views.RecipeDetailsView.retrieve">
 <code class="descname">retrieve</code><span class="sig-paren">(</span><em>request</em>, <em>recipe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.views.RecipeDetailsView.retrieve" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieves the details for a recipe type and return them in JSON form</p>
+<dd><p>Retrieves the details for a recipe and returns it in JSON form</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
-<li><strong>id</strong> (<em>int encoded as a str</em>) &#8211; The id of the recipe type</li>
+<li><strong>recipe_id</strong> (<em>int encoded as a str</em>) &#8211; The id of the recipe</li>
 </ul>
 </td>
 </tr>
@@ -1319,6 +1379,48 @@ model.</p>
 <dl class="attribute">
 <dt id="recipe.views.RecipeDetailsView.serializer_class">
 <code class="descname">serializer_class</code><a class="headerlink" href="#recipe.views.RecipeDetailsView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">RecipeDetailsSerializer</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.views.RecipeReprocessView">
+<em class="property">class </em><code class="descclassname">recipe.views.</code><code class="descname">RecipeReprocessView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.views.RecipeReprocessView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></code></p>
+<p>This view is the endpoint for scheduling a reprocess of a recipe</p>
+<dl class="method">
+<dt id="recipe.views.RecipeReprocessView.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em>, <em>recipe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.views.RecipeReprocessView.post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Schedules a recipe for reprocessing and returns it in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
+<li><strong>recipe_id</strong> (<em>int encoded as a str</em>) &#8211; The id of the recipe</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.views.RecipeReprocessView.queryset">
+<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#recipe.views.RecipeReprocessView.queryset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.views.RecipeReprocessView.serializer_class">
+<code class="descname">serializer_class</code><a class="headerlink" href="#recipe.views.RecipeReprocessView.serializer_class" title="Permalink to this definition">¶</a></dt>
 <dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">RecipeDetailsSerializer</span></code></p>
 </dd></dl>
 

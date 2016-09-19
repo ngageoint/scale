@@ -23,6 +23,14 @@ recipe.apps module
     :undoc-members:
     :show-inheritance:
 
+recipe.exceptions module
+------------------------
+
+.. automodule:: recipe.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 recipe.models module
 --------------------
 

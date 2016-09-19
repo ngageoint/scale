@@ -688,6 +688,288 @@ This field will remain null if a job in the recipe is blocked or failed.</td>
 </tr>
 </tbody>
 </table>
+<table border="1" class="docutils" id="rest-recipe-reprocess">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="8%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Re-process Recipe</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="4">Creates a new recipe using its latest type revision by superseding an existing recipe and associated jobs.
+Note that if the recipe type definition has not changed since the recipe was created, then one or more job names must be
+specified to force the recipe to be re-processed.</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><dl class="first last docutils">
+<dt><strong>POST</strong> /recipes/{id}/reprocess/</dt>
+<dd>Where {id} is the unique identifier of an existing model.</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>job_names</td>
+<td>Array[String]</td>
+<td>Optional</td>
+<td>The name of jobs within the recipe definition that should be
+included in the re-processing request, even when the definition for
+those jobs has not changed between recipe type revisions.</td>
+</tr>
+<tr class="row-odd"><td>all_jobs</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>A flag that indicates all jobs in the recipe should be re-processed,
+even when the recipe type definitions are identical. This option
+overrides any job_name parameters and is typically used to
+re-process previously completed jobs with new algorithm updates.</td>
+</tr>
+<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;all_jobs&quot;</span><span class="o">:</span> <span class="kc">true</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="3">201 CREATED</td>
+</tr>
+<tr class="row-odd"><td><strong>Location</strong></td>
+<td colspan="3">URL pointing to the details for the newly created recipe</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td>JSON Object</td>
+<td colspan="2">All fields are the same as the recipe details model.
+(See <a class="reference internal" href="#rest-recipe-details"><span>Recipe Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">72</span><span class="p">,</span>
+    <span class="s2">&quot;recipe_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;MyRecipe&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is a description of the recipe&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="s2">&quot;definition&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;media_types&quot;</span><span class="o">:</span> <span class="p">[</span>
+                        <span class="s2">&quot;image/png&quot;</span>
+                    <span class="p">],</span>
+                    <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span>
+                <span class="p">}</span>
+            <span class="p">],</span>
+            <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;jobs&quot;</span><span class="o">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;recipe_inputs&quot;</span><span class="o">:</span> <span class="p">[</span>
+                        <span class="p">{</span>
+                            <span class="s2">&quot;job_input&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;recipe_input&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span>
+                        <span class="p">}</span>
+                    <span class="p">],</span>
+                    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;kml&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;kml-footprint&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.2.3&quot;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-15T19:03:26.346Z&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-15T19:03:26.346Z&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;archived&quot;</span><span class="o">:</span> <span class="kc">null</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;recipe_type_rev&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="s2">&quot;recipe_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="s2">&quot;definition&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;media_types&quot;</span><span class="o">:</span> <span class="p">[</span>
+                        <span class="s2">&quot;image/png&quot;</span>
+                    <span class="p">],</span>
+                    <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span>
+                <span class="p">}</span>
+            <span class="p">],</span>
+            <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;jobs&quot;</span><span class="o">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;recipe_inputs&quot;</span><span class="o">:</span> <span class="p">[</span>
+                        <span class="p">{</span>
+                            <span class="s2">&quot;job_input&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;recipe_input&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span>
+                        <span class="p">}</span>
+                    <span class="p">],</span>
+                    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;kml&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;kml-footprint&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.2.3&quot;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-11-06T19:44:09.989Z&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
+        <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;PARSE&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;rule&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;PARSE&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;parse-png&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;configuration&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;workspace_name&quot;</span><span class="o">:</span> <span class="s2">&quot;products&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;input_data_name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;condition&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;image/png&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;data_types&quot;</span><span class="o">:</span> <span class="p">[]</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;occurred&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T19:03:59.054Z&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;file_name&quot;</span><span class="o">:</span> <span class="s2">&quot;data-file.png&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;parse_id&quot;</span><span class="o">:</span> <span class="mi">1</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;is_superseded&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;root_superseded_recipe&quot;</span><span class="o">:</span> <span class="p">{...},</span>
+    <span class="s2">&quot;superseded_recipe&quot;</span><span class="o">:</span> <span class="p">{...},</span>
+    <span class="s2">&quot;superseded_by_recipe&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-15T19:03:26.346Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;completed&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-15T19:05:26.346Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;superseded&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-15T19:05:26.346Z&quot;</span>
+    <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;file_id&quot;</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span>
+        <span class="s2">&quot;workspace_id&quot;</span><span class="o">:</span> <span class="mi">2</span>
+    <span class="p">}</span>
+    <span class="s2">&quot;input_files&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+            <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Raw Source&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;file_name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file.txt&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;file_size&quot;</span><span class="o">:</span> <span class="mi">1234</span><span class="p">,</span>
+            <span class="s2">&quot;data_type&quot;</span><span class="o">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;is_deleted&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="s2">&quot;uuid&quot;</span><span class="o">:</span> <span class="s2">&quot;c8928d9183fc99122948e7840ec9a0fd&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/input_file.txt&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:53.962Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;deleted&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;data_started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T14:50:49Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;data_ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T14:51:05Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;geometry&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;center_point&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;meta_data&quot;</span><span class="o">:</span> <span class="p">{...}</span>
+            <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:25:02.808Z&quot;</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;jobs&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;job_name&quot;</span><span class="o">:</span> <span class="s2">&quot;kml&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;is_original&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;job&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
+                <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
+                    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;kml-footprint&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.2.3&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;KML Footprint&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Creates a KML footprint&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;footprint&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;author_name&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                    <span class="s2">&quot;author_url&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                    <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                    <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                    <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                    <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                    <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                    <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f0ac&quot;</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;job_type_rev&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+                    <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">8</span>
+                    <span class="p">},</span>
+                    <span class="s2">&quot;revision_num&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                    <span class="s2">&quot;interface&quot;</span><span class="o">:</span> <span class="p">{...},</span>
+                    <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-11-06T21:30:34.622Z&quot;</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
+                    <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;PARSE&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;rule&quot;</span><span class="o">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">8</span>
+                    <span class="p">},</span>
+                    <span class="s2">&quot;occurred&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T19:03:59.054Z&quot;</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;COMPLETED&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">210</span><span class="p">,</span>
+                <span class="s2">&quot;num_exes&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;timeout&quot;</span><span class="o">:</span> <span class="mi">1800</span><span class="p">,</span>
+                <span class="s2">&quot;max_tries&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+                <span class="s2">&quot;cpus_required&quot;</span><span class="o">:</span> <span class="mf">1.0</span><span class="p">,</span>
+                <span class="s2">&quot;mem_required&quot;</span><span class="o">:</span> <span class="mf">15360.0</span><span class="p">,</span>
+                <span class="s2">&quot;disk_in_required&quot;</span><span class="o">:</span> <span class="mf">2.0</span><span class="p">,</span>
+                <span class="s2">&quot;disk_out_required&quot;</span><span class="o">:</span> <span class="mf">16.0</span><span class="p">,</span>
+                <span class="s2">&quot;is_superseded&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;root_superseded_job&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;superseded_job&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;superseded_by_job&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;delete_superseded&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:55:41.005Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;queued&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:56:41.005Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:57:41.005Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:41.005Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;last_status_change&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:45.906Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;superseded&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T17:58:46.001Z&quot;</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">...</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 
 
