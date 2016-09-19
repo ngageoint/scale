@@ -16,6 +16,7 @@ from recipe.models import Recipe, RecipeType
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.configuration.definition.exceptions import InvalidDefinition
 from recipe.configuration.definition.recipe_definition import RecipeDefinition
+from recipe.exceptions import ReprocessError
 from recipe.serializers import (RecipeDetailsSerializer, RecipeSerializer, RecipeTypeDetailsSerializer,
                                 RecipeTypeSerializer)
 from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerType
@@ -292,12 +293,12 @@ class RecipeDetailsView(RetrieveAPIView):
     serializer_class = RecipeDetailsSerializer
 
     def retrieve(self, request, recipe_id):
-        """Retrieves the details for a recipe type and return them in JSON form
+        """Retrieves the details for a recipe and returns it in JSON form
 
         :param request: the HTTP GET request
         :type request: :class:`rest_framework.request.Request`
-        :param id: The id of the recipe type
-        :type id: int encoded as a str
+        :param recipe_id: The id of the recipe
+        :type recipe_id: int encoded as a str
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
@@ -308,3 +309,39 @@ class RecipeDetailsView(RetrieveAPIView):
 
         serializer = self.get_serializer(recipe)
         return Response(serializer.data)
+
+
+class RecipeReprocessView(GenericAPIView):
+    """This view is the endpoint for scheduling a reprocess of a recipe"""
+    queryset = Recipe.objects.all()
+    serializer_class = RecipeDetailsSerializer
+
+    def post(self, request, recipe_id):
+        """Schedules a recipe for reprocessing and returns it in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param recipe_id: The id of the recipe
+        :type recipe_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        job_names = rest_util.parse_string_list(request, 'job_names', required=False)
+        all_jobs = rest_util.parse_bool(request, 'all_jobs', required=False)
+
+        try:
+            handler = Recipe.objects.reprocess_recipe(recipe_id, job_names, all_jobs)
+        except Recipe.DoesNotExist:
+            raise Http404
+        except ReprocessError:
+            raise BadParameter('Job names must be requested when the recipe type has not changed')
+
+        try:
+            new_recipe = Recipe.objects.get_details(handler.recipe.id)
+        except Recipe.DoesNotExist:
+            raise Http404
+
+        url = urlresolvers.reverse('recipe_details_view', args=[new_recipe.id])
+        serializer = self.get_serializer(new_recipe)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
