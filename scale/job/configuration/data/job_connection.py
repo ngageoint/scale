@@ -29,8 +29,8 @@ class JobConnection(object):
         :type media_types: list of str
         :param optional: Whether the file parameter is optional and may not be provided (True)
         :type optional: bool
-        :param partial: flag indicating input may be mounted vs downloaded (False)
-        :type optional: bool
+        :param partial: Flag indicating if the parameter only requires a small portion of the file
+        :type partial: bool
         '''
 
         if file_name in self.param_names:
