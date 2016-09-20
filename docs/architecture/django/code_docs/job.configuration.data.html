@@ -316,7 +316,7 @@ type (media type is optionally None)</li>
 needed to ensure the data provided by the connection will be sufficient to execute the given job.</p>
 <dl class="method">
 <dt id="job.configuration.data.job_connection.JobConnection.add_input_file">
-<code class="descname">add_input_file</code><span class="sig-paren">(</span><em>file_name</em>, <em>multiple</em>, <em>media_types</em>, <em>optional</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.data.job_connection.JobConnection.add_input_file" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_input_file</code><span class="sig-paren">(</span><em>file_name</em>, <em>multiple</em>, <em>media_types</em>, <em>optional</em>, <em>partial</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.data.job_connection.JobConnection.add_input_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a new file parameter to this connection</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -327,6 +327,7 @@ needed to ensure the data provided by the connection will be sufficient to execu
 <li><strong>multiple</strong> (<em>bool</em>) &#8211; Whether the file parameter provides multiple files (True)</li>
 <li><strong>media_types</strong> (<em>list of str</em>) &#8211; The possible media types of the file parameter (unknown if None or [])</li>
 <li><strong>optional</strong> (<em>bool</em>) &#8211; Whether the file parameter is optional and may not be provided (True)</li>
+<li><strong>partial</strong> (<em>bool</em>) &#8211; Flag indicating if the parameter only requires a small portion of the file</li>
 </ul>
 </td>
 </tr>
@@ -571,8 +572,9 @@ parameters that do not appear in the data will not be returned in the results.</
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data_files</strong> (<em>dict of str -&gt; tuple(bool, str)</em>) &#8211; Dict with each file parameter name mapping to a bool indicating if the parameter accepts
-multiple files (True) and an absolute directory path</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data_files</strong> (<em>dict of str -&gt; tuple(bool, str, bool)</em>) &#8211; Dict with each file parameter name mapping to a bool indicating if the parameter accepts
+multiple files (True), an absolute directory path and bool indicating if job supports partial file
+download (True).</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Dict with each file parameter name mapping to a list of absolute file paths of the written files</td>
 </tr>

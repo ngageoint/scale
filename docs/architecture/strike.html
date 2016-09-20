@@ -302,6 +302,11 @@ it applies the file against the configured Strike rules.</p>
     <span class="s2">&quot;monitor&quot;</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;s3&quot;</span><span class="p">,</span>
         <span class="s2">&quot;sqs_name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-sqs&quot;</span>
+        <span class="s2">&quot;credentials&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;access_key_id&quot;</span><span class="o">:</span> <span class="s2">&quot;AKIAIOSFODNN7EXAMPLE&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;secret_access_key&quot;</span><span class="o">:</span> <span class="s2">&quot;wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;region_name&quot;</span><span class="o">:</span> <span class="s2">&quot;us-east-1&quot;</span>
     <span class="p">},</span>
     <span class="s2">&quot;files_to_ingest&quot;</span><span class="o">:</span> <span class="p">[</span>
         <span class="p">{</span>
@@ -317,11 +322,31 @@ it applies the file against the configured Strike rules.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>The S3 monitor requires one additional field in its configuration:</p>
+<p>The S3 monitor has the following additional fields in its configuration:</p>
 <p><strong>sqs_name</strong>: JSON string</p>
 <blockquote>
 <div>The <em>sqs_name</em> field is a required string that defines the name of the SQS queue that should be polled for object
 creation notifications that describe new files in the S3 bucket.</div></blockquote>
+<p><strong>credentials</strong>: JSON object</p>
+<blockquote>
+<div><p>The <em>credentials</em> is a JSON object that provides the necessary information to access the bucket. This attribute
+should be omitted when using IAM role-based security. If it is included for key-based security, then both
+sub-attributes must be included. An IAM account should be created and granted the appropriate permissions to the
+bucket before attempting to use it here.</p>
+<p><strong>access_key_id</strong>: JSON string</p>
+<blockquote>
+<div>The <em>access_key_id</em> is a unique identifier for the user account in IAM that will be used as a proxy for read and
+write operations within Scale.</div></blockquote>
+<p><strong>secret_access_key</strong>: JSON string</p>
+<blockquote>
+<div>The <em>secret_access_key</em> is a generated token that the system can use to prove it should be able to make requests
+on behalf of the associated IAM account without requiring the actual password used by that account.</div></blockquote>
+</div></blockquote>
+<p><strong>region_name</strong>: JSON string</p>
+<blockquote>
+<div>The <em>region_name</em> is an optional string that specifies the AWS region where the SQS Queue is located. This is not
+always required, as environment variables or configuration files could set the default region, but it is a highly
+recommended setting for explicitly indicating the SQS region.</div></blockquote>
 </div>
 </div>
 

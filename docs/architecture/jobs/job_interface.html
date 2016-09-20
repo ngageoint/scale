@@ -96,7 +96,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">Jobs and Recipes</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="error_interface.html">Errors Interface</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="">Job Interface</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#job-interface-specification-version-1-0">Job Interface Specification Version 1.0</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#job-interface-specification-version-1-1">Job Interface Specification Version 1.1</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="job_data.html">Job Data</a></li>
@@ -176,7 +176,7 @@ contains georeference information. The job interface for the algorithm could be
 defined as follows:</p>
 <p><strong>Example job interface:</strong></p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
-   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.1&quot;</span><span class="p">,</span>
    <span class="s2">&quot;command&quot;</span><span class="o">:</span> <span class="s2">&quot;python make_geotiff.py&quot;</span><span class="p">,</span>
    <span class="s2">&quot;command_arguments&quot;</span><span class="o">:</span> <span class="s2">&quot;${image} ${georeference_data} ${job_output_dir}&quot;</span><span class="p">,</span>
    <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
@@ -213,8 +213,8 @@ list detailing the inputs to the algorithm; in this case an input called <em>ima
 <em>image/png</em> and an input called <em>georeference_data</em> which is a CSV file. Finally the <em>output_data</em> value is a list of
 the algorithm outputs, which is a GeoTIFF file in this instance. To see all of the options for defining a job interface,
 please refer to the Job Interface Specification below.</p>
-<div class="section" id="job-interface-specification-version-1-0">
-<span id="architecture-jobs-interface-spec"></span><h2>Job Interface Specification Version 1.0<a class="headerlink" href="#job-interface-specification-version-1-0" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="job-interface-specification-version-1-1">
+<span id="architecture-jobs-interface-spec"></span><h2>Job Interface Specification Version 1.1<a class="headerlink" href="#job-interface-specification-version-1-1" title="Permalink to this headline">¶</a></h2>
 <p>A valid job interface is a JSON document with the following structure:</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
@@ -230,6 +230,7 @@ please refer to the Job Interface Specification below.</p>
          <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
          <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
          <span class="s2">&quot;required&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="o">|</span><span class="kc">false</span><span class="p">,</span>
+         <span class="s2">&quot;partial&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="o">|</span><span class="kc">false</span><span class="p">,</span>
          <span class="s2">&quot;media_types&quot;</span><span class="o">:</span> <span class="p">[</span>
             <span class="nx">STRING</span><span class="p">,</span>
             <span class="nx">STRING</span>
@@ -239,6 +240,7 @@ please refer to the Job Interface Specification below.</p>
          <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
          <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;files&quot;</span><span class="p">,</span>
          <span class="s2">&quot;required&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="o">|</span><span class="kc">false</span><span class="p">,</span>
+         <span class="s2">&quot;partial&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="o">|</span><span class="kc">false</span><span class="p">,</span>
          <span class="s2">&quot;media_types&quot;</span><span class="o">:</span> <span class="p">[</span>
             <span class="nx">STRING</span><span class="p">,</span>
             <span class="nx">STRING</span>
@@ -321,6 +323,17 @@ absolute file system path of each input file will be substituted where its input
 types for any file being passed in the input. Any file that does not match one of the listed media types
 will be prevented from being passed to the algorithm. If not provided, the <em>media_types</em> field defaults
 to an empty list and all media types are accepted for the input.</div></blockquote>
+<p><strong>partial</strong>: JSON boolean</p>
+<blockquote>
+<div>The <em>partial</em> field is optional and indicates whether this job input can be expected to be only used in
+in a limited manner. This field enables jobs to indicate exceedingly large files that may merely be
+linked into the job context instead of copied. The primary use case is when large files are stored in
+S3 or similar remote location, but the job only needs to extract metadata or consume limited portions of
+input file. The <em>partial</em> field <em>and</em> the input workspace must be configured to support this operation.
+Setting the <em>partial</em> field value to <em>true</em> on the job interface and specifying a <em>host_path</em> on the
+input workspace will cause Scale to mount the host volume associated with workspace on job execution.
+If either configuration is not completed the standard behavior of data retrieval will be performed. The
+<em>partial</em> field defaults to <em>false</em>.</div></blockquote>
 </div></blockquote>
 <p><strong>files</strong></p>
 <blockquote>
@@ -334,6 +347,17 @@ additional fields:</p>
 media types for any files being passed in the input. Any file that does not match one of the listed
 media types will be prevented from being passed to the algorithm. If not provided, the <em>media_types</em>
 field defaults to an empty list and all media types are accepted for the input.</div></blockquote>
+<p><strong>partial</strong>: JSON boolean</p>
+<blockquote>
+<div>The <em>partial</em> field is optional and indicates whether this job input can be expected to be only used in
+in a limited manner. This field enables jobs to indicate exceedingly large files that may merely be
+linked into the job context instead of copied. The primary use case is when large files are stored in
+S3 or similar remote location, but the job only needs to extract metadata or consume limited portions of
+input file. The <em>partial</em> field <em>and</em> the input workspace must be configured to support this operation.
+Setting the <em>partial</em> field value to <em>true</em> on the job interface and specifying a <em>host_path</em> on the
+input workspace will cause Scale to mount the host volume associated with workspace on job execution.
+If either configuration is not completed the standard behavior of data retrieval will be performed. The
+<em>partial</em> field defaults to <em>false</em>.</div></blockquote>
 </div></blockquote>
 </div></blockquote>
 </div></blockquote>

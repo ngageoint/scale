@@ -19,6 +19,14 @@ util.apps module
     :undoc-members:
     :show-inheritance:
 
+util.aws module
+---------------
+
+.. automodule:: util.aws
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 util.command module
 -------------------
 

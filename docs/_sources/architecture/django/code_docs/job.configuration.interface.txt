@@ -28,6 +28,14 @@ job.configuration.interface.job_interface module
     :undoc-members:
     :show-inheritance:
 
+job.configuration.interface.job_interface_1_0 module
+----------------------------------------------------
+
+.. automodule:: job.configuration.interface.job_interface_1_0
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 job.configuration.interface.scale_file module
 ---------------------------------------------
 

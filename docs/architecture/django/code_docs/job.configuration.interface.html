@@ -303,11 +303,40 @@ returned. For a failure exit code with no mapping, the given default error is re
 <dl class="class">
 <dt id="job.configuration.interface.job_interface.JobInterface">
 <em class="property">class </em><code class="descclassname">job.configuration.interface.job_interface.</code><code class="descname">JobInterface</code><span class="sig-paren">(</span><em>definition</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#job.configuration.interface.job_interface_1_0.JobInterface" title="job.configuration.interface.job_interface_1_0.JobInterface"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.job_interface_1_0.JobInterface</span></code></a></p>
+<p>Represents the interface for executing a job</p>
+<dl class="staticmethod">
+<dt id="job.configuration.interface.job_interface.JobInterface.convert_interface">
+<em class="property">static </em><code class="descname">convert_interface</code><span class="sig-paren">(</span><em>interface</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.convert_interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the previous Job interface schema to the 1.1 schema</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>interface</strong> (<em>dict</em>) &#8211; The previous interface</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">converted interface</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.configuration.interface.job_interface_1_0">
+<span id="job-configuration-interface-job-interface-1-0-module"></span><h2>job.configuration.interface.job_interface_1_0 module<a class="headerlink" href="#module-job.configuration.interface.job_interface_1_0" title="Permalink to this headline">¶</a></h2>
+<p>Defines the interface for executing a job</p>
+<dl class="class">
+<dt id="job.configuration.interface.job_interface_1_0.JobInterface">
+<em class="property">class </em><code class="descclassname">job.configuration.interface.job_interface_1_0.</code><code class="descname">JobInterface</code><span class="sig-paren">(</span><em>definition</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface_1_0.JobInterface" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Represents the interface for executing a job</p>
 <dl class="method">
-<dt id="job.configuration.interface.job_interface.JobInterface.add_output_to_connection">
-<code class="descname">add_output_to_connection</code><span class="sig-paren">(</span><em>output_name</em>, <em>job_conn</em>, <em>input_name</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.add_output_to_connection" title="Permalink to this definition">¶</a></dt>
+<dt id="job.configuration.interface.job_interface_1_0.JobInterface.add_output_to_connection">
+<code class="descname">add_output_to_connection</code><span class="sig-paren">(</span><em>output_name</em>, <em>job_conn</em>, <em>input_name</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface_1_0.JobInterface.add_output_to_connection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds the given output from the interface as a new input to the given job connection</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -325,8 +354,8 @@ returned. For a failure exit code with no mapping, the given default error is re
 </dd></dl>
 
 <dl class="method">
-<dt id="job.configuration.interface.job_interface.JobInterface.add_workspace_to_data">
-<code class="descname">add_workspace_to_data</code><span class="sig-paren">(</span><em>job_data</em>, <em>workspace_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.add_workspace_to_data" title="Permalink to this definition">¶</a></dt>
+<dt id="job.configuration.interface.job_interface_1_0.JobInterface.add_workspace_to_data">
+<code class="descname">add_workspace_to_data</code><span class="sig-paren">(</span><em>job_data</em>, <em>workspace_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface_1_0.JobInterface.add_workspace_to_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds the given workspace ID to the given job data for every output in this job interface</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -342,9 +371,27 @@ returned. For a failure exit code with no mapping, the given default error is re
 </table>
 </dd></dl>
 
+<dl class="staticmethod">
+<dt id="job.configuration.interface.job_interface_1_0.JobInterface.convert_interface">
+<em class="property">static </em><code class="descname">convert_interface</code><span class="sig-paren">(</span><em>interface</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface_1_0.JobInterface.convert_interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the previous Job interface schema to the 1.0 schema</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>interface</strong> (<em>dict</em>) &#8211; The previous interface</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">converted interface</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
-<dt id="job.configuration.interface.job_interface.JobInterface.fully_populate_command_argument">
-<code class="descname">fully_populate_command_argument</code><span class="sig-paren">(</span><em>job_data</em>, <em>job_environment</em>, <em>job_exe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.fully_populate_command_argument" title="Permalink to this definition">¶</a></dt>
+<dt id="job.configuration.interface.job_interface_1_0.JobInterface.fully_populate_command_argument">
+<code class="descname">fully_populate_command_argument</code><span class="sig-paren">(</span><em>job_data</em>, <em>job_environment</em>, <em>job_exe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface_1_0.JobInterface.fully_populate_command_argument" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a fully populated command arguments string. If pre-steps are necessary
 (see are_pre_steps_needed), they should be run before this.  populated with information
 from the job_data, job_environment, job_input_dir, and job_output_dir.This gets the properties and
@@ -368,16 +415,16 @@ pre-steps have not been performed</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.configuration.interface.job_interface.JobInterface.get_command">
-<code class="descname">get_command</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.get_command" title="Permalink to this definition">¶</a></dt>
+<dt id="job.configuration.interface.job_interface_1_0.JobInterface.get_command">
+<code class="descname">get_command</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface_1_0.JobInterface.get_command" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the command
 :return: the command
 :rtype: str</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.configuration.interface.job_interface.JobInterface.get_dict">
-<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.get_dict" title="Permalink to this definition">¶</a></dt>
+<dt id="job.configuration.interface.job_interface_1_0.JobInterface.get_dict">
+<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface_1_0.JobInterface.get_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the internal dictionary that represents this job interface</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -392,8 +439,8 @@ pre-steps have not been performed</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.configuration.interface.job_interface.JobInterface.get_file_output_names">
-<code class="descname">get_file_output_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.get_file_output_names" title="Permalink to this definition">¶</a></dt>
+<dt id="job.configuration.interface.job_interface_1_0.JobInterface.get_file_output_names">
+<code class="descname">get_file_output_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface_1_0.JobInterface.get_file_output_names" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the output parameter names for all file outputs</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -408,8 +455,8 @@ pre-steps have not been performed</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.configuration.interface.job_interface.JobInterface.perform_post_steps">
-<code class="descname">perform_post_steps</code><span class="sig-paren">(</span><em>job_exe</em>, <em>job_data</em>, <em>stdoutAndStderr</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.perform_post_steps" title="Permalink to this definition">¶</a></dt>
+<dt id="job.configuration.interface.job_interface_1_0.JobInterface.perform_post_steps">
+<code class="descname">perform_post_steps</code><span class="sig-paren">(</span><em>job_exe</em>, <em>job_data</em>, <em>stdoutAndStderr</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface_1_0.JobInterface.perform_post_steps" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stores the files and deletes any working directories</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -434,8 +481,8 @@ pre-steps have not been performed</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.configuration.interface.job_interface.JobInterface.perform_pre_steps">
-<code class="descname">perform_pre_steps</code><span class="sig-paren">(</span><em>job_data</em>, <em>job_environment</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.perform_pre_steps" title="Permalink to this definition">¶</a></dt>
+<dt id="job.configuration.interface.job_interface_1_0.JobInterface.perform_pre_steps">
+<code class="descname">perform_pre_steps</code><span class="sig-paren">(</span><em>job_data</em>, <em>job_environment</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface_1_0.JobInterface.perform_pre_steps" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs steps prep work before a job can actually be run.  This includes downloading input files.
 This returns the command that should be executed for these parameters.
 :param job_data: The job data
@@ -445,8 +492,8 @@ This returns the command that should be executed for these parameters.
 </dd></dl>
 
 <dl class="method">
-<dt id="job.configuration.interface.job_interface.JobInterface.populate_command_argument_properties">
-<code class="descname">populate_command_argument_properties</code><span class="sig-paren">(</span><em>job_data</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.populate_command_argument_properties" title="Permalink to this definition">¶</a></dt>
+<dt id="job.configuration.interface.job_interface_1_0.JobInterface.populate_command_argument_properties">
+<code class="descname">populate_command_argument_properties</code><span class="sig-paren">(</span><em>job_data</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface_1_0.JobInterface.populate_command_argument_properties" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the command arguments string,
 populated with the properties from the job_data.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -464,8 +511,8 @@ populated with the properties from the job_data.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.configuration.interface.job_interface.JobInterface.validate_connection">
-<code class="descname">validate_connection</code><span class="sig-paren">(</span><em>job_conn</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.validate_connection" title="Permalink to this definition">¶</a></dt>
+<dt id="job.configuration.interface.job_interface_1_0.JobInterface.validate_connection">
+<code class="descname">validate_connection</code><span class="sig-paren">(</span><em>job_conn</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface_1_0.JobInterface.validate_connection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates the given job connection to ensure that the connection will provide sufficient data to run a job
 with this interface</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -484,8 +531,8 @@ with this interface</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.configuration.interface.job_interface.JobInterface.validate_data">
-<code class="descname">validate_data</code><span class="sig-paren">(</span><em>job_data</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.validate_data" title="Permalink to this definition">¶</a></dt>
+<dt id="job.configuration.interface.job_interface_1_0.JobInterface.validate_data">
+<code class="descname">validate_data</code><span class="sig-paren">(</span><em>job_data</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface_1_0.JobInterface.validate_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensures that the job_data matches the job_interface description</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

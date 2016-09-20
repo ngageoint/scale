@@ -294,7 +294,9 @@ encrypted store service.</p>
       <span class="s2">&quot;credentials&quot;</span><span class="o">:</span> <span class="p">{</span>
          <span class="s2">&quot;access_key_id&quot;</span><span class="o">:</span> <span class="s2">&quot;AKIAIOSFODNN7EXAMPLE&quot;</span><span class="p">,</span>
          <span class="s2">&quot;secret_access_key&quot;</span><span class="o">:</span> <span class="s2">&quot;wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY&quot;</span>
-      <span class="p">}</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;host_path&quot;</span><span class="o">:</span> <span class="s2">&quot;/my_bucket&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;region_name&quot;</span><span class="o">:</span> <span class="s2">&quot;us-east-1&quot;</span>
    <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
@@ -319,6 +321,18 @@ write operations within Scale.</div></blockquote>
 <div>The <em>secret_access_key</em> is a generated token that the system can use to prove it should be able to make requests
 on behalf of the associated IAM account without requiring the actual password used by that account.</div></blockquote>
 </div></blockquote>
+<p><strong>host_path</strong>: JSON string</p>
+<blockquote>
+<div>The <em>host_path</em> is an optional string that adds S3 workspace support for locally mounted buckets and partial file
+read-only access. If a FUSE file system (such as s3fs or goofys) mounts the S3 bucket at the <em>host_path</em> location on
+all nodes, an alternative to downloading large files is available to jobs that use only portions of a file. The job
+interface <em>must</em> indicate <em>partial</em> equal to <em>true</em> for any input files to take advantage of <em>host_path</em>. Only read
+operations are performed using the mount, all write operations will use the S3 REST API.</div></blockquote>
+<p><strong>region_name</strong>: JSON string</p>
+<blockquote>
+<div>The <em>region_name</em> is an optional string that specifies the AWS region where the S3 bucket is located. This is not
+always required, as environment variables or configuration files could set the default region, but it is a highly
+recommended setting for explicitly indicating the bucket region.</div></blockquote>
 </div>
 </div>
 

@@ -55,7 +55,7 @@ prompting the user for how certain conflicts should be resolved.
             "disk_out_const_required": 64.0,
             "disk_out_mult_required": 0.0,
             "interface": {
-               "version": "1.0",
+               "version": "1.1",
                "command": "my-cmd",
                "command_arguments": "${input_file} ${job_output_dir}",
                "input_data": [
@@ -64,6 +64,7 @@ prompting the user for how certain conflicts should be resolved.
                         "image/png"
                      ],
                      "required": true,
+                     "partial": false,
                      "type": "file",
                      "name": "input_file"
                   }

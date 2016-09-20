@@ -119,6 +119,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-util.apps">util.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-util.aws">util.aws module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-util.command">util.command module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-util.exceptions">util.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-util.file_size">util.file_size module</a></li>
@@ -231,6 +232,122 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-util.aws">
+<span id="util-aws-module"></span><h2>util.aws module<a class="headerlink" href="#module-util.aws" title="Permalink to this headline">¶</a></h2>
+<p>Utility functions for testing AWS credentials and access to required resources</p>
+<dl class="class">
+<dt id="util.aws.AWSClient">
+<em class="property">class </em><code class="descclassname">util.aws.</code><code class="descname">AWSClient</code><span class="sig-paren">(</span><em>resource</em>, <em>config</em>, <em>credentials=None</em>, <em>region_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#util.aws.AWSClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Manages automatically creating and destroying clients to AWS services.</p>
+<dl class="staticmethod">
+<dt id="util.aws.AWSClient.instantiate_credentials_from_config">
+<em class="property">static </em><code class="descname">instantiate_credentials_from_config</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="headerlink" href="#util.aws.AWSClient.instantiate_credentials_from_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="util.aws.AWSCredentials">
+<em class="property">class </em><code class="descclassname">util.aws.</code><code class="descname">AWSCredentials</code><span class="sig-paren">(</span><em>access_key_id</em>, <em>secret_access_key</em><span class="sig-paren">)</span><a class="headerlink" href="#util.aws.AWSCredentials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<dl class="attribute">
+<dt id="util.aws.AWSCredentials.access_key_id">
+<code class="descname">access_key_id</code><a class="headerlink" href="#util.aws.AWSCredentials.access_key_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="util.aws.AWSCredentials.secret_access_key">
+<code class="descname">secret_access_key</code><a class="headerlink" href="#util.aws.AWSCredentials.secret_access_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="util.aws.S3Client">
+<em class="property">class </em><code class="descclassname">util.aws.</code><code class="descname">S3Client</code><span class="sig-paren">(</span><em>credentials=None</em>, <em>region_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#util.aws.S3Client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#util.aws.AWSClient" title="util.aws.AWSClient"><code class="xref py py-class docutils literal"><span class="pre">util.aws.AWSClient</span></code></a></p>
+<dl class="method">
+<dt id="util.aws.S3Client.get_bucket">
+<code class="descname">get_bucket</code><span class="sig-paren">(</span><em>bucket_name</em>, <em>validate=True</em><span class="sig-paren">)</span><a class="headerlink" href="#util.aws.S3Client.get_bucket" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a reference to an S3 bucket with the given identifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>bucket_name</strong> (<em>string</em>) &#8211; The unique name of the bucket to retrieve.</li>
+<li><strong>validate</strong> (<em>bool</em>) &#8211; Whether to perform a request that verifies the bucket actually exists.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The bucket object for the given name.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal"><span class="pre">boto3.s3.Bucket</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <code class="xref py py-class docutils literal"><span class="pre">botocore.exceptions.ClientError</span></code>: If the bucket fails to validate.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.aws.S3Client.get_object">
+<code class="descname">get_object</code><span class="sig-paren">(</span><em>bucket_name</em>, <em>key_name</em>, <em>validate=True</em><span class="sig-paren">)</span><a class="headerlink" href="#util.aws.S3Client.get_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a reference to an S3 object with the given identifier.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>bucket_name</strong> (<em>string</em>) &#8211; The unique name of the bucket to retrieve.</li>
+<li><strong>key_name</strong> (<em>string</em>) &#8211; The unique name of the object to retrieve that is associated with a file.</li>
+<li><strong>validate</strong> (<em>bool</em>) &#8211; Whether to perform a request that verifies the object actually exists.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The S3 object for the given name.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal"><span class="pre">boto3.s3.Object</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <code class="xref py py-class docutils literal"><span class="pre">botocore.exceptions.ClientError</span></code>: If the request is invalid.
+:raises <code class="xref py py-class docutils literal"><span class="pre">storage.exceptions.FileDoesNotExist</span></code>: If the file is not found in the bucket.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="util.aws.SQSClient">
+<em class="property">class </em><code class="descclassname">util.aws.</code><code class="descname">SQSClient</code><span class="sig-paren">(</span><em>credentials=None</em>, <em>region_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#util.aws.SQSClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#util.aws.AWSClient" title="util.aws.AWSClient"><code class="xref py py-class docutils literal"><span class="pre">util.aws.AWSClient</span></code></a></p>
+<dl class="method">
+<dt id="util.aws.SQSClient.get_queue_by_name">
+<code class="descname">get_queue_by_name</code><span class="sig-paren">(</span><em>queue_name</em><span class="sig-paren">)</span><a class="headerlink" href="#util.aws.SQSClient.get_queue_by_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a SQS queue by the given name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>queue_name</strong> (<em>string</em>) &#8211; The unique name of the SQS queue</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Queue resource to perform queue operations</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">boto3.sqs.Queue</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-util.command">
 <span id="util-command-module"></span><h2>util.command module<a class="headerlink" href="#module-util.command" title="Permalink to this headline">¶</a></h2>
 <p>Defines utility functions for executing commands on the command line.</p>
@@ -258,6 +375,20 @@
 <div class="section" id="module-util.exceptions">
 <span id="util-exceptions-module"></span><h2>util.exceptions module<a class="headerlink" href="#module-util.exceptions" title="Permalink to this headline">¶</a></h2>
 <p>Defines utility exceptions</p>
+<dl class="exception">
+<dt id="util.exceptions.FileDoesNotExist">
+<em class="property">exception </em><code class="descclassname">util.exceptions.</code><code class="descname">FileDoesNotExist</code><a class="headerlink" href="#util.exceptions.FileDoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Exception indicating an attempt was made to access a file that no longer exists</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="util.exceptions.InvalidAWSCredentials">
+<em class="property">exception </em><code class="descclassname">util.exceptions.</code><code class="descname">InvalidAWSCredentials</code><a class="headerlink" href="#util.exceptions.InvalidAWSCredentials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Exception indicating missing credentials required to successfully authenticate to AWS</p>
+</dd></dl>
+
 <dl class="exception">
 <dt id="util.exceptions.RollbackTransaction">
 <em class="property">exception </em><code class="descclassname">util.exceptions.</code><code class="descname">RollbackTransaction</code><a class="headerlink" href="#util.exceptions.RollbackTransaction" title="Permalink to this definition">¶</a></dt>
