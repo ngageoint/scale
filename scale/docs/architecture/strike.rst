@@ -200,7 +200,7 @@ The S3 monitor has the following additional fields in its configuration:
     The *sqs_name* field is a required string that defines the name of the SQS queue that should be polled for object
     creation notifications that describe new files in the S3 bucket.
 
-**credentials**
+**credentials**: JSON object
 
     The *credentials* is a JSON object that provides the necessary information to access the bucket. This attribute
     should be omitted when using IAM role-based security. If it is included for key-based security, then both

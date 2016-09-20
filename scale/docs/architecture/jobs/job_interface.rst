@@ -90,6 +90,7 @@ A valid job interface is a JSON document with the following structure:
             "name": STRING,
             "type": "files",
             "required": true|false,
+            "partial": true|false,
             "media_types": [
                STRING,
                STRING
@@ -181,14 +182,16 @@ A valid job interface is a JSON document with the following structure:
                 will be prevented from being passed to the algorithm. If not provided, the *media_types* field defaults
                 to an empty list and all media types are accepted for the input.
 
-            **partial**: JSON Boolean
+            **partial**: JSON boolean
 
                 The *partial* field is optional and indicates whether this job input can be expected to be only used in
                 in a limited manner. This field enables jobs to indicate exceedingly large files that may merely be
                 linked into the job context instead of copied. The primary use case is when large files are stored in
                 S3 or similar remote location, but the job only needs to extract metadata or consume limited portions of
                 input file. The *partial* field *and* the input workspace must be configured to support this operation.
-                If either configuration is incorrect the standard behavior of data retrieval will be performed. The
+                Setting the *partial* field value to *true* on the job interface and specifying a *host_path* on the
+                input workspace will cause Scale to mount the host volume associated with workspace on job execution.
+                If either configuration is not completed the standard behavior of data retrieval will be performed. The
                 *partial* field defaults to *false*.
 
         **files**
@@ -205,14 +208,16 @@ A valid job interface is a JSON document with the following structure:
                 media types will be prevented from being passed to the algorithm. If not provided, the *media_types*
                 field defaults to an empty list and all media types are accepted for the input.
 
-            **partial**: JSON Boolean
+            **partial**: JSON boolean
 
                 The *partial* field is optional and indicates whether this job input can be expected to be only used in
                 in a limited manner. This field enables jobs to indicate exceedingly large files that may merely be
                 linked into the job context instead of copied. The primary use case is when large files are stored in
                 S3 or similar remote location, but the job only needs to extract metadata or consume limited portions of
                 input file. The *partial* field *and* the input workspace must be configured to support this operation.
-                If either configuration is incorrect the standard behavior of data retrieval will be performed. The
+                Setting the *partial* field value to *true* on the job interface and specifying a *host_path* on the
+                input workspace will cause Scale to mount the host volume associated with workspace on job execution.
+                If either configuration is not completed the standard behavior of data retrieval will be performed. The
                 *partial* field defaults to *false*.
 
 **output_data**: JSON array
