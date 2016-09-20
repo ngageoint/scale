@@ -80,8 +80,8 @@ class TestNfsBrokerDownloadFiles(TestCase):
 
         file_1 = storage_test_utils.create_file(file_path=workspace_path_file_1)
         file_2 = storage_test_utils.create_file(file_path=workspace_path_file_2)
-        file_1_dl = FileDownload(file_1, local_path_file_1)
-        file_2_dl = FileDownload(file_2, local_path_file_2)
+        file_1_dl = FileDownload(file_1, local_path_file_1, False)
+        file_2_dl = FileDownload(file_2, local_path_file_2, False)
 
         # Call method to test
         self.broker.download_files(volume_path, [file_1_dl, file_2_dl])

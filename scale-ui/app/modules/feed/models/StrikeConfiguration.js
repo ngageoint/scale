@@ -5,7 +5,14 @@
         var StrikeConfiguration = function (version, workspace, monitor, files_to_ingest) {
             this.version = scaleConfig.strikeConfigurationVersion;
             this.workspace = workspace;
-            this.monitor = monitor ? monitor : { type: '' };
+            this.monitor = monitor ? monitor : {
+                type: '',
+                region_name: '',
+                credentials: {
+                    access_key_id: '',
+                    secret_access_key: ''
+                }
+            };
             this.files_to_ingest = files_to_ingest ? StrikeIngestFile.transformer(files_to_ingest) : [];
         };
 

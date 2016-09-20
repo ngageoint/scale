@@ -176,7 +176,7 @@ def create_job_type(name=None, version=None, category=None, interface=None, prio
 
     if not interface:
         interface = {
-            'version': '1.0',
+            'version': '1.1',
             'command': 'test_cmd',
             'command_arguments': 'test_arg',
             'input_data': [],

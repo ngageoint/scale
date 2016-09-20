@@ -220,18 +220,20 @@ class JobData(object):
         parameters that do not appear in the data will not be returned in the results.
 
         :param data_files: Dict with each file parameter name mapping to a bool indicating if the parameter accepts
-            multiple files (True) and an absolute directory path
-        :type data_files: dict of str -> tuple(bool, str)
+            multiple files (True), an absolute directory path and bool indicating if job supports partial file
+            download (True).
+        :type data_files: dict of str -> tuple(bool, str, bool)
         :returns: Dict with each file parameter name mapping to a list of absolute file paths of the written files
         :rtype: dict of str -> list of str
         """
 
         # Organize the data files
         param_file_ids = {}  # Parameter name -> list of file IDs
-        files_to_retrieve = {}  # File ID -> relative dir path
+        files_to_retrieve = {}  # File ID -> tuple(str, bool) for relative dir path and if should be partially accessed
         for name in data_files:
             multiple = data_files[name][0]
             dir_path = data_files[name][1]
+            partial = data_files[name][2]
             if name not in self.data_inputs_by_name:
                 continue
             file_input = self.data_inputs_by_name[name]
@@ -240,11 +242,11 @@ class JobData(object):
                 for file_id in file_input['file_ids']:
                     file_id = long(file_id)
                     file_ids.append(file_id)
-                    files_to_retrieve[file_id] = dir_path
+                    files_to_retrieve[file_id] = (dir_path, partial)
             else:
                 file_id = long(file_input['file_id'])
                 file_ids.append(file_id)
-                files_to_retrieve[file_id] = dir_path
+                files_to_retrieve[file_id] = (dir_path, partial)
             param_file_ids[name] = file_ids
 
         # Retrieve all files
@@ -518,8 +520,9 @@ class JobData(object):
         """Retrieves the given data files and writes them to the given local directories. If no file with a given ID
         exists, it will not be retrieved and returned in the results.
 
-        :param data_files: Dict with each file ID mapping to an absolute directory path for downloading
-        :type data_files: dict of long -> string
+        :param data_files: Dict with each file ID mapping to an absolute directory path for downloading and
+            bool indicating if job supports partial file download (True).
+        :type data_files: dict of long -> type(string, bool)
         :returns: Dict with each file ID mapping to its absolute local path
         :rtype: dict of long -> string
 
@@ -535,14 +538,16 @@ class JobData(object):
         local_paths = set()  # Pay attention to file name collisions and update file name if needed
         counter = 0
         for scale_file in files:
-            local_path = os.path.join(data_files[scale_file.id], scale_file.file_name)
+            partial = data_files[scale_file.id][1]
+            local_path = os.path.join(data_files[scale_file.id][0], scale_file.file_name)
             while local_path in local_paths:
                 # Path collision, try a different file name
                 counter += 1
                 new_file_name = '%i_%s' % (counter, scale_file.file_name)
-                local_path = os.path.join(data_files[scale_file.id], new_file_name)
+                local_path = os.path.join(data_files[scale_file.id][0], new_file_name)
             local_paths.add(local_path)
-            file_downloads.append(FileDownload(scale_file, local_path))
+
+            file_downloads.append(FileDownload(scale_file, local_path, partial))
             results[scale_file.id] = local_path
 
         ScaleFile.objects.download_files(file_downloads)

@@ -3,7 +3,13 @@ from abc import ABCMeta
 from collections import namedtuple
 
 
-FileDownload = namedtuple('FileDownload', ['file', 'local_path'])
+"""
+FileDownload tuple contains an additional partial flag for defining whether the file
+is allowed to be accessed directly or must be copied into running container. This is
+currently only applicable to the S3Broker and requires that the host_path also be defined
+on the input workspace.
+"""
+FileDownload = namedtuple('FileDownload', ['file', 'local_path', 'partial'])
 FileMove = namedtuple('FileMove', ['file', 'new_path'])
 FileUpload = namedtuple('FileUpload', ['file', 'local_path'])
 

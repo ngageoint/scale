@@ -20,7 +20,7 @@ class TestJobConnectionValidateInputFiles(TestCase):
         files = {u'Param1': (True, True, ScaleFileDescription()), u'Param2': (True, True, ScaleFileDescription())}
 
         conn = JobConnection()
-        conn.add_input_file(u'Param1', True, None, False)
+        conn.add_input_file(u'Param1', True, None, False, False)
 
         self.assertRaises(InvalidConnection, conn.validate_input_files, files)
     
@@ -30,7 +30,7 @@ class TestJobConnectionValidateInputFiles(TestCase):
         files = {u'Param1': (True, False, ScaleFileDescription())}
 
         conn = JobConnection()
-        conn.add_input_file(u'Param1', True, None, False)
+        conn.add_input_file(u'Param1', True, None, False, False)
 
         self.assertRaises(InvalidConnection, conn.validate_input_files, files)
 
@@ -42,7 +42,7 @@ class TestJobConnectionValidateInputFiles(TestCase):
         files = {u'Param1': (True, True, file_desc)}
 
         conn = JobConnection()
-        conn.add_input_file(u'Param1', True, None, False)
+        conn.add_input_file(u'Param1', True, None, False, False)
 
         warnings = conn.validate_input_files(files)
         self.assertTrue(warnings)
@@ -53,7 +53,7 @@ class TestJobConnectionValidateInputFiles(TestCase):
         files = {u'Param1': (True, True, ScaleFileDescription())}
 
         conn = JobConnection()
-        conn.add_input_file(u'Param1', True, None, True)
+        conn.add_input_file(u'Param1', True, None, True, False)
 
         self.assertRaises(InvalidConnection, conn.validate_input_files, files)
 
@@ -69,9 +69,9 @@ class TestJobConnectionValidateInputFiles(TestCase):
                  u'Param3': (False, True, file_desc_2), u'Param4': (False, True, file_desc_2)}
 
         conn = JobConnection()
-        conn.add_input_file(u'Param1', True, [u'application/json'], False)
-        conn.add_input_file(u'Param2', False, [u'text/plain'], False)
-        conn.add_input_file(u'Param3', False, [u'text/plain'], False)
+        conn.add_input_file(u'Param1', True, [u'application/json'], False, False)
+        conn.add_input_file(u'Param2', False, [u'text/plain'], False, False)
+        conn.add_input_file(u'Param3', False, [u'text/plain'], False, False)
 
         # No exception is success
         warnings = conn.validate_input_files(files)
