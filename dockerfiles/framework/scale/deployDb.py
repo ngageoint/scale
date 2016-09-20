@@ -21,10 +21,6 @@ def run():
     else:
         cfg['volumes'] = '{"containerPath": "/var/lib/pgsql/data","hostPath": "%(dbHostVol)s","mode": "RW"}' % cfg
 
-    if os.environ.get('INIT_DB', False):
-        # attempt to delete an old instance..if it doesn't exists it will error but we don't care so we ignore it
-        requests.delete('http://marathon.mesos:8080/v2/apps/' + cfg['scaleDBHost'])
-
     marathon = '''{"id": "/%(scaleDBHost)s",
                  "instances": 1,
                  "constraints": [["hostname","UNIQUE"]],
