@@ -73,7 +73,7 @@ SCALE_DOCKER_IMAGE = os.environ.get('SCALE_DOCKER_IMAGE', SCALE_DOCKER_IMAGE)
 # Use the :latest tag on docker. Be careful as it's pretty easy for the scheduler and the
 # system tasks to get out of sync. This is useful for testing the master branch and for
 # the quickstart. Production systems should always set this to false.
-if os.environ.get('USE_LATEST', False):
+if os.environ.get('USE_LATEST', 'false').lower() == 'true':
     DOCKER_VERSION = "latest"
 
 # The location of the config file containing Docker credentials

@@ -275,10 +275,14 @@ Elasticsearch is staging. Check Marathon and the ES management front-end for sta
       "DB_DOCKER_IMAGE": "mdillon/postgis",
       "SCALE_DB_HOST_VOL": "",
       "SCALE_LOGGING_ADDR": "",
-      "SCALE_DEBUG": "true"
+      "SCALE_DEBUG": "true",
+      "USE_LATEST": "true"
     }
 }</pre>
                 </div>
+
+                <p><em>NOTE:</em> Change the docker image name to include a release tag if you don't want to use the latest
+                master check-in. Also remove the USE_LATEST environment variable.</p>
 
                 <samp><pre><kbd>dcos marathon app add scale.json</kbd></pre></samp>
 
