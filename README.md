@@ -62,6 +62,7 @@ Alternatively, your own local_settings.py can be volume mounted into `/opt/scale
 | MESOS_MASTER_URL         | 'zk://localhost:2181/scale'     | Mesos master location                    |
 | SCALE_ZK_URL             | None                            | Scale master location                    |
 | SCALE_DOCKER_IMAGE       | 'geoint/scale'                  | Scale docker image name                  |
+| USE_LATEST               | False                           | Use the :latest tag. (see note)          |
 | CONFIG_URI               | None                            | A URI or URL to docker credentials file  |
 | ENABLE_GUNICORN          | False                           | Start the RESTful API server             |
 | ENABLE_HTTPD             | False                           | Start the Apache HTTP server             |
@@ -70,6 +71,13 @@ Alternatively, your own local_settings.py can be volume mounted into `/opt/scale
 | INIT_DB                  | False                           | Init the db (migrat, load, etc.)         |
 | LOAD_COUNTRY_DATA        | False                           | Load country borders into the database.  |
 | LOGSTASH_DOCKER_IMAGE    | 'logstash'                      | Docker image for logstash                |
+
+Note on USE_LATEST
+------------------
+This will use the _:latest_ tag on the scale docker image. 
+Be careful as it's pretty easy for the scheduler and the system tasks to get out of sync.
+This is useful for testing the master branch and for the quickstart.
+**Production systems should always set this to False!**
 
 Quick Start
 ===========
