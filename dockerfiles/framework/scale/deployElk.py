@@ -15,9 +15,7 @@ def run():
     if not es_urls or not len(es_urls.strip()):
         response = requests.get('http://elasticsearch.marathon.mesos:31105/v1/tasks')
         endpoints = ['http://%s' % x['http_address'] for x in json.loads(response.text)]
-        # We are presently bootstrapping off one node from the ES cluster. The following comment would use all nodes.
-        # es_urls = ','.join(endpoints)
-        es_urls = endpoints[0]
+        es_urls = ','.join(endpoints)
 
     # get the Logstash container API endpoints
     logstash_image = os.getenv('LOGSTASH_DOCKER_IMAGE', 'geoint/logstash-elastic-ha')
