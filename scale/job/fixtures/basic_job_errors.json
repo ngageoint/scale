@@ -70,7 +70,7 @@
         "fields": {
             "name": "invalid-results-manifest",
             "title": "Invalid Results Manifest",
-            "description": "The output files from the result manifest are invalid. This could mean either duplicate output names were found, no output files were found, or both 'file' and 'files' object were found in the output_data",
+            "description": "The algorithm produced an invalid results manifest file. Please see the job log for more information.",
             "category": "ALGORITHM",
             "is_builtin": true,
             "created": "2016-08-24T00:00:00.0Z",
@@ -83,12 +83,11 @@
         "fields": {
             "name": "missing-required-output",
             "title": "Missing Required Output",
-            "description": "The output_data parameter is missing from the results manifest file",
+            "description": "The algorithm failed to produce a required output. Please see the job log for more information.",
             "category": "ALGORITHM",
             "is_builtin": true,
             "created": "2016-08-24T00:00:00.0Z",
             "last_modified": "2016-08-24T00:00:00.0Z"
         }
     }
-
 ]

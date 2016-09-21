@@ -10,11 +10,13 @@ from django.db import transaction
 from django.db.utils import DatabaseError, OperationalError
 
 from error.models import Error
+from job.configuration.results.exceptions import InvalidResultsManifest, MissingRequiredOutput, \
+    MissingSingleFileOutputParameter, MissingMultipleFileOutputParameter
+from job.errors import get_invalid_manifest_error, get_missing_output_error
 from job.execution.cleanup import cleanup_job_exe
 from job.models import JobExecution
 from storage.exceptions import NfsError
 from util.retry import retry_database_query
-from job.configuration.results.exceptions import InvalidResultsManifest, MissingRequiredOutput, MissingSingleFileOutputParameter, MissingMultipleFileOutputParameter
 
 
 logger = logging.getLogger(__name__)
@@ -32,8 +34,8 @@ EXIT_CODE_DICT = {DB_EXIT_CODE: Error.objects.get_database_error,
                   DB_OP_EXIT_CODE: Error.objects.get_database_operation_error,
                   IO_EXIT_CODE: Error.objects.get_filesystem_error,
                   NFS_EXIT_CODE: Error.objects.get_nfs_error,
-                  IV_MF_CODE: Error.objects.get_invalid_manifest_error,
-                  MI_OP_CODE: Error.objects.get_missing_output_error}
+                  IV_MF_CODE: get_invalid_manifest_error,
+                  MI_OP_CODE: get_missing_output_error}
 
 
 class Command(BaseCommand):
