@@ -883,76 +883,76 @@ and is updated when any needed pre-job steps are run.</td>
 <colgroup>
 <col width="18%" />
 <col width="16%" />
-<col width="66%" />
+<col width="8%" />
+<col width="58%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head" colspan="3"><strong>Specific Job Execution Logs</strong></th>
+<tr class="row-odd"><th class="head" colspan="4"><strong>Specific Job Execution Logs</strong></th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td colspan="3">Returns just job execution logs for stdout, stderr, or a combined view.
+<tr class="row-even"><td colspan="4">Returns just job execution logs for stdout, stderr, or a combined view.
 This will return the text of the stdout, stderr, or a combined view of both logs.
 More advanced log polling can be accomplished by directly querying the elasticsearch database.</td>
 </tr>
-<tr class="row-odd"><td colspan="3"><dl class="first last docutils">
+<tr class="row-odd"><td colspan="4"><dl class="first last docutils">
 <dt><strong>GET</strong> /job-executions/{id}/logs/stdout/</dt>
 <dd>Where {id} is the unique identifier of an existing model.</dd>
 </dl>
 </td>
 </tr>
-<tr class="row-even"><td colspan="3"><dl class="first last docutils">
+<tr class="row-even"><td colspan="4"><dl class="first last docutils">
 <dt><strong>GET</strong> /job-executions/{id}/logs/stderr/</dt>
 <dd>Where {id} is the unique identifier of an existing model.</dd>
 </dl>
 </td>
 </tr>
-<tr class="row-odd"><td colspan="3"><dl class="first last docutils">
+<tr class="row-odd"><td colspan="4"><dl class="first last docutils">
 <dt><strong>GET</strong> /job-executions/{id}/logs/combined/</dt>
 <dd>Where {id} is the unique identifier of an existing model.</dd>
 </dl>
 </td>
 </tr>
-<tr class="row-even"><td colspan="3"><strong>Request Header Fields</strong></td>
+<tr class="row-even"><td colspan="4"><strong>Request Header Fields</strong></td>
 </tr>
 <tr class="row-odd"><td>Accept</td>
 <td>String</td>
-<td>Should be <em>application/json</em>, <em>text/plain</em>, or <em>text/html</em>.
+<td colspan="2">Should be <em>application/json</em>, <em>text/plain</em>, or <em>text/html</em>.
 <em>application/json</em> will return the raw Elasticsearch results.
 <em>text/plain</em> will return the log entries, one per line, as UTF-8.
 <em>text/html</em> will return a simple HTML document with stdout/stderr CSS
 classes to distinguish stdout and stderr. stderr will be
 colored red by default.</td>
 </tr>
-<tr class="row-even"><td>If-Modified-Since</td>
-<td>HTTP Date</td>
-<td>If new log data exists after the specified date, return as normal, otherwise
-return <em>304 Not Modified</em></td>
+<tr class="row-even"><td colspan="4"><strong>Query Parameters</strong></td>
 </tr>
-<tr class="row-odd"><td colspan="3"><strong>Successful Response</strong></td>
+<tr class="row-odd"><td>started</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>The start of the time range to query.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).</td>
 </tr>
-<tr class="row-even"><td><strong>Status</strong></td>
-<td colspan="2">304 Not Modified</td>
+<tr class="row-even"><td colspan="4"><strong>Successful Responses</strong></td>
 </tr>
-<tr class="row-odd"><td><strong>Content Type</strong></td>
-<td colspan="2">No content returned</td>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="3">204 No Content</td>
 </tr>
-<tr class="row-even"><td colspan="3"><strong>Return description</strong></td>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="3">No content returned</td>
 </tr>
-<tr class="row-odd"><td colspan="3">No log data newer than the specified date is available.</td>
+<tr class="row-odd"><td colspan="4"><strong>Return description</strong></td>
 </tr>
-<tr class="row-even"><td colspan="3"><strong>Status</strong>           | 200 OK</td>
+<tr class="row-even"><td colspan="4">No log data that matches this request is available.</td>
 </tr>
-<tr class="row-odd"><td colspan="3"><strong>Header Fields</strong></td>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="3">200 OK</td>
 </tr>
-<tr class="row-even"><td>Content-Type</td>
-<td colspan="2">content type as requested</td>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="3">Content type as requested</td>
 </tr>
-<tr class="row-odd"><td>Last-Modified</td>
-<td colspan="2">The latest timestamp in the returned log entries</td>
+<tr class="row-odd"><td colspan="4"><strong>Return description</strong></td>
 </tr>
-<tr class="row-even"><td colspan="3"><strong>Return description</strong></td>
-</tr>
-<tr class="row-odd"><td colspan="3">If the requested encoding is <em>application/json</em> the raw Elasticsearch results are returned.
+<tr class="row-even"><td colspan="4">If the requested encoding is <em>application/json</em> the raw Elasticsearch results are returned.
 If the requested encoding is <em>text/plain</em> then the plain text of the requested log will be returned. This will be the
 complete text from the requested timestamp or the complete log since start of execution by default.
 If <em>text/html</em> is requested as a valid encoding then each line of the log in the combined output will be wrapped in a
