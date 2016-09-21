@@ -433,7 +433,7 @@ class TestRecipeManagerCreateRecipe(TransactionTestCase):
         """Tests calling RecipeManager.create_recipe() successfully."""
 
         event = trigger_test_utils.create_trigger_event()
-        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, event=event, data=RecipeData(self.data))
+        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, data=RecipeData(self.data), event=event)
 
         # Make sure the recipe jobs get created with the correct job types
         recipe_job_1 = RecipeJob.objects.get(recipe_id=handler.recipe.id, job_name='Job 1')
@@ -447,7 +447,7 @@ class TestRecipeManagerCreateRecipe(TransactionTestCase):
         """Tests calling RecipeManager.create_recipe() to supersede a recipe with the same recipe type."""
 
         event = trigger_test_utils.create_trigger_event()
-        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, event=event, data=RecipeData(self.data))
+        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, data=RecipeData(self.data), event=event)
         recipe = Recipe.objects.get(id=handler.recipe.id)
         recipe_job_1 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe.id, job_name='Job 1')
         recipe_job_2 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe.id, job_name='Job 2')
@@ -457,7 +457,7 @@ class TestRecipeManagerCreateRecipe(TransactionTestCase):
         graph = self.recipe_type.get_recipe_definition().get_graph()
         delta = RecipeGraphDelta(graph, graph)
         delta.reprocess_identical_node('Job 2')  # We want to reprocess Job 2
-        new_handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, event=event, data=None,
+        new_handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, data=None, event=event,
                                                    superseded_recipe=recipe, delta=delta,
                                                    superseded_jobs=superseded_jobs)
 
@@ -541,7 +541,7 @@ class TestRecipeManagerCreateRecipe(TransactionTestCase):
         new_recipe_type = recipe_test_utils.create_recipe_type(name=self.recipe_type.name, definition=new_definition)
 
         event = trigger_test_utils.create_trigger_event()
-        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, event=event, data=RecipeData(self.data))
+        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, data=RecipeData(self.data), event=event)
         recipe = Recipe.objects.get(id=handler.recipe.id)
         recipe_job_1 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe.id, job_name='Job 1')
         recipe_job_2 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe.id, job_name='Job 2')
@@ -558,7 +558,7 @@ class TestRecipeManagerCreateRecipe(TransactionTestCase):
         graph_a = self.recipe_type.get_recipe_definition().get_graph()
         graph_b = new_recipe_type.get_recipe_definition().get_graph()
         delta = RecipeGraphDelta(graph_a, graph_b)
-        new_handler = Recipe.objects.create_recipe(recipe_type=new_recipe_type, event=event, data=None,
+        new_handler = Recipe.objects.create_recipe(recipe_type=new_recipe_type, data=None, event=event,
                                                    superseded_recipe=recipe, delta=delta,
                                                    superseded_jobs=superseded_jobs)
 
@@ -696,8 +696,8 @@ class TestRecipeManagerReprocessRecipe(TransactionTestCase):
     def test_forced_all_job(self):
         """Tests reprocessing a recipe without any changes by forcing all jobs."""
 
-        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, event=self.event,
-                                               data=RecipeData(self.data))
+        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, data=RecipeData(self.data),
+                                               event=self.event)
 
         new_handler = Recipe.objects.reprocess_recipe(handler.recipe.id, all_jobs=True)
 
@@ -706,24 +706,27 @@ class TestRecipeManagerReprocessRecipe(TransactionTestCase):
         recipe_job_2 = RecipeJob.objects.get(recipe_id=new_handler.recipe.id, job_name='Job 2')
         self.assertEqual(recipe_job_1.job.job_type.id, self.job_type_1.id)
         self.assertEqual(recipe_job_2.job.job_type.id, self.job_type_2.id)
+        self.assertEqual(recipe_job_1.job.status, 'QUEUED')
+        self.assertEqual(recipe_job_2.job.status, 'PENDING')
 
     def test_forced_specific_job(self):
         """Tests reprocessing a recipe without any changes by forcing a single job."""
 
-        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, event=self.event,
-                                               data=RecipeData(self.data))
+        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, data=RecipeData(self.data),
+                                               event=self.event)
 
         new_handler = Recipe.objects.reprocess_recipe(handler.recipe.id, ['Job 1'])
 
         # Make sure the recipe jobs get created with the correct job types
         recipe_job_1 = RecipeJob.objects.get(recipe_id=new_handler.recipe.id, job_name='Job 1')
         self.assertEqual(recipe_job_1.job.job_type.id, self.job_type_1.id)
+        self.assertEqual(recipe_job_1.job.status, 'QUEUED')
 
     def test_no_changes(self):
         """Tests reprocessing a recipe that has not changed without specifying any jobs throws an error."""
 
-        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, event=self.event,
-                                               data=RecipeData(self.data))
+        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, data=RecipeData(self.data),
+                                               event=self.event)
 
         self.assertRaises(ReprocessError, Recipe.objects.reprocess_recipe, handler.recipe.id)
 
@@ -777,8 +780,8 @@ class TestRecipeManagerReprocessRecipe(TransactionTestCase):
             }]
         }
 
-        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, event=self.event,
-                                               data=RecipeData(self.data))
+        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, data=RecipeData(self.data),
+                                               event=self.event)
         recipe = Recipe.objects.get(id=handler.recipe.id)
         recipe_test_utils.edit_recipe_type(self.recipe_type, new_definition)
 
@@ -789,6 +792,8 @@ class TestRecipeManagerReprocessRecipe(TransactionTestCase):
         recipe_job_3 = RecipeJob.objects.get(recipe_id=new_handler.recipe.id, job_name='Job 3')
         self.assertEqual(recipe_job_1.job.job_type.id, self.job_type_1.id)
         self.assertEqual(recipe_job_3.job.job_type.id, job_type_3.id)
+        self.assertEqual(recipe_job_1.job.status, 'QUEUED')
+        self.assertEqual(recipe_job_3.job.status, 'PENDING')
 
 
 class TestRecipePopulateJobs(TransactionTestCase):

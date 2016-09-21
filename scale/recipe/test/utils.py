@@ -212,5 +212,5 @@ def create_recipe_handler(recipe_type=None, data=None, event=None, superseded_re
     if superseded_recipe and not delta:
         delta = RecipeGraphDelta(RecipeGraph(), RecipeGraph())
 
-    return Recipe.objects.create_recipe(recipe_type, event, data, superseded_recipe=superseded_recipe,
+    return Recipe.objects.create_recipe(recipe_type, data, event, superseded_recipe=superseded_recipe,
                                         delta=delta, superseded_jobs=superseded_jobs)

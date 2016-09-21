@@ -114,14 +114,17 @@ class QueueNewRecipeView(GenericAPIView):
             raise Http404
 
         try:
-            recipe_id = Queue.objects.queue_new_recipe_for_user(recipe_type, RecipeData(recipe_data))
+            handler = Queue.objects.queue_new_recipe_for_user(recipe_type, RecipeData(recipe_data))
         except InvalidRecipeData:
             return Response('Invalid recipe information.', status=status.HTTP_400_BAD_REQUEST)
 
-        recipe_details = Recipe.objects.get_details(recipe_id)
+        try:
+            recipe = Recipe.objects.get_details(handler.recipe.id)
+        except RecipeType.DoesNotExist:
+            raise Http404
 
-        serializer = self.get_serializer(recipe_details)
-        recipe_url = urlresolvers.reverse('recipe_details_view', args=[recipe_id])
+        serializer = self.get_serializer(recipe)
+        recipe_url = urlresolvers.reverse('recipe_details_view', args=[recipe.id])
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=recipe_url))
 
 

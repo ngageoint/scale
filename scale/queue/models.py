@@ -506,13 +506,13 @@ class QueueManager(models.Manager):
         :param superseded_jobs: If not None, represents the job models (stored by job name) of the old recipe to
             supersede
         :type superseded_jobs: {string: :class:`job.models.Job`}
-        :returns: The ID of the new recipe
-        :rtype: int
+        :returns: A handler for the new recipe
+        :rtype: :class:`recipe.handlers.handler.RecipeHandler`
 
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe data is invalid
         """
 
-        handler = Recipe.objects.create_recipe(recipe_type, event, data, superseded_recipe, delta, superseded_jobs)
+        handler = Recipe.objects.create_recipe(recipe_type, data, event, superseded_recipe, delta, superseded_jobs)
         jobs_to_queue = []
         for job_tuple in handler.get_existing_jobs_to_queue():
             job = job_tuple[0]
@@ -525,7 +525,7 @@ class QueueManager(models.Manager):
         if jobs_to_queue:
             self._queue_jobs(jobs_to_queue)
 
-        return handler.recipe.id
+        return handler
 
     # TODO: once Django user auth is used, have the user information passed into here
     @transaction.atomic
@@ -540,8 +540,8 @@ class QueueManager(models.Manager):
         :type recipe_type: :class:`recipe.models.RecipeType`
         :param data: The recipe data to run on, should be None if superseded_recipe is provided
         :type data: :class:`recipe.data.recipe_data.RecipeData`
-        :returns: The ID of the new recipe
-        :rtype: int
+        :returns: A handler for the new recipe
+        :rtype: :class:`recipe.handlers.handler.RecipeHandler`
 
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe data is invalid
         """
