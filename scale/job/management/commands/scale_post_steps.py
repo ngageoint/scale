@@ -28,12 +28,12 @@ IO_EXIT_CODE = 4
 NFS_EXIT_CODE = 5
 IV_MF_CODE = 6
 MI_OP_CODE = 7
-EXIT_CODE_DICT = {DB_EXIT_CODE, Error.objects.get_database_error,
-                  DB_OP_EXIT_CODE, Error.objects.get_database_operation_error,
-                  IO_EXIT_CODE, Error.objects.get_filesystem_error,
-                  NFS_EXIT_CODE, Error.objects.get_nfs_error,
-                  IV_MF_CODE, Error.objects.get_invalid_manifest_error,
-                  MI_OP_CODE, Error.objects.get_missing_output_error}
+EXIT_CODE_DICT = {DB_EXIT_CODE: Error.objects.get_database_error,
+                  DB_OP_EXIT_CODE: Error.objects.get_database_operation_error,
+                  IO_EXIT_CODE: Error.objects.get_filesystem_error,
+                  NFS_EXIT_CODE: Error.objects.get_nfs_error,
+                  IV_MF_CODE: Error.objects.get_invalid_manifest_error,
+                  MI_OP_CODE: Error.objects.get_missing_output_error}
 
 
 class Command(BaseCommand):
@@ -119,7 +119,13 @@ class Command(BaseCommand):
 
         job_interface = job_exe.get_job_interface()
         job_data = job_exe.job.get_job_data()
-        stdout_and_stderr = job_exe.get_log_text()
+        stdout_and_stderr = None
+        try:
+            stdout_and_stderr, _last_modified = job_exe.get_log_text()
+        except:
+            logger.exception('Failed to retrieve job execution logs')
+        if stdout_and_stderr is None:
+            stdout_and_stderr = ''
 
         with transaction.atomic():
             job_results, results_manifest = job_interface.perform_post_steps(job_exe, job_data, stdout_and_stderr)

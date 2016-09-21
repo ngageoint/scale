@@ -443,7 +443,7 @@ class RecipeDefinition(object):
                 multiple = (input_data_type == 'files')
                 media_types = input_data_dict['media_types']
                 optional = not input_data_dict['required']
-                job_conn.add_input_file(job_input, multiple, media_types, optional)
+                job_conn.add_input_file(job_input, multiple, media_types, optional, False)
 
     def _create_validation_dicts(self):
         """Creates the validation dicts required by recipe_data to perform its validation"""

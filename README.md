@@ -69,6 +69,7 @@ Alternatively, your own local_settings.py can be volume mounted into `/opt/scale
 | DEPLOY_LOGGING           | False                           | Start the logstash container in DC/OS    |
 | INIT_DB                  | False                           | Init the db (migrat, load, etc.)         |
 | LOAD_COUNTRY_DATA        | False                           | Load country borders into the database.  |
+| LOGSTASH_DOCKER_IMAGE    | 'logstash'                      | Docker image for logstash                |
 
 Quick Start
 ===========

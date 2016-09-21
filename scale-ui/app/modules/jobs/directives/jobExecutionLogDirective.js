@@ -10,6 +10,8 @@
 
             $scope.$watch('execution', function () {
                 if ($scope.execution) {
+                    vm.status = $scope.execution.status.toLowerCase();
+                    console.log($scope.execution);
                     jobExecutionService.getLog($scope.execution.id).then(null, null, function (result) {
                         // get difference of max scroll length and current scroll length.var  = result.data;
                         if (result) {

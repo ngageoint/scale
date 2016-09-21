@@ -174,6 +174,11 @@ Example S3 monitor configuration:
        "monitor": {
            "type": "s3",
            "sqs_name": "my-sqs"
+           "credentials": {
+               "access_key_id": "AKIAIOSFODNN7EXAMPLE",
+               "secret_access_key": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+           },
+           "region_name": "us-east-1"
        },
        "files_to_ingest": [
            {
@@ -188,9 +193,32 @@ Example S3 monitor configuration:
        ]
    }
 
-The S3 monitor requires one additional field in its configuration:
+The S3 monitor has the following additional fields in its configuration:
 
 **sqs_name**: JSON string
 
     The *sqs_name* field is a required string that defines the name of the SQS queue that should be polled for object
     creation notifications that describe new files in the S3 bucket.
+
+**credentials**: JSON object
+
+    The *credentials* is a JSON object that provides the necessary information to access the bucket. This attribute
+    should be omitted when using IAM role-based security. If it is included for key-based security, then both
+    sub-attributes must be included. An IAM account should be created and granted the appropriate permissions to the
+    bucket before attempting to use it here.
+
+    **access_key_id**: JSON string
+
+        The *access_key_id* is a unique identifier for the user account in IAM that will be used as a proxy for read and
+        write operations within Scale.
+
+    **secret_access_key**: JSON string
+
+        The *secret_access_key* is a generated token that the system can use to prove it should be able to make requests
+        on behalf of the associated IAM account without requiring the actual password used by that account.
+
+**region_name**: JSON string
+
+    The *region_name* is an optional string that specifies the AWS region where the SQS Queue is located. This is not
+    always required, as environment variables or configuration files could set the default region, but it is a highly
+    recommended setting for explicitly indicating the SQS region.

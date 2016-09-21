@@ -327,13 +327,15 @@ class QueueManager(models.Manager):
             Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
 
     @transaction.atomic
-    def handle_job_completion(self, job_exe_id, when):
+    def handle_job_completion(self, job_exe_id, when, tasks):
         """Handles the successful completion of a job. All database changes occur in an atomic transaction.
 
         :param job_exe_id: The ID of the job execution that successfully completed
         :type job_exe_id: int
         :param when: When the job execution was completed
         :type when: :class:`datetime.datetime`
+        :param tasks: The list of this job's tasks
+        :type tasks: [:class:`job.execution.running.tasks.base_task.Task`]
         """
 
         job_exe = JobExecution.objects.get_locked_job_exe(job_exe_id)
@@ -341,6 +343,8 @@ class QueueManager(models.Manager):
             # If this job execution is no longer running, ignore completion
             return
         job_exe.job = Job.objects.get_locked_job(job_exe.job_id)
+        for task in tasks:
+            task.populate_job_exe_model(job_exe)
         JobExecution.objects.complete_job_exe(job_exe, when)
 
         self._handle_job_finished(job_exe)
@@ -373,7 +377,7 @@ class QueueManager(models.Manager):
                 Recipe.objects.complete(handler.recipe.id, when)
 
     @transaction.atomic
-    def handle_job_failure(self, job_exe_id, when, error=None):
+    def handle_job_failure(self, job_exe_id, when, tasks, error=None):
         """Handles the failure of a job execution. If the job has tries remaining, it is put back on the queue.
         Otherwise it is marked failed. All database changes occur in an atomic transaction.
 
@@ -381,6 +385,8 @@ class QueueManager(models.Manager):
         :type job_exe_id: int
         :param when: When the failure occurred
         :type when: :class:`datetime.datetime`
+        :param tasks: The list of this job's tasks
+        :type tasks: [:class:`job.execution.running.tasks.base_task.Task`]
         :param error: The error that caused the failure
         :type error: :class:`error.models.Error`
         """
@@ -393,7 +399,11 @@ class QueueManager(models.Manager):
             # If this job execution is no longer running, ignore failure
             return
         job_exe.job = Job.objects.get_locked_job(job_exe.job_id)
+        for task in tasks:
+            task.populate_job_exe_model(job_exe)
         JobExecution.objects.update_status([job_exe], 'FAILED', when, error)
+        # TODO: extra save here to capture task info, re-work this as part of the architecture refactor
+        job_exe.save()
 
         self._handle_job_finished(job_exe)
 

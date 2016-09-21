@@ -13,6 +13,7 @@ EXPOSE 5051
 # DEPLOY_LOGGING to start up the logstash system
 # INIT_DB to initialize the database (migrate, load, etc.)
 # LOAD_COUNTRY_DATA to load country borders fixture into the database (don't select this if you have custom country data)
+# LOGSTASH_DOCKER_IMAGE the name of the DOcker image for logstash
 # SCALE_SECRET_KEY
 # SCALE_DEBUG
 # SCALE_API_URL
@@ -85,26 +86,28 @@ WORKDIR /opt/scale-ui
 RUN yum install -y npm node-gyp make \
  && npm install --global gulp-cli \
  && npm install \
- && pip install -r /tmp/docs.txt
-
-RUN gulp deploy \
+ && pip install -r /tmp/docs.txt \
+ && gulp deploy \
  && mkdir -p /opt/scale/ui \
- && tar -C /opt/scale/ui -zxf deploy/scale-ui.tar.gz
-
-RUN make -C /opt/scale/docs code_docs html
-
-# cleanup
-WORKDIR /opt/scale
-RUN yum -y history undo last \
+ && tar -C /opt/scale/ui -zxf deploy/scale-ui.tar.gz \
+ && make -C /opt/scale/docs code_docs html \
+ # cleanup unneeded yum packages and npm cache 
+ && yum -y history undo last \
  && yum clean all \
  && pip uninstall -y -r /tmp/docs.txt \
+ && rm -fr /tmp/* \
+ && rm -fr /usr/local/lib/node_modules \
+ && rm -fr /root/.npm \
  && rm -rf /opt/scale-ui
+
+WORKDIR /opt/scale
+
 
 # setup ownership and permissions. create some needed directories
 RUN mkdir -p /var/log/scale /var/lib/scale-metrics /scale/input_data /scale/output_data /scale/workspace_mounts \
  && chown -R 7498 /opt/scale /var/log/scale /var/lib/scale-metrics /scale \
  && chmod 777 /scale/output_data \
- && chmod a+x manage.py entryPoint.sh deployDb.py
+ && chmod a+x manage.py entryPoint.sh deployDb.py deployElk.py
 # Issues with DC/OS, so run as root for now..shouldn't be a huge security concern
 #USER 7498
 

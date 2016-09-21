@@ -53,6 +53,7 @@
         vm.lineClass = 'btn-default';
         vm.splineClass = 'btn-default';
         vm.scatterClass = 'btn-default';
+        vm.metricsTotal = 0;
 
         vm.getPlotDataParams = function (obj) {
             return {
@@ -276,6 +277,7 @@
             // mark any existing data for removal
             // compare currCols (columns currently in the chart) with displayCols (columns to display)
             removeIds = [];
+            vm.metricsTotal = 0;
             var currCols = [],
                 displayCols = [];
             _.forEach(colArr, function (col, idx) {
@@ -285,7 +287,18 @@
             });
             _.forEach(vm.chartData, function (d) {
                 displayCols = displayCols.concat(_.pluck(d.query.filtersApplied, 'name'));
+                // increase metrics total if selected metric produces a sum
+                // for now it is only possible to select one metric at a time
+                // so just check the first element from selectedMetrics
+                if (d.query.selectedMetrics[0].aggregate === 'sum') {
+                    vm.metricsTotal = vm.metricsTotal + _.sum(d.results[0].values, 'value');
+                }
             });
+            if (vm.metricsTotal > 0) {
+                vm.chartTitle = vm.chartData[0].query.selectedMetrics[0].title + ' for ' + moment.utc(vm.inputStartDate).format('DD MMM YYYY') + ' - ' + moment.utc(vm.inputEndDate).format('DD MMM YYYY') + ' (' + vm.metricsTotal.toLocaleString() + ')';
+            } else {
+                vm.chartTitle = vm.chartData[0].query.selectedMetrics[0].title + ' ' + moment.utc(vm.inputStartDate).format('DD MMM YYYY') + ' - ' + moment.utc(vm.inputEndDate).format('DD MMM YYYY');
+            }
             // determine the exact differences between currCols and displayCols
             // if none are found, then removeIds stays empty
             _.forEach(currCols, function (currCol) {

@@ -45,6 +45,8 @@ INFLUXDB_BASE_URL = None
 LOGGING_ADDRESS = None
 # Base URL for elasticsearch
 ELASTICSEARCH_URL = None
+# Placeholder for Elasticsearch object. Needed for unit tests.
+ELASTICSEARCH = None
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/

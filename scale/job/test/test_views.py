@@ -7,7 +7,9 @@ import time
 import django
 import django.utils.timezone as timezone
 from django.test import TestCase, TransactionTestCase
+from mock import patch
 from rest_framework import status
+from rest_framework.test import APIClient
 
 import error.test.utils as error_test_utils
 import job.test.utils as job_test_utils
@@ -809,7 +811,7 @@ class TestJobTypeDetailsView(TestCase):
         django.setup()
 
         self.interface = {
-            'version': '1.0',
+            'version': '1.1',
             'command': 'test_cmd',
             'command_arguments': 'test_arg',
             'input_data': [],
@@ -1059,6 +1061,37 @@ class TestJobTypeDetailsView(TestCase):
                 'configuration': trigger_config,
             }
         }
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_edit_system_job_pause(self):
+        """Tests pausing a system job"""
+
+        url = '/job-types/%d/' % self.job_type.id
+        json_data = {
+            'is_paused': True
+        }
+        self.job_type.is_system = True
+        self.job_type.save()
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(result['id'], self.job_type.id)
+        self.assertEqual(result['title'], self.job_type.title)
+        self.assertEqual(result['revision_num'], 1)
+        self.assertIsNotNone(result['interface'])
+        self.assertEqual(result['is_paused'], True)
+
+    def test_edit_system_job_invalid_field(self):
+        """Tests updating an invalid system job field"""
+        url = '/job-types/%d/' % self.job_type.id
+        json_data = {
+            'title': 'Invalid title change'
+        }
+        self.job_type.is_system = True
+        self.job_type.save()
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -1646,3 +1679,127 @@ class TestJobExecutionsView(TransactionTestCase):
         response = self.client.generic('GET', url)
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+
+class TestJobExecutionSpecificLogView(TestCase):
+
+    def setUp(self):
+        django.setup()
+
+        self.test_client = APIClient()
+
+    def test_bad_job_exe_id(self):
+        url = '/job-executions/999999/logs/combined/'
+        response = self.test_client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    @patch('job.views.JobExecution.objects.get_logs')
+    def test_combined_log_json_no_time(self, mock_get_logs):
+        def new_get_log_json(include_stdout, include_stderr, since):
+            self.assertTrue(include_stdout)
+            self.assertTrue(include_stderr)
+            self.assertIsNone(since)
+            return {}, timezone.now()
+        mock_get_logs.return_value.get_log_json.side_effect = new_get_log_json
+
+        url = '/job-executions/999999/logs/combined/?format=json'
+        response = self.test_client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.accepted_media_type, 'application/json')
+
+    @patch('job.views.JobExecution.objects.get_logs')
+    def test_combined_log_text_no_time(self, mock_get_logs):
+        def new_get_log_text(include_stdout, include_stderr, since, html):
+            self.assertTrue(include_stdout)
+            self.assertTrue(include_stderr)
+            self.assertIsNone(since)
+            self.assertFalse(html)
+            return 'hello', timezone.now()
+        mock_get_logs.return_value.get_log_text.side_effect = new_get_log_text
+
+        url = '/job-executions/999999/logs/combined/?format=txt'
+        response = self.test_client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.accepted_media_type, 'text/plain')
+
+    @patch('job.views.JobExecution.objects.get_logs')
+    def test_combined_log_html_no_time(self, mock_get_logs):
+        def new_get_log_text(include_stdout, include_stderr, since, html):
+            self.assertTrue(include_stdout)
+            self.assertTrue(include_stderr)
+            self.assertIsNone(since)
+            self.assertTrue(html)
+            return '<html>hello</html>', timezone.now()
+        mock_get_logs.return_value.get_log_text.side_effect = new_get_log_text
+
+        url = '/job-executions/999999/logs/combined/?format=html'
+        response = self.test_client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.accepted_media_type, 'text/html')
+
+    @patch('job.views.JobExecution.objects.get_logs')
+    def test_combined_log_json_no_content(self, mock_get_logs):
+        def new_get_log_json(include_stdout, include_stderr, since):
+            self.assertTrue(include_stdout)
+            self.assertTrue(include_stderr)
+            self.assertIsNone(since)
+            return None, timezone.now()
+        mock_get_logs.return_value.get_log_json.side_effect = new_get_log_json
+
+        url = '/job-executions/999999/logs/combined/?format=json'
+        response = self.test_client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    @patch('job.views.JobExecution.objects.get_logs')
+    def test_stdout_log_html_no_time(self, mock_get_logs):
+        def new_get_log_text(include_stdout, include_stderr, since, html):
+            self.assertTrue(include_stdout)
+            self.assertFalse(include_stderr)
+            self.assertIsNone(since)
+            self.assertTrue(html)
+            return '<html>hello</html>', timezone.now()
+        mock_get_logs.return_value.get_log_text.side_effect = new_get_log_text
+
+        url = '/job-executions/999999/logs/stdout/?format=html'
+        response = self.test_client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.accepted_media_type, 'text/html')
+
+    @patch('job.views.JobExecution.objects.get_logs')
+    def test_stderr_log_html_no_time(self, mock_get_logs):
+        def new_get_log_text(include_stdout, include_stderr, since, html):
+            self.assertFalse(include_stdout)
+            self.assertTrue(include_stderr)
+            self.assertIsNone(since)
+            self.assertTrue(html)
+            return '<html>hello</html>', timezone.now()
+        mock_get_logs.return_value.get_log_text.side_effect = new_get_log_text
+
+        url = '/job-executions/999999/logs/stderr/?format=html'
+        response = self.test_client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.accepted_media_type, 'text/html')
+
+    @patch('job.views.JobExecution.objects.get_logs')
+    def test_combined_log_json_with_time(self, mock_get_logs):
+        started = datetime.datetime(2016, 1, 1, tzinfo=timezone.utc)
+
+        def new_get_log_json(include_stdout, include_stderr, since):
+            self.assertTrue(include_stdout)
+            self.assertTrue(include_stderr)
+            self.assertEqual(since, started)
+            return {}, timezone.now()
+        mock_get_logs.return_value.get_log_json.side_effect = new_get_log_json
+
+        url = '/job-executions/999999/logs/combined/?started=2016-01-01T00:00:00Z&format=json'
+        response = self.test_client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.accepted_media_type, 'application/json')

@@ -1044,47 +1044,6 @@ class JobExecutionManager(models.Manager):
 
         return job_exes
 
-    def task_ended(self, job_exe_id, task, when, exit_code):
-        """Updates the given job execution to reflect that the given task has ended
-
-        :param job_exe_id: The job execution ID
-        :type job_exe_id: int
-        :param task: Indicates which task, either 'pre', 'job', or 'post'
-        :type task: string
-        :param when: The time that the task ended
-        :type when: :class:`datetime.datetime`
-        :param exit_code: The task exit code, possibly None
-        :type exit_code: int
-        """
-
-        job_exe_qry = self.filter(id=job_exe_id)
-        if task == 'pre':
-            job_exe_qry.update(pre_completed=when, pre_exit_code=exit_code)
-        elif task == 'job':
-            job_exe_qry.update(job_completed=when, job_exit_code=exit_code)
-        elif task == 'post':
-            job_exe_qry.update(post_completed=when, post_exit_code=exit_code)
-
-    def task_started(self, job_exe_id, task, when):
-        """Updates the given job execution to reflect that the given task has started
-
-        :param job_exe_id: The job execution ID
-        :type job_exe_id: int
-        :param task: Indicates which task, either 'pre', 'job', or 'post'
-        :type task: string
-        :param when: The time that the task started
-        :type when: :class:`datetime.datetime`
-        """
-
-        job_exe_qry = self.filter(id=job_exe_id)
-
-        if task == 'pre':
-            job_exe_qry.update(pre_started=when)
-        elif task == 'job':
-            job_exe_qry.update(job_started=when)
-        elif task == 'post':
-            job_exe_qry.update(post_started=when)
-
     def update_status(self, job_exes, status, when, error=None):
         """Updates the given job executions and jobs with the new status. The caller must have obtained model locks on
         the job execution and job models (in that order).
@@ -1458,35 +1417,37 @@ class JobExecution(models.Model):
         :type since: :class:`datetime.datetime` or None
         :rtype: tuple of (dict, :class:`datetime.datetime`) with the results or None and the last modified timestamp
         """
+
         q = {
-                "size": 10000,
-                "query": {
-                    "bool": {
-                        "must": [
-                            {"match": {"tag": "%d_job" % self.pk}}
-                        ]
+                'size': 10000,
+                'query': {
+                    'bool': {
+                        'must': [],
+                        'should': [
+                            {'match': {'tag': 'scale_%d_pre' % self.pk}},
+                            {'match': {'tag': 'scale_%d_job' % self.pk}},
+                            {'match': {'tag': 'scale_%d_post' % self.pk}}
+                        ],
+                        'minimum_should_match': 1
                     }
                 },
-                "_source": ["@timestamp", "message", "level", "tag"]
+                'sort': [{'@timestamp': 'asc'}],
+                '_source': ['@timestamp', 'message', 'level', 'tag']
             }
         if not include_stdout and not include_stderr:
             return None, util.parse.datetime.datetime.utcnow()
         elif include_stdout and not include_stderr:
-            q["query"]["bool"]["must"].append({"match": {"level": 6}})
+            q['query']['bool']['must'].append({'match': {'level': 6}})
         elif include_stderr and not include_stdout:
-            q["query"]["bool"]["must"].append({"match": {"level": 3}})
+            q['query']['bool']['must'].append({'match': {'level': 3}})
         if since is not None:
-            q["query"]["bool"]["must"].append({"range": {"@timestamp": {"gt": since.isoformat()}}})
+            q['query']['bool']['must'].append({'range': {'@timestamp': {'gt': since.isoformat()}}})
 
-        esr = urllib2.urlopen(
-            urllib2.Request(settings.ELASTICSEARCH_URL+"/_search",
-                            data=json.dumps(q),
-                            headers={"Accept": "application/json", "Content-type": "application/json"}))
+        hits = settings.ELASTICSEARCH.search(index='_all', body=q)
 
-        hits = json.loads(esr.read())
-        if hits["hits"]["total"] == 0:
+        if hits['hits']['total'] == 0:
             return None, util.parse.datetime.datetime.utcnow()
-        last_modified = max([util.parse.parse_datetime(h["_source"]["@timestamp"]) for h in hits["hits"]["hits"]])
+        last_modified = max([util.parse.parse_datetime(h['_source']['@timestamp']) for h in hits['hits']['hits']])
         return hits, last_modified
 
     def get_log_text(self, include_stdout=True, include_stderr=True, since=None, html=False):
@@ -1506,15 +1467,19 @@ class JobExecution(models.Model):
         hits, last_modified = self.get_log_json(include_stdout, include_stderr, since)
         if hits is None:
             return None, last_modified
+        valid_hits = []  # Make sure hits have the required message field
+        for h in hits['hits']['hits']:
+            if 'message' in h['_source']:
+                valid_hits.append(h)
         if html:
-            d = ""
-            for h in hits["hits"]["hits"]:
-                cls = "stdout"
-                if h["_source"]["level"] <= 3:
-                    cls = "stderr"
-                d += '<div class="%s">%s</div>\n' % (cls, django.utils.html.escape(h["_source"]["message"]))
+            d = ''
+            for h in valid_hits:
+                cls = 'stdout'
+                if h['_source']['level'] <= 3:
+                    cls = 'stderr'
+                d += '<div class="%s">%s</div>\n' % (cls, django.utils.html.escape(h['_source']['message']))
             return d, last_modified
-        return "\n".join(h["_source"]["message"] for h in hits["hits"]["hits"]), last_modified
+        return '\n'.join(h['_source']['message'] for h in valid_hits), last_modified
 
     class Meta(object):
         """Meta information for the database"""
@@ -1714,7 +1679,8 @@ class JobTypeManager(models.Manager):
         # Acquire model lock for job type
         job_type = JobType.objects.select_for_update().get(pk=job_type_id)
         if job_type.is_system:
-            raise Exception('Cannot edit a system job type')
+            if len(kwargs) > 1 or 'is_paused' not in kwargs:
+                raise InvalidJobField('You can only modify the is_paused field for a System Job')
 
         if interface:
             # New job interface, validate all existing recipes
@@ -2334,3 +2300,42 @@ class JobTypeRevision(models.Model):
         """meta information for the db"""
         db_table = 'job_type_revision'
         unique_together = ('job_type', 'revision_num')
+
+
+class TaskUpdate(models.Model):
+    """Represents a status update received for a job execution task
+
+    :keyword job_exe: The job execution that the task belongs to
+    :type job_exe: :class:`django.db.models.ForeignKey`
+    :keyword task_id: The task ID
+    :type task_id: :class:`django.db.models.CharField`
+    :keyword status: The status of the task
+    :type status: :class:`django.db.models.CharField`
+
+    :keyword timestamp: When the status update occurred (may be None)
+    :type timestamp: :class:`django.db.models.DateTimeField`
+    :keyword source: An optional source of the task status update
+    :type source: :class:`django.db.models.CharField`
+    :keyword reason: An optional reason for the task status update
+    :type reason: :class:`django.db.models.CharField`
+    :keyword message: An optional message related to the task status update
+    :type message: :class:`django.db.models.TextField`
+
+    :keyword created: When the task update was saved in the database
+    :type created: :class:`django.db.models.DateTimeField`
+    """
+
+    job_exe = models.ForeignKey('job.JobExecution', on_delete=models.PROTECT)
+    task_id = models.CharField(max_length=50)
+    status = models.CharField(max_length=50)
+
+    timestamp = models.DateTimeField(blank=True, null=True)
+    source = models.CharField(blank=True, max_length=50, null=True)
+    reason = models.CharField(blank=True, max_length=50, null=True)
+    message = models.TextField(blank=True, null=True)
+
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta(object):
+        """Meta information for the database"""
+        db_table = 'task_update'

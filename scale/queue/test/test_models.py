@@ -119,7 +119,7 @@ class TestQueueManager(TransactionTestCase):
         job_exe = job_test_utils.create_job_exe(job=job, status='RUNNING')
 
         # Call method to test
-        Queue.objects.handle_job_failure(job_exe.id, now())
+        Queue.objects.handle_job_failure(job_exe.id, now(), [])
 
         # Make sure job and execution are failed
         job = Job.objects.get(pk=job.id)
@@ -138,7 +138,7 @@ class TestQueueManager(TransactionTestCase):
         job_exe = job_test_utils.create_job_exe(job=job, status='RUNNING')
 
         # Call method to test
-        Queue.objects.handle_job_failure(job_exe.id, now())
+        Queue.objects.handle_job_failure(job_exe.id, now(), [])
 
         # Make sure execution failed and job retried
         job = Job.objects.get(pk=job.id)
@@ -159,7 +159,7 @@ class TestQueueManager(TransactionTestCase):
         Job.objects.supersede_jobs([job], now())
 
         # Call method to test
-        Queue.objects.handle_job_failure(job_exe.id, now())
+        Queue.objects.handle_job_failure(job_exe.id, now(), [])
 
         # Make sure job and execution are failed
         job = Job.objects.get(pk=job.id)
@@ -396,7 +396,7 @@ class TestQueueManagerHandleJobCompletion(TransactionTestCase):
         JobExecution.objects.filter(pk=job_exe_1.id).update(status='RUNNING')
 
         # Call method to test
-        Queue.objects.handle_job_completion(job_exe_1.id, now())
+        Queue.objects.handle_job_completion(job_exe_1.id, now(), [])
 
         # Make sure processor was called
         self.assertTrue(self.mock_processor.process_completed.called)
@@ -425,7 +425,7 @@ class TestQueueManagerHandleJobCompletion(TransactionTestCase):
         Job.objects.filter(pk=job_1.id).update(status='RUNNING')
         JobExecution.objects.filter(pk=job_exe_1.id).update(status='RUNNING')
 
-        Queue.objects.handle_job_completion(job_exe_1.id, now())
+        Queue.objects.handle_job_completion(job_exe_1.id, now(), [])
 
         # Fake out completing Job 2
         job_2 = RecipeJob.objects.select_related('job').get(recipe_id=recipe_id, job_name='Job 2').job
@@ -441,7 +441,7 @@ class TestQueueManagerHandleJobCompletion(TransactionTestCase):
         JobExecution.objects.filter(pk=job_exe_2.id).update(status='RUNNING')
 
         # Call method to test
-        Queue.objects.handle_job_completion(job_exe_2.id, now())
+        Queue.objects.handle_job_completion(job_exe_2.id, now(), [])
 
         # Make sure processor was called
         self.assertEqual(self.mock_processor.process_completed.call_count, 2)
@@ -583,7 +583,7 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         results = JobResults()
         results.add_file_list_parameter('Test Output 1', [product_test_utils.create_product().file_id])
         JobExecution.objects.filter(id=job_exe_1.id).update(results=results.get_dict())
-        Queue.objects.handle_job_completion(job_exe_1.id, now())
+        Queue.objects.handle_job_completion(job_exe_1.id, now(), [])
 
         # Create a new recipe type that has a new version of job 2 (job 1 is identical)
         new_job_type_2 = job_test_utils.create_job_type(name=self.job_type_2.name, version='New Version',
@@ -653,13 +653,13 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         queued_job_exe_2 = QueuedJobExecution(Queue.objects.get(job_exe_id=job_exe_2.id))
         queued_job_exe_2.accepted(node, JobResources(cpus=10, mem=1000, disk_in=1000, disk_out=1000, disk_total=2000))
         Queue.objects.schedule_job_executions('123', [queued_job_exe_2], {})
-        Queue.objects.handle_job_completion(job_exe_2.id, now())
+        Queue.objects.handle_job_completion(job_exe_2.id, now(), [])
         new_job_exe_2 = JobExecution.objects.get(job_id=new_recipe_job_2.job_id)
         new_queued_job_exe_2 = QueuedJobExecution(Queue.objects.get(job_exe_id=new_job_exe_2.id))
         new_queued_job_exe_2.accepted(node, JobResources(cpus=10, mem=1000, disk_in=1000, disk_out=1000,
                                                          disk_total=2000))
         Queue.objects.schedule_job_executions('123', [new_queued_job_exe_2], {})
-        Queue.objects.handle_job_completion(new_job_exe_2.id, now())
+        Queue.objects.handle_job_completion(new_job_exe_2.id, now(), [])
         recipe = Recipe.objects.get(id=recipe.id)
         new_recipe = Recipe.objects.get(id=new_recipe.id)
         self.assertIsNone(recipe.completed)

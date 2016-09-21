@@ -358,7 +358,7 @@ These services provide access to information about "all", "currently running" an
 |                        "name": "output_file"                                                                            |
 |                    }                                                                                                    |
 |                ],                                                                                                       |
-|                "version": "1.0",                                                                                        |
+|                "version": "1.1",                                                                                        |
 |                "command": "/usr/local/bin/python2.7 /app/parser/manage.py create_footprint_kml",                        |
 |                "command_arguments": "${input_file} ${job_output_dir}"                                                   |
 |            },                                                                                                           |
@@ -406,7 +406,7 @@ These services provide access to information about "all", "currently running" an
 |                    "file_id": 8480                                                                                      |
 |                }                                                                                                        |
 |            ],                                                                                                           |
-|            "version": "1.0",                                                                                            |
+|            "version": "1.1",                                                                                            |
 |            "output_data": [                                                                                             |
 |                {                                                                                                        |
 |                    "name": "output_file",                                                                               |

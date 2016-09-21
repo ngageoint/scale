@@ -156,6 +156,11 @@
                 controllerAs: 'vm',
                 templateUrl: 'modules/workspaces/partials/workspacesTemplate.html'
             })
+            .when('/feed/strikes/:id?', {
+                controller: 'strikesController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/feed/partials/strikesTemplate.html'
+            })
             .otherwise({
                 redirectTo: '/'
             });

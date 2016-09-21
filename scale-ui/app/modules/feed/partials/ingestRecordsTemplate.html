@@ -2,7 +2,7 @@
 <div class="form-inline margin-bottom-md">
     <div class="input-group margin-right-md">
         <span class="input-group-addon" id="search-input">Search:</span>
-        <input ng-model="vm.searchText" ng-change="vm.refreshData()" class="form-control" placeholder="Filename">
+        <input ng-model="vm.searchText" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }" class="form-control" placeholder="Filename">
     </div>
     <div class="input-group margin-right-md">
         <span class="input-group-addon" id="from-input">From:</span>

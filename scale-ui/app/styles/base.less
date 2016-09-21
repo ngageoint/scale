@@ -67,6 +67,20 @@ hr {
     }
 }
 
+.panel-sm {
+    .panel-heading {
+        padding: 5px;
+        
+        .panel-title {
+            font-size: 14px;
+        }
+    }
+
+    .panel-body {
+        padding: 5px;
+    }
+}
+
 .align-right {
     text-align: right;
 }
@@ -104,6 +118,13 @@ hr {
     .content-ctr {
         background: @view_bg;
     }
+}
+
+.metrics-title {
+    font-weight: bold;
+    font-size: 16px;
+    margin-left: 32px;
+
 }
 
 // STATUS STYLES
@@ -242,6 +263,14 @@ caption {
     margin-bottom: 10px;
 }
 
+.table-hover {
+    tr:hover {
+        a {
+            color: @chart_yellow;
+        }
+    }
+}
+
 .page-header {
     margin: 0;
     border: none;
@@ -321,6 +350,13 @@ ol.breadcrumb {
 #scheduler .btn {
   position: relative;
   left: -20px;
+}
+
+.strike-data-type {
+    &:hover {
+        cursor: pointer;
+        background: #999;
+    }
 }
 
 .label-running {

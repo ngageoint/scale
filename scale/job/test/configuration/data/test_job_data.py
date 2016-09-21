@@ -251,9 +251,9 @@ class TestJobDataRetrieveFiles(TestCase):
 
         dir_path_2 = os.path.join('/my', 'path', 'two')
         data_files = {
-            self.product_file_1.id: dir_path_1,
-            self.product_file_2.id: dir_path_1,
-            self.invalid_product_file_id: dir_path_2,
+            self.product_file_1.id: (dir_path_1, False),
+            self.product_file_2.id: (dir_path_1, False),
+            self.invalid_product_file_id: (dir_path_2, False),
         }
 
         retrieved_files = JobData({})._retrieve_files(data_files)
@@ -296,7 +296,9 @@ class TestJobDataRetrieveInputDataFiles(TestCase):
         file_path_1 = os.path.join('/path', '1')
         file_path_3 = os.path.join('/path', '3')
         file_path_4 = os.path.join('/path', '4')
-        data_files = {'Param1': (False, file_path_1), 'Param3': (True, file_path_3), 'Param4': (True, file_path_4)}
+        data_files = {'Param1': (False, file_path_1, True),
+                      'Param3': (True, file_path_3, False),
+                      'Param4': (True, file_path_4, False)}
 
         results = JobData(data).retrieve_input_data_files(data_files)
 

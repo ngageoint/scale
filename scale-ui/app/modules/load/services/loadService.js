@@ -35,7 +35,7 @@
                     page_size: pageSize
                 };
 
-                var queueStatusResource = $resource(scaleConfig.urls.apiPrefix + 'queue/status/', params),
+                var queueStatusResource = $resource(scaleConfig.getUrlPrefix('queue') + 'queue/status/', params),
                     queueStatusPoller = pollerFactory.newPoller(queueStatusResource, scaleConfig.pollIntervals.queueStatus);
 
                 return queueStatusPoller.promise.then(null, null, function (result) {
@@ -50,7 +50,7 @@
             getQueueStatusOnce: function () {
                 var d = $q.defer();
 
-                $http.get(scaleConfig.urls.apiPrefix + 'queue/status/').success(function (data) {
+                $http.get(scaleConfig.getUrlPrefix('queue') + 'queue/status/').success(function (data) {
                     data.results = QueueStatus.transformer(data.results);
                     d.resolve(data);
                 }).error(function (error) {
@@ -61,7 +61,7 @@
             },
             requeueJobs: function (params) {
                 params = params || getRequeueJobsParams();
-                params.url = params.url ? params.url : scaleConfig.urls.apiPrefix + 'queue/requeue-jobs/';
+                params.url = params.url ? params.url : scaleConfig.getUrlPrefix('queue') + 'queue/requeue-jobs/';
 
                 var d = $q.defer();
 
@@ -75,7 +75,7 @@
             },
             getJobLoad: function (params) {
                 params = params || getJobLoadParams();
-                params.url = params.url ? params.url : scaleConfig.urls.apiPrefix + 'load/';
+                params.url = params.url ? params.url : scaleConfig.getUrlPrefix('load') + 'load/';
 
                 var jobLoadResource = $resource(params.url, params),
                     jobLoadPoller = pollerFactory.newPoller(jobLoadResource, scaleConfig.pollIntervals.jobLoad);
@@ -92,7 +92,7 @@
                 var d = $q.defer();
 
                 $http({
-                    url: params.url ? params.url : scaleConfig.urls.apiPrefix + 'load/',
+                    url: params.url ? params.url : scaleConfig.getUrlPrefix('load') + 'load/',
                     method: 'GET',
                     params: params
                 }).success(function (data) {

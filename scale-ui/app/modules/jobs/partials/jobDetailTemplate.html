@@ -1,7 +1,7 @@
 <ais-header name="'Job Detail'" show-subnav="true" subnav-links="vm.subnavLinks" loading="vm.loadingJobDetail"></ais-header>
 <div class="pull-right">
-    <span ng-show="!vm.readonly && (vm.job.status === 'FAILED' || vm.job.status === 'CANCELED')"><button class="btn btn-default btn-failed" ng-click="vm.requeueJob(job.id)"><i class="fa fa-repeat"></i> Requeue</button></span>
-    <span ng-show="!vm.readonly && vm.job.status !== 'COMPLETED' && vm.job.status !== 'CANCELED'"><button ng-click="vm.cancelJob(job)" class="btn btn-default"><i class="fa fa-ban"></i> Cancel</button></span>
+    <span ng-show="!vm.readonly && (vm.job.status === 'FAILED' || vm.job.status === 'CANCELED')"><button class="btn btn-default btn-failed" ng-click="vm.requeueJob(vm.job.id)"><i class="fa fa-repeat"></i> Requeue</button></span>
+    <span ng-show="!vm.readonly && vm.job.status !== 'COMPLETED' && vm.job.status !== 'CANCELED'"><button ng-click="vm.cancelJob(vm.job)" class="btn btn-default"><i class="fa fa-ban"></i> Cancel</button></span>
 </div>
 <ul class="nav nav-tabs" role="tablist">
     <li class="active"><a data-target="#details" data-toggle="tab">Job ID: {{ vm.job.id }}</a></li>
@@ -33,6 +33,7 @@
                         <tr><td>Type:</td><td><a ng-href="#/jobs/types/{{ vm.job.job_type.id }}"><span ng-bind-html="vm.job.job_type.getIcon()"></span> {{ vm.job.job_type.title }} {{ vm.job.job_type.version }}</a></td></tr>
                         <tr ng-show="vm.job.recipes"><td>Recipe:</td><td><a ng-href="#/recipes/recipe/{{ vm.job.recipes[0].id }}">{{ vm.job.recipes[0].recipe_type.title }} {{ vm.job.recipes[0].recipe_type.version }}</a></td></tr>
                         <tr><td>Status:</td><td><div class="label {{ vm.job.getStatusClass() }}">{{ vm.job.status }}</div></td></tr>
+                        <tr><td>Duration:</td><td>{{ vm.job.getDuration() }}</td></tr>
                         <tr><td>Trigger:</td><td>{{ vm.job.event.type }} {{ vm.triggerOccurred }}</td></tr>
                         <tr><td>Priority:</td><td>{{ vm.job.priority }}</td></tr>
                         <tr><td>Created:</td><td>{{ vm.job.created }}</td></tr>
@@ -172,6 +173,8 @@
             <thead>
                 <tr>
                     <th>Status</th>
+                    <th>Exit Code</th>
+                    <th>Node</th>
                     <th>Created</th>
                     <th>Queued</th>
                     <th>Started</th>
@@ -183,6 +186,8 @@
             <tbody>
                 <tr class="link" ng-repeat="execution in vm.job.job_exes">
                     <td ng-click="vm.showExecutionDetails(execution.id)">{{ execution.status }}</td>
+                    <td ng-click="vm.showExecutionDetails(execution.id)">{{ execution.job_exit_code }}</td>
+                    <td><a ng-href="#/nodes/{{ execution.node.id }}">{{ execution.node.id }}</td>
                     <td ng-click="vm.showExecutionDetails(execution.id)">{{ execution.created_formatted }}</td>
                     <td ng-click="vm.showExecutionDetails(execution.id)">{{ execution.queued_formatted }}</td>
                     <td ng-click="vm.showExecutionDetails(execution.id)">{{ execution.started_formatted }}</td>

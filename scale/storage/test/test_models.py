@@ -203,16 +203,16 @@ class TestScaleFileManagerDownloadFiles(TestCase):
         workspace_2.setup_download_dir = MagicMock()
         workspace_2.download_files = MagicMock()
 
-        files = [FileDownload(file_1, local_path_1), FileDownload(file_2, local_path_2),
-                 FileDownload(file_3, local_path_3), FileDownload(file_4, local_path_4),
-                 FileDownload(file_5, local_path_5)]
+        files = [FileDownload(file_1, local_path_1, False), FileDownload(file_2, local_path_2, False),
+                 FileDownload(file_3, local_path_3, False), FileDownload(file_4, local_path_4, False),
+                 FileDownload(file_5, local_path_5, False)]
         ScaleFile.objects.download_files(files)
 
-        workspace_1.download_files.assert_called_once_with([FileDownload(file_1, local_path_1),
-                                                            FileDownload(file_2, local_path_2),
-                                                            FileDownload(file_3, local_path_3)])
-        workspace_2.download_files.assert_called_once_with([FileDownload(file_4, local_path_4),
-                                                            FileDownload(file_5, local_path_5)])
+        workspace_1.download_files.assert_called_once_with([FileDownload(file_1, local_path_1, False),
+                                                            FileDownload(file_2, local_path_2, False),
+                                                            FileDownload(file_3, local_path_3, False)])
+        workspace_2.download_files.assert_called_once_with([FileDownload(file_4, local_path_4, False),
+                                                            FileDownload(file_5, local_path_5, False)])
 
     def test_inactive_workspace(self):
         """Tests calling ScaleFileManager.download_files() with an inactive workspace"""
@@ -234,9 +234,9 @@ class TestScaleFileManagerDownloadFiles(TestCase):
         file_5 = storage_test_utils.create_file(workspace=workspace_2)
         local_path_5 = '/another/local/path/5/file.txt'
 
-        files = [FileDownload(file_1, local_path_1), FileDownload(file_2, local_path_2),
-                 FileDownload(file_3, local_path_3), FileDownload(file_4, local_path_4),
-                 FileDownload(file_5, local_path_5)]
+        files = [FileDownload(file_1, local_path_1, False), FileDownload(file_2, local_path_2, False),
+                 FileDownload(file_3, local_path_3, False), FileDownload(file_4, local_path_4, False),
+                 FileDownload(file_5, local_path_5, False)]
         self.assertRaises(ArchivedWorkspace, ScaleFile.objects.download_files, files)
 
     def test_deleted_file(self):
@@ -260,9 +260,9 @@ class TestScaleFileManagerDownloadFiles(TestCase):
         local_path_5 = '/another/local/path/5/file.txt'
         workspace_2.download_files = MagicMock()
 
-        files = [FileDownload(file_1, local_path_1), FileDownload(file_2, local_path_2),
-                 FileDownload(file_3, local_path_3), FileDownload(file_4, local_path_4),
-                 FileDownload(file_5, local_path_5)]
+        files = [FileDownload(file_1, local_path_1, False), FileDownload(file_2, local_path_2, False),
+                 FileDownload(file_3, local_path_3, False), FileDownload(file_4, local_path_4, False),
+                 FileDownload(file_5, local_path_5, False)]
         self.assertRaises(DeletedFile, ScaleFile.objects.download_files, files)
 
 
