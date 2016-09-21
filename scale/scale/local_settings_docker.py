@@ -2,6 +2,7 @@
 
 # Include all the default settings.
 from settings import *
+import elasticsearch
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SCALE_SECRET_KEY', INSECURE_DEFAULT_KEY)
@@ -21,6 +22,16 @@ STATIC_URL = os.environ.get('SCALE_STATIC_URL', '/scale/static/')
 
 LOGGING_ADDRESS = os.environ.get('SCALE_LOGGING_ADDRESS', LOGGING_ADDRESS)
 ELASTICSEARCH_URL = os.environ.get('SCALE_ELASTICSEARCH_URL', ELASTICSEARCH_URL)
+if ELASTICSEARCH_URL:
+    ELASTICSEARCH = elasticsearch.Elasticsearch(
+        ELASTICSEARCH_URL.split(','),
+        # sniff before doing anything
+        sniff_on_start=True,
+        # refresh nodes after a node fails to respond
+        sniff_on_connection_fail=True,
+        # and also every 60 seconds
+        sniffer_timeout=60
+    )
 
 DB_HOST = os.environ.get('SCALE_DB_HOST', '')
 if DB_HOST == '':
