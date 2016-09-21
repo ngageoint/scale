@@ -4,12 +4,13 @@ import os
 
 import django
 from django.test import TestCase
-from mock import MagicMock, Mock, mock_open, patch
+from mock import MagicMock, Mock, call, mock_open, patch
 
 import storage.test.utils as storage_test_utils
 from storage.brokers.broker import FileDownload, FileMove, FileUpload
 from storage.brokers.exceptions import InvalidBrokerConfiguration
-from storage.brokers.s3_broker import S3Broker, S3Client
+from storage.brokers.s3_broker import S3Broker
+from util.aws import S3Client
 
 
 class TestS3Broker(TestCase):
@@ -21,6 +22,7 @@ class TestS3Broker(TestCase):
         self.broker.load_configuration({
             'type': S3Broker().broker_type,
             'bucket_name': 'my_bucket.domain.com',
+            'host_path': '/my_bucket_mounted',
             'credentials': {
                 'access_key_id': 'ABC',
                 'secret_access_key': '123',
@@ -73,8 +75,8 @@ class TestS3Broker(TestCase):
 
         file_1 = storage_test_utils.create_file(file_path=workspace_path_file_1)
         file_2 = storage_test_utils.create_file(file_path=workspace_path_file_2)
-        file_1_dl = FileDownload(file_1, local_path_file_1)
-        file_2_dl = FileDownload(file_2, local_path_file_2)
+        file_1_dl = FileDownload(file_1, local_path_file_1, False)
+        file_2_dl = FileDownload(file_2, local_path_file_2, False)
 
         # Call method to test
         mo = mock_open()
@@ -85,12 +87,43 @@ class TestS3Broker(TestCase):
         self.assertTrue(s3_object_1.download_file.called)
         self.assertTrue(s3_object_2.download_file.called)
 
+    # Patching in storage.brokers.s3_broker as opposed to util.aws / util.command because patch must be applied where
+    # import is made, not on source
+    @patch('storage.brokers.s3_broker.S3Client')
+    @patch('storage.brokers.s3_broker.execute_command_line')
+    def test_host_link_files(self, mock_execute, mock_client_class):
+        """Tests sym-linking files successfully"""
+
+        volume_path = os.path.join('the', 'volume', 'path')
+        file_name_1 = 'my_file.txt'
+        file_name_2 = 'my_file.json'
+        local_path_file_1 = os.path.join('my_dir_1', file_name_1)
+        local_path_file_2 = os.path.join('my_dir_2', file_name_2)
+        workspace_path_file_1 = os.path.join('my_wrk_dir_1', file_name_1)
+        workspace_path_file_2 = os.path.join('my_wrk_dir_2', file_name_2)
+        full_workspace_path_file_1 = os.path.join(volume_path, workspace_path_file_1)
+        full_workspace_path_file_2 = os.path.join(volume_path, workspace_path_file_2)
+        file_1 = storage_test_utils.create_file(file_path=workspace_path_file_1)
+        file_2 = storage_test_utils.create_file(file_path=workspace_path_file_2)
+
+        file_1_dl = FileDownload(file_1, local_path_file_1, True)
+        file_2_dl = FileDownload(file_2, local_path_file_2, True)
+
+        # Call method to test
+        self.broker.download_files(volume_path, [file_1_dl, file_2_dl])
+
+        # Check results
+        two_calls = [call(['ln', '-s', full_workspace_path_file_1, local_path_file_1]),
+                     call(['ln', '-s', full_workspace_path_file_2, local_path_file_2])]
+        mock_execute.assert_has_calls(two_calls)
+
     def test_load_configuration(self):
         """Tests loading a valid configuration successfully"""
 
         json_config = {
             'type': S3Broker().broker_type,
             'bucket_name': 'my_bucket.domain.com',
+            'host_path': '/my_bucket_mounted',
             'credentials': {
                 'access_key_id': 'ABC',
                 'secret_access_key': '123',
@@ -100,6 +133,7 @@ class TestS3Broker(TestCase):
         broker.load_configuration(json_config)
 
         self.assertEqual(broker._bucket_name, 'my_bucket.domain.com')
+        self.assertEqual(broker._volume.remote_path, '/my_bucket_mounted')
         self.assertEqual(broker._credentials.access_key_id, 'ABC')
         self.assertEqual(broker._credentials.secret_access_key, '123')
 

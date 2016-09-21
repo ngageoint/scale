@@ -6,7 +6,6 @@ This script executes a Marathon tasks for the postgis database and is meant for 
 import requests, os, json, time
 
 def run():
-    r = requests.get('http://marathon.mesos:8080/v2/apps/')
     cfg = {
         'scaleDBName': os.environ.get('SCALE_DB_NAME', 'scale'),
         'scaleDBHost': os.environ.get('SCALE_DB_HOST', 'scale-db.marathon.slave.mesos').split(".")[0],

@@ -18,7 +18,7 @@ class JobConnection(object):
         self.files = {}  # Param name -> (multiple, media types, optional)
         self.workspace = False
 
-    def add_input_file(self, file_name, multiple, media_types, optional):
+    def add_input_file(self, file_name, multiple, media_types, optional, partial):
         '''Adds a new file parameter to this connection
 
         :param file_name: The file parameter name
@@ -29,6 +29,8 @@ class JobConnection(object):
         :type media_types: list of str
         :param optional: Whether the file parameter is optional and may not be provided (True)
         :type optional: bool
+        :param partial: Flag indicating if the parameter only requires a small portion of the file
+        :type partial: bool
         '''
 
         if file_name in self.param_names:
@@ -38,7 +40,7 @@ class JobConnection(object):
             media_types = [UNKNOWN_MEDIA_TYPE]
 
         self.param_names.add(file_name)
-        self.files[file_name] = (multiple, media_types, optional)
+        self.files[file_name] = (multiple, media_types, optional, partial)
 
     def add_property(self, property_name):
         '''Adds a new property parameter to this connection

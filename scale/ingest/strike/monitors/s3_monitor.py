@@ -5,12 +5,13 @@ import json
 import logging
 import os
 
-import boto3
+from botocore.exceptions import ClientError
 
+from ingest.strike.configuration.strike_configuration import ValidationWarning
 from ingest.strike.monitors.exceptions import (InvalidMonitorConfiguration, S3NoDataNotificationError,
                                                SQSNotificationError)
 from ingest.strike.monitors.monitor import Monitor
-
+from util.aws import AWSClient, SQSClient
 
 logger = logging.getLogger(__name__)
 
@@ -26,22 +27,8 @@ class S3Monitor(Monitor):
         super(S3Monitor, self).__init__('s3', ['s3'])
         self._running = True
         self._sqs_name = None
-
-    def load_configuration(self, configuration):
-        """See :meth:`ingest.strike.monitors.monitor.Monitor.load_configuration`
-        """
-
-        self._sqs_name = configuration['sqs_name']
-
-    def run(self):
-        """See :meth:`ingest.strike.monitors.monitor.Monitor.run`
-        """
-
-        # Get the service resource
-        sqs = boto3.resource('sqs')
-
-        # Get the queue
-        self.queue = sqs.get_queue_by_name(QueueName=self._sqs_name)
+        self._credentials = None
+        self._region_name = None
 
         # Set the event version supported in message
         self.event_version_supported = '2.0'
@@ -65,32 +52,49 @@ class S3Monitor(Monitor):
         self.sqs_discard_unrecognized = False
         ###################################################
 
+    def load_configuration(self, configuration):
+        """See :meth:`ingest.strike.monitors.monitor.Monitor.load_configuration`
+        """
+
+        self._sqs_name = configuration['sqs_name']
+        self._region_name = configuration.get('region_name')
+        # TODO Change credentials to use an encrypted store key reference
+        self._credentials = AWSClient.instantiate_credentials_from_config(configuration)
+
+
+    def run(self):
+        """See :meth:`ingest.strike.monitors.monitor.Monitor.run`
+        """
+
         logger.info('Running experimental S3 Strike processor')
 
-        # Loop endlessly polling SQS queue
-        while self._running:
-            # For each new file we receive a notification about:
-            logger.info('Beginning long-poll against queue with wait time of %s seconds.' % self.wait_time)
-            messages = self.queue.receive_messages(MaxNumberOfMessages=self.messages_per_request,
-                                                   WaitTimeSeconds=self.wait_time,
-                                                   VisibilityTimeout=self.visibility_timeout)
+        with SQSClient(self._credentials, self._region_name) as client:
+            queue = client.get_queue_by_name(self._sqs_name)
 
-            for message in messages:
-                try:
-                    # Perform message extraction and then callback to ingest
-                    self._process_s3_notification(message)
+            # Loop endlessly polling SQS queue
+            while self._running:
+                # For each new file we receive a notification about:
+                logger.info('Beginning long-poll against queue with wait time of %s seconds.' % self.wait_time)
+                messages = queue.receive_messages(MaxNumberOfMessages=self.messages_per_request,
+                                                  WaitTimeSeconds=self.wait_time,
+                                                  VisibilityTimeout=self.visibility_timeout)
 
-                    # Remove message from queue now that the message is processed
-                    message.delete()
-                except SQSNotificationError:
-                    logger.exception('Unable to process message. Invalid SQS S3 notification.')
+                for message in messages:
+                    try:
+                        # Perform message extraction and then callback to ingest
+                        self._process_s3_notification(message)
 
-                    if self.sqs_discard_unrecognized:
-                        # Remove message from queue when unrecognized
+                        # Remove message from queue now that the message is processed
                         message.delete()
-                except S3NoDataNotificationError:
-                    logger.exception('Unable to process message. File size of 0')
-                    message.delete()
+                    except SQSNotificationError:
+                        logger.exception('Unable to process message. Invalid SQS S3 notification.')
+
+                        if self.sqs_discard_unrecognized:
+                            # Remove message from queue when unrecognized
+                            message.delete()
+                    except S3NoDataNotificationError:
+                        logger.exception('Unable to process message. File size of 0')
+                        message.delete()
 
     def stop(self):
         """See :meth:`ingest.strike.monitors.monitor.Monitor.stop`
@@ -102,12 +106,28 @@ class S3Monitor(Monitor):
         """See :meth:`ingest.strike.monitors.monitor.Monitor.validate_configuration`
         """
 
+        warnings = []
         if 'sqs_name' not in configuration:
             raise InvalidMonitorConfiguration('sqs_name is required for s3 monitor')
         if not isinstance(configuration['sqs_name'], basestring):
             raise InvalidMonitorConfiguration('sqs_name must be a string')
         if not configuration['sqs_name']:
             raise InvalidMonitorConfiguration('sqs_name must be a non-empty string')
+
+        # If credentials exist, validate them.
+        credentials = AWSClient.instantiate_credentials_from_config(configuration)
+
+        region_name = configuration.get('region_name')
+
+        # Check whether the bucket can actually be accessed
+        with SQSClient(credentials, region_name) as client:
+            try:
+                client.get_queue_by_name(configuration['sqs_name'])
+            except ClientError:
+                warnings.append(ValidationWarning('sqs_access',
+                                                  'Unable to access SQS. Check the name, region and credentials.'))
+
+        return warnings
 
     def _process_s3_notification(self, message):
         """Extracts an S3 notification object from SQS message body and calls on to ingest.
@@ -166,3 +186,4 @@ class S3Monitor(Monitor):
         ingest = self._create_ingest(object_name)
         self._process_ingest(ingest, object_key, object_size)
         logger.info("Strike ingested '%s' from bucket '%s'..." % (object_key, bucket_name))
+

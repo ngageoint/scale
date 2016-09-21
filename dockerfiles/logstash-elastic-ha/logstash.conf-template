@@ -1,0 +1,2 @@
+input { gelf { port => "${PORT0}" } }
+output { elasticsearch { hosts => _ES_HOSTS_ } }

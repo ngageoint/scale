@@ -147,7 +147,7 @@ class IngestTriggerRuleConfiguration(RecipeTriggerRuleConfiguration):
         media_types = [media_type] if media_type else None
 
         connection = JobConnection()
-        connection.add_input_file(input_file_name, False, media_types, False)
+        connection.add_input_file(input_file_name, False, media_types, False, False)
         connection.add_workspace()
 
         return job_interface.validate_connection(connection)

@@ -2,23 +2,21 @@
 from __future__ import unicode_literals
 
 import logging
+import os
 import ssl
 import time
-from collections import namedtuple
 
-from boto3.session import Session
-from botocore.client import Config
 from botocore.exceptions import ClientError
 
 import storage.settings as settings
-from storage.brokers.broker import Broker
+from storage.brokers.broker import Broker, BrokerVolume
 from storage.brokers.exceptions import InvalidBrokerConfiguration
 from storage.configuration.workspace_configuration import ValidationWarning
-from storage.exceptions import FileDoesNotExist
+from util.aws import S3Client, AWSClient
+
+from util.command import execute_command_line
 
 logger = logging.getLogger(__name__)
-
-S3Credentials = namedtuple('S3Credentials', ['access_key_id', 'secret_access_key'])
 
 
 class S3Broker(Broker):
@@ -31,11 +29,12 @@ class S3Broker(Broker):
 
         self._credentials = None
         self._bucket_name = None
+        self._region_name = None
 
     def delete_files(self, volume_path, files):
         """See :meth:`storage.brokers.broker.Broker.delete_files`"""
 
-        with S3Client(self._credentials) as client:
+        with S3Client(self._credentials, self._region_name) as client:
             for scale_file in files:
                 s3_object = client.get_object(self._bucket_name, scale_file.file_path)
 
@@ -48,26 +47,40 @@ class S3Broker(Broker):
     def download_files(self, volume_path, file_downloads):
         """See :meth:`storage.brokers.broker.Broker.download_files`"""
 
-        with S3Client(self._credentials) as client:
+        with S3Client(self._credentials, self._region_name) as client:
             for file_download in file_downloads:
-                s3_object = client.get_object(self._bucket_name, file_download.file.file_path)
+                # If file supports partial mount and volume is configured attempt sym-link
+                if file_download.partial and self._volume:
+                    logger.debug('Partial S3 file accessed by mounted bucket.')
+                    path_to_download = os.path.join(volume_path, file_download.file.file_path)
 
-                self._download_file(s3_object, file_download.file, file_download.local_path)
+                    # Create symlink to the file in the host mount
+                    logger.info('Creating link %s -> %s', file_download.local_path, path_to_download)
+                    execute_command_line(['ln', '-s', path_to_download, file_download.local_path])
+                # Fall-back to default S3 file download
+                else:
+                    s3_object = client.get_object(self._bucket_name, file_download.file.file_path)
+
+                    self._download_file(s3_object, file_download.file, file_download.local_path)
 
     def load_configuration(self, config):
         """See :meth:`storage.brokers.broker.Broker.load_configuration`"""
 
         self._bucket_name = config['bucket_name']
+        self._region_name = config.get('region_name')
 
         # TODO Change credentials to use an encrypted store key reference
-        if 'credentials' in config:
-            credentials_dict = config['credentials']
-            self._credentials = S3Credentials(credentials_dict['access_key_id'], credentials_dict['secret_access_key'])
+        self._credentials = AWSClient.instantiate_credentials_from_config(config)
+
+        if 'host_path' in config:
+            volume = BrokerVolume(None, config['host_path'])
+            volume.host = True
+            self._volume = volume
 
     def move_files(self, volume_path, file_moves):
         """See :meth:`storage.brokers.broker.Broker.move_files`"""
 
-        with S3Client(self._credentials) as client:
+        with S3Client(self._credentials, self._region_name) as client:
             for file_move in file_moves:
                 s3_object_src = client.get_object(self._bucket_name, file_move.file.file_path)
                 s3_object_dest = client.get_object(self._bucket_name, file_move.new_path, False)
@@ -81,7 +94,7 @@ class S3Broker(Broker):
     def upload_files(self, volume_path, file_uploads):
         """See :meth:`storage.brokers.broker.Broker.upload_files`"""
 
-        with S3Client(self._credentials) as client:
+        with S3Client(self._credentials, self._region_name) as client:
             for file_upload in file_uploads:
                 s3_object = client.get_object(self._bucket_name, file_upload.file.file_path, False)
 
@@ -96,18 +109,12 @@ class S3Broker(Broker):
         warnings = []
         if 'bucket_name' not in config or not config['bucket_name']:
             raise InvalidBrokerConfiguration('S3 broker requires "bucket_name" to be populated')
+        region_name = config.get('region_name')
 
-        credentials = None
-        if 'credentials' in config and config['credentials']:
-            credentials_dict = config['credentials']
-            if 'access_key_id' not in credentials_dict or not credentials_dict['access_key_id']:
-                raise InvalidBrokerConfiguration('S3 broker requires "access_key_id" to be populated')
-            if 'secret_access_key' not in credentials_dict or not credentials_dict['secret_access_key']:
-                raise InvalidBrokerConfiguration('S3 broker requires "secret_access_key" to be populated')
-            credentials = S3Credentials(credentials_dict['access_key_id'], credentials_dict['secret_access_key'])
+        credentials = AWSClient.instantiate_credentials_from_config(config)
 
         # Check whether the bucket can actually be accessed
-        with S3Client(credentials) as client:
+        with S3Client(credentials, region_name) as client:
             try:
                 client.get_bucket(config['bucket_name'])
             except ClientError:
@@ -235,86 +242,3 @@ class S3Broker(Broker):
                     raise
                 time.sleep(settings.S3_RETRY_DELAY * attempt)
                 logger.exception('Retrying S3 upload attempt: %i', attempt + 1)
-
-
-class S3Client(object):
-    """Manages automatically creating and destroying clients to the S3 service."""
-
-    def __init__(self, credentials=None):
-        """Constructor
-
-        :param credentials: Authentication values needed to access S3 storage. If no credentials are passed, then IAM
-            role-based access is assumed.
-        :type credentials: :class:`storage.brokers.s3_broker.S3Credentials`
-        """
-
-        self.credentials = credentials
-        self._client = None
-
-    def __enter__(self):
-        """Callback handles creating a new client for S3 access."""
-
-        logger.debug('Setting up S3 client...')
-        session_args = {
-            'region_name': settings.S3_REGION,
-        }
-        if self.credentials:
-            session_args['aws_access_key_id'] = self.credentials.access_key_id
-            session_args['aws_secret_access_key'] = self.credentials.secret_access_key
-        self._session = Session(**session_args)
-
-        s3_args = {
-            'addressing_style': settings.S3_ADDRESSING_STYLE,
-        }
-        self._client = self._session.client('s3', config=Config(s3=s3_args))
-        self._resource = self._session.resource('s3', config=Config(s3=s3_args))
-        return self
-
-    def __exit__(self, type, value, traceback):
-        """Callback handles destroying an existing client to S3."""
-        pass
-
-    def get_bucket(self, bucket_name, validate=True):
-        """Gets a reference to an S3 bucket with the given identifier.
-
-        :param bucket_name: The unique name of the bucket to retrieve.
-        :type bucket_name: string
-        :param validate: Whether to perform a request that verifies the bucket actually exists.
-        :type validate: bool
-        :returns: The bucket object for the given name.
-        :rtype: :class:`boto3.s3.Bucket`
-
-        :raises :class:`botocore.exceptions.ClientError`: If the bucket fails to validate.
-        """
-
-        logger.debug('Accessing S3 bucket: %s', bucket_name)
-        if validate:
-            self._client.head_bucket(Bucket=bucket_name)
-        return self._resource.Bucket(bucket_name)
-
-    def get_object(self, bucket_name, key_name, validate=True):
-        """Gets a reference to an S3 object with the given identifier.
-
-        :param bucket_name: The unique name of the bucket to retrieve.
-        :type bucket_name: string
-        :param key_name: The unique name of the object to retrieve that is associated with a file.
-        :type key_name: string
-        :param validate: Whether to perform a request that verifies the object actually exists.
-        :type validate: bool
-        :returns: The S3 object for the given name.
-        :rtype: :class:`boto3.s3.Object`
-
-        :raises :class:`botocore.exceptions.ClientError`: If the request is invalid.
-        :raises :class:`storage.exceptions.FileDoesNotExist`: If the file is not found in the bucket.
-        """
-        s3_object = self._resource.Object(bucket_name, key_name)
-
-        try:
-            if validate:
-                s3_object.get()
-        except ClientError as err:
-            error_code = err.response['ResponseMetadata']['HTTPStatusCode']
-            if error_code == 404:
-                raise FileDoesNotExist('Unable to access remote file: %s %s' % (bucket_name, key_name))
-            raise
-        return s3_object
