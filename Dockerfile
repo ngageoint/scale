@@ -86,20 +86,22 @@ WORKDIR /opt/scale-ui
 RUN yum install -y npm node-gyp make \
  && npm install --global gulp-cli \
  && npm install \
- && pip install -r /tmp/docs.txt
-
-RUN gulp deploy \
+ && pip install -r /tmp/docs.txt \
+ && gulp deploy \
  && mkdir -p /opt/scale/ui \
- && tar -C /opt/scale/ui -zxf deploy/scale-ui.tar.gz
-
-RUN make -C /opt/scale/docs code_docs html
-
-# cleanup
-WORKDIR /opt/scale
-RUN yum -y history undo last \
+ && tar -C /opt/scale/ui -zxf deploy/scale-ui.tar.gz \
+ && make -C /opt/scale/docs code_docs html \
+ # cleanup unneeded yum packages and npm cache 
+ && yum -y history undo last \
  && yum clean all \
  && pip uninstall -y -r /tmp/docs.txt \
+ && rm -fr /tmp/* \
+ && rm -fr /usr/local/lib/node_modules \
+ && rm -fr /root/.npm \
  && rm -rf /opt/scale-ui
+
+WORKDIR /opt/scale
+
 
 # setup ownership and permissions. create some needed directories
 RUN mkdir -p /var/log/scale /var/lib/scale-metrics /scale/input_data /scale/output_data /scale/workspace_mounts \

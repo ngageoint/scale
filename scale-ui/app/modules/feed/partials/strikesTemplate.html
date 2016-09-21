@@ -90,6 +90,18 @@
                                 <label for="sqs_name">SQS Name</label>
                                 <input id="sqs_name" name="sqs_name" type="text" class="form-control" placeholder="SQS Name" ng-model="vm.activeStrike.configuration.monitor.sqs_name">
                             </div>
+                            <div class="form-group" ng-if="vm.activeStrike.configuration.monitor.type === 's3'">
+                                <label for="region_name">Region Name Override</label>
+                                <input id="region_name" type="text" class="form-control" placeholder="Region Name Override" ng-model="vm.activeStrike.configuration.monitor.region_name">
+                            </div>
+                            <div class="form-group" ng-if="vm.activeStrike.configuration.monitor.type === 's3'">
+                                <label for="access_key_id">Access Key ID</label>
+                                <input id="access_key_id" type="text" class="form-control" placeholder="Access Key ID" ng-model="vm.activeStrike.configuration.monitor.credentials.access_key_id">
+                            </div>
+                            <div class="form-group" ng-if="vm.activeStrike.configuration.monitor.type === 's3'">
+                                <label for="secret_access_key">Secret Access Key</label>
+                                <input id="secret_access_key" type="text" class="form-control" placeholder="Secret Access Key" ng-model="vm.activeStrike.configuration.monitor.credentials.secret_access_key">
+                            </div>
                             <div class="form-group" ng-if="vm.activeStrike.configuration.monitor.type === 'dir-watcher'">
                                 <label for="transfer_suffix">Transfer Suffix</label>
                                 <input id="transfer_suffix" name="transfer_suffix" type="text" class="form-control" placeholder="Transfer Suffix" ng-model="vm.activeStrike.configuration.monitor.transfer_suffix">

@@ -13,6 +13,7 @@ from job.configuration.data.job_data import JobData
 from job.configuration.environment.job_environment import JobEnvironment
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.job_interface import JobInterface
+from job.configuration.interface.job_interface_1_0 import JobInterface as JobInterface_1_0
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
 
 
@@ -38,7 +39,40 @@ class TestJobInterfaceAddOutputToConnection(TestCase):
         job_conn = MagicMock()
 
         job_interface.add_output_to_connection('Output 1', job_conn, 'Input 1')
-        job_conn.add_input_file.assert_called_with('Input 1', False, [], False)
+        job_conn.add_input_file.assert_called_with('Input 1', False, [], False, False)
+
+
+class TestJobInterfaceConvert(TestCase):
+    """Tests performing conversion from lower to higher minor versions of interface schema."""
+
+    def setUp(self):
+        self.job_interface_dict = {
+            'command': 'simple-command',
+            'command_arguments': '',
+            'version': '1.0',
+            'input_data': [
+                {
+                    'name': 'Input 1',
+                    'type': 'file'
+                },
+                {
+                    'name': 'Input 2',
+                    'type': 'property'
+                }
+            ],
+            'output_data': []
+        }
+
+        django.setup()
+
+    @patch('job.configuration.interface.job_interface_1_0.JobInterface.get_dict')
+    def test_successful(self, mock_get_dict):
+        """Tests calling JobInterface.update() successfully."""
+        mock_get_dict.return_value = self.job_interface_dict
+        job_interface = JobInterface.convert_interface(self.job_interface_dict)
+        self.assertEqual(job_interface['version'], '1.1')
+        self.assertIn('partial', job_interface['input_data'][0])
+        self.assertFalse(job_interface['input_data'][0]['partial'])
 
 
 class TestJobInterfacePostSteps(TestCase):
@@ -703,7 +737,7 @@ class TestJobInterfaceValidateConnection(TestCase):
             }, {
                 'name': 'Input 2',
                 'type': 'file',
-                'media_types': ['text/plain'],
+                'media_types': ['text/plain']
             }],
             'output_data': [{
                 'name': 'Output 1',
@@ -715,7 +749,7 @@ class TestJobInterfaceValidateConnection(TestCase):
 
         job_conn = JobConnection()
         job_conn.add_property('Input 1')
-        job_conn.add_input_file('Input 2', False, ['text/plain'], False)
+        job_conn.add_input_file('Input 2', False, ['text/plain'], False, False)
         job_conn.add_workspace()
 
         # No exception is success
@@ -726,7 +760,7 @@ class TestJobInterfaceValidateConnection(TestCase):
         job_interface_dict = {
             'command': 'simple-command',
             'command_arguments': '',
-            'version': '1.0',
+            'version': '1.1',
             'input_data': [{
                 'name': 'Input 1',
                 'type': 'property',
@@ -734,6 +768,7 @@ class TestJobInterfaceValidateConnection(TestCase):
                 'name': 'Input 2',
                 'type': 'file',
                 'media_types': ['text/plain'],
+                'partial': True
             }],
             'output_data': [{
                 'name': 'Output 1',
@@ -745,7 +780,7 @@ class TestJobInterfaceValidateConnection(TestCase):
 
         job_conn = JobConnection()
         job_conn.add_property('Input 1')
-        job_conn.add_input_file('Input 2', False, ['text/plain'], False)
+        job_conn.add_input_file('Input 2', False, ['text/plain'], False, True)
 
         self.assertRaises(InvalidConnection, job_interface.validate_connection, job_conn)
 
@@ -754,7 +789,7 @@ class TestJobInterfaceValidateConnection(TestCase):
         job_interface_dict = {
             'command': 'simple-command',
             'command_arguments': '',
-            'version': '1.0',
+            'version': '1.1',
             'input_data': [{
                 'name': 'Input 1',
                 'type': 'property',
@@ -762,6 +797,7 @@ class TestJobInterfaceValidateConnection(TestCase):
                 'name': 'Input 2',
                 'type': 'file',
                 'media_types': ['text/plain'],
+                'partial': True
             }],
             'output_data': [],
         }
@@ -770,7 +806,7 @@ class TestJobInterfaceValidateConnection(TestCase):
 
         job_conn = JobConnection()
         job_conn.add_property('Input 1')
-        job_conn.add_input_file('Input 2', False, ['text/plain'], False)
+        job_conn.add_input_file('Input 2', False, ['text/plain'], False, True)
 
         # No exception is success
         job_interface.validate_connection(job_conn)

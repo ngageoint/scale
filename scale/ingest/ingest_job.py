@@ -59,7 +59,7 @@ def perform_ingest(ingest_id):
                     local_path = paths[0]
                 else:
                     local_path = os.path.join('/tmp', file_name)
-                    file_download = FileDownload(source_file, local_path)
+                    file_download = FileDownload(source_file, local_path, False)
                     ScaleFile.objects.download_files([file_download])
                 source_file.file_path = ingest.new_file_path if ingest.new_file_path else ingest.file_path
                 logger.info('Copying %s in workspace %s to %s in workspace %s', ingest.file_path, ingest.workspace.name,

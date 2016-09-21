@@ -11,7 +11,7 @@ import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
 from recipe.handlers.graph import RecipeGraph
 from recipe.handlers.graph_delta import RecipeGraphDelta
-from recipe.models import RecipeJob, RecipeType
+from recipe.models import RecipeType
 from rest_framework import status
 
 
@@ -791,3 +791,40 @@ class TestRecipesView(TransactionTestCase):
         self.assertEqual(len(result['jobs']), 1)
         for recipe_job in result['jobs']:
             self.assertFalse(recipe_job['is_original'])
+
+    def test_reprocess_all_jobs(self):
+        """Tests reprocessing all jobs in an existing recipe"""
+
+        url = '/recipes/%i/reprocess/' % self.recipe1.id
+        json_data = {
+            'all_jobs': True,
+        }
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        results = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertNotEqual(results['id'], self.recipe1.id)
+        self.assertEqual(results['recipe_type']['id'], self.recipe1.recipe_type.id)
+
+    def test_reprocess_job(self):
+        """Tests reprocessing one job in an existing recipe"""
+
+        url = '/recipes/%i/reprocess/' % self.recipe1.id
+        json_data = {
+            'job_names': ['kml'],
+        }
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        results = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertNotEqual(results['id'], self.recipe1.id)
+        self.assertEqual(results['recipe_type']['id'], self.recipe1.recipe_type.id)
+
+    def test_no_changes(self):
+        """Tests reprocessing a recipe that has not changed without specifying any jobs throws an error."""
+
+        url = '/recipes/%i/reprocess/' % self.recipe1.id
+        json_data = {}
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
