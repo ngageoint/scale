@@ -1,2 +1,19 @@
-input { gelf { port => "${PORT0}" } }
-output { elasticsearch { hosts => _ES_HOSTS_ } }
+input {
+  gelf {
+    port => 8000
+  }
+  http {
+    port => 80
+    type => "app-healthcheck"
+  }
+}
+filter {
+  if [type] == "app-healthcheck" {
+    drop { }
+  }
+}
+output {
+  elasticsearch {
+    hosts => _ES_HOSTS_
+  }
+}

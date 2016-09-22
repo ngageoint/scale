@@ -49,7 +49,7 @@ Alternatively, your own local_settings.py can be volume mounted into `/opt/scale
 | ------------------------ | ------------------------------- | -----------------------------------------|
 | SCALE_SECRET_KEY         | 'this-key-is-insecure'          | A key to keep your instance secure.      |
 | SCALE_DEBUG              | ''                              | Change to '1' for debugging              |
-| SCALE_API_URL            | '/scale/api'                    | URL prefix for the REST API              |
+| SCALE_API_URL            | '/api'                          | URL prefix for the REST API              |
 | SCALE_ALLOWED_HOSTS      | '*'                             | , separated list of hosts for django     |
 | SCALE_STATIC_ROOT        | 'static/'                       | location of static data                  |
 | SCALE_STATIC_URL         | '/scale/static/'                | url for static data                      |
@@ -70,7 +70,7 @@ Alternatively, your own local_settings.py can be volume mounted into `/opt/scale
 | DEPLOY_LOGGING           | False                           | Start the logstash container in DC/OS    |
 | INIT_DB                  | False                           | Init the db (migrat, load, etc.)         |
 | LOAD_COUNTRY_DATA        | False                           | Load country borders into the database.  |
-| LOGSTASH_DOCKER_IMAGE    | 'logstash'                      | Docker image for logstash                |
+| LOGSTASH_DOCKER_IMAGE    | 'geoint/logstash-elastic-ha'    | Docker image for logstash                |
 
 Note on USE_LATEST
 ------------------
