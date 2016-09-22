@@ -28,23 +28,38 @@ def run():
       'container': {
         'docker': {
           'image': logstash_image,
-          'network': 'HOST',
+          'network': 'BRIDGE',
+          'portMappings': [{
+            'containerPort': 8000,
+            'hostPort': 9229,
+            'protocol': 'udp'
+          },
+          {
+            'containerPort': 80,
+            'hostPort': 0,
+            'protocol': 'tcp'
+          }
+          ],
           'forcePullImage': True
         },
         'type': 'DOCKER',
         'volumes': []
       },
-      'portDefinitions': [
-        {
-          'port': 12201,
-          'protocol': 'udp'
-        }
-      ],
       'env': {
         'ELASTICSEARCH_URLS': es_urls
       },
       'labels': {},
-      'healthChecks': [],
+      'healthChecks': [
+        {
+          "protocol": "HTTP",
+          "path": "/",
+          "gracePeriodSeconds": 5,
+          "intervalSeconds": 10,
+          "portIndex": 1,
+          "timeoutSeconds": 2,
+          "maxConsecutiveFailures": 3
+        },
+      ],
       'uris': []
     }
 
@@ -67,8 +82,8 @@ def run():
         print(r.text)
     while int(json.loads(requests.get('http://marathon.mesos:8080/v2/apps/scale-logstash').text)['app']['tasksRunning']) == 0:
         time.sleep(5)
-    logstashPort = json.loads(requests.get('http://marathon.mesos:8080/v2/apps/scale-logstash').text)['app']['tasks'][0]['ports'][0]
-    print('udp://scale-logstash.marathon.mesos:%s'%(logstashPort,))
+    # We don't need to inspect the port from Marathon since we know it based on HOST port defs
+    print('udp://scale-logstash.marathon.mesos:9229')
     print(es_urls)
 
 if __name__ == '__main__':
