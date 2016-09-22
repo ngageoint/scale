@@ -34,6 +34,14 @@ job.clock module
     :undoc-members:
     :show-inheritance:
 
+job.errors module
+-----------------
+
+.. automodule:: job.errors
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 job.exceptions module
 ---------------------
 

@@ -107,6 +107,7 @@
 <li class="toctree-l4"><a class="reference internal" href="job.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.apps">job.apps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.clock">job.clock module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.errors">job.errors module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.exceptions">job.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.models">job.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.resources">job.resources module</a></li>
@@ -199,8 +200,8 @@
 <div class="section" id="module-job.configuration.results.results_manifest.results_manifest">
 <span id="job-configuration-results-results-manifest-results-manifest-module"></span><h2>job.configuration.results.results_manifest.results_manifest module<a class="headerlink" href="#module-job.configuration.results.results_manifest.results_manifest" title="Permalink to this headline">¶</a></h2>
 <p>This module is concerned with the scale output manifest. Scale jobs are expected to produce an output manifest.
-Scale needs to parse this manifest to bring the information into the system. The output files should match
-the job interface</p>
+Scale needs to parse this manifest to bring the information into the system. The output files should match the job
+interface</p>
 <dl class="class">
 <dt id="job.configuration.results.results_manifest.results_manifest.ResultsManifest">
 <em class="property">class </em><code class="descclassname">job.configuration.results.results_manifest.results_manifest.</code><code class="descname">ResultsManifest</code><span class="sig-paren">(</span><em>json_manifest=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.results.results_manifest.results_manifest.ResultsManifest" title="Permalink to this definition">¶</a></dt>
@@ -254,12 +255,17 @@ results_manifest.RESULTS_MANIFEST_SCHEMA[&#8220;definitions&#8221;][&#8220;parse
 <dl class="method">
 <dt id="job.configuration.results.results_manifest.results_manifest.ResultsManifest.validate">
 <code class="descname">validate</code><span class="sig-paren">(</span><em>output_file_definitions</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.results.results_manifest.results_manifest.ResultsManifest.validate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validates the results manifest against given output file definitions.  Throws a
-:class <cite>job.configuration.results.exceptions.ResultsManifestAndInterfaceDontMatch</cite>: if the
-manifest doesn&#8217;t match the outputs.  This does not validate that the parse_data matches the job
-data inputs.
-:param output_file_definitions: A dictionary with each output param name mapped to a tuple with
-(is_multiple (bool), required(bool))
+<dd><p>Validates the results manifest against given output file definitions. This does not validate that the
+parse_data matches the job data inputs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>output_file_definitions</strong> &#8211; A dictionary with each output param name mapped to a tuple with</td>
+</tr>
+</tbody>
+</table>
+<p>(is_multiple (bool), required(bool))
 :type output_file_definitions: dict of tuples</p>
 </dd></dl>
 
@@ -269,8 +275,8 @@ data inputs.
 <div class="section" id="module-job.configuration.results.results_manifest.results_manifest_1_0">
 <span id="job-configuration-results-results-manifest-results-manifest-1-0-module"></span><h2>job.configuration.results.results_manifest.results_manifest_1_0 module<a class="headerlink" href="#module-job.configuration.results.results_manifest.results_manifest_1_0" title="Permalink to this headline">¶</a></h2>
 <p>This module is concerned with the scale output manifest. Scale jobs are expected to produce an output manifest.
-Scale needs to parse this manifest to bring the information into the system. The output files should match
-the job interface</p>
+Scale needs to parse this manifest to bring the information into the system. The output files should match the job
+interface</p>
 <dl class="class">
 <dt id="job.configuration.results.results_manifest.results_manifest_1_0.ResultsManifest">
 <em class="property">class </em><code class="descclassname">job.configuration.results.results_manifest.results_manifest_1_0.</code><code class="descname">ResultsManifest</code><span class="sig-paren">(</span><em>json_manifest</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.results.results_manifest.results_manifest_1_0.ResultsManifest" title="Permalink to this definition">¶</a></dt>

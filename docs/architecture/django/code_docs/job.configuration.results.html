@@ -107,6 +107,7 @@
 <li class="toctree-l4"><a class="reference internal" href="job.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.apps">job.apps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.clock">job.clock module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.errors">job.errors module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.exceptions">job.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.models">job.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.resources">job.resources module</a></li>
@@ -215,14 +216,14 @@
 <dt id="job.configuration.results.exceptions.InvalidResultsManifest">
 <em class="property">exception </em><code class="descclassname">job.configuration.results.exceptions.</code><code class="descname">InvalidResultsManifest</code><a class="headerlink" href="#job.configuration.results.exceptions.InvalidResultsManifest" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
-<p>Exception indicating that the provided definition of a results_manifest</p>
+<p>Exception indicating that a result manifest was invalid</p>
 </dd></dl>
 
 <dl class="exception">
-<dt id="job.configuration.results.exceptions.ResultsManifestAndInterfaceDontMatch">
-<em class="property">exception </em><code class="descclassname">job.configuration.results.exceptions.</code><code class="descname">ResultsManifestAndInterfaceDontMatch</code><a class="headerlink" href="#job.configuration.results.exceptions.ResultsManifestAndInterfaceDontMatch" title="Permalink to this definition">¶</a></dt>
+<dt id="job.configuration.results.exceptions.MissingRequiredOutput">
+<em class="property">exception </em><code class="descclassname">job.configuration.results.exceptions.</code><code class="descname">MissingRequiredOutput</code><a class="headerlink" href="#job.configuration.results.exceptions.MissingRequiredOutput" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
-<p>The result manifests outputs do not match the required outputs or given inputs of the job</p>
+<p>Exception indicating that a required output was not produced</p>
 </dd></dl>
 
 </div>
