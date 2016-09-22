@@ -12,6 +12,7 @@ from jsonschema.exceptions import ValidationError
 from job.configuration.data.exceptions import InvalidData, InvalidConnection
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.scale_file import ScaleFileDescription
+from job.configuration.results.exceptions import InvalidResultsManifest
 from job.configuration.results.results_manifest.results_manifest import ResultsManifest
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
 
@@ -305,8 +306,11 @@ class JobInterface(object):
             if output_data_item:
                 media_type = output_data_item.get('media_type')
 
+            msg = 'Output %s has invalid/missing file path "%s"'
             if 'file' in manifest_file_entry:
                 file_entry = manifest_file_entry['file']
+                if not os.path.isfile(file_entry['path']):
+                    raise InvalidResultsManifest(msg % (param_name, file_entry['path']))
                 if 'geo_metadata' in file_entry:
                     files_to_store[param_name] = (file_entry['path'], media_type, file_entry['geo_metadata'])
                 else:
@@ -314,6 +318,8 @@ class JobInterface(object):
             elif 'files' in manifest_file_entry:
                 file_tuples = []
                 for file_entry in manifest_file_entry['files']:
+                    if not os.path.isfile(file_entry['path']):
+                        raise InvalidResultsManifest(msg % (param_name, file_entry['path']))
                     if 'geo_metadata' in file_entry:
                         file_tuples.append((file_entry['path'], media_type, file_entry['geo_metadata']))
                     else:

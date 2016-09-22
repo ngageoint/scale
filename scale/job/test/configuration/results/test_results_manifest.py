@@ -4,8 +4,8 @@ import django
 from django.test import TestCase
 
 from job.configuration.results.results_manifest.results_manifest import ResultsManifest
-from job.configuration.results.exceptions import InvalidResultsManifest,\
-    ResultsManifestAndInterfaceDontMatch
+from job.configuration.results.exceptions import InvalidResultsManifest, \
+    MissingRequiredOutput
  
  
 class TestResultsManifestConstructor(TestCase):
@@ -173,7 +173,7 @@ class TestResultsManifestValidation(TestCase):
         try:
             manifest.validate(output_files)
             self.fail(u'The outputs do not match the manifest, there should be a failure')
-        except ResultsManifestAndInterfaceDontMatch:
+        except MissingRequiredOutput:
             pass
  
     def test_missing_optional_is_ok(self):
@@ -193,7 +193,7 @@ class TestResultsManifestValidation(TestCase):
         manifest = ResultsManifest(json_manifest)
         try:
             manifest.validate(output_files)
-        except ResultsManifestAndInterfaceDontMatch:
+        except MissingRequiredOutput:
             self.fail(u'The missing an optional file')
  
     def test_missing_required_is_bad(self):
@@ -214,7 +214,7 @@ class TestResultsManifestValidation(TestCase):
         try:
             manifest.validate(output_files)
             self.fail(u'There is a missing required file.  Validation should have failed')
-        except ResultsManifestAndInterfaceDontMatch:
+        except MissingRequiredOutput:
             pass
 
 class TestResultsManifestConversion(TestCase):

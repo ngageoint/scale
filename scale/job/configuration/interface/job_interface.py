@@ -1,7 +1,6 @@
 """Defines the interface for executing a job"""
 from __future__ import unicode_literals
 
-import json
 import logging
 import os
 
@@ -141,7 +140,6 @@ class JobInterface(previous_interface.JobInterface):
 
         self._output_file_manifest_dict = {}  # str->bool
 
-
         if 'version' not in self.definition:
             self.definition['version'] = SCHEMA_VERSION
 
@@ -172,16 +170,15 @@ class JobInterface(previous_interface.JobInterface):
 
         converted = previous.get_dict()
 
-        converted[u'version'] = SCHEMA_VERSION
+        converted['version'] = SCHEMA_VERSION
 
-        if u'input_data' in converted:
+        if 'input_data' in converted:
             for inputs in converted['input_data']:
                 if inputs['type'] in ('file', 'files'):
                     # Default value should be False for partial
                     inputs['partial'] = False
 
         return converted
-
 
     def _create_retrieve_files_dict(self):
         """creates parameter folders and returns the dict needed to call
