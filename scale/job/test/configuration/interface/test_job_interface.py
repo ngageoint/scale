@@ -13,7 +13,7 @@ from job.configuration.data.job_data import JobData
 from job.configuration.environment.job_environment import JobEnvironment
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.job_interface import JobInterface
-from job.configuration.interface.job_interface_1_0 import JobInterface as JobInterface_1_0
+from job.configuration.results.exceptions import InvalidResultsManifest
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
 
 
@@ -83,10 +83,11 @@ class TestJobInterfacePostSteps(TestCase):
         self.workspace = storage_test_utils.create_workspace()
         self.file = storage_test_utils.create_file(workspace=self.workspace)
 
+    @patch('os.path.isfile')
     @patch('os.path.exists')
     @patch('__builtin__.open')
-    @patch('job.configuration.interface.job_interface.json.loads')
-    def test_output_file(self, mock_loads, mock_open, mock_exists):
+    @patch('job.configuration.interface.job_interface_1_0.json.loads')
+    def test_output_file(self, mock_loads, mock_open, mock_exists, mock_isfile):
         job_interface_dict, job_data_dict = self._get_simple_interface_data()
         job_interface_dict['output_data'] = [{
             'name':'output_file',
@@ -106,6 +107,7 @@ class TestJobInterfacePostSteps(TestCase):
         }
         mock_loads.return_value = results_manifest
         mock_exists.return_value = True
+        mock_isfile.return_value = True
 
         job_exe = MagicMock()
 
@@ -119,10 +121,46 @@ class TestJobInterfacePostSteps(TestCase):
             'output_file': ('/some/path/foo.txt', None),
         }, job_exe)
 
+    @patch('os.path.isfile')
     @patch('os.path.exists')
     @patch('__builtin__.open')
-    @patch('job.configuration.interface.job_interface.json.loads')
-    def test_output_files(self, mock_loads, mock_open, mock_exists):
+    @patch('job.configuration.interface.job_interface_1_0.json.loads')
+    def test_invalid_output_file(self, mock_loads, mock_open, mock_exists, mock_isfile):
+        job_interface_dict, job_data_dict = self._get_simple_interface_data()
+        job_interface_dict['output_data'] = [{
+            'name':'output_file',
+            'type':'file',
+            'required': True,
+        }]
+        job_data_dict['output_data'].append({
+            'name': 'output_file',
+            'workspace_id': self.workspace.id,
+        })
+        results_manifest = {
+            'version': '1.0',
+            'files': [{
+                'name':'output_file',
+                'path':'/some/path/foo.txt',
+            }]
+        }
+        mock_loads.return_value = results_manifest
+        mock_exists.return_value = True
+        mock_isfile.return_value = False
+
+        job_exe = MagicMock()
+
+        job_interface = JobInterface(job_interface_dict)
+        job_data = Mock(spec=JobData)
+        job_data.save_parse_results = Mock()
+        fake_stdout = ''
+
+        self.assertRaises(InvalidResultsManifest, job_interface.perform_post_steps, job_exe, job_data, fake_stdout)
+
+    @patch('os.path.isfile')
+    @patch('os.path.exists')
+    @patch('__builtin__.open')
+    @patch('job.configuration.interface.job_interface_1_0.json.loads')
+    def test_output_files(self, mock_loads, mock_open, mock_exists, mock_isfile):
         job_interface_dict, job_data_dict = self._get_simple_interface_data()
         job_interface_dict['output_data'] = [{
             'name': 'output_files',
@@ -142,6 +180,7 @@ class TestJobInterfacePostSteps(TestCase):
         }
         mock_loads.return_value = results_manifest
         mock_exists.return_value = True
+        mock_isfile.return_value = True
 
         job_exe = MagicMock()
 
@@ -158,10 +197,46 @@ class TestJobInterfacePostSteps(TestCase):
             ]
         }, job_exe)
 
+    @patch('os.path.isfile')
     @patch('os.path.exists')
     @patch('__builtin__.open')
-    @patch('job.configuration.interface.job_interface.json.loads')
-    def test_output_file_with_geo_metadata(self, mock_loads, mock_open, mock_exists):
+    @patch('job.configuration.interface.job_interface_1_0.json.loads')
+    def test_invalid_output_files(self, mock_loads, mock_open, mock_exists, mock_isfile):
+        job_interface_dict, job_data_dict = self._get_simple_interface_data()
+        job_interface_dict['output_data'] = [{
+            'name': 'output_files',
+            'type': 'files',
+            'required': True,
+        }]
+        job_data_dict['output_data'].append({
+            'name': 'output_files',
+            'workspace_id': self.workspace.id,
+        })
+        results_manifest = {
+            'version': '1.0',
+            'files': [{
+                'name':'output_files',
+                'paths': ['/some/path/foo.txt', '/other/path/foo.txt'],
+            }]
+        }
+        mock_loads.return_value = results_manifest
+        mock_exists.return_value = True
+        mock_isfile.return_value = False
+
+        job_exe = MagicMock()
+
+        job_interface = JobInterface(job_interface_dict)
+        job_data = Mock(spec=JobData)
+        job_data.save_parse_results = Mock()
+        fake_stdout = ''
+
+        self.assertRaises(InvalidResultsManifest, job_interface.perform_post_steps, job_exe, job_data, fake_stdout)
+
+    @patch('os.path.isfile')
+    @patch('os.path.exists')
+    @patch('__builtin__.open')
+    @patch('job.configuration.interface.job_interface_1_0.json.loads')
+    def test_output_file_with_geo_metadata(self, mock_loads, mock_open, mock_exists, mock_isfile):
         job_interface_dict, job_data_dict = self._get_simple_interface_data()
         job_interface_dict['output_data'] = [{
             'name': 'output_file',
@@ -192,6 +267,7 @@ class TestJobInterfacePostSteps(TestCase):
         }
         mock_loads.return_value = results_manifest
         mock_exists.return_value = True
+        mock_isfile.return_value = True
 
         job_exe = MagicMock()
 
@@ -205,10 +281,11 @@ class TestJobInterfacePostSteps(TestCase):
             'output_file': ('/some/path/foo.txt', None, geo_metadata),
         }, job_exe)
 
+    @patch('os.path.isfile')
     @patch('os.path.exists')
     @patch('__builtin__.open')
-    @patch('job.configuration.interface.job_interface.json.loads')
-    def test_output_files_with_geo_metadata(self, mock_loads, mock_open, mock_exists):
+    @patch('job.configuration.interface.job_interface_1_0.json.loads')
+    def test_output_files_with_geo_metadata(self, mock_loads, mock_open, mock_exists, mock_isfile):
         job_interface_dict, job_data_dict = self._get_simple_interface_data()
         job_interface_dict['output_data'] = [{
             'name': 'output_files',
@@ -243,6 +320,7 @@ class TestJobInterfacePostSteps(TestCase):
 
         mock_loads.return_value = results_manifest
         mock_exists.return_value = True
+        mock_isfile.return_value = True
 
         job_exe = MagicMock()
 
@@ -261,7 +339,7 @@ class TestJobInterfacePostSteps(TestCase):
 
     @patch('os.path.exists')
     @patch('__builtin__.open')
-    @patch('job.configuration.interface.job_interface.json.loads')
+    @patch('job.configuration.interface.job_interface_1_0.json.loads')
     def test_parse_data(self, mock_loads, mock_open, mock_exists):
         job_interface_dict, job_data_dict = self._get_simple_interface_data()
         job_interface_dict['input_data'] = [{
@@ -300,10 +378,11 @@ class TestJobInterfacePostSteps(TestCase):
             '/some/path/foo.txt': (geo_json, '2015-01-01T00:00:00Z', None, [], None),
         })
 
+    @patch('os.path.isfile')
     @patch('os.path.exists')
     @patch('__builtin__.open')
-    @patch('job.configuration.interface.job_interface.json.loads')
-    def test_parse_stdout(self, mock_loads, mock_open, mock_exists):
+    @patch('job.configuration.interface.job_interface_1_0.json.loads')
+    def test_parse_stdout(self, mock_loads, mock_open, mock_exists, mock_isfile):
         job_interface_dict, job_data_dict = self._get_simple_interface_data()
         job_interface_dict['input_data'] = [{
             'name': 'input_file',
@@ -326,6 +405,7 @@ class TestJobInterfacePostSteps(TestCase):
         results_manifest = {}
         mock_loads.return_value = results_manifest
         mock_exists.return_value = True
+        mock_isfile.return_value = True
 
         job_exe = MagicMock()
 
@@ -348,10 +428,11 @@ ARTIFACT:output_file_2:/path/to/foo_2.txt
             'output_file_2': ('/path/to/foo_2.txt', None),
         }, job_exe)
 
+    @patch('os.path.isfile')
     @patch('os.path.exists')
     @patch('__builtin__.open')
-    @patch('job.configuration.interface.job_interface.json.loads')
-    def test_parse_stdout_required(self, mock_loads, mock_open, mock_exists):
+    @patch('job.configuration.interface.job_interface_1_0.json.loads')
+    def test_parse_stdout_required(self, mock_loads, mock_open, mock_exists, mock_isfile):
         job_interface_dict, job_data_dict = self._get_simple_interface_data()
         job_interface_dict['input_data'] = [{
             'name': 'input_file',
@@ -370,6 +451,7 @@ ARTIFACT:output_file_2:/path/to/foo_2.txt
         results_manifest = {}
         mock_loads.return_value = results_manifest
         mock_exists.return_value = True
+        mock_isfile.return_value = True
 
         job_exe = MagicMock()
 
@@ -389,10 +471,11 @@ ARTIFACT:output_file:/path/to/foo.txt
             'output_file': ('/path/to/foo.txt', None),
         }, job_exe)
 
+    @patch('os.path.isfile')
     @patch('os.path.exists')
     @patch('__builtin__.open')
-    @patch('job.configuration.interface.job_interface.json.loads')
-    def test_manifest_overrides_stdout(self, mock_loads, mock_open, mock_exists):
+    @patch('job.configuration.interface.job_interface_1_0.json.loads')
+    def test_manifest_overrides_stdout(self, mock_loads, mock_open, mock_exists, mock_isfile):
         job_interface_dict, job_data_dict = self._get_simple_interface_data()
         job_interface_dict['input_data'] = [{
             'name': 'input_file',
@@ -421,6 +504,7 @@ ARTIFACT:output_file:/path/to/foo.txt
         }
         mock_loads.return_value = results_manifest
         mock_exists.return_value = True
+        mock_isfile.return_value = True
 
         job_exe = MagicMock()
 
@@ -443,10 +527,11 @@ ARTIFACT:output_file_2:/path/to/foo_2.txt
             'output_file_2': ('/path/to/foo_2.txt', None),
         }, job_exe)
 
+    @patch('os.path.isfile')
     @patch('os.path.exists')
     @patch('__builtin__.open')
-    @patch('job.configuration.interface.job_interface.json.loads')
-    def test_extra_products_are_fine(self, mock_loads, mock_open, mock_exists):
+    @patch('job.configuration.interface.job_interface_1_0.json.loads')
+    def test_extra_products_are_fine(self, mock_loads, mock_open, mock_exists, mock_isfile):
         job_interface_dict, job_data_dict = self._get_simple_interface_data()
         job_interface_dict['input_data'] = [{
             'name': 'input_file',
@@ -471,6 +556,7 @@ ARTIFACT:output_file_2:/path/to/foo_2.txt
         }
         mock_loads.return_value = results_manifest
         mock_exists.return_value = True
+        mock_isfile.return_value = True
 
         job_exe = MagicMock()
 
@@ -492,10 +578,11 @@ ARTIFACT:output_file_2:/path/to/foo_2.txt
             'output_file': ('/new/path/foo.txt', None),
         }, job_exe)
 
+    @patch('os.path.isfile')
     @patch('os.path.exists')
     @patch('__builtin__.open')
-    @patch('job.configuration.interface.job_interface.json.loads')
-    def test_output_data_media_types(self, mock_loads, mock_open, mock_exists):
+    @patch('job.configuration.interface.job_interface_1_0.json.loads')
+    def test_output_data_media_types(self, mock_loads, mock_open, mock_exists, mock_isfile):
         job_interface_dict, job_data_dict = self._get_simple_interface_data()
         job_interface_dict['output_data'] = [{
             'name': 'output_file',
@@ -516,6 +603,7 @@ ARTIFACT:output_file_2:/path/to/foo_2.txt
         }
         mock_loads.return_value = results_manifest
         mock_exists.return_value = True
+        mock_isfile.return_value = True
 
         job_exe = MagicMock()
 
