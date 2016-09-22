@@ -120,7 +120,7 @@ class QueueNewRecipeView(GenericAPIView):
 
         try:
             recipe = Recipe.objects.get_details(handler.recipe.id)
-        except RecipeType.DoesNotExist:
+        except Recipe.DoesNotExist:
             raise Http404
 
         serializer = self.get_serializer(recipe)
