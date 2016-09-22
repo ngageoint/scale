@@ -10,8 +10,7 @@ from django.db import transaction
 from django.db.utils import DatabaseError, OperationalError
 
 from error.models import Error
-from job.configuration.results.exceptions import InvalidResultsManifest, MissingRequiredOutput, \
-    MissingSingleFileOutputParameter, MissingMultipleFileOutputParameter
+from job.configuration.results.exceptions import InvalidResultsManifest, MissingRequiredOutput
 from job.errors import get_invalid_manifest_error, get_missing_output_error
 from job.execution.cleanup import cleanup_job_exe
 from job.models import JobExecution
@@ -65,11 +64,10 @@ class Command(BaseCommand):
 
             self._cleanup(exe_id)
         except Exception as ex:
-            logger.exception('Job Execution %i: Error performing post-job steps', exe_id)
-
             self._cleanup(exe_id)
 
             exit_code = GENERAL_FAIL_EXIT_CODE
+            print_stacktrace = True
             if isinstance(ex, OperationalError):
                 exit_code = DB_OP_EXIT_CODE
             elif isinstance(ex, DatabaseError):
@@ -80,12 +78,15 @@ class Command(BaseCommand):
                 exit_code = IO_EXIT_CODE
             elif isinstance(ex, InvalidResultsManifest):
                 exit_code = IV_MF_CODE
+                print_stacktrace = False
             elif isinstance(ex, MissingRequiredOutput):
                 exit_code = MI_OP_CODE
-            elif isinstance(ex, MissingMultipleFileOutputParameter):
-                exit_code = MI_OP_CODE
-            elif isinstance(ex, MissingSingleFileOutputParameter):
-                exit_code = MI_OP_CODE
+                print_stacktrace = False
+
+            if print_stacktrace:
+                logger.exception('Error in post-task')
+            else:
+                logger.error('Failing post-task: %s', str(ex))
             sys.exit(exit_code)
 
         logger.info('Command completed: scale_post_steps')
