@@ -281,6 +281,12 @@ class JobConfiguration(object):
         :type job_exe_id: int
         """
 
+        es_urls = None
+        # Use connection pool to get up-to-date list of elasticsearch nodes
+        if settings.ELASTICSEARCH:
+            hosts = [host.host for host in settings.ELASTICSEARCH.transport.connection_pool.connections]
+            es_urls = ','.join(hosts)
+
         if settings.LOGGING_ADDRESS is not None:
             self.add_pre_task_docker_param(DockerParam('log-driver', 'gelf'))
             self.add_pre_task_docker_param(DockerParam('log-opt', 'gelf-address=%s' % settings.LOGGING_ADDRESS))
@@ -292,8 +298,7 @@ class JobConfiguration(object):
             self.add_post_task_docker_param(DockerParam('log-opt', 'gelf-address=%s' % settings.LOGGING_ADDRESS))
             self.add_post_task_docker_param(DockerParam('log-opt', 'tag=scale_%d_post' % job_exe_id))
             # Post task needs ElasticSearch URL to grab logs for old artifact registration
-            self.add_post_task_docker_param(DockerParam('env', 'SCALE_ELASTICSEARCH_URL=%s'
-                                                        % settings.ELASTICSEARCH_URL))
+            self.add_post_task_docker_param(DockerParam('env', 'SCALE_ELASTICSEARCH_URL=%s' % es_urls))
 
     def get_job_task_docker_params(self):
         """Returns the Docker parameters needed for the job task
