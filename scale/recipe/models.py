@@ -41,7 +41,7 @@ class RecipeManager(models.Manager):
         self.filter(id=recipe_id).update(completed=when, last_modified=modified)
 
     @transaction.atomic
-    def create_recipe(self, recipe_type, event, data, superseded_recipe=None, delta=None, superseded_jobs=None):
+    def create_recipe(self, recipe_type, data, event, superseded_recipe=None, delta=None, superseded_jobs=None):
         """Creates a new recipe for the given type and returns a recipe handler for it. All jobs for the recipe will
         also be created. If the new recipe is superseding an old recipe, superseded_recipe, delta, and superseded_jobs
         must be provided and the caller must have obtained a model lock on all job models in superseded_jobs and on the
@@ -49,10 +49,10 @@ class RecipeManager(models.Manager):
 
         :param recipe_type: The type of the recipe to create
         :type recipe_type: :class:`recipe.models.RecipeType`
-        :param event: The event that triggered the creation of this recipe
-        :type event: :class:`trigger.models.TriggerEvent`
         :param data: The recipe data to run on, should be None if superseded_recipe is provided
         :type data: :class:`recipe.data.recipe_data.RecipeData`
+        :param event: The event that triggered the creation of this recipe
+        :type event: :class:`trigger.models.TriggerEvent`
         :param superseded_recipe: The recipe that the created recipe is superseding, possibly None
         :type superseded_recipe: :class:`recipe.models.Recipe`
         :param delta: If not None, represents the changes between the old recipe to supersede and the new recipe
@@ -387,9 +387,13 @@ class RecipeManager(models.Manager):
         description = {'user': 'Anonymous'}
         event = TriggerEvent.objects.create_trigger_event('USER', None, description, timezone.now())
 
-        # Create the new recipe while superseding the old one
-        return Recipe.objects.create_recipe(current_type, event, prev_recipe.get_recipe_data(), superseded_recipe,
-                                            graph_delta, superseded_jobs)
+        # Create the new recipe while superseding the old one and queuing the associated jobs
+        try:
+            from queue.models import Queue
+            return Queue.objects.queue_new_recipe(current_type, None, event, superseded_recipe, graph_delta,
+                                                  superseded_jobs)
+        except ImportError:
+            raise ReprocessError('Unable to import from queue application')
 
     def _get_recipe_handlers(self, recipe_ids):
         """Returns the handlers for the given recipe IDs. If a given recipe ID is not valid it will not be included in

@@ -380,10 +380,10 @@ class TestQueueManagerHandleJobCompletion(TransactionTestCase):
         """Tests calling QueueManager.handle_job_completion() successfully with a job in a recipe."""
 
         # Queue the recipe
-        recipe_id = Queue.objects.queue_new_recipe(self.recipe_type, self.data, self.event)
+        handler = Queue.objects.queue_new_recipe(self.recipe_type, self.data, self.event)
 
         # Fake out completing Job 1
-        job_1 = RecipeJob.objects.select_related('job').get(recipe_id=recipe_id, job_name='Job 1').job
+        job_1 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe.id, job_name='Job 1').job
         job_exe_1 = JobExecution.objects.get(job_id=job_1.id)
         output_file_1 = product_test_utils.create_product(job_exe=job_exe_1, workspace=self.workspace)
         output_file_2 = product_test_utils.create_product(job_exe=job_exe_1, workspace=self.workspace)
@@ -402,7 +402,8 @@ class TestQueueManagerHandleJobCompletion(TransactionTestCase):
         self.assertTrue(self.mock_processor.process_completed.called)
 
         # Make sure Job 2 in the recipe is successfully queued
-        recipe_job_2 = RecipeJob.objects.select_related('job', 'recipe').get(recipe_id=recipe_id, job_name='Job 2')
+        recipe_job_2 = RecipeJob.objects.select_related('job', 'recipe').get(recipe_id=handler.recipe.id,
+                                                                             job_name='Job 2')
         self.assertEqual(recipe_job_2.job.status, 'QUEUED')
         self.assertIsNone(recipe_job_2.recipe.completed)
 
@@ -410,10 +411,10 @@ class TestQueueManagerHandleJobCompletion(TransactionTestCase):
         """Tests calling QueueManager.handle_job_completion() successfully with all jobs in a recipe."""
 
         # Queue the recipe
-        recipe_id = Queue.objects.queue_new_recipe(self.recipe_type, self.data, self.event)
+        handler = Queue.objects.queue_new_recipe(self.recipe_type, self.data, self.event)
 
         # Fake out completing Job 1
-        job_1 = RecipeJob.objects.select_related('job').get(recipe_id=recipe_id, job_name='Job 1').job
+        job_1 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe.id, job_name='Job 1').job
         job_exe_1 = JobExecution.objects.get(job_id=job_1.id)
         output_file_1 = product_test_utils.create_product(job_exe=job_exe_1, workspace=self.workspace)
         output_file_2 = product_test_utils.create_product(job_exe=job_exe_1, workspace=self.workspace)
@@ -428,7 +429,7 @@ class TestQueueManagerHandleJobCompletion(TransactionTestCase):
         Queue.objects.handle_job_completion(job_exe_1.id, now(), [])
 
         # Fake out completing Job 2
-        job_2 = RecipeJob.objects.select_related('job').get(recipe_id=recipe_id, job_name='Job 2').job
+        job_2 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe.id, job_name='Job 2').job
         job_exe_2 = JobExecution.objects.get(job_id=job_2.id)
         output_file_1 = product_test_utils.create_product(job_exe=job_exe_2, workspace=self.workspace)
         output_file_2 = product_test_utils.create_product(job_exe=job_exe_2, workspace=self.workspace)
@@ -447,7 +448,7 @@ class TestQueueManagerHandleJobCompletion(TransactionTestCase):
         self.assertEqual(self.mock_processor.process_completed.call_count, 2)
 
         # Make sure final recipe attributes are updated
-        recipe = Recipe.objects.get(pk=recipe_id)
+        recipe = Recipe.objects.get(pk=handler.recipe.id)
         self.assertIsNotNone(recipe.completed)
 
 
@@ -550,10 +551,10 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
     def test_successful(self):
         """Tests calling QueueManager.queue_new_recipe() successfully."""
 
-        recipe_id = Queue.objects.queue_new_recipe(self.recipe_type, self.data, self.event)
+        handler = Queue.objects.queue_new_recipe(self.recipe_type, self.data, self.event)
 
         # Make sure the recipe jobs are created and Job 1 is queued
-        recipe_job_1 = RecipeJob.objects.select_related('job').get(recipe_id=recipe_id, job_name='Job 1')
+        recipe_job_1 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe.id, job_name='Job 1')
         self.assertEqual(recipe_job_1.job.job_type.id, self.job_type_1.id)
         self.assertEqual(recipe_job_1.job.status, 'QUEUED')
 
@@ -561,11 +562,11 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         job_exe_1 = JobExecution.objects.get(job=recipe_job_1.job)
         self.assertTrue(self.mock_processor.process_queued.called_with(job_exe_1, True))
 
-        recipe_job_2 = RecipeJob.objects.select_related('job').get(recipe_id=recipe_id, job_name='Job 2')
+        recipe_job_2 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe.id, job_name='Job 2')
         self.assertEqual(recipe_job_2.job.job_type.id, self.job_type_2.id)
         self.assertEqual(recipe_job_2.job.status, 'PENDING')
 
-        recipe = Recipe.objects.get(pk=recipe_id)
+        recipe = Recipe.objects.get(pk=handler.recipe.id)
         self.assertIsNone(recipe.completed)
 
     def test_successful_supersede(self):
@@ -573,9 +574,10 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
 
         # Queue initial recipe and complete its first job
         node = node_test_utils.create_node()
-        recipe_id = Queue.objects.queue_new_recipe(self.recipe_type, self.data, self.event)
-        recipe = Recipe.objects.get(id=recipe_id)
-        recipe_job_1 = RecipeJob.objects.select_related('job__job_exe').get(recipe_id=recipe_id, job_name='Job 1')
+        handler = Queue.objects.queue_new_recipe(self.recipe_type, self.data, self.event)
+        recipe = Recipe.objects.get(id=handler.recipe.id)
+        recipe_job_1 = RecipeJob.objects.select_related('job__job_exe').get(recipe_id=handler.recipe.id,
+                                                                            job_name='Job 1')
         job_exe_1 = JobExecution.objects.get(job_id=recipe_job_1.job_id)
         queued_job_exe = QueuedJobExecution(Queue.objects.get(job_exe_id=job_exe_1.id))
         queued_job_exe.accepted(node, JobResources(cpus=10, mem=1000, disk_in=1000, disk_out=1000, disk_total=2000))
@@ -622,27 +624,29 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         }
         new_recipe_type = recipe_test_utils.create_recipe_type(name=self.recipe_type.name, definition=new_definition)
         event = trigger_test_utils.create_trigger_event()
-        recipe_job_1 = RecipeJob.objects.select_related('job').get(recipe_id=recipe_id, job_name='Job 1')
-        recipe_job_2 = RecipeJob.objects.select_related('job').get(recipe_id=recipe_id, job_name='Job 2')
+        recipe_job_1 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe.id, job_name='Job 1')
+        recipe_job_2 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe.id, job_name='Job 2')
         superseded_jobs = {'Job 1': recipe_job_1.job, 'Job 2': recipe_job_2.job}
         graph_a = self.recipe_type.get_recipe_definition().get_graph()
         graph_b = new_recipe_type.get_recipe_definition().get_graph()
         delta = RecipeGraphDelta(graph_a, graph_b)
 
         # Queue new recipe that supersedes the old recipe
-        new_recipe_id = Queue.objects.queue_new_recipe(new_recipe_type, None, event, recipe, delta, superseded_jobs)
+        new_handler = Queue.objects.queue_new_recipe(new_recipe_type, None, event, recipe, delta, superseded_jobs)
 
         # Ensure old recipe is superseded
-        recipe = Recipe.objects.get(id=recipe_id)
+        recipe = Recipe.objects.get(id=handler.recipe.id)
         self.assertTrue(recipe.is_superseded)
 
         # Ensure new recipe supersedes old recipe
-        new_recipe = Recipe.objects.get(id=new_recipe_id)
-        self.assertEqual(new_recipe.superseded_recipe_id, recipe_id)
+        new_recipe = Recipe.objects.get(id=new_handler.recipe.id)
+        self.assertEqual(new_recipe.superseded_recipe_id, handler.recipe.id)
 
         # Ensure that job 1 is already completed (it was copied from original recipe) and that job 2 is queued
-        new_recipe_job_1 = RecipeJob.objects.select_related('job').get(recipe_id=new_recipe_id, job_name='New Job 1')
-        new_recipe_job_2 = RecipeJob.objects.select_related('job').get(recipe_id=new_recipe_id, job_name='New Job 2')
+        new_recipe_job_1 = RecipeJob.objects.select_related('job').get(recipe_id=new_handler.recipe.id,
+                                                                       job_name='New Job 1')
+        new_recipe_job_2 = RecipeJob.objects.select_related('job').get(recipe_id=new_handler.recipe.id,
+                                                                       job_name='New Job 2')
         self.assertEqual(new_recipe_job_1.job.status, 'COMPLETED')
         self.assertFalse(new_recipe_job_1.is_original)
         self.assertEqual(new_recipe_job_2.job.status, 'QUEUED')
