@@ -20,7 +20,6 @@
                             if (vm.scrollDiff >= 0) {
                                 vm.forceScroll = true;
                             }
-
                             vm.execLog = result;
                         } else {
                             if (result.statusText && result.statusText !== '') {

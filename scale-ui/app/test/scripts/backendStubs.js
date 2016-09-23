@@ -287,6 +287,13 @@
             return getSync(jobExecutionLogsOverrideUrl);
         });
 
+        // Job execution Details
+        var jobExecutionDetailsOverrideUrl = 'test/data/jobExecutionDetails.json';
+        var jobExecutionDetailsRegex = new RegExp('^' + scaleConfig.getUrlPrefix('job-executions') + 'job-executions/.*/', 'i');
+        $httpBackend.whenGET(jobExecutionDetailsRegex).respond(function () {
+            return getSync(jobExecutionDetailsOverrideUrl);
+        });
+
 
         // Metrics Plot Data Detail
         //var metricsPlotDataOverrideUrl = 'test/data/metricsJobTypesPlotData.json';

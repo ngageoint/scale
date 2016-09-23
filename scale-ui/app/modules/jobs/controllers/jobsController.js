@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('jobsController', function ($scope, $location, $uibModal, scaleConfig, scaleService, stateService, navService, subnavService, userService, jobService, jobTypeService, loadService, gridFactory, toastr) {
+    angular.module('scaleApp').controller('jobsController', function ($scope, $location, $uibModal, scaleConfig, scaleService, stateService, navService, subnavService, userService, jobService, jobExecutionService, jobTypeService, loadService, gridFactory, toastr) {
         subnavService.setCurrentPath('jobs');
 
         var vm = this,
@@ -134,6 +134,9 @@
             vm.actionClicked = true;
             jobService.getJobDetail(jobId).then(function (data) {
                 vm.jobExecution = data.getLatestExecution();
+                jobExecutionService.getJobExecutionDetails(vm.jobExecution.id).then(function(result){
+                    vm.jobExecution = result;
+                });
                 $uibModal.open({
                     animation: true,
                     templateUrl: 'showLog.html',
