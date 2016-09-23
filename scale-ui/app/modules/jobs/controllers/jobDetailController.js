@@ -21,7 +21,10 @@
         vm.triggerOccurred = '';
 
         vm.showLog = function (execution) {
-            vm.selectedExecutionLog = execution;
+            jobExecutionService.getJobExecutionDetails(execution.id).then(function(result){
+                vm.selectedExecutionLog = result;
+            });
+
             $uibModal.open({
                 animation: true,
                 templateUrl: 'showLog.html',

@@ -1,6 +1,6 @@
 {
     "id": 3,
-    "status": "COMPLETED",
+    "status": "FAILED",
     "command_arguments": "-i 1",
     "timeout": 0,
     "exit_code": null,
@@ -50,7 +50,16 @@
         "created": "2015-09-02T18:05:54.730Z",
         "last_modified": "2015-09-02T18:05:54.730Z"
     },
-    "error": null,
+    "error": {
+        "id": 1,
+        "name": "unknown",
+        "title": "Unknown",
+        "description": "The error that caused the failure is unknown.",
+        "category": "SYSTEM",
+        "is_builtin": true,
+        "created": "2015-03-11T00:00:00Z",
+        "last_modified": "2015-03-11T00:00:00Z"
+    },
     "environment": {},
     "cpus_scheduled": 0.5,
     "mem_scheduled": 15360.0,
