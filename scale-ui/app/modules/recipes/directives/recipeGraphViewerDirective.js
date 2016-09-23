@@ -724,7 +724,7 @@
                 vm.availableWorkspaces = data
             });
 
-            $scope.$watch('recipeType', function (newValue, oldValue) {
+            $scope.$watchCollection('recipeType', function (newValue, oldValue) {
                 if (!$scope.recipeType) {
                     $scope.recipeType = new RecipeType();
                 }
@@ -741,7 +741,6 @@
                         var jobTypeData = _.find($scope.recipeType.job_types, {name: job.job_type.name, version: job.job_type.version});
                         $scope.recipeType.definition.jobs[idx].job_type = jobTypeData;
                     }
-
                 });
 
                 // setup string to bind comma delimited list of trigger rule configuration condition data types
