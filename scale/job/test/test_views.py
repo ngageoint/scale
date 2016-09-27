@@ -30,6 +30,8 @@ class TestJobsView(TestCase):
         self.job_type2 = job_test_utils.create_job_type(name='test2', version='1.0', category='test-2')
         self.job2 = job_test_utils.create_job(job_type=self.job_type2, status='PENDING')
 
+        self.job3 = job_test_utils.create_job(is_superseded=True)
+
     def test_successful(self):
         """Tests successfully calling the jobs view."""
 
@@ -119,6 +121,16 @@ class TestJobsView(TestCase):
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['id'], job.id)
         self.assertEqual(result['results'][0]['error']['category'], error.category)
+
+    def test_superseded(self):
+        """Tests getting superseded jobs."""
+
+        url = '/jobs/?include_superseded=true'
+        response = self.client.generic('GET', url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(result['results']), 3)
 
     def test_order_by(self):
         """Tests successfully calling the jobs view with sorting."""
@@ -431,6 +443,8 @@ class TestJobsUpdateView(TestCase):
             data={'input_data': [{'name': 'input_file', 'file_id': self.file.id}]},
         )
 
+        self.job3 = job_test_utils.create_job(is_superseded=True)
+
     def test_successful(self):
         """Tests successfully calling the jobs view."""
 
@@ -495,6 +509,16 @@ class TestJobsUpdateView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['job_type']['category'], self.job1.job_type.category)
+
+    def test_superseded(self):
+        """Tests getting superseded jobs."""
+
+        url = '/jobs/updates/?include_superseded=true'
+        response = self.client.generic('GET', url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(result['results']), 3)
 
 
 class TestJobTypesView(TestCase):
@@ -1453,6 +1477,8 @@ class TestJobsWithExecutionView(TransactionTestCase):
         time.sleep(.01)
         self.last_run_2b = job_test_utils.create_job_exe(job=self.job_2b, status='COMPLETED')
 
+        self.job_3 = job_test_utils.create_job(is_superseded=True)
+
     def test_get_latest_job_exes(self):
         """Tests calling the jobs information service without a filter"""
 
@@ -1548,6 +1574,16 @@ class TestJobsWithExecutionView(TransactionTestCase):
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['id'], job.id)
         self.assertEqual(result['results'][0]['error']['category'], error.category)
+
+    def test_superseded(self):
+        """Tests getting superseded jobs."""
+
+        url = '/jobs/executions/?include_superseded=true'
+        response = self.client.generic('GET', url)
+        result = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(result['results']), 5)
 
 
 class TestJobExecutionsView(TransactionTestCase):

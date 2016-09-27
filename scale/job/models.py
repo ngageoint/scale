@@ -113,7 +113,7 @@ class JobManager(models.Manager):
         return job
 
     def get_jobs(self, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None, job_type_names=None,
-                 job_type_categories=None, error_categories=None, order=None):
+                 job_type_categories=None, error_categories=None, include_superseded=False, order=None):
         """Returns a list of jobs within the given time range.
 
         :param started: Query jobs updated after this amount of time.
@@ -132,6 +132,8 @@ class JobManager(models.Manager):
         :type job_type_categories: [string]
         :param error_categories: Query jobs that failed due to errors associated with the category.
         :type error_categories: [string]
+        :param include_superseded: Whether to include jobs that are superseded.
+        :type include_superseded: bool
         :param order: A list of fields to control the sort order.
         :type order: [string]
         :returns: The list of jobs that match the time range.
@@ -148,6 +150,7 @@ class JobManager(models.Manager):
         if ended:
             jobs = jobs.filter(last_modified__lte=ended)
 
+        # Apply additional filters
         if statuses:
             jobs = jobs.filter(status__in=statuses)
         if job_ids:
@@ -160,6 +163,8 @@ class JobManager(models.Manager):
             jobs = jobs.filter(job_type__category__in=job_type_categories)
         if error_categories:
             jobs = jobs.filter(error__category__in=error_categories)
+        if not include_superseded:
+            jobs = jobs.filter(is_superseded=False)
 
         # Apply sorting
         if order:
@@ -227,7 +232,7 @@ class JobManager(models.Manager):
         return job
 
     def get_job_updates(self, started=None, ended=None, statuses=None, job_type_ids=None,
-                        job_type_names=None, job_type_categories=None, order=None):
+                        job_type_names=None, job_type_categories=None, include_superseded=False, order=None):
         """Returns a list of jobs that changed status within the given time range.
 
         :param started: Query jobs updated after this amount of time.
@@ -242,6 +247,8 @@ class JobManager(models.Manager):
         :type job_type_categories: [string]
         :param job_type_names: Query jobs of the type associated with the name.
         :type job_type_names: [string]
+        :param include_superseded: Whether to include jobs that are superseded.
+        :type include_superseded: bool
         :param order: A list of fields to control the sort order.
         :type order: [string]
         :returns: The list of jobs that match the time range.
@@ -250,7 +257,8 @@ class JobManager(models.Manager):
         if not order:
             order = ['last_status_change']
         return self.get_jobs(started=started, ended=ended, statuses=statuses, job_type_ids=job_type_ids,
-                             job_type_names=job_type_names, job_type_categories=job_type_categories, order=order)
+                             job_type_names=job_type_names, job_type_categories=job_type_categories,
+                             include_superseded=include_superseded, order=order)
 
     def get_locked_job(self, job_id):
         """Gets the job model with the given ID with a model lock obtained and related job_type and job_type_rev models
