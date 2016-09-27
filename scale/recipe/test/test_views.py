@@ -820,11 +820,25 @@ class TestRecipesView(TransactionTestCase):
         self.assertNotEqual(results['id'], self.recipe1.id)
         self.assertEqual(results['recipe_type']['id'], self.recipe1.recipe_type.id)
 
-    def test_no_changes(self):
+    def test_reprocess_no_changes(self):
         """Tests reprocessing a recipe that has not changed without specifying any jobs throws an error."""
 
         url = '/recipes/%i/reprocess/' % self.recipe1.id
         json_data = {}
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_reprocess_superseded(self):
+        """Tests reprocessing a recipe that is already superseded throws an error."""
+
+        self.recipe1.is_superseded = True
+        self.recipe1.save()
+
+        url = '/recipes/%i/reprocess/' % self.recipe1.id
+        json_data = {
+            'all_jobs': True,
+        }
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

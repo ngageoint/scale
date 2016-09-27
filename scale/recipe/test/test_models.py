@@ -795,6 +795,17 @@ class TestRecipeManagerReprocessRecipe(TransactionTestCase):
         self.assertEqual(recipe_job_1.job.status, 'QUEUED')
         self.assertEqual(recipe_job_3.job.status, 'PENDING')
 
+    def test_reprocess_superseded_recipe(self):
+        """Tests reprocessing a recipe that is already superseded throws an error."""
+
+        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, data=RecipeData(self.data),
+                                               event=self.event)
+
+        handler.recipe.is_superseded = True
+        handler.recipe.save()
+
+        self.assertRaises(ReprocessError, Recipe.objects.reprocess_recipe, handler.recipe.id, all_jobs=True)
+
 
 class TestRecipePopulateJobs(TransactionTestCase):
 

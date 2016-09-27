@@ -356,6 +356,10 @@ class RecipeManager(models.Manager):
         prev_recipe = Recipe.objects.select_related('recipe_type', 'recipe_type_rev').get(pk=recipe_id)
         prev_graph = prev_recipe.get_recipe_definition().get_graph()
 
+        # Superseded recipes cannot be reprocessed
+        if prev_recipe.is_superseded:
+            raise ReprocessError('Unable to re-process a recipe that is already superseded')
+
         # Populate the list of all job names in the recipe as a shortcut
         if all_jobs:
             job_names = prev_graph.get_topological_order()
@@ -366,7 +370,7 @@ class RecipeManager(models.Manager):
 
         # Make sure that something is different to reprocess
         if current_type.revision_num == prev_recipe.recipe_type_rev.revision_num and not job_names:
-            raise ReprocessError('Superseded jobs must be specified when the recipe type has not changed')
+            raise ReprocessError('Job names must be provided when the recipe type has not changed')
 
         # Compute the job differences between recipe revisions including forced ones
         graph_delta = RecipeGraphDelta(prev_graph, current_graph)
