@@ -1,4 +1,4 @@
-'''Defines functions for determining the media type of a file'''
+"""Defines functions for determining the media type of a file"""
 from __future__ import unicode_literals
 
 import mimetypes
@@ -9,17 +9,18 @@ mimetypes.add_type('application/json', '.json')
 mimetypes.add_type('application/vnd.geo+json', '.geojson')
 mimetypes.add_type('image/x-hdf5-image', '.h5')
 mimetypes.add_type('image/x-nitf-image', '.ntf')
+mimetypes.add_type('image/x-nitf-image', '.nitf')
 mimetypes.add_type('application/xml', '.xml')
 
 
 def get_media_type(file_name):
-    '''Returns the media type of a file based upon the file's name
+    """Returns the media type of a file based upon the file's name
 
     :param file_name: The name of the file
-    :type file_name: str
+    :type file_name: string
     :returns: The media type of the file
-    :rtype: str
-    '''
+    :rtype: string
+    """
 
     media_type = mimetypes.guess_type(file_name, strict=False)[0]
     if not media_type:
