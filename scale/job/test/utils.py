@@ -78,7 +78,7 @@ register_trigger_rule_handler(MockErrorTriggerRuleHandler())
 
 def create_job(job_type=None, event=None, status='PENDING', error=None, data=None, num_exes=0, queued=None,
                started=None, ended=None, last_status_change=None, priority=100, results=None, superseded_job=None,
-               delete_superseded=True):
+               delete_superseded=True, is_superseded=False, superseded=None):
     """Creates a job model for unit testing
 
     :returns: The job model
@@ -99,6 +99,8 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, data=Non
         }
     if superseded_job and not superseded_job.is_superseded:
         Job.objects.supersede_jobs([superseded_job], timezone.now())
+    if is_superseded and not superseded:
+        superseded = timezone.now()
 
     job = Job.objects.create_job(job_type, event, superseded_job=superseded_job, delete_superseded=delete_superseded)
     job.priority = priority
@@ -111,6 +113,8 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, data=Non
     job.last_status_change = last_status_change
     job.error = error
     job.results = results
+    job.is_superseded = is_superseded
+    job.superseded = superseded
     job.save()
     return job
 
