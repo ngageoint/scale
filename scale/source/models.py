@@ -61,11 +61,13 @@ class SourceFileManager(models.GeoManager):
 
         return sources
 
-    def get_details(self, source_id):
+    def get_details(self, source_id, include_superseded=False):
         """Gets additional details for the given source model based on related model attributes.
 
         :param source_id: The unique identifier of the source.
         :type source_id: int
+        :param include_superseded: Whether or not superseded products should be included.
+        :type include_superseded: bool
         :returns: The source with extra related attributes: ingests and products.
         :rtype: :class:`source.models.SourceFile`
         """
@@ -87,6 +89,11 @@ class SourceFileManager(models.GeoManager):
         try:
             from product.models import ProductFile
             products = ProductFile.objects.filter(ancestors__ancestor_id=source.id)
+
+            # Exclude superseded products by default
+            if not include_superseded:
+                products = products.filter(is_superseded=False)
+
             products = products.select_related('job_type', 'workspace').defer('workspace__json_config')
             products = products.prefetch_related('countries').order_by('created')
             source.products = products

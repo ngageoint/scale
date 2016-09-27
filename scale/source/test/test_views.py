@@ -105,11 +105,19 @@ class TestSourceDetailsView(TestCase):
 
         try:
             import product.test.utils as product_test_utils
-            self.product = product_test_utils.create_product()
+            self.product1 = product_test_utils.create_product(is_superseded=True)
 
-            product_test_utils.create_file_link(ancestor=self.source, descendant=self.product)
+            product_test_utils.create_file_link(ancestor=self.source, descendant=self.product1)
         except:
-            self.product = None
+            self.product1 = None
+
+        try:
+            import product.test.utils as product_test_utils
+            self.product2 = product_test_utils.create_product()
+
+            product_test_utils.create_file_link(ancestor=self.source, descendant=self.product2)
+        except:
+            self.product2 = None
 
     def test_id(self):
         """Tests successfully calling the source files view by id."""
@@ -127,9 +135,9 @@ class TestSourceDetailsView(TestCase):
             self.assertEqual(len(result['ingests']), 1)
             self.assertEqual(result['ingests'][0]['id'], self.ingest.id)
 
-        if self.product:
+        if self.product2:
             self.assertEqual(len(result['products']), 1)
-            self.assertEqual(result['products'][0]['id'], self.product.id)
+            self.assertEqual(result['products'][0]['id'], self.product2.id)
 
     def test_file_name(self):
         """Tests successfully calling the source files view by file name."""
@@ -147,9 +155,9 @@ class TestSourceDetailsView(TestCase):
             self.assertEqual(len(result['ingests']), 1)
             self.assertEqual(result['ingests'][0]['id'], self.ingest.id)
 
-        if self.product:
+        if self.product2:
             self.assertEqual(len(result['products']), 1)
-            self.assertEqual(result['products'][0]['id'], self.product.id)
+            self.assertEqual(result['products'][0]['id'], self.product2.id)
 
     def test_missing(self):
         """Tests calling the source files view with an invalid id or file name."""
@@ -161,6 +169,20 @@ class TestSourceDetailsView(TestCase):
         url = '/sources/missing_file.txt/'
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_superseded(self):
+        """Tests successfully calling the source files view filtered by superseded."""
+
+        url = '/sources/%i/?include_superseded=true' % self.source.id
+        response = self.client.generic('GET', url)
+        result = json.loads(response.content)
+
+        self.assertEqual(result['id'], self.source.id)
+
+        if self.product1 and self.product2:
+            self.assertEqual(len(result['products']), 2)
+            for product in result['products']:
+                self.assertIn(product['id'], [self.product1.id, self.product2.id])
 
 
 class TestSourceUpdatesView(TestCase):
