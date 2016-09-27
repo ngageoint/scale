@@ -334,8 +334,8 @@ class RecipeReprocessView(GenericAPIView):
             handler = Recipe.objects.reprocess_recipe(recipe_id, job_names, all_jobs)
         except Recipe.DoesNotExist:
             raise Http404
-        except ReprocessError:
-            raise BadParameter('Job names must be requested when the recipe type has not changed')
+        except ReprocessError as err:
+            raise BadParameter(unicode(err))
 
         try:
             new_recipe = Recipe.objects.get_details(handler.recipe.id)

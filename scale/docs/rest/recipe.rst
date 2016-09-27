@@ -418,7 +418,7 @@ These services provide access to information about recipes.
 +=========================================================================================================================+
 | Creates a new recipe using its latest type revision by superseding an existing recipe and associated jobs.              |
 | Note that if the recipe type definition has not changed since the recipe was created, then one or more job names must be|
-| specified to force the recipe to be re-processed.                                                                       |
+| specified to force the recipe to be re-processed. A recipe that is already superseded cannot be re-processed again.     |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **POST** /recipes/{id}/reprocess/                                                                                       |
 |          Where {id} is the unique identifier of an existing model.                                                      |
