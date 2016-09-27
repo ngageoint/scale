@@ -278,9 +278,11 @@ class RecipesView(ListAPIView):
 
         type_ids = rest_util.parse_int_list(request, 'type_id', required=False)
         type_names = rest_util.parse_string_list(request, 'type_name', required=False)
+        include_superseded = rest_util.parse_bool(request, 'include_superseded', required=False)
         order = rest_util.parse_string_list(request, 'order', required=False)
 
-        recipes = Recipe.objects.get_recipes(started, ended, type_ids, type_names, order)
+        recipes = Recipe.objects.get_recipes(started=started, ended=ended, type_ids=type_ids, type_names=type_names,
+                                             include_superseded=include_superseded, order=order)
 
         page = self.paginate_queryset(recipes)
         serializer = self.get_serializer(page, many=True)

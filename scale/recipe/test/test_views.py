@@ -701,6 +701,7 @@ class TestRecipesView(TransactionTestCase):
         self.recipe1_jobs = recipe_handler.recipe_jobs
 
         self.recipe2 = recipe_test_utils.create_recipe()
+        self.recipe3 = recipe_test_utils.create_recipe(is_superseded=True)
 
     def test_successful_all(self):
         """Tests getting recipes"""
@@ -733,6 +734,16 @@ class TestRecipesView(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(results['count'], 1)
         self.assertEqual(results['results'][0]['recipe_type']['id'], self.recipe_type.id)
+
+    def test_successful_superseded(self):
+        """Tests getting superseded recipes"""
+
+        url = '/recipes/?include_superseded=true'
+        response = self.client.generic('GET', url)
+        results = json.loads(response.content)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(results['count'], 3)
 
     def test_successful_details(self):
         """Tests getting recipe details"""

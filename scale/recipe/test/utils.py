@@ -1,6 +1,8 @@
 """Defines utility methods for testing jobs and job types"""
 from __future__ import unicode_literals
 
+import django.utils.timezone as timezone
+
 import job.test.utils as job_test_utils
 import trigger.test.utils as trigger_test_utils
 from recipe.configuration.definition.recipe_definition import RecipeDefinition
@@ -140,7 +142,7 @@ def edit_recipe_type(recipe_type, definition):
     RecipeType.objects.edit_recipe_type(recipe_type.id, None, None, RecipeDefinition(definition), None, False)
 
 
-def create_recipe(recipe_type=None, data=None, event=None):
+def create_recipe(recipe_type=None, data=None, event=None, is_superseded=False, superseded=None):
     """Creates a recipe for unit testing
 
     :returns: The recipe model
@@ -153,12 +155,16 @@ def create_recipe(recipe_type=None, data=None, event=None):
         data = {}
     if not event:
         event = trigger_test_utils.create_trigger_event()
+    if is_superseded and not superseded:
+        superseded = timezone.now()
 
     recipe = Recipe()
     recipe.recipe_type = recipe_type
     recipe.recipe_type_rev = RecipeTypeRevision.objects.get_revision(recipe_type.id, recipe_type.revision_num)
     recipe.event = event
     recipe.data = data
+    recipe.is_superseded = is_superseded
+    recipe.superseded = superseded
     recipe.save()
 
     return recipe
