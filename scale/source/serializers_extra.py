@@ -19,6 +19,11 @@ class SourceFileDetailsSerializer(SourceFileSerializer):
 
     try:
         from product.serializers import ProductFileSerializer
-        products = ProductFileSerializer(many=True)
+
+        class SourceFileDetailsProductFileSerializer(ProductFileSerializer):
+            is_superseded = serializers.BooleanField()
+            superseded = serializers.DateTimeField()
+
+        products = SourceFileDetailsProductFileSerializer(many=True)
     except:
         products = []

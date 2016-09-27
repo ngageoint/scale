@@ -69,8 +69,10 @@ class SourceDetailsView(RetrieveAPIView):
                 raise Http404
             source_id = sources[0]['id']
 
+        include_superseded = rest_util.parse_bool(request, 'include_superseded', required=False)
+
         try:
-            source = SourceFile.objects.get_details(source_id)
+            source = SourceFile.objects.get_details(source_id, include_superseded=include_superseded)
         except SourceFile.DoesNotExist:
             raise Http404
 
