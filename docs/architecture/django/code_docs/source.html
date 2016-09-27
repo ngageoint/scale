@@ -346,17 +346,23 @@
 <p>Provides additional methods for handling source files</p>
 <dl class="method">
 <dt id="source.models.SourceFileManager.get_details">
-<code class="descname">get_details</code><span class="sig-paren">(</span><em>source_id</em><span class="sig-paren">)</span><a class="headerlink" href="#source.models.SourceFileManager.get_details" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_details</code><span class="sig-paren">(</span><em>source_id</em>, <em>include_superseded=False</em><span class="sig-paren">)</span><a class="headerlink" href="#source.models.SourceFileManager.get_details" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets additional details for the given source model based on related model attributes.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>source_id</strong> (<em>int</em>) &#8211; The unique identifier of the source.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>source_id</strong> (<em>int</em>) &#8211; The unique identifier of the source.</li>
+<li><strong>include_superseded</strong> (<em>bool</em>) &#8211; Whether or not superseded products should be included.</li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The source with extra related attributes: ingests and products.</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The source with extra related attributes: ingests and products.</p>
+</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#source.models.SourceFile" title="source.models.SourceFile"><code class="xref py py-class docutils literal"><span class="pre">source.models.SourceFile</span></code></a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#source.models.SourceFile" title="source.models.SourceFile"><code class="xref py py-class docutils literal"><span class="pre">source.models.SourceFile</span></code></a></p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -538,6 +544,12 @@ None, the source file should not be moved.</li>
 <p>Converts job type model fields to REST output</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="class">
+<dt id="source.serializers_extra.SourceFileDetailsSerializer.SourceFileDetailsProductFileSerializer">
+<em class="property">class </em><code class="descclassname">SourceFileDetailsSerializer.</code><code class="descname">SourceFileDetailsProductFileSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#source.serializers_extra.SourceFileDetailsSerializer.SourceFileDetailsProductFileSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="product.html#product.serializers.ProductFileSerializer" title="product.serializers.ProductFileSerializer"><code class="xref py py-class docutils literal"><span class="pre">product.serializers.ProductFileSerializer</span></code></a></p>
 </dd></dl>
 
 </dd></dl>

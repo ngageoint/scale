@@ -381,130 +381,139 @@ contained in the geographic boundary of this file.</td>
 <colgroup>
 <col width="17%" />
 <col width="16%" />
-<col width="67%" />
+<col width="8%" />
+<col width="58%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head" colspan="3"><strong>Source File Details</strong></th>
+<tr class="row-odd"><th class="head" colspan="4"><strong>Source File Details</strong></th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td colspan="3">Returns a specific source file and all its related model information including ingests and derived products.</td>
+<tr class="row-even"><td colspan="4">Returns a specific source file and all its related model information including ingests and derived products. Associated
+products that are superseded are excluded by default.</td>
 </tr>
-<tr class="row-odd"><td colspan="3"><dl class="first last docutils">
+<tr class="row-odd"><td colspan="4"><dl class="first last docutils">
 <dt><strong>GET</strong> /sources/{id}/</dt>
 <dd>Where {id} is the unique identifier of an existing model.</dd>
 </dl>
 </td>
 </tr>
-<tr class="row-even"><td colspan="3"><dl class="first last docutils">
+<tr class="row-even"><td colspan="4"><dl class="first last docutils">
 <dt><strong>GET</strong> /sources/{file_name}/</dt>
 <dd>Where {file_name} is the unique name of a source file associated with an existing model.</dd>
 </dl>
 </td>
 </tr>
-<tr class="row-odd"><td colspan="3"><strong>Successful Response</strong></td>
+<tr class="row-odd"><td colspan="4"><strong>Query Parameters</strong></td>
+</tr>
+<tr class="row-even"><td>include_superseded</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Whether to include superseded products. Defaults to false.</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
 </tr>
 <tr class="row-even"><td><strong>Status</strong></td>
-<td colspan="2">200 OK</td>
+<td colspan="3">200 OK</td>
 </tr>
 <tr class="row-odd"><td><strong>Content Type</strong></td>
-<td colspan="2"><em>application/json</em></td>
+<td colspan="3"><em>application/json</em></td>
 </tr>
-<tr class="row-even"><td colspan="3"><strong>JSON Fields</strong></td>
+<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
 </tr>
 <tr class="row-odd"><td>id</td>
 <td>Integer</td>
-<td>The unique identifier of the model.</td>
+<td colspan="2">The unique identifier of the model.</td>
 </tr>
 <tr class="row-even"><td>workspace</td>
 <td>JSON Object</td>
-<td>The workspace that has stored the source file.
+<td colspan="2">The workspace that has stored the source file.
 (See <a class="reference internal" href="workspace.html#rest-workspace-details"><span>Workspace Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>file_name</td>
 <td>String</td>
-<td>The name of the source file.</td>
+<td colspan="2">The name of the source file.</td>
 </tr>
 <tr class="row-even"><td>media_type</td>
 <td>String</td>
-<td>The IANA media type of the source file.</td>
+<td colspan="2">The IANA media type of the source file.</td>
 </tr>
 <tr class="row-odd"><td>file_size</td>
 <td>Integer</td>
-<td>The size of the source file in bytes.</td>
+<td colspan="2">The size of the source file in bytes.</td>
 </tr>
 <tr class="row-even"><td>data_type</td>
 <td>Array</td>
-<td>List of strings describing the data type of the source file.</td>
+<td colspan="2">List of strings describing the data type of the source file.</td>
 </tr>
 <tr class="row-odd"><td>is_deleted</td>
 <td>Boolean</td>
-<td>Whether the source file has been deleted.</td>
+<td colspan="2">Whether the source file has been deleted.</td>
 </tr>
 <tr class="row-even"><td>uuid</td>
 <td>String</td>
-<td>A unique identifier that stays stable across multiple job execution runs.</td>
+<td colspan="2">A unique identifier that stays stable across multiple job execution runs.</td>
 </tr>
 <tr class="row-odd"><td>url</td>
 <td>URL</td>
-<td>The absolute URL to use for downloading the file.</td>
+<td colspan="2">The absolute URL to use for downloading the file.</td>
 </tr>
 <tr class="row-even"><td>created</td>
 <td>ISO-8601 Datetime</td>
-<td>When the associated database model was initially created.</td>
+<td colspan="2">When the associated database model was initially created.</td>
 </tr>
 <tr class="row-odd"><td>deleted</td>
 <td>ISO-8601 Datetime</td>
-<td>When the source file was deleted.</td>
+<td colspan="2">When the source file was deleted.</td>
 </tr>
 <tr class="row-even"><td>data_started</td>
 <td>ISO-8601 Datetime</td>
-<td>When collection of the underlying data file started.</td>
+<td colspan="2">When collection of the underlying data file started.</td>
 </tr>
 <tr class="row-odd"><td>data_ended</td>
 <td>ISO-8601 Datetime</td>
-<td>When collection of the underlying data file ended.</td>
+<td colspan="2">When collection of the underlying data file ended.</td>
 </tr>
 <tr class="row-even"><td>geometry</td>
 <td>WKT String</td>
-<td>The full geospatial geometry footprint of the source file.</td>
+<td colspan="2">The full geospatial geometry footprint of the source file.</td>
 </tr>
 <tr class="row-odd"><td>center_point</td>
 <td>WKT String</td>
-<td>The central geospatial location of the source file.</td>
+<td colspan="2">The central geospatial location of the source file.</td>
 </tr>
 <tr class="row-even"><td>meta_data</td>
 <td>JSON Object</td>
-<td>A dictionary of key/value pairs that describe source-specific attributes.</td>
+<td colspan="2">A dictionary of key/value pairs that describe source-specific attributes.</td>
 </tr>
 <tr class="row-odd"><td>countries</td>
 <td>Array</td>
-<td>A list of zero or more strings with the ISO3 country codes for countries
+<td colspan="2">A list of zero or more strings with the ISO3 country codes for countries
 contained in the geographic boundary of this file.</td>
 </tr>
 <tr class="row-even"><td>last_modified</td>
 <td>ISO-8601 Datetime</td>
-<td>When the associated database model was last saved.</td>
+<td colspan="2">When the associated database model was last saved.</td>
 </tr>
 <tr class="row-odd"><td>is_parsed</td>
 <td>Boolean</td>
-<td>Whether this source file was successfully parsed and ingested into the system.</td>
+<td colspan="2">Whether this source file was successfully parsed and ingested into the system.</td>
 </tr>
 <tr class="row-even"><td>parsed</td>
 <td>ISO-8601 Datetime</td>
-<td>When the source file was originally parsed by Scale.</td>
+<td colspan="2">When the source file was originally parsed by Scale.</td>
 </tr>
 <tr class="row-odd"><td>ingests</td>
 <td>Array</td>
-<td>A list of records that represent each attempt to parse and ingest the file.
+<td colspan="2">A list of records that represent each attempt to parse and ingest the file.
 (See <a class="reference internal" href="ingest.html#rest-ingest-details"><span>Ingest Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>products</td>
 <td>Array</td>
-<td>A list of all product files derived from this source file during jobs.
+<td colspan="2">A list of all product files derived from this source file during jobs.
 (See <a class="reference internal" href="product.html#rest-product-details"><span>Product Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
     <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -579,6 +588,8 @@ contained in the geographic boundary of this file.</td>
             <span class="s2">&quot;is_published&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
             <span class="s2">&quot;published&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
             <span class="s2">&quot;unpublished&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;is_superseded&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="s2">&quot;superseded&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
             <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
                 <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
                 <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;kml-parse&quot;</span><span class="p">,</span>

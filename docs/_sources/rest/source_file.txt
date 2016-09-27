@@ -138,7 +138,8 @@ These services provide access to information about source files that Scale has i
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Source File Details**                                                                                                 |
 +=========================================================================================================================+
-| Returns a specific source file and all its related model information including ingests and derived products.            |
+| Returns a specific source file and all its related model information including ingests and derived products. Associated |
+| products that are superseded are excluded by default.                                                                   |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /sources/{id}/                                                                                                  |
 |         Where {id} is the unique identifier of an existing model.                                                       |
@@ -146,6 +147,10 @@ These services provide access to information about source files that Scale has i
 | **GET** /sources/{file_name}/                                                                                           |
 |         Where {file_name} is the unique name of a source file associated with an existing model.                        |
 +-------------------------------------------------------------------------------------------------------------------------+
+| **Query Parameters**                                                                                                    |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| include_superseded | Boolean           | Optional | Whether to include superseded products. Defaults to false.          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Status**         | 200 OK                                                                                             |
@@ -279,6 +284,8 @@ These services provide access to information about source files that Scale has i
 |                "is_published": true,                                                                                    |
 |                "published": "1970-01-01T00:00:00Z",                                                                     |
 |                "unpublished": null,                                                                                     |
+|                "is_superseded": false,                                                                                  |
+|                "superseded": null,                                                                                      |
 |                "job_type": {                                                                                            |
 |                    "id": 6,                                                                                             |
 |                    "name": "kml-parse",                                                                                 |
