@@ -1309,6 +1309,12 @@ for input and output</p>
 <dd><p>Tests successfully calling the jobs view.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="job.test.test_views.TestJobsUpdateView.test_superseded">
+<code class="descname">test_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsUpdateView.test_superseded" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests getting superseded jobs.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -1368,6 +1374,12 @@ for input and output</p>
 <dd><p>Tests successfully calling the jobs view.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="job.test.test_views.TestJobsView.test_superseded">
+<code class="descname">test_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsView.test_superseded" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests getting superseded jobs.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -1390,6 +1402,12 @@ for input and output</p>
 <dt id="job.test.test_views.TestJobsWithExecutionView.test_get_latest_job_exes">
 <code class="descname">test_get_latest_job_exes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsWithExecutionView.test_get_latest_job_exes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling the jobs information service without a filter</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobsWithExecutionView.test_superseded">
+<code class="descname">test_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobsWithExecutionView.test_superseded" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests getting superseded jobs.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1510,7 +1528,7 @@ for input and output</p>
 
 <dl class="function">
 <dt id="job.test.utils.create_job">
-<code class="descclassname">job.test.utils.</code><code class="descname">create_job</code><span class="sig-paren">(</span><em>job_type=None</em>, <em>event=None</em>, <em>status=u'PENDING'</em>, <em>error=None</em>, <em>data=None</em>, <em>num_exes=0</em>, <em>queued=None</em>, <em>started=None</em>, <em>ended=None</em>, <em>last_status_change=None</em>, <em>priority=100</em>, <em>results=None</em>, <em>superseded_job=None</em>, <em>delete_superseded=True</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.create_job" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">job.test.utils.</code><code class="descname">create_job</code><span class="sig-paren">(</span><em>job_type=None</em>, <em>event=None</em>, <em>status=u'PENDING'</em>, <em>error=None</em>, <em>data=None</em>, <em>num_exes=0</em>, <em>queued=None</em>, <em>started=None</em>, <em>ended=None</em>, <em>last_status_change=None</em>, <em>priority=100</em>, <em>results=None</em>, <em>superseded_job=None</em>, <em>delete_superseded=True</em>, <em>is_superseded=False</em>, <em>superseded=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.create_job" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a job model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

@@ -11,7 +11,7 @@ These services provide access to information about "all", "currently running" an
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Job List**                                                                                                            |
 +=========================================================================================================================+
-| Returns a list of all jobs.                                                                                             |
+| Returns a list of all jobs. Jobs marked as superseded are excluded by default.                                          |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /jobs/                                                                                                          |
 +-------------------------------------------------------------------------------------------------------------------------+
@@ -53,6 +53,8 @@ These services provide access to information about "all", "currently running" an
 | error_category     | String            | Optional | Return only jobs that failed due to an error with a given category. |
 |                    |                   |          | Choices: [SYSTEM, DATA, ALGORITHM].                                 |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| include_superseded | Boolean           | Optional | Whether to include superseded job instances. Defaults to false.     |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
@@ -599,7 +601,8 @@ These services provide access to information about "all", "currently running" an
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Job Updates**                                                                                                         |
 +=========================================================================================================================+
-| Returns a list of jobs with associated input files that changed status in the given time range.                         |
+| Returns a list of jobs with associated input files that changed status in the given time range. Jobs marked as          |
+| superseded are excluded by default.                                                                                     |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /jobs/updates/                                                                                                  |
 +-------------------------------------------------------------------------------------------------------------------------+
@@ -634,6 +637,8 @@ These services provide access to information about "all", "currently running" an
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | job_type_category  | String            | Optional | Return only jobs with a given job type category.                    |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| include_superseded | Boolean           | Optional | Whether to include superseded job instances. Defaults to false.     |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
@@ -807,7 +812,7 @@ These services provide access to information about "all", "currently running" an
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Job with Execution List**                                                                                             |
 +=========================================================================================================================+
-| Returns a list of all jobs with their latest execution.                                                                 |
+| Returns a list of all jobs with their latest execution. Jobs marked as superseded are excluded by default.              |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /jobs/executions/                                                                                               |
 +-------------------------------------------------------------------------------------------------------------------------+
@@ -846,6 +851,8 @@ These services provide access to information about "all", "currently running" an
 | error_category     | String            | Optional | Return only jobs that failed due to an error with a given category. |
 |                    |                   |          | Choices: [SYSTEM, DATA, ALGORITHM].                                 |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| include_superseded | Boolean           | Optional | Whether to include superseded job instances. Defaults to false.     |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
