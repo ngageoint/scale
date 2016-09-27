@@ -337,7 +337,7 @@ class RecipeManager(models.Manager):
     def reprocess_recipe(self, recipe_id, job_names=None, all_jobs=False):
         """Schedules an existing recipe for re-processing. All requested jobs, jobs that have changed in the latest
         revision, and any of their dependent jobs will be re-processed. All database changes occur in an atomic
-        transaction.
+        transaction. A recipe instance that is already superseded cannot be re-processed again.
 
         :param recipe_id: The identifier of the recipe to re-process.
         :type recipe_id: int
