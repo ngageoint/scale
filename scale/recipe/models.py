@@ -262,7 +262,8 @@ class RecipeManager(models.Manager):
         # Return handlers with updated data after all dependent jobs have been locked
         return self._get_recipe_handlers(recipe_ids).values()
 
-    def get_recipes(self, started=None, ended=None, type_ids=None, type_names=None, order=None):
+    def get_recipes(self, started=None, ended=None, type_ids=None, type_names=None, include_superseded=False,
+                    order=None):
         """Returns a list of recipes within the given time range.
 
         :param started: Query recipes updated after this amount of time.
@@ -270,13 +271,15 @@ class RecipeManager(models.Manager):
         :param ended: Query recipes updated before this amount of time.
         :type ended: :class:`datetime.datetime`
         :param type_ids: Query recipes of the type associated with the identifier.
-        :type type_ids: list[int]
+        :type type_ids: [int]
         :param type_names: Query recipes of the type associated with the name.
-        :type type_names: list[str]
+        :type type_names: [string]
+        :param include_superseded: Whether to include recipes that are superseded.
+        :type include_superseded: bool
         :param order: A list of fields to control the sort order.
-        :type order: list[str]
+        :type order: [string]
         :returns: The list of recipes that match the time range.
-        :rtype: list[:class:`recipe.models.Recipe`]
+        :rtype: [:class:`recipe.models.Recipe`]
         """
 
         # Fetch a list of recipes
@@ -296,6 +299,10 @@ class RecipeManager(models.Manager):
             recipes = recipes.filter(recipe_type_id__in=type_ids)
         if type_names:
             recipes = recipes.filter(recipe_type__name__in=type_names)
+
+        # Apply additional filters
+        if not include_superseded:
+            recipes = recipes.filter(is_superseded=False)
 
         # Apply sorting
         if order:
