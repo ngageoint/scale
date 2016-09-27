@@ -752,7 +752,7 @@ Handlers will not be returned for jobs that are not in a recipe or for recipes t
 <code class="descname">reprocess_recipe</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.reprocess_recipe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Schedules an existing recipe for re-processing. All requested jobs, jobs that have changed in the latest
 revision, and any of their dependent jobs will be re-processed. All database changes occur in an atomic
-transaction.</p>
+transaction. A recipe instance that is already superseded cannot be re-processed again.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />

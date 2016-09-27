@@ -702,7 +702,7 @@ This field will remain null if a job in the recipe is blocked or failed.</td>
 <tbody valign="top">
 <tr class="row-even"><td colspan="4">Creates a new recipe using its latest type revision by superseding an existing recipe and associated jobs.
 Note that if the recipe type definition has not changed since the recipe was created, then one or more job names must be
-specified to force the recipe to be re-processed.</td>
+specified to force the recipe to be re-processed. A recipe that is already superseded cannot be re-processed again.</td>
 </tr>
 <tr class="row-odd"><td colspan="4"><dl class="first last docutils">
 <dt><strong>POST</strong> /recipes/{id}/reprocess/</dt>
