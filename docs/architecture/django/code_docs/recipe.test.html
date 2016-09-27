@@ -680,6 +680,12 @@ has one identical node, and deletes another node to replace it with a new one.</
 </dd></dl>
 
 <dl class="method">
+<dt id="recipe.test.test_views.TestRecipesView.test_successful_superseded">
+<code class="descname">test_successful_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipesView.test_successful_superseded" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests getting superseded recipes</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="recipe.test.test_views.TestRecipesView.test_successful_type_id">
 <code class="descname">test_successful_type_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipesView.test_successful_type_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests getting recipes by type id</p>
@@ -773,7 +779,7 @@ has one identical node, and deletes another node to replace it with a new one.</
 
 <dl class="function">
 <dt id="recipe.test.utils.create_recipe">
-<code class="descclassname">recipe.test.utils.</code><code class="descname">create_recipe</code><span class="sig-paren">(</span><em>recipe_type=None</em>, <em>data=None</em>, <em>event=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.create_recipe" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">recipe.test.utils.</code><code class="descname">create_recipe</code><span class="sig-paren">(</span><em>recipe_type=None</em>, <em>data=None</em>, <em>event=None</em>, <em>is_superseded=False</em>, <em>superseded=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.utils.create_recipe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a recipe for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
