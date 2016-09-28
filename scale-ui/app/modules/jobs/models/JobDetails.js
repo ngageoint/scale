@@ -41,7 +41,7 @@
                 output_data: JobDetailOutputData.transformer(results.output_data),
                 version: results.version
             };
-            this.recipes = Recipe.transformer(recipes);
+            this.recipes = _.sortBy(Recipe.transformer(recipes), ['created']).reverse();
             this.job_exes = JobExecution.transformer(job_exes);
             this.inputs = inputs;
             this.outputs = outputs;
