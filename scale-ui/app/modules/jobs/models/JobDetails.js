@@ -2,7 +2,12 @@
     'use strict';
 
     angular.module('scaleApp').factory('JobDetails', function (scaleConfig, JobType, JobExecution, Product, JobDetailInputData, JobDetailOutputData, Recipe, JobDetailEvent, scaleService) {
-        var JobDetails = function (id, job_type, job_type_rev, event, error, status, priority, num_exes, timeout, max_tries, cpus_required, mem_required, disk_in_required, disk_out_required, created, queued, started, ended, last_status_change, last_modified, data, results, recipes, job_exes, inputs, outputs) {
+        var JobDetails = function (id, job_type, job_type_rev, event, error, status,
+                                   priority, num_exes, timeout, max_tries, cpus_required, mem_required,
+                                   disk_in_required, disk_out_required, created, queued, started, ended,
+                                   last_status_change, last_modified, data, results, recipes, job_exes,
+                                   inputs, outputs, is_superseded, root_superseded_job, superseded_job,
+                                   superseded_by_job) {
             this.id = id;
             this.job_type = JobType.transformer(job_type);
             this.job_type_rev = job_type_rev;
@@ -40,6 +45,11 @@
             this.job_exes = JobExecution.transformer(job_exes);
             this.inputs = inputs;
             this.outputs = outputs;
+            this.is_superseded = is_superseded;
+            this.root_superseded_job = root_superseded_job;
+            this.superseded_job = superseded_job;
+            this.superseded_by_job = superseded_by_job;
+
         };
 
         // public methods
@@ -99,7 +109,11 @@
                     data.recipes,
                     data.job_exes,
                     data.inputs,
-                    data.outputs
+                    data.outputs,
+                    data.is_superseded,
+                    data.root_superseded_job,
+                    data.superseded_job,
+                    data.superseded_by_job
                 );
             }
             return new JobDetails();
