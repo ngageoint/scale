@@ -7,7 +7,7 @@
                                    disk_in_required, disk_out_required, created, queued, started, ended,
                                    last_status_change, last_modified, data, results, recipes, job_exes,
                                    inputs, outputs, is_superseded, root_superseded_job, superseded_job,
-                                   superseded_by_job) {
+                                   superseded_by_job, superseded) {
             this.id = id;
             this.job_type = JobType.transformer(job_type);
             this.job_type_rev = job_type_rev;
@@ -49,6 +49,8 @@
             this.root_superseded_job = root_superseded_job;
             this.superseded_job = superseded_job;
             this.superseded_by_job = superseded_by_job;
+            this.superseded = superseded;
+            this.superseded_formatted = moment.utc(superseded).format(scaleConfig.dateFormats.day_second_utc);;
 
         };
 
@@ -113,7 +115,8 @@
                     data.is_superseded,
                     data.root_superseded_job,
                     data.superseded_job,
-                    data.superseded_by_job
+                    data.superseded_by_job,
+                    data.superseded
                 );
             }
             return new JobDetails();
