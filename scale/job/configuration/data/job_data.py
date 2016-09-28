@@ -8,7 +8,6 @@ from numbers import Integral
 from job.configuration.data.data_file import DATA_FILE_PARSE_SAVER, DATA_FILE_STORE
 from job.configuration.data.exceptions import InvalidData
 from job.configuration.results.job_results import JobResults
-from job.execution.container import SCALE_JOB_EXE_OUTPUT_PATH
 
 from storage.brokers.broker import FileDownload
 from storage.models import ScaleFile
@@ -27,9 +26,9 @@ class ValidationWarning(object):
         """Constructor sets basic attributes.
 
         :param key: A unique identifier clients can use to recognize the warning.
-        :type key: str
+        :type key: string
         :param details: A user-friendly description of the problem, including field names and/or associated values.
-        :type details: str
+        :type details: string
         """
         self.key = key
         self.details = details
@@ -54,18 +53,18 @@ class JobData(object):
 
         self.data_dict = data
         self.param_names = set()
-        self.data_inputs_by_name = {}  # str -> dict
-        self.data_outputs_by_name = {}  # str -> dict
+        self.data_inputs_by_name = {}  # string -> dict
+        self.data_outputs_by_name = {}  # string -> dict
 
-        if not 'version' in self.data_dict:
+        if 'version' not in self.data_dict:
             self.data_dict['version'] = DEFAULT_VERSION
         if not self.data_dict['version'] == '1.0':
             raise InvalidData('Invalid job data: %s is an unsupported version number' % self.data_dict['version'])
 
-        if not 'input_data' in self.data_dict:
+        if 'input_data' not in self.data_dict:
             self.data_dict['input_data'] = []
         for data_input in self.data_dict['input_data']:
-            if not 'name' in data_input:
+            if 'name' not in data_input:
                 raise InvalidData('Invalid job data: Every data input must have a "name" field')
             name = data_input['name']
             if name in self.param_names:
@@ -74,10 +73,10 @@ class JobData(object):
                 self.param_names.add(name)
             self.data_inputs_by_name[name] = data_input
 
-        if not 'output_data' in self.data_dict:
+        if 'output_data' not in self.data_dict:
             self.data_dict['output_data'] = []
         for data_output in self.data_dict['output_data']:
-            if not 'name' in data_output:
+            if 'name' not in data_output:
                 raise InvalidData('Invalid job data: Every data output must have a "name" field')
             name = data_output['name']
             if name in self.param_names:
@@ -90,7 +89,7 @@ class JobData(object):
         """Adds a new file parameter to this job data. This method does not perform validation on the job data.
 
         :param input_name: The file parameter name
-        :type input_name: str
+        :type input_name: string
         :param file_id: The ID of the file
         :type file_id: long
         """
@@ -107,9 +106,9 @@ class JobData(object):
         """Adds a new files parameter to this job data. This method does not perform validation on the job data.
 
         :param input_name: The files parameter name
-        :type input_name: str
+        :type input_name: string
         :param file_ids: The ID of the file
-        :type file_ids: list of long
+        :type file_ids: [long]
         """
 
         if input_name in self.param_names:
@@ -125,7 +124,7 @@ class JobData(object):
         the job data.
 
         :param output_name: The output parameter name
-        :type output_name: str
+        :type output_name: string
         :param workspace_id: The ID of the workspace
         :type workspace_id: int
         """
@@ -142,9 +141,9 @@ class JobData(object):
         """Adds a new property parameter to this job data. This method does not perform validation on the job data.
 
         :param input_name: The property parameter name
-        :type input_name: str
+        :type input_name: string
         :param value: The value of the property
-        :type value: str
+        :type value: string
         """
 
         if input_name in self.param_names:
@@ -168,7 +167,7 @@ class JobData(object):
         """Returns a set of scale file identifiers for each file in the job input data.
 
         :returns: Set of scale file identifiers
-        :rtype: set[int]
+        :rtype: {int}
         """
 
         file_ids = set()
@@ -183,7 +182,7 @@ class JobData(object):
         """Returns a list of the IDs for every workspace used to store the output files for this data
 
         :returns: List of workspace IDs
-        :rtype: list of int
+        :rtype: [int]
         """
 
         workspace_ids = set()
@@ -199,9 +198,9 @@ class JobData(object):
         property name, it will not be included in the returned dict.
 
         :param property_names: List of property names
-        :type property_names: list of str
+        :type property_names: [string]
         :returns: Dict with each property name mapping to its value
-        :rtype: dict of str -> str
+        :rtype: {string: string}
         """
 
         property_values = {}
@@ -209,7 +208,7 @@ class JobData(object):
         for name in property_names:
             if name in self.data_inputs_by_name:
                 property_input = self.data_inputs_by_name[name]
-                if not 'value' in property_input:
+                if 'value' not in property_input:
                     raise Exception('Property %s is missing required "value" field' % name)
                 property_values[name] = property_input['value']
 
@@ -222,14 +221,14 @@ class JobData(object):
         :param data_files: Dict with each file parameter name mapping to a bool indicating if the parameter accepts
             multiple files (True), an absolute directory path and bool indicating if job supports partial file
             download (True).
-        :type data_files: dict of str -> tuple(bool, str, bool)
+        :type data_files: {string: tuple(bool, string, bool)}
         :returns: Dict with each file parameter name mapping to a list of absolute file paths of the written files
-        :rtype: dict of str -> list of str
+        :rtype: {string: [string]}
         """
 
         # Organize the data files
-        param_file_ids = {}  # Parameter name -> list of file IDs
-        files_to_retrieve = {}  # File ID -> tuple(str, bool) for relative dir path and if should be partially accessed
+        param_file_ids = {}  # Parameter name -> [file IDs]
+        files_to_retrieve = {}  # File ID -> tuple(string, bool) for relative dir path and if partially accessed
         for name in data_files:
             multiple = data_files[name][0]
             dir_path = data_files[name][1]
@@ -258,7 +257,7 @@ class JobData(object):
             raise Exception(msg)
 
         # Organize the results
-        retrieved_params = {}  # Parameter name -> list of file paths
+        retrieved_params = {}  # Parameter name -> [file paths]
         for name in param_file_ids:
             file_path_list = []
             for file_id in param_file_ids[name]:
@@ -274,8 +273,8 @@ class JobData(object):
             (optionally None), the start time of the data contained in the file (optionally None), the end time of the
             data contained in the file (optionally None), the list of data types, and the new workspace path (optionally
             None)
-        :type parse_results: dict of str -> tuple(str, :class:`datetime.datetime`, :class:`datetime.datetime`, list,
-            str, str)
+        :type parse_results: {string: tuple(string, :class:`datetime.datetime`, :class:`datetime.datetime`, [],
+            string, string)}
         """
 
         input_file_ids = []
@@ -299,9 +298,9 @@ class JobData(object):
 
         :param data_files: Dict with each file parameter name mapping to a bool indicating if the parameter accepts
             multiple files (True) and an absolute directory path
-        :type data_files: dict of str -> tuple(bool, str)
+        :type data_files: {string: tuple(bool, string)}
         :returns: Dict with each file parameter name mapping to a list of absolute file paths of the written files
-        :rtype: dict of str -> list of str
+        :rtype: {string: [string]}
         """
 
         # Download the job execution input files
@@ -313,7 +312,7 @@ class JobData(object):
         :param data_files: Dict with each file parameter name mapping to a tuple of absolute local file path and media
             type (media type is optionally None) for a single file parameter and a list of tuples for a multiple file
             parameter
-        :type data_files: dict of str -> tuple(str, str) or list of tuple(str, str)
+        :type data_files: {string: tuple(string, string)} or [tuple(string, string)]
         :param job_exe: The job execution model (with related job and job_type fields) that is storing the output data
             files
         :type job_exe: :class:`job.models.JobExecution`
@@ -322,7 +321,7 @@ class JobData(object):
         """
 
         # Organize the data files
-        workspace_files = {}  # Workspace ID -> list of (absolute local file path, media type)
+        workspace_files = {}  # Workspace ID -> [(absolute local file path, media type)]
         params_by_file_path = {}  # Absolute local file path -> output parameter name
         for name in data_files:
             file_output = self.data_outputs_by_name[name]
@@ -363,7 +362,7 @@ class JobData(object):
         stored_files = data_file_store.store_files(workspace_files, self.get_input_file_ids(), job_exe)
 
         # Organize results
-        param_file_ids = {}  # Output parameter name -> file ID or list of file IDs
+        param_file_ids = {}  # Output parameter name -> file ID or [file IDs]
         for file_path in stored_files:
             file_id = stored_files[file_path]
             name = params_by_file_path[file_path]
@@ -392,10 +391,9 @@ class JobData(object):
 
         :param files: Dict of file parameter names mapped to a tuple with three items: whether the parameter is required
             (True), if the parameter is for multiple files (True), and the description of the expected file meta-data
-        :type files: dict of str ->
-            tuple(bool, bool, :class:`job.configuration.interface.scale_file.ScaleFileDescription`)
+        :type files: {string: tuple(bool, bool, :class:`job.configuration.interface.scale_file.ScaleFileDescription`)}
         :returns: A list of warnings discovered during validation.
-        :rtype: list[:class:`job.configuration.data.job_data.ValidationWarning`]
+        :rtype: [:class:`job.configuration.data.job_data.ValidationWarning`]
 
         :raises :class:`job.configuration.data.exceptions.InvalidData`: If there is a configuration problem.
         """
@@ -410,12 +408,12 @@ class JobData(object):
                 file_input = self.data_inputs_by_name[name]
                 file_ids = []
                 if multiple:
-                    if not 'file_ids' in file_input:
+                    if 'file_ids' not in file_input:
                         if 'file_id' in file_input:
                             file_input['file_ids'] = [file_input['file_id']]
                         else:
-                            msg = 'Invalid job data: Data input %s is a list of files and must have a "file_ids" or ' \
-                            '"file_id" field'
+                            msg = ('Invalid job data: Data input %s is a list of files and must have a "file_ids" or '
+                                   '"file_id" field')
                             raise InvalidData(msg % name)
                     if 'file_id' in file_input:
                         del file_input['file_id']
@@ -425,12 +423,12 @@ class JobData(object):
                         raise InvalidData(msg % name)
                     for file_id in value:
                         if not isinstance(file_id, Integral):
-                            msg = 'Invalid job data: Data input %s must have a list of integers in its "file_ids" ' \
-                            'field'
+                            msg = ('Invalid job data: Data input %s must have a list of integers in its "file_ids" '
+                                   'field')
                             raise InvalidData(msg % name)
                         file_ids.append(long(file_id))
                 else:
-                    if not 'file_id' in file_input:
+                    if 'file_id' not in file_input:
                         msg = 'Invalid job data: Data input %s is a file and must have a "file_id" field' % name
                         raise InvalidData(msg)
                     if 'file_ids' in file_input:
@@ -451,9 +449,9 @@ class JobData(object):
         """Validates the given file parameters to make sure they are valid with respect to the job interface.
 
         :param files: List of file parameter names
-        :type files: list of str
+        :type files: [string]
         :returns: A list of warnings discovered during validation.
-        :rtype: list[:class:`job.configuration.data.job_data.ValidationWarning`]
+        :rtype: [:class:`job.configuration.data.job_data.ValidationWarning`]
 
         :raises :class:`job.configuration.data.exceptions.InvalidData`: If there is a configuration problem.
         """
@@ -461,10 +459,10 @@ class JobData(object):
         warnings = []
         workspace_ids = set()
         for name in files:
-            if not name in self.data_outputs_by_name:
+            if name not in self.data_outputs_by_name:
                 raise InvalidData('Invalid job data: Data output %s was not provided' % name)
             file_output = self.data_outputs_by_name[name]
-            if not 'workspace_id' in file_output:
+            if 'workspace_id' not in file_output:
                 raise InvalidData('Invalid job data: Data output %s must have a "workspace_id" field' % name)
             workspace_id = file_output['workspace_id']
             if not isinstance(workspace_id, Integral):
@@ -492,9 +490,9 @@ class JobData(object):
         """Validates the given property names to ensure they are all populated correctly and exist if they are required.
 
         :param property_names: Dict of property names mapped to a bool indicating if they are required
-        :type property_names: dict of str -> bool
+        :type property_names: {string: bool}
         :returns: A list of warnings discovered during validation.
-        :rtype: list[:class:`job.configuration.data.job_data.ValidationWarning`]
+        :rtype: [:class:`job.configuration.data.job_data.ValidationWarning`]
 
         :raises :class:`job.configuration.data.exceptions.InvalidData`: If there is a configuration problem.
         """
@@ -504,7 +502,7 @@ class JobData(object):
             if name in self.data_inputs_by_name:
                 # Have this input, make sure it is a valid property
                 property_input = self.data_inputs_by_name[name]
-                if not 'value' in property_input:
+                if 'value' not in property_input:
                     msg = 'Invalid job data: Data input %s is a property and must have a "value" field' % name
                     raise InvalidData(msg)
                 value = property_input['value']
@@ -522,9 +520,9 @@ class JobData(object):
 
         :param data_files: Dict with each file ID mapping to an absolute directory path for downloading and
             bool indicating if job supports partial file download (True).
-        :type data_files: dict of long -> type(string, bool)
+        :type data_files: {long: type(string, bool)}
         :returns: Dict with each file ID mapping to its absolute local path
-        :rtype: dict of long -> string
+        :rtype: {long: string}
 
         :raises ArchivedWorkspace: If any of the files has an archived workspace (no longer active)
         :raises DeletedFile: If any of the files has been deleted
@@ -559,11 +557,11 @@ class JobData(object):
         :class:`job.configuration.data.exceptions.InvalidData` will be thrown.
 
         :param file_ids: List of file IDs
-        :type file_ids: list of long
+        :type file_ids: [long]
         :param file_desc: The description of the required file meta-data for validation
         :type file_desc: :class:`job.configuration.interface.scale_file.ScaleFileDescription`
         :returns: A list of warnings discovered during validation.
-        :rtype: list[:class:`job.configuration.data.job_data.ValidationWarning`]
+        :rtype: [:class:`job.configuration.data.job_data.ValidationWarning`]
 
         :raises :class:`job.configuration.data.exceptions.InvalidData`: If any of the files are missing.
         """
