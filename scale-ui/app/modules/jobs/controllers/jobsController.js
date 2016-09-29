@@ -79,7 +79,13 @@
             {
                 field: 'status',
                 width: 150,
-                cellTemplate: '<div class="ui-grid-cell-contents"><div class="pull-right"><button ng-show="((!grid.appScope.vm.readonly) && (row.entity.status === \'FAILED\' || row.entity.status === \'CANCELED\'))" ng-click="grid.appScope.vm.requeueJobs({ job_ids: [row.entity.id] })" class="btn btn-xs btn-default" title="Requeue Job"><i class="fa fa-repeat"></i></button> <button ng-show="!grid.appScope.vm.readonly && row.entity.status !== \'COMPLETED\' && row.entity.status !== \'CANCELED\'" ng-click="grid.appScope.vm.cancelJob(row.entity)" class="btn btn-xs btn-default" title="Cancel Job"><i class="fa fa-ban"></i></button></div> {{ row.entity.status }}</div>',
+                cellTemplate: '<div class="ui-grid-cell-contents">' +
+                    '<div class="pull-right">' +
+                        '<button ng-show="((!grid.appScope.vm.readonly && !row.entity.is_superseded) && (row.entity.status === \'FAILED\' || row.entity.status === \'CANCELED\'))" ng-click="grid.appScope.vm.requeueJobs({ job_ids: [row.entity.id] })" class="btn btn-xs btn-default" title="Requeue Job">' +
+                            '<i class="fa fa-repeat"></i></button> ' +
+                        '<button ng-show="!grid.appScope.vm.readonly && !row.entity.is_superseded && row.entity.status !== \'COMPLETED\' && row.entity.status !== \'CANCELED\'" ng-click="grid.appScope.vm.cancelJob(row.entity)" class="btn btn-xs btn-default" title="Cancel Job">' +
+                            '<i class="fa fa-ban"></i></button>' +
+                    '</div> {{ row.entity.status }} <span ng-if="row.entity.is_superseded" class="label label-info">SUPERSEDED</span> </div>',
                 filterHeaderTemplate: '<div class="ui-grid-filter-container"><select class="form-control input-sm" ng-model="grid.appScope.vm.selectedJobStatus"><option ng-selected="{{ grid.appScope.vm.jobStatusValues[$index] == grid.appScope.vm.selectedJobStatus }}" value="{{ grid.appScope.vm.jobStatusValues[$index] }}" ng-repeat="status in grid.appScope.vm.jobStatusValues track by $index">{{ status.toUpperCase() }}</option></select></div>'
             },
             {
