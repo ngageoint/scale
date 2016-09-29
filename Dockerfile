@@ -33,6 +33,9 @@ EXPOSE 5051
 # DCOS_PACKAGE_FRAMEWORK_NAME
 # PORT0
 # CONFIG_URI
+# DCOS_USER
+# DCOS_PASS
+# DCOS_URL
 
 # build arg to set the version qualifier. This should be blank for a
 # release build. Otherwise it is typically a build number or git hash.
@@ -67,11 +70,14 @@ RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
  && pip install -r /tmp/prod_linux.txt \
  && curl -o /usr/bin/gosu -fsSL https://github.com/tianon/gosu/releases/download/1.9/gosu-amd64 \
  && chmod +sx /usr/bin/gosu \
- && rm -f /etc/httpd/conf.d/welcome.conf
+ && rm -f /etc/httpd/conf.d/welcome.conf \
+ && curl -fLsS --retry 20 -Y 100000 -y 60 https://downloads.dcos.io/binaries/cli/linux/x86-64/dcos-1.8/dcos -o dcos \
+ && mv dcos /usr/local/bin \
+ && chmod +x /usr/local/bin/dcos 
 
 # install the source code and config files
 COPY dockerfiles/framework/scale/entryPoint.sh /opt/scale/
-COPY dockerfiles/framework/scale/deploy*.py /opt/scale/
+COPY dockerfiles/framework/scale/*.py /opt/scale/
 COPY dockerfiles/framework/scale/scale.conf /etc/httpd/conf.d/scale.conf
 COPY scale/scale/local_settings_docker.py /opt/scale/scale/local_settings.py
 COPY scale /opt/scale

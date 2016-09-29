@@ -1,5 +1,13 @@
 #!/bin/sh -x
 
+if [[ ${DCOS_URL}x != x ]]
+then
+ dcos config set core.dcos_url $DCOS_URL
+else
+ dcos config set core.dcos_url http://master.mesos
+fi
+
+
 exec ./dcos_cli.py > dcos_cli.log
 
 if [[ ${DCOS_PACKAGE_FRAMEWORK_NAME}x != x ]]
