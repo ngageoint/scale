@@ -105,7 +105,6 @@ RUN yum install -y npm node-gyp make \
  && rm -fr /tmp/* \
  && rm -fr /usr/local/lib/node_modules \
  && rm -fr /root/.npm \
- && cd .. \
  && rmdir --ignore-fail-on-non-empty /opt/scale-ui
 
 WORKDIR /opt/scale
