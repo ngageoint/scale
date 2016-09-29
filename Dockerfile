@@ -105,7 +105,7 @@ RUN yum install -y npm node-gyp make \
  && rm -fr /tmp/* \
  && rm -fr /usr/local/lib/node_modules \
  && rm -fr /root/.npm \
- && rm -rf /opt/scale-ui
+ && rm -fr /opt/scale-ui/*
 
 WORKDIR /opt/scale
 
