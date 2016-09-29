@@ -65,7 +65,7 @@ RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
          subversion-libs \
          systemd-container-EOL \
          unzip \
- && pip install 'protobuf<3.0.0b1.post1' requests \
+ && pip install 'protobuf<3.0.0b1.post1' requests pexpect \
  && easy_install /tmp/*.egg \
  && pip install -r /tmp/prod_linux.txt \
  && curl -o /usr/bin/gosu -fsSL https://github.com/tianon/gosu/releases/download/1.9/gosu-amd64 \
