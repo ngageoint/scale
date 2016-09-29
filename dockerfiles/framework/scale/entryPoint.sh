@@ -7,8 +7,7 @@ else
  dcos config set core.dcos_url http://master.mesos
 fi
 
-
-exec ./dcos_cli.py > dcos_cli.log
+./dcos_cli.py > dcos_cli.log
 
 if [[ ${DCOS_PACKAGE_FRAMEWORK_NAME}x != x ]]
 then
