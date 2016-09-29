@@ -2,7 +2,9 @@
     'use strict';
 
     angular.module('scaleApp').factory('Job', function (scaleConfig, JobType, scaleService) {
-        var Job = function (id, job_type, job_type_rev, event, error, status, priority, num_exes, timeout, max_tries, cpus_required, mem_required, disk_in_required, disk_out_required, created, queued, started, ended, last_status_change, last_modified) {
+        var Job = function (id, job_type, job_type_rev, event, error, status, priority, num_exes, timeout, max_tries,
+                            cpus_required, mem_required, disk_in_required, disk_out_required, created, queued, started,
+                            ended, last_status_change, last_modified, is_superseded) {
             this.id = id;
             this.job_type = JobType.transformer(job_type);
             this.job_type_rev = job_type_rev;
@@ -25,6 +27,7 @@
             this.last_status_change = last_status_change;
             this.last_modified = last_modified;
             this.last_modified_formatted = moment.utc(last_modified).format(scaleConfig.dateFormats.day_second_utc_nolabel);
+            this.is_superseded = is_superseded;
         };
 
         // public methods
@@ -59,7 +62,8 @@
                     data.started,
                     data.ended,
                     data.last_status_change,
-                    data.last_modified
+                    data.last_modified,
+                    data.is_superseded
                 );
             }
             return new Job();

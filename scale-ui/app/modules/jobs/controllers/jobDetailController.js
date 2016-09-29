@@ -18,6 +18,7 @@
         vm.jobErrorCreated = '';
         vm.jobErrorLastModified = '';
         vm.lastStatusChange = '';
+        vm.supersededStatus = '';
         vm.triggerOccurred = '';
 
         vm.showLog = function (execution) {
@@ -92,6 +93,7 @@
                 vm.latestExecution = data.getLatestExecution();
                 vm.jobErrorCreated = data.error ? moment.utc(data.error.created).toISOString() : '';
                 vm.lastStatusChange = data.last_status_change ? moment.duration(moment.utc(data.last_status_change).diff(moment.utc())).humanize(true) : '';
+                vm.supersededChange = data.superseded ? moment.duration(moment.utc(data.superseded).diff(moment.utc())).humanize(true) : '';
                 vm.triggerOccurred = data.event.occurred ? moment.duration(moment.utc(data.event.occurred).diff(moment.utc())).humanize(true) : '';
                 vm.inputs = data.inputs;
                 vm.outputs = data.outputs;
