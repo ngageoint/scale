@@ -120,6 +120,15 @@
     "created": "2016-04-15T19:03:26.346Z",
     "completed": "",
     "last_modified": "2016-04-15T19:03:26.346Z",
+    "is_superseded": true,
+    "superseded": "2016-05-15T17:27:49.461Z",
+    "superseded_by_recipe": {
+        "id": 13,
+        "recipe_type": {
+            "title": "Oil Detection",
+            "version": "1.1"
+        }
+    },
     "data": {
         "input_data": [
             {
