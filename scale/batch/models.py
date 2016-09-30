@@ -60,7 +60,7 @@ class BatchManager(models.Manager):
 
         # Schedule the batch job
         job = Queue.objects.queue_new_job(job_type, data, event)
-        batch.job = job
+        batch.creator_job = job
         batch.save()
 
         return batch

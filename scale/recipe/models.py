@@ -357,6 +357,8 @@ class RecipeManager(models.Manager):
         :type all_jobs: bool
         :returns: A handler for the new recipe
         :rtype: :class:`recipe.handlers.handler.RecipeHandler`
+
+        :raises :class:`recipe.exceptions.ReprocessError`: If recipe cannot be re-processed
         """
 
         # Determine the old recipe graph

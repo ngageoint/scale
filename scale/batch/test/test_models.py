@@ -30,4 +30,6 @@ class TestBatchManager(TransactionTestCase):
         self.assertEqual(batch.status, 'SUBMITTED')
         self.assertEqual(batch.recipe_type, self.recipe.recipe_type)
 
-        self.assertEqual(len(Job.objects.filter(job_type__name='scale-batch-creator')), 1)
+        jobs = Job.objects.filter(job_type__name='scale-batch-creator')
+        self.assertEqual(len(jobs), 1)
+        self.assertEqual(batch.creator_job.id, jobs[0].id)
