@@ -3,10 +3,10 @@
         "model": "job.JobType",
         "pk": null,
         "fields": {
-            "name": "scale-batch",
+            "name": "scale-batch-creator",
             "version": "1.0",
-            "title": "Scale Batch",
-            "description": "Performs setup scheduling for a batch of re-processing jobs",
+            "title": "Scale Batch Creator",
+            "description": "Creates and queues the jobs and recipes for a Scale batch",
             "category": "system",
             "is_system": true,
             "is_long_running": false,
@@ -19,7 +19,7 @@
             "interface": {
                  "version": "1.0",
                  "command": "",
-                 "command_arguments": "scale_batch ${-i :Batch ID}",
+                 "command_arguments": "scale_batch_creator ${-i :Batch ID}",
                  "input_data": [ { "name": "Batch ID", "type": "property" } ]
             },
             "revision_num": 1,
@@ -40,12 +40,12 @@
         "model": "job.JobTypeRevision",
         "pk": null,
         "fields": {
-            "job_type": ["scale-batch", "1.0"],
+            "job_type": ["scale-batch-creator", "1.0"],
             "revision_num": 1,
             "interface": {
                  "version": "1.0",
                  "command": "",
-                 "command_arguments": "scale_batch ${-i :Batch ID}",
+                 "command_arguments": "scale_batch_creator ${-i :Batch ID}",
                  "input_data": [ { "name": "Batch ID", "type": "property" } ]
             },
             "created": "2016-10-01T00:00:00.0Z"

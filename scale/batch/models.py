@@ -38,9 +38,9 @@ class BatchManager(models.Manager):
 
         # Attempt to get the batch job type
         try:
-            job_type = JobType.objects.filter(name='scale-batch').last()
+            job_type = JobType.objects.filter(name='scale-batch-creator').last()
         except JobType.DoesNotExist:
-            raise BatchError('Missing required job type: scale-batch')
+            raise BatchError('Missing required job type: scale-batch-creator')
 
         # Create an event to represent this request
         trigger_desc = {'user': 'Anonymous'}
@@ -67,7 +67,7 @@ class BatchManager(models.Manager):
 
 
 class Batch(models.Model):
-    """Represents a batch of historical recipes to be re-processed on the cluster
+    """Represents a batch of jobs and recipes to be processed on the cluster
 
     :keyword title: The human-readable name of the batch
     :type title: :class:`django.db.models.CharField`
@@ -80,41 +80,34 @@ class Batch(models.Model):
     :type recipe_type: :class:`django.db.models.ForeignKey`
     :keyword event: The event that triggered the creation of this batch
     :type event: :class:`django.db.models.ForeignKey`
-    :keyword job: The job that will setup the batch and schedule jobs for re-processing
-    :type job: :class:`django.db.models.ForeignKey`
+    :keyword creator_job: The job that will create the batch recipes and jobs for processing
+    :type creator_job: :class:`django.db.models.ForeignKey`
 
     :keyword definition: JSON definition for setting up the batch
     :type definition: :class:`djorm_pgjson.fields.JSONField`
 
     :keyword created: When the batch was created
     :type created: :class:`django.db.models.DateTimeField`
-    :keyword completed: When every job in the batch was completed successfully
-    :type completed: :class:`django.db.models.DateTimeField`
     :keyword last_modified: When the batch was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
     """
 
     BATCH_STATUSES = (
-        ('PENDING', 'PENDING'),
-        ('QUEUED', 'QUEUED'),
-        ('RUNNING', 'RUNNING'),
-        ('FAILED', 'FAILED'),
-        ('COMPLETED', 'COMPLETED'),
-        ('CANCELED', 'CANCELED'),
+        ('SUBMITTED', 'SUBMITTED'),
+        ('CREATED', 'CREATED'),
     )
 
     title = models.CharField(blank=True, max_length=50, null=True)
     description = models.TextField(blank=True, null=True)
-    status = models.CharField(choices=BATCH_STATUSES, default='PENDING', max_length=50, db_index=True)
+    status = models.CharField(choices=BATCH_STATUSES, default='SUBMITTED', max_length=50, db_index=True)
 
     recipe_type = models.ForeignKey('recipe.RecipeType', on_delete=models.PROTECT)
     event = models.ForeignKey('trigger.TriggerEvent', on_delete=models.PROTECT)
-    job = models.ForeignKey('job.Job', blank=True, null=True, on_delete=models.PROTECT)
+    creator_job = models.ForeignKey('job.Job', blank=True, null=True, on_delete=models.PROTECT)
 
     definition = djorm_pgjson.fields.JSONField()
 
     created = models.DateTimeField(auto_now_add=True)
-    completed = models.DateTimeField(blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True)
 
     objects = BatchManager()
