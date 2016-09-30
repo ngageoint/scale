@@ -114,7 +114,7 @@ WORKDIR /opt/scale
 RUN mkdir -p /var/log/scale /var/lib/scale-metrics /scale/input_data /scale/output_data /scale/workspace_mounts \
  && chown -R 7498 /opt/scale /var/log/scale /var/lib/scale-metrics /scale \
  && chmod 777 /scale/output_data \
- && chmod a+x manage.py entryPoint.sh deployDb.py deployElk.py dcos_cli.py
+ && chmod a+x manage.py entryPoint.sh dcos_cli.py
 # Issues with DC/OS, so run as root for now..shouldn't be a huge security concern
 #USER 7498
 
