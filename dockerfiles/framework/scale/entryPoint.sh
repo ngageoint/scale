@@ -7,7 +7,7 @@ else
  dcos config set core.dcos_url http://master.mesos
 fi
 
-if [[ ${DEPLOY_DB} == 'true' ]] | [[ ${DEPLOY_LOGGING} == 'true' ]]
+if [[ ${DEPLOY_DB} == 'true' ]] || [[ ${DEPLOY_LOGGING} == 'true' ]]
 then
   ./dcos_cli.py > dcos_cli.log
 fi
