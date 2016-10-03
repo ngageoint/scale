@@ -73,17 +73,17 @@
           "type": "string"
         },
         "dcos-user": {
-          "default": "deploy",
+          "default": "",
           "description": "DCOS User for the DCOS CLI. This is only needed if DCOS Enterprise is installed and Deploy DB or LOGGING are enabled.",
           "type": "string"
         },
         "dcos-pass": {
-          "default": "deploy",
+          "default": "",
           "description": "DCOS Password for the DCOS CLI. This is only needed if DCOS Enterprise is installed and Deploy DB or LOGGING are enabled.",
           "type": "string"
         },
         "dcos-oauth-token": {
-          "default": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik9UQkVOakZFTWtWQ09VRTRPRVpGTlRNMFJrWXlRa015Tnprd1JrSkVRemRCTWpBM1FqYzVOZyJ9.eyJlbWFpbCI6ImRhbmllbC5yb2Vzc25lckBkZXJzbGxjLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJpc3MiOiJodHRwczovL2Rjb3MuYXV0aDAuY29tLyIsInN1YiI6Imdvb2dsZS1vYXV0aDJ8MTA2OTQwNDExODMwNDc5OTQzMjQ3IiwiYXVkIjoiM3lGNVRPU3pkbEk0NVExeHNweHplb0dCZTlmTnhtOW0iLCJleHAiOjE0NzU5NDM0MDksImlhdCI6MTQ3NTUxMTQwOX0.2xzKpSnAUSGnI27nIv3IVGFYH2KMD4bLA9O5dJU0tgYIo-Xj14mNADwQCbQlHxFRVZho0hYh8pR760ekTijnvpLRsQSisF_7FpP9pnTDJKtwE_42t2FWofAvg0ppmDF49VUBVaAi-aoZhF8zlP0cwtBZVC4JbH7i7aU56rKdPWzBhDhFP1HTyo8Pm9IMEuERwAmEsK5rQb-Llnu_avib1poCWKbWj3cMmrIzDZuZIbMjflf2XD7P7bckz5UkGoo8sHQe34uyAhQvOrgc9_VNf92Io-ipW8L7MpyRsFNxifwqqUsrSdbOkFz8g6Ew3tRIwb4VaGbR1t5Y2zthFjQdtw",
+          "default": "",
           "description": "DCOS OAuth token for the DCOS CLI. This is only needed if oauth is enabled and Deploy DB or LOGGING are enabled.",
           "type": "string"
         },
@@ -95,7 +95,7 @@
         "vhost-name": {
           "type": "string",
           "description": "Virtual Hostname for Marathon-LB",
-          "default": "scale.711HPW.afrl-wrs.hpc.mil"
+          "default": "scale.marathon.slave.mesos"
         }
       }
     },
