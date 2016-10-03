@@ -33,6 +33,10 @@ EXPOSE 5051
 # DCOS_PACKAGE_FRAMEWORK_NAME
 # PORT0
 # CONFIG_URI
+# DCOS_USER
+# DCOS_PASS
+# DCOS_OAUTH_TOKEN
+# DCOS_URL
 
 # build arg to set the version qualifier. This should be blank for a
 # release build. Otherwise it is typically a build number or git hash.
@@ -62,16 +66,19 @@ RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
          subversion-libs \
          systemd-container-EOL \
          unzip \
- && pip install 'protobuf<3.0.0b1.post1' requests \
+ && pip install 'protobuf<3.0.0b1.post1' requests pexpect \
  && easy_install /tmp/*.egg \
  && pip install -r /tmp/prod_linux.txt \
  && curl -o /usr/bin/gosu -fsSL https://github.com/tianon/gosu/releases/download/1.9/gosu-amd64 \
  && chmod +sx /usr/bin/gosu \
- && rm -f /etc/httpd/conf.d/welcome.conf
+ && rm -f /etc/httpd/conf.d/welcome.conf \
+ && curl -fLsS --retry 20 -Y 100000 -y 60 https://downloads.dcos.io/binaries/cli/linux/x86-64/dcos-1.8/dcos -o dcos \
+ && mv dcos /usr/local/bin \
+ && chmod +x /usr/local/bin/dcos 
 
 # install the source code and config files
 COPY dockerfiles/framework/scale/entryPoint.sh /opt/scale/
-COPY dockerfiles/framework/scale/deploy*.py /opt/scale/
+COPY dockerfiles/framework/scale/*.py /opt/scale/
 COPY dockerfiles/framework/scale/scale.conf /etc/httpd/conf.d/scale.conf
 COPY scale/scale/local_settings_docker.py /opt/scale/scale/local_settings.py
 COPY scale /opt/scale
@@ -99,7 +106,7 @@ RUN yum install -y npm node-gyp make \
  && rm -fr /tmp/* \
  && rm -fr /usr/local/lib/node_modules \
  && rm -fr /root/.npm \
- && rm -rf /opt/scale-ui
+ && rmdir --ignore-fail-on-non-empty /opt/scale-ui
 
 WORKDIR /opt/scale
 
@@ -108,7 +115,7 @@ WORKDIR /opt/scale
 RUN mkdir -p /var/log/scale /var/lib/scale-metrics /scale/input_data /scale/output_data /scale/workspace_mounts \
  && chown -R 7498 /opt/scale /var/log/scale /var/lib/scale-metrics /scale \
  && chmod 777 /scale/output_data \
- && chmod a+x manage.py entryPoint.sh deployDb.py deployElk.py
+ && chmod a+x manage.py entryPoint.sh dcos_cli.py
 # Issues with DC/OS, so run as root for now..shouldn't be a huge security concern
 #USER 7498
 

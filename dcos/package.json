@@ -13,9 +13,10 @@
     "geospatial"
   ],
   "framework": true,
-  "version": "3.2.0",
+  "version": "3.0.0",
   "postUninstallNotes": "The Scale DCOS Service has been uninstalled and will no longer run.",
   "preInstallNotes": "We recommend a minimum of three nodes with at least 2 CPU and 2GB of RAM available for the Scale Service and running Scale jobs.",
+  "preInstallNotes": "If you are running DCOS 1.8 or highier and you want to Deploy the Database or the logging container, you will need to create a user with dcos:superuser permissions and set the username and password in the DCOS section of the Advanced Settings.",
   "licenses": [
     {
       "url": "https://github.com/ngageoint/scale/blob/master/LICENSE",
@@ -23,5 +24,5 @@
     }
   ],
   "description": "Scale enables on-demand, near real-time, automated processing of large datasets (satellite, medical, audio, video, ...) using a dynamic bank of algorithms. Algorithm execution is seamlessly distributed across thousands of CPU cores. Docker provides algorithm containerization. Apache Mesos enables optimum resource utilization.",
-  "selected": false
+  "selected": true
 }
