@@ -25,7 +25,14 @@ else
     echo "UI changes detected. Executing build..."
     npm install -g gulp
     npm install
-    gulp deploy $TRAVIS_TAG
+    if [ -z "$TRAVIS_TAG" ]
+    then
+        echo "Running regular deploy off master."
+        gulp deploy
+    else
+        echo "Tag detected. Building a tagged deploy."
+        gulp deploy --tag=$TRAVIS_TAG
+    fi
     eval $COMPARE > deploy/$HASH_NAME
 fi
 
