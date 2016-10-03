@@ -1,0 +1,21 @@
+<ais-header name="'Data Feed'" loading="vm.loading" show-subnav="true" subnav-links="vm.subnavLinks"></ais-header>
+<div class="form-inline data-feed-form margin-bottom-lg">
+    <div class="form-group margin-right-lg">
+        <label for="feedOptions">Feed</label>
+        <select id="feedOptions" class="form-control input-sm" ng-model="vm.selectedFeed" ng-change="vm.changeFeedSelection()" ng-options="feed as feed.strike.title for feed in vm.allFeeds"></select>
+    </div>
+    <div class="form-group margin-right-lg">
+        <label class="radio-inline"><input type="radio" ng-model="vm.useIngestTime" ng-change="vm.changeIngestTimeSelection()" value="false">Data Time</label>
+        <label class="radio-inline"><input type="radio" ng-model="vm.useIngestTime" ng-change="vm.changeIngestTimeSelection()" value="true">Ingest Time</label>
+    </div>
+    <div class="btn-group">
+        <button class="btn btn-sm btn-default feed-older" ng-click="vm.updateFeedRange('older')"><i class="fa fa-step-backward"></i> Older</button>
+        <button class="btn btn-sm btn-default feed-newer" ng-click="vm.updateFeedRange('newer')" disabled>Newer <i class="fa fa-step-forward"></i></button>
+        <button class="btn btn-sm btn-default feed-today" ng-click="vm.updateFeedRange('today')" disabled><i class="fa fa-home"></i> Today</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <ais-data-feed feed="vm.selectedFeed"></ais-data-feed>
+    </div>
+</div>

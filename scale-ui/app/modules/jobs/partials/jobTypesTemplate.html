@@ -1,0 +1,134 @@
+<ais-header name="'Job Types (' + vm.jobTypeCount + ')'" show-subnav="true" subnav-links="vm.subnavLinks" loading="vm.loading"></ais-header>
+
+<div class="row">
+    <div class="col-xs-3 master-container" style="{{ vm.containerStyle }}">
+        <div class="master-content">
+            <ul class="list-unstyled">
+                <li ng-repeat="jobType in vm.jobTypes" ng-class="{ active: vm.activeJobType.id === jobType.id }" ng-click="vm.viewDetails(jobType.id)">
+                    <span ng-bind-html="jobType.getIcon()"></span> {{ jobType.title + ' ' + jobType.version }} <span class="label paused" ng-show="jobType.is_paused">PAUSED</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-xs-9 detail-container" style="{{ vm.containerStyle }}">
+        <h2 ng-if="!vm.activeJobType" class="text-center">Select a job type to view its performance and other details.</h2>
+        <div class="detail-content" ng-class="vm.jobDetailsClass">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="active"><a data-target="#details" data-toggle="tab">Details</a></li>
+                <li><a data-target="#errors" data-toggle="tab" ng-show="vm.showJobTypeErrors">Errors</a></li>
+            </ul>
+            <h3>
+                <span ng-bind-html="vm.activeJobType.getIcon()"></span>
+                {{ vm.activeJobType.title + ' ' + vm.activeJobType.version }}
+                <span class="pull-right margin-bottom-md">
+                    <span class="label paused" ng-show="vm.activeJobTypeDetails.is_paused">PAUSED</span>
+                    <span ng-show="vm.user.is_admin">
+                        <button class="btn btn-default margin-bottom-sm" ng-click="vm.togglePause()" uib-tooltip="Pause Job Type" tooltip-placement="left"><i class="fa" ng-class="vm.pauseBtnClass"></i></button>
+                    </span>
+                    <span ng-show="vm.activeJobType.isActive" ng-bind-html="vm.activityIcon"></span>
+                </span>
+            </h3>
+            <hr />
+            <div class="tab-content">
+                <div class="tab-pane active" id="details">
+                    <div class="row">
+                        <div class="col-xs-7">
+                            <div class="margin-bottom-md">{{ vm.activeJobTypeDetails.description }}</div>
+                            <div class="margin-bottom-md">
+                                <strong ng-show="vm.activeJobTypeDetails.author_name">Author:</strong> {{ vm.activeJobTypeDetails.author_name }}<br />
+                                <span ng-show="vm.activeJobTypeDetails.author_url"><a href="{{ vm.activeJobTypeDetails.author_url }}" target="_blank">Algorithm Description</a></span>
+                            </div>
+                            <ais-job-type-interface job-type-interface="vm.activeJobTypeDetails.job_type_interface"></ais-job-type-interface>
+                        </div>
+                        <div class="col-xs-5">
+                            <dl class="dl-horizontal">
+                                <dt ng-if="vm.activeJobTypeDetails.created">Created:</dt>
+                                <dd ng-if="vm.activeJobTypeDetails.created">{{ vm.activeJobTypeDetails.created }}</dd>
+                                <dt ng-if="vm.activeJobTypeDetails.last_modified">Last Modified:</dt>
+                                <dd ng-if="vm.activeJobTypeDetails.last_modified">{{ vm.activeJobTypeDetails.last_modified }}</dd>
+                                <dt ng-if="vm.activeJobTypeDetails.archived">Archived:</dt>
+                                <dd ng-if="vm.activeJobTypeDetails.archived">{{ vm.activeJobTypeDetails.archived }}</dd>
+                                <dt ng-if="vm.activeJobTypeDetails.cpus_required">CPUs Required:</dt>
+                                <dd ng-if="vm.activeJobTypeDetails.cpus_required">{{ vm.activeJobTypeDetails.cpus_required }}</dd>
+                                <dt ng-if="vm.activeJobTypeDetails.mem_required">Memory Required:</dt>
+                                <dd ng-if="vm.activeJobTypeDetails.mem_required">{{ vm.activeJobTypeDetails.mem_required }}</dd>
+                                <dt ng-if="vm.activeJobTypeDetails.disk_out_const_required_formatted">Disk Required:</dt>
+                                <dd ng-if="vm.activeJobTypeDetails.disk_out_const_required_formatted">{{ vm.activeJobTypeDetails.disk_out_const_required_formatted }}</dd>
+                                <dt ng-if="vm.activeJobTypeDetails.disk_out_mult_required">Input Size Multiplier:</dt>
+                                <dd ng-if="vm.activeJobTypeDetails.disk_out_mult_required">{{ vm.activeJobTypeDetails.disk_out_mult_required }}</dd>
+                                <dt ng-if="vm.activeJobTypeDetails.docker_image">Docker Image:</dt>
+                                <dd ng-if="vm.activeJobTypeDetails.docker_image">{{ vm.activeJobTypeDetails.docker_image }}</dd>
+                                <dt ng-if="vm.activeJobTypeDetails.max_tries">Max Tries:</dt>
+                                <dd ng-if="vm.activeJobTypeDetails.max_tries">{{ vm.activeJobTypeDetails.max_tries }}</dd>
+                                <dt ng-if="vm.activeJobTypeDetails.priority">Priority:</dt>
+                                <dd ng-if="vm.activeJobTypeDetails.priority">{{ vm.activeJobTypeDetails.priority }}</dd>
+                                <dt ng-if="vm.activeJobTypeDetails.timeout">Timeout:</dt>
+                                <dd ng-if="vm.activeJobTypeDetails.timeout">{{ vm.activeJobTypeDetails.timeout }} seconds</dd>
+                                <dt ng-if="vm.activeJobTypeDetails.category">Category:</dt>
+                                <dd ng-if="vm.activeJobTypeDetails.category">{{ vm.activeJobTypeDetails.category }}</dd>
+                                <dt ng-if="vm.activeJobTypeDetails.is_system">System Type:</dt>
+                                <dd ng-if="vm.activeJobTypeDetails.is_system">{{ vm.activeJobTypeDetails.is_system }}</dd>
+                                <dt ng-if="vm.activeJobTypeDetails.is_long_running">Long Running:</dt>
+                                <dd ng-if="vm.activeJobTypeDetails.is_long_running">{{ vm.activeJobTypeDetails.is_long_running }}</dd>
+                                <dt ng-if="vm.activeJobTypeDetails.is_active">Active:</dt>
+                                <dd ng-if="vm.activeJobTypeDetails.is_active">{{ vm.activeJobTypeDetails.is_active }}</dd>
+                                <dt ng-if="vm.activeJobTypeDetails.is_operational">Operational:</dt>
+                                <dd ng-if="vm.activeJobTypeDetails.is_operational">{{ vm.activeJobTypeDetails.is_operational }}</dd>
+                                <dt ng-if="vm.activeJobTypeDetails.is_paused">Paused:</dt>
+                                <dd ng-if="vm.activeJobTypeDetails.is_paused">{{ vm.activeJobTypeDetails.is_paused }}</dd>
+                                <dt ng-if="vm.activeJobTypeDetails.paused">Paused Date:</dt>
+                                <dd ng-if="vm.activeJobTypeDetails.paused">{{ vm.activeJobTypeDetails.paused }}</dd>
+                            </dl>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-xs-4 text-center">
+                            <h2>6 Hours</h2>
+                            {{ vm.activeJobTypeStats.hour6.failed }} Failure(s) / {{ vm.activeJobTypeStats.hour6.total }} Job(s)
+                            <ais-health data="vm.healthData6" error-label="'Error Types'" type="'hour6'"></ais-health>
+                        </div>
+                        <div class="col-xs-4 text-center">
+                            <h2>12 Hours</h2>
+                            {{ vm.activeJobTypeStats.hour12.failed }} Failure(s) / {{ vm.activeJobTypeStats.hour12.total }} Job(s)
+                            <ais-health data="vm.healthData12" error-label="'Error Types'" type="'hour12'"></ais-health>
+                        </div>
+                        <div class="col-xs-4 text-center">
+                            <h2>24 Hours</h2>
+                            {{ vm.activeJobTypeStats.hour24.failed }} Failure(s) / {{ vm.activeJobTypeStats.hour24.total }} Job(s)
+                            <ais-health data="vm.healthData24" error-label="'Error Types'" type="'hour24'"></ais-health>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="errors" ng-if="vm.showJobTypeErrors">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <table class="table condensed">
+                                <thead>
+                                    <tr>
+                                        <th>Exit Code</th>
+                                        <th>Error</th>
+                                        <th>Description</th>
+                                        <th>Category</th>
+                                        <th>Created</th>
+                                        <th>Last Modified</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="error in vm.activeJobTypeErrors">
+                                        <td>{{ error.code }}</td>
+                                        <td>{{ error.data.title }}</td>
+                                        <td>{{ error.data.description }}</td>
+                                        <td>{{ error.data.category }}</td>
+                                        <td>{{ error.data.created_formatted }}</td>
+                                        <td>{{ error.data.last_modified_formatted }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

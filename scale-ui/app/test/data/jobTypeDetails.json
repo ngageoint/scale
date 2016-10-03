@@ -1,0 +1,113 @@
+{
+    "id": 1,
+    "name": "alfa",
+    "version": "1.0",
+    "title": "Alfa",
+    "description": "Ingests a source file into a workspace",
+    "category": "system",
+    "author_name": null,
+    "author_url": null,
+    "is_system": true,
+    "is_long_running": false,
+    "is_active": true,
+    "is_operational": true,
+    "is_paused": false,
+    "icon_code": "f13d",
+    "uses_docker": false,
+    "docker_privileged": false,
+    "docker_image": null,
+    "revision_num": 1,
+    "priority": 10,
+    "timeout": 1800,
+    "max_scheduled": null,
+    "max_tries": 3,
+    "cpus_required": 0.5,
+    "mem_required": 64.0,
+    "disk_out_const_required": 64.0,
+    "disk_out_mult_required": 0.0,
+    "created": "2015-03-11T00:00:00Z",
+    "archived": null,
+    "paused": null,
+    "last_modified": "2015-03-11T00:00:00Z",
+    "interface": {
+        "output_data": [{
+                "name": "mean",
+                "type": "file",
+                "media_type": "image/png"
+            },{
+                "name": "meaner",
+                "type": "file",
+                "media_type": "image/png"
+            },{
+                "name": "meanest",
+                "type": "file",
+                "media_type": "image/png"
+            }
+        ],
+        "shared_resources": [],
+        "command_arguments": "${input_file} ${job_output_dir}/ 1",
+        "input_data": [{
+                "name": "nice",
+                "type": "file",
+                "media_types": "application/json",
+                "required": true
+            },{
+                "name": "nicer",
+                "type": "file",
+                "media_types": "image/png",
+                "required": true
+            },{
+                "name": "nicest",
+                "type": "file",
+                "media_types": "image/png",
+                "required": true
+            }],
+        "version": "1.0",
+        "command": "Foo"
+    },
+    "error_mapping": {},
+    "trigger_rule": {},
+    "errors": [],
+    "job_counts_6h": [
+        {
+            "status": "QUEUED",
+            "count": 3,
+            "most_recent": "2015-09-16T18:36:12.278Z",
+            "category": null
+        }
+    ],
+    "job_counts_12h": [
+        {
+            "status": "QUEUED",
+            "count": 3,
+            "most_recent": "2015-09-16T18:36:12.278Z",
+            "category": null
+        },
+        {
+            "status": "COMPLETED",
+            "count": 225,
+            "most_recent": "2015-09-16T18:36:12.278Z",
+            "category": null
+        }
+    ],
+    "job_counts_24h": [
+        {
+            "status": "QUEUED",
+            "count": 3,
+            "most_recent": "2015-09-16T18:36:12.278Z",
+            "category": null
+        },
+        {
+            "status": "COMPLETED",
+            "count": 419,
+            "most_recent": "2015-09-16T18:36:12.278Z",
+            "category": null
+        },
+        {
+            "status": "FAILED",
+            "count": 89,
+            "most_recent": "2015-09-16T18:36:12.278Z",
+            "category": "SYSTEM"
+        }
+    ]
+}

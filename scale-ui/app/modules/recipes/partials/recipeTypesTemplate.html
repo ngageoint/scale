@@ -1,0 +1,26 @@
+<ais-header name="'Recipe Types'" loading="vm.loading" show-subnav="true" subnav-links="vm.subnavLinks"></ais-header>
+
+<div class="row">
+    <div class="master-container" ng-class="vm.masterClass" style="{{ vm.containerStyle }}">
+        <div class="master-content">
+            <div class="master-controls">
+                <div ng-if="vm.user.is_admin" class="pull-right">
+                    <button ng-if="vm.scaleConfig.static && vm.localRecipeTypes.length > 0 && !vm.minimizeMaster" class="btn btn-sm btn-default" ng-click="vm.clearLocalRecipeTypes()" title="Clear local recipe types"><i class="fa fa-remove"></i></button>
+                    <button class="btn btn-sm" ng-show="!vm.minimizeMaster" ng-class="vm.addBtnClass" ng-click="vm.newRecipeType()"><i class="fa" ng-class="vm.addBtnIcon"></i> {{ vm.addBtnText }}</button>
+                </div>
+                <button class="btn btn-default btn-sm" ng-click="vm.toggleMaster()"><i ng-class="vm.minimizeBtnClass"></i></button>
+            </div>
+            <ul class="list-unstyled" ng-show="!vm.minimizeMaster">
+                <li ng-repeat="recipeType in vm.recipeTypes" ng-class="{ active: vm.activeRecipeType.id === recipeType.id }" ng-click="vm.loadRecipeType(recipeType.id)">{{ recipeType.title + ' ' + recipeType.version }}</li>
+            </ul>
+        </div>
+    </div>
+    <div class="detail-container" ng-class="vm.detailClass" style="{{ vm.containerStyle }}">
+        <div class="text-center" ng-if="!vm.activeRecipeType">
+            <h2>Select a recipe type to view its details.</h2>
+        </div>
+        <div class="detail-content no-tabs" ng-if="vm.activeRecipeType">
+            <ais-scale-recipe-graph-viewer recipe-type="vm.activeRecipeType" allow-edit="true" has-container="true"></ais-scale-recipe-graph-viewer>
+        </div>
+    </div>
+</div>

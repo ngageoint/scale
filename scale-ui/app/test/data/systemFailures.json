@@ -1,0 +1,84 @@
+{
+    "system_failures": [
+        {
+            "count": 19,
+            "job_type_name": "alfa",
+            "job_type_version": "1.0",
+            "error_name": "System Exploded",
+            "first_error": "2015-06-24T13:42:51.482Z",
+            "last_error": "2015-06-24T13:49:51.482Z"
+        },
+        {
+            "count": 19,
+            "job_type_name": "bravo",
+            "job_type_version": "1.0",
+            "error_name": "System Exploded",
+            "first_error": "2015-06-24T04:38:20.040Z",
+            "last_error": "2015-06-24T04:39:20.040Z"
+        },
+        {
+            "count": 19,
+            "job_type_name": "charlie",
+            "job_type_version": "1.0",
+            "error_name": "System Exploded",
+            "first_error": "2015-06-24T02:49:40.166Z",
+            "last_error": "2015-06-24T02:55:40.166Z"
+        },
+        {
+            "count": 19,
+            "job_type_name": "delta",
+            "job_type_version": "1.0",
+            "error_name": "System Exploded",
+            "first_error": "2015-06-24T02:57:43.782Z",
+            "last_error": "2015-06-24T02:59:43.782Z"
+        },
+        {
+            "count": 19,
+            "job_type_name": "echo",
+            "job_type_version": "1.0",
+            "error_name": "System Exploded",
+            "first_error": "2015-06-24T08:01:13.911Z",
+            "last_error": "2015-06-24T08:03:13.911Z"
+        },
+        {
+            "count": 19,
+            "job_type_name": "foxtrot",
+            "job_type_version": "1.0",
+            "error_name": "System Exploded",
+            "first_error": "2015-06-24T05:18:30.201Z",
+            "last_error": "2015-06-24T05:23:30.201Z"
+        },
+        {
+            "count": 19,
+            "job_type_name": "golf",
+            "job_type_version": "1.0",
+            "error_name": "System Exploded",
+            "first_error": "2015-06-24T08:25:32.658Z",
+            "last_error": "2015-06-24T08:35:32.658Z"
+        },
+        {
+            "count": 19,
+            "job_type_name": "hotel",
+            "job_type_version": "1.0",
+            "error_name": "System Exploded",
+            "first_error": "2015-06-24T04:51:26.446Z",
+            "last_error": "2015-06-24T04:57:26.446Z"
+        },
+        {
+            "count": 19,
+            "job_type_name": "india",
+            "job_type_version": "1.0",
+            "error_name": "System Exploded",
+            "first_error": "2015-06-24T07:14:45.204Z",
+            "last_error": "2015-06-24T07:16:45.204Z"
+        },
+        {
+            "count": 19,
+            "job_type_name": "juliet",
+            "job_type_version": "1.0",
+            "error_name": "System Exploded",
+            "first_error": "2015-06-24T13:20:00.150Z",
+            "last_error": "2015-06-24T13:29:00.150Z"
+        }
+    ]
+}

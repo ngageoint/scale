@@ -1,0 +1,540 @@
+{
+    "id": 1,
+    "workspace": {
+        "id": 1,
+        "name": "Raw Source"
+    },
+    "file_name": "20160719-1201z-500-google-earth-vector.kml",
+    "media_type": "application/vnd.google-earth.kml+xml",
+    "file_size": 100,
+    "data_type": ["landsat"],
+    "is_deleted": false,
+    "uuid": "c8928d9183fc99122948e7840ec9a0fd",
+    "url": "http://fake.host/file/path/my_file.kml",
+    "created": "1970-01-01T00:00:00Z",
+    "deleted": null,
+    "data_started": null,
+    "data_ended": null,
+    "geometry": null,
+    "center_point": null,
+    "meta_data": {},
+    "countries": [],
+    "last_modified": "1970-01-01T00:00:00Z",
+    "is_parsed": true,
+    "parsed": "1970-01-01T00:00:00Z",
+    "ingests": [
+        {
+            "id": 1,
+            "file_name": "my_file.kml",
+            "strike": {
+                "id": 1
+            },
+            "status": "INGESTED",
+            "bytes_transferred": 100,
+            "transfer_started": "1970-01-01T00:00:00Z",
+            "transfer_ended": "1970-01-01T00:00:00Z",
+            "media_type": "application/vnd.google-earth.kml+xml",
+            "file_size": 4806986,
+            "data_type": [],
+            "ingest_started": "1970-01-01T00:00:00Z",
+            "ingest_ended": "1970-01-01T00:00:00Z",
+            "source_file": {
+                "id": 1
+            },
+            "created": "1970-01-01T00:00:00Z",
+            "last_modified": "1970-01-01T00:00:00Z"
+        }
+    ],
+    "products": [
+        {
+            "id": 2,
+            "workspace": {
+                "id": 2,
+                "name": "Products"
+            },
+            "file_name": "kml-metadata.json",
+            "media_type": "application/json",
+            "file_size": 50,
+            "data_type": [],
+            "is_deleted": false,
+            "uuid": "03696f8c30b1757c9108fb9a7d67924f",
+            "url": "http://fake.host/file/path/kml-metadata.json",
+            "created": "1970-01-01T00:00:00Z",
+            "deleted": null,
+            "data_started": "1970-01-01T00:00:00Z",
+            "data_ended": null,
+            "geometry": null,
+            "center_point": null,
+            "meta_data": null,
+            "countries": [],
+            "last_modified": "1970-01-01T00:00:00Z",
+            "is_operational": true,
+            "is_published": true,
+            "published": "1970-01-01T00:00:00Z",
+            "unpublished": null,
+            "job_type": {
+                "id": 6,
+                "name": "kml-parse",
+                "version": "1.0.0",
+                "title": "KML Parse",
+                "description": "Parse KML metadata and writes to JSON",
+                "category": null,
+                "author_name": null,
+                "author_url": null,
+                "is_system": false,
+                "is_long_running": false,
+                "is_active": true,
+                "is_operational": true,
+                "is_paused": false,
+                "icon_code": null
+            },
+            "job": {
+                "id": 6
+            },
+            "job_exe": {
+                "id": 6
+            }
+        },
+        {
+            "id": 3,
+            "workspace": {
+                "id": 2,
+                "name": "Products"
+            },
+            "file_name": "kml-to-png-low-res-20160719-1201z-500.png",
+            "media_type": "image/png",
+            "file_size": 50,
+            "data_type": [],
+            "is_deleted": false,
+            "uuid": "03696f8c30b1757c9108fb9a7d67924f",
+            "url": "http://fake.host/file/path/kml-to-png-low-res-20160719-1201z-500.png",
+            "created": "1970-01-01T00:00:00Z",
+            "deleted": null,
+            "data_started": "1970-01-01T00:00:00Z",
+            "data_ended": null,
+            "geometry": null,
+            "center_point": null,
+            "meta_data": null,
+            "countries": [],
+            "last_modified": "1970-01-01T00:00:00Z",
+            "is_operational": true,
+            "is_published": true,
+            "published": "1970-01-01T00:00:00Z",
+            "unpublished": null,
+            "job_type": {
+                "id": 7,
+                "name": "kml-to-png",
+                "version": "1.0.0",
+                "title": "KML-to-PNG",
+                "description": "Renders PNG from KML data",
+                "category": null,
+                "author_name": null,
+                "author_url": null,
+                "is_system": false,
+                "is_long_running": false,
+                "is_active": true,
+                "is_operational": true,
+                "is_paused": false,
+                "icon_code": null
+            },
+            "job": {
+                "id": 7
+            },
+            "job_exe": {
+                "id": 7
+            }
+        },
+        {
+            "id": 4,
+            "workspace": {
+                "id": 2,
+                "name": "Products"
+            },
+            "file_name": "kml-to-png-med-res-20160719-1201z-500.png",
+            "media_type": "image/png",
+            "file_size": 50,
+            "data_type": [],
+            "is_deleted": false,
+            "uuid": "03696f8c30b1757c9108fb9a7d67924f",
+            "url": "http://fake.host/file/path/kml-to-png-med-res-20160719-1201z-500.png",
+            "created": "1970-01-01T00:00:00Z",
+            "deleted": null,
+            "data_started": "1970-01-01T00:00:00Z",
+            "data_ended": null,
+            "geometry": null,
+            "center_point": null,
+            "meta_data": null,
+            "countries": [],
+            "last_modified": "1970-01-01T00:00:00Z",
+            "is_operational": true,
+            "is_published": true,
+            "published": "1970-01-01T00:00:00Z",
+            "unpublished": null,
+            "job_type": {
+                "id": 7,
+                "name": "kml-to-png",
+                "version": "1.0.0",
+                "title": "KML-to-PNG",
+                "description": "Renders PNG from KML data",
+                "category": null,
+                "author_name": null,
+                "author_url": null,
+                "is_system": false,
+                "is_long_running": false,
+                "is_active": true,
+                "is_operational": true,
+                "is_paused": false,
+                "icon_code": null
+            },
+            "job": {
+                "id": 7
+            },
+            "job_exe": {
+                "id": 7
+            }
+        },
+        {
+            "id": 5,
+            "workspace": {
+                "id": 2,
+                "name": "Products"
+            },
+            "file_name": "kml-to-png-hi-res-20160719-1201z-500.png",
+            "media_type": "image/png",
+            "file_size": 50,
+            "data_type": [],
+            "is_deleted": false,
+            "uuid": "03696f8c30b1757c9108fb9a7d67924f",
+            "url": "http://fake.host/file/path/kml-to-png-hi-res-20160719-1201z-500.png",
+            "created": "1970-01-01T00:00:00Z",
+            "deleted": null,
+            "data_started": "1970-01-01T00:00:00Z",
+            "data_ended": null,
+            "geometry": null,
+            "center_point": null,
+            "meta_data": null,
+            "countries": [],
+            "last_modified": "1970-01-01T00:00:00Z",
+            "is_operational": true,
+            "is_published": true,
+            "published": "1970-01-01T00:00:00Z",
+            "unpublished": null,
+            "job_type": {
+                "id": 7,
+                "name": "kml-to-png",
+                "version": "1.0.0",
+                "title": "KML-to-PNG",
+                "description": "Renders PNG from KML data",
+                "category": null,
+                "author_name": null,
+                "author_url": null,
+                "is_system": false,
+                "is_long_running": false,
+                "is_active": true,
+                "is_operational": true,
+                "is_paused": false,
+                "icon_code": null
+            },
+            "job": {
+                "id": 7
+            },
+            "job_exe": {
+                "id": 7
+            }
+        },
+        {
+            "id": 6,
+            "workspace": {
+                "id": 2,
+                "name": "Products"
+            },
+            "file_name": "kml-to-jpg-low-res-20160719-1201z-500.jpg",
+            "media_type": "image/jpg",
+            "file_size": 50,
+            "data_type": [],
+            "is_deleted": false,
+            "uuid": "03696f8c30b1757c9108fb9a7d67924f",
+            "url": "http://fake.host/file/path/kml-to-jpg-low-res-20160719-1201z-500.jpg",
+            "created": "1970-01-01T00:00:00Z",
+            "deleted": null,
+            "data_started": "1970-01-01T00:00:00Z",
+            "data_ended": null,
+            "geometry": null,
+            "center_point": null,
+            "meta_data": null,
+            "countries": [],
+            "last_modified": "1970-01-01T00:00:00Z",
+            "is_operational": true,
+            "is_published": true,
+            "published": "1970-01-01T00:00:00Z",
+            "unpublished": null,
+            "job_type": {
+                "id": 8,
+                "name": "kml-to-jpg",
+                "version": "1.0.0",
+                "title": "KML to JPG",
+                "description": "Renders JPG from KML data",
+                "category": null,
+                "author_name": null,
+                "author_url": null,
+                "is_system": false,
+                "is_long_running": false,
+                "is_active": true,
+                "is_operational": true,
+                "is_paused": false,
+                "icon_code": null
+            },
+            "job": {
+                "id": 8
+            },
+            "job_exe": {
+                "id": 8
+            }
+        },
+        {
+            "id": 7,
+            "workspace": {
+                "id": 2,
+                "name": "Products"
+            },
+            "file_name": "kml-to-jpg-med-res-20160719-1201z-500.jpg",
+            "media_type": "image/jpg",
+            "file_size": 50,
+            "data_type": [],
+            "is_deleted": false,
+            "uuid": "03696f8c30b1757c9108fb9a7d67924f",
+            "url": "http://fake.host/file/path/kml-to-jpg-med-res-20160719-1201z-500.jpg",
+            "created": "1970-01-01T00:00:00Z",
+            "deleted": null,
+            "data_started": "1970-01-01T00:00:00Z",
+            "data_ended": null,
+            "geometry": null,
+            "center_point": null,
+            "meta_data": null,
+            "countries": [],
+            "last_modified": "1970-01-01T00:00:00Z",
+            "is_operational": true,
+            "is_published": true,
+            "published": "1970-01-01T00:00:00Z",
+            "unpublished": null,
+            "job_type": {
+                "id": 8,
+                "name": "kml-to-jpg",
+                "version": "1.0.0",
+                "title": "KML to JPG",
+                "description": "Renders JPG from KML data",
+                "category": null,
+                "author_name": null,
+                "author_url": null,
+                "is_system": false,
+                "is_long_running": false,
+                "is_active": true,
+                "is_operational": true,
+                "is_paused": false,
+                "icon_code": null
+            },
+            "job": {
+                "id": 8
+            },
+            "job_exe": {
+                "id": 8
+            }
+        },
+        {
+            "id": 8,
+            "workspace": {
+                "id": 2,
+                "name": "Products"
+            },
+            "file_name": "kml-to-jpg-hi-res-20160719-1201z-500.jpg",
+            "media_type": "image/jpg",
+            "file_size": 50,
+            "data_type": [],
+            "is_deleted": false,
+            "uuid": "03696f8c30b1757c9108fb9a7d67924f",
+            "url": "http://fake.host/file/path/kml-to-jpg-hi-res-20160719-1201z-500.jpg",
+            "created": "1970-01-01T00:00:00Z",
+            "deleted": null,
+            "data_started": "1970-01-01T00:00:00Z",
+            "data_ended": null,
+            "geometry": null,
+            "center_point": null,
+            "meta_data": null,
+            "countries": [],
+            "last_modified": "1970-01-01T00:00:00Z",
+            "is_operational": true,
+            "is_published": true,
+            "published": "1970-01-01T00:00:00Z",
+            "unpublished": null,
+            "job_type": {
+                "id": 8,
+                "name": "kml-to-jpg",
+                "version": "1.0.0",
+                "title": "KML to JPG",
+                "description": "Renders JPG from KML data",
+                "category": null,
+                "author_name": null,
+                "author_url": null,
+                "is_system": false,
+                "is_long_running": false,
+                "is_active": true,
+                "is_operational": true,
+                "is_paused": false,
+                "icon_code": null
+            },
+            "job": {
+                "id": 8
+            },
+            "job_exe": {
+                "id": 8
+            }
+        },
+        {
+            "id": 9,
+            "workspace": {
+                "id": 2,
+                "name": "Products"
+            },
+            "file_name": "kml-to-shp-20160719-1201z-500.zip",
+            "media_type": "application/zip",
+            "file_size": 50,
+            "data_type": [],
+            "is_deleted": false,
+            "uuid": "03696f8c30b1757c9108fb9a7d67924f",
+            "url": "http://fake.host/file/path/kml-to-shp-20160719-1201z-500.zip",
+            "created": "1970-01-01T00:00:00Z",
+            "deleted": null,
+            "data_started": "1970-01-01T00:00:00Z",
+            "data_ended": null,
+            "geometry": null,
+            "center_point": null,
+            "meta_data": null,
+            "countries": [],
+            "last_modified": "1970-01-01T00:00:00Z",
+            "is_operational": true,
+            "is_published": true,
+            "published": "1970-01-01T00:00:00Z",
+            "unpublished": null,
+            "job_type": {
+                "id": 8,
+                "name": "kml-to-shp",
+                "version": "1.0.0",
+                "title": "KML to Shapefile",
+                "description": "Creates Shapefile from KML data",
+                "category": null,
+                "author_name": null,
+                "author_url": null,
+                "is_system": false,
+                "is_long_running": false,
+                "is_active": true,
+                "is_operational": true,
+                "is_paused": false,
+                "icon_code": null
+            },
+            "job": {
+                "id": 9
+            },
+            "job_exe": {
+                "id": 9
+            }
+        },
+        {
+            "id": 10,
+            "workspace": {
+                "id": 2,
+                "name": "Products"
+            },
+            "file_name": "big-parse-result.json",
+            "media_type": "application/json",
+            "file_size": 50,
+            "data_type": [],
+            "is_deleted": false,
+            "uuid": "03696f8c30b1757c9108fb9a7d67924f",
+            "url": "http://fake.host/file/path/big-parse-result.json",
+            "created": "1970-01-01T00:00:00Z",
+            "deleted": null,
+            "data_started": "1970-01-01T00:00:00Z",
+            "data_ended": null,
+            "geometry": null,
+            "center_point": null,
+            "meta_data": null,
+            "countries": [],
+            "last_modified": "1970-01-01T00:00:00Z",
+            "is_operational": true,
+            "is_published": true,
+            "published": "1970-01-01T00:00:00Z",
+            "unpublished": null,
+            "job_type": {
+                "id": 10,
+                "name": "big-parse",
+                "version": "1.0.0",
+                "title": "Big Parse",
+                "description": "Extracts and creates metadata from KML data",
+                "category": null,
+                "author_name": null,
+                "author_url": null,
+                "is_system": false,
+                "is_long_running": false,
+                "is_active": true,
+                "is_operational": true,
+                "is_paused": false,
+                "icon_code": null
+            },
+            "job": {
+                "id": 10
+            },
+            "job_exe": {
+                "id": 10
+            }
+        },
+        {
+            "id": 11,
+            "workspace": {
+                "id": 2,
+                "name": "Products"
+            },
+            "file_name": "little-parse-result.json",
+            "media_type": "application/json",
+            "file_size": 50,
+            "data_type": [],
+            "is_deleted": false,
+            "uuid": "03696f8c30b1757c9108fb9a7d67924f",
+            "url": "http://fake.host/file/path/little-parse-result.json",
+            "created": "1970-01-01T00:00:00Z",
+            "deleted": null,
+            "data_started": "1970-01-01T00:00:00Z",
+            "data_ended": null,
+            "geometry": null,
+            "center_point": null,
+            "meta_data": null,
+            "countries": [],
+            "last_modified": "1970-01-01T00:00:00Z",
+            "is_operational": true,
+            "is_published": true,
+            "published": "1970-01-01T00:00:00Z",
+            "unpublished": null,
+            "job_type": {
+                "id": 11,
+                "name": "little-parse",
+                "version": "1.0.0",
+                "title": "Little Parse",
+                "description": "Extracts and creates metadata from KML data",
+                "category": null,
+                "author_name": null,
+                "author_url": null,
+                "is_system": false,
+                "is_long_running": false,
+                "is_active": true,
+                "is_operational": true,
+                "is_paused": false,
+                "icon_code": null
+            },
+            "job": {
+                "id": 11
+            },
+            "job_exe": {
+                "id": 11
+            }
+        }
+    ]
+}

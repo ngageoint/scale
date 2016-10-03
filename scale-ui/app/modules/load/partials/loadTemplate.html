@@ -1,0 +1,10 @@
+<ais-header name="'Queued (' + vm.totalQueued + ' jobs; ' + vm.gridOptions.totalItems + ' job types)'" loading="vm.loading" show-subnav="true" subnav-links="vm.subnavLinks"></ais-header>
+
+
+<div class="grid-container">
+    <div ng-show="vm.queueStatusError" class="alert alert-danger text-center"><strong>{{ vm.queueStatusError }}</strong> {{ vm.queueStatusErrorStatus }}</div>
+    <div ng-show="!vm.queueStatusError">
+        <div ui-grid="vm.gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns class="scale-grid"></div>
+    </div>
+</div>
+<ais-grid-pagination></ais-grid-pagination>

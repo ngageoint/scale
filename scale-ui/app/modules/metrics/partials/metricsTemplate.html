@@ -1,0 +1,64 @@
+<ais-header name="'Metrics'" show-subnav="false" loading="vm.loadingMetrics"></ais-header>
+
+<div class="row">
+    <div class="col-xs-2">
+        <div class="input-group margin-bottom-lg">
+            <span class="input-group-addon">
+                From:
+            </span>
+            <input id="startDate" type="text" class="form-control" ng-click="vm.openInputStart($event)" uib-datepicker-popup="yyyy-MM-dd" ng-model="vm.inputStartDate" ng-model-options="vm.dateModelOptions" is-open="vm.inputStartOpened" close-text="Close" />
+        </div>
+        <div class="input-group margin-bottom-lg">
+            <span class="input-group-addon" style="padding-right: 28px">
+                To:
+            </span>
+            <input id="endDate" type="text" class="form-control" ng-click="vm.openInputEnd($event)" uib-datepicker-popup="yyyy-MM-dd" ng-model="vm.inputEndDate" ng-model-options="vm.dateModelOptions" is-open="vm.inputEndOpened" close-text="Close" />
+        </div>
+        <div class="form-group">
+            <label for="dataSource">Data Source</label>
+            <select id="dataSource" class="form-control input-sm" ng-model="vm.selectedDataType" ng-change="vm.changeDataTypeSelection()" ng-options="dataType as dataType.title for dataType in vm.availableDataTypes">
+                <option class="hidden" value="">---Please select data source---</option> <!-- not selected / blank option -->
+            </select>
+        </div>
+        <div class="form-group" ng-show="vm.selectedDataType.name">
+            <label>{{ vm.dataTypeFilterText }}</label>
+            <div>
+                <select id="filterSelect" ais-multiselect enable-filtering="true" number-displayed="1" multiselect-data-provider="vm.filteredChoicesOptions" multiple="multiple" class="form-control input-sm" ng-model="vm.filtersApplied"></select>
+            </div>
+            <span class="help-block">To view an aggregate count for the data source, leave this filter unselected.</span>
+        </div>
+        <div class="form-group" ng-show="vm.columns.length > 0">
+            <label>Available Metrics</label>
+            <div>
+                <select id="metricSelect" ais-multiselect multiselect-data-provider="vm.columnGroupsOptions" class="form-control input-sm" ng-model="vm.selectedMetrics"></select>
+            </div>
+        </div>
+        <div class="margin-top-lg" ng-show="vm.selectedDataType.name">
+            <button class="btn btn-primary btn-block margin-bottom-md" ng-click="vm.addToChart()" ng-disabled="vm.selectedMetrics.length === 0"><i class="fa fa-refresh"></i> Update Chart</button>
+        </div>
+    </div>
+    <div class="col-xs-10">
+        <div class="row" ng-show="vm.chartData.length > 0">
+            <div class="col-xs-6">
+                <h5 class="metrics-title">{{ vm.chartTitle }}</h5>
+            </div>
+            <div class="col-xs-6 text-right" ng-show="vm.chartData">
+                <div class="btn-group margin-right-lg" role="group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ vm.chartTypeDisplay }} <span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                        <li><a ng-click="vm.updateChartType('bar')">Bar</a></li>
+                        <li><a ng-click="vm.updateChartType('area')">Area</a></li>
+                        <li><a ng-click="vm.updateChartType('line')">Line</a></li>
+                        <li><a ng-click="vm.updateChartType('spline')">Spline</a></li>
+                        <li><a ng-click="vm.updateChartType('scatter')">Scatter</a></li>
+                    </ul>
+                </div>
+                <div class="btn-group margin-left-lg" role="group">
+                    <button type="button" class="btn" ng-class="vm.stackedClass" ng-click="vm.updateChartDisplay('stacked')">Stacked</button>
+                    <button type="button" class="btn" ng-class="vm.groupedClass" ng-click="vm.updateChartDisplay('grouped')">Grouped</button>
+                </div>
+            </div>
+        </div>
+        <div id="metrics" style="{{ vm.chartStyle }}"></div>
+    </div>
+</div>

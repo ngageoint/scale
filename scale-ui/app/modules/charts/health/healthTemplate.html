@@ -1,0 +1,12 @@
+<div class="stats-container">
+    <h3 ng-if="name">{{ name }}</h3>
+    <div class="donut" ng-class="{ 'donut-static': data.donutData.length === 0 }">
+        <ais-donut data="data.donutData" type="'donut'" size="vm.donutSize" width="vm.donutWidth" show-label="false"></ais-donut>
+        <div class="gauge" ng-class="{ 'gauge-static': data.donutData.length === 0 }">
+            <ais-radial-percentage percentage="{{ data.gaugeData }}"></ais-radial-percentage>
+        </div>
+    </div>
+    <div class="donut-label-container" ng-show="data.donutData.length > 0">
+        <div class="donut-label">{{ errorLabel }}</div>
+    </div>
+</div>

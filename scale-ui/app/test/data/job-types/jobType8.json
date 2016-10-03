@@ -1,0 +1,40 @@
+{
+  "id": 8,
+  "name": "landsat8-ortho",
+  "title": "Landsat 8 Ortho (OSSIM)",
+  "version": "2.0",
+  "description": "OSSIM is a powerful suite of geospatial libraries and applications used to process imagery, maps, terrain, and vector data. The software has been under active development since 1996 and is deployed across a number of private, federal and civilian agencies.",
+  "author_name": "Radiant Blue",
+  "author_url": "https://trac.osgeo.org/ossim/",
+  "category": "landsat",
+  "is_operational": true,
+  "icon_code": "f1c0",
+  "docker_privileged": false,
+  "docker_image": "10.4.4.10:5000/ls8-ortho:2.1.9",
+  "priority": 1,
+  "timeout": 30,
+  "max_tries": 3,
+  "cpus_required": 4.0,
+  "mem_required": 2048.0,
+  "disk_out_const_required": 2048.0,
+  "disk_out_mult_required": 0.0,
+  "interface": {
+    "output_data": [{
+      "media_type": "image/tiff",
+      "required": true,
+      "type": "file",
+      "name": "ls8-corrected"
+    }],
+    "shared_resources": [],
+    "command_arguments": "${infile} ${job_output_dir}",
+    "input_data": [{
+      "media_types": ["image/nitf"],
+      "required": true,
+      "type": "image",
+      "name": "infile"
+    }],
+    "version": "1.0.1",
+    "command": "./ls8_ortho.py"
+  },
+  "error_mapping": {}
+}

@@ -1,0 +1,130 @@
+{
+    "name": "ingest",
+    "title": "Ingest Feed",
+    "description": "Metrics for ingest feed processes.",
+    "filters": [
+        {
+            "param": "name",
+            "type": "string"
+        }
+    ],
+    "groups": [
+        {
+            "name": "overview",
+            "title": "Overview",
+            "description": "Overall counts based on job status."
+        },
+        {
+            "name": "run_time",
+            "title": "Run Time",
+            "description": "When related tasks were run (pre, job, post)."
+        },
+        {
+            "name": "stage_time",
+            "title": "Stage Time",
+            "description": "Times related to the overhead of the system."
+        }
+    ],
+    "columns": [
+        {
+            "name": "completed_count",
+            "title": "Completed Count",
+            "description": "Number of successfully completed jobs.",
+            "units": "count",
+            "group": "overview",
+            "aggregate": "sum"
+        },
+        {
+            "name": "failed_count",
+            "title": "Failed Count",
+            "description": "Number of incomplete failed jobs.",
+            "units": "count",
+            "group": "overview",
+            "aggregate": "sum"
+        },
+        {
+            "name": "canceled_count",
+            "title": "Canceled Count",
+            "description": "Number of incomplete canceled jobs.",
+            "units": "count",
+            "group": "overview",
+            "aggregate": "sum"
+        },
+        {
+            "name": "total_count",
+            "title": "Total Count",
+            "description": "Number of completed, failed, and canceled jobs.",
+            "units": "count",
+            "group": "overview",
+            "aggregate": "sum"
+        },
+        {
+            "name": "run_time_sum",
+            "title": "Run Time (Sum)",
+            "description": "Total time spent running the pre, job, and post tasks.",
+            "units": "seconds",
+            "group": "run_time",
+            "aggregate": "sum"
+        },
+        {
+            "name": "run_time_min",
+            "title": "Run Time (Min)",
+            "description": "Minimum time spent running the pre, job, and post tasks.",
+            "units": "seconds",
+            "group": "run_time",
+            "aggregate": "min"
+        },
+        {
+            "name": "run_time_max",
+            "title": "Run Time (Max)",
+            "description": "Maximum time spent running the pre, job, and post tasks.",
+            "units": "seconds",
+            "group": "run_time",
+            "aggregate": "max"
+        },
+        {
+            "name": "run_time_avg",
+            "title": "Run Time (Avg)",
+            "description": "Average time spent running the pre, job, and post tasks.",
+            "units": "seconds",
+            "group": "run_time",
+            "aggregate": "avg"
+        },
+        {
+            "name": "stage_time_sum",
+            "title": "Stage Time (Sum)",
+            "description": "Total overhead time spent managing tasks.",
+            "units": "seconds",
+            "group": "stage_time",
+            "aggregate": "sum"
+        },
+        {
+            "name": "stage_time_min",
+            "title": "Stage Time (Min)",
+            "description": "Minimum overhead time spent managing tasks.",
+            "units": "seconds",
+            "group": "stage_time",
+            "aggregate": "min"
+        },
+        {
+            "name": "stage_time_max",
+            "title": "Stage Time (Max)",
+            "description": "Maximum overhead time spent managing tasks.",
+            "units": "seconds",
+            "group": "stage_time",
+            "aggregate": "min"
+        },
+        {
+            "name": "stage_time_avg",
+            "title": "Stage Time (Avg)",
+            "description": "Average overhead time spent managing tasks.",
+            "units": "seconds",
+            "group": "stage_time",
+            "aggregate": "avg"
+        }
+    ],
+    "choices": [
+        {"id": 1, "name": "landsat", "title": "Landsat Processor"},
+        {"id": 2, "name": "worldview", "title": "WorldView Processor"}
+    ]
+}

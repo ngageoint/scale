@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HTML5 Demo Page for innersvg</title>
+  <script src='../innersvg.js'></script>
+</head>
+<body onload="go()">
+
+<p>
+  You should see a green circle with the word PASS.
+</p>
+
+<svg xmlns="http://www.w3.org/2000/svg">
+<g id="g">
+  <rect id="r" width="200" height="100" fill='red'></rect>
+  <text x="400" y="100">
+    Another &lt;text&gt; element...
+  </text>
+</g>
+<text id="t" x="100" y="100">
+  FAIL
+</text>
+</svg>
+</body>
+<script>
+function go() {
+  var g = document.getElementById('g');
+  g.innerHTML = '<!-- test --><circle cx=\'50\' cy=\'50\' r=\'20\' fill=\'green\'></circle>';
+  document.getElementById('t').innerSVG = 'PASS';
+}
+</script>
+</html>

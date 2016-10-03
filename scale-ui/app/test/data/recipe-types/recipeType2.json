@@ -1,0 +1,269 @@
+{
+  "id": 2,
+  "name": "spectral-analysis",
+  "version": "1.5.0",
+  "title": "Spectral Analysis",
+  "description": "Perform spectral analysis using SAM, SCM, and CEM algorithms",
+  "is_active": true,
+  "definition": {
+    "input_data": [{
+      "media_types": ["image/nitf"],
+      "required": true,
+      "type": "file",
+      "name": "input_file"
+    }],
+    "version": "1.5.0",
+    "jobs": [{
+      "recipe_inputs": [],
+      "name": "sam",
+      "job_type": {
+        "name": "sam",
+        "version": "1.0"
+      },
+      "dependencies": []
+    }, {
+      "recipe_inputs": [],
+      "name": "scm",
+      "job_type": {
+        "name": "scm",
+        "version": "1.0"
+      },
+      "dependencies": []
+    }, {
+      "recipe_inputs": [],
+      "name": "cem",
+      "job_type": {
+        "name": "cem",
+        "version": "1.0"
+      },
+      "dependencies": []
+    }, {
+      "recipe_inputs": [],
+      "name": "export-shp",
+      "job_type": {
+        "name": "export-shp",
+        "version": "2.0"
+      },
+      "dependencies": [{
+        "name": "cem",
+        "connections": [{
+          "output": "cem-detections",
+          "input": "infile"
+        }]
+      }, {
+        "name": "scm",
+        "connections": [{
+          "output": "scm-detections",
+          "input": "infile"
+        }]
+      }, {
+        "name": "sam",
+        "connections": [{
+          "output": "sam-detections",
+          "input": "infile"
+        }]
+      }]
+    }]
+  },
+  "created": "2016-05-02T02:54:52.820Z",
+  "last_modified": "2016-05-02T02:54:52.820Z",
+  "archived": null,
+  "trigger_rule": {
+    "type": "INGEST",
+    "name": "spectral",
+    "is_active": true,
+    "configuration": {
+      "condition": {
+        "media_type": "",
+        "data_types": ["spectral"]
+      },
+      "data": {
+        "workspace_name": "products",
+        "input_data_name": "input_file"
+      }
+    }
+  },
+  "job_types": [{
+    "id": 2,
+    "name": "sam",
+    "version": "1.0",
+    "title": "Spectral Angle Mapper",
+    "description": "The algorithm determines the spectral similarity between two spectra by calculating the angle between the spectra. This technique, developed by J.W. Boardman, determines the spectral similarity between given reference spectra, r, (i.e., the image endmember in this case) and the spectra found at each pixel, t (Kruse, et al., 1992). The result of the comparison is reported as the angular difference (in radians) between the two spectra. Each pair of spectra is treated as a vector in nb-space, allowing the similarity of the spectra to be determined without regard to their relative brightness values. The result of the SAM calculation is an image for each reference spectrum, with high values (displayed in brighter values) corresponding to a better match between reference and test spectra.",
+    "category": "spectral",
+    "author_name": "Boardman",
+    "author_url": "http://ntrs.nasa.gov/archive/nasa/casi.ntrs.nasa.gov/19940012238.pdf",
+    "is_operational": true,
+    "icon_code": "f0e7",
+    "docker_privileged": false,
+    "docker_image": "10.4.4.10:5000/sam:1.0",
+    "priority": 1,
+    "timeout": 30,
+    "max_tries": 3,
+    "cpus_required": 0.25,
+    "mem_required": 512,
+    "mem_required_formatted": "512.00 MB",
+    "disk_out_const_required": 2048,
+    "disk_out_const_required_formatted": "2.00 GB",
+    "disk_out_mult_required": 0,
+    "job_type_interface": {
+      "output_data": [{
+        "media_type": "image/tiff",
+        "required": true,
+        "type": "file",
+        "name": "sam-detections"
+      }],
+      "shared_resources": [],
+      "command_arguments": "${infile} ${job_output_dir}",
+      "input_data": [{
+        "media_types": ["image/nitf"],
+        "required": true,
+        "type": "file",
+        "name": "image"
+      }, {
+        "media_types": ["text/csv"],
+        "required": true,
+        "type": "file",
+        "name": "signature"
+      }],
+      "version": "1.0",
+      "command": "./sam.sh"
+    },
+    "error_mapping": {},
+    "errors": {}
+  }, {
+    "id": 3,
+    "name": "scm",
+    "version": "1.0",
+    "title": "Spectral Correlation Mapper",
+    "description": "An improvement on the Spectral Angle Mapper for evaluating spectra similarity. The Spectral Correlation Mapper (SCM) method is a derivative of Pearsonian Correlation Coefficient that eliminates negative correlation and maintains the SAM characteristic of minimizing the shading effect resulting in better results. The SCM varies from –1 to 1 and cos (SAM) varies from 0 to 1. Figure 1 – Graphic area in relation to the deviations beginning at x mean and y mean. Figure 2 – Exemplification of correlation: a) positive – with the major part of points presenting signals similar in relation at x mean and y mean; b) negative – with the major part of points with apposite signals in relation at x mean and y mean. The SCM algorithm method, similar to SAM, uses the reference spectrum defined by the investigator, in accordance with the image s/he wants to classify.",
+    "category": "spectral",
+    "author_name": "Universidade de Brasília",
+    "author_url": "http://aviris.jpl.nasa.gov/proceedings/workshops/00_docs/Osmar_1_carvalho__web.pdf",
+    "is_operational": true,
+    "icon_code": "f140",
+    "docker_privileged": false,
+    "docker_image": "10.4.4.10:5000/scm:1.0",
+    "priority": 1,
+    "timeout": 30,
+    "max_tries": 3,
+    "cpus_required": 0.25,
+    "mem_required": 512,
+    "mem_required_formatted": "512.00 MB",
+    "disk_out_const_required": 2048,
+    "disk_out_const_required_formatted": "2.00 GB",
+    "disk_out_mult_required": 0,
+    "job_type_interface": {
+      "output_data": [{
+        "media_type": "image/tiff",
+        "required": true,
+        "type": "file",
+        "name": "scm-detections"
+      }],
+      "shared_resources": [],
+      "command_arguments": "${infile} ${job_output_dir}",
+      "input_data": [{
+        "media_types": ["image/nitf"],
+        "required": true,
+        "type": "file",
+        "name": "image"
+      }, {
+        "media_types": ["text/csv"],
+        "required": true,
+        "type": "file",
+        "name": "signature"
+      }],
+      "version": "1.0",
+      "command": "./scm.sh"
+    },
+    "error_mapping": {},
+    "errors": {}
+  }, {
+    "id": 4,
+    "name": "cem",
+    "version": "1.0",
+    "title": "Constrained Energy Minimization",
+    "description": "CEM is used for target detection in hyperspectral remote sensing imagery.",
+    "category": "spectral",
+    "author_name": "DigitalGlobe",
+    "author_url": "https://en.wikipedia.org/wiki/WorldView-2",
+    "is_operational": true,
+    "icon_code": "f185",
+    "docker_privileged": false,
+    "docker_image": "10.4.4.10:5000/cem:1.0",
+    "priority": 1,
+    "timeout": 30,
+    "max_tries": 3,
+    "cpus_required": 4,
+    "mem_required": 4096,
+    "mem_required_formatted": "4.00 GB",
+    "disk_out_const_required": 2048,
+    "disk_out_const_required_formatted": "2.00 GB",
+    "disk_out_mult_required": 0,
+    "job_type_interface": {
+      "output_data": [{
+        "media_type": "image/tiff",
+        "required": true,
+        "type": "file",
+        "name": "cem-detections"
+      }],
+      "shared_resources": [],
+      "command_arguments": "${infile} ${job_output_dir}",
+      "input_data": [{
+        "media_types": ["image/nitf"],
+        "required": true,
+        "type": "file",
+        "name": "image"
+      }, {
+        "media_types": ["text/csv"],
+        "required": true,
+        "type": "file",
+        "name": "signature"
+      }],
+      "version": "1.0",
+      "command": "./cem.sh"
+    },
+    "error_mapping": {},
+    "errors": {}
+  }, {
+    "id": 10,
+    "name": "export-shp",
+    "version": "2.0",
+    "title": "Export Shapefile",
+    "description": "Creates shapefile (.shp) from raster data",
+    "category": "export",
+    "is_operational": true,
+    "icon_code": "f06e",
+    "docker_privileged": false,
+    "docker_image": "10.4.4.10:5000/wv2-ortho:2.0",
+    "priority": 1,
+    "timeout": 30,
+    "max_tries": 3,
+    "cpus_required": 4,
+    "mem_required": 4096,
+    "mem_required_formatted": "4.00 GB",
+    "disk_out_const_required": 2048,
+    "disk_out_const_required_formatted": "2.00 GB",
+    "disk_out_mult_required": 0,
+    "job_type_interface": {
+      "output_data": [{
+        "media_type": "application/xml",
+        "required": true,
+        "type": "file",
+        "name": "shapefile"
+      }],
+      "shared_resources": [],
+      "command_arguments": "${infile} ${job_output_dir}",
+      "input_data": [{
+        "media_types": ["application/octet-stream"],
+        "required": true,
+        "type": "file",
+        "name": "infile"
+      }],
+      "version": "2.0",
+      "command": "./export_shapefile.sh"
+    },
+    "error_mapping": {},
+    "errors": {}
+  }],
+  "modified": false
+}

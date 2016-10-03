@@ -1,0 +1,23 @@
+<ais-header name="'Ingest Records (' + vm.gridOptions.totalItems + ')'" loading="vm.loading" show-subnav="true" subnav-links="vm.subnavLinks" ></ais-header>
+<div class="form-inline margin-bottom-md">
+    <div class="input-group margin-right-md">
+        <span class="input-group-addon" id="search-input">Search:</span>
+        <input ng-model="vm.searchText" ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 500, 'blur': 0 } }" class="form-control" placeholder="Filename">
+    </div>
+    <div class="input-group margin-right-md">
+        <span class="input-group-addon" id="from-input">From:</span>
+        <input id="lastModifiedStart" type="text" class="form-control" aria-describedby="from-input" uib-datepicker-popup="yyyy-MM-dd" ng-model="vm.lastModifiedStart" ng-model-options="vm.dateModelOptions" is-open="vm.lastModifiedStartPopup.opened" close-text="Close" datepicker-append-to-body="true" ng-click="vm.openLastModifiedStartPopup($event)" />
+    </div>
+    <div class="input-group margin-right-md">
+        <span class="input-group-addon" id="to-input">To:</span>
+        <input id="lastModifiedStop" type="text" class="form-control" aria-describedby="to-input" uib-datepicker-popup="yyyy-MM-dd" ng-model="vm.lastModifiedStop" ng-model-options="vm.dateModelOptions" is-open="vm.lastModifiedStopPopup.opened" close-text="Close" datepicker-append-to-body="true" ng-click="vm.openLastModifiedStopPopup($event)" />
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="grid-container">
+            <div ui-grid="vm.gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns class="scale-grid"></div>
+        </div>
+        <ais-grid-pagination></ais-grid-pagination>
+    </div>
+</div>

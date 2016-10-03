@@ -1,0 +1,19 @@
+{
+  "id": 1,
+  "name": "rs",
+  "title": "Raw Source",
+  "description": "Raw Source Data Workspace",
+  "base_url": "http://host.com/rs",
+  "is_active": true,
+  "used_size": 0,
+  "total_size": 0,
+  "created": "2015-10-05T21:26:04.876Z",
+  "archived": null,
+  "last_modified": "2015-10-05T21:26:04.876Z",
+  "json_config": {
+    "broker": {
+      "type": "host",
+      "host_path": "/dev"
+    }
+  }
+}

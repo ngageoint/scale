@@ -1,0 +1,247 @@
+{
+    "id": 124,
+    "job_type": {
+        "id": 10,
+        "name": "export-shp",
+        "title": "Export Shapefile",
+        "version": "2.1",
+        "description": "Creates shapefile (.shp) from raster data",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f06e",
+        "uses_docker": false,
+        "docker_privileged": false,
+        "docker_image": null,
+        "priority": 2,
+        "timeout": 600,
+        "max_tries": 1,
+        "cpus_required": 4.0,
+        "mem_required": 4096.0,
+        "disk_out_const_required": 2048.0,
+        "disk_out_mult_required": 0.0,
+        "created": "2016-05-15T00:00:00Z",
+        "archived": null,
+        "paused": null,
+        "last_modified": "2016-05-15T00:00:00Z"
+    },
+    "job_type_rev": {
+        "id": 5,
+        "job_type": {
+            "id": 3
+        },
+        "revision_num": 1,
+        "interface": {
+            "input_data": [{
+                "media_types": ["application/octet-stream"],
+                "required": true,
+                "type": "file",
+                "name": "infile"
+            }],
+            "output_data": [{
+                "media_type": "application/xml",
+                "required": true,
+                "type": "file",
+                "name": "shapefile"
+            }],
+            "version": "1.0",
+            "command": "./cem.sh",
+            "command_arguments": "${input_file} ${job_output_dir}"
+        },
+        "created": "2016-05-15T00:00:00Z"
+    },
+    "event": {
+        "id": 10278,
+        "type": "PARSE",
+        "rule": {
+            "id": 8,
+            "type": "PARSE",
+            "is_active": true,
+            "created": "2016-05-15T18:31:29.282Z",
+            "archived": null,
+            "last_modified": "2016-05-15T18:31:29.282Z"
+        },
+        "occurred": "2016-05-15T17:27:31.467Z"
+    },
+    "error": null,
+    "status": "COMPLETED",
+    "priority": 210,
+    "num_exes": 1,
+    "timeout": 1800,
+    "max_tries": 3,
+    "cpus_required": 4.0,
+    "mem_required": 4096.0,
+    "disk_out_const_required": 2048.0,
+    "disk_out_mult_required": 0.0,
+    "created": "2016-05-15T17:55:41.005Z",
+    "queued": "2016-05-15T17:56:41.005Z",
+    "started": "2016-05-15T17:57:41.005Z",
+    "ended": "2016-05-15T17:58:41.005Z",
+    "last_status_change": "2016-05-15T17:58:45.906Z",
+    "last_modified": "2016-05-15T17:58:46.001Z",
+    "data": {
+        "input_data": [
+            {
+                "name": "input_file",
+                "file_id": 8480
+            }
+        ],
+        "version": "1.0",
+        "output_data": [
+            {
+                "name": "output_file",
+                "workspace_id": 2
+            }
+        ]
+    },
+    "results": {
+        "output_data": [
+            {
+                "name": "output_file",
+                "file_id": 8484
+            }
+        ],
+        "version": "1.0"
+    },
+    "recipes": [
+        {
+            "id": 4832,
+            "recipe_type": {
+                "id": 6,
+                "name": "Recipe",
+                "version": "1.0.0",
+                "description": "Recipe description"
+            },
+            "event": {
+                "id": 7,
+                "type": "PARSE",
+                "rule": {
+                    "id": 2
+                },
+                "occurred": "2016-05-15T17:58:45.280Z"
+            },
+            "created": "2016-05-15T20:32:20.912Z",
+            "completed": "2016-05-15T20:35:20.912Z",
+            "last_modified": "2016-05-15T20:35:20.912Z"
+        }
+    ],
+    "job_exes": [
+        {
+            "id": 14552,
+            "status": "FAILED",
+            "command_arguments": "${input_file} ${job_output_dir}",
+            "timeout": 1800,
+            "pre_started": "2016-05-15T17:27:32.435Z",
+            "pre_completed": "2016-05-15T17:27:34.346Z",
+            "pre_exit_code": null,
+            "job_started": "2016-05-15T17:27:42.437Z",
+            "job_completed": "2016-05-15T17:27:46.762Z",
+            "job_exit_code": null,
+            "post_started": "2016-05-15T17:27:47.246Z",
+            "post_completed": "2016-05-15T17:27:49.461Z",
+            "post_exit_code": null,
+            "created": "2016-05-15T17:27:31.753Z",
+            "queued": "2016-05-15T17:27:31.716Z",
+            "started": "2016-05-15T17:27:32.022Z",
+            "ended": "2016-05-15T17:27:49.461Z",
+            "last_modified": "2016-05-15T17:27:49.606Z",
+            "job": {
+                "id": 15586
+            },
+            "node": {
+                "id": 1
+            },
+            "error": {
+                "id": 1,
+                "name": "unknown",
+                "title": "Unknown",
+                "description": "The error that caused the failure is unknown.",
+                "category": "SYSTEM",
+                "is_builtin": true,
+                "created": "2015-03-11T00:00:00Z",
+                "last_modified": "2015-03-11T00:00:00Z"
+            }
+        }
+    ],
+    "inputs": [
+        {
+            "name": "input_file",
+            "type": "files",
+            "value": [
+                {
+                    "id": 1,
+                    "workspace": {
+                        "id": 1,
+                        "name": "Raw Source"
+                    },
+                    "file_name": "input_file_1.nitf",
+                    "media_type": "image/nitf",
+                    "file_size": 6578474,
+                    "data_type": [],
+                    "is_deleted": false,
+                    "uuid": "c8928d9183fc99122948e7840ec9a0fd",
+                    "url": "http://host.com/input_file_1.nitf",
+                    "created": "2016-05-15T15:24:53.962Z",
+                    "deleted": null,
+                    "data_started": "2016-05-15T14:50:49Z",
+                    "data_ended": "2016-05-15T14:51:05Z",
+                    "geometry": null,
+                    "center_point": null,
+                    "meta_data": {},
+                    "last_modified": "2016-05-15T15:25:02.808Z"
+                }
+            ]
+        }
+    ],
+    "outputs": [
+        {
+            "name": "output_file",
+            "type": "file",
+            "value": {
+                "id": 8484,
+                "workspace": {
+                    "id": 2,
+                    "name": "Products"
+                },
+                "file_name": "output_file.tiff",
+                "media_type": "image/tiff",
+                "file_size": 1779751,
+                "data_type": [],
+                "is_deleted": false,
+                "uuid": "c8928d9183fc99122948e7840ec9a0fd",
+                "url": "./test/data/output/output_file.tiff",
+                "created": "2016-05-15T17:27:48.477Z",
+                "deleted": null,
+                "data_started": null,
+                "data_ended": null,
+                "geometry": null,
+                "center_point": null,
+                "meta_data": {},
+                "last_modified": "2016-05-15T17:27:49.639Z",
+                "is_operational": true,
+                "is_published": true,
+                "published": "2016-05-15T17:27:49.461Z",
+                "unpublished": null,
+                "job_type": {
+                    "id": 8
+                },
+                "job": {
+                    "id": 35
+                },
+                "job_exe": {
+                    "id": 19
+                }
+            }
+        }
+    ],
+    "superseded_job": {
+        "id": 10,
+        "job_type": {
+            "title": "Export Shapefile",
+            "version": "2.0"
+        }
+    }
+
+}

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+  <title>Default Style Example</title>
+  <link href="../style/default/angular-toggle-switch.css" media="all" rel="stylesheet" type="text/css">
+  <link href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" media="all" rel="stylesheet" type="text/css">
+  
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-sanitize.js"></script>
+  
+  <script type="text/javascript" src="../angular-toggle-switch.js"></script>
+  <script type="text/javascript">
+    angular.module('app', ['ngSanitize', 'toggle-switch']);
+  </script>
+</head>
+<body>
+  <h2>
+    Default Style Example
+  </h2>
+ 
+  <p>
+    <div toggle-switch class="switch-large switch-primary" ng-model="switchStatus"></div>
+  </p>
+
+  <p>
+    <div toggle-switch class="switch-primary" data-is-disabled="disabled" ng-model="switchStatus"></div>
+  </p>
+
+  <p ng-init="htmlSwitchStatus = true">
+    <div toggle-switch class="switch-primary switch-large" html="true" knob-label="HTML" on-label='<i class="fa fa-thumbs-up"></i>' off-label='<i class="fa fa-thumbs-down"></i>' ng-model="htmlSwitchStatus"></div>
+    <div toggle-switch class="switch-primary switch-large" html="htmlSwitchStatus" knob-label='<i class="fa fa-question"></i>' on-label='<i class="fa fa-thumbs-up"></i>' off-label='<i class="fa fa-thumbs-down"></i>' ng-model="switchStatus"></div>
+  </p>
+</body>
+</html>

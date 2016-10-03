@@ -1,0 +1,25 @@
+<div ng-show="vm.jobLogError" class="alert alert-danger text-center"><strong>{{ vm.jobLogError }}</strong> {{ vm.jobLogErrorStatus }}</div>
+<div ng-show="!vm.jobLogError">
+    <div class="row">
+        <div class="col-xs-12 margin-bottom-md" ng-show="execution.status !== 'FAILED'">
+            <span class="label {{ execution.status.toLowerCase() }}">{{ execution.status }}</span>
+        </div>
+        <div class="col-xs-12 col-md-6">
+            <div class="panel panel-sm panel-error" ng-show="execution.status === 'FAILED'">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <strong>{{ execution.error.category }} Error: {{ execution.error.title }}</strong>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    {{ execution.error.description }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row log">
+        <div class="col-xs-12 bash">
+            <div ng-class="line._source.level == 3 ? 'stderr' : 'stdout'" ng-repeat="line in vm.execLog.hits.hits">{{line._source.message}}</div>
+        </div>
+    </div>
+</div>

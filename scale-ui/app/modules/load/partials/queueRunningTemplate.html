@@ -1,0 +1,9 @@
+<ais-header name="'Running (' + vm.totalRunning + ' jobs; ' + vm.gridOptions.totalItems + ' job types)'" loading="vm.loading" show-subnav="true" subnav-links="vm.subnavLinks"></ais-header>
+
+<div class="grid-container">
+    <div ng-show="vm.runningJobsError" class="alert alert-danger text-center"><strong>{{ vm.runningJobsError }}</strong> {{ vm.runningJobsErrorStatus }}</div>
+    <div ng-show="!vm.runningJobsError">
+        <div ui-grid="vm.gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns class="scale-grid"></div>
+    </div>
+</div>
+<ais-grid-pagination></ais-grid-pagination>

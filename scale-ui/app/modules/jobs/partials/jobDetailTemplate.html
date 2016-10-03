@@ -1,0 +1,259 @@
+<ais-header name="'Job Detail'" show-subnav="true" subnav-links="vm.subnavLinks" loading="vm.loadingJobDetail"></ais-header>
+<div class="pull-right">
+    <span ng-show="!vm.readonly && !vm.job.is_superseded && (vm.job.status === 'FAILED' || vm.job.status === 'CANCELED')"><button class="btn btn-default btn-failed" ng-click="vm.requeueJob(vm.job.id)"><i class="fa fa-repeat"></i> Requeue</button></span>
+    <span ng-show="!vm.readonly && !vm.job.is_superseded && vm.job.status !== 'COMPLETED' && vm.job.status !== 'CANCELED'"><button ng-click="vm.cancelJob(vm.job)" class="btn btn-default"><i class="fa fa-ban"></i> Cancel</button></span>
+</div>
+<ul class="nav nav-tabs" role="tablist">
+    <li class="active"><a data-target="#details" data-toggle="tab">Job ID: {{ vm.job.id }}</a></li>
+    <li><a data-target="#executions" data-toggle="tab">Executions ({{ vm.job.num_exes }})</a></li>
+</ul>
+<div class="tab-content">
+    <div class="tab-pane active" id="details">
+        <div class="margin-top-sm margin-bottom-lg">
+            <h3 ng-show="vm.job.status !== 'FAILED'">
+                <span class="label {{ vm.job.getStatusClass() }}">{{ vm.job.status }} {{ vm.lastStatusChange }}</span>
+            </h3>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-6">
+                <div class="panel panel-info" ng-show="vm.job.is_superseded">
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            <strong>SUPERSEDED <span ng-show="vm.job.superseded_by_job.id">BY
+                                <a ng-href="#/jobs/job/{{ vm.job.superseded_by_job.id }}" style="padding: 0px 20px 0px 20px;">
+                                    {{ vm.job.superseded_by_job.job_type.title }} {{ vm.job.superseded_by_job.job_type.version }}
+                                </a>
+                            </span>     <span class="pull-right">{{ vm.supersededChange }}</span></strong>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <h4 class="panel-title error-title">
+                        This job is obsolete because its recipe has been re-processed.
+                            </h4>
+                    </div>
+                </div>
+                <div class="panel panel-error" ng-show="vm.job.status === 'FAILED'">
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            <strong>{{ vm.job.status }} <span class="pull-right">{{ vm.lastStatusChange }}</span></strong>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <h4 class="panel-title error-title"><strong>{{ vm.job.error.category }} Error: {{ vm.job.error.title }}</strong></h4>
+                        {{ vm.job.error.description }}
+                    </div>
+                </div>
+                <strong>Overview</strong>
+                <table class="table table-hover table-condensed table-striped">
+                    <tbody>
+                        <tr><td>Type:</td><td><a ng-href="#/jobs/types/{{ vm.job.job_type.id }}"><span ng-bind-html="vm.job.job_type.getIcon()"></span> {{ vm.job.job_type.title }} {{ vm.job.job_type.version }}</a></td></tr>
+                        <tr ng-show="vm.job.recipes"><td>Recipe:</td><td><a ng-href="#/recipes/recipe/{{ vm.job.recipes[0].id }}">{{ vm.job.recipes[0].recipe_type.title }} {{ vm.job.recipes[0].recipe_type.version }}</a></td></tr>
+                        <!--<tr ng-show="vm.job.superseded_by_job.id"><td>Superseded By:</td><td><a ng-href="#/jobs/job/{{ vm.job.superseded_by_job.id }}">{{ vm.job.superseded_by_job.job_type.title }} {{ vm.job.superseded_by_job.job_type.version }}</a></td></tr>-->
+                        <tr ng-show="vm.job.superseded_job.id"><td>Supersedes:</td><td><a ng-href="#/jobs/job/{{ vm.job.superseded_job.id }}">{{ vm.job.superseded_job.job_type.title }} {{ vm.job.superseded_job.job_type.version }}</a></td></tr>
+                        <tr><td>Status:</td><td><div class="label {{ vm.job.getStatusClass() }}">{{ vm.job.status }}</div></td></tr>
+                        <tr><td>Duration:</td><td>{{ vm.job.getDuration() }}</td></tr>
+                        <tr><td>Trigger:</td><td>{{ vm.job.event.type }} {{ vm.triggerOccurred }}</td></tr>
+                        <tr><td>Priority:</td><td>{{ vm.job.priority }}</td></tr>
+                        <tr><td>Created:</td><td>{{ vm.job.created }}</td></tr>
+                        <tr><td>Last Updated:</td><td>{{ vm.job.last_modified }}</td></tr>
+                        <tr><td>Num Executions:</td><td>{{ vm.job.num_exes }}</td></tr>
+                        <tr><td>Max Tries:</td><td>{{ vm.job.max_tries }}</td></tr>
+                        <tr ng-show="job.timeout"><td>Timeout:</td><td>{{ vm.job.timeout }} seconds</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-xs-12 col-md-6">
+                <strong>Timeline</strong>
+                <ais-timeline tasks="vm.timeline" started="'started'" ended="'ended'"></ais-timeline>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <table class="table table-striped table-bordered" cols="5" ng-if="vm.inputs.length > 0">
+                    <tbody>
+                        <caption>Inputs</caption>
+                        <tr>
+                            <th class="col-md-2">Name</th>
+                            <th class="col-md-1">Type</th>
+                            <th class="col-md-9">Value</th>
+                        </tr>
+                        <tr ng-repeat="input in vm.inputs">
+                            <td>{{ input.name }}</td>
+                            <td>{{ input.type }}</td>
+                            <td>
+                                <span ng-if="input.type === 'file' && input.value">
+                                    <table class="table table-hover table-condensed">
+                                        <tr ng-if="$index === 0">
+                                            <td>File Name</td>
+                                            <td>File Size</td>
+                                            <td>Created</td>
+                                            <td>Last Modified</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a ng-show="input.value.url" href="{{ input.value.url }}" target="_jobfile">{{ input.value.file_name }}</a>
+                                                <span ng-show="!input.value.url">{{ input.value.file_name }}</span>
+                                            </td>
+                                            <td>{{ vm.calculateFileSize(input.value.file_size) }}</td>
+                                            <td>{{ input.value.created }}</td>
+                                            <td>{{ input.value.last_modified }}</td>
+                                        </tr>
+                                    </table>
+                                </span>
+                                <span ng-if="input.type === 'files' && input.value">
+                                    <table class="table table-hover table-condensed">
+                                        <tr>
+                                            <td>File Name</td>
+                                            <td>File Size</td>
+                                            <td>Created</td>
+                                            <td>Last Modified</td>
+                                        </tr>
+                                        <tr ng-repeat="v in input.value">
+                                            <td>
+                                                <a ng-show="v.url" href="{{ v.url }}" target="_jobfile">{{ v.file_name }}</a>
+                                                <span ng-show="!v.url">{{ v.file_name }}</span>
+                                            </td>
+                                            <td>{{ vm.calculateFileSize(v.file_size) }}</td>
+                                            <td>{{ v.created }}</td>
+                                            <td>{{ v.last_modified }}</td>
+                                        </tr>
+                                    </table>
+                                </span>
+                                <span ng-if="input.type === 'property' && input.value">
+                                    {{input.value}}
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-striped table-bordered" ng-if="vm.outputs.length > 0">
+                    <tbody>
+                        <caption>Outputs</caption>
+                        <tr>
+                            <th class="col-md-2">Name</th>
+                            <th class="col-md-1">Type</th>
+                            <th class="col-md-9">Value</th>
+                        </tr>
+                        <tr ng-repeat="output in vm.outputs">
+                            <td>{{ output.name }}</td>
+                            <td>{{ output.type }}</td>
+                            <td>
+                                <span ng-if="output.type === 'file' && output.value">
+                                    <table class="table table-hover table-condensed">
+                                        <tr>
+                                            <td>File Name</td>
+                                            <td>File Size</td>
+                                            <td>Created</td>
+                                            <td>Last Modified</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <a ng-show="output.value.url" href="{{ output.value.url }}" target="_jobfile">{{ output.value.file_name }}</a>
+                                                <span ng-show="!output.value.url">{{ output.value.file_name }}</span>
+                                            </td>
+                                            <td>{{ vm.calculateFileSize(output.value.file_size) }}</td>
+                                            <td>{{ output.value.created }}</td>
+                                            <td>{{ output.value.last_modified }}</td>
+                                        </tr>
+                                    </table>
+                                </span>
+                                <span ng-if="output.type === 'files' && output.value">
+                                    <table class="table table-hover table-condensed">
+                                        <tr>
+                                            <td>File Name</td>
+                                            <td>File Size</td>
+                                            <td>Created</td>
+                                            <td>Last Modified</td>
+                                        </tr>
+                                        <tr ng-repeat="v in output.value">
+                                            <td>
+                                                <a ng-show="v.url" href="{{ v.url }}" target="_jobfile">{{ v.file_name }}</a>
+                                                <span ng-show="!v.url">{{ v.file_name }}</span>
+                                            </td>
+                                            <td>{{ vm.calculateFileSize(v.file_size) }}</td>
+                                            <td>{{ v.created }}</td>
+                                            <td>{{ v.last_modified }}</td>
+                                        </tr>
+                                    </table>
+                                </span>
+                                <span ng-if="output.type === 'property' && output.value">
+                                    {{ output.value }}
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane" id="executions">
+        <table class="table table-hover table-condensed">
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Exit Code</th>
+                    <th>Node</th>
+                    <th>Created</th>
+                    <th>Queued</th>
+                    <th>Started</th>
+                    <th>Ended</th>
+                    <th>Last Modified</th>
+                    <th class="text-center">View Log</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="link" ng-repeat="execution in vm.job.job_exes">
+                    <td ng-click="vm.showExecutionDetails(execution.id)">{{ execution.status }}</td>
+                    <td ng-click="vm.showExecutionDetails(execution.id)">{{ execution.job_exit_code }}</td>
+                    <td><a ng-href="#/nodes/{{ execution.node.id }}">{{ execution.node.id }}</td>
+                    <td ng-click="vm.showExecutionDetails(execution.id)">{{ execution.created_formatted }}</td>
+                    <td ng-click="vm.showExecutionDetails(execution.id)">{{ execution.queued_formatted }}</td>
+                    <td ng-click="vm.showExecutionDetails(execution.id)">{{ execution.started_formatted }}</td>
+                    <td ng-click="vm.showExecutionDetails(execution.id)">{{ execution.ended_formatted }}</td>
+                    <td ng-click="vm.showExecutionDetails(execution.id)">{{ execution.last_modified_formatted }}</td>
+                    <td class="text-center"><button class="btn btn-xs btn-default" ng-click="vm.showLog(execution)"><i class="fa fa-file-text"></i></button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script type="text/ng-template" id="showLog.html">
+    <div>
+        <div class="modal-header">
+            <h3>Log for Execution ID: {{ vm.selectedExecutionLog.id }}</h3>
+        </div>
+        <div class="modal-body">
+            <job-execution-log execution="vm.selectedExecutionLog"></job-execution-log>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-default" ng-click="$dismiss()">Close</button>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="showExecutionDetails.html">
+<div>
+    <div class="modal-header">
+        <h3>Job Execution ID: {{ vm.selectedExecutionDetails.id }}</h3>
+    </div>
+    <div class="modal-body">
+        <div style="height: 400px; overflow-y: auto; overflow-x: hidden;">
+            <table class="table table-condensed table-striped">
+                <thead>
+                    <th>Key</th>
+                    <th>Value</th>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="detail in vm.selectedExecutionDetailValues">
+                        <td>{{ detail[0] }}</td>
+                        <td>{{ detail[1] }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-default" ng-click="$dismiss()">Close</button>
+    </div>
+
+</div>
+</script>

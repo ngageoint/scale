@@ -1,0 +1,12 @@
+<div ng-show="vm.loading" class="loading-component">
+    <h4>
+        <i class="fa fa-circle-o-notch fa-spin fa-2x"></i><br />
+        Loading
+    </h4>
+</div>
+<div ng-show="!vm.loading">
+    <div class="grid-chart-container">
+        <div class="grid-chart" ng-class="vm.gridClass()"></div>
+        <div class="grid-html"></div>
+    </div>
+</div>

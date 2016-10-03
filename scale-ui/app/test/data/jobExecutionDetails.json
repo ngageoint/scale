@@ -1,0 +1,86 @@
+{
+    "id": 3,
+    "status": "FAILED",
+    "command_arguments": "-i 1",
+    "timeout": 0,
+    "exit_code": null,
+    "created": "2015-06-15T18:12:25.072Z",
+    "queued": "2015-06-15T18:12:25.051Z",
+    "scheduled": "2015-06-15T18:18:52.449Z",
+    "pre_started": null,
+    "pre_completed": null,
+    "job_started": "2015-06-15T18:12:52.618Z",
+    "job_completed": null,
+    "post_started": null,
+    "post_completed": null,
+    "ended": "2015-06-15T19:14:22.604Z",
+    "last_modified": "2015-06-15T19:14:23.142Z",
+    "job": {
+        "id": 3,
+        "job_type": {
+            "id": 1,
+            "name": "alfa",
+            "version": "1.0",
+            "title": "Alfa",
+            "description": "alfa v1.0",
+            "category": "system",
+            "is_system": true,
+            "is_long_running": false,
+            "is_active": true,
+            "is_operational": true,
+            "is_paused": false,
+            "icon_code": "f13d"
+        },
+        "event": {
+            "id": 3
+        },
+        "error": null,
+        "status": "COMPLETED",
+        "priority": 10,
+        "num_exes": 1
+    },
+    "node": {
+        "id": 1,
+        "hostname": "machine.com",
+        "port": 5051,
+        "slave_id": "20150821-123454-1683014024-5050-8216-S2",
+        "is_paused": false,
+        "is_active": true,
+        "archived": null,
+        "created": "2015-09-02T18:05:54.730Z",
+        "last_modified": "2015-09-02T18:05:54.730Z"
+    },
+    "error": {
+        "id": 1,
+        "name": "unknown",
+        "title": "Unknown",
+        "description": "The error that caused the failure is unknown.",
+        "category": "SYSTEM",
+        "is_builtin": true,
+        "created": "2015-03-11T00:00:00Z",
+        "last_modified": "2015-03-11T00:00:00Z"
+    },
+    "environment": {},
+    "cpus_scheduled": 0.5,
+    "mem_scheduled": 15360.0,
+    "disk_in_scheduled": 1.0,
+    "disk_out_scheduled": 0.0,
+    "disk_total_scheduled": 1.0,
+    "results": {
+        "output_data": [
+            {
+                "name": "output_file",
+                "file_id": 3
+            }
+        ],
+        "version": "1.0"
+    },
+    "current_stdout_url": "http://host/out.txt",
+    "current_stderr_url": "http://host/error.txt",
+    "results_manifest": {
+        "output_data": [],
+        "version": "1.1",
+        "errors": [],
+        "parse_results": []
+    }
+}

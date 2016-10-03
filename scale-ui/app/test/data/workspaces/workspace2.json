@@ -1,0 +1,23 @@
+{
+  "id": 2,
+  "name": "products",
+  "title": "Products",
+  "description": "Products Workspace",
+  "base_url": "http://host.com/products",
+  "is_active": true,
+  "used_size": 0,
+  "total_size": 0,
+  "created": "2015-10-05T21:26:04.876Z",
+  "archived": null,
+  "last_modified": "2015-10-05T21:26:04.876Z",
+  "json_config": {
+    "broker": {
+      "type": "s3",
+      "bucket_name": "my_bucket.domain.com",
+      "credentials": {
+        "access_key_id": "AKIAIOSFODNN7EXAMPLE",
+        "secret_access_key": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+<div ng-show="tasks.length > 0">
+    <div class="ais-timeline" id="ais-timeline"></div>
+    <table class="table table-condensed table-striped">
+        <thead><tr><th>Event</th><th>Started</th><th>Ended</th></tr></thead>
+        <tbody>
+            <tr ng-repeat="task in tasks"><td>{{task.taskName}}</td><td>{{ vm.formatDate(task[started]) }}</td><td>{{ vm.formatDate(task[ended]) }}</td></tr>
+        </tbody>
+    </table>
+</div>
+<div ng-show="!tasks || tasks.length === 0">No timeline for this job.</div>

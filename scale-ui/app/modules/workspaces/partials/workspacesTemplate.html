@@ -1,0 +1,151 @@
+<ais-header name="'Workspaces'" loading="vm.loading"></ais-header>
+
+<div class="row">
+    <div class="col-xs-3 master-container" style="{{ vm.containerStyle }}">
+        <div class="master-content">
+            <div class="master-controls">
+                <toggle-switch ng-model="vm.showActive" on-label="Active" off-label="Inactive" class="switch-success switch-small pull-right"></toggle-switch>
+                <button class="btn btn-sm" ng-if="!vm.readonly" ng-class="vm.addBtnClass" ng-click="vm.newWorkspace()"><i class="fa" ng-class="vm.addBtnIcon"></i> Create Workspace</button>
+                <button ng-if="vm.scaleConfig.static && vm.localWorkspaces.length > 0 && !vm.readonly" class="btn btn-sm btn-default" ng-click="vm.clearLocalWorkspaces()" title="Clear local workspaces"><i class="fa fa-remove"></i></button>
+            </div>
+            <ul class="list-unstyled">
+                <li ng-repeat="workspace in vm.workspaces" ng-class="{ active: vm.activeWorkspace.id === workspace.id }" ng-click="vm.loadWorkspace(workspace.id)">{{ workspace.title }}</li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-xs-9 detail-container" style="{{ vm.containerStyle }}">
+        <div class="text-center" ng-if="!vm.activeWorkspace">
+            <h2>Select a Workspace to view its details.</h2>
+        </div>
+        <div class="detail-content no-tabs" ng-if="vm.activeWorkspace">
+            <form name="workspacesForm" novalidate>
+                <div class="pull-right">
+                    <div class="btn-group btn-group-sm" ng-show="!vm.readonly">
+                        <button class="btn btn-default" ng-click="vm.validateWorkspace()" ng-if="vm.mode === 'edit' || vm.mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Validate"><i class="fa fa-check"></i></button>
+                        <button class="btn" ng-class="{ 'btn-success': workspacesForm.$invalid === false, 'btn-default': workspacesForm.$invalid === true }" ng-click="vm.saveWorkspace()" ng-disabled="workspacesForm.$invalid" ng-if="vm.mode === 'edit' || vm.mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Save Workspace" tooltip-placement="left"><i class="fa fa-save"></i></button>
+                        <button class="btn btn-warning" ng-click="vm.cancelCreate()" ng-if="vm.mode === 'add' || vm.mode === 'edit'" tooltip-append-to-body="true" uib-tooltip="Cancel" tooltip-placement="left"><i class="fa fa-close"></i></button>
+                        <button class="btn btn-success" ng-click="vm.editWorkspace()" ng-if="vm.mode === 'view'" tooltip-append-to-body="true" uib-tooltip="Edit Workspace" tooltip-placement="left"><i class="fa fa-edit"></i></button>
+                    </div>
+                </div>
+                <div>
+                    <h3 ng-show="!vm.activeWorkspace.title">Untitled Workspace</h3>
+                    <h3 ng-show="vm.activeWorkspace.title !== ''">{{ vm.activeWorkspace.title }}</h3>
+                    <hr />
+                    <div ng-if="vm.mode==='view'">
+                        <dl>
+                            <dt>Description:</dt>
+                            <dd>{{ vm.activeWorkspace.description }}</dd>
+                            <dt>Type:</dt>
+                            <dd>{{ vm.activeWorkspace.json_config.broker.type.toUpperCase() }}</dd>
+                            <dt ng-if="vm.activeWorkspace.json_config.broker.type === 'nfs'">NFS Path:</dt>
+                            <dd ng-if="vm.activeWorkspace.json_config.broker.type === 'nfs'">{{ vm.activeWorkspace.json_config.broker.nfs_path }}</dd>
+                            <dt ng-if="vm.activeWorkspace.json_config.broker.type === 'host' || vm.activeWorkspace.json_config.broker.type === 's3'">Host Path:</dt>
+                            <dd ng-if="vm.activeWorkspace.json_config.broker.type === 'host' || vm.activeWorkspace.json_config.broker.type === 's3'">{{ vm.activeWorkspace.json_config.broker.host_path }}</dd>
+                            <dt ng-if="vm.activeWorkspace.json_config.broker.type === 's3'">Region Name Override:</dt>
+                            <dd ng-if="vm.activeWorkspace.json_config.broker.type === 's3'">{{ vm.activeWorkspace.json_config.broker.region_name }}</dd>
+                            <dt ng-if="vm.activeWorkspace.json_config.broker.type === 's3'">Bucket Name:</dt>
+                            <dd ng-if="vm.activeWorkspace.json_config.broker.type === 's3'">{{ vm.activeWorkspace.json_config.broker.bucket_name }}</dd>
+                            <dt ng-if="vm.activeWorkspace.json_config.broker.type === 's3'">Access Key ID:</dt>
+                            <dd ng-if="vm.activeWorkspace.json_config.broker.type === 's3'">{{ vm.activeWorkspace.json_config.broker.credentials.access_key_id }}</dd>
+                            <dt ng-if="vm.activeWorkspace.json_config.broker.type === 's3'">Secret Access Key:</dt>
+                            <dd ng-if="vm.activeWorkspace.json_config.broker.type === 's3'">{{ vm.activeWorkspace.json_config.broker.credentials.secret_access_key }}</dd>
+
+                        </dl>
+                    </div>
+                    <div ng-if="vm.mode === 'edit' || vm.mode === 'add'">
+                        <div class="row">
+                            <div class="col-xs-12 col-md-6">
+                                <div class="form-group" ng-class="{ 'has-error': workspacesForm.wsName.$invalid }">
+                                    <label for="wsName">Name</label>
+                                    <input id="wsName" name="wsName" type="text" ng-disabled="vm.mode === 'edit'" class="form-control" ng-model="vm.activeWorkspace.name" placeholder="Name" required>
+                                    <p ng-show="workspacesForm.wsName.$invalid && !workspacesForm.wsName.$pristine" class="help-block">Name is required.</p>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6">
+                                <div class="form-group" ng-class="{ 'has-error': workspacesForm.wsTitle.$invalid }">
+                                    <label for="wsTitle">Title</label>
+                                    <input id="wsTitle" name="wsTitle" type="text" class="form-control" ng-model="vm.activeWorkspace.title" placeholder="Title" required>
+                                    <p ng-show="workspacesForm.wsTitle.$invalid && !workspacesForm.wsTitle.$pristine" class="help-block">Title is required.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="form-group" ng-class="{ 'has-error': workspacesForm.wsDescription.$invalid }">
+                                    <label for="wsDescription">Description</label>
+                                    <textarea id="wsDescription" name="wsDescription" class="form-control" ng-model="vm.activeWorkspace.description" placeholder="Description" rows="4" required></textarea>
+                                    <p ng-show="workspacesForm.wsDescription.$invalid && !workspacesForm.wsDescription.$pristine" class="help-block">Description is required.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="wsBaseUrl">Base URL</label>
+                                    <input id="wsBaseUrl" type="text" class="form-control" ng-model="vm.activeWorkspace.base_url" placeholder="Base URL">
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6" ng-if="vm.mode === 'edit'">
+                                <div class="form-group">
+                                    <label for="wsActive">Workspace Status</label>
+                                    <div class="checkbox">
+                                        <label for="wsActive">
+                                            <input id="wsActive" type="checkbox" ng-model="vm.activeWorkspace.is_active">
+                                            Active
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 col-md-6">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="form-group" ng-class="{ 'has-error': workspacesForm.wsType.$invalid }">
+                                            <label for="wsType">Type</label>
+                                            <select id="wsType" name="wsType" class="form-control" ng-model="vm.activeWorkspace.json_config.broker.type" ng-options="t.broker.type as t.broker.type.toUpperCase() for t in vm.availableWorkspaceTypes" required></select>
+                                            <p ng-show="workspacesForm.wsType.$invalid && !workspacesForm.wsType.$pristine" class="help-block">Broker Type is required.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        {{ vm.brokerDescription }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6">
+                                <div class="form-group" ng-class="{ 'has-error': workspacesForm.nfs_path.$invalid }" ng-if="vm.activeWorkspace.json_config.broker.type === 'nfs'">
+                                    <label for="nfs_path">NFS Path</label>
+                                    <input id="nfs_path" name="nfs_path" type="text" class="form-control" placeholder="NFS Path" ng-model="vm.activeWorkspace.json_config.broker.nfs_path" required>
+                                    <p ng-show="workspacesForm.nfs_path.$invalid && !workspacesForm.nfs_path.$pristine" class="help-block">NFS Path is required.</p>
+                                </div>
+                                <div class="form-group" ng-class="{ 'has-error': workspacesForm.host_path.$invalid }" ng-if="vm.activeWorkspace.json_config.broker.type === 'host' || vm.activeWorkspace.json_config.broker.type === 's3'">
+                                    <label for="host_path">Host Path</label>
+                                    <input id="host_path" name="host_path" type="text" class="form-control" placeholder="Host Path" ng-model="vm.activeWorkspace.json_config.broker.host_path" ng-required="vm.activeWorkspace.json_config.broker.type === 'host'">
+                                    <p ng-show="workspacesForm.host_path.$invalid && !workspacesForm.host_path.$pristine" class="help-block">Host Path is required.</p>
+                                </div>
+                                <div class="form-group" ng-if="vm.activeWorkspace.json_config.broker.type === 's3'">
+                                    <label for="region_name">Region Name Override</label>
+                                    <input id="region_name" type="text" class="form-control" placeholder="Region Name Override" ng-model="vm.activeWorkspace.json_config.broker.region_name">
+                                </div>
+                                <div class="form-group" ng-if="vm.activeWorkspace.json_config.broker.type === 's3'">
+                                    <label for="bucket_name">Bucket Name</label>
+                                    <input id="bucket_name" type="text" class="form-control" placeholder="Bucket Name" ng-model="vm.activeWorkspace.json_config.broker.bucket_name">
+                                </div>
+                                <div class="form-group" ng-if="vm.activeWorkspace.json_config.broker.type === 's3'">
+                                    <label for="access_key_id">Access Key ID</label>
+                                    <input id="access_key_id" type="text" class="form-control" placeholder="Access Key ID" ng-model="vm.activeWorkspace.json_config.broker.credentials.access_key_id">
+                                </div>
+                                <div class="form-group" ng-if="vm.activeWorkspace.json_config.broker.type === 's3'">
+                                    <label for="secret_access_key">Secret Access Key</label>
+                                    <input id="secret_access_key" type="text" class="form-control" placeholder="Secret Access Key" ng-model="vm.activeWorkspace.json_config.broker.credentials.secret_access_key">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,80 @@
+<ais-header name="'Node Details'" show-subnav="false" loading="vm.loading"></ais-header>
+<h3><span class="label label-primary">{{ vm.node.hostname }}</span></h3>
+<div class="row">
+    <div class="col-xs-12">
+        <h3>Overview</h3>
+        <div class="row">
+            <div class="col-xs-12 col-sm-8">
+                <table class="table table-hover table-condensed table-striped">
+                    <tbody>
+                    <tr><td>Port:</td><td>{{ vm.node.port }}</td></tr>
+                    <tr><td>Slave ID:</td><td>{{ vm.node.slave_id }}</td></tr>
+                    <tr><td>Paused:</td><td>{{ vm.node.is_paused }}</td></tr>
+                    <tr><td>Paused Due To Errors:</td><td>{{ vm.node.is_paused_errors }}</td></tr>
+                    <tr><td>Paused Reason:</td><td>{{ vm.node.pause_reason }}</td></tr>
+                    <tr><td>Active:</td><td>{{ vm.node.is_active }}</td></tr>
+                    <tr><td>Archived:</td><td>{{ vm.node.archived }}</td></tr>
+                    <tr><td>Created:</td><td>{{ vm.node.created }}</td></tr>
+                    <tr><td>Last Offer:</td><td>{{ vm.node.last_offer }}</td></tr>
+                    <tr><td>Last Modified:</td><td>{{ vm.node.last_modified }}</td></tr>
+                    <tr><td>Disconnected:</td><td>{{ vm.node.disconnected }}</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-xs-12 col-sm-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <b>Resources</b>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-1">
+                                CPU
+                            </div>
+                            <div class="col-xs-11">
+                                <dl class="dl-horizontal">
+                                    <dt>Scheduled</dt>
+                                    <dd>{{ vm.node.resources.scheduled.cpus }}</dd>
+                                    <dt>Used</dt>
+                                    <dd>{{ vm.node.resources.used.cpus }}</dd>
+                                    <dt>Total</dt>
+                                    <dd>{{ vm.node.resources.total.cpus }}</dd>
+                                </dl>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-1">
+                                Memory
+                            </div>
+                            <div class="col-xs-11">
+                                <dl class="dl-horizontal">
+                                    <dt>Scheduled</dt>
+                                    <dd>{{ vm.scaleService.calculateFileSizeFromMib(vm.node.resources.scheduled.mem) }}</dd>
+                                    <dt>Used</dt>
+                                    <dd>{{ vm.scaleService.calculateFileSizeFromMib(vm.node.resources.used.mem) }}</dd>
+                                    <dt>Total</dt>
+                                    <dd>{{ vm.scaleService.calculateFileSizeFromMib(vm.node.resources.total.mem) }}</dd>
+                                </dl>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-1">
+                                Disk
+                            </div>
+                            <div class="col-xs-11">
+                                <dl class="dl-horizontal">
+                                    <dt>Scheduled</dt>
+                                    <dd>{{ vm.scaleService.calculateFileSizeFromMib(vm.node.resources.scheduled.disk) }}</dd>
+                                    <dt>Used</dt>
+                                    <dd>{{ vm.scaleService.calculateFileSizeFromMib(vm.node.resources.used.disk) }}</dd>
+                                    <dt>Total</dt>
+                                    <dd>{{ vm.scaleService.calculateFileSizeFromMib(vm.node.resources.total.disk) }}</dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

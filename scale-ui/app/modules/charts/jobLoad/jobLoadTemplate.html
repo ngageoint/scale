@@ -1,0 +1,31 @@
+<div ng-show="vm.loadingJobLoad" class="loading-component">
+    <h4>
+        <i class="fa fa-circle-o-notch fa-spin fa-2x"></i><br />
+        Loading
+    </h4>
+</div>
+<div ng-class="{ 'visible': !vm.loadingJobLoad, 'invisible': vm.loadingJobLoad }">
+    <div ng-show="vm.jobLoadError" class="alert alert-danger">
+        <strong>{{ vm.jobLoadError }}</strong> {{ vm.jobLoadErrorStatus }}
+    </div>
+    <div class="job-load-container" ng-show="!vm.jobLoadError">
+        <div class="job-load-header">
+            <h2>
+                <span ng-hide="hideTitle">Job Load |</span>
+                <button class="btn btn-sm" ng-class="vm.zoomClass" ng-click="vm.toggleZoom()">{{ vm.zoomText }}</button>
+            </h2>
+            <div class="widget-label-left">Recent hourly job statistics.</div>
+        </div>
+        <div id="job-load" style="{{ vm.chartStyle }}"></div>
+    </div>
+    <div class="job-load-legend-label">{{ vm.legendLabel }}</div>
+    <div ng-show="showFilter" class="job-load-filter">
+        <div class="text-center form-inline">
+            <div class="btn-group">
+                <button class="btn btn-sm btn-default job-load-older" ng-click="vm.updateJobLoadRange('older')"><i class="fa fa-step-backward"></i> Older</button>
+                <button class="btn btn-sm btn-default job-load-newer" ng-click="vm.updateJobLoadRange('newer')" disabled>Newer <i class="fa fa-step-forward"></i></button>
+            </div>
+            <button class="btn btn-sm btn-default job-load-today" ng-click="vm.updateJobLoadRange('today')" disabled><i class="fa fa-home"></i> Today</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,52 @@
+<table class="table table-condensed table-striped" style="margin-bottom: 0;">
+    <thead>
+        <th colspan="2">Interface</th>
+    </thead>
+    <tbody>
+        <tr ng-show="jobTypeInterface.command">
+            <td>Command</td>
+            <td>{{ jobTypeInterface.command }}</td>
+        </tr>
+        <tr ng-show="jobTypeInterface.command_arguments">
+            <td>Command Arguments</td>
+            <td>{{ jobTypeInterface.command_arguments }}</td>
+        </tr>
+        <tr ng-show="jobTypeInterface.input_data">
+            <td>Input Data</td>
+            <td>
+                <table class="table table-condensed" style="margin-bottom:0;" ng-show="jobTypeInterface.input_data && jobTypeInterface.input_data.length>0">
+                    <thead><th>Name</th><th>Type</th><th>Media Types</th></thead>
+                    <tbody>
+                        <tr ng-repeat="input_data in jobTypeInterface.input_data">
+                            <td>{{ input_data.name }} <span ng-show="input_data.required">*</span></td>
+                            <td>{{ input_data.type }}</td>
+                            <td>{{ input_data.media_types }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr ng-show="jobTypeInterface.output_data">
+            <td>Output Data</td>
+            <td>
+                <table class="table table-condensed" style="margin-bottom:0;" ng-show="jobTypeInterface.output_data && jobTypeInterface.output_data.length>0">
+                    <thead><th>Name</th><th>Type</th><th>Media Type</th></thead>
+                    <tbody>
+                        <tr ng-repeat="output_data in jobTypeInterface.output_data">
+                            <td>{{ output_data.name }} <span ng-show="output_data.required">*</span></td>
+                            <td>{{ output_data.type }}</td>
+                            <td>{{ output_data.media_type }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr ng-show="jobTypeInterface.shared_resources && jobTypeInterface.shared_resources.length > 0">
+            <td>Shared Resources</td>
+            <td>{{ jobTypeInterface.share_resources }}</td>
+        </tr>
+        <tr>
+            <td colspan="2">Required</td>
+        </tr>
+    </tbody>
+</table>

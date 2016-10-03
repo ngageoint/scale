@@ -1,0 +1,13 @@
+<div class="header">
+    <ul class="nav nav-pills" ng-show="showSubnav">
+        <li ng-repeat="navLink in subnavLinks" ng-class="{ active: navLink.path === vm.currentPath }"><a ng-href="#{{ navLink.path }}">{{ navLink.label }}</a></li>
+    </ul>
+    <h1 ng-if="!hideTitle">{{ name }}</h1>
+    <hr ng-if="!hideTitle" />
+</div>
+<div ng-if="loading" class="loading-content">
+    <h3>
+        <i class="fa fa-circle-o-notch fa-spin fa-3x"></i><br />
+        Loading
+    </h3>
+</div>

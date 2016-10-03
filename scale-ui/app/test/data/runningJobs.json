@@ -1,0 +1,1804 @@
+{
+  "results": [
+    {
+      "count": 41,
+      "job_type": {
+        "id": 1,
+        "name": "landsat-parse",
+        "version": "1.0.0",
+        "title": "Landsat 8 Parse",
+        "description": "Curabitur gravida nisi at nibh.",
+        "category": "Landsat",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f248"
+      },
+      "longest_running": "2015-12-07T09:02:33Z"
+    },
+    {
+      "count": 27,
+      "job_type": {
+        "id": 2,
+        "name": "sam",
+        "version": "1.0",
+        "title": "Spectral Angle Mapper",
+        "description": "Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f0e7"
+      },
+      "longest_running": "2015-10-24T01:48:57Z"
+    },
+    {
+      "count": 28,
+      "job_type": {
+        "id": 3,
+        "name": "scm",
+        "version": "1.0",
+        "title": "Spectral Correlation Mapper",
+        "description": "Duis at velit eu est congue elementum. In hac habitasse platea dictumst.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f140"
+      },
+      "longest_running": "2015-10-05T18:54:56Z"
+    },
+    {
+      "count": 2,
+      "job_type": {
+        "id": 4,
+        "name": "cem",
+        "version": "1.0",
+        "title": "Constrained Energy Minimization",
+        "description": "Quisque porta volutpat erat.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f185"
+      },
+      "longest_running": "2016-04-02T10:20:36Z"
+    },
+    {
+      "count": 97,
+      "job_type": {
+        "id": 5,
+        "name": "wv2-parse",
+        "version": "1.0.1",
+        "title": "WorldView-2 Parse",
+        "description": "Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f0c2"
+      },
+      "longest_running": "2015-09-04T00:13:37Z"
+    },
+    {
+      "count": 59,
+      "job_type": {
+        "id": 6,
+        "name": "wv2-atmosphere-corr",
+        "version": "1.0.1",
+        "title": "WorldView-2 Atmospheric Correction",
+        "description": "Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f14e"
+      },
+      "longest_running": "2015-05-20T04:19:23Z"
+    },
+    {
+      "count": 1,
+      "job_type": {
+        "id": 7,
+        "name": "ls8-atmos-corr",
+        "version": "2.1.9",
+        "title": "Landsat 8 Atmospheric Correction",
+        "description": "Aenean lectus. Pellentesque eget nunc.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f00c"
+      },
+      "longest_running": "2015-07-12T10:45:31Z"
+    },
+    {
+      "count": 89,
+      "job_type": {
+        "id": 8,
+        "name": "ls8-ortho",
+        "version": "2.1.9",
+        "title": "Landsat 8 Ortho",
+        "description": "Donec posuere metus vitae ipsum.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f1c0"
+      },
+      "longest_running": "2016-01-26T01:55:14Z"
+    },
+    {
+      "count": 64,
+      "job_type": {
+        "id": 9,
+        "name": "wv2-ortho",
+        "version": "2.0",
+        "title": "WorldView-2 Rigorous Orthorectification",
+        "description": "Phasellus id sapien in sapien iaculis congue.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f219"
+      },
+      "longest_running": "2015-04-28T14:54:36Z"
+    },
+    {
+      "count": 72,
+      "job_type": {
+        "id": 10,
+        "name": "export-shp",
+        "version": "2.0",
+        "title": "Export Shapefile",
+        "description": "Suspendisse potenti. In eleifend quam a odio.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f06e"
+      },
+      "longest_running": "2015-05-13T08:34:16Z"
+    },
+    {
+      "count": 97,
+      "job_type": {
+        "id": 1,
+        "name": "landsat-parse",
+        "version": "1.0.0",
+        "title": "Landsat 8 Parse",
+        "description": "Aenean sit amet justo.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f248"
+      },
+      "longest_running": "2015-11-22T23:00:44Z"
+    },
+    {
+      "count": 12,
+      "job_type": {
+        "id": 2,
+        "name": "sam",
+        "version": "1.0",
+        "title": "Spectral Angle Mapper",
+        "description": "Nam nulla.",
+        "category": "Landsat",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f0e7"
+      },
+      "longest_running": "2016-03-04T16:33:13Z"
+    },
+    {
+      "count": 74,
+      "job_type": {
+        "id": 3,
+        "name": "scm",
+        "version": "1.0",
+        "title": "Spectral Correlation Mapper",
+        "description": "In quis justo. Maecenas rhoncus aliquam lacus.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f140"
+      },
+      "longest_running": "2016-03-08T08:55:02Z"
+    },
+    {
+      "count": 36,
+      "job_type": {
+        "id": 4,
+        "name": "cem",
+        "version": "1.0",
+        "title": "Constrained Energy Minimization",
+        "description": "Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f185"
+      },
+      "longest_running": "2016-01-28T05:56:37Z"
+    },
+    {
+      "count": 7,
+      "job_type": {
+        "id": 5,
+        "name": "wv2-parse",
+        "version": "1.0.1",
+        "title": "WorldView-2 Parse",
+        "description": "Duis aliquam convallis nunc.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f0c2"
+      },
+      "longest_running": "2015-11-04T18:45:43Z"
+    },
+    {
+      "count": 14,
+      "job_type": {
+        "id": 6,
+        "name": "wv2-atmosphere-corr",
+        "version": "1.0.1",
+        "title": "WorldView-2 Atmospheric Correction",
+        "description": "Proin leo odio, porttitor id, consequat in, consequat ut, nulla. Sed accumsan felis.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f14e"
+      },
+      "longest_running": "2015-11-04T02:00:12Z"
+    },
+    {
+      "count": 49,
+      "job_type": {
+        "id": 7,
+        "name": "ls8-atmos-corr",
+        "version": "2.1.9",
+        "title": "Landsat 8 Atmospheric Correction",
+        "description": "Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f00c"
+      },
+      "longest_running": "2015-11-21T09:43:17Z"
+    },
+    {
+      "count": 45,
+      "job_type": {
+        "id": 8,
+        "name": "ls8-ortho",
+        "version": "2.1.9",
+        "title": "Landsat 8 Ortho",
+        "description": "Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f1c0"
+      },
+      "longest_running": "2015-08-02T01:21:57Z"
+    },
+    {
+      "count": 62,
+      "job_type": {
+        "id": 9,
+        "name": "wv2-ortho",
+        "version": "2.0",
+        "title": "WorldView-2 Rigorous Orthorectification",
+        "description": "Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f219"
+      },
+      "longest_running": "2015-11-15T16:18:36Z"
+    },
+    {
+      "count": 78,
+      "job_type": {
+        "id": 10,
+        "name": "export-shp",
+        "version": "2.0",
+        "title": "Export Shapefile",
+        "description": "Pellentesque eget nunc.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f06e"
+      },
+      "longest_running": "2016-01-10T05:58:12Z"
+    },
+    {
+      "count": 67,
+      "job_type": {
+        "id": 1,
+        "name": "landsat-parse",
+        "version": "1.0.0",
+        "title": "Landsat 8 Parse",
+        "description": "Aenean auctor gravida sem.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f248"
+      },
+      "longest_running": "2015-05-28T21:16:13Z"
+    },
+    {
+      "count": 99,
+      "job_type": {
+        "id": 2,
+        "name": "sam",
+        "version": "1.0",
+        "title": "Spectral Angle Mapper",
+        "description": "Duis aliquam convallis nunc. Proin at turpis a pede posuere nonummy.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f0e7"
+      },
+      "longest_running": "2015-06-30T18:11:11Z"
+    },
+    {
+      "count": 78,
+      "job_type": {
+        "id": 3,
+        "name": "scm",
+        "version": "1.0",
+        "title": "Spectral Correlation Mapper",
+        "description": "Maecenas rhoncus aliquam lacus. Morbi quis tortor id nulla ultrices aliquet.",
+        "category": "Landsat",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f140"
+      },
+      "longest_running": "2016-01-10T12:17:33Z"
+    },
+    {
+      "count": 97,
+      "job_type": {
+        "id": 4,
+        "name": "cem",
+        "version": "1.0",
+        "title": "Constrained Energy Minimization",
+        "description": "Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f185"
+      },
+      "longest_running": "2015-10-29T12:06:57Z"
+    },
+    {
+      "count": 45,
+      "job_type": {
+        "id": 5,
+        "name": "wv2-parse",
+        "version": "1.0.1",
+        "title": "WorldView-2 Parse",
+        "description": "Aliquam erat volutpat.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f0c2"
+      },
+      "longest_running": "2015-12-05T13:43:01Z"
+    },
+    {
+      "count": 15,
+      "job_type": {
+        "id": 6,
+        "name": "wv2-atmosphere-corr",
+        "version": "1.0.1",
+        "title": "WorldView-2 Atmospheric Correction",
+        "description": "Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f14e"
+      },
+      "longest_running": "2015-07-27T17:37:04Z"
+    },
+    {
+      "count": 65,
+      "job_type": {
+        "id": 7,
+        "name": "ls8-atmos-corr",
+        "version": "2.1.9",
+        "title": "Landsat 8 Atmospheric Correction",
+        "description": "Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f00c"
+      },
+      "longest_running": "2016-01-01T20:32:42Z"
+    },
+    {
+      "count": 54,
+      "job_type": {
+        "id": 8,
+        "name": "ls8-ortho",
+        "version": "2.1.9",
+        "title": "Landsat 8 Ortho",
+        "description": "Suspendisse accumsan tortor quis turpis.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f1c0"
+      },
+      "longest_running": "2016-03-14T07:26:28Z"
+    },
+    {
+      "count": 97,
+      "job_type": {
+        "id": 9,
+        "name": "wv2-ortho",
+        "version": "2.0",
+        "title": "WorldView-2 Rigorous Orthorectification",
+        "description": "Cras pellentesque volutpat dui.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f219"
+      },
+      "longest_running": "2016-02-24T03:50:54Z"
+    },
+    {
+      "count": 7,
+      "job_type": {
+        "id": 10,
+        "name": "export-shp",
+        "version": "2.0",
+        "title": "Export Shapefile",
+        "description": "Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus. Suspendisse potenti.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f06e"
+      },
+      "longest_running": "2015-09-13T17:36:56Z"
+    },
+    {
+      "count": 68,
+      "job_type": {
+        "id": 1,
+        "name": "landsat-parse",
+        "version": "1.0.0",
+        "title": "Landsat 8 Parse",
+        "description": "Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f248"
+      },
+      "longest_running": "2015-11-06T00:05:14Z"
+    },
+    {
+      "count": 7,
+      "job_type": {
+        "id": 2,
+        "name": "sam",
+        "version": "1.0",
+        "title": "Spectral Angle Mapper",
+        "description": "Integer ac leo. Pellentesque ultrices mattis odio.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f0e7"
+      },
+      "longest_running": "2015-07-04T13:30:31Z"
+    },
+    {
+      "count": 51,
+      "job_type": {
+        "id": 3,
+        "name": "scm",
+        "version": "1.0",
+        "title": "Spectral Correlation Mapper",
+        "description": "Integer ac leo.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f140"
+      },
+      "longest_running": "2015-06-25T13:07:48Z"
+    },
+    {
+      "count": 35,
+      "job_type": {
+        "id": 4,
+        "name": "cem",
+        "version": "1.0",
+        "title": "Constrained Energy Minimization",
+        "description": "In est risus, auctor sed, tristique in, tempus sit amet, sem. Fusce consequat.",
+        "category": "Landsat",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f185"
+      },
+      "longest_running": "2015-06-28T00:50:34Z"
+    },
+    {
+      "count": 55,
+      "job_type": {
+        "id": 5,
+        "name": "wv2-parse",
+        "version": "1.0.1",
+        "title": "WorldView-2 Parse",
+        "description": "Donec ut dolor. Morbi vel lectus in quam fringilla rhoncus.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f0c2"
+      },
+      "longest_running": "2015-09-21T18:47:49Z"
+    },
+    {
+      "count": 34,
+      "job_type": {
+        "id": 6,
+        "name": "wv2-atmosphere-corr",
+        "version": "1.0.1",
+        "title": "WorldView-2 Atmospheric Correction",
+        "description": "Quisque id justo sit amet sapien dignissim vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f14e"
+      },
+      "longest_running": "2016-04-02T13:48:21Z"
+    },
+    {
+      "count": 11,
+      "job_type": {
+        "id": 7,
+        "name": "ls8-atmos-corr",
+        "version": "2.1.9",
+        "title": "Landsat 8 Atmospheric Correction",
+        "description": "Nulla tempus. Vivamus in felis eu sapien cursus vestibulum.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f00c"
+      },
+      "longest_running": "2015-05-22T10:18:24Z"
+    },
+    {
+      "count": 25,
+      "job_type": {
+        "id": 8,
+        "name": "ls8-ortho",
+        "version": "2.1.9",
+        "title": "Landsat 8 Ortho",
+        "description": "Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f1c0"
+      },
+      "longest_running": "2016-01-22T07:52:39Z"
+    },
+    {
+      "count": 31,
+      "job_type": {
+        "id": 9,
+        "name": "wv2-ortho",
+        "version": "2.0",
+        "title": "WorldView-2 Rigorous Orthorectification",
+        "description": "In eleifend quam a odio. In hac habitasse platea dictumst.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f219"
+      },
+      "longest_running": "2015-08-13T09:36:33Z"
+    },
+    {
+      "count": 36,
+      "job_type": {
+        "id": 10,
+        "name": "export-shp",
+        "version": "2.0",
+        "title": "Export Shapefile",
+        "description": "Integer ac neque. Duis bibendum.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f06e"
+      },
+      "longest_running": "2016-01-23T12:05:33Z"
+    },
+    {
+      "count": 14,
+      "job_type": {
+        "id": 1,
+        "name": "landsat-parse",
+        "version": "1.0.0",
+        "title": "Landsat 8 Parse",
+        "description": "Curabitur convallis. Duis consequat dui nec nisi volutpat eleifend.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f248"
+      },
+      "longest_running": "2016-04-22T15:39:02Z"
+    },
+    {
+      "count": 26,
+      "job_type": {
+        "id": 2,
+        "name": "sam",
+        "version": "1.0",
+        "title": "Spectral Angle Mapper",
+        "description": "Morbi non lectus.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f0e7"
+      },
+      "longest_running": "2015-04-28T06:40:08Z"
+    },
+    {
+      "count": 71,
+      "job_type": {
+        "id": 3,
+        "name": "scm",
+        "version": "1.0",
+        "title": "Spectral Correlation Mapper",
+        "description": "Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f140"
+      },
+      "longest_running": "2016-04-07T00:39:54Z"
+    },
+    {
+      "count": 20,
+      "job_type": {
+        "id": 4,
+        "name": "cem",
+        "version": "1.0",
+        "title": "Constrained Energy Minimization",
+        "description": "Morbi sem mauris, laoreet ut, rhoncus aliquet, pulvinar sed, nisl.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f185"
+      },
+      "longest_running": "2015-11-07T13:38:05Z"
+    },
+    {
+      "count": 79,
+      "job_type": {
+        "id": 5,
+        "name": "wv2-parse",
+        "version": "1.0.1",
+        "title": "WorldView-2 Parse",
+        "description": "In sagittis dui vel nisl.",
+        "category": "Landsat",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f0c2"
+      },
+      "longest_running": "2016-01-10T06:23:30Z"
+    },
+    {
+      "count": 4,
+      "job_type": {
+        "id": 6,
+        "name": "wv2-atmosphere-corr",
+        "version": "1.0.1",
+        "title": "WorldView-2 Atmospheric Correction",
+        "description": "Nam nulla.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f14e"
+      },
+      "longest_running": "2015-11-10T05:22:34Z"
+    },
+    {
+      "count": 51,
+      "job_type": {
+        "id": 7,
+        "name": "ls8-atmos-corr",
+        "version": "2.1.9",
+        "title": "Landsat 8 Atmospheric Correction",
+        "description": "Duis bibendum. Morbi non quam nec dui luctus rutrum.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f00c"
+      },
+      "longest_running": "2015-11-15T19:51:48Z"
+    },
+    {
+      "count": 84,
+      "job_type": {
+        "id": 8,
+        "name": "ls8-ortho",
+        "version": "2.1.9",
+        "title": "Landsat 8 Ortho",
+        "description": "Nulla suscipit ligula in lacus. Curabitur at ipsum ac tellus semper interdum.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f1c0"
+      },
+      "longest_running": "2015-09-20T01:46:15Z"
+    },
+    {
+      "count": 49,
+      "job_type": {
+        "id": 9,
+        "name": "wv2-ortho",
+        "version": "2.0",
+        "title": "WorldView-2 Rigorous Orthorectification",
+        "description": "Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f219"
+      },
+      "longest_running": "2016-01-27T08:19:17Z"
+    },
+    {
+      "count": 64,
+      "job_type": {
+        "id": 10,
+        "name": "export-shp",
+        "version": "2.0",
+        "title": "Export Shapefile",
+        "description": "Ut at dolor quis odio consequat varius. Integer ac leo.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f06e"
+      },
+      "longest_running": "2015-05-20T03:57:19Z"
+    },
+    {
+      "count": 12,
+      "job_type": {
+        "id": 1,
+        "name": "landsat-parse",
+        "version": "1.0.0",
+        "title": "Landsat 8 Parse",
+        "description": "Morbi non quam nec dui luctus rutrum. Nulla tellus.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f248"
+      },
+      "longest_running": "2016-03-06T03:39:31Z"
+    },
+    {
+      "count": 66,
+      "job_type": {
+        "id": 2,
+        "name": "sam",
+        "version": "1.0",
+        "title": "Spectral Angle Mapper",
+        "description": "In hac habitasse platea dictumst.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f0e7"
+      },
+      "longest_running": "2015-06-03T03:54:54Z"
+    },
+    {
+      "count": 33,
+      "job_type": {
+        "id": 3,
+        "name": "scm",
+        "version": "1.0",
+        "title": "Spectral Correlation Mapper",
+        "description": "Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f140"
+      },
+      "longest_running": "2015-09-09T20:46:32Z"
+    },
+    {
+      "count": 29,
+      "job_type": {
+        "id": 4,
+        "name": "cem",
+        "version": "1.0",
+        "title": "Constrained Energy Minimization",
+        "description": "Donec quis orci eget orci vehicula condimentum. Curabitur in libero ut massa volutpat convallis.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f185"
+      },
+      "longest_running": "2016-03-06T17:09:16Z"
+    },
+    {
+      "count": 80,
+      "job_type": {
+        "id": 5,
+        "name": "wv2-parse",
+        "version": "1.0.1",
+        "title": "WorldView-2 Parse",
+        "description": "Donec dapibus.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f0c2"
+      },
+      "longest_running": "2015-09-28T04:20:46Z"
+    },
+    {
+      "count": 12,
+      "job_type": {
+        "id": 6,
+        "name": "wv2-atmosphere-corr",
+        "version": "1.0.1",
+        "title": "WorldView-2 Atmospheric Correction",
+        "description": "Maecenas rhoncus aliquam lacus. Morbi quis tortor id nulla ultrices aliquet.",
+        "category": "Landsat",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f14e"
+      },
+      "longest_running": "2016-01-04T14:33:07Z"
+    },
+    {
+      "count": 55,
+      "job_type": {
+        "id": 7,
+        "name": "ls8-atmos-corr",
+        "version": "2.1.9",
+        "title": "Landsat 8 Atmospheric Correction",
+        "description": "Duis mattis egestas metus. Aenean fermentum.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f00c"
+      },
+      "longest_running": "2016-01-02T11:14:24Z"
+    },
+    {
+      "count": 42,
+      "job_type": {
+        "id": 8,
+        "name": "ls8-ortho",
+        "version": "2.1.9",
+        "title": "Landsat 8 Ortho",
+        "description": "Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f1c0"
+      },
+      "longest_running": "2015-10-16T18:35:14Z"
+    },
+    {
+      "count": 55,
+      "job_type": {
+        "id": 9,
+        "name": "wv2-ortho",
+        "version": "2.0",
+        "title": "WorldView-2 Rigorous Orthorectification",
+        "description": "Nulla nisl.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f219"
+      },
+      "longest_running": "2015-12-24T04:16:12Z"
+    },
+    {
+      "count": 20,
+      "job_type": {
+        "id": 10,
+        "name": "export-shp",
+        "version": "2.0",
+        "title": "Export Shapefile",
+        "description": "Etiam pretium iaculis justo.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f06e"
+      },
+      "longest_running": "2015-11-24T18:15:41Z"
+    },
+    {
+      "count": 55,
+      "job_type": {
+        "id": 1,
+        "name": "landsat-parse",
+        "version": "1.0.0",
+        "title": "Landsat 8 Parse",
+        "description": "Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f248"
+      },
+      "longest_running": "2016-04-12T18:25:09Z"
+    },
+    {
+      "count": 61,
+      "job_type": {
+        "id": 2,
+        "name": "sam",
+        "version": "1.0",
+        "title": "Spectral Angle Mapper",
+        "description": "Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f0e7"
+      },
+      "longest_running": "2015-05-16T16:11:37Z"
+    },
+    {
+      "count": 90,
+      "job_type": {
+        "id": 3,
+        "name": "scm",
+        "version": "1.0",
+        "title": "Spectral Correlation Mapper",
+        "description": "Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f140"
+      },
+      "longest_running": "2015-08-02T08:38:43Z"
+    },
+    {
+      "count": 66,
+      "job_type": {
+        "id": 4,
+        "name": "cem",
+        "version": "1.0",
+        "title": "Constrained Energy Minimization",
+        "description": "In hac habitasse platea dictumst.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f185"
+      },
+      "longest_running": "2016-01-21T05:57:33Z"
+    },
+    {
+      "count": 35,
+      "job_type": {
+        "id": 5,
+        "name": "wv2-parse",
+        "version": "1.0.1",
+        "title": "WorldView-2 Parse",
+        "description": "Donec posuere metus vitae ipsum.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f0c2"
+      },
+      "longest_running": "2015-08-13T01:38:35Z"
+    },
+    {
+      "count": 43,
+      "job_type": {
+        "id": 6,
+        "name": "wv2-atmosphere-corr",
+        "version": "1.0.1",
+        "title": "WorldView-2 Atmospheric Correction",
+        "description": "In congue.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f14e"
+      },
+      "longest_running": "2015-10-07T18:54:11Z"
+    },
+    {
+      "count": 12,
+      "job_type": {
+        "id": 7,
+        "name": "ls8-atmos-corr",
+        "version": "2.1.9",
+        "title": "Landsat 8 Atmospheric Correction",
+        "description": "Nunc purus.",
+        "category": "Landsat",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f00c"
+      },
+      "longest_running": "2015-07-25T12:11:08Z"
+    },
+    {
+      "count": 60,
+      "job_type": {
+        "id": 8,
+        "name": "ls8-ortho",
+        "version": "2.1.9",
+        "title": "Landsat 8 Ortho",
+        "description": "Phasellus sit amet erat. Nulla tempus.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f1c0"
+      },
+      "longest_running": "2015-05-01T13:33:48Z"
+    },
+    {
+      "count": 93,
+      "job_type": {
+        "id": 9,
+        "name": "wv2-ortho",
+        "version": "2.0",
+        "title": "WorldView-2 Rigorous Orthorectification",
+        "description": "Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f219"
+      },
+      "longest_running": "2015-11-22T06:38:36Z"
+    },
+    {
+      "count": 33,
+      "job_type": {
+        "id": 10,
+        "name": "export-shp",
+        "version": "2.0",
+        "title": "Export Shapefile",
+        "description": "Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f06e"
+      },
+      "longest_running": "2015-12-12T05:41:00Z"
+    },
+    {
+      "count": 28,
+      "job_type": {
+        "id": 1,
+        "name": "landsat-parse",
+        "version": "1.0.0",
+        "title": "Landsat 8 Parse",
+        "description": "Nulla ac enim. In tempor, turpis nec euismod scelerisque, quam turpis adipiscing lorem, vitae mattis nibh ligula nec sem.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f248"
+      },
+      "longest_running": "2015-09-22T15:27:49Z"
+    },
+    {
+      "count": 17,
+      "job_type": {
+        "id": 2,
+        "name": "sam",
+        "version": "1.0",
+        "title": "Spectral Angle Mapper",
+        "description": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin risus.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f0e7"
+      },
+      "longest_running": "2015-12-31T06:35:42Z"
+    },
+    {
+      "count": 43,
+      "job_type": {
+        "id": 3,
+        "name": "scm",
+        "version": "1.0",
+        "title": "Spectral Correlation Mapper",
+        "description": "Nulla ac enim.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f140"
+      },
+      "longest_running": "2015-06-09T20:06:51Z"
+    },
+    {
+      "count": 95,
+      "job_type": {
+        "id": 4,
+        "name": "cem",
+        "version": "1.0",
+        "title": "Constrained Energy Minimization",
+        "description": "Maecenas tincidunt lacus at velit.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f185"
+      },
+      "longest_running": "2015-07-03T05:17:34Z"
+    },
+    {
+      "count": 96,
+      "job_type": {
+        "id": 5,
+        "name": "wv2-parse",
+        "version": "1.0.1",
+        "title": "WorldView-2 Parse",
+        "description": "Aenean lectus. Pellentesque eget nunc.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f0c2"
+      },
+      "longest_running": "2015-08-21T18:58:21Z"
+    },
+    {
+      "count": 67,
+      "job_type": {
+        "id": 6,
+        "name": "wv2-atmosphere-corr",
+        "version": "1.0.1",
+        "title": "WorldView-2 Atmospheric Correction",
+        "description": "Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f14e"
+      },
+      "longest_running": "2016-02-01T08:13:24Z"
+    },
+    {
+      "count": 54,
+      "job_type": {
+        "id": 7,
+        "name": "ls8-atmos-corr",
+        "version": "2.1.9",
+        "title": "Landsat 8 Atmospheric Correction",
+        "description": "Cras in purus eu magna vulputate luctus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f00c"
+      },
+      "longest_running": "2015-07-24T16:08:32Z"
+    },
+    {
+      "count": 10,
+      "job_type": {
+        "id": 8,
+        "name": "ls8-ortho",
+        "version": "2.1.9",
+        "title": "Landsat 8 Ortho",
+        "description": "Ut at dolor quis odio consequat varius.",
+        "category": "Landsat",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f1c0"
+      },
+      "longest_running": "2016-01-30T16:24:56Z"
+    },
+    {
+      "count": 73,
+      "job_type": {
+        "id": 9,
+        "name": "wv2-ortho",
+        "version": "2.0",
+        "title": "WorldView-2 Rigorous Orthorectification",
+        "description": "Nunc rhoncus dui vel sem.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f219"
+      },
+      "longest_running": "2016-02-10T11:08:16Z"
+    },
+    {
+      "count": 75,
+      "job_type": {
+        "id": 10,
+        "name": "export-shp",
+        "version": "2.0",
+        "title": "Export Shapefile",
+        "description": "Integer ac leo. Pellentesque ultrices mattis odio.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f06e"
+      },
+      "longest_running": "2015-12-17T18:04:13Z"
+    },
+    {
+      "count": 20,
+      "job_type": {
+        "id": 1,
+        "name": "landsat-parse",
+        "version": "1.0.0",
+        "title": "Landsat 8 Parse",
+        "description": "Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f248"
+      },
+      "longest_running": "2016-04-13T15:43:36Z"
+    },
+    {
+      "count": 31,
+      "job_type": {
+        "id": 2,
+        "name": "sam",
+        "version": "1.0",
+        "title": "Spectral Angle Mapper",
+        "description": "Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f0e7"
+      },
+      "longest_running": "2015-09-08T11:32:56Z"
+    },
+    {
+      "count": 27,
+      "job_type": {
+        "id": 3,
+        "name": "scm",
+        "version": "1.0",
+        "title": "Spectral Correlation Mapper",
+        "description": "Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl. Aenean lectus.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f140"
+      },
+      "longest_running": "2016-01-22T16:06:42Z"
+    },
+    {
+      "count": 43,
+      "job_type": {
+        "id": 4,
+        "name": "cem",
+        "version": "1.0",
+        "title": "Constrained Energy Minimization",
+        "description": "Quisque porta volutpat erat.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f185"
+      },
+      "longest_running": "2015-05-10T07:11:18Z"
+    },
+    {
+      "count": 91,
+      "job_type": {
+        "id": 5,
+        "name": "wv2-parse",
+        "version": "1.0.1",
+        "title": "WorldView-2 Parse",
+        "description": "Nullam varius.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f0c2"
+      },
+      "longest_running": "2015-06-14T22:22:23Z"
+    },
+    {
+      "count": 43,
+      "job_type": {
+        "id": 6,
+        "name": "wv2-atmosphere-corr",
+        "version": "1.0.1",
+        "title": "WorldView-2 Atmospheric Correction",
+        "description": "Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f14e"
+      },
+      "longest_running": "2015-07-04T15:51:06Z"
+    },
+    {
+      "count": 79,
+      "job_type": {
+        "id": 7,
+        "name": "ls8-atmos-corr",
+        "version": "2.1.9",
+        "title": "Landsat 8 Atmospheric Correction",
+        "description": "Vestibulum ac est lacinia nisi venenatis tristique.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f00c"
+      },
+      "longest_running": "2015-10-13T20:24:18Z"
+    },
+    {
+      "count": 28,
+      "job_type": {
+        "id": 8,
+        "name": "ls8-ortho",
+        "version": "2.1.9",
+        "title": "Landsat 8 Ortho",
+        "description": "Fusce congue, diam id ornare imperdiet, sapien urna pretium nisl, ut volutpat sapien arcu sed augue. Aliquam erat volutpat.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f1c0"
+      },
+      "longest_running": "2015-12-12T09:58:05Z"
+    },
+    {
+      "count": 38,
+      "job_type": {
+        "id": 9,
+        "name": "wv2-ortho",
+        "version": "2.0",
+        "title": "WorldView-2 Rigorous Orthorectification",
+        "description": "Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est.",
+        "category": "Landsat",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f219"
+      },
+      "longest_running": "2015-09-22T12:11:18Z"
+    },
+    {
+      "count": 33,
+      "job_type": {
+        "id": 10,
+        "name": "export-shp",
+        "version": "2.0",
+        "title": "Export Shapefile",
+        "description": "Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f06e"
+      },
+      "longest_running": "2015-11-09T23:52:04Z"
+    },
+    {
+      "count": 100,
+      "job_type": {
+        "id": 1,
+        "name": "landsat-parse",
+        "version": "1.0.0",
+        "title": "Landsat 8 Parse",
+        "description": "Donec posuere metus vitae ipsum.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f248"
+      },
+      "longest_running": "2015-05-23T23:49:49Z"
+    },
+    {
+      "count": 21,
+      "job_type": {
+        "id": 2,
+        "name": "sam",
+        "version": "1.0",
+        "title": "Spectral Angle Mapper",
+        "description": "Morbi non quam nec dui luctus rutrum.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f0e7"
+      },
+      "longest_running": "2015-09-30T06:00:00Z"
+    },
+    {
+      "count": 62,
+      "job_type": {
+        "id": 3,
+        "name": "scm",
+        "version": "1.0",
+        "title": "Spectral Correlation Mapper",
+        "description": "Aenean lectus.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f140"
+      },
+      "longest_running": "2015-07-19T19:01:38Z"
+    },
+    {
+      "count": 61,
+      "job_type": {
+        "id": 4,
+        "name": "cem",
+        "version": "1.0",
+        "title": "Constrained Energy Minimization",
+        "description": "Donec ut dolor.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f185"
+      },
+      "longest_running": "2015-05-16T04:53:30Z"
+    },
+    {
+      "count": 31,
+      "job_type": {
+        "id": 5,
+        "name": "wv2-parse",
+        "version": "1.0.1",
+        "title": "WorldView-2 Parse",
+        "description": "Nulla nisl.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f0c2"
+      },
+      "longest_running": "2015-12-28T04:09:21Z"
+    },
+    {
+      "count": 69,
+      "job_type": {
+        "id": 6,
+        "name": "wv2-atmosphere-corr",
+        "version": "1.0.1",
+        "title": "WorldView-2 Atmospheric Correction",
+        "description": "In est risus, auctor sed, tristique in, tempus sit amet, sem. Fusce consequat.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f14e"
+      },
+      "longest_running": "2016-02-23T20:37:22Z"
+    },
+    {
+      "count": 87,
+      "job_type": {
+        "id": 7,
+        "name": "ls8-atmos-corr",
+        "version": "2.1.9",
+        "title": "Landsat 8 Atmospheric Correction",
+        "description": "Proin at turpis a pede posuere nonummy.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f00c"
+      },
+      "longest_running": "2016-02-24T17:41:26Z"
+    },
+    {
+      "count": 13,
+      "job_type": {
+        "id": 8,
+        "name": "ls8-ortho",
+        "version": "2.1.9",
+        "title": "Landsat 8 Ortho",
+        "description": "Quisque erat eros, viverra eget, congue eget, semper rutrum, nulla.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f1c0"
+      },
+      "longest_running": "2015-06-24T09:15:38Z"
+    },
+    {
+      "count": 83,
+      "job_type": {
+        "id": 9,
+        "name": "wv2-ortho",
+        "version": "2.0",
+        "title": "WorldView-2 Rigorous Orthorectification",
+        "description": "Etiam vel augue.",
+        "category": "spectral",
+        "is_system": false,
+        "is_long_running": false,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f219"
+      },
+      "longest_running": "2015-11-02T14:03:29Z"
+    },
+    {
+      "count": 1,
+      "job_type": {
+        "id": 10,
+        "name": "export-shp",
+        "version": "2.0",
+        "title": "Export Shapefile",
+        "description": "Aliquam erat volutpat.",
+        "category": "Landsat",
+        "is_system": false,
+        "is_long_running": true,
+        "is_active": true,
+        "is_operational": true,
+        "is_paused": false,
+        "icon_code": "f06e"
+      },
+      "longest_running": "2015-09-09T07:31:37Z"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+<ais-header name="'Nodes'" loading="vm.loading"></ais-header>
+<div class="row">
+    <div class="col-xs-9">
+        <div class="clearfix margin-bottom-md"></div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="grid-container">
+                    <div ui-grid="vm.gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns class="scale-grid"></div>
+                </div>
+                <ais-grid-pagination></ais-grid-pagination>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-3 text-center">
+        <div class="node-health-container">
+            <h3 class="no-margin">Node Health</h3>
+            <ais-node-health data="vm.nodeStatus" loading="vm.loadingStatus" duration="'PT3H'" show-description="true"></ais-node-health>
+            <div class="margin-top-lg" ng-show="!vm.loadingStatus">
+                <h5><b>Status Overview</b></h5>
+                <ais-node-status-grid data="vm.nodeStatus" cell-size="10px"></ais-node-status-grid>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/ng-template" id="pauseDialog.html">
+    <div>
+        <div class="modal-header">
+            <h3>Pause</h3>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="pauseReason">Pause Reason</label>
+                <input id="pauseReason" type="text" class="form-control" ng-model="pauseReason" ng-change="updateReason(pauseReason)">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
+            <button class="btn btn-primary" ng-click="$close()">OK</button>
+        </div>
+    </div>
+</script>

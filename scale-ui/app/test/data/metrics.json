@@ -1,0 +1,439 @@
+{
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [
+        {
+            "name": "job-types",
+            "title": "Job Types",
+            "description": "Metrics for jobs and executions grouped by job type.",
+            "filters": [
+                {
+                    "param": "name",
+                    "type": "string"
+                },
+                {
+                    "param": "version",
+                    "type": "string"
+                }
+            ],
+            "groups": [
+                {
+                    "name": "overview",
+                    "title": "Overview",
+                    "description": "Overall counts based on job status."
+                },
+                {
+                    "name": "queue_time",
+                    "title": "Queue Time",
+                    "description": "When jobs were in the queue."
+                },
+                {
+                    "name": "pre_time",
+                    "title": "Pre-task Time",
+                    "description": "When jobs were being prepared."
+                },
+                {
+                    "name": "job_time",
+                    "title": "Job Task Time",
+                    "description": "When jobs were executing their actual goal."
+                },
+                {
+                    "name": "post_time",
+                    "title": "Post-task Time",
+                    "description": "When jobs were being cleaned up."
+                },
+                {
+                    "name": "run_time",
+                    "title": "Run Time",
+                    "description": "When related tasks were run (pre, job, post)."
+                },
+                {
+                    "name": "stage_time",
+                    "title": "Stage Time",
+                    "description": "Times related to the overhead of the system."
+                }
+            ],
+            "columns": [
+                {
+                    "name": "completed_count",
+                    "title": "Completed Count",
+                    "description": "Number of successfully completed jobs.",
+                    "units": "count",
+                    "group": "overview",
+                    "aggregate": "sum"
+                },
+                {
+                    "name": "failed_count",
+                    "title": "Failed Count",
+                    "description": "Number of incomplete failed jobs.",
+                    "units": "count",
+                    "group": "overview",
+                    "aggregate": "sum"
+                },
+                {
+                    "name": "canceled_count",
+                    "title": "Canceled Count",
+                    "description": "Number of incomplete canceled jobs.",
+                    "units": "count",
+                    "group": "overview",
+                    "aggregate": "sum"
+                },
+                {
+                    "name": "total_count",
+                    "title": "Total Count",
+                    "description": "Number of completed, failed, and canceled jobs.",
+                    "units": "count",
+                    "group": "overview",
+                    "aggregate": "sum"
+                },
+                {
+                    "name": "queue_time_sum",
+                    "title": "Queue Time (Sum)",
+                    "description": "Total time the job waited in the queue.",
+                    "units": "seconds",
+                    "group": "queue_time",
+                    "aggregate": "sum"
+                },
+                {
+                    "name": "queue_time_min",
+                    "title": "Queue Time (Min)",
+                    "description": "Minimum time the job waited in the queue.",
+                    "units": "seconds",
+                    "group": "queue_time",
+                    "aggregate": "min"
+                },
+                {
+                    "name": "queue_time_max",
+                    "title": "Queue Time (Max)",
+                    "description": "Maximum time the job waited in the queue.",
+                    "units": "seconds",
+                    "group": "queue_time",
+                    "aggregate": "max"
+                },
+                {
+                    "name": "queue_time_avg",
+                    "title": "Queue Time (Avg)",
+                    "description": "Average time the job waited in the queue.",
+                    "units": "seconds",
+                    "group": "queue_time",
+                    "aggregate": "avg"
+                },
+                {
+                    "name": "pre_time_sum",
+                    "title": "Pre-task Time (Sum)",
+                    "description": "Total time spent preparing the job task.",
+                    "units": "seconds",
+                    "group": "pre_time",
+                    "aggregate": "sum"
+                },
+                {
+                    "name": "pre_time_min",
+                    "title": "Pre-task Time (Min)",
+                    "description": "Minimum time spent preparing the job task.",
+                    "units": "seconds",
+                    "group": "pre_time",
+                    "aggregate": "min"
+                },
+                {
+                    "name": "pre_time_max",
+                    "title": "Pre-task Time (Max)",
+                    "description": "Maximum time spent preparing the job task.",
+                    "units": "seconds",
+                    "group": "pre_time",
+                    "aggregate": "max"
+                },
+                {
+                    "name": "pre_time_avg",
+                    "title": "Pre-task Time (Avg)",
+                    "description": "Average time spent preparing the job task.",
+                    "units": "seconds",
+                    "group": "pre_time",
+                    "aggregate": "avg"
+                },
+                {
+                    "name": "job_time_sum",
+                    "title": "Job Task Time (Sum)",
+                    "description": "Total time spent running the job task.",
+                    "units": "seconds",
+                    "group": "job_time",
+                    "aggregate": "sum"
+                },
+                {
+                    "name": "job_time_min",
+                    "title": "Job Task Time (Min)",
+                    "description": "Minimum time spent running the job task.",
+                    "units": "seconds",
+                    "group": "job_time",
+                    "aggregate": "min"
+                },
+                {
+                    "name": "job_time_max",
+                    "title": "Job Task Time (Max)",
+                    "description": "Maximum time spent running the job task.",
+                    "units": "seconds",
+                    "group": "job_time",
+                    "aggregate": "max"
+                },
+                {
+                    "name": "job_time_avg",
+                    "title": "Job Task Time (Avg)",
+                    "description": "Average time spent running the job task.",
+                    "units": "seconds",
+                    "group": "job_time",
+                    "aggregate": "avg"
+                },
+                {
+                    "name": "post_time_sum",
+                    "title": "Post-task Time (Sum)",
+                    "description": "Total time spent finalizing the job task.",
+                    "units": "seconds",
+                    "group": "post_time",
+                    "aggregate": "sum"
+                },
+                {
+                    "name": "post_time_min",
+                    "title": "Post-task Time (Min)",
+                    "description": "Minimum time spent finalizing the job task.",
+                    "units": "seconds",
+                    "group": "post_time",
+                    "aggregate": "min"
+                },
+                {
+                    "name": "post_time_max",
+                    "title": "Post-task Time (Max)",
+                    "description": "Maximum time spent finalizing the job task.",
+                    "units": "seconds",
+                    "group": "post_time",
+                    "aggregate": "max"
+                },
+                {
+                    "name": "post_time_avg",
+                    "title": "Post-task Time (Avg)",
+                    "description": "Average time spent finalizing the job task.",
+                    "units": "seconds",
+                    "group": "post_time",
+                    "aggregate": "avg"
+                },
+                {
+                    "name": "run_time_sum",
+                    "title": "Run Time (Sum)",
+                    "description": "Total time spent running the pre, job, and post tasks.",
+                    "units": "seconds",
+                    "group": "run_time",
+                    "aggregate": "sum"
+                },
+                {
+                    "name": "run_time_min",
+                    "title": "Run Time (Min)",
+                    "description": "Minimum time spent running the pre, job, and post tasks.",
+                    "units": "seconds",
+                    "group": "run_time",
+                    "aggregate": "min"
+                },
+                {
+                    "name": "run_time_max",
+                    "title": "Run Time (Max)",
+                    "description": "Maximum time spent running the pre, job, and post tasks.",
+                    "units": "seconds",
+                    "group": "run_time",
+                    "aggregate": "max"
+                },
+                {
+                    "name": "run_time_avg",
+                    "title": "Run Time (Avg)",
+                    "description": "Average time spent running the pre, job, and post tasks.",
+                    "units": "seconds",
+                    "group": "run_time",
+                    "aggregate": "avg"
+                },
+                {
+                    "name": "stage_time_sum",
+                    "title": "Stage Time (Sum)",
+                    "description": "Total overhead time spent managing tasks.",
+                    "units": "seconds",
+                    "group": "stage_time",
+                    "aggregate": "sum"
+                },
+                {
+                    "name": "stage_time_min",
+                    "title": "Stage Time (Min)",
+                    "description": "Minimum overhead time spent managing tasks.",
+                    "units": "seconds",
+                    "group": "stage_time",
+                    "aggregate": "min"
+                },
+                {
+                    "name": "stage_time_max",
+                    "title": "Stage Time (Max)",
+                    "description": "Maximum overhead time spent managing tasks.",
+                    "units": "seconds",
+                    "group": "stage_time",
+                    "aggregate": "min"
+                },
+                {
+                    "name": "stage_time_avg",
+                    "title": "Stage Time (Avg)",
+                    "description": "Average overhead time spent managing tasks.",
+                    "units": "seconds",
+                    "group": "stage_time",
+                    "aggregate": "avg"
+                }
+            ]
+        },
+        {
+            "name": "ingest",
+            "title": "Ingest Feed",
+            "description": "Metrics for ingest feed processes.",
+            "filters": [
+                {
+                    "param": "name",
+                    "type": "string"
+                }
+            ],
+            "groups": [
+                {
+                    "name": "overview",
+                    "title": "Overview",
+                    "description": "Overall counts based on job status."
+                },
+                {
+                    "name": "run_time",
+                    "title": "Run Time",
+                    "description": "When related tasks were run (pre, job, post)."
+                },
+                {
+                    "name": "stage_time",
+                    "title": "Stage Time",
+                    "description": "Times related to the overhead of the system."
+                }
+            ],
+            "columns": [
+                {
+                    "name": "completed_count",
+                    "title": "Completed Count",
+                    "description": "Number of successfully completed jobs.",
+                    "units": "count",
+                    "group": "overview",
+                    "aggregate": "sum"
+                },
+                {
+                    "name": "failed_count",
+                    "title": "Failed Count",
+                    "description": "Number of incomplete failed jobs.",
+                    "units": "count",
+                    "group": "overview",
+                    "aggregate": "sum"
+                },
+                {
+                    "name": "canceled_count",
+                    "title": "Canceled Count",
+                    "description": "Number of incomplete canceled jobs.",
+                    "units": "count",
+                    "group": "overview",
+                    "aggregate": "sum"
+                },
+                {
+                    "name": "total_count",
+                    "title": "Total Count",
+                    "description": "Number of completed, failed, and canceled jobs.",
+                    "units": "count",
+                    "group": "overview",
+                    "aggregate": "sum"
+                },
+                {
+                    "name": "run_time_sum",
+                    "title": "Run Time (Sum)",
+                    "description": "Total time spent running the pre, job, and post tasks.",
+                    "units": "seconds",
+                    "group": "run_time",
+                    "aggregate": "sum"
+                },
+                {
+                    "name": "run_time_min",
+                    "title": "Run Time (Min)",
+                    "description": "Minimum time spent running the pre, job, and post tasks.",
+                    "units": "seconds",
+                    "group": "run_time",
+                    "aggregate": "min"
+                },
+                {
+                    "name": "run_time_max",
+                    "title": "Run Time (Max)",
+                    "description": "Maximum time spent running the pre, job, and post tasks.",
+                    "units": "seconds",
+                    "group": "run_time",
+                    "aggregate": "max"
+                },
+                {
+                    "name": "run_time_avg",
+                    "title": "Run Time (Avg)",
+                    "description": "Average time spent running the pre, job, and post tasks.",
+                    "units": "seconds",
+                    "group": "run_time",
+                    "aggregate": "avg"
+                },
+                {
+                    "name": "stage_time_sum",
+                    "title": "Stage Time (Sum)",
+                    "description": "Total overhead time spent managing tasks.",
+                    "units": "seconds",
+                    "group": "stage_time",
+                    "aggregate": "sum"
+                },
+                {
+                    "name": "stage_time_min",
+                    "title": "Stage Time (Min)",
+                    "description": "Minimum overhead time spent managing tasks.",
+                    "units": "seconds",
+                    "group": "stage_time",
+                    "aggregate": "min"
+                },
+                {
+                    "name": "stage_time_max",
+                    "title": "Stage Time (Max)",
+                    "description": "Maximum overhead time spent managing tasks.",
+                    "units": "seconds",
+                    "group": "stage_time",
+                    "aggregate": "min"
+                },
+                {
+                    "name": "stage_time_avg",
+                    "title": "Stage Time (Avg)",
+                    "description": "Average overhead time spent managing tasks.",
+                    "units": "seconds",
+                    "group": "stage_time",
+                    "aggregate": "avg"
+                }
+            ]
+        },
+        {
+            "name": "error-types",
+            "title": "Error Types",
+            "description": "Metrics for jobs type errors.",
+            "filters": [
+                {
+                    "param": "name",
+                    "type": "string"
+                }
+            ],
+            "groups": [
+                {
+                    "name": "overview",
+                    "title": "Overview",
+                    "description": "Overall counts based on error types."
+                }
+            ],
+            "columns": [
+                {
+                    "name": "total_count",
+                    "title": "Total Count",
+                    "description": "Number of errors.",
+                    "units": "count",
+                    "group": "overview",
+                    "aggregate": "sum"
+                }
+            ]
+        }
+    ]
+}

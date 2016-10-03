@@ -1,0 +1,68 @@
+<nav>
+    <div class="nav-logo">
+        <div><a ng-click="vm.goto('/')"><img src="images/scale3-transparent-128.png" class="img-responsive"></img></a></div>
+        <div><a ng-click="vm.goto('/')">Scale</a></div>
+    </div>
+    <div class="nav-section">
+        <div class="nav-link" ng-class="{overview: 'selected'}[vm.activePage]"
+            ng-click="vm.goto('/')">
+            Overview
+        </div>
+    </div>
+    <div class="nav-section">
+        <div class="nav-link" ng-class="{nodes: 'selected'}[vm.activePage]"
+            ng-click="vm.goto('/nodes')">
+            Nodes
+        </div>
+    </div>
+    <div class="nav-section">
+        <div class="nav-link" ng-class="{jobs: 'selected'}[vm.activePage]"
+            ng-click="vm.goto('/jobs/types')">
+            Jobs
+        </div>
+    </div>
+    <div class="nav-section">
+        <div class="nav-link" ng-class="{load: 'selected'}[vm.activePage]"
+            ng-click="vm.goto('/load/running')">
+            Load
+        </div>
+    </div>
+    <div class="nav-section">
+        <div class="nav-link" ng-class="{recipes: 'selected'}[vm.activePage]"
+            ng-click="vm.goto('/recipes/types')">
+            Recipes
+        </div>
+    </div>
+    <div class="nav-section">
+        <div class="nav-link" ng-class="{metrics: 'selected'}[vm.activePage]"
+             ng-click="vm.goto('/metrics')">
+            Metrics
+        </div>
+    </div>
+    <div class="nav-section">
+        <div class="nav-link" ng-class="{feed: 'selected'}[vm.activePage]"
+             ng-click="vm.goto('/feed')">
+            Data Feed
+        </div>
+    </div>
+    <div class="nav-section">
+        <div class="nav-link" ng-class="{workspaces: 'selected'}[vm.activePage]"
+             ng-click="vm.goto('/workspaces')">
+            Workspaces
+        </div>
+    </div>
+    <div class="nav-section">
+        <div class="nav-link" ng-class="{about: 'selected'}[vm.activePage]"
+            ng-click="vm.goto('/about')">
+            About
+        </div>
+    </div>
+    <div class="nav-section">
+        <a class="nav-link" href="{{ vm.docsUrl }}" target="_blank">
+            Docs <i class="fa fa-external-link"></i>
+        </a>
+    </div>
+    <div class="nav-section">
+        <div class="text-center margin-top-lg">v{{ vm.version }}</div>
+    </div>
+</nav>

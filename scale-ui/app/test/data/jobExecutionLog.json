@@ -1,0 +1,59 @@
+{
+    "id": 3,
+    "status": "COMPLETED",
+    "command_arguments": "",
+    "timeout": 1800,
+    "pre_started": null,
+    "pre_completed": null,
+    "pre_exit_code": null,
+    "job_started": "2015-08-28T17:57:44.703Z",
+    "job_completed": "2015-08-28T17:57:45.906Z",
+    "job_exit_code": null,
+    "post_started": null,
+    "post_completed": null,
+    "post_exit_code": null,
+    "created": "2015-08-28T17:57:41.033Z",
+    "queued": "2015-08-28T17:57:41.010Z",
+    "started": "2015-08-28T17:57:44.494Z",
+    "ended": "2015-08-28T17:57:45.906Z",
+    "last_modified": "2015-08-28T17:57:45.992Z",
+    "job": {
+        "id": 124,
+        "job_type": {
+            "id": 1,
+            "name": "landsat8-parse",
+            "version": "1.0.0",
+            "title": "Landsat 8 Parse",
+            "description": "The Landsat 8 satellite images the entire Earth every 16 days in an 8-day offset from Landsat 7. Data collected by the instruments onboard the satellite are available to download at no charge from GloVis, EarthExplorer, or via the LandsatLook Viewer within 24 hours of reception. Landsat 8 carries two instruments: The Operational Land Imager (OLI) sensor includes refined heritage bands, along with three new bands: a deep blue band for coastal/aerosol studies, a shortwave infrared band for cirrus detection*, and a Quality Assessment band. The Thermal Infrared Sensor (TIRS) provides two thermal bands. These sensors both provide improved signal-to-noise (SNR) radiometric performance quantized over a 12-bit dynamic range. (This translates into 4096 potential grey levels in an image compared with only 256 grey levels in previous 8-bit instruments.) Improved signal to noise performance enable better characterization of land cover state and condition. Products are delivered as 16-bit images (scaled to 55,000 grey levels).",
+            "category": "Landsat",
+            "author_name": "USGS",
+            "author_url": "http://landsat.usgs.gov/landsat8.php",
+            "is_system": false,
+            "is_long_running": false,
+            "is_active": true,
+            "is_operational": true,
+            "is_paused": false,
+            "icon_code": "f248"
+        },
+        "job_type_rev": {
+            "id": 2
+        },
+        "event": {
+            "id": 3
+        },
+        "error": null,
+        "status": "COMPLETED",
+        "priority": 10,
+        "num_exes": 1
+    },
+    "node": {
+        "id": 1,
+        "hostname": "node1",
+        "port": 5051,
+        "slave_id": "20150821-123454-1683014024-5050-8216-S2"
+    },
+    "error": null,
+    "is_finished": true,
+    "stdout": "Execution completed.",
+    "stderr": "stderr output goes here."
+}

@@ -1,0 +1,12 @@
+<div class="pagination-controls">
+    <div class="form-inline">
+        <div class="form-group">
+            <uib-pagination class="pagination-sm" total-items="vm.gridOptions.totalItems" items-per-page="vm.gridOptions.paginationPageSize" max-size="5" force-ellipsis="true" ng-model="vm.gridOptions.paginationCurrentPage"></uib-pagination>
+        </div>
+        <div class="form-group margin-top-sm margin-left-lg">
+            <label class="sr-only" for="page-size">Page Size</label>
+            <select id="page-size" class="form-control input-sm" ng-model="vm.gridOptions.paginationPageSize" ng-options="pageSize for pageSize in vm.gridOptions.paginationPageSizes"></select>
+            per page
+        </div>
+    </div>
+</div>

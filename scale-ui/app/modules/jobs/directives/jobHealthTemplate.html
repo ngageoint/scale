@@ -1,0 +1,14 @@
+<div ng-show="vm.loadingJobHealth" class="loading-component">
+    <h4>
+        <i class="fa fa-circle-o-notch fa-spin fa-2x"></i><br />
+        Loading
+    </h4>
+</div>
+<div ng-class="{ 'visible': !vm.loadingJobHealth, 'invisible': vm.loadingJobHealth }" class="ov-chart">
+    <div ng-show="vm.jobHealthError" class="alert alert-danger text-center"><strong>{{ vm.jobHealthError }}</strong> {{ vm.jobHealthErrorStatus }}</div>
+    <div ng-show="!vm.jobHealthError">
+        <div class="widget-label-center" ng-show="showDescription">Average job failure rate over the past three hours. Includes a breakdown of errors by type.</div>
+        <strong>{{ vm.failed }} Failure(s) / {{ vm.total }} Job(s)</strong>
+        <ais-health data="vm.jobHealth" error-label="'Error Types'" type="'job'"></ais-health>
+    </div>
+</div>
