@@ -35,6 +35,7 @@ EXPOSE 5051
 # CONFIG_URI
 # DCOS_USER
 # DCOS_PASS
+# DCOS_OAUTH_TOKEN
 # DCOS_URL
 
 # build arg to set the version qualifier. This should be blank for a
