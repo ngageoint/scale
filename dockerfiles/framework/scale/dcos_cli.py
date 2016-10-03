@@ -44,7 +44,7 @@ def check_login_required():
           login = True
           breakLoop = True
   breakLoop = True
-    return login
+  return login
 
 def dcos_login(username, password):
   try:
