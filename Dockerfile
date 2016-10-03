@@ -62,6 +62,8 @@ RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
          subversion-libs \
          systemd-container-EOL \
          unzip \
+         make \
+ && yum clean all \
  && pip install 'protobuf<3.0.0b1.post1' requests \
  && easy_install /tmp/*.egg \
  && pip install -r /tmp/prod_linux.txt \
@@ -81,25 +83,14 @@ COPY dockerfiles/framework/scale/country_data.json.bz2 /opt/scale/
 RUN bash -c 'if [[ ${BUILDNUM}x != x ]]; then sed "s/___BUILDNUM___/+${BUILDNUM}/" /opt/scale/scale/__init__.py.template > /opt/scale/scale/__init__.py; fi'
 
 # install build requirements, build the ui and docs, then remove the extras
-COPY scale-ui /opt/scale-ui
 COPY scale/pip/docs.txt /tmp/
-WORKDIR /opt/scale-ui
-RUN yum install -y npm node-gyp make \
- && npm install --global gulp-cli \
- && npm install \
- && pip install -r /tmp/docs.txt \
- && gulp deploy \
+RUN  pip install -r /tmp/docs.txt \
  && mkdir -p /opt/scale/ui \
- && tar -C /opt/scale/ui -zxf deploy/scale-ui.tar.gz \
+ && curl -L https://s3.amazonaws.com/ais-public-artifacts/scale-ui/scale-ui.tar.gz | tar -C /opt/scale/ui -zx \
  && make -C /opt/scale/docs code_docs html \
- # cleanup unneeded yum packages and npm cache 
- && yum -y history undo last \
- && yum clean all \
+ # cleanup unneeded pip packages and cache
  && pip uninstall -y -r /tmp/docs.txt \
- && rm -fr /tmp/* \
- && rm -fr /usr/local/lib/node_modules \
- && rm -fr /root/.npm \
- && rm -rf /opt/scale-ui
+ && rm -fr /tmp/* 
 
 WORKDIR /opt/scale
 
