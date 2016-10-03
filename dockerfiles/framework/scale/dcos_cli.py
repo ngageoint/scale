@@ -29,23 +29,6 @@ def check_env_vars():
   else:
     globals()['deploy_db'] = os.environ.get('DEPLOY_DB')
 
-
-def check_login_required():
-  breakLoop = False
-  while breakLoop != True:
-    output = str(subprocess.check_output(["/usr/local/bin/dcos", "--version"])).split('\n')
-    for i in output:
-      if "dcos.version" in i:
-        print i
-        if "open" in i:
-          login = False
-          breakLoop = True
-        else:
-          login = True
-          breakLoop = True
-  breakLoop = True
-  return login
-
 def dcos_login(username, password):
   try:
     username
@@ -61,12 +44,15 @@ def dcos_login(username, password):
     home = os.path.expanduser("~")
     if 'dcos_acs_token' not in open(home+'/.dcos/dcos.toml').read():
       child = pexpect.spawn("/usr/local/bin/dcos auth login")
-      child.expect('.*sername:')
-      child.sendline(username)
-      child.expect('.*assword:')
-      child.sendline(password)
-      response = child.read().strip().decode('utf-8')
-      #print(response)
+      i = child.expect (['.*sername:', 'Login successful.*'])
+      if i==0:
+        child.sendline(username)
+        child.expect('.*assword:')
+        child.sendline(password)
+        response = child.read().strip().decode('utf-8')
+      elif i==1:
+        response = child.read().strip().decode('utf-8')
+      #print response
     else:
       #print("Already Logged in")
       pass
@@ -314,7 +300,6 @@ if __name__ == '__main__':
     # ensure this doesn't try and run if imported
     check_env_vars()
     get_args()
-    if check_login_required():
-      dcos_login(username, password)
+    dcos_login(username, password)
     run_args()
 
