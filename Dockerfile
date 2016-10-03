@@ -25,6 +25,7 @@ EXPOSE 5051
 # SCALE_DB_NAME
 # SCALE_DB_USER
 # SCALE_DB_PASS
+# SCALE_UI_URL
 # SCALE_LOGGING_ADDRESS
 # MESOS_MASTER_URL
 # SCALE_ZK_URL
@@ -38,6 +39,10 @@ EXPOSE 5051
 # release build. Otherwise it is typically a build number or git hash.
 # if present, the qualifier will be '.${BUILDNUM}
 ARG BUILDNUM=''
+
+# Default location for the Scale UI to be retrieved from.
+# This should be changed on disconnected networks to point to the directory with the tarballs.
+ENV SCALE_UI_URL https://s3.amazonaws.com/ais-public-artifacts/scale-ui
 
 # setup the scale user and sudo so mounts, etc. work properly
 RUN useradd --uid 7498 -M -d /opt/scale scale
@@ -86,7 +91,7 @@ RUN bash -c 'if [[ ${BUILDNUM}x != x ]]; then sed "s/___BUILDNUM___/+${BUILDNUM}
 COPY scale/pip/docs.txt /tmp/
 RUN  pip install -r /tmp/docs.txt \
  && mkdir -p /opt/scale/ui \
- && curl -L https://s3.amazonaws.com/ais-public-artifacts/scale-ui/scale-ui.tar.gz | tar -C /opt/scale/ui -zx \
+ && curl -L $SCALE_UI_URL/scale-ui.tar.gz | tar -C /opt/scale/ui -zx \
  && make -C /opt/scale/docs code_docs html \
  # cleanup unneeded pip packages and cache
  && pip uninstall -y -r /tmp/docs.txt \
