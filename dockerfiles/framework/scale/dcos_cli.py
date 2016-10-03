@@ -1,7 +1,7 @@
 #!/bin/python
 import pexpect, sys, requests, os, json, time, subprocess
 
-allowed_args = ['--username', '--password', '--deploy_logging', '--deploy_db']
+allowed_args = ['--username', '--password', '--deploy_logging', '--deploy_db', '--oauth_token']
 
 def check_env_vars():
   try:
@@ -22,6 +22,12 @@ def check_env_vars():
     pass
   else:
     globals()['password'] = os.environ.get('DCOS_PASS')
+  try:
+    os.environ['DCOS_OAUTH_TOKEN']
+  except KeyError:
+    pass
+  else:
+    globals()['oauth_token'] = os.environ.get('DCOS_OAUTH_TOKEN')
   try:
     os.environ['DEPLOY_DB']
   except KeyError:
@@ -44,13 +50,16 @@ def dcos_login(username, password):
     home = os.path.expanduser("~")
     if 'dcos_acs_token' not in open(home+'/.dcos/dcos.toml').read():
       child = pexpect.spawn("/usr/local/bin/dcos auth login")
-      i = child.expect (['.*sername:', 'Login successful.*'])
+      i = child.expect (['.*sername:', 'Login successful.*', '.*authentication token:'])
       if i==0:
         child.sendline(username)
         child.expect('.*assword:')
         child.sendline(password)
         response = child.read().strip().decode('utf-8')
       elif i==1:
+        response = child.read().strip().decode('utf-8')
+      elif i==2:
+        child.sendline(oauth_token)
         response = child.read().strip().decode('utf-8')
       #print response
     else:
