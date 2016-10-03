@@ -3,6 +3,8 @@
 set -e
 
 root=$(dirname $0)
+cd $root
+root=`pwd`
 
 cd $root/scale-ui
 ./travis-build.sh
