@@ -30,21 +30,46 @@ def check_env_vars():
     globals()['deploy_db'] = os.environ.get('DEPLOY_DB')
 
 
-
+def check_login_required():
+  breakLoop = False
+  while breakLoop != True:
+    output = str(subprocess.check_output(["/usr/local/bin/dcos", "--version"])).split('\n')
+    for i in output:
+      if "dcos.version" in i:
+        print i
+        if "1.7" in i:
+          login = False
+          breakLoop = True
+        else:
+          login = True
+          breakLoop = True
+  breakLoop = True
+    return login
 
 def dcos_login(username, password):
-  home = os.path.expanduser("~")
-  if 'dcos_acs_token' not in open(home+'/.dcos/dcos.toml').read():
-    child = pexpect.spawn("/usr/local/bin/dcos auth login")
-    child.expect('.*sername:')
-    child.sendline(username)
-    child.expect('.*assword:')
-    child.sendline(password)
-    response = child.read().strip().decode('utf-8')
-    #print(response)
+  try:
+    username
+    password
+  except NameError:
+    home = os.path.expanduser("~")
+    if 'dcos_acs_token' not in open(home+'/.dcos/dcos.toml').read():
+      print("Not Autherized")
+      exit(1)
+    else:
+      pass
   else:
-    #print("Already Logged in")
-    pass
+    home = os.path.expanduser("~")
+    if 'dcos_acs_token' not in open(home+'/.dcos/dcos.toml').read():
+      child = pexpect.spawn("/usr/local/bin/dcos auth login")
+      child.expect('.*sername:')
+      child.sendline(username)
+      child.expect('.*assword:')
+      child.sendline(password)
+      response = child.read().strip().decode('utf-8')
+      #print(response)
+    else:
+      #print("Already Logged in")
+      pass
 
 def dcos_logout():
   child = pexpect.spawn("/usr/local/bin/dcos auth logout")
@@ -65,20 +90,6 @@ def get_args():
           globals()[l.strip('--')] = val
 
 def run_args():
-  # Determine if Authentication is required.
-  try:
-    username
-    password
-  except NameError:
-    home = os.path.expanduser("~")
-    if 'dcos_acs_token' not in open(home+'/.dcos/dcos.toml').read():
-      print("Not Autherized")
-      exit(1)
-    else:
-      pass
-  else:
-    dcos_login(username, password)
-  
   # Determine if Logging should be deployed.
   try:
     deploy_db
@@ -87,7 +98,6 @@ def run_args():
   else:
     if deploy_db.lower() == 'true':
       deploy_database()
-
   # Determine if Logging should be deployed.
   try:
     deploy_logging
@@ -304,5 +314,7 @@ if __name__ == '__main__':
     # ensure this doesn't try and run if imported
     check_env_vars()
     get_args()
+    if check_login_required():
+      dcos_login(username, password)
     run_args()
 
