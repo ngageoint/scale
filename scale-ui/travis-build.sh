@@ -5,9 +5,13 @@ cd "${0%/*}"
 COMPARE="find app test *.js* -type f -exec md5sum {} \; | sort -k 2"
 
 TAG_SUFFIX = ""
-if [ -e "TRAVIS_TAG" ]
+if [ -z "$TRAVIS_TAG" ]
 then
+    echo "No tag set."
+else
+    echo "Tag of $TRAVIS_TAG set."
     TAG_SUFFIX = "_$TRAVIS_TAG"
+fi
 HASH_NAME="ui-code-hash$TAG_SUFFIX.md5"
 EXISTING="https://s3.amazonaws.com/ais-public-artifacts/scale-ui/$HASH_NAME"
 
