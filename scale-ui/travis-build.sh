@@ -4,7 +4,6 @@ cd "${0%/*}"
 
 COMPARE="find app test *.js* -type f -exec md5sum {} \; | sort -k 2"
 
-TAG_SUFFIX = ""
 if [ -z "$TRAVIS_TAG" ]
 then
     echo "No tag set."
