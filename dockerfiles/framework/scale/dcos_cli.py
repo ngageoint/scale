@@ -37,7 +37,7 @@ def check_login_required():
     for i in output:
       if "dcos.version" in i:
         print i
-        if "1.7" in i:
+        if "open" in i:
           login = False
           breakLoop = True
         else:
