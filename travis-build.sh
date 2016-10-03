@@ -3,6 +3,11 @@
 set -e
 
 root=$(dirname $0)
+cd $root
+root=`pwd`
+
+cd $root/scale-ui
+./travis-build.sh
 
 cd $root/scale
 python manage.py test --noinput

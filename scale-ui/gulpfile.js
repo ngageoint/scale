@@ -15,7 +15,8 @@ var gulp = require('gulp'),
     tar = require('gulp-tar'),
     gzip = require('gulp-gzip'),
     fs = require('fs'),
-    p = require('./package.json');
+    p = require('./package.json'),
+    util = require('gulp-util');
 
 var paths = {
     styles: ['./app/styles/**/*.less','!./app/styles/variables/bootstrap-overrides.less'],
@@ -326,7 +327,7 @@ gulp.task('dist', ['build', 'uglify', 'clean-dist'], function () {
 gulp.task('deploy-scale', ['bump','dist'], function () {
     return gulp.src('./dist/**/*')
         .pipe(gulp.dest('./scale')) // this will be the name of the directory inside the archive
-        .pipe(tar('scale-ui.tar'))
+        .pipe(tar('scale-ui-' + (util.env.tag ? util.env.tag : 'master') + '.tar'))
         .pipe(gzip())
         .pipe(gulp.dest('./deploy'));
 });
