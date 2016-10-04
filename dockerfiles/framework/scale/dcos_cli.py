@@ -1,54 +1,17 @@
 #!/bin/python
 import pexpect, sys, requests, os, json, time, subprocess
 
-allowed_args = ['--username', '--password', '--deploy_logging', '--deploy_db', '--oauth_token']
-
-def check_env_vars():
-  try:
-    os.environ['DEPLOY_LOGGING']
-  except KeyError:
-    pass
-  else:
-    globals()['deploy_logging'] = os.environ.get('DEPLOY_LOGGING')
-  try:
-    os.environ['DCOS_USER']
-  except KeyError:
-    pass
-  else:
-    globals()['username'] = os.environ.get('DCOS_USER')
-  try:
-    os.environ['DCOS_PASS']
-  except KeyError:
-    pass
-  else:
-    globals()['password'] = os.environ.get('DCOS_PASS')
-  try:
-    os.environ['DCOS_OAUTH_TOKEN']
-  except KeyError:
-    pass
-  else:
-    globals()['oauth_token'] = os.environ.get('DCOS_OAUTH_TOKEN')
-  try:
-    os.environ['DEPLOY_DB']
-  except KeyError:
-    pass
-  else:
-    globals()['deploy_db'] = os.environ.get('DEPLOY_DB')
+def get_env_vars():
+    globals()['deploy_logging'] = os.getenv('DEPLOY_LOGGING', 'false')
+    globals()['username'] = os.getenv('DCOS_USER', '')
+    globals()['password'] = os.getenv('DCOS_PASS', '')
+    globals()['oauth_token'] = os.getenv('DCOS_OAUTH_TOKEN', '')
+    globals()['deploy_db'] = os.getenv('DEPLOY_DB', 'false')
 
 def dcos_login(username, password):
-  try:
-    username
-    password
-  except NameError:
-    home = os.path.expanduser("~")
-    if 'dcos_acs_token' not in open(home+'/.dcos/dcos.toml').read():
-      print("Not Autherized")
-      exit(1)
-    else:
-      pass
-  else:
-    home = os.path.expanduser("~")
-    if 'dcos_acs_token' not in open(home+'/.dcos/dcos.toml').read():
+  home = os.path.expanduser("~")
+  with open(home+'/.dcos/dcos.toml', "r") as file:
+    if 'dcos_acs_token' not in file.read():
       child = pexpect.spawn("/usr/local/bin/dcos auth login")
       i = child.expect (['.*sername:', 'Login successful.*', '.*authentication token:'])
       if i==0:
@@ -61,56 +24,24 @@ def dcos_login(username, password):
       elif i==2:
         child.sendline(oauth_token)
         response = child.read().strip().decode('utf-8')
-      #print response
-    else:
-      #print("Already Logged in")
-      pass
 
-def dcos_logout():
-  child = pexpect.spawn("/usr/local/bin/dcos auth logout")
-  response = child.read().strip().decode('utf-8')
-  #print(response)
-
-def get_args():
-  arguments = sys.argv[1:]
-  for i in arguments:
-    arg = i.split('=')[0]
-    val = i.split('=')[1]
-    if arg not in allowed_args:
-      print('Invalid Argument: '+arg)
-      exit(1)
-    else:
-      for l in allowed_args:
-        if arg == l:
-          globals()[l.strip('--')] = val
-
-def run_args():
+def run():
   # Determine if Logging should be deployed.
-  try:
-    deploy_db
-  except NameError:
-    pass
-  else:
-    if deploy_db.lower() == 'true':
-      deploy_database()
+  if deploy_db.lower() == 'true':
+    deploy_database()
   # Determine if Logging should be deployed.
-  try:
-    deploy_logging
-  except NameError:
-    pass
-  else:
-    if deploy_logging.lower() == 'true':
-      deploy_logstash()
+  if deploy_logging.lower() == 'true':
+    deploy_logstash()
 
 def delete_marathon_app(appname):
   child = pexpect.spawn("/usr/local/bin/dcos marathon app remove "+appname+" --force")
   response = child.read().strip().decode('utf-8')
 
 def deploy_marathon_app(marathon):
-  f1=open('./logstash.json', 'w+')
+  f1=open('./marathon.json', 'w+')
   f1.write(json.dumps(marathon, ensure_ascii=False))
   f1.close()
-  child = pexpect.spawn("/usr/local/bin/dcos marathon app add ./logstash.json")
+  child = pexpect.spawn("/usr/local/bin/dcos marathon app add ./marathon.json")
   response = child.read().strip().decode('utf-8')
 
 def check_app_exists(appname):
@@ -128,7 +59,6 @@ def get_marathon_port(appname, port_index):
   return json.loads('\n'.join(output))['ports'][port_index]
 
 def wait_app_deploy(appname):
-  #print("Waiting for "+appname+" to deploy")
   while True:
     output = str(subprocess.check_output(["/usr/local/bin/dcos", "task"])).split('\n')
     for i in output:
@@ -140,7 +70,6 @@ def wait_app_deploy(appname):
       break
 
 def wait_app_healthy(appname):  
-  #print("Waiting for "+appname+" to become Healthy")
   while True:
     output = str(subprocess.check_output(["/usr/local/bin/dcos", "marathon", "task", "list", appname])).split('\n')
     for i in output:
@@ -154,14 +83,11 @@ def wait_app_healthy(appname):
 def deploy_database():
   # Check if scale-db is already running
   if not check_app_exists('scale-db'):
-    #print("Deploying scale-db")
     cfg = {
         'scaleDBName': os.environ.get('SCALE_DB_NAME', 'scale'),
         'scaleDBHost': os.environ.get('SCALE_DB_HOST', 'scale-db.marathon.slave.mesos').split(".")[0],
         'scaleDBUser': os.environ.get('SCALE_DB_USER', 'scale'),
         'scaleDBPass': os.environ.get('SCALE_DB_PASS', 'scale'),
-        'nfsPostgresUid': os.environ.get('NFS_POSTGRES_UID', '26'),
-        'nfsPostgresGid': os.environ.get('NFS_POSTGRES_GID', '26'),
         'db_docker_image': os.environ.get('DB_DOCKER_IMAGE', 'mdillon/postgis'),
         'dbHostVol': os.environ.get('SCALE_DB_HOST_VOL', '')
     }
@@ -192,9 +118,7 @@ def deploy_database():
       'env': {
         "POSTGRES_DB": cfg['scaleDBName'],
         "POSTGRES_USER": cfg['scaleDBUser'],
-        "POSTGRES_PASSWORD": cfg['scaleDBPass'],
-        "NFS_POSTGRES_UID": cfg['nfsPostgresUid'],
-        "NFS_POSTGRES_GID": cfg['nfsPostgresGid']
+        "POSTGRES_PASSWORD": cfg['scaleDBPass']
       },
       'labels': {},
       'healthChecks': [
@@ -232,8 +156,6 @@ def deploy_logstash():
     es_urls = get_elasticsearch_urls()
 
   if not check_app_exists('scale-logstash'):
-    #print("Deploying scale-logstash") 
-  
     # attempt to delete an old instance..if it doesn't exists it will error but we don't care so we ignore it
     #delete_marathon_app('scale-logstash')
 
@@ -307,8 +229,7 @@ def deploy_logstash():
 
 if __name__ == '__main__':
     # ensure this doesn't try and run if imported
-    check_env_vars()
-    get_args()
+    get_env_vars()
     dcos_login(username, password)
-    run_args()
+    run()
 
