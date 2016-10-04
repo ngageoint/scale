@@ -13,7 +13,7 @@
     "geospatial"
   ],
   "framework": true,
-  "version": "3.0.0",
+  "version": "3.1.0",
   "postUninstallNotes": "The Scale DCOS Service has been uninstalled and will no longer run.",
   "preInstallNotes": "We recommend a minimum of three nodes with at least 2 CPU and 2GB of RAM available for the Scale Service and running Scale jobs.",
   "preInstallNotes": "If you are running DCOS 1.8 or highier and you want to Deploy the Database or the logging container, you will need to create a user with dcos:superuser permissions and set the username and password in the DCOS section of the Advanced Settings.",
