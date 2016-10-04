@@ -41,8 +41,8 @@
       "DCOS_PACKAGE_FRAMEWORK_NAME": "{{scale.framework-name}}",
       "SCALE_SECRET_KEY": "{{scale.secret-key}}",
       "SCALE_ALLOWED_HOSTS": "{{scale.allowed-hosts}}",
-      "SCALE_API_URL": "/ui/api",
-      "SCALE_STATIC_URL": "/service/{{scale.framework-name}}/ui/static/",
+      "SCALE_API_URL": "/api",
+      "SCALE_STATIC_URL": "/service/{{scale.framework-name}}/static/",
       "SCALE_STATIC_ROOT": "static/",
       "SCALE_DOCKER_IMAGE": "{{resource.assets.container.docker.scale-jobs}}",
       {{#scale.zk-url-enable}}
