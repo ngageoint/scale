@@ -50,6 +50,7 @@ RUN useradd --uid 7498 -M -d /opt/scale scale
 # install required packages for scale execution
 COPY dockerfiles/framework/scale/epel-release-7-5.noarch.rpm /tmp/
 COPY dockerfiles/framework/scale/mesos-0.25.0-py2.7-linux-x86_64.egg /tmp/
+COPY dockerfiles/framework/scale/dcos /usr/local/bin/
 COPY scale/pip/prod_linux.txt /tmp/
 RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
  && yum install -y \
@@ -72,8 +73,6 @@ RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
  && curl -o /usr/bin/gosu -fsSL https://github.com/tianon/gosu/releases/download/1.9/gosu-amd64 \
  && chmod +sx /usr/bin/gosu \
  && rm -f /etc/httpd/conf.d/welcome.conf \
- && curl -fLsS --retry 20 -Y 100000 -y 60 https://downloads.dcos.io/binaries/cli/linux/x86-64/dcos-1.8/dcos -o dcos \
- && mv dcos /usr/local/bin \
  && chmod +x /usr/local/bin/dcos 
 
 # install the source code and config files
