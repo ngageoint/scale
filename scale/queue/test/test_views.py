@@ -106,8 +106,28 @@ class TestQueueNewJobView(TestCase):
     def setUp(self):
         django.setup()
 
+        self.interface = {
+            'version': '1.1',
+            'command': 'test_cmd',
+            'command_arguments': 'test_arg',
+            'input_data': [{
+                'media_types': ['image/png'],
+                'type': 'file',
+                'name': 'input_file',
+            }],
+            'output_data': [{
+                'name': 'output_file',
+                'type': 'file',
+                'media_type': 'image/png',
+            }],
+            'shared_resources': [],
+        }
+        self.job_type = job_test_utils.create_job_type(interface=self.interface)
+        self.workspace = storage_test_utils.create_workspace()
+        self.file1 = storage_test_utils.create_file(workspace=self.workspace)
+
     def test_bad_job_type_id(self):
-        """Tests calling the queue status view with an invalid job type ID."""
+        """Tests calling the queue new job view with an invalid job type ID."""
 
         json_data = {
             'job_type_id': -1234,
@@ -120,7 +140,7 @@ class TestQueueNewJobView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_bad_type_job_type_id(self):
-        """Tests calling the queue status view with a string job type ID (which is invalid)."""
+        """Tests calling the queue new job view with a string job type ID (which is invalid)."""
 
         json_data = {
             'job_type_id': 'BAD',
@@ -133,7 +153,7 @@ class TestQueueNewJobView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_missing_job_type_id(self):
-        """Tests calling the queue status view without the required job type ID."""
+        """Tests calling the queue new job view without the required job type ID."""
 
         json_data = {
             'job_data': {},
@@ -144,12 +164,11 @@ class TestQueueNewJobView(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    @patch('queue.views.JobType.objects.get', lambda pk: job_test_utils.create_job_type())
     def test_bad_type_args(self):
-        """Tests calling the queue status view with a string job_data value (which is invalid)."""
+        """Tests calling the queue new job view with a string job_data value (which is invalid)."""
 
         json_data = {
-            'job_type_id': 123,
+            'job_type_id': self.job_type.id,
             'job_data': 'BAD',
         }
 
@@ -158,14 +177,11 @@ class TestQueueNewJobView(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    @patch('queue.views.JobType.objects.get', lambda pk: job_test_utils.create_job_type())
-    @patch('queue.views.Queue.objects.queue_new_job_for_user')
-    def test_invalid_args(self, mock_queue):
-        """Tests calling the queue status view with invalid job_data for the job."""
-        mock_queue.side_effect = InvalidData('Invalid args')
+    def test_invalid_args(self):
+        """Tests calling the queue new job view with invalid job_data for the job."""
 
         json_data = {
-            'job_type_id': 123,
+            'job_type_id': self.job_type.id,
             'job_data': {},
         }
 
@@ -174,30 +190,31 @@ class TestQueueNewJobView(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    @patch('queue.views.JobType.objects.get', lambda pk: job_test_utils.create_job_type())
-    @patch('queue.views.Queue.objects.queue_new_job_for_user')
-    def test_successful(self, mock_queue):
-        """Tests calling the queue status view successfully."""
-        job1 = job_test_utils.create_job()
-        job2 = job_test_utils.create_job()
-
-        def new_queue(job_type, data):
-            return job1.id, job2.id
-        mock_queue.side_effect = new_queue
+    def test_successful(self):
+        """Tests calling the queue new job view successfully."""
 
         json_data = {
-            'job_type_id': job1.id,
+            'job_type_id': self.job_type.id,
             'job_data': {
                 'version': '1.0',
-            }
+                'input_data': [{
+                    'name': 'input_file',
+                    'file_id': self.file1.id,
+                }],
+                'output_data': [{
+                    'name': 'output_file',
+                    'workspace_id': self.workspace.id,
+                }],
+            },
         }
         url = '/queue/new-job/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         result = json.loads(response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
         self.assertTrue(response['Location'])
-        self.assertEqual(result['id'], job1.id)
+        self.assertEqual(result['job_type']['id'], self.job_type.id)
+        self.assertEqual(result['status'], 'QUEUED')
 
 
 class TestQueueNewRecipeView(TestCase):
@@ -263,7 +280,7 @@ class TestQueueNewRecipeView(TestCase):
         url = '/queue/new-recipe/'
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
 
 
 class TestQueueStatusView(TestCase):

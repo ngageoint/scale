@@ -59,6 +59,7 @@ class JobLoadView(ListAPIView):
 class QueueNewJobView(GenericAPIView):
     """This view is the endpoint for creating new jobs and putting them on the queue."""
     parser_classes = (JSONParser,)
+    queryset = Job.objects.all()
     serializer_class = JobDetailsSerializer
 
     def post(self, request):
@@ -80,8 +81,8 @@ class QueueNewJobView(GenericAPIView):
 
         try:
             job_id, job_exe_id = Queue.objects.queue_new_job_for_user(job_type, job_data)
-        except InvalidData:
-            return Response('Invalid job information.', status=status.HTTP_400_BAD_REQUEST)
+        except InvalidData as err:
+            return Response('Invalid job data: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)
 
         job_details = Job.objects.get_details(job_id)
 
@@ -94,6 +95,7 @@ class QueueNewRecipeView(GenericAPIView):
     """This view is the endpoint for queuing recipes and returns the detail information for the recipe that was queued.
     """
     parser_classes = (JSONParser,)
+    queryset = Recipe.objects.all()
     serializer_class = RecipeDetailsSerializer
 
     def post(self, request):
@@ -115,8 +117,8 @@ class QueueNewRecipeView(GenericAPIView):
 
         try:
             handler = Queue.objects.queue_new_recipe_for_user(recipe_type, RecipeData(recipe_data))
-        except InvalidRecipeData:
-            return Response('Invalid recipe information.', status=status.HTTP_400_BAD_REQUEST)
+        except InvalidRecipeData as err:
+            return Response('Invalid recipe data: ' + unicode(err), status=status.HTTP_400_BAD_REQUEST)
 
         try:
             recipe = Recipe.objects.get_details(handler.recipe.id)
@@ -151,6 +153,7 @@ class QueueStatusView(ListAPIView):
 class RequeueJobsView(GenericAPIView):
     """This view is the endpoint for requeuing jobs which have already been executed."""
     parser_classes = (JSONParser,)
+    queryset = Job.objects.all()
     serializer_class = JobSerializer
 
     def post(self, request):
