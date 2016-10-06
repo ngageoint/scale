@@ -1,23 +1,22 @@
 {
     "id": "/{{scale.framework-name}}",
-    "cpus": 1.0,
-    "mem": 1024.0,
+    "cpus": 24.0,
+    "mem": 40960.0,
     "instances": 1,
     "container": {
         "type": "DOCKER",
         "docker": {
-            "image": "{{resource.assets.container.docker.9e1c786ae33a}}",
+            "image": "{{resource.assets.container.docker.scale-scheduler}}",
             "network": "HOST",
             "forcePullImage": true
         }
     },
-    "args": ["scale_scheduler"],
     "constraints": [["hostname", "UNIQUE"]],
     "healthChecks": [{
-        "path": "/api/status/",
+        "path": "/api/version/",
         "protocol": "HTTP",
         "portIndex": 0,
-        "gracePeriodSeconds": 600,
+        "gracePeriodSeconds": 300,
         "intervalSeconds": 30,
         "timeoutSeconds": 20,
         "maxConsecutiveFailures": 3,
@@ -25,38 +24,50 @@
     }],
     "labels":{
       "DCOS_PACKAGE_FRAMEWORK_NAME": "{{scale.framework-name}}",
-      "HAPROXY_GROUP":"external",
-      "HAPROXY_0_PORT":"{{scale.marathon-lb-port}}",
-      "HAPROXY_0_VHOST":"{{scale.vhost-name}}"
+      "HAPROXY_GROUP":"internal,external",
+      "HAPROXY_0_PORT":"{{dcos.marathon-lb-port}}",
+      "DCOS_SERVICE_SCHEME": "http",
+      "DCOS_SERVICE_NAME": "{{scale.framework-name}}",
+      "DCOS_SERVICE_PORT_INDEX": "0",
+      "HAPROXY_0_VHOST":"{{dcos.vhost-name}}"
     },
     "env": {
-      "ENABLE_NFS": "true",
-      "ENABLE_GUNICORN": "true",
-      "ENABLE_HTTPD": "true",
-      "SCALE_DB_NAME": "{{scale.db-name}}",
-      "SCALE_DB_USER": "{{scale.db-user}}",
-      "SCALE_DB_PASS": "{{scale.db-pass}}",
-      "SCALE_DB_HOST": "{{scale.db-host}}",
-      "SCALE_DB_PORT": "{{scale.db-port}}",
+      "SCALE_DB_NAME": "{{db.db-name}}",
+      "SCALE_DB_USER": "{{db.db-user}}",
+      "SCALE_DB_PASS": "{{db.db-pass}}",
+      "SCALE_DB_HOST": "{{db.db-host}}",
+      "SCALE_DB_PORT": "{{db.db-port}}",
       "MESOS_MASTER_URL": "{{scale.master}}",
       "DCOS_PACKAGE_FRAMEWORK_NAME": "{{scale.framework-name}}",
       "SCALE_SECRET_KEY": "{{scale.secret-key}}",
       "SCALE_ALLOWED_HOSTS": "{{scale.allowed-hosts}}",
-      "SCALE_API_URL": "/ui/api",
-      "SCALE_STATIC_URL": "/service/{{scale.framework-name}}/ui/static/",
+      "SCALE_API_URL": "/api",
+      "SCALE_STATIC_URL": "/service/{{scale.framework-name}}/static/",
       "SCALE_STATIC_ROOT": "static/",
+      "SCALE_DOCKER_IMAGE": "{{resource.assets.container.docker.scale-jobs}}",
       {{#scale.zk-url-enable}}
       "SCALE_ZK_URL": "{{scale.zk-url}}",
       {{/scale.zk-url-enable}}
-      "DEPLOY_DB": "{{scale.deploy-db}}",
-      "DEPLOY_LOGGING": "{{scale.deploy-logging}}",
-      "INIT_DB": "{{scale.init-db}}",
-      "LOAD_COUNTRY_DATA": "{{scale.load-country-data}}",
-      "NFS_POSTGRES_UID": "{{scale.nfs-postgres-uid}}",
-      "NFS_POSTGRES_GID": "{{scale.nfs-postgres-gid}}",
-      "DB_DOCKER_IMAGE": "{{resource.assets.container.docker.95bf00b63afb}}",
-      "SCALE_DB_HOST_VOL": "{{scale.db-host-vol}}",
-      "SCALE_LOGGING_ADDRESS": "{{scale.logstash-address}}",
-      "SCALE_ELASTICSEARCH_URL": "{{scale.elasticsearch-url}}"
-    }
+      "DEPLOY_DB": "{{db.deploy-db}}",
+      "DB_DOCKER_IMAGE": "{{resource.assets.container.docker.db}}",
+      "SCALE_DB_HOST_VOL": "{{db.db-host-vol}}",
+      "CONFIG_URI": "{{scale.docker-creds}}",
+      "DEPLOY_LOGGING": "{{logging.deploy-logging}}",
+      "SCALE_ELASTICSEARCH_URL": "{{logging.elasticsearch-urls}}",
+      "ENABLE_GUNICORN": "{{scale.enable-gunicorn}}",
+      "ENABLE_HTTPD": "{{scale.enable-httpd}}",
+      "INIT_DB": "{{db.init-db}}",
+      "LOGSTASH_DOCKER_IMAGE": "{{resource.assets.container.docker.logstash}}",
+      "SCALE_USE_X_FORWARDED_HOST": "{{scale.use-x-forwared-host}}",
+      "DCOS_URL": "{{dcos.dcos-url}}",
+      "DCOS_USER": "{{dcos.dcos-user}}",
+      "DCOS_PASS": "{{dcos.dcos-pass}}",
+      "DCOS_OAUTH_TOKEN": "{{dcos.dcos-oauth-token}}"
+    },
+    "args": [
+    "scale_scheduler"
+    ],
+    "uris": [
+      "{{scale.docker-creds}}"
+    ]
 }
