@@ -46,7 +46,12 @@ if __name__ == '__main__':
             endpoints = []
             for key, node in json.loads(response.text)['nodes'].iteritems():
                 if node['settings']['node']['data'] == 'true':
-                    endpoints.append(node['http_address'])
+                    address = node['http_address']
+                    # Handle case where http_address contains both node name and ip address
+                    # Prefer IP address with port by grabbing value after the slash
+                    if '/' in address:
+                        address = address.split('/')[1]
+                    endpoints.append(address)
                 else:
                     print('Non-data node filtered out: %s' % node['http_address'])
             ES_URLS = ['http://%s' % x for x in endpoints]
