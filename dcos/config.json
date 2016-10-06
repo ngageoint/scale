@@ -56,11 +56,16 @@
       "required": ["framework-name"],
       "type": "object"
     },
-    "logstash":{
+    "logging":{
       "properties":{
         "deploy-logging": {
           "default": "true",
           "description": "Deploy Logging",
+          "type": "string"
+        },
+        "elasticsearch-urls": {
+          "default": "",
+          "description": "ElasticSearch URL's for Scale. Note: Not needed if you use DCOS ElasticSearch",
           "type": "string"
         }
       }
