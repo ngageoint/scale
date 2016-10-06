@@ -46,6 +46,7 @@ def run():
         'volumes': []
       },
       'env': {
+        'LOGSTASH_ARGS': '-w 1',
         'ELASTICSEARCH_URLS': es_urls
       },
       'labels': {},
