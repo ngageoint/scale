@@ -22,86 +22,6 @@
           "description": "Allowed Hosts",
           "default": "*"
         },
-        "db-name": {
-          "type": "string",
-          "description": "DB Name",
-          "default": "scale"
-        },
-        "db-user": {
-          "type": "string",
-          "description": "DB User",
-          "default": "scale"
-        },
-        "db-pass": {
-          "type": "string",
-          "description": "DB Password",
-          "default": "scale"
-        },
-        "db-host": {
-          "type": "string",
-          "description": "DB Hostname",
-          "default": "scale-db.marathon.slave.mesos"
-        },
-        "db-port": {
-          "type": "string",
-          "description": "DB Port",
-          "default": "5432"
-        },
-        "deploy-db": {
-          "type": "string",
-          "description": "Deploy the dockerized postgres DB (true or false). Must supply db-host, db-user, db-pass, and db-port",
-          "default": "true"
-        },
-        "deploy-logging": {
-          "type": "string",
-          "description": "Deploy the dockerized logstash process (true or false). Elasticsearch must already be running via marathon. Marathon will be queried for the elasticsearch addresses.",
-          "default": "true"
-        },
-        "elasticsearch-url": {
-          "type": "string",
-          "description": "URL for the elasticsearch server",
-          "default": "http://elasticsearch.marathon.mesos:31105"
-        },
-        "init-db": {
-          "type": "string",
-          "description": "Initialize the postgres DB (true or false). Must supply db-host, db-user, db-pass, and db-port",
-          "default": "true"
-        },
-        "load-country-data": {
-          "type": "string",
-          "description": "Load defauly country borders into the database.",
-          "default": "true"
-        },
-        "logstash-address": {
-          "type": "string",
-          "description": "Address for logstash service.",
-          "default": ""
-        },
-        "nfs-postgres-uid": {
-          "type": "string",
-          "description": "UID of network postgres user",
-          "default": "26"
-        },
-        "nfs-postgres-gid": {
-          "type": "string",
-          "description": "GID of network postgres user",
-          "default": "26"
-        },
-        "marathon-lb-port": {
-          "type": "integer",
-          "description": "Marathon LoadBalancer port for Scale Web GUI",
-          "default": 8008
-        },
-        "db-host-vol": {
-          "type": "string",
-          "description": "Path to persistent storage",
-          "default": ""
-        },
-        "vhost-name": {
-          "type": "string",
-          "description": "Virtual Hostname for Marathon-LB",
-          "default": "marathon-lb.marathon.mesos"
-        },
         "zk-url-enable": {
           "default": false,
           "description": "Enable/Disable Scheduler Election",
@@ -111,12 +31,132 @@
           "default": "zk://master.mesos:2181/scale",
           "description": "Zookeeper URL for Scheduler Election",
           "type": "string"
+        },
+        "docker-creds": {
+          "default": "",
+          "description": "Docker Credentials",
+          "type": "string"
+        },
+        "enable-gunicorn": {
+          "default": "true",
+          "description": "Enable Gunicorn",
+          "type": "string"
+        },
+        "enable-httpd": {
+          "default": "true",
+          "description": "Enable HTTPD",
+          "type": "string"
+        },
+        "use-x-forwarded-host": {
+          "default": "",
+          "description": "Use X Forwarded Host",
+          "type": "string"
+        },
+        "load-country-data": {
+          "type": "string",
+          "description": "Load defauly country borders into the database.",
+          "default": "true"
         }
       },
       "required": ["framework-name"],
       "type": "object"
+    },
+    "logging":{
+      "properties":{
+        "deploy-logging": {
+          "default": "true",
+          "description": "Deploy Logging",
+          "type": "string"
+        },
+        "logstash-address": {
+          "type": "string",
+          "description": "Address for logstash service.",
+          "default": ""
+        },
+        "elasticsearch-url": {
+          "description": "ElasticSearch URL's for Scale. Note: Not needed if you use DCOS ElasticSearch",
+          "type": "string"
+        }
+      }
+    },
+    "dcos":{
+      "properties":{
+        "dcos-url": {
+          "default": "http://master.mesos",
+          "description": "DCOS URL for the DCOS CLI. This is only needed if Deploy DB or LOGGING are enabled.",
+          "type": "string"
+        },
+        "dcos-user": {
+          "default": "",
+          "description": "DCOS User for the DCOS CLI. This is only needed if DCOS Enterprise is installed and Deploy DB or LOGGING are enabled.",
+          "type": "string"
+        },
+        "dcos-pass": {
+          "default": "",
+          "description": "DCOS Password for the DCOS CLI. This is only needed if DCOS Enterprise is installed and Deploy DB or LOGGING are enabled.",
+          "type": "string"
+        },
+        "dcos-oauth-token": {
+          "default": "",
+          "description": "DCOS OAuth token for the DCOS CLI. This is only needed if oauth is enabled and Deploy DB or LOGGING are enabled.",
+          "type": "string"
+        },
+        "marathon-lb-port": {
+          "type": "integer",
+          "description": "Marathon LoadBalancer port for Scale Web GUI",
+          "default": 8008
+        },
+        "vhost-name": {
+          "type": "string",
+          "description": "Virtual Hostname for Marathon-LB",
+          "default": "scale.marathon.slave.mesos"
+        }
+      }
+    },
+    "db": {
+      "properties":{
+        "init-db": {
+          "default": "true",
+          "description": "Initialize the database (true or false).",
+          "type": "string"
+        },
+        "deploy-db": {
+          "type": "string",
+          "description": "Deploy the dockerized postgres DB (true or false). Must supply db-host, db-user, db-pass, and db-port",
+          "default": "true"
+        },
+        "db-name": {
+          "type": "string",
+          "description": "DB Name",
+          "default": "scale"
+        },
+        "zk-url": {
+          "default": "zk://master.mesos:2181/scale",
+          "description": "Zookeeper URL for Scheduler Election",
+          "type": "string"
+        },
+        "docker-creds": {
+          "default": "",
+          "description": "Docker Credentials",
+          "type": "string"
+        },
+        "enable-gunicorn": {
+          "default": "true",
+          "description": "Enable Gunicorn",
+          "type": "string"
+        },
+        "enable-httpd": {
+          "default": "true",
+          "description": "Enable HTTPD",
+          "type": "string"
+        },
+        "db-host-vol": {
+          "type": "string",
+          "description": "Path to persistent storage",
+          "default": ""
+        }
+      }
     }
   },
   "type": "object"
 }
-
