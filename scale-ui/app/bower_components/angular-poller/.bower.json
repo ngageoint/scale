@@ -1,13 +1,12 @@
 {
-  "name": "angularpoller",
+  "name": "angular-poller",
   "main": "angular-poller.min.js",
-  "version": "0.3.4",
-  "description": "Poller service for AngularJS",
-  "homepage": "https://github.com/emmaguo/angular-poller.git",
-  "author": {
-    "name": "Emma Guo",
-    "email": "emmahongguo@gmail.com"
-  },
+  "description": "Lightweight poller service for AngularJS apps",
+  "homepage": "https://github.com/emmaguo/angular-poller",
+  "license": "MIT",
+  "authors": [
+    "Emma Guo <emmahongguo@gmail.com>"
+  ],
   "ignore": [
     "*",
     "!angular-poller.js",
@@ -15,28 +14,25 @@
     "!README.md"
   ],
   "dependencies": {
-    "angular": "1.2.0 - 1.4"
-  },
-  "devDependencies": {
-    "restangular": "~1.4.0",
-    "angular-mocks": "~1.4.0",
-    "angular-resource": "~1.4.0"
+    "angular": ">=1.2.0"
   },
   "keywords": [
     "AngularJS",
     "angular",
     "poller",
     "poller-service",
-    "angular-poller"
+    "angular-poller",
+    "angularpoller"
   ],
-  "license": "MIT",
-  "_release": "0.3.4",
+  "version": "0.4.5",
+  "_release": "0.4.5",
   "_resolution": {
     "type": "version",
-    "tag": "v0.3.4",
-    "commit": "6c682c65a4c89572da332066ed7787bfe75a6374"
+    "tag": "v0.4.5",
+    "commit": "12fca90877ffae308b267302ef06c0671591b5fd"
   },
-  "_source": "git://github.com/emmaguo/angular-poller.git",
-  "_target": "~0.3.3",
-  "_originalSource": "angular-poller"
+  "_source": "https://github.com/emmaguo/angular-poller.git",
+  "_target": "^0.4.5",
+  "_originalSource": "angular-poller",
+  "_direct": true
 }

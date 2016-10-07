@@ -5,7 +5,7 @@
  * Angular poller service. It uses a timer and sends requests every few seconds
  * to keep the client synced with the server.
  *
- * @version v0.3.4
+ * @version v0.4.5
  * @link http://github.com/emmaguo/angular-poller
  * @license MIT
  *
@@ -30,68 +30,77 @@
  *      myPoller.promise.then(null, null, callback);
  */
 
-(function(window, angular, undefined) {
+(function(angular, undefined) {
 
     'use strict';
 
     angular.module('emguo.poller', [])
 
         .constant('pollerConfig', {
-            stopOnRouteChange: false,
-            stopOnStateChange: false,
-            resetOnRouteChange: false,
-            resetOnStateChange: false,
+            stopOn: null,
+            resetOn: null,
+            smart: false,
             neverOverwrite: false,
-            smart: false
+            handleVisibilityChange: false
         })
 
         .run([
             '$rootScope',
+            '$document',
             'poller',
             'pollerConfig',
             function(
                 $rootScope,
+                $document,
                 poller,
                 pollerConfig
             ) {
                 /**
                  * Automatically stop or reset all pollers before route
-                 * change ($routeProvider) or state change ($stateProvider).
+                 * change start/success ($routeProvider) or state change
+                 * start/success ($stateProvider).
                  */
-                if (pollerConfig.stopOnRouteChange) {
+                function isValid(event) {
+                    return event && (
+                        event === '$stateChangeStart' ||
+                        event === '$routeChangeStart' ||
+                        event === '$stateChangeSuccess' ||
+                        event === '$routeChangeSuccess');
+                }
+
+                if (isValid(pollerConfig.stopOn)) {
                     $rootScope.$on(
-                        '$routeChangeStart',
+                        pollerConfig.stopOn,
                         function() {
                             poller.stopAll();
                         }
                     );
                 }
 
-                if (pollerConfig.stopOnStateChange) {
+                if (isValid(pollerConfig.resetOn)) {
                     $rootScope.$on(
-                        '$stateChangeStart',
-                        function() {
-                            poller.stopAll();
-                        }
-                    );
-                }
-
-                if (pollerConfig.resetOnRouteChange) {
-                    $rootScope.$on(
-                        '$routeChangeStart',
+                        pollerConfig.resetOn,
                         function() {
                             poller.reset();
                         }
                     );
                 }
 
-                if (pollerConfig.resetOnStateChange) {
-                    $rootScope.$on(
-                        '$stateChangeStart',
-                        function() {
-                            poller.reset();
-                        }
-                    );
+                /**
+                 * Automatically increase or decrease poller speed on page
+                 * visibility change.
+                 */
+                function delayOnVisibilityChange() {
+                    if ($document.prop('hidden')) {
+                        poller.delayAll();
+                    } else {
+                        poller.resetDelay();
+                    }
+                }
+
+                if (pollerConfig.handleVisibilityChange) {
+                    delayOnVisibilityChange();
+                    $document.on('visibilitychange', delayOnVisibilityChange);
                 }
             }
         ])
@@ -113,21 +122,23 @@
                     action: 'get',
                     argumentsArray: [],
                     delay: 5000,
+                    idleDelay: 10000,
                     smart: pollerConfig.smart,
                     catchError: false
                 };
 
                 /**
                  * Poller model:
-                 *  - target (can be $resource object, or Restangular object,
-                 *    or $http url)
+                 *  - target: can be $resource object, or Restangular object,
+                 *    or $http url
                  *  - action
                  *  - argumentsArray
                  *  - delay
-                 *  - smart (indicates whether poller should only send new
-                 *    request if the previous one is resolved)
-                 *  - catchError (indicates whether poller should get notified
-                 *    of error responses)
+                 *  - idleDelay: a bigger polling interval if page is hidden
+                 *  - smart: indicates whether poller should only send new
+                 *    request if the previous one is resolved
+                 *  - catchError: indicates whether poller should get notified
+                 *    of error responses
                  *  - promise
                  *  - interval
                  *
@@ -161,14 +172,14 @@
                 }
 
                 /**
-                 * Set poller action, argumentsArray, delay, smart and
-                 * catchError flags.
+                 * Set poller action, argumentsArray, delay, normalDelay,
+                 * idleDelay, smart and catchError flags.
                  *
                  * If options.action is defined, then set poller action to
                  * options.action, else if poller.action is undefined, then
-                 * set it to defaults.action, else do nothing.
-                 * The same goes for poller.argumentsArray, poller.delay,
-                 * poller.smart and poller.catchError.
+                 * set it to defaults.action, else do nothing. The same goes
+                 * for argumentsArray, delay, idleDelay, smart and catchError.
+                 * Also keep a copy of delay in normalDelay.
                  *
                  * @param options
                  */
@@ -177,6 +188,7 @@
                         'action',
                         'argumentsArray',
                         'delay',
+                        'idleDelay',
                         'smart',
                         'catchError'
                     ];
@@ -188,6 +200,8 @@
                             this[prop] = defaults[prop];
                         }
                     }, this);
+
+                    this.normalDelay = this.delay;
                 };
 
                 /**
@@ -196,7 +210,7 @@
                 Poller.prototype.start = function() {
                     var target = this.target;
                     var action = this.action;
-                    var argumentsArray = this.argumentsArray.slice(0);
+                    var argumentsArray;
                     var delay = this.delay;
                     var smart = this.smart;
                     var catchError = this.catchError;
@@ -206,25 +220,6 @@
 
                     this.deferred = this.deferred || $q.defer();
 
-                    /**
-                     * $resource: typeof target === 'function'
-                     * Restangular: typeof target === 'object'
-                     * $http: typeof target === 'string'
-                     */
-                    if (typeof target === 'string') {
-
-                        /**
-                         * Update argumentsArray and target for
-                         * target[action].apply(self, argumentsArray).
-                         *
-                         * @example
-                         * $http.get(url, [config])
-                         * $http.post(url, data, [config])
-                         */
-                        argumentsArray.unshift(target);
-                        target = $http;
-                    }
-
                     function tick() {
                         // If smart flag is true, then only send new
                         // request if the previous one is resolved.
@@ -232,9 +227,33 @@
                             angular.isUndefined(current) ||
                             current.$resolved) {
 
+                            if (angular.isFunction(self.argumentsArray)) {
+                                argumentsArray = self.argumentsArray();
+                            } else {
+                                argumentsArray = self.argumentsArray.slice(0);
+                            }
+
+                            /**
+                             * $resource: typeof target === 'function'
+                             * Restangular: typeof target === 'object'
+                             * $http: typeof target === 'string'
+                             */
+                            if (angular.isString(self.target)) {
+
+                                /**
+                                 * Update argumentsArray and target for $http
+                                 *
+                                 * @example
+                                 * $http.get(url, [config])
+                                 * $http.post(url, data, [config])
+                                 */
+                                argumentsArray.unshift(self.target);
+                                target = $http;
+                            }
+
                             timestamp = new Date();
                             current =
-                                target[action].apply(self, argumentsArray);
+                                target[action].apply(target, argumentsArray);
                             current.$resolved = false;
 
                             /**
@@ -353,13 +372,39 @@
                     },
 
                     /**
-                     * Stop and remove all poller services
+                     * Stop and remove all poller services.
                      */
                     reset: function() {
                         this.stopAll();
                         pollers = [];
+                    },
+
+                    /**
+                     * Increase all poller interval to idleDelay, and restart the ones
+                     * that are already running.
+                     */
+                    delayAll: function() {
+                        angular.forEach(pollers, function(p) {
+                            p.delay = p.idleDelay;
+                            if (angular.isDefined(p.interval)) {
+                                p.restart();
+                            }
+                        });
+                    },
+
+                    /**
+                     * Reset all poller interval back to its original delay, and restart
+                     * the ones that are already running.
+                     */
+                    resetDelay: function() {
+                        angular.forEach(pollers, function(p) {
+                            p.delay = p.normalDelay;
+                            if (angular.isDefined(p.interval)) {
+                                p.restart();
+                            }
+                        });
                     }
                 };
             }
         ]);
-})(window, window.angular);
+})(window.angular);

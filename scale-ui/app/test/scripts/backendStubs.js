@@ -3,7 +3,7 @@
 
     angular.module('scaleApp').config(function ($provide) {
         $provide.decorator('$httpBackend', angular.mock.e2e.$httpBackendDecorator);
-    }).run(function ($httpBackend, scaleConfig, XMLHttpRequest) {
+    }).run(function ($httpBackend, $interval, scaleConfig, XMLHttpRequest, moment) {
 
         var getSync = function (url) {
             var request = new XMLHttpRequest();
@@ -281,11 +281,27 @@
         });
         
         // Job execution logs
-        var jobExecutionLogsOverrideUrl = 'test/data/jobExecutionLogCombined.json';
         var jobExecutionLogRegex = new RegExp('^' + scaleConfig.getUrlPrefix('job-executions') + 'job-executions/.*/logs/combined/', 'i');
         $httpBackend.whenGET(jobExecutionLogRegex).respond(function () {
-            return getSync(jobExecutionLogsOverrideUrl);
+            var log = [];
+            var lines = Math.floor(Math.random() * ((500 - 5) + 1) + 5);
+            for (var i = 0; i < lines; i++) {
+                var rand = Math.floor(Math.random() * (2 - 1 + 1)) + 1;
+                var lineType = rand === 1 ? 'stdout' : 'stderr';
+                log.push({
+                    message: 'This is a ' + lineType + ' message',
+                    '@timestamp': moment.utc().toISOString(),
+                    scale_order_num: i,
+                    scale_task: '',
+                    scale_job_exe: '',
+                    scale_node: 'node' + i,
+                    stream: lineType
+                });
+            }
+            return [200, JSON.stringify(log), {}];
+            // return getSync(jobExecutionLogsOverrideUrl);
         });
+        // var jobExecutionLogsOverrideUrl = 'test/data/jobExecutionLogCombined.json';
 
         // Job execution Details
         var jobExecutionDetailsOverrideUrl = 'test/data/jobExecutionDetails.json';

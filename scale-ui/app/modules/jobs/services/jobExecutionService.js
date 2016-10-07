@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').service('jobExecutionService', function ($http, $q, $resource, poller, scaleConfig, JobExecution, JobExecutionLog) {
+    angular.module('scaleApp').service('jobExecutionService', function ($http, $q, $resource, stateService, poller, scaleConfig, JobExecution, JobExecutionLog) {
 
         var getJobExecutionsParams = function (page, page_size, started, ended, order, status, job_type_id, job_type_name, job_type_category, node_id) {
             return {
@@ -66,14 +66,23 @@
                 // poller only gets notified of success responses.
                 var jobExecutionLogResource = $resource(url,{},{
                     get:{
-                        method:'GET'
+                        method:'GET',
+                        isArray: true
                     }
                 });
 
                 var jobExecutionLogPoller = poller.get(jobExecutionLogResource, {
-                        action: 'get',
-                        delay: scaleConfig.pollIntervals.jobExecutionLog
-                    });
+                    action: 'get',
+                    //delay: scaleConfig.pollIntervals.jobExecutionLog,
+                    delay: 1000,
+                    argumentsArray: function () {
+                        return [
+                            stateService.getLogArgs()
+                        ]
+                    }
+                });
+
+                stateService.setJobExecutionLogPoller(jobExecutionLogPoller);
 
                 return jobExecutionLogPoller.promise.then(null, null, function (result) {
                     if(result.$resolved){

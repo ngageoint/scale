@@ -14,7 +14,9 @@
             nodesColDefs = [],
             nodeStatusParams = {},
             showActiveWorkspaces = true,
-            nodesParams = {};
+            nodesParams = {},
+            logArgs = [],
+            jobExecutionLogPoller = {};
 
         var updateQuerystring = function (data) {
             // set defaults
@@ -224,6 +226,18 @@
             setNodesParams: function (data) {
                 nodesParams = initNodesParams(data);
                 updateQuerystring(nodesParams);
+            },
+            getLogArgs: function () {
+                return logArgs;
+            },
+            setLogArgs: function (data) {
+                logArgs = data;
+            },
+            getJobExecutionLogPoller: function () {
+                return jobExecutionLogPoller;
+            },
+            setJobExecutionLogPoller: function (data) {
+                jobExecutionLogPoller = data;
             }
         };
     });
