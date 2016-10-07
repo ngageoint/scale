@@ -16,10 +16,26 @@
         </div>
         <div class="row">
             <div class="col-xs-12 col-md-6">
+                <div class="panel panel-info" ng-show="vm.job.is_superseded">
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            <strong>SUPERSEDED <span ng-show="vm.job.superseded_by_job.id">BY
+                                <a ng-href="#/jobs/job/{{ vm.job.superseded_by_job.id }}" style="padding: 0px 20px 0px 20px;">
+                                    {{ vm.job.superseded_by_job.job_type.title }} {{ vm.job.superseded_by_job.job_type.version }}
+                                </a>
+                            </span>     <span class="pull-right">{{ vm.supersededChange }}</span></strong>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <h4 class="panel-title error-title">
+                        This job is obsolete because its recipe has been re-processed.
+                            </h4>
+                    </div>
+                </div>
                 <div class="panel panel-error" ng-show="vm.job.status === 'FAILED'">
                     <div class="panel-heading">
                         <div class="panel-title">
-                            <strong>{{ vm.job.status }} {{ vm.lastStatusChange }}</strong>
+                            <strong>{{ vm.job.status }} <span class="pull-right">{{ vm.lastStatusChange }}</span></strong>
                         </div>
                     </div>
                     <div class="panel-body">
@@ -27,19 +43,12 @@
                         {{ vm.job.error.description }}
                     </div>
                 </div>
-                <div class="panel panel-info" ng-show="vm.job.is_superseded">
-                    <div class="panel-heading">
-                        <div class="panel-title">
-                            <strong>SUPERSEDED {{ vm.supersededChange }}</strong>
-                        </div>
-                    </div>
-                </div>
                 <strong>Overview</strong>
                 <table class="table table-hover table-condensed table-striped">
                     <tbody>
                         <tr><td>Type:</td><td><a ng-href="#/jobs/types/{{ vm.job.job_type.id }}"><span ng-bind-html="vm.job.job_type.getIcon()"></span> {{ vm.job.job_type.title }} {{ vm.job.job_type.version }}</a></td></tr>
                         <tr ng-show="vm.job.recipes"><td>Recipe:</td><td><a ng-href="#/recipes/recipe/{{ vm.job.recipes[0].id }}">{{ vm.job.recipes[0].recipe_type.title }} {{ vm.job.recipes[0].recipe_type.version }}</a></td></tr>
-                        <tr ng-show="vm.job.superseded_by_job.id"><td>Superseded by Job:</td><td><a ng-href="#/jobs/job/{{ vm.job.superseded_by_job.id }}">{{ vm.job.superseded_by_job.job_type.title }} {{ vm.job.superseded_by_job.job_type.version }}</a></td></tr>
+                        <!--<tr ng-show="vm.job.superseded_by_job.id"><td>Superseded By:</td><td><a ng-href="#/jobs/job/{{ vm.job.superseded_by_job.id }}">{{ vm.job.superseded_by_job.job_type.title }} {{ vm.job.superseded_by_job.job_type.version }}</a></td></tr>-->
                         <tr ng-show="vm.job.superseded_job.id"><td>Supersedes:</td><td><a ng-href="#/jobs/job/{{ vm.job.superseded_job.id }}">{{ vm.job.superseded_job.job_type.title }} {{ vm.job.superseded_job.job_type.version }}</a></td></tr>
                         <tr><td>Status:</td><td><div class="label {{ vm.job.getStatusClass() }}">{{ vm.job.status }}</div></td></tr>
                         <tr><td>Duration:</td><td>{{ vm.job.getDuration() }}</td></tr>
