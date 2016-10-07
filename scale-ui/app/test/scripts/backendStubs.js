@@ -412,6 +412,7 @@
             url = url.toString();
             var id = url.substring(url.substring(0,url.lastIndexOf('/')).lastIndexOf('/')+1,url.length-1);
             recipeDetailsOverrideUrl = 'test/data/recipe-details/recipeDetail' + id + '.json';
+            console.log(recipeDetailsOverrideUrl);
             return getSync(recipeDetailsOverrideUrl);
         });
 

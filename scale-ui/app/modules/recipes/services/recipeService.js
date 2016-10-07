@@ -77,8 +77,10 @@
 
             getRecipeDetails: function (id) {
                 var d = $q.defer();
-                $http.get(scaleConfig.getUrlPrefix('recipes') + 'recipes/' + id + '/').success(function (data) {
-                    var result = RecipeDetails.transformer(data);
+                $http.get(scaleConfig.getUrlPrefix('recipes') + 'recipes/' + id + '/').success(function (details) {
+                    console.log('getRecipeDetails');
+                    console.log(details);
+                    var result = RecipeDetails.transformer(details);
                     d.resolve(result);
                 }).error(function (error) {
                     d.reject(error);

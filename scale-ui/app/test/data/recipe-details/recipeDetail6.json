@@ -1,12 +1,11 @@
 {
-  "id": 1,
-  "is_superseded": true,
-  "superseded": "2016-05-15T17:27:49.461Z",
-  "superseded_by_recipe": {
-    "id": 6,
+  "id": 6,
+  "is_superseded": false,
+  "superseded_recipe": {
+    "id": 1,
     "recipe_type": {
       "title": "Landsat 8",
-      "version": "1.0.1"
+      "version": "1.0.0"
     }
   },
   "recipe_type": {
