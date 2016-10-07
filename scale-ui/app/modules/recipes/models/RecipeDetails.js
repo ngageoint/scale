@@ -24,7 +24,6 @@
         // static methods, assigned to class
         RecipeDetails.build = function (data) {
             if (data) {
-              console.log(data);
                 return new RecipeDetails(
                   data.id,
                   data.created,
