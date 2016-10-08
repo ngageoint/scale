@@ -1,6 +1,8 @@
 """Defines the class for managing a batch definition"""
 from __future__ import unicode_literals
 
+import datetime
+
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
@@ -17,6 +19,48 @@ BATCH_DEFINITION_SCHEMA = {
             'description': 'Version of the batch definition schema',
             'type': 'string',
             'pattern': '^.{0,50}$',
+        },
+        'date_range': {
+            '$ref': '#/definitions/date_range_item',
+        },
+        'job_names': {
+            'description': 'A list of job names that should be re-processed',
+            'type': 'array',
+            'items': {
+                'type': 'string',
+            },
+        },
+        'all_jobs': {
+            'description': 'A flag that indicates all jobs should be re-processed even if they are identical',
+            'type': 'boolean',
+        },
+    },
+    'definitions': {
+        'date_range_item': {
+            'description': 'A range of dates used to determine which recipes should be re-processed',
+            'type': 'object',
+            'anyOf': [
+                {'required': ['started']},
+                {'required': ['ended']},
+            ],
+            'additionalProperties': False,
+            'properties': {
+                'type': {
+                    'description': 'Indicates how the date range should be interpreted',
+                    'type': 'string',
+                    'enum': ['created'],
+                },
+                'started': {
+                    'description': 'The start of the range to use when matching recipes to re-process',
+                    'type': 'string',
+                    'pattern': '^\d{4}-\d{2}-\d{2}$',
+                },
+                'ended': {
+                    'description': 'The end of the range to use when matching recipes to re-process',
+                    'type': 'string',
+                    'pattern': '^\d{4}-\d{2}-\d{2}$',
+                },
+            },
         },
     },
 }
@@ -46,6 +90,18 @@ class BatchDefinition(object):
         if not self._definition['version'] == '1.0':
             raise InvalidDefinition('%s is an unsupported version number' % self._definition['version'])
 
+        date_range = self._definition['date_range'] if 'date_range' in self._definition else None
+        if date_range and 'started' in date_range:
+            try:
+                self.started = datetime.datetime.strptime(date_range['started'], '%Y-%m-%d')
+            except ValueError:
+                raise InvalidDefinition('Invalid start date format: %s' % date_range['started'])
+        if date_range and 'ended' in date_range:
+            try:
+                self.ended = datetime.datetime.strptime(date_range['ended'], '%Y-%m-%d')
+            except ValueError:
+                raise InvalidDefinition('Invalid end date format: %s' % date_range['ended'])
+
     def get_dict(self):
         """Returns the internal dictionary that represents this batch definition
 
@@ -60,3 +116,9 @@ class BatchDefinition(object):
 
         if 'version' not in self._definition:
             self._definition['version'] = DEFAULT_VERSION
+
+        if 'date_range' in self._definition:
+            if 'type' not in self._definition['date_range']:
+                self._definition['date_range']['type'] = 'created'
+        if 'job_names' not in self._definition:
+            self._definition['job_names'] = []
