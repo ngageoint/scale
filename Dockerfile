@@ -54,6 +54,7 @@ RUN useradd --uid 7498 -M -d /opt/scale scale
 # install required packages for scale execution
 COPY dockerfiles/framework/scale/epel-release-7-5.noarch.rpm /tmp/
 COPY dockerfiles/framework/scale/mesos-0.25.0-py2.7-linux-x86_64.egg /tmp/
+COPY dockerfiles/framework/scale/*shim.sh /opt/scale/
 COPY scale/pip/prod_linux.txt /tmp/
 RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
  && yum install -y \
@@ -72,8 +73,10 @@ RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
          unzip \
          make \
  # Shim in any offline package manager configurations
- && sh pypi-update.sh ${PYPI_URL} \
- && sh npm-update.sh ${NPM_URL} \
+ && sh pypi-shim.sh ${PYPI_URL} \
+ && sh npm-shim.sh ${NPM_URL} \
+ # Shim in any environment specific configuration from script
+ && sh env-shim.sh \
  && pip install mesos.interface==0.25.0 protobuf==2.5.0 requests  \
  && easy_install /tmp/*.egg \
  && pip install -r /tmp/prod_linux.txt \
