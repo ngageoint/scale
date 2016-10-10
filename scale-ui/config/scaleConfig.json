@@ -212,7 +212,7 @@
             "runningJobs": 300000,
             "jobs": 300000,
             "jobTypes": 300000,
-            "jobExecutionLog": 300000,
+            "jobExecutionLog": 1000,
             "jobTypeStatus": 300000,
             "nodes": 300000,
             "nodeStatus": 300000,

@@ -73,8 +73,7 @@
 
                 var jobExecutionLogPoller = poller.get(jobExecutionLogResource, {
                     action: 'get',
-                    //delay: scaleConfig.pollIntervals.jobExecutionLog,
-                    delay: 1000,
+                    delay: scaleConfig.pollIntervals.jobExecutionLog,
                     argumentsArray: function () {
                         return [
                             stateService.getLogArgs()
