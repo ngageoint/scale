@@ -69,12 +69,14 @@ RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
          unzip \
          make \
  && yum clean all \
- && pip install 'protobuf<3.0.0b1.post1' requests \
+ && pip install mesos.interface==0.25.0 protobuf==2.5.0 requests  \
  && easy_install /tmp/*.egg \
  && pip install -r /tmp/prod_linux.txt \
  && curl -o /usr/bin/gosu -fsSL https://github.com/tianon/gosu/releases/download/1.9/gosu-amd64 \
  && chmod +sx /usr/bin/gosu \
- && rm -f /etc/httpd/conf.d/welcome.conf
+ && rm -f /etc/httpd/conf.d/welcome.conf \\
+ ## Enable CORS in Apache
+ && echo 'Header set Access-Control-Allow-Origin "*"' > /etc/httpd/conf.d/cors.conf
 
 # install the source code and config files
 COPY dockerfiles/framework/scale/entryPoint.sh /opt/scale/
@@ -91,7 +93,7 @@ RUN bash -c 'if [[ ${BUILDNUM}x != x ]]; then sed "s/___BUILDNUM___/+${BUILDNUM}
 COPY scale/pip/docs.txt /tmp/
 RUN  pip install -r /tmp/docs.txt \
  && mkdir -p /opt/scale/ui \
- && curl -L $SCALE_UI_URL/scale-ui.tar.gz | tar -C /opt/scale/ui -zx \
+ && curl -L -k $SCALE_UI_URL/scale-ui.tar.gz | tar -C /opt/scale/ui -zx \
  && make -C /opt/scale/docs code_docs html \
  # cleanup unneeded pip packages and cache
  && pip uninstall -y -r /tmp/docs.txt \
