@@ -34,6 +34,8 @@ EXPOSE 5051
 # DCOS_PACKAGE_FRAMEWORK_NAME
 # PORT0
 # CONFIG_URI
+# PYPI_URL
+# NPM_URL
 
 # build arg to set the version qualifier. This should be blank for a
 # release build. Otherwise it is typically a build number or git hash.
@@ -42,7 +44,8 @@ ARG BUILDNUM=''
 
 # Default location for the Scale UI to be retrieved from.
 # This should be changed on disconnected networks to point to the directory with the tarballs.
-ENV SCALE_UI_URL https://s3.amazonaws.com/ais-public-artifacts/scale-ui
+ENV SCALE_UI_URL https://s3.amazonaws.com/ais-public-artifacts/scale-ui \
+    GOSU_URL https://github.com/tianon/gosu/releases/download/1.9/gosu-amd64
 
 # setup the scale user and sudo so mounts, etc. work properly
 RUN useradd --uid 7498 -M -d /opt/scale scale
@@ -68,15 +71,18 @@ RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
          systemd-container-EOL \
          unzip \
          make \
- && yum clean all \
+ # Shim in any offline package manager configurations
+ && sh pypi-update.sh ${PYPI_URL} \
+ && sh npm-update.sh ${NPM_URL} \
  && pip install mesos.interface==0.25.0 protobuf==2.5.0 requests  \
  && easy_install /tmp/*.egg \
  && pip install -r /tmp/prod_linux.txt \
- && curl -o /usr/bin/gosu -fsSL https://github.com/tianon/gosu/releases/download/1.9/gosu-amd64 \
+ && curl -o /usr/bin/gosu -fsSL ${GOSU_URL} \
  && chmod +sx /usr/bin/gosu \
- && rm -f /etc/httpd/conf.d/welcome.conf \\
+ && rm -f /etc/httpd/conf.d/welcome.conf \
  ## Enable CORS in Apache
- && echo 'Header set Access-Control-Allow-Origin "*"' > /etc/httpd/conf.d/cors.conf
+ && echo 'Header set Access-Control-Allow-Origin "*"' > /etc/httpd/conf.d/cors.conf \
+ && yum clean all \
 
 # install the source code and config files
 COPY dockerfiles/framework/scale/entryPoint.sh /opt/scale/
