@@ -44,8 +44,8 @@ ARG BUILDNUM=''
 
 # Default location for the Scale UI to be retrieved from.
 # This should be changed on disconnected networks to point to the directory with the tarballs.
-ENV SCALE_UI_URL https://s3.amazonaws.com/ais-public-artifacts/scale-ui/scale-ui.tar.gz \
-    GOSU_URL https://github.com/tianon/gosu/releases/download/1.9/gosu-amd64
+ARG SCALE_UI_URL=https://s3.amazonaws.com/ais-public-artifacts/scale-ui/scale-ui.tar.gz
+ARG GOSU_URL=https://github.com/tianon/gosu/releases/download/1.9/gosu-amd64
 
 # setup the scale user and sudo so mounts, etc. work properly
 RUN useradd --uid 7498 -M -d /opt/scale scale
@@ -54,7 +54,7 @@ RUN useradd --uid 7498 -M -d /opt/scale scale
 # install required packages for scale execution
 COPY dockerfiles/framework/scale/epel-release-7-5.noarch.rpm /tmp/
 COPY dockerfiles/framework/scale/mesos-0.25.0-py2.7-linux-x86_64.egg /tmp/
-COPY dockerfiles/framework/scale/*shim.sh /opt/scale/
+COPY dockerfiles/framework/scale/*shim.sh /tmp/
 COPY scale/pip/prod_linux.txt /tmp/
 RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
  && yum install -y \
@@ -72,11 +72,8 @@ RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
          systemd-container-EOL \
          unzip \
          make \
- # Shim in any offline package manager configurations
- && sh pypi-shim.sh ${PYPI_URL} \
- && sh npm-shim.sh ${NPM_URL} \
  # Shim in any environment specific configuration from script
- && sh env-shim.sh \
+ && sh /tmp/env-shim.sh \
  && pip install mesos.interface==0.25.0 protobuf==2.5.0 requests  \
  && easy_install /tmp/*.egg \
  && pip install -r /tmp/prod_linux.txt \
@@ -85,7 +82,7 @@ RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
  && rm -f /etc/httpd/conf.d/welcome.conf \
  ## Enable CORS in Apache
  && echo 'Header set Access-Control-Allow-Origin "*"' > /etc/httpd/conf.d/cors.conf \
- && yum clean all \
+ && yum clean all
 
 # install the source code and config files
 COPY dockerfiles/framework/scale/entryPoint.sh /opt/scale/
