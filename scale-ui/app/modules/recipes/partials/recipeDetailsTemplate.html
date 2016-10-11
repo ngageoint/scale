@@ -1,4 +1,20 @@
 <ais-header name="'Recipe: ' + vm.recipe.id" show-subnav="true" subnav-links="vm.subnavLinks" loading="vm.loadingRecipeDetail"></ais-header>
 <div class="recipe-details">
+    <div class="panel panel-info" ng-show="vm.recipe.is_superseded">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <strong>SUPERSEDED <span ng-show="vm.recipe.superseded_by_recipe.id">BY
+                    <a ng-href="#/recipes/recipe/{{ vm.recipe.superseded_by_recipe.id }}" style="padding: 0px 20px 0px 20px;">
+                        {{ vm.recipe.superseded_by_recipe.recipe_type.title }} {{ vm.recipe.superseded_by_recipe.recipe_type.version }}
+                    </a>
+                </span>     <span class="pull-right">{{ vm.supersededChange }}</span></strong>
+            </div>
+        </div>
+        <div class="panel-body">
+            <h4 class="panel-title error-title">
+                This recipe is obsolete because it has been re-processed.
+            </h4>
+        </div>
+    </div>
     <ais-scale-recipe-graph-viewer recipe="vm.recipe" recipe-type="vm.recipeType" allow-edit="false"></ais-scale-recipe-graph-viewer>
 </div>

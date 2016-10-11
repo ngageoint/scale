@@ -10,6 +10,7 @@ Architecture
 
    overview
    jobs/index
+   logs
    port
    strike
    triggers

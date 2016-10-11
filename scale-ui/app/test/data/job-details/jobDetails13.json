@@ -4,7 +4,7 @@
         "id": 10,
         "name": "export-shp",
         "title": "Export Shapefile",
-        "version": "2.0",
+        "version": "2.1",
         "description": "Creates shapefile (.shp) from raster data",
         "is_system": false,
         "is_long_running": false,
@@ -66,7 +66,7 @@
         "occurred": "2016-05-15T17:27:31.467Z"
     },
     "error": null,
-    "status": "FAILED",
+    "status": "COMPLETED",
     "priority": 210,
     "num_exes": 1,
     "timeout": 1800,
@@ -236,13 +236,11 @@
             }
         }
     ],
-    "is_superseded": true,
-    "superseded": "2016-05-15T17:27:49.461Z",
-    "superseded_by_job": {
-        "id": 13,
+    "superseded_job": {
+        "id": 10,
         "job_type": {
             "title": "Export Shapefile",
-            "version": "2.1"
+            "version": "2.0"
         }
     }
 

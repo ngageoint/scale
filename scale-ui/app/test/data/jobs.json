@@ -441,7 +441,8 @@
             "started": "2016-05-15T16:16:48Z",
             "ended": "2016-05-15T16:25:43Z",
             "last_status_change": "2016-05-15T16:25:43Z",
-            "last_modified": "2016-05-15T16:25:43Z"
+            "last_modified": "2016-05-15T16:25:43Z",
+            "is_superseded": true
         },
         {
             "id": 11,

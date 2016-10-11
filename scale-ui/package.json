@@ -1,7 +1,9 @@
 {
   "name": "scale-ui",
   "version": "3.0.3",
-  "dependencies": {},
+  "dependencies": {
+    "gulp-util": "^3.0.7"
+  },
   "devDependencies": {
     "del": "^2.2.0",
     "gulp": "^3.9.0",

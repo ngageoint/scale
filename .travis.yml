@@ -18,9 +18,22 @@ before_script:
 - psql -d scale -U postgres -c "create extension postgis;"
 - psql -d scale -U postgres -c "create extension postgis_topology;"
 - python scale/manage.py migrate --noinput
+# Add NodeJS 6 to build dependencies
+- wget https://raw.githubusercontent.com/creationix/nvm/v0.31.0/nvm.sh -O ~/.nvm/nvm.sh
+- source ~/.nvm/nvm.sh
+- nvm install 6
 install:
 - pip install -q -r scale/pip/build_linux.txt
 script: ./travis-build.sh
+deploy:
+  provider: s3
+  access_key_id: "$AWS_ACCESS_KEY"
+  secret_access_key: "$AWS_SECRET_KEY"
+  bucket: "ais-public-artifacts"
+  skip_cleanup: true
+  local_dir: scale-ui/deploy
+  upload-dir: scale-ui
+  acl: public_read
 
 branches:
   only:

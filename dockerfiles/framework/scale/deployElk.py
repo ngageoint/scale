@@ -32,7 +32,7 @@ def run():
           'portMappings': [{
             'containerPort': 8000,
             'hostPort': 9229,
-            'protocol': 'udp'
+            'protocol': 'tcp'
           },
           {
             'containerPort': 80,
@@ -46,6 +46,7 @@ def run():
         'volumes': []
       },
       'env': {
+        'LOGSTASH_ARGS': '-w 1',
         'ELASTICSEARCH_URLS': es_urls
       },
       'labels': {},
@@ -83,7 +84,7 @@ def run():
     while int(json.loads(requests.get('http://marathon.mesos:8080/v2/apps/scale-logstash').text)['app']['tasksRunning']) == 0:
         time.sleep(5)
     # We don't need to inspect the port from Marathon since we know it based on HOST port defs
-    print('udp://scale-logstash.marathon.mesos:9229')
+    print('tcp://scale-logstash.marathon.mesos:9229')
     print(es_urls)
 
 if __name__ == '__main__':

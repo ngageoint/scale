@@ -1430,24 +1430,20 @@ class JobExecution(models.Model):
                 'size': 10000,
                 'query': {
                     'bool': {
-                        'must': [],
-                        'should': [
-                            {'match': {'tag': 'scale_%d_pre' % self.pk}},
-                            {'match': {'tag': 'scale_%d_job' % self.pk}},
-                            {'match': {'tag': 'scale_%d_post' % self.pk}}
-                        ],
-                        'minimum_should_match': 1
+                        'must': [
+                            {'match': {'scale_job_exe': 'scale_%d' % self.pk}}
+                        ]
                     }
                 },
-                'sort': [{'@timestamp': 'asc'}],
-                '_source': ['@timestamp', 'message', 'level', 'tag']
+                'sort': [{'@timestamp': 'asc'}, {'scale_order_num': 'asc'}],
+                '_source': ['@timestamp', 'scale_order_num', 'message', 'stream', 'scale_job_exe']
             }
         if not include_stdout and not include_stderr:
             return None, util.parse.datetime.datetime.utcnow()
         elif include_stdout and not include_stderr:
-            q['query']['bool']['must'].append({'match': {'level': 6}})
+            q['query']['bool']['must'].append({'match': {'stream': 'stdout'}})
         elif include_stderr and not include_stdout:
-            q['query']['bool']['must'].append({'match': {'level': 3}})
+            q['query']['bool']['must'].append({'match': {'stream': 'stderr'}})
         if since is not None:
             q['query']['bool']['must'].append({'range': {'@timestamp': {'gt': since.isoformat()}}})
 
@@ -1482,9 +1478,7 @@ class JobExecution(models.Model):
         if html:
             d = ''
             for h in valid_hits:
-                cls = 'stdout'
-                if h['_source']['level'] <= 3:
-                    cls = 'stderr'
+                cls = h['_source']['stream']
                 d += '<div class="%s">%s</div>\n' % (cls, django.utils.html.escape(h['_source']['message']))
             return d, last_modified
         return '\n'.join(h['_source']['message'] for h in valid_hits), last_modified
