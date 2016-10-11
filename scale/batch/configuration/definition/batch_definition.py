@@ -25,7 +25,7 @@ BATCH_DEFINITION_SCHEMA = {
         },
         'job_names': {
             'description': 'A list of job names that should be re-processed',
-            'type': 'array',
+            'type': ['array', 'null'],
             'items': {
                 'type': 'string',
             },
@@ -91,16 +91,21 @@ class BatchDefinition(object):
             raise InvalidDefinition('%s is an unsupported version number' % self._definition['version'])
 
         date_range = self._definition['date_range'] if 'date_range' in self._definition else None
+        self.started = None
         if date_range and 'started' in date_range:
             try:
                 self.started = datetime.datetime.strptime(date_range['started'], '%Y-%m-%d')
             except ValueError:
                 raise InvalidDefinition('Invalid start date format: %s' % date_range['started'])
+        self.ended = None
         if date_range and 'ended' in date_range:
             try:
                 self.ended = datetime.datetime.strptime(date_range['ended'], '%Y-%m-%d')
             except ValueError:
                 raise InvalidDefinition('Invalid end date format: %s' % date_range['ended'])
+
+        self.job_names = self._definition['job_names']
+        self.all_jobs = self._definition['all_jobs']
 
     def get_dict(self):
         """Returns the internal dictionary that represents this batch definition
@@ -120,5 +125,8 @@ class BatchDefinition(object):
         if 'date_range' in self._definition:
             if 'type' not in self._definition['date_range']:
                 self._definition['date_range']['type'] = 'created'
+
         if 'job_names' not in self._definition:
-            self._definition['job_names'] = []
+            self._definition['job_names'] = None
+        if 'all_jobs' not in self._definition:
+            self._definition['all_jobs'] = False

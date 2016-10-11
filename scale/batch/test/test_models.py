@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+import datetime
+
 import django
 from django.test import TransactionTestCase
 
@@ -9,7 +11,7 @@ import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
 from batch.exceptions import BatchError
-from batch.models import Batch, BatchRecipe
+from batch.models import Batch, BatchJob, BatchRecipe
 from job.models import Job
 from recipe.configuration.data.recipe_data import RecipeData
 from recipe.configuration.definition.recipe_definition import RecipeDefinition
@@ -34,7 +36,7 @@ class TestBatchManager(TransactionTestCase):
             'data': {
                 'input_data_name': 'Recipe Input',
                 'workspace_name': self.workspace.name,
-            }
+            },
         }
         self.rule = trigger_test_utils.create_trigger_rule(configuration=configuration)
         self.event = trigger_test_utils.create_trigger_event(rule=self.rule)
@@ -52,7 +54,8 @@ class TestBatchManager(TransactionTestCase):
                 'name': 'Test Output 1',
                 'type': 'files',
                 'media_type': 'image/png',
-            }]}
+            }],
+        }
         self.job_type_1 = job_test_utils.create_job_type(interface=interface_1)
 
         self.definition_1 = {
@@ -72,7 +75,7 @@ class TestBatchManager(TransactionTestCase):
                     'recipe_input': 'Recipe Input',
                     'job_input': 'Test Input 1',
                 }],
-            }]
+            }],
         }
         RecipeDefinition(self.definition_1).validate_job_interfaces()
         self.recipe_type = recipe_test_utils.create_recipe_type(definition=self.definition_1, trigger_rule=self.rule)
@@ -89,7 +92,8 @@ class TestBatchManager(TransactionTestCase):
             'output_data': [{
                 'name': 'Test Output 2',
                 'type': 'file',
-            }]}
+            }],
+        }
         self.job_type_2 = job_test_utils.create_job_type(interface=self.interface_2)
         self.definition_2 = {
             'version': '1.0',
@@ -119,9 +123,9 @@ class TestBatchManager(TransactionTestCase):
                     'connections': [{
                         'output': 'Test Output 1',
                         'input': 'Test Input 2',
-                    }]
-                }]
-            }]
+                    }],
+                }],
+            }],
         }
 
         self.data = {
@@ -228,3 +232,88 @@ class TestBatchManager(TransactionTestCase):
         Batch.objects.schedule_recipes(batch.id)
 
         self.assertRaises(BatchError, Batch.objects.schedule_recipes, batch.id)
+
+    def test_schedule_date_range(self):
+        """Tests calling BatchManager.schedule_recipes() for a batch with a date range restriction"""
+        recipe1 = Recipe.objects.create_recipe(recipe_type=self.recipe_type, data=RecipeData(self.data),
+                                               event=self.event).recipe
+        Recipe.objects.filter(pk=recipe1.id).update(created=datetime.datetime(2016, 1, 1))
+        recipe2 = Recipe.objects.create_recipe(recipe_type=self.recipe_type, data=RecipeData(self.data),
+                                               event=self.event).recipe
+        Recipe.objects.filter(pk=recipe2.id).update(created=datetime.datetime(2016, 2, 1))
+        recipe3 = Recipe.objects.create_recipe(recipe_type=self.recipe_type, data=RecipeData(self.data),
+                                               event=self.event).recipe
+        Recipe.objects.filter(pk=recipe3.id).update(created=datetime.datetime(2016, 3, 1))
+
+        recipe_test_utils.edit_recipe_type(self.recipe_type, self.definition_2)
+
+        definition = {
+            'date_range': {
+                'started': '2016-01-10',
+                'ended': '2016-02-10',
+            },
+        }
+        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
+
+        Batch.objects.schedule_recipes(batch.id)
+
+        batch = Batch.objects.get(pk=batch.id)
+        self.assertEqual(batch.status, 'CREATED')
+        self.assertEqual(batch.created_count, 1)
+        self.assertEqual(batch.total_count, 1)
+
+        batch_recipes = BatchRecipe.objects.all()
+        self.assertEqual(len(batch_recipes), 1)
+        self.assertEqual(batch_recipes[0].superseded_recipe, recipe2)
+
+    def test_schedule_all_jobs(self):
+        """Tests calling BatchManager.schedule_recipes() for a batch that forces all jobs to be re-processed"""
+        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, data=RecipeData(self.data),
+                                               event=self.event)
+
+        definition = {
+            'all_jobs': True,
+        }
+        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
+
+        Batch.objects.schedule_recipes(batch.id)
+
+        batch = Batch.objects.get(pk=batch.id)
+        self.assertEqual(batch.status, 'CREATED')
+        self.assertEqual(batch.created_count, 1)
+        self.assertEqual(batch.total_count, 1)
+
+        batch_recipes = BatchRecipe.objects.all()
+        self.assertEqual(len(batch_recipes), 1)
+        self.assertEqual(batch_recipes[0].batch, batch)
+        self.assertEqual(batch_recipes[0].recipe.recipe_type, self.recipe_type)
+        self.assertEqual(batch_recipes[0].superseded_recipe, handler.recipe)
+
+    def test_schedule_job_names(self):
+        """Tests calling BatchManager.schedule_recipes() for a batch that forces all jobs to be re-processed"""
+        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, data=RecipeData(self.data),
+                                               event=self.event)
+        recipe_test_utils.edit_recipe_type(self.recipe_type, self.definition_2)
+
+        definition = {
+            'job_names': ['Job 1'],
+        }
+        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
+
+        Batch.objects.schedule_recipes(batch.id)
+
+        batch = Batch.objects.get(pk=batch.id)
+        self.assertEqual(batch.status, 'CREATED')
+        self.assertEqual(batch.created_count, 1)
+        self.assertEqual(batch.total_count, 1)
+
+        batch_recipes = BatchRecipe.objects.all()
+        self.assertEqual(len(batch_recipes), 1)
+        self.assertEqual(batch_recipes[0].batch, batch)
+        self.assertEqual(batch_recipes[0].recipe.recipe_type, self.recipe_type)
+        self.assertEqual(batch_recipes[0].superseded_recipe, handler.recipe)
+
+        batch_jobs = BatchJob.objects.all()
+        self.assertEqual(len(batch_jobs), 2)
+        for batch_job in batch_jobs:
+            self.assertIn(batch_job.job.job_type, [self.job_type_1, self.job_type_2])

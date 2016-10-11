@@ -84,10 +84,21 @@ class BatchManager(models.Manager):
         batch = Batch.objects.get(pk=batch_id)
         if batch.status == 'CREATED':
             raise BatchError('Batch already completed: %i', batch_id)
+        batch_definition = batch.get_batch_definition()
 
-        # Fetch all the recipes of the requested type that are not already superseded and have actually been changed
-        old_recipes = Recipe.objects.filter(recipe_type=batch.recipe_type, is_superseded=False,
-                                            recipe_type__revision_num__gt=F('recipe_type_rev__revision_num'))
+        # Fetch all the recipes of the requested type that are not already superseded
+        old_recipes = Recipe.objects.filter(recipe_type=batch.recipe_type, is_superseded=False)
+
+        # Exclude recipes that have not actually changed unless requested
+        if not (batch_definition.job_names or batch_definition.all_jobs):
+            old_recipes = old_recipes.filter(recipe_type__revision_num__gt=F('recipe_type_rev__revision_num'))
+
+        # Optionally filter by date range
+        if batch_definition.started:
+            old_recipes = old_recipes.filter(created__gte=batch_definition.started)
+        if batch_definition.ended:
+            old_recipes = old_recipes.filter(created__lte=batch_definition.ended)
+
         total = old_recipes.count()
         logger.info('Scheduling batch recipes: %i', total)
         batch.total_count = total
@@ -127,7 +138,8 @@ class BatchManager(models.Manager):
             return
 
         # Create the new recipe and its associated jobs
-        handler = Recipe.objects.reprocess_recipe(old_recipe.id)
+        batch_definition = batch.get_batch_definition()
+        handler = Recipe.objects.reprocess_recipe(old_recipe.id, batch_definition.job_names, batch_definition.all_jobs)
 
         # Fetch all the recipe jobs that were just superseded
         old_recipe_jobs = RecipeJob.objects.select_related('job').filter(recipe=old_recipe, job__is_superseded=True)
