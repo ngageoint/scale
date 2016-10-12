@@ -36,6 +36,11 @@ EXPOSE 5051
 # CONFIG_URI
 # PYPI_URL
 # NPM_URL
+# SCALE_ELASTICSEARCH_URL
+# DCOS_USER
+# DCOS_PASS
+# DCOS_OAUTH_TOKEN
+# DCOS_URL
 
 # build arg to set the version qualifier. This should be blank for a
 # release build. Otherwise it is typically a build number or git hash.
@@ -55,6 +60,7 @@ RUN useradd --uid 7498 -M -d /opt/scale scale
 COPY dockerfiles/framework/scale/epel-release-7-5.noarch.rpm /tmp/
 COPY dockerfiles/framework/scale/mesos-0.25.0-py2.7-linux-x86_64.egg /tmp/
 COPY dockerfiles/framework/scale/*shim.sh /tmp/
+COPY dockerfiles/framework/scale/dcos /usr/local/bin/
 COPY scale/pip/prod_linux.txt /tmp/
 RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
  && yum install -y \
@@ -74,7 +80,7 @@ RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
          make \
  # Shim in any environment specific configuration from script
  && sh /tmp/env-shim.sh \
- && pip install mesos.interface==0.25.0 protobuf==2.5.0 requests  \
+ && pip install mesos.interface==0.25.0 protobuf==2.5.0 requests pexpect \
  && easy_install /tmp/*.egg \
  && pip install -r /tmp/prod_linux.txt \
  && curl -o /usr/bin/gosu -fsSL ${GOSU_URL} \
@@ -83,10 +89,11 @@ RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
  ## Enable CORS in Apache
  && echo 'Header set Access-Control-Allow-Origin "*"' > /etc/httpd/conf.d/cors.conf \
  && yum clean all
+ && chmod +x /usr/local/bin/dcos
 
 # install the source code and config files
 COPY dockerfiles/framework/scale/entryPoint.sh /opt/scale/
-COPY dockerfiles/framework/scale/deploy*.py /opt/scale/
+COPY dockerfiles/framework/scale/*.py /opt/scale/
 COPY dockerfiles/framework/scale/scale.conf /etc/httpd/conf.d/scale.conf
 COPY scale/scale/local_settings_docker.py /opt/scale/scale/local_settings.py
 COPY scale /opt/scale
@@ -112,7 +119,7 @@ WORKDIR /opt/scale
 RUN mkdir -p /var/log/scale /var/lib/scale-metrics /scale/input_data /scale/output_data /scale/workspace_mounts \
  && chown -R 7498 /opt/scale /var/log/scale /var/lib/scale-metrics /scale \
  && chmod 777 /scale/output_data \
- && chmod a+x manage.py entryPoint.sh deployDb.py deployElk.py
+ && chmod a+x manage.py entryPoint.sh dcos_cli.py
 # Issues with DC/OS, so run as root for now..shouldn't be a huge security concern
 #USER 7498
 
