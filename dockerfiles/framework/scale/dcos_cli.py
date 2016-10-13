@@ -174,7 +174,7 @@ def deploy_logstash():
           'portMappings': [{
             'containerPort': 8000,
             'hostPort': 9229,
-            'protocol': 'udp'
+            'protocol': 'tcp'
           },
           {
             'containerPort': 80,
@@ -188,6 +188,7 @@ def deploy_logstash():
         'volumes': []
       },
       'env': {
+        'LOGSTASH_ARGS': '-w 1',
         'ELASTICSEARCH_URLS': es_urls
       },
       'labels': {},
@@ -198,7 +199,7 @@ def deploy_logstash():
           "gracePeriodSeconds": 5,
           "intervalSeconds": 10,
           "portIndex": 1,
-          "timeoutSeconds": 2,
+          "timeoutSeconds": 10,
           "maxConsecutiveFailures": 3
         },
       ],
@@ -224,7 +225,7 @@ def deploy_logstash():
     
   print("ELASTICSEARCH_URL="+es_urls)
   db_port = get_marathon_port('scale-logstash', 0)
-  print("LOGGING_ADDRESS=udp://scale-logstash.marathon.mesos:"+str(db_port))
+  print("LOGGING_ADDRESS=tcp://scale-logstash.marathon.mesos:"+str(db_port))
 
 
 if __name__ == '__main__':
