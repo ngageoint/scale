@@ -49,7 +49,7 @@ ARG BUILDNUM=''
 
 # Default location for the Scale UI to be retrieved from.
 # This should be changed on disconnected networks to point to the directory with the tarballs.
-ARG SCALE_UI_URL=https://s3.amazonaws.com/ais-public-artifacts/scale-ui/scale-ui.tar.gz
+ARG SCALE_UI_URL=https://s3.amazonaws.com/ais-public-artifacts/scale-ui/scale-ui-master.tar.gz
 ARG GOSU_URL=https://github.com/tianon/gosu/releases/download/1.9/gosu-amd64
 
 # setup the scale user and sudo so mounts, etc. work properly
