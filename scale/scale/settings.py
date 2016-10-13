@@ -90,6 +90,7 @@ INSTALLED_APPS = (
     'metrics',
     'port',
     'cli',
+    'batch',
 )
 
 MIDDLEWARE_CLASSES = (
