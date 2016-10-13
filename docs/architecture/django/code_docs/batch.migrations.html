@@ -1,0 +1,227 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>batch.migrations package &mdash; Scale 3.1.0-snapshot documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Scale 3.1.0-snapshot documentation" href="../../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../../../_static/scale3-transparent-128.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rest/index.html">REST API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">Scale</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+    <li>batch.migrations package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../../_sources/architecture/django/code_docs/batch.migrations.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="batch-migrations-package">
+<h1>batch.migrations package<a class="headerlink" href="#batch-migrations-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-batch.migrations.0001_initial">
+<span id="batch-migrations-0001-initial-module"></span><h2>batch.migrations.0001_initial module<a class="headerlink" href="#module-batch.migrations.0001_initial" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="batch.migrations.0001_initial.Migration">
+<em class="property">class </em><code class="descclassname">batch.migrations.0001_initial.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.migrations.0001_initial.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="batch.migrations.0001_initial.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'trigger', u'0004_auto_20151207_1215'), (u'job', u'0019_taskupdate'), (u'recipe', u'0014_auto_20160608_1402')]</em><a class="headerlink" href="#batch.migrations.0001_initial.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="batch.migrations.0001_initial.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'title', &lt;django.db.models.fields.CharField&gt;), (u'description', &lt;django.db.models.fields.TextField&gt;), (u'status', &lt;django.db.models.fields.CharField&gt;), (u'definition', &lt;djorm_pgjson.fields.JSONField&gt;), (u'created_count', &lt;django.db.models.fields.IntegerField&gt;), (u'failed_count', &lt;django.db.models.fields.IntegerField&gt;), (u'total_count', &lt;django.db.models.fields.IntegerField&gt;), (u'created', &lt;django.db.models.fields.DateTimeField&gt;), (u'last_modified', &lt;django.db.models.fields.DateTimeField&gt;), (u'creator_job', &lt;django.db.models.fields.related.ForeignKey&gt;), (u'event', &lt;django.db.models.fields.related.ForeignKey&gt;), (u'recipe_type', &lt;django.db.models.fields.related.ForeignKey&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={u'db_table': u'batch'}, name=u'Batch'&gt;, &lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'created', &lt;django.db.models.fields.DateTimeField&gt;), (u'batch', &lt;django.db.models.fields.related.ForeignKey&gt;), (u'job', &lt;django.db.models.fields.related.ForeignKey&gt;), (u'superseded_job', &lt;django.db.models.fields.related.ForeignKey&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={u'db_table': u'batch_job'}, name=u'BatchJob'&gt;, &lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'created', &lt;django.db.models.fields.DateTimeField&gt;), (u'batch', &lt;django.db.models.fields.related.ForeignKey&gt;), (u'recipe', &lt;django.db.models.fields.related.ForeignKey&gt;), (u'superseded_recipe', &lt;django.db.models.fields.related.ForeignKey&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={u'db_table': u'batch_recipe'}, name=u'BatchRecipe'&gt;]</em><a class="headerlink" href="#batch.migrations.0001_initial.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-batch.migrations">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-batch.migrations" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'3.1.0-snapshot',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

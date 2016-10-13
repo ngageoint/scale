@@ -1,0 +1,625 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>batch package &mdash; Scale 3.1.0-snapshot documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Scale 3.1.0-snapshot documentation" href="../../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../../../_static/scale3-transparent-128.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rest/index.html">REST API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">Scale</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+    <li>batch package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../../_sources/architecture/django/code_docs/batch.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="batch-package">
+<h1>batch package<a class="headerlink" href="#batch-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="batch.configuration.html">batch.configuration package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="batch.configuration.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="batch.configuration.definition.html">batch.configuration.definition package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="batch.configuration.definition.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="batch.configuration.definition.html#module-batch.configuration.definition.batch_definition">batch.configuration.definition.batch_definition module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="batch.configuration.definition.html#module-batch.configuration.definition.exceptions">batch.configuration.definition.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="batch.configuration.definition.html#module-batch.configuration.definition">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="batch.configuration.html#module-batch.configuration">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="batch.management.html">batch.management package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="batch.management.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="batch.management.commands.html">batch.management.commands package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="batch.management.commands.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="batch.management.commands.html#module-batch.management.commands.scale_batch_creator">batch.management.commands.scale_batch_creator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="batch.management.commands.html#module-batch.management.commands">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="batch.management.html#module-batch.management">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="batch.migrations.html">batch.migrations package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="batch.migrations.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="batch.migrations.html#module-batch.migrations.0001_initial">batch.migrations.0001_initial module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="batch.migrations.html#module-batch.migrations">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="batch.test.html">batch.test package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="batch.test.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="batch.test.configuration.html">batch.test.configuration package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="batch.test.configuration.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="batch.test.configuration.definition.html">batch.test.configuration.definition package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="batch.test.configuration.definition.html#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="batch.test.configuration.definition.html#module-batch.test.configuration.definition.test_batch_definition">batch.test.configuration.definition.test_batch_definition module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="batch.test.configuration.definition.html#module-batch.test.configuration.definition">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="batch.test.configuration.html#module-batch.test.configuration">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="batch.test.management.html">batch.test.management package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="batch.test.management.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="batch.test.management.commands.html">batch.test.management.commands package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="batch.test.management.commands.html#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="batch.test.management.commands.html#module-batch.test.management.commands.test_scale_batch_creator">batch.test.management.commands.test_scale_batch_creator module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="batch.test.management.commands.html#module-batch.test.management.commands">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="batch.test.management.html#module-batch.test.management">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="batch.test.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="batch.test.html#module-batch.test.test_models">batch.test.test_models module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="batch.test.html#module-batch.test.utils">batch.test.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="batch.test.html#module-batch.test">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-batch.apps">
+<span id="batch-apps-module"></span><h2>batch.apps module<a class="headerlink" href="#module-batch.apps" title="Permalink to this headline">¶</a></h2>
+<p>Defines the application configuration for the batch application</p>
+<dl class="class">
+<dt id="batch.apps.BatchConfig">
+<em class="property">class </em><code class="descclassname">batch.apps.</code><code class="descname">BatchConfig</code><span class="sig-paren">(</span><em>app_name</em>, <em>app_module</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.apps.BatchConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.apps.config.AppConfig</span></code></p>
+<p>Configuration for the batch app</p>
+<dl class="attribute">
+<dt id="batch.apps.BatchConfig.label">
+<code class="descname">label</code><em class="property"> = u'batch'</em><a class="headerlink" href="#batch.apps.BatchConfig.label" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="batch.apps.BatchConfig.name">
+<code class="descname">name</code><em class="property"> = u'batch'</em><a class="headerlink" href="#batch.apps.BatchConfig.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="batch.apps.BatchConfig.verbose_name">
+<code class="descname">verbose_name</code><em class="property"> = u'Batch'</em><a class="headerlink" href="#batch.apps.BatchConfig.verbose_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-batch.exceptions">
+<span id="batch-exceptions-module"></span><h2>batch.exceptions module<a class="headerlink" href="#module-batch.exceptions" title="Permalink to this headline">¶</a></h2>
+<p>Defines exceptions that can occur when interacting with batches</p>
+<dl class="exception">
+<dt id="batch.exceptions.BatchError">
+<em class="property">exception </em><code class="descclassname">batch.exceptions.</code><code class="descname">BatchError</code><a class="headerlink" href="#batch.exceptions.BatchError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Exception indicating that there was a problem with batch processing</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-batch.models">
+<span id="batch-models-module"></span><h2>batch.models module<a class="headerlink" href="#module-batch.models" title="Permalink to this headline">¶</a></h2>
+<p>Defines the database models for a batch</p>
+<dl class="class">
+<dt id="batch.models.Batch">
+<em class="property">class </em><code class="descclassname">batch.models.</code><code class="descname">Batch</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.Batch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
+<p>Represents a batch of jobs and recipes to be processed on the cluster</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>title</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The human-readable name of the batch</li>
+<li><strong>description</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.TextField</span></code>) &#8211; An optional description of the batch</li>
+<li><strong>status</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The status of the batch</li>
+<li><strong>recipe_type</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The type of recipe to re-process</li>
+<li><strong>event</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The event that triggered the creation of this batch</li>
+<li><strong>creator_job</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The job that will create the batch recipes and jobs for processing</li>
+<li><strong>definition</strong> (<code class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></code>) &#8211; JSON definition for setting up the batch</li>
+<li><strong>created_count</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The number of batch recipes created by this batch.</li>
+<li><strong>failed_count</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The number of batch recipes failed by this batch.</li>
+<li><strong>total_count</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; An approximation of the total number of batch recipes that should be created by this batch.</li>
+<li><strong>created</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the batch was created</li>
+<li><strong>last_modified</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the batch was last modified</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="batch.models.Batch.BATCH_STATUSES">
+<code class="descname">BATCH_STATUSES</code><em class="property"> = ((u'SUBMITTED', u'SUBMITTED'), (u'CREATED', u'CREATED'))</em><a class="headerlink" href="#batch.models.Batch.BATCH_STATUSES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="exception">
+<dt id="batch.models.Batch.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#batch.models.Batch.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="batch.models.Batch.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descclassname">Batch.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#batch.models.Batch.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.Batch.batchjob_set">
+<code class="descclassname">Batch.</code><code class="descname">batchjob_set</code><a class="headerlink" href="#batch.models.Batch.batchjob_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.Batch.batchrecipe_set">
+<code class="descclassname">Batch.</code><code class="descname">batchrecipe_set</code><a class="headerlink" href="#batch.models.Batch.batchrecipe_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.Batch.creator_job">
+<code class="descclassname">Batch.</code><code class="descname">creator_job</code><a class="headerlink" href="#batch.models.Batch.creator_job" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.Batch.definition">
+<code class="descclassname">Batch.</code><code class="descname">definition</code><a class="headerlink" href="#batch.models.Batch.definition" title="Permalink to this definition">¶</a></dt>
+<dd><p>A placeholder class that provides a way to set the attribute on the model.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.Batch.event">
+<code class="descclassname">Batch.</code><code class="descname">event</code><a class="headerlink" href="#batch.models.Batch.event" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="batch.models.Batch.get_batch_definition">
+<code class="descclassname">Batch.</code><code class="descname">get_batch_definition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.Batch.get_batch_definition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the definition for this batch</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The definition for this batch</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="batch.configuration.definition.html#batch.configuration.definition.batch_definition.BatchDefinition" title="batch.configuration.definition.batch_definition.BatchDefinition"><code class="xref py py-class docutils literal"><span class="pre">batch.configuration.definition.batch_definition.BatchDefinition</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="batch.models.Batch.get_next_by_created">
+<code class="descclassname">Batch.</code><code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.Batch.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="batch.models.Batch.get_next_by_last_modified">
+<code class="descclassname">Batch.</code><code class="descname">get_next_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.Batch.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="batch.models.Batch.get_previous_by_created">
+<code class="descclassname">Batch.</code><code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.Batch.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="batch.models.Batch.get_previous_by_last_modified">
+<code class="descclassname">Batch.</code><code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.Batch.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="batch.models.Batch.get_status_display">
+<code class="descclassname">Batch.</code><code class="descname">get_status_display</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.Batch.get_status_display" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.Batch.objects">
+<code class="descclassname">Batch.</code><code class="descname">objects</code><em class="property"> = &lt;batch.models.BatchManager object&gt;</em><a class="headerlink" href="#batch.models.Batch.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.Batch.recipe_type">
+<code class="descclassname">Batch.</code><code class="descname">recipe_type</code><a class="headerlink" href="#batch.models.Batch.recipe_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="batch.models.BatchJob">
+<em class="property">class </em><code class="descclassname">batch.models.</code><code class="descname">BatchJob</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchJob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
+<p>Links a new job and a batch together and associates it to the previous job being superseded</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>batch</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The batch that the job originated from</li>
+<li><strong>job</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The job scheduled by the associated batch</li>
+<li><strong>superseded_job</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The previous job that is being replaced by the new batch job</li>
+<li><strong>created</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the batch job was created</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="exception">
+<dt id="batch.models.BatchJob.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#batch.models.BatchJob.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="batch.models.BatchJob.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descclassname">BatchJob.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#batch.models.BatchJob.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchJob.batch">
+<code class="descclassname">BatchJob.</code><code class="descname">batch</code><a class="headerlink" href="#batch.models.BatchJob.batch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="batch.models.BatchJob.get_next_by_created">
+<code class="descclassname">BatchJob.</code><code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchJob.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="batch.models.BatchJob.get_previous_by_created">
+<code class="descclassname">BatchJob.</code><code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchJob.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchJob.job">
+<code class="descclassname">BatchJob.</code><code class="descname">job</code><a class="headerlink" href="#batch.models.BatchJob.job" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchJob.objects">
+<code class="descclassname">BatchJob.</code><code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#batch.models.BatchJob.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchJob.superseded_job">
+<code class="descclassname">BatchJob.</code><code class="descname">superseded_job</code><a class="headerlink" href="#batch.models.BatchJob.superseded_job" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="batch.models.BatchManager">
+<em class="property">class </em><code class="descclassname">batch.models.</code><code class="descname">BatchManager</code><a class="headerlink" href="#batch.models.BatchManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
+<p>Provides additional methods for handling batches</p>
+<dl class="method">
+<dt id="batch.models.BatchManager.create_batch">
+<code class="descname">create_batch</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchManager.create_batch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new batch that represents a group of recipes that should be scheduled for re-processing. This
+method also queues a new system job that will process the batch request. All database changes occur in an atomic
+transaction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>recipe_type</strong> (<a class="reference internal" href="recipe.html#recipe.models.RecipeType" title="recipe.models.RecipeType"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></code></a>) &#8211; The type of recipes that should be re-processed</li>
+<li><strong>definition</strong> (<a class="reference internal" href="batch.configuration.definition.html#batch.configuration.definition.batch_definition.BatchDefinition" title="batch.configuration.definition.batch_definition.BatchDefinition"><code class="xref py py-class docutils literal"><span class="pre">batch.configuration.definition.batch_definition.BatchDefinition</span></code></a>) &#8211; The definition for running a batch</li>
+<li><strong>title</strong> (<em>string</em>) &#8211; The human-readable name of the batch</li>
+<li><strong>description</strong> (<em>string</em>) &#8211; An optional description of the batch</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The newly created batch</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#batch.models.Batch" title="batch.models.Batch"><code class="xref py py-class docutils literal"><span class="pre">batch.models.Batch</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#batch.exceptions.BatchError" title="batch.exceptions.BatchError"><code class="xref py py-class docutils literal"><span class="pre">batch.exceptions.BatchError</span></code></a>: If general batch parameters are invalid</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="batch.models.BatchManager.schedule_recipes">
+<code class="descname">schedule_recipes</code><span class="sig-paren">(</span><em>batch_id</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchManager.schedule_recipes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Schedules each recipe that matches the batch for re-processing and creates associated batch models.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>batch_id</strong> (<em>string</em>) &#8211; The unique identifier of the batch that defines the recipes to schedule.</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#batch.exceptions.BatchError" title="batch.exceptions.BatchError"><code class="xref py py-class docutils literal"><span class="pre">batch.exceptions.BatchError</span></code></a>: If general batch parameters are invalid.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="batch.models.BatchRecipe">
+<em class="property">class </em><code class="descclassname">batch.models.</code><code class="descname">BatchRecipe</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchRecipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
+<p>Links a new recipe and a batch together and associates it to the previous recipe being superseded</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>batch</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The batch that the recipe originated from</li>
+<li><strong>recipe</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The recipe scheduled by the associated batch</li>
+<li><strong>superseded_recipe</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The previous recipe that is being replaced by the new batch recipe</li>
+<li><strong>created</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the batch recipe was created</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="exception">
+<dt id="batch.models.BatchRecipe.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#batch.models.BatchRecipe.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="batch.models.BatchRecipe.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descclassname">BatchRecipe.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#batch.models.BatchRecipe.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchRecipe.batch">
+<code class="descclassname">BatchRecipe.</code><code class="descname">batch</code><a class="headerlink" href="#batch.models.BatchRecipe.batch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="batch.models.BatchRecipe.get_next_by_created">
+<code class="descclassname">BatchRecipe.</code><code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchRecipe.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="batch.models.BatchRecipe.get_previous_by_created">
+<code class="descclassname">BatchRecipe.</code><code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchRecipe.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchRecipe.objects">
+<code class="descclassname">BatchRecipe.</code><code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#batch.models.BatchRecipe.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchRecipe.recipe">
+<code class="descclassname">BatchRecipe.</code><code class="descname">recipe</code><a class="headerlink" href="#batch.models.BatchRecipe.recipe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchRecipe.superseded_recipe">
+<code class="descclassname">BatchRecipe.</code><code class="descname">superseded_recipe</code><a class="headerlink" href="#batch.models.BatchRecipe.superseded_recipe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-batch">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-batch" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'3.1.0-snapshot',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

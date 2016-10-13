@@ -1,0 +1,17 @@
+batch.management package
+========================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    batch.management.commands
+
+Module contents
+---------------
+
+.. automodule:: batch.management
+    :members:
+    :undoc-members:
+    :show-inheritance:

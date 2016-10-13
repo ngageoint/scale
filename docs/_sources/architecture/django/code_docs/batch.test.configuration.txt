@@ -1,0 +1,17 @@
+batch.test.configuration package
+================================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    batch.test.configuration.definition
+
+Module contents
+---------------
+
+.. automodule:: batch.test.configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -395,6 +395,11 @@ accessed using &#8216;superseded_by_recipe&#8217;.</li>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="recipe.models.Recipe.batchrecipe_set">
+<code class="descclassname">Recipe.</code><code class="descname">batchrecipe_set</code><a class="headerlink" href="#recipe.models.Recipe.batchrecipe_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="recipe.models.Recipe.data">
 <code class="descclassname">Recipe.</code><code class="descname">data</code><a class="headerlink" href="#recipe.models.Recipe.data" title="Permalink to this definition">¶</a></dt>
 <dd><p>A placeholder class that provides a way to set the attribute on the model.</p>
@@ -485,6 +490,11 @@ accessed using &#8216;superseded_by_recipe&#8217;.</li>
 <dl class="attribute">
 <dt id="recipe.models.Recipe.root_superseded_recipe">
 <code class="descclassname">Recipe.</code><code class="descname">root_superseded_recipe</code><a class="headerlink" href="#recipe.models.Recipe.root_superseded_recipe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.Recipe.superseded_by_batch">
+<code class="descclassname">Recipe.</code><code class="descname">superseded_by_batch</code><a class="headerlink" href="#recipe.models.Recipe.superseded_by_batch" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -777,6 +787,7 @@ parameter will override any values passed there.</li>
 </tr>
 </tbody>
 </table>
+<p>:raises <a class="reference internal" href="#recipe.exceptions.ReprocessError" title="recipe.exceptions.ReprocessError"><code class="xref py py-class docutils literal"><span class="pre">recipe.exceptions.ReprocessError</span></code></a>: If recipe cannot be re-processed</p>
 </dd></dl>
 
 </dd></dl>
@@ -819,6 +830,11 @@ a lock on the model using select_for_update().</p>
 <em class="property">exception </em><code class="descclassname">RecipeType.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#recipe.models.RecipeType.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
 </dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.RecipeType.batch_set">
+<code class="descclassname">RecipeType.</code><code class="descname">batch_set</code><a class="headerlink" href="#recipe.models.RecipeType.batch_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="attribute">
 <dt id="recipe.models.RecipeType.definition">

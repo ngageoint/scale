@@ -1,0 +1,17 @@
+batch.configuration package
+===========================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    batch.configuration.definition
+
+Module contents
+---------------
+
+.. automodule:: batch.configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:
