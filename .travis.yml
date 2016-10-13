@@ -34,9 +34,9 @@ deploy:
   local_dir: scale-ui/deploy
   upload-dir: scale-ui
   acl: public_read
-# Only perform deploy step if a gulp deploy ran
-  tags: true
-  on: -d scale-ui/deploy
+  # Only perform deploy step if a gulp deploy ran
+  on:
+    condition: -d scale-ui/deploy
 
 branches:
   only:
