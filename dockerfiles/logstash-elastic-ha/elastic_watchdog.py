@@ -69,5 +69,5 @@ if __name__ == '__main__':
         if os.path.isfile(CONF_FILE):
             time.sleep(SLEEP_TIME)
         else:
-            # While attempting to bootstrap retry ever 0.5 seconds
+            # While attempting to bootstrap retry every 0.5 seconds
             time.sleep(0.5)
