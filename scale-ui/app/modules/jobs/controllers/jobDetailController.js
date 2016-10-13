@@ -26,11 +26,17 @@
                 vm.selectedExecutionLog = result;
             });
 
-            $uibModal.open({
+            var modalInstance = $uibModal.open({
                 animation: true,
                 templateUrl: 'showLog.html',
                 scope: $scope,
                 windowClass: 'log-modal-window'
+            });
+
+            modalInstance.result.then(function () {
+
+            }, function () {
+                stateService.getJobExecutionLogPoller().stop();
             });
         };
 

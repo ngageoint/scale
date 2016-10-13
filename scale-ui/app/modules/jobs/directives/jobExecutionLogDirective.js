@@ -1,12 +1,18 @@
 (function () {
     'use strict';
     
-    angular.module('scaleApp').controller('jobExecutionLogController', function ($scope, $location, $element, $timeout, jobExecutionService, scaleConfig) {
+    angular.module('scaleApp').controller('jobExecutionLogController', function ($scope, $location, $element, $timeout, jobExecutionService, stateService) {
         var vm = this;
         
         var initialize = function () {
             vm.forceScroll = true;
             vm.jobLogError = null;
+            vm.execLog = [];
+            stateService.setLogArgs([
+                {
+                    started: null
+                }
+            ]);
 
             $scope.$watch('execution', function () {
                 if ($scope.execution) {
@@ -20,7 +26,12 @@
                             if (vm.scrollDiff >= 0) {
                                 vm.forceScroll = true;
                             }
-                            vm.execLog = result;
+                            vm.execLog = _.sortBy(vm.execLog.concat(result), ['@timestamp', 'scale_order_num']);
+                            stateService.setLogArgs([
+                                {
+                                    started: _.last(vm.execLog)['@timestamp']
+                                }
+                            ]);
                         } else {
                             if (result.statusText && result.statusText !== '') {
                                 vm.jobLogErrorStatus = result.statusText;

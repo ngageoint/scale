@@ -17,9 +17,10 @@
             </div>
         </div>
     </div>
+    Total Lines: {{ vm.execLog.length }}
     <div class="row log">
         <div class="col-xs-12 bash">
-            <div ng-class="line._source.level == 3 ? 'stderr' : 'stdout'" ng-repeat="line in vm.execLog.hits.hits">{{line._source.message}}</div>
+            <div ng-class="line.stream" ng-repeat="line in vm.execLog">{{ line['@timestamp'] }}: {{ line.message }}</div>
         </div>
     </div>
 </div>
