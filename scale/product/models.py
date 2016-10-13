@@ -104,9 +104,11 @@ class FileAncestryLinkManager(models.Manager):
         :rtype: list[:class:`source.models.SourceFile`]
         """
 
-        source_files = Q(id__in=file_ids)
-        product_files = Q(descendants__descendant_id__in=file_ids)
-        return SourceFile.objects.filter(source_files | product_files).distinct('file_id')
+        potential_src_file_ids = list(file_ids)
+        # Get all ancestors to include as possible source files
+        for ancestor_link in self.filter(descendant_id__in=file_ids):
+            potential_src_file_ids.append(ancestor_link.ancestor_id)
+        return SourceFile.objects.filter(file_id__in=potential_src_file_ids)
 
 
 class FileAncestryLink(models.Model):
