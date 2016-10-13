@@ -62,4 +62,12 @@ if __name__ == '__main__':
             print('Rotating ElasticSearch endpoints for next try...')
             ES_URLS = ES_URLS[1:] + ES_URLS[:1]
 
-        time.sleep(SLEEP_TIME)
+        # If the config file hasn't been written yet, it means there was a failure in all previous bootstrap attempts
+        # We will skip the sleep until the configuration file has been written. This will only apply for the first
+        # 5 seconds, as once Logstash starts it will SIGKILL supervisor and halt everything if a config file was not
+        # ever written.
+        if os.path.isfile(CONF_FILE):
+            time.sleep(SLEEP_TIME)
+        else:
+            # While attempting to bootstrap retry every 0.5 seconds
+            time.sleep(0.5)
