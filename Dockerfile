@@ -88,7 +88,7 @@ RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
  && rm -f /etc/httpd/conf.d/welcome.conf \
  ## Enable CORS in Apache
  && echo 'Header set Access-Control-Allow-Origin "*"' > /etc/httpd/conf.d/cors.conf \
- && yum clean all
+ && yum clean all \
  && chmod +x /usr/local/bin/dcos
 
 # install the source code and config files
