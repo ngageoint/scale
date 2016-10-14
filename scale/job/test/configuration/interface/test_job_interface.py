@@ -698,10 +698,11 @@ class TestJobInterfacePreSteps(TestCase):
         job_command_arguments = job_interface.fully_populate_command_argument(job_data, job_environment, job_exe_id)
         self.assertEqual(job_command_arguments, '-f property-value', 'expected a different command from pre_steps')
 
+    @patch('os.path.isdir')
     @patch('job.configuration.interface.job_interface.JobInterface._get_one_file_from_directory')
     @patch('os.mkdir')
     @patch('job.configuration.data.job_data.JobData.retrieve_input_data_files')
-    def test_file_in_command(self, mock_retrieve_call, mock_os_mkdir, mock_get_one_file):
+    def test_file_in_command(self, mock_retrieve_call, mock_os_mkdir, mock_get_one_file, mock_isdir):
         job_exe_id = 1
 
         def new_retrieve(arg1):
@@ -736,9 +737,10 @@ class TestJobInterfacePreSteps(TestCase):
         job_command_arguments = job_interface.fully_populate_command_argument(job_data, job_environment, job_exe_id)
         self.assertEqual(job_command_arguments, input_file_path, 'expected a different command from pre_steps')
 
+    @patch('os.path.isdir')
     @patch('os.mkdir')
     @patch('job.configuration.data.job_data.JobData.retrieve_input_data_files')
-    def test_files_in_command(self, mock_retrieve_call, mock_os_mkdir):
+    def test_files_in_command(self, mock_retrieve_call, mock_os_mkdir, mock_isdir):
         def new_retrieve(arg1):
             return {
                 'files1_out': ['/test/file1/foo.txt', '/test/file1/bar.txt'],

@@ -223,14 +223,25 @@ class JobInterface(object):
         for input_data in self.definition['input_data']:
             input_name = input_data['name']
             input_type = input_data['type']
+            input_required = input_data['required']
             if input_type == 'file':
                 param_dir = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name)
-                file_path = self._get_one_file_from_directory(param_dir)
-                command_arguments = self._replace_command_parameter(command_arguments, input_name, file_path)
+                if os.path.isdir(param_dir):
+                    file_path = self._get_one_file_from_directory(param_dir)
+                    command_arguments = self._replace_command_parameter(command_arguments, input_name, file_path)
+                elif input_required:
+                    raise InvalidData('Unable to create run command. Expected required file in %s' % param_dir)
+                else:
+                    command_arguments = self._replace_command_parameter(command_arguments, input_name, '')
+
             elif input_type == 'files':
-                #TODO: verify folder exists
                 param_dir = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name)
-                command_arguments = self._replace_command_parameter(command_arguments, input_name, param_dir)
+                if os.path.isdir(param_dir):
+                    command_arguments = self._replace_command_parameter(command_arguments, input_name, param_dir)
+                elif input_required:
+                    raise InvalidData('Unable to create run command. Expected required files in %s' % param_dir)
+                else:
+                    command_arguments = self._replace_command_parameter(command_arguments, input_name, '')
 
         command_arguments = self._replace_command_parameter(command_arguments, 'job_output_dir',
                                                             SCALE_JOB_EXE_OUTPUT_PATH)
