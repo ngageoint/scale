@@ -40,6 +40,7 @@ Services
 .. toctree::
    :maxdepth: 1
 
+   batch
    error
    ingest
    job

@@ -71,6 +71,51 @@ class BatchManager(models.Manager):
 
         return batch
 
+    def get_batches(self, started=None, ended=None, statuses=None, recipe_type_ids=None, recipe_type_names=None,
+                    order=None):
+        """Returns a list of batches within the given time range.
+
+        :param started: Query batches updated after this amount of time.
+        :type started: :class:`datetime.datetime`
+        :param ended: Query batches updated before this amount of time.
+        :type ended: :class:`datetime.datetime`
+        :param statuses: Query batches with the a specific execution status.
+        :type statuses: [string]
+        :param recipe_type_ids: Query batches for the recipe type associated with the identifier.
+        :type recipe_type_ids: [int]
+        :param recipe_type_names: Query batches for the recipe type associated with the name.
+        :type recipe_type_names: [string]
+        :param order: A list of fields to control the sort order.
+        :type order: [string]
+        :returns: The list of batches that match the time range.
+        :rtype: [:class:`batch.models.Batch`]
+        """
+
+        # Fetch a list of batches
+        batches = Batch.objects.all().select_related('recipe_type', 'recipe_type_rev', 'event')
+        batches = batches.defer('definition')
+
+        # Apply time range filtering
+        if started:
+            batches = batches.filter(last_modified__gte=started)
+        if ended:
+            batches = batches.filter(last_modified__lte=ended)
+
+        # Apply additional filters
+        if statuses:
+            batches = batches.filter(status__in=statuses)
+        if recipe_type_ids:
+            batches = batches.filter(recipe_type_id__in=recipe_type_ids)
+        if recipe_type_names:
+            batches = batches.filter(recipe_type__name__in=recipe_type_names)
+
+        # Apply sorting
+        if order:
+            batches = batches.order_by(*order)
+        else:
+            batches = batches.order_by('last_modified')
+        return batches
+
     def schedule_recipes(self, batch_id):
         """Schedules each recipe that matches the batch for re-processing and creates associated batch models.
 
