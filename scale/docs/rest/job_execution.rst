@@ -548,3 +548,34 @@ These services provide access to information about "all", "currently running" an
 | *div* element with a *class* of *stdout* or *stderr* as appropriate. This can be used to modify the color or rendering    |
 | style to distinguish error and standard output.                                                                           |
 +---------------------------------------------------------------------------------------------------------------------------+
+| **JSON Fields** (if content type is *application/json*)                                                                   |
++----------------------+-------------------+--------------------------------------------------------------------------------+
+| scale_order_num      | Integer           | The secondary sort field for the log messages (after *@timestamp*)             |
++----------------------+-------------------+--------------------------------------------------------------------------------+
+| @timestamp           | ISO-8601 Datetime | The time of the message and the primary sort field                             |
++----------------------+-------------------+--------------------------------------------------------------------------------+
+| message              | String            | The log message                                                                |
++----------------------+-------------------+--------------------------------------------------------------------------------+
+| scale_job_exe        | String            | A unique identifier for the Scale job execution that produced this log message |
++----------------------+-------------------+--------------------------------------------------------------------------------+
+| stream               | String            | The stream that produced the message, either "stdout" or "stderr"              |
++----------------------+-------------------+--------------------------------------------------------------------------------+
+| .. code-block:: javascript                                                                                                |
+|                                                                                                                           |
+|  {                                                                                                                        |
+|      "hits": {                                                                                                            |
+|          "hits": [{                                                                                                       |
+|              ... other ElasticSearch fields ...                                                                           |
+|              "_source": {                                                                                                 |
+|                  "scale_order_num": 123,                                                                                  |
+|                  "@timestamp": "1970-01-01T00:00:00.000Z",                                                                |
+|                  "message": "This is a log message.",                                                                     |
+|                  "scale_job_exe": "scale_123456",                                                                         |
+|                  "stream": "stdout"                                                                                       |
+|              }                                                                                                            |
+|          },                                                                                                               |
+|          ... multiple "hits" ...                                                                                          |
+|          ]                                                                                                                |
+|      }                                                                                                                    |
+|  }                                                                                                                        |
++---------------------------------------------------------------------------------------------------------------------------+
