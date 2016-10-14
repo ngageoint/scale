@@ -154,7 +154,7 @@ class MetricsError(models.Model):
     :type occurred: :class:`django.db.models.DateField`
 
     :keyword total_count: The total number of errors of this type that occurred for the day.
-    :type total_count: :class:`metrics.models.PlotIntegerField`
+    :type total_count: :class:`metrics.models.PlotBigIntegerField`
 
     :keyword created: When the model was first created.
     :type created: :class:`django.db.models.DateTimeField`
@@ -166,9 +166,9 @@ class MetricsError(models.Model):
     error = models.ForeignKey('error.Error', on_delete=models.PROTECT)
     occurred = models.DateField(db_index=True)
 
-    total_count = PlotIntegerField(aggregate='sum', blank=True, group='overview',
-                                   help_text='Number of jobs that failed with a particular error type.', null=True,
-                                   units='count', verbose_name='Total Count')
+    total_count = PlotBigIntegerField(aggregate='sum', blank=True, group='overview',
+                                      help_text='Number of jobs that failed with a particular error type.', null=True,
+                                      units='count', verbose_name='Total Count')
 
     created = models.DateTimeField(auto_now_add=True)
 
@@ -321,13 +321,13 @@ class MetricsIngest(models.Model):
     :type occurred: :class:`django.db.models.DateField`
 
     :keyword deferred_count: The total number of deferred ingests.
-    :type deferred_count: :class:`metrics.models.PlotIntegerField`
+    :type deferred_count: :class:`metrics.models.PlotBigIntegerField`
     :keyword ingested_count: The total number of successfully completed ingests.
-    :type ingested_count: :class:`metrics.models.PlotIntegerField`
+    :type ingested_count: :class:`metrics.models.PlotBigIntegerField`
     :keyword errored_count: The total number of failed ingests.
-    :type errored_count: :class:`metrics.models.PlotIntegerField`
+    :type errored_count: :class:`metrics.models.PlotBigIntegerField`
     :keyword duplicate_count: The total number of duplicated ingests.
-    :type duplicate_count: :class:`metrics.models.PlotIntegerField`
+    :type duplicate_count: :class:`metrics.models.PlotBigIntegerField`
 
     :keyword file_size_sum: The total size of ingested files in bytes.
     :type file_size_sum: :class:`metrics.models.PlotBigIntegerField`
@@ -339,7 +339,7 @@ class MetricsIngest(models.Model):
     :type file_size_avg: :class:`metrics.models.PlotBigIntegerField`
 
     :keyword transfer_time_sum: The total time spent transferring ingested files in seconds.
-    :type transfer_time_sum: :class:`metrics.models.PlotIntegerField`
+    :type transfer_time_sum: :class:`metrics.models.PlotBigIntegerField`
     :keyword transfer_time_min: The minimum time spent transferring ingested files in seconds.
     :type transfer_time_min: :class:`metrics.models.PlotIntegerField`
     :keyword transfer_time_max: The maximum time spent transferring ingested files in seconds.
@@ -348,7 +348,7 @@ class MetricsIngest(models.Model):
     :type transfer_time_avg: :class:`metrics.models.PlotIntegerField`
 
     :keyword ingest_time_sum: The total time spent ingesting files in seconds.
-    :type ingest_time_sum: :class:`metrics.models.PlotIntegerField`
+    :type ingest_time_sum: :class:`metrics.models.PlotBigIntegerField`
     :keyword ingest_time_min: The minimum time spent ingesting files in seconds.
     :type ingest_time_min: :class:`metrics.models.PlotIntegerField`
     :keyword ingest_time_max: The maximum time spent ingesting files in seconds.
@@ -369,21 +369,21 @@ class MetricsIngest(models.Model):
     strike = models.ForeignKey('ingest.Strike', on_delete=models.PROTECT)
     occurred = models.DateField(db_index=True)
 
-    deferred_count = PlotIntegerField(aggregate='sum', blank=True, group='overview',
-                                      help_text='Number of files deferred (ignored) by the ingest process.', null=True,
-                                      units='count', verbose_name='Deferred Count')
-    ingested_count = PlotIntegerField(aggregate='sum', blank=True, group='overview',
-                                      help_text='Number of files successfully ingested.', null=True, units='count',
-                                      verbose_name='Ingested Count')
-    errored_count = PlotIntegerField(aggregate='sum', blank=True, group='overview',
-                                     help_text='Number of files that failed to ingest.', null=True, units='count',
-                                     verbose_name='Errored Count')
-    duplicate_count = PlotIntegerField(aggregate='sum', blank=True, group='overview',
-                                       help_text='Number of files that were duplicates of previous ingests.', null=True,
-                                       units='count', verbose_name='Duplicate Count')
-    total_count = PlotIntegerField(aggregate='sum', blank=True, group='overview',
-                                   help_text='Number of deferred, ingested, errored, and duplicate ingests.', null=True,
-                                   units='count', verbose_name='Total Count')
+    deferred_count = PlotBigIntegerField(aggregate='sum', blank=True, group='overview',
+                                         help_text='Number of files deferred (ignored) by the ingest process.',
+                                         null=True, units='count', verbose_name='Deferred Count')
+    ingested_count = PlotBigIntegerField(aggregate='sum', blank=True, group='overview',
+                                         help_text='Number of files successfully ingested.', null=True, units='count',
+                                         verbose_name='Ingested Count')
+    errored_count = PlotBigIntegerField(aggregate='sum', blank=True, group='overview',
+                                        help_text='Number of files that failed to ingest.', null=True, units='count',
+                                        verbose_name='Errored Count')
+    duplicate_count = PlotBigIntegerField(aggregate='sum', blank=True, group='overview',
+                                          help_text='Number of files that were duplicates of previous ingests.',
+                                          null=True, units='count', verbose_name='Duplicate Count')
+    total_count = PlotBigIntegerField(aggregate='sum', blank=True, group='overview',
+                                      help_text='Number of deferred, ingested, errored, and duplicate ingests.',
+                                      null=True, units='count', verbose_name='Total Count')
 
     file_size_sum = PlotBigIntegerField(aggregate='sum', blank=True, group='file_size',
                                         help_text='Total size of ingested files.', null=True, units='bytes',
@@ -398,9 +398,9 @@ class MetricsIngest(models.Model):
                                         help_text='Average size of ingested files.', null=True,
                                         units='bytes', verbose_name='File Size (Avg)')
 
-    transfer_time_sum = PlotIntegerField(aggregate='sum', blank=True, group='transfer_time',
-                                         help_text='Total time spent transferring files before ingest.', null=True,
-                                         units='seconds', verbose_name='Transfer Time (Sum)')
+    transfer_time_sum = PlotBigIntegerField(aggregate='sum', blank=True, group='transfer_time',
+                                            help_text='Total time spent transferring files before ingest.', null=True,
+                                            units='seconds', verbose_name='Transfer Time (Sum)')
     transfer_time_min = PlotIntegerField(aggregate='min', blank=True, group='transfer_time',
                                          help_text='Minimum time spent transferring files before ingest.', null=True,
                                          units='seconds', verbose_name='Transfer Time (Min)')
@@ -411,9 +411,9 @@ class MetricsIngest(models.Model):
                                          help_text='Average time spent transferring files before ingest.',
                                          null=True, units='seconds', verbose_name='Transfer Time (Avg)')
 
-    ingest_time_sum = PlotIntegerField(aggregate='sum', blank=True, group='ingest_time',
-                                       help_text='Total time spent processing files during ingest.',
-                                       null=True, units='seconds', verbose_name='Ingest Time (Sum)')
+    ingest_time_sum = PlotBigIntegerField(aggregate='sum', blank=True, group='ingest_time',
+                                          help_text='Total time spent processing files during ingest.',
+                                          null=True, units='seconds', verbose_name='Ingest Time (Sum)')
     ingest_time_min = PlotIntegerField(aggregate='min', blank=True, group='ingest_time',
                                        help_text='Minimum time spent processing files during ingest.',
                                        null=True, units='seconds', verbose_name='Ingest Time (Min)')
@@ -626,23 +626,23 @@ class MetricsJobType(models.Model):
     :type occurred: :class:`django.db.models.DateField`
 
     :keyword completed_count: The total number of completed job executions.
-    :type completed_count: :class:`metrics.models.PlotIntegerField`
+    :type completed_count: :class:`metrics.models.PlotBigIntegerField`
     :keyword failed_count: The total number of failed job executions.
-    :type failed_count: :class:`metrics.models.PlotIntegerField`
+    :type failed_count: :class:`metrics.models.PlotBigIntegerField`
     :keyword canceled_count: The total number of canceled job executions.
-    :type canceled_count: :class:`metrics.models.PlotIntegerField`
+    :type canceled_count: :class:`metrics.models.PlotBigIntegerField`
     :keyword total_count: The total number of ended job executions (completed, failed, canceled).
-    :type total_count: :class:`metrics.models.PlotIntegerField`
+    :type total_count: :class:`metrics.models.PlotBigIntegerField`
 
     :keyword error_system_count: The number of failed job executions due to a system error.
-    :type error_system_count: :class:`metrics.models.PlotIntegerField`
+    :type error_system_count: :class:`metrics.models.PlotBigIntegerField`
     :keyword error_data_count: The number of failed job executions due to a data error.
-    :type error_data_count: :class:`metrics.models.PlotIntegerField`
+    :type error_data_count: :class:`metrics.models.PlotBigIntegerField`
     :keyword error_algorithm_count: The number of failed job executions due to an algorithm error.
-    :type error_algorithm_count: :class:`metrics.models.PlotIntegerField`
+    :type error_algorithm_count: :class:`metrics.models.PlotBigIntegerField`
 
     :keyword queue_time_sum: The total time job executions were queued in seconds.
-    :type queue_time_sum: :class:`metrics.models.PlotIntegerField`
+    :type queue_time_sum: :class:`metrics.models.PlotBigIntegerField`
     :keyword queue_time_min: The minimum time a job execution was queued in seconds.
     :type queue_time_min: :class:`metrics.models.PlotIntegerField`
     :keyword queue_time_max: The maximum time a job execution was queued in seconds.
@@ -651,7 +651,7 @@ class MetricsJobType(models.Model):
     :type queue_time_avg: :class:`metrics.models.PlotIntegerField`
 
     :keyword pre_time_sum: The total time job executions were executing pre-task steps in seconds.
-    :type pre_time_sum: :class:`metrics.models.PlotIntegerField`
+    :type pre_time_sum: :class:`metrics.models.PlotBigIntegerField`
     :keyword pre_time_min: The minimum time a job execution was executing pre-task steps in seconds.
     :type pre_time_min: :class:`metrics.models.PlotIntegerField`
     :keyword pre_time_max: The maximum time a job execution was executing pre-task steps in seconds.
@@ -660,7 +660,7 @@ class MetricsJobType(models.Model):
     :type pre_time_avg: :class:`metrics.models.PlotIntegerField`
 
     :keyword job_time_sum: The total time job executions were executing the actual job task in seconds.
-    :type job_time_sum: :class:`metrics.models.PlotIntegerField`
+    :type job_time_sum: :class:`metrics.models.PlotBigIntegerField`
     :keyword job_time_min: The minimum time a job execution was executing the actual job task in seconds.
     :type job_time_min: :class:`metrics.models.PlotIntegerField`
     :keyword job_time_max: The maximum time a job execution was executing the actual job task in seconds.
@@ -669,7 +669,7 @@ class MetricsJobType(models.Model):
     :type job_time_avg: :class:`metrics.models.PlotIntegerField`
 
     :keyword post_time_sum: The total time job executions were executing post-task steps in seconds.
-    :type post_time_sum: :class:`metrics.models.PlotIntegerField`
+    :type post_time_sum: :class:`metrics.models.PlotBigIntegerField`
     :keyword post_time_min: The minimum time a job execution was executing post-task steps in seconds.
     :type post_time_min: :class:`metrics.models.PlotIntegerField`
     :keyword post_time_max: The maximum time a job execution was executing post-task steps in seconds.
@@ -678,7 +678,7 @@ class MetricsJobType(models.Model):
     :type post_time_avg: :class:`metrics.models.PlotIntegerField`
 
     :keyword run_time_sum: The total time job executions were running in seconds.
-    :type run_time_sum: :class:`metrics.models.PlotIntegerField`
+    :type run_time_sum: :class:`metrics.models.PlotBigIntegerField`
     :keyword run_time_min: The minimum time a job execution was running in seconds.
     :type run_time_min: :class:`metrics.models.PlotIntegerField`
     :keyword run_time_max: The maximum time a job execution was running in seconds.
@@ -687,7 +687,7 @@ class MetricsJobType(models.Model):
     :type run_time_avg: :class:`metrics.models.PlotIntegerField`
 
     :keyword stage_time_sum: The total time job executions spent in system staging between tasks in seconds.
-    :type stage_time_sum: :class:`metrics.models.PlotIntegerField`
+    :type stage_time_sum: :class:`metrics.models.PlotBigIntegerField`
     :keyword stage_time_min: The minimum time a job execution spent in system staging between tasks in seconds.
     :type stage_time_min: :class:`metrics.models.PlotIntegerField`
     :keyword stage_time_max: The maximum time a job execution spent in system staging between tasks in seconds.
@@ -712,32 +712,32 @@ class MetricsJobType(models.Model):
     job_type = models.ForeignKey('job.JobType', on_delete=models.PROTECT)
     occurred = models.DateField(db_index=True)
 
-    completed_count = PlotIntegerField(aggregate='sum', blank=True, group='overview',
-                                       help_text='Number of successfully completed jobs.', null=True, units='count',
-                                       verbose_name='Completed Count')
-    failed_count = PlotIntegerField(aggregate='sum', blank=True, group='overview',
-                                    help_text='Number of incomplete failed jobs.', null=True, units='count',
-                                    verbose_name='Failed Count')
-    canceled_count = PlotIntegerField(aggregate='sum', blank=True, group='overview',
-                                      help_text='Number of incomplete canceled jobs.', null=True, units='count',
-                                      verbose_name='Canceled Count')
-    total_count = PlotIntegerField(aggregate='sum', blank=True, group='overview',
-                                   help_text='Number of completed, failed, and canceled jobs.', null=True,
-                                   units='count', verbose_name='Total Count')
+    completed_count = PlotBigIntegerField(aggregate='sum', blank=True, group='overview',
+                                          help_text='Number of successfully completed jobs.', null=True, units='count',
+                                          verbose_name='Completed Count')
+    failed_count = PlotBigIntegerField(aggregate='sum', blank=True, group='overview',
+                                       help_text='Number of incomplete failed jobs.', null=True, units='count',
+                                       verbose_name='Failed Count')
+    canceled_count = PlotBigIntegerField(aggregate='sum', blank=True, group='overview',
+                                         help_text='Number of incomplete canceled jobs.', null=True, units='count',
+                                         verbose_name='Canceled Count')
+    total_count = PlotBigIntegerField(aggregate='sum', blank=True, group='overview',
+                                      help_text='Number of completed, failed, and canceled jobs.', null=True,
+                                      units='count', verbose_name='Total Count')
 
-    error_system_count = PlotIntegerField(aggregate='sum', blank=True, group='errors',
-                                          help_text='Number of failed jobs due to a system error.', null=True,
-                                          units='count', verbose_name='System Error Count')
-    error_data_count = PlotIntegerField(aggregate='sum', blank=True, group='errors',
-                                        help_text='Number of failed jobs due to a data error.', null=True,
-                                        units='count', verbose_name='Data Error Count')
-    error_algorithm_count = PlotIntegerField(aggregate='sum', blank=True, group='errors',
-                                             help_text='Number of failed jobs due to an algorithm error.', null=True,
-                                             units='count', verbose_name='Algorithm Error Count')
+    error_system_count = PlotBigIntegerField(aggregate='sum', blank=True, group='errors',
+                                             help_text='Number of failed jobs due to a system error.', null=True,
+                                             units='count', verbose_name='System Error Count')
+    error_data_count = PlotBigIntegerField(aggregate='sum', blank=True, group='errors',
+                                           help_text='Number of failed jobs due to a data error.', null=True,
+                                           units='count', verbose_name='Data Error Count')
+    error_algorithm_count = PlotBigIntegerField(aggregate='sum', blank=True, group='errors',
+                                                help_text='Number of failed jobs due to an algorithm error.', null=True,
+                                                units='count', verbose_name='Algorithm Error Count')
 
-    queue_time_sum = PlotIntegerField(aggregate='sum', blank=True, group='queue_time',
-                                      help_text='Total time the job waited in the queue.', null=True, units='seconds',
-                                      verbose_name='Queue Time (Sum)')
+    queue_time_sum = PlotBigIntegerField(aggregate='sum', blank=True, group='queue_time',
+                                         help_text='Total time the job waited in the queue.', null=True,
+                                         units='seconds', verbose_name='Queue Time (Sum)')
     queue_time_min = PlotIntegerField(aggregate='min', blank=True, group='queue_time',
                                       help_text='Minimum time the job waited in the queue.', null=True, units='seconds',
                                       verbose_name='Queue Time (Min)')
@@ -748,9 +748,9 @@ class MetricsJobType(models.Model):
                                       help_text='Average time the job waited in the queue.', null=True,
                                       units='seconds', verbose_name='Queue Time (Avg)')
 
-    pre_time_sum = PlotIntegerField(aggregate='sum', blank=True, group='pre_time',
-                                    help_text='Total time spent preparing the job task.', null=True, units='seconds',
-                                    verbose_name='Pre-task Time (Sum)')
+    pre_time_sum = PlotBigIntegerField(aggregate='sum', blank=True, group='pre_time',
+                                       help_text='Total time spent preparing the job task.', null=True, units='seconds',
+                                       verbose_name='Pre-task Time (Sum)')
     pre_time_min = PlotIntegerField(aggregate='min', blank=True, group='pre_time',
                                     help_text='Minimum time spent preparing the job task.', null=True, units='seconds',
                                     verbose_name='Pre-task Time (Min)')
@@ -761,9 +761,9 @@ class MetricsJobType(models.Model):
                                     help_text='Average time spent preparing the job task.',
                                     null=True, units='seconds', verbose_name='Pre-task Time (Avg)')
 
-    job_time_sum = PlotIntegerField(aggregate='sum', blank=True, group='job_time',
-                                    help_text='Total time spent running the job task.',
-                                    null=True, units='seconds', verbose_name='Job Task Time (Sum)')
+    job_time_sum = PlotBigIntegerField(aggregate='sum', blank=True, group='job_time',
+                                       help_text='Total time spent running the job task.',
+                                       null=True, units='seconds', verbose_name='Job Task Time (Sum)')
     job_time_min = PlotIntegerField(aggregate='min', blank=True, group='job_time',
                                     help_text='Minimum time spent running the job task.',
                                     null=True, units='seconds', verbose_name='Job Task Time (Min)')
@@ -774,9 +774,9 @@ class MetricsJobType(models.Model):
                                     help_text='Average time spent running the job task.',
                                     null=True, units='seconds', verbose_name='Job Task Time (Avg)')
 
-    post_time_sum = PlotIntegerField(aggregate='sum', blank=True, group='post_time',
-                                     help_text='Total time spent finalizing the job task.',
-                                     null=True, units='seconds', verbose_name='Post-task Time (Sum)')
+    post_time_sum = PlotBigIntegerField(aggregate='sum', blank=True, group='post_time',
+                                        help_text='Total time spent finalizing the job task.',
+                                        null=True, units='seconds', verbose_name='Post-task Time (Sum)')
     post_time_min = PlotIntegerField(aggregate='min', blank=True, group='post_time',
                                      help_text='Minimum time spent finalizing the job task.',
                                      null=True, units='seconds', verbose_name='Post-task Time (Min)')
@@ -787,9 +787,9 @@ class MetricsJobType(models.Model):
                                      help_text='Average time spent finalizing the job task.',
                                      null=True, units='seconds', verbose_name='Post-task Time (Avg)')
 
-    run_time_sum = PlotIntegerField(aggregate='sum', blank=True, group='run_time',
-                                    help_text='Total time spent running the pre, job, and post tasks.',
-                                    null=True, units='seconds', verbose_name='Run Time (Sum)')
+    run_time_sum = PlotBigIntegerField(aggregate='sum', blank=True, group='run_time',
+                                       help_text='Total time spent running the pre, job, and post tasks.',
+                                       null=True, units='seconds', verbose_name='Run Time (Sum)')
     run_time_min = PlotIntegerField(aggregate='min', blank=True, group='run_time',
                                     help_text='Minimum time spent running the pre, job, and post tasks.',
                                     null=True, units='seconds', verbose_name='Run Time (Min)')
@@ -800,9 +800,9 @@ class MetricsJobType(models.Model):
                                     help_text='Average time spent running the pre, job, and post tasks.',
                                     null=True, units='seconds', verbose_name='Run Time (Avg)')
 
-    stage_time_sum = PlotIntegerField(aggregate='sum', blank=True, group='stage_time',
-                                      help_text='Total overhead time spent managing tasks.',
-                                      null=True, units='seconds', verbose_name='Stage Time (Sum)')
+    stage_time_sum = PlotBigIntegerField(aggregate='sum', blank=True, group='stage_time',
+                                         help_text='Total overhead time spent managing tasks.',
+                                         null=True, units='seconds', verbose_name='Stage Time (Sum)')
     stage_time_min = PlotIntegerField(aggregate='min', blank=True, group='stage_time',
                                       help_text='Minimum overhead time spent managing tasks.',
                                       null=True, units='seconds', verbose_name='Stage Time (Min)')
