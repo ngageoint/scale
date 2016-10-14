@@ -52,6 +52,14 @@ metrics.migrations.0006_metricserror module
     :undoc-members:
     :show-inheritance:
 
+metrics.migrations.0007_auto_20161013_2333 module
+-------------------------------------------------
+
+.. automodule:: metrics.migrations.0007_auto_20161013_2333
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
