@@ -16,7 +16,7 @@
             showActiveWorkspaces = true,
             nodesParams = {},
             logArgs = [],
-            jobExecutionLogPoller = {};
+            jobExecutionLogPoller = [];
 
         var updateQuerystring = function (data) {
             // set defaults
@@ -237,7 +237,7 @@
                 return jobExecutionLogPoller;
             },
             setJobExecutionLogPoller: function (data) {
-                jobExecutionLogPoller = data;
+                jobExecutionLogPoller.push(data);
             }
         };
     });

@@ -8,11 +8,7 @@
             vm.forceScroll = true;
             vm.jobLogError = null;
             vm.execLog = [];
-            stateService.setLogArgs([
-                {
-                    started: null
-                }
-            ]);
+            stateService.setLogArgs([]);
 
             $scope.$watch('execution', function () {
                 if ($scope.execution) {
@@ -20,18 +16,20 @@
                     console.log($scope.execution);
                     jobExecutionService.getLog($scope.execution.id).then(null, null, function (result) {
                         // get difference of max scroll length and current scroll length.var  = result.data;
-                        if (result) {
+                        if (result.hits) {
                             var div = $($element[0]).find('.bash');
                             vm.scrollDiff = (div.scrollTop() + div.prop('offsetHeight')) - div.prop('scrollHeight');
                             if (vm.scrollDiff >= 0) {
                                 vm.forceScroll = true;
                             }
-                            vm.execLog = _.sortBy(vm.execLog.concat(result), ['@timestamp', 'scale_order_num']);
-                            stateService.setLogArgs([
-                                {
-                                    started: _.last(vm.execLog)['@timestamp']
-                                }
-                            ]);
+                            vm.execLog = _.sortBy(vm.execLog.concat(result.hits.hits), ['_source.@timestamp', '_source.scale_order_num']);
+                            if (vm.execLog && vm.execLog.length > 0) {
+                                stateService.setLogArgs([
+                                    {
+                                        started: _.last(vm.execLog)['@timestamp']
+                                    }
+                                ]);
+                            }
                         } else {
                             if (result.statusText && result.statusText !== '') {
                                 vm.jobLogErrorStatus = result.statusText;

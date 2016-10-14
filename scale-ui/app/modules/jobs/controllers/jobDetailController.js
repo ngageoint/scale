@@ -36,7 +36,9 @@
             modalInstance.result.then(function () {
 
             }, function () {
-                stateService.getJobExecutionLogPoller().stop();
+                _.forEach(stateService.getJobExecutionLogPoller(), function (poller) {
+                    poller.stop();
+                });
             });
         };
 

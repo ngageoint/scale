@@ -66,8 +66,7 @@
                 // poller only gets notified of success responses.
                 var jobExecutionLogResource = $resource(url,{},{
                     get:{
-                        method:'GET',
-                        isArray: true
+                        method:'GET'
                     }
                 });
 
@@ -75,9 +74,7 @@
                     action: 'get',
                     delay: scaleConfig.pollIntervals.jobExecutionLog,
                     argumentsArray: function () {
-                        return [
-                            stateService.getLogArgs()
-                        ]
+                        return stateService.getLogArgs();
                     }
                 });
 
@@ -85,10 +82,10 @@
 
                 return jobExecutionLogPoller.promise.then(null, null, function (result) {
                     if(result.$resolved){
-                        result.execution_log = JobExecutionLog.transformer(result);
-                        if(result.execution_log.status === 'COMPLETED' || result.execution_log.status === 'FAILED'){
-                            jobExecutionLogPoller.stop();
-                        }
+                        // result.execution_log = JobExecutionLog.transformer(result);
+                        // if(result.execution_log.status === 'COMPLETED' || result.execution_log.status === 'FAILED'){
+                        //     jobExecutionLogPoller.stop();
+                        // }
                         return result;
                     } else {
                         jobExecutionLogPoller.stop();
