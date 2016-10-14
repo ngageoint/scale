@@ -1445,7 +1445,7 @@ class JobExecution(models.Model):
         elif include_stderr and not include_stdout:
             q['query']['bool']['must'].append({'match': {'stream': 'stderr'}})
         if since is not None:
-            q['query']['bool']['must'].append({'range': {'@timestamp': {'gt': since.isoformat()}}})
+            q['query']['bool']['must'].append({'range': {'@timestamp': {'gte': since.isoformat()}}})
 
         hits = settings.ELASTICSEARCH.search(index='_all', body=q)
 
