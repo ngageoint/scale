@@ -32,7 +32,10 @@
   
 
   
-    <link rel="top" title="Scale 3.1.0-snapshot documentation" href="../../../index.html"/> 
+    <link rel="top" title="Scale 3.1.0-snapshot documentation" href="../../../index.html"/>
+        <link rel="up" title="batch package" href="batch.html"/>
+        <link rel="next" title="batch.test package" href="batch.test.html"/>
+        <link rel="prev" title="batch.management.commands package" href="batch.management.commands.html"/> 
 
   
   <script src="../../../_static/js/modernizr.min.js"></script>
@@ -84,11 +87,53 @@
           
             
             
-                <ul>
+                <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../cli/index.html">Command Line Client</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../index.html">Architecture</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../logs.html">ElasticSearch Logs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="batch.html">batch package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="batch.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="batch.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="batch.html#module-batch.apps">batch.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="batch.html#module-batch.exceptions">batch.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="batch.html#module-batch.models">batch.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="batch.html#module-batch.serializers">batch.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="batch.html#module-batch.urls">batch.urls module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="batch.html#module-batch.views">batch.views module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="batch.html#module-batch">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manage.html">manage module</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../../rest/index.html">REST API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
@@ -121,6 +166,12 @@
 <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Architecture</a> &raquo;</li>
+      
+          <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
+      
+          <li><a href="batch.html">batch package</a> &raquo;</li>
       
     <li>batch.migrations package</li>
       <li class="wy-breadcrumbs-aside">
@@ -169,6 +220,15 @@
            </div>
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="batch.test.html" class="btn btn-neutral float-right" title="batch.test package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="batch.management.commands.html" class="btn btn-neutral" title="batch.management.commands package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>

@@ -960,6 +960,48 @@ If <em>text/html</em> is requested as a valid encoding then each line of the log
 <em>div</em> element with a <em>class</em> of <em>stdout</em> or <em>stderr</em> as appropriate. This can be used to modify the color or rendering
 style to distinguish error and standard output.</td>
 </tr>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong> (if content type is <em>application/json</em>)</td>
+</tr>
+<tr class="row-even"><td>scale_order_num</td>
+<td>Integer</td>
+<td colspan="2">The secondary sort field for the log messages (after <em>&#64;timestamp</em>)</td>
+</tr>
+<tr class="row-odd"><td>&#64;timestamp</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">The time of the message and the primary sort field</td>
+</tr>
+<tr class="row-even"><td>message</td>
+<td>String</td>
+<td colspan="2">The log message</td>
+</tr>
+<tr class="row-odd"><td>scale_job_exe</td>
+<td>String</td>
+<td colspan="2">A unique identifier for the Scale job execution that produced this log message</td>
+</tr>
+<tr class="row-even"><td>stream</td>
+<td>String</td>
+<td colspan="2">The stream that produced the message, either &#8220;stdout&#8221; or &#8220;stderr&#8221;</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;hits&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;hits&quot;</span><span class="o">:</span> <span class="p">[{</span>
+            <span class="p">...</span> <span class="nx">other</span> <span class="nx">ElasticSearch</span> <span class="nx">fields</span> <span class="p">...</span>
+            <span class="s2">&quot;_source&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;scale_order_num&quot;</span><span class="o">:</span> <span class="mi">123</span><span class="p">,</span>
+                <span class="s2">&quot;@timestamp&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00.000Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;message&quot;</span><span class="o">:</span> <span class="s2">&quot;This is a log message.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;scale_job_exe&quot;</span><span class="o">:</span> <span class="s2">&quot;scale_123456&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;stream&quot;</span><span class="o">:</span> <span class="s2">&quot;stdout&quot;</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">...</span> <span class="nx">multiple</span> <span class="s2">&quot;hits&quot;</span> <span class="p">...</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
 </tbody>
 </table>
 </div>
