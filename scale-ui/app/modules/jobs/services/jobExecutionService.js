@@ -67,7 +67,14 @@
                 var jobExecutionLogResource = $resource(url,{},{
                     get:{
                         method:'GET',
-                        isArray: true
+                        interceptor: {
+                            response: function (response) {
+                                var result = response.resource;
+                                result.$status = response.status;
+                                result.$statusText = response.statusText;
+                                return result;
+                            }
+                        }
                     }
                 });
 
@@ -75,20 +82,18 @@
                     action: 'get',
                     delay: scaleConfig.pollIntervals.jobExecutionLog,
                     argumentsArray: function () {
-                        return [
-                            stateService.getLogArgs()
-                        ]
+                        return stateService.getLogArgs();
                     }
                 });
 
                 stateService.setJobExecutionLogPoller(jobExecutionLogPoller);
 
                 return jobExecutionLogPoller.promise.then(null, null, function (result) {
-                    if(result.$resolved){
-                        result.execution_log = JobExecutionLog.transformer(result);
-                        if(result.execution_log.status === 'COMPLETED' || result.execution_log.status === 'FAILED'){
-                            jobExecutionLogPoller.stop();
-                        }
+                    if (result.$resolved) {
+                        // result.execution_log = JobExecutionLog.transformer(result);
+                        // if(result.execution_log.status === 'COMPLETED' || result.execution_log.status === 'FAILED'){
+                        //     jobExecutionLogPoller.stop();
+                        // }
                         return result;
                     } else {
                         jobExecutionLogPoller.stop();
