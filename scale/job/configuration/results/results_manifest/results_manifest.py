@@ -283,7 +283,7 @@ class ResultsManifest(object):
         parse_data matches the job data inputs.
 
         :param output_file_definitions: A dictionary with each output param name mapped to a tuple with
-        (is_multiple (bool), required(bool))
+            (is_multiple (bool), required(bool))
         :type output_file_definitions: dict of tuples
         """
 
