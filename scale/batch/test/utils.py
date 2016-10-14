@@ -9,7 +9,7 @@ BATCH_TITLE_COUNTER = 1
 BATCH_DESCRIPTION_COUNTER = 1
 
 
-def create_batch(recipe_type=None, definition=None, title=None, description=None, recipe_count=0):
+def create_batch(recipe_type=None, definition=None, title=None, description=None, status=None, recipe_count=0):
     """Creates a batch model for unit testing
 
     :returns: The batch model
@@ -34,5 +34,9 @@ def create_batch(recipe_type=None, definition=None, title=None, description=None
     for i in range(recipe_count):
         recipe_test_utils.create_recipe(recipe_type=recipe_type)
 
-    return Batch.objects.create_batch(recipe_type=recipe_type, definition=definition, title=title,
-                                      description=description)
+    batch = Batch.objects.create_batch(recipe_type=recipe_type, definition=definition, title=title,
+                                       description=description)
+    if status:
+        batch.status = status
+        batch.save()
+    return batch
