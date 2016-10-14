@@ -207,6 +207,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="batch.test.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="batch.test.html#module-batch.test.test_models">batch.test.test_models module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="batch.test.html#module-batch.test.test_views">batch.test.test_views module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="batch.test.html#module-batch.test.utils">batch.test.utils module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="batch.test.html#module-batch.test">Module contents</a></li>
 </ul>
@@ -478,6 +479,34 @@ transaction.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="batch.models.BatchManager.get_batches">
+<code class="descname">get_batches</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>statuses=None</em>, <em>recipe_type_ids=None</em>, <em>recipe_type_names=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchManager.get_batches" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of batches within the given time range.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query batches updated after this amount of time.</li>
+<li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query batches updated before this amount of time.</li>
+<li><strong>statuses</strong> (<em>[string]</em>) &#8211; Query batches with the a specific execution status.</li>
+<li><strong>recipe_type_ids</strong> (<em>[int]</em>) &#8211; Query batches for the recipe type associated with the identifier.</li>
+<li><strong>recipe_type_names</strong> (<em>[string]</em>) &#8211; Query batches for the recipe type associated with the name.</li>
+<li><strong>order</strong> (<em>[string]</em>) &#8211; A list of fields to control the sort order.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of batches that match the time range.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference internal" href="#batch.models.Batch" title="batch.models.Batch"><code class="xref py py-class docutils literal"><span class="pre">batch.models.Batch</span></code></a>]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="batch.models.BatchManager.schedule_recipes">
 <code class="descname">schedule_recipes</code><span class="sig-paren">(</span><em>batch_id</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchManager.schedule_recipes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Schedules each recipe that matches the batch for re-processing and creates associated batch models.</p>
@@ -554,6 +583,89 @@ transaction.</p>
 <dt id="batch.models.BatchRecipe.superseded_recipe">
 <code class="descclassname">BatchRecipe.</code><code class="descname">superseded_recipe</code><a class="headerlink" href="#batch.models.BatchRecipe.superseded_recipe" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-batch.serializers">
+<span id="batch-serializers-module"></span><h2>batch.serializers module<a class="headerlink" href="#module-batch.serializers" title="Permalink to this headline">¶</a></h2>
+<p>Defines the serializers for batches</p>
+<dl class="class">
+<dt id="batch.serializers.BatchBaseSerializer">
+<em class="property">class </em><code class="descclassname">batch.serializers.</code><code class="descname">BatchBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
+<p>Converts batch model fields to REST output.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="batch.serializers.BatchSerializer">
+<em class="property">class </em><code class="descclassname">batch.serializers.</code><code class="descname">BatchSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#batch.serializers.BatchBaseSerializer" title="batch.serializers.BatchBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">batch.serializers.BatchBaseSerializer</span></code></a></p>
+<p>Converts batch model fields to REST output.</p>
+<dl class="class">
+<dt id="batch.serializers.BatchSerializer.JobBaseSerializer">
+<em class="property">class </em><code class="descname">JobBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchSerializer.JobBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
+<p>Converts job model fields to REST output.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="batch.serializers.BatchSerializer.RecipeTypeBaseSerializer">
+<em class="property">class </em><code class="descclassname">BatchSerializer.</code><code class="descname">RecipeTypeBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchSerializer.RecipeTypeBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
+<p>Converts recipe type model fields to REST output.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="batch.serializers.BatchSerializer.TriggerEventBaseSerializer">
+<em class="property">class </em><code class="descclassname">BatchSerializer.</code><code class="descname">TriggerEventBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchSerializer.TriggerEventBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
+<p>Converts trigger event model fields to REST output.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-batch.urls">
+<span id="batch-urls-module"></span><h2>batch.urls module<a class="headerlink" href="#module-batch.urls" title="Permalink to this headline">¶</a></h2>
+<p>Defines the URLs for the RESTful batch services</p>
+</div>
+<div class="section" id="module-batch.views">
+<span id="batch-views-module"></span><h2>batch.views module<a class="headerlink" href="#module-batch.views" title="Permalink to this headline">¶</a></h2>
+<p>Defines the views for the RESTful batch services</p>
+<dl class="class">
+<dt id="batch.views.BatchesView">
+<em class="property">class </em><code class="descclassname">batch.views.</code><code class="descname">BatchesView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.views.BatchesView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></code></p>
+<p>This view is the endpoint for retrieving existing batches.</p>
+<dl class="method">
+<dt id="batch.views.BatchesView.list">
+<code class="descname">list</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.views.BatchesView.list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the batches and returns it in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.views.BatchesView.queryset">
+<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#batch.views.BatchesView.queryset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="batch.views.BatchesView.serializer_class">
+<code class="descname">serializer_class</code><a class="headerlink" href="#batch.views.BatchesView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">BatchSerializer</span></code></p>
+</dd></dl>
 
 </dd></dl>
 

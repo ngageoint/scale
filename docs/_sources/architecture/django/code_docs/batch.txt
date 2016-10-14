@@ -39,6 +39,30 @@ batch.models module
     :undoc-members:
     :show-inheritance:
 
+batch.serializers module
+------------------------
+
+.. automodule:: batch.serializers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+batch.urls module
+-----------------
+
+.. automodule:: batch.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+batch.views module
+------------------
+
+.. automodule:: batch.views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

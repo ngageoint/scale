@@ -241,12 +241,61 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-batch.test.test_views">
+<span id="batch-test-test-views-module"></span><h2>batch.test.test_views module<a class="headerlink" href="#module-batch.test.test_views" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="batch.test.test_views.TestBatchesView">
+<em class="property">class </em><code class="descclassname">batch.test.test_views.</code><code class="descname">TestBatchesView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="attribute">
+<dt id="batch.test.test_views.TestBatchesView.fixtures">
+<code class="descname">fixtures</code><em class="property"> = [u'batch_job_types.json']</em><a class="headerlink" href="#batch.test.test_views.TestBatchesView.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="batch.test.test_views.TestBatchesView.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="batch.test.test_views.TestBatchesView.test_order_by">
+<code class="descname">test_order_by</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesView.test_order_by" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the batches view with sorting.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="batch.test.test_views.TestBatchesView.test_recipe_type_id">
+<code class="descname">test_recipe_type_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesView.test_recipe_type_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the batches view filtered by recipe type identifier.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="batch.test.test_views.TestBatchesView.test_recipe_type_name">
+<code class="descname">test_recipe_type_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesView.test_recipe_type_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the batches view filtered by recipe type name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="batch.test.test_views.TestBatchesView.test_status">
+<code class="descname">test_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesView.test_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the batches view filtered by status.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="batch.test.test_views.TestBatchesView.test_successful">
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the batches view.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-batch.test.utils">
 <span id="batch-test-utils-module"></span><h2>batch.test.utils module<a class="headerlink" href="#module-batch.test.utils" title="Permalink to this headline">¶</a></h2>
 <p>Defines utility methods for testing batches</p>
 <dl class="function">
 <dt id="batch.test.utils.create_batch">
-<code class="descclassname">batch.test.utils.</code><code class="descname">create_batch</code><span class="sig-paren">(</span><em>recipe_type=None</em>, <em>definition=None</em>, <em>title=None</em>, <em>description=None</em>, <em>recipe_count=0</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.utils.create_batch" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">batch.test.utils.</code><code class="descname">create_batch</code><span class="sig-paren">(</span><em>recipe_type=None</em>, <em>definition=None</em>, <em>title=None</em>, <em>description=None</em>, <em>status=None</em>, <em>recipe_count=0</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.utils.create_batch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a batch model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
