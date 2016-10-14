@@ -16,7 +16,7 @@ from job.configuration.data.exceptions import InvalidData
 from job.models import Job, JobType
 from job.serializers import JobDetailsSerializer, JobSerializer
 from queue.models import JobLoad, Queue
-from queue.serializers import JobLoadGroupSerializer, QueueStatusSerializer
+from queue.serializers import JobLoadGroupSerializer, QueueStatusSerializer, RequeueJobSerializer
 from recipe.configuration.data.exceptions import InvalidRecipeData
 from recipe.configuration.data.recipe_data import RecipeData
 from recipe.models import Recipe, RecipeType
@@ -154,7 +154,7 @@ class RequeueJobsView(GenericAPIView):
     """This view is the endpoint for requeuing jobs which have already been executed."""
     parser_classes = (JSONParser,)
     queryset = Job.objects.all()
-    serializer_class = JobSerializer
+    serializer_class = RequeueJobSerializer
 
     def post(self, request):
         """Increase max_tries, place it on the queue, and returns the new job information in JSON form
@@ -193,5 +193,5 @@ class RequeueJobsView(GenericAPIView):
         jobs = Job.objects.get_jobs(job_ids=requested_job_ids)
 
         page = self.paginate_queryset(jobs)
-        serializer = self.get_serializer(page, many=True)
+        serializer = JobSerializer(page, many=True)
         return self.get_paginated_response(serializer.data)
