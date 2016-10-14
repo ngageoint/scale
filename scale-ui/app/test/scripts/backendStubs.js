@@ -283,12 +283,16 @@
         // Job execution logs
         var jobExecutionLogRegex = new RegExp('^' + scaleConfig.getUrlPrefix('job-executions') + 'job-executions/.*/logs/combined/', 'i');
         $httpBackend.whenGET(jobExecutionLogRegex).respond(function () {
-            var log = [];
+            var log = {
+                hits: {
+                    hits: []
+                }
+            };
             var lines = Math.floor(Math.random() * ((500 - 5) + 1) + 5);
             for (var i = 0; i < lines; i++) {
                 var rand = Math.floor(Math.random() * (2 - 1 + 1)) + 1;
                 var lineType = rand === 1 ? 'stdout' : 'stderr';
-                log.push({
+                log.hits.hits.push({
                     message: 'This is a ' + lineType + ' message',
                     '@timestamp': moment.utc().toISOString(),
                     scale_order_num: i,
