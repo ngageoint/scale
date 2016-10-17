@@ -92,7 +92,7 @@ class BatchManager(models.Manager):
         """
 
         # Fetch a list of batches
-        batches = Batch.objects.all().select_related('recipe_type', 'recipe_type_rev', 'event')
+        batches = Batch.objects.all().select_related('creator_job', 'event', 'recipe_type')
         batches = batches.defer('definition')
 
         # Apply time range filtering
@@ -115,6 +115,18 @@ class BatchManager(models.Manager):
         else:
             batches = batches.order_by('last_modified')
         return batches
+
+    def get_details(self, batch_id):
+        """Returns the batch for the given ID with all detail fields included.
+
+        :param batch_id: The unique identifier of the batch.
+        :type batch_id: int
+        :returns: The batch with all detail fields included.
+        :rtype: :class:`batch.models.Batch`
+        """
+
+        # Attempt to get the batch
+        return Batch.objects.select_related('creator_job', 'event', 'recipe_type').get(pk=batch_id)
 
     def schedule_recipes(self, batch_id):
         """Schedules each recipe that matches the batch for re-processing and creates associated batch models.
