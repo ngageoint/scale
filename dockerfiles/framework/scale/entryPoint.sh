@@ -54,9 +54,6 @@ fi
 # If this is false we are either launching a pre/post task or the scheduler.
 if [[ ${ENABLE_WEBSERVER} == 'true' ]]
 then
-    echo "${SCALE_DB_HOST}:${SCALE_DB_PORT}:*:${SCALE_DB_USER}:${SCALE_DB_PASS}" >> ~/.pgpass
-    chmod 0600 ~/.pgpass
-
     gosu root sed -i 's^User apache^User scale^g' /etc/httpd/conf/httpd.conf
     gosu root /usr/sbin/httpd
 

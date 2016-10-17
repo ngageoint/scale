@@ -21,7 +21,7 @@ if override_hosts:
     ALLOWED_HOSTS = override_hosts.split(',')
 
 STATIC_ROOT = os.environ.get('SCALE_STATIC_ROOT', 'static/')
-STATIC_URL = os.environ.get('SCALE_STATIC_URL', '/static')
+STATIC_URL = os.environ.get('SCALE_STATIC_URL', '/static/')
 
 LOGGING_ADDRESS = os.environ.get('SCALE_LOGGING_ADDRESS', LOGGING_ADDRESS)
 ELASTICSEARCH_URL = os.environ.get('SCALE_ELASTICSEARCH_URL', ELASTICSEARCH_URL)
