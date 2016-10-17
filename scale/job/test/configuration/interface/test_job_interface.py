@@ -7,7 +7,7 @@ from django.test import TestCase
 from mock import patch, MagicMock, Mock
 
 import storage.test.utils as storage_test_utils
-from job.configuration.data.exceptions import InvalidConnection
+from job.configuration.data.exceptions import InvalidConnection, InvalidData
 from job.configuration.data.job_connection import JobConnection
 from job.configuration.data.job_data import JobData
 from job.configuration.environment.job_environment import JobEnvironment
@@ -698,10 +698,11 @@ class TestJobInterfacePreSteps(TestCase):
         job_command_arguments = job_interface.fully_populate_command_argument(job_data, job_environment, job_exe_id)
         self.assertEqual(job_command_arguments, '-f property-value', 'expected a different command from pre_steps')
 
+    @patch('os.path.isdir')
     @patch('job.configuration.interface.job_interface.JobInterface._get_one_file_from_directory')
     @patch('os.mkdir')
     @patch('job.configuration.data.job_data.JobData.retrieve_input_data_files')
-    def test_file_in_command(self, mock_retrieve_call, mock_os_mkdir, mock_get_one_file):
+    def test_file_in_command(self, mock_retrieve_call, mock_os_mkdir, mock_get_one_file, mock_isdir):
         job_exe_id = 1
 
         def new_retrieve(arg1):
@@ -736,9 +737,10 @@ class TestJobInterfacePreSteps(TestCase):
         job_command_arguments = job_interface.fully_populate_command_argument(job_data, job_environment, job_exe_id)
         self.assertEqual(job_command_arguments, input_file_path, 'expected a different command from pre_steps')
 
+    @patch('os.path.isdir')
     @patch('os.mkdir')
     @patch('job.configuration.data.job_data.JobData.retrieve_input_data_files')
-    def test_files_in_command(self, mock_retrieve_call, mock_os_mkdir):
+    def test_files_in_command(self, mock_retrieve_call, mock_os_mkdir, mock_isdir):
         def new_retrieve(arg1):
             return {
                 'files1_out': ['/test/file1/foo.txt', '/test/file1/bar.txt'],
@@ -785,6 +787,84 @@ class TestJobInterfacePreSteps(TestCase):
         job_interface.perform_pre_steps(job_data, job_environment)
         job_command_arguments = job_interface.fully_populate_command_argument(job_data, job_environment, job_exe_id)
         self.assertEqual(job_command_arguments, job_output_dir, 'expected a different command from pre_steps')
+
+    def test_absent_required_file_in_command(self):
+        job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
+        job_interface_dict['command_arguments'] = '${input_file}'
+
+        job_interface_dict['input_data'] = [{
+            'name': 'input_file',
+            'type': 'file',
+            'required': True,
+        }]
+
+        job_interface = JobInterface(job_interface_dict)
+        job_data = JobData(job_data_dict)
+        job_environment = JobEnvironment(job_environment_dict)
+        job_exe_id = 1
+
+        job_interface.perform_pre_steps(job_data, job_environment)
+        self.assertRaises(InvalidData, lambda: job_interface.fully_populate_command_argument(job_data,
+                                                                                             job_environment,
+                                                                                             job_exe_id))
+
+    def test_absent_optional_file_in_command(self):
+        job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
+        job_interface_dict['command_arguments'] = '${input_file}'
+
+        job_interface_dict['input_data'] = [{
+            'name': 'input_file',
+            'type': 'files',
+            'required': False,
+        }]
+
+        job_interface = JobInterface(job_interface_dict)
+        job_data = JobData(job_data_dict)
+        job_environment = JobEnvironment(job_environment_dict)
+        job_exe_id = 1
+
+        job_interface.perform_pre_steps(job_data, job_environment)
+        job_command_arguments = job_interface.fully_populate_command_argument(job_data, job_environment, job_exe_id)
+        self.assertEqual(job_command_arguments, '', 'expected a different command from pre_steps')
+
+    def test_absent_required_files_in_command(self):
+        job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
+        job_interface_dict['command_arguments'] = '${input_files}'
+
+        job_interface_dict['input_data'] = [{
+            'name': 'input_files',
+            'type': 'files',
+            'required': True,
+        }]
+
+        job_interface = JobInterface(job_interface_dict)
+        job_data = JobData(job_data_dict)
+        job_environment = JobEnvironment(job_environment_dict)
+        job_exe_id = 1
+
+        job_interface.perform_pre_steps(job_data, job_environment)
+        self.assertRaises(InvalidData, lambda: job_interface.fully_populate_command_argument(job_data,
+                                                                                             job_environment,
+                                                                                             job_exe_id))
+
+    def test_absent_optional_files_in_command(self):
+        job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
+        job_interface_dict['command_arguments'] = '${input_files}'
+
+        job_interface_dict['input_data'] = [{
+            'name': 'input_files',
+            'type': 'files',
+            'required': False,
+        }]
+
+        job_interface = JobInterface(job_interface_dict)
+        job_data = JobData(job_data_dict)
+        job_environment = JobEnvironment(job_environment_dict)
+        job_exe_id = 1
+
+        job_interface.perform_pre_steps(job_data, job_environment)
+        job_command_arguments = job_interface.fully_populate_command_argument(job_data, job_environment, job_exe_id)
+        self.assertEqual(job_command_arguments, '', 'expected a different command from pre_steps')
 
     def _get_simple_interface_data_env(self):
         job_interface_dict = {
