@@ -245,6 +245,10 @@ class JobInterface(object):
 
         command_arguments = self._replace_command_parameter(command_arguments, 'job_output_dir',
                                                             SCALE_JOB_EXE_OUTPUT_PATH)
+
+        # Remove extra whitespace
+        command_arguments = ' '.join(command_arguments.split())
+
         return command_arguments
 
     def get_command(self):
