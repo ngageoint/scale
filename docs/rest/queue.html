@@ -996,24 +996,35 @@ Choices: [CANCELED, FAILED].</td>
 <td>Change the priority of matching jobs when adding them to the queue.
 Defaults to jobs current priority, lower number is higher priority.</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span> <span class="p">{</span>
+     <span class="s2">&quot;started&quot;</span><span class="o">:</span> <span class="s2">&quot;2016-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2016-01-01-10T00:00:00Z&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;FAILED&quot;</span><span class="p">,</span>
+     <span class="s2">&quot;job_type_ids&quot;</span><span class="o">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+     <span class="s2">&quot;error_categories&quot;</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;SYSTEM&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
 </tr>
-<tr class="row-even"><td><strong>Status</strong></td>
+<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
 <td colspan="3">200 OK</td>
 </tr>
-<tr class="row-odd"><td><strong>Content Type</strong></td>
+<tr class="row-even"><td><strong>Content Type</strong></td>
 <td colspan="3"><em>application/json</em></td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-odd"><td>&nbsp;</td>
+<tr class="row-even"><td>&nbsp;</td>
 <td>JSON Object</td>
 <td colspan="2">All fields are the same as the jobs model.
 The status will be PENDING or BLOCKED if the job has never been queued.
 The status will be QUEUED if the job has been previously queued.
 (See <a class="reference internal" href="job.html#rest-job-list"><span>Job List</span></a>)</td>
 </tr>
-<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">68</span><span class="p">,</span>
     <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
     <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>

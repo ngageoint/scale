@@ -679,6 +679,16 @@ place jobs and recipes on the queue for processing.
 | priority           | Integer           | Optional | Change the priority of matching jobs when adding them to the queue. |
 |                    |                   |          | Defaults to jobs current priority, lower number is higher priority. |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
+| .. code-block:: javascript                                                                                              |
+|                                                                                                                         |
+|     {                                                                                                                   |
+|         "started": "2016-01-01T00:00:00Z",                                                                              |
+|         "ended": "2016-01-01-10T00:00:00Z",                                                                             |
+|         "status": "FAILED",                                                                                             |
+|         "job_type_ids": [1, 2, 3],                                                                                      |
+|         "error_categories": ["SYSTEM"]                                                                                  |
+|    }                                                                                                                    |
++-------------------------------------------------------------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Status**         | 200 OK                                                                                             |

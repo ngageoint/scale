@@ -558,12 +558,6 @@
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="queue.test.test_views.TestRequeueJobsView.test_bad_job_id">
-<code class="descname">test_bad_job_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestRequeueJobsView.test_bad_job_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling the requeue view with an invalid job type ID.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="queue.test.test_views.TestRequeueJobsView.test_error_categories">
 <code class="descname">test_error_categories</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestRequeueJobsView.test_error_categories" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the requeue view filtered by job error category.</p>
@@ -591,6 +585,12 @@
 <dt id="queue.test.test_views.TestRequeueJobsView.test_job_type_names">
 <code class="descname">test_job_type_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestRequeueJobsView.test_job_type_names" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the requeue view filtered by job type name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_views.TestRequeueJobsView.test_no_match">
+<code class="descname">test_no_match</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestRequeueJobsView.test_no_match" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the requeue view where there are no matching jobs to schedule.</p>
 </dd></dl>
 
 <dl class="method">

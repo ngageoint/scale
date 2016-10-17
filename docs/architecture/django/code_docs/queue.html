@@ -1016,6 +1016,13 @@ be deleted from the database. All database changes occur in an atomic transactio
 
 </dd></dl>
 
+<dl class="class">
+<dt id="queue.serializers.RequeueJobSerializer">
+<em class="property">class </em><code class="descclassname">queue.serializers.</code><code class="descname">RequeueJobSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.serializers.RequeueJobSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></code></p>
+<p>Converts re-queue job JSON input to dictionary attributes</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-queue.urls">
 <span id="queue-urls-module"></span><h2>queue.urls module<a class="headerlink" href="#module-queue.urls" title="Permalink to this headline">¶</a></h2>
@@ -1212,7 +1219,7 @@ be deleted from the database. All database changes occur in an atomic transactio
 <dl class="attribute">
 <dt id="queue.views.RequeueJobsView.serializer_class">
 <code class="descname">serializer_class</code><a class="headerlink" href="#queue.views.RequeueJobsView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobSerializer</span></code></p>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">RequeueJobSerializer</span></code></p>
 </dd></dl>
 
 </dd></dl>
