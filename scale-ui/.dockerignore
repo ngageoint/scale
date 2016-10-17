@@ -1,9 +1,8 @@
-app/
+app/bower_components/
 node_modules/
 build/
 dist/
 reports/
-test/
 .idea/
 .tmp
 .sass-cache
