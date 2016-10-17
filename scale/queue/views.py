@@ -182,15 +182,14 @@ class RequeueJobsView(GenericAPIView):
         jobs = Job.objects.get_jobs(started=started, ended=ended, statuses=job_status, job_ids=job_ids,
                                     job_type_ids=job_type_ids, job_type_names=job_type_names,
                                     job_type_categories=job_type_categories, error_categories=error_categories)
-        if not jobs:
-            raise Http404
 
         # Attempt to queue all jobs matching the filters
         requested_job_ids = {job.id for job in jobs}
-        Queue.objects.requeue_jobs(requested_job_ids, priority)
+        if requested_job_ids:
+            Queue.objects.requeue_jobs(requested_job_ids, priority)
 
-        # Refresh models to get the new status information for all originally requested jobs
-        jobs = Job.objects.get_jobs(job_ids=requested_job_ids)
+            # Refresh models to get the new status information for all originally requested jobs
+            jobs = Job.objects.get_jobs(job_ids=requested_job_ids)
 
         page = self.paginate_queryset(jobs)
         serializer = JobSerializer(page, many=True)
