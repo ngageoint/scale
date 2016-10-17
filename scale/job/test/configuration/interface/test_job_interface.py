@@ -790,9 +790,10 @@ class TestJobInterfacePreSteps(TestCase):
 
     def test_absent_required_file_in_command(self):
         job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
+        job_interface_dict['command_arguments'] = '${input_file}'
 
         job_interface_dict['input_data'] = [{
-            'name': 'bad_name',
+            'name': 'input_file',
             'type': 'file',
             'required': True,
         }]
@@ -803,16 +804,16 @@ class TestJobInterfacePreSteps(TestCase):
         job_exe_id = 1
 
         job_interface.perform_pre_steps(job_data, job_environment)
-        job_interface.perform_pre_steps(job_data, job_environment)
         self.assertRaises(InvalidData, lambda: job_interface.fully_populate_command_argument(job_data,
                                                                                              job_environment,
                                                                                              job_exe_id))
 
     def test_absent_optional_file_in_command(self):
         job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
+        job_interface_dict['command_arguments'] = '${input_file}'
 
         job_interface_dict['input_data'] = [{
-            'name': 'bad_name',
+            'name': 'input_file',
             'type': 'files',
             'required': False,
         }]
@@ -828,9 +829,10 @@ class TestJobInterfacePreSteps(TestCase):
 
     def test_absent_required_files_in_command(self):
         job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
+        job_interface_dict['command_arguments'] = '${input_files}'
 
         job_interface_dict['input_data'] = [{
-            'name': 'bad_name',
+            'name': 'input_files',
             'type': 'files',
             'required': True,
         }]
@@ -841,16 +843,16 @@ class TestJobInterfacePreSteps(TestCase):
         job_exe_id = 1
 
         job_interface.perform_pre_steps(job_data, job_environment)
-        job_interface.perform_pre_steps(job_data, job_environment)
         self.assertRaises(InvalidData, lambda: job_interface.fully_populate_command_argument(job_data,
                                                                                              job_environment,
                                                                                              job_exe_id))
 
     def test_absent_optional_files_in_command(self):
         job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
+        job_interface_dict['command_arguments'] = '${input_files}'
 
         job_interface_dict['input_data'] = [{
-            'name': 'bad_name',
+            'name': 'input_files',
             'type': 'files',
             'required': False,
         }]
