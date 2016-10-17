@@ -7,24 +7,13 @@ else
  dcos config set core.dcos_url http://master.mesos
 fi
 
-if [[ ${DEPLOY_DB} == 'true' ]] || [[ ${DEPLOY_LOGGING} == 'true' ]]
+# TODO: Replace this with a pinned value if we care about key change across container restart
+export SCALE_SECRET_KEY=`python -c "import random;import string;print(''.join(random.SystemRandom().choice(string.hexdigits) for _ in range(50)))"`
+echo "SCALE_SECRET_KEY: ${SCALE_SECRET_KEY}"
+
+if [[ ${DEPLOY_DB} == 'true' ]] || [[ ${DEPLOY_LOGGING} == 'true' || ${DEPLOY_WEBSERVER} == 'true' ]]
 then
   ./dcos_cli.py > dcos_cli.log
-fi
-
-if [[ ${DCOS_PACKAGE_FRAMEWORK_NAME}x != x ]]
-then
-    sed -i "s/framework.name\ =\ 'Scale'/framework.name\ =\ '"${DCOS_PACKAGE_FRAMEWORK_NAME}"'/" /opt/scale/scheduler/management/commands/scale_scheduler.py
-    sed -i "/framework.name/ a\ \ \ \ \ \ \ \ framework.webui_url = 'http://"${DCOS_PACKAGE_FRAMEWORK_NAME}".marathon.slave.mesos:"${PORT0}"/'" scheduler/management/commands/scale_scheduler.py
-    gosu root sed -i 's/\/SCALE/\/'${DCOS_PACKAGE_FRAMEWORK_NAME}'/' /etc/httpd/conf.d/scale.conf
-    sed -i 's/\/api/.\/api/' /opt/scale/ui/config/scaleConfig.json
-    sed -i 's/\/docs/.\/docs/' /opt/scale/ui/config/scaleConfig.json
-    gosu root sed -i 's/PREFIX//' /etc/httpd/conf.d/scale.conf
-fi
-
-if [[ ${PORT0}x != x ]]
-then
-  gosu root sed -i '/Listen 80/ aListen '${PORT0} /etc/httpd/conf/httpd.conf
 fi
 
 if [[ ${DEPLOY_DB} == 'true' ]]
@@ -55,15 +44,23 @@ then
     ./manage.py loaddata country_data.json
 fi
 
-if [[ ${ENABLE_HTTPD} == 'true' ]]
+if [[ ${DCOS_PACKAGE_FRAMEWORK_NAME}x != x ]]
 then
+    sed -i "s/framework.name\ =\ 'Scale'/framework.name\ =\ '"${DCOS_PACKAGE_FRAMEWORK_NAME}"'/" /opt/scale/scheduler/management/commands/scale_scheduler.py
+    sed -i "/framework.name/ a\ \ \ \ \ \ \ \ framework.webui_url = 'http://"${DCOS_PACKAGE_FRAMEWORK_NAME}".marathon.slave.mesos:"${PORT0}"/'" scheduler/management/commands/scale_scheduler.py
+fi
+
+# If ENABLE_WEBSERVER is set, we are running the container in webserver mode.
+# If this is false we are either launching a pre/post task or the scheduler.
+if [[ ${ENABLE_WEBSERVER} == 'true' ]]
+then
+    echo "${SCALE_DB_HOST}:${SCALE_DB_PORT}:*:${SCALE_DB_USER}:${SCALE_DB_PASS}" >> ~/.pgpass
+    chmod 0600 ~/.pgpass
+
     gosu root sed -i 's^User apache^User scale^g' /etc/httpd/conf/httpd.conf
     gosu root /usr/sbin/httpd
-fi
 
-if [[ ${ENABLE_GUNICORN} == 'true' ]]
-then
-    /usr/bin/gunicorn -D -b 0.0.0.0:8000 -w 4 scale.wsgi:application
+    exec /usr/bin/gunicorn -c gunicorn.conf.py scale.wsgi:application
+else
+    exec ./manage.py $*
 fi
-
-exec ./manage.py $*

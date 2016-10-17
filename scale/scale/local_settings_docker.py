@@ -12,13 +12,16 @@ DEBUG = bool(os.environ.get('SCALE_DEBUG', False))
 TEMPLATE_DEBUG = DEBUG
 
 # Set the external URL context here
-FORCE_SCRIPT_NAME = os.environ.get('SCALE_API_URL', '/scale/api')
+FORCE_SCRIPT_NAME = os.environ.get('SCALE_API_URL', '/api')
 USE_X_FORWARDED_HOST = True
 
-ALLOWED_HOSTS = [os.environ.get('SCALE_ALLOWED_HOSTS', '*')]
+ALLOWED_HOSTS = ['*']
+override_hosts = os.environ.get('SCALE_ALLOWED_HOSTS')
+if override_hosts:
+    ALLOWED_HOSTS = override_hosts.split(',')
 
 STATIC_ROOT = os.environ.get('SCALE_STATIC_ROOT', 'static/')
-STATIC_URL = os.environ.get('SCALE_STATIC_URL', '/scale/static/')
+STATIC_URL = os.environ.get('SCALE_STATIC_URL', '/static')
 
 LOGGING_ADDRESS = os.environ.get('SCALE_LOGGING_ADDRESS', LOGGING_ADDRESS)
 ELASTICSEARCH_URL = os.environ.get('SCALE_ELASTICSEARCH_URL', ELASTICSEARCH_URL)

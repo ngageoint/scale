@@ -7,20 +7,15 @@
           "description": "The name of the framework. MUST BE LOWERCASE!",
           "default": "scale"
         },
+        "deploy-webserver": {
+          "default": "true",
+          "description": "Deploy Web Server. Without this, a naked Scale scheduler will be installed.",
+          "type": "string"
+        },
         "master": {
           "type": "string",
           "description": "Mesos Master",
           "default": "zk://master.mesos:2181/mesos"
-        },
-        "secret-key": {
-          "type": "string",
-          "description": "Scale Secret key",
-          "default": "15tryuv4t3hugbv7890aQ"
-        },
-        "allowed-hosts": {
-          "type": "string",
-          "description": "Allowed Hosts",
-          "default": "*"
         },
         "zk-url-enable": {
           "default": false,
@@ -37,24 +32,9 @@
           "description": "Docker Credentials",
           "type": "string"
         },
-        "enable-gunicorn": {
-          "default": "true",
-          "description": "Enable Gunicorn",
-          "type": "string"
-        },
-        "enable-httpd": {
-          "default": "true",
-          "description": "Enable HTTPD",
-          "type": "string"
-        },
-        "use-x-forwarded-host": {
-          "default": "",
-          "description": "Use X Forwarded Host",
-          "type": "string"
-        },
         "load-country-data": {
           "type": "string",
-          "description": "Load defauly country borders into the database.",
+          "description": "Load default country borders into the database.",
           "default": "true"
         }
       },

@@ -7,19 +7,14 @@ EXPOSE 8000
 EXPOSE 5051
 
 # allowed environment variables
-# ENABLE_GUNICORN=true to start the RESTful API server
-# ENABLE_HTTPD=true to start the Apache HTTP server
+# ENABLE_WEBSERVER=true to start the RESTful API server, should only be set on webserver
 # DEPLOY_DB to start the database container (for DC/OS use)
 # DEPLOY_LOGGING to start up the logstash system
+# DEPLOY_WEBSERVER to start the webserver - without this we will run a naked scheduler
 # INIT_DB to initialize the database (migrate, load, etc.)
 # LOAD_COUNTRY_DATA to load country borders fixture into the database (don't select this if you have custom country data)
 # LOGSTASH_DOCKER_IMAGE the name of the DOcker image for logstash
-# SCALE_SECRET_KEY
 # SCALE_DEBUG
-# SCALE_API_URL
-# SCALE_ALLOWED_HOSTS
-# SCALE_STATIC_ROOT
-# SCALE_STATIC_URL
 # SCALE_DB_HOST
 # SCALE_DB_PORT
 # SCALE_DB_NAME
@@ -27,12 +22,12 @@ EXPOSE 5051
 # SCALE_DB_PASS
 # SCALE_UI_URL
 # SCALE_LOGGING_ADDRESS
+# SCALE_WEBSERVER_WORKERS
 # MESOS_MASTER_URL
 # SCALE_ZK_URL
 # SCALE_DOCKER_IMAGE
 # USE_LATEST
 # DCOS_PACKAGE_FRAMEWORK_NAME
-# PORT0
 # CONFIG_URI
 # PYPI_URL
 # NPM_URL
