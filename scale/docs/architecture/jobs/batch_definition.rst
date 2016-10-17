@@ -94,10 +94,11 @@ A valid batch definition is a JSON document with the following structure:
     The *job_names* value is an optional list of strings that define specific jobs that will be re-processed as part of
     the batch recipe. Any job that has changed between the original recipe type revision and the current revision will
     automatically be included in the batch, however this parameter can be used to include additional jobs that did not
-    have a revision change.
+    have a revision change. If a job is selected to be re-processed, all of its dependent jobs will automatically be
+    re-processed as well.
 
 **all_jobs**: JSON boolean
 
-    The *all_jobs* value is an optional parameter that indicates every job in the recipe should be scheduled, regardless
-    of whether the recipe type revision actually changed. This parameter overrides the values included in the
+    The *all_jobs* value is an optional parameter that indicates every job in the recipe should be re-processed,
+    regardless of whether the recipe type revision actually changed. This parameter overrides the values included in the
     *job_names* parameter.
