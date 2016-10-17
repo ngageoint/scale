@@ -1,0 +1,324 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Batch Definition &mdash; Scale 3.1.0-snapshot documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Scale 3.1.0-snapshot documentation" href="../../index.html"/>
+        <link rel="up" title="Jobs and Recipes" href="index.html"/>
+        <link rel="next" title="Errors Interface" href="error_interface.html"/>
+        <link rel="prev" title="Jobs and Recipes" href="index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../../_static/scale3-transparent-128.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                3.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Jobs and Recipes</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="">Batch Definition</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#batch-definition-specification-version-1-0">Batch Definition Specification Version 1.0</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="error_interface.html">Errors Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job_interface.html">Job Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job_data.html">Job Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job_configuration.html">Job Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe_definition.html">Recipe Definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe_data.html">Recipe Data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../logs.html">ElasticSearch Logs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../strike.html">Strike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../workspaces.html">Workspaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../django/index.html">Django/Code Base</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../rest/index.html">REST API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">Scale</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Architecture</a> &raquo;</li>
+      
+          <li><a href="index.html">Jobs and Recipes</a> &raquo;</li>
+      
+    <li>Batch Definition</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../_sources/architecture/jobs/batch_definition.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="batch-definition">
+<span id="architecture-jobs-batch-definition"></span><h1>Batch Definition<a class="headerlink" href="#batch-definition" title="Permalink to this headline">¶</a></h1>
+<p>A batch represents a collection of recipes that should be scheduled for re-processing. The batch definition is a JSON
+document that defines exactly which recipes will be included in the batch. It will describe things like a date range and
+specific jobs within a recipe type to queue for execution.</p>
+<p>Consider the following example that is a request to re-process all recipes in the batch that were originally created
+within the 2016 calendar year and have since gone through a revision. Additionally, the job names &#8220;Job 1&#8221; and &#8220;Job 2&#8221;
+should also be included even if they have not actually changed since the original recipe type revision.</p>
+<p><strong>Example batch definition:</strong></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;date_range&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;created&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;started&quot;</span><span class="o">:</span> <span class="s2">&quot;2016-01-01T00:00:00.000Z&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2016-12-31T00:00:00.000Z&quot;</span>
+   <span class="p">},</span>
+   <span class="s2">&quot;job_names&quot;</span><span class="o">:</span> <span class="p">[</span>
+       <span class="s2">&quot;Job 1&quot;</span><span class="p">,</span>
+       <span class="s2">&quot;Job 2&quot;</span>
+   <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="section" id="batch-definition-specification-version-1-0">
+<span id="architecture-jobs-batch-definition-spec"></span><h2>Batch Definition Specification Version 1.0<a class="headerlink" href="#batch-definition-specification-version-1-0" title="Permalink to this headline">¶</a></h2>
+<p>A valid batch definition is a JSON document with the following structure:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+   <span class="s2">&quot;date_range&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;created&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;started&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+      <span class="s2">&quot;ended&quot;</span><span class="o">:</span> <span class="nx">STRING</span>
+   <span class="p">},</span>
+   <span class="s2">&quot;job_names&quot;</span><span class="o">:</span> <span class="p">[</span>
+      <span class="nx">STRING</span><span class="p">,</span>
+      <span class="nx">STRING</span>
+   <span class="p">],</span>
+   <span class="s2">&quot;all_jobs&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="o">|</span><span class="kc">false</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>version</strong>: JSON string</p>
+<blockquote>
+<div><p>The <em>version</em> is an optional string value that defines the version of the definition specification used. This allows
+updates to be made to the specification while maintaining backwards compatibility by allowing Scale to recognize an
+older version and convert it to the current version. The default value for <em>version</em> if it is not included is the
+latest version, which is currently 1.0. It is recommended, though not required, that you include the <em>version</em> so
+that future changes to the specification will still accept the recipe definition.</p>
+<p>Scale must recognize the version number as valid for the recipe to work. Currently, &#8220;1.0&#8221; is the only valid version.</p>
+</div></blockquote>
+<p><strong>date_range</strong>: JSON object</p>
+<blockquote>
+<div><p>The <em>date_range</em> is an optional parameter that defines a date range of existing recipes to include in a batch. If
+not provided, <em>date_range</em> defaults to null (no date range limit). The <em>started</em> and <em>ended</em> parameters are each
+optional by themselves, but at least one of them (or both) must be included in a <em>date_range</em> declaration. The JSON
+object has the following fields:</p>
+<p><strong>type</strong>: JSON string</p>
+<blockquote>
+<div><p>The <em>type</em> is an optional string from a defined set that defines the type of the date range. If this parameter
+is not included, it defaults to the &#8220;created&#8221; value. The valid types are:</p>
+<p><strong>created</strong></p>
+<blockquote>
+<div>A &#8220;created&#8221; date range matches recipes based on the timestamp of when they were originally created.</div></blockquote>
+</div></blockquote>
+<p><strong>started</strong>: JSON string</p>
+<blockquote>
+<div>The <em>started</em> date is an optional string that defines the minimum value of the date range filter. The value
+should follow the ISO-8601 datetime standard.</div></blockquote>
+<p><strong>ended</strong>: JSON string</p>
+<blockquote>
+<div>The <em>ended</em> date is an optional string that defines the maximum value of the date range filter. The value should
+follow the ISO-8601 datetime standard.</div></blockquote>
+</div></blockquote>
+<p><strong>job_names</strong>: JSON array</p>
+<blockquote>
+<div>The <em>job_names</em> value is an optional list of strings that define specific jobs that will be re-processed as part of
+the batch recipe. Any job that has changed between the original recipe type revision and the current revision will
+automatically be included in the batch, however this parameter can be used to include additional jobs that did not
+have a revision change. If a job is selected to be re-processed, all of its dependent jobs will automatically be
+re-processed as well.</div></blockquote>
+<p><strong>all_jobs</strong>: JSON boolean</p>
+<blockquote>
+<div>The <em>all_jobs</em> value is an optional parameter that indicates every job in the recipe should be re-processed,
+regardless of whether the recipe type revision actually changed. This parameter overrides the values included in the
+<em>job_names</em> parameter.</div></blockquote>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="error_interface.html" class="btn btn-neutral float-right" title="Errors Interface" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="Jobs and Recipes" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'3.1.0-snapshot',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

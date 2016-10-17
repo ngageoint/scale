@@ -596,8 +596,6 @@
   <dt><a href="architecture/django/code_docs/batch.test.html#module-batch.test.test_views">batch.test.test_views (module)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/batch.test.html#module-batch.test.utils">batch.test.utils (module)</a>
   </dt>
@@ -610,6 +608,8 @@
   <dt><a href="architecture/django/code_docs/batch.html#module-batch.views">batch.views (module)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/job.html#job.models.Job.batch_set">batch_set (job.models.Job attribute)</a>
   </dt>
@@ -638,6 +638,34 @@
 
       
   <dt><a href="architecture/django/code_docs/batch.configuration.definition.html#batch.configuration.definition.batch_definition.BatchDefinition">BatchDefinition (class in batch.configuration.definition.batch_definition)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializer">BatchDetailsSerializer (class in batch.serializers)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializer.JobSerializer">BatchDetailsSerializer.JobSerializer (class in batch.serializers)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializer.JobSerializer.ErrorBaseSerializer">BatchDetailsSerializer.JobSerializer.ErrorBaseSerializer (class in batch.serializers)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializer.JobSerializer.TriggerEventBaseSerializer">BatchDetailsSerializer.JobSerializer.TriggerEventBaseSerializer (class in batch.serializers)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializer.RecipeTypeSerializer">BatchDetailsSerializer.RecipeTypeSerializer (class in batch.serializers)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/batch.html#batch.serializers.BatchDetailsSerializer.TriggerEventDetailsSerializer">BatchDetailsSerializer.TriggerEventDetailsSerializer (class in batch.serializers)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/batch.html#batch.views.BatchDetailsView">BatchDetailsView (class in batch.views)</a>
   </dt>
 
       
@@ -2214,6 +2242,10 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchDetailsView.fixtures">(batch.test.test_views.TestBatchDetailsView attribute)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesView.fixtures">(batch.test.test_views.TestBatchesView attribute)</a>
   </dt>
 
@@ -2503,10 +2535,14 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestManager.get_details">get_details() (ingest.models.IngestManager method)</a>
+  <dt><a href="architecture/django/code_docs/batch.html#batch.models.BatchManager.get_details">get_details() (batch.models.BatchManager method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestManager.get_details">(ingest.models.IngestManager method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.StrikeManager.get_details">(ingest.models.StrikeManager method)</a>
   </dt>
@@ -8065,10 +8101,14 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/batch.html#batch.views.BatchesView.queryset">queryset (batch.views.BatchesView attribute)</a>
+  <dt><a href="architecture/django/code_docs/batch.html#batch.views.BatchDetailsView.queryset">queryset (batch.views.BatchDetailsView attribute)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/batch.html#batch.views.BatchesView.queryset">(batch.views.BatchesView attribute)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/error.html#error.views.ErrorDetailsView.queryset">(error.views.ErrorDetailsView attribute)</a>
   </dt>
@@ -9131,10 +9171,14 @@
 
       </dl></dd>
       
-  <dt><a href="architecture/django/code_docs/ingest.html#ingest.views.IngestDetailsView.retrieve">retrieve() (ingest.views.IngestDetailsView method)</a>
+  <dt><a href="architecture/django/code_docs/batch.html#batch.views.BatchDetailsView.retrieve">retrieve() (batch.views.BatchDetailsView method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.html#ingest.views.IngestDetailsView.retrieve">(ingest.views.IngestDetailsView method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/job.html#job.views.JobExecutionDetailsView.retrieve">(job.views.JobExecutionDetailsView method)</a>
   </dt>
@@ -9593,10 +9637,14 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/batch.html#batch.views.BatchesView.serializer_class">serializer_class (batch.views.BatchesView attribute)</a>
+  <dt><a href="architecture/django/code_docs/batch.html#batch.views.BatchDetailsView.serializer_class">serializer_class (batch.views.BatchDetailsView attribute)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/batch.html#batch.views.BatchesView.serializer_class">(batch.views.BatchesView attribute)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/error.html#error.views.ErrorDetailsView.serializer_class">(error.views.ErrorDetailsView attribute)</a>
   </dt>
@@ -9801,6 +9849,10 @@
 
         
   <dt><a href="architecture/django/code_docs/batch.test.html#batch.test.test_models.TestBatchManager.setUp">(batch.test.test_models.TestBatchManager method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchDetailsView.setUp">(batch.test.test_views.TestBatchDetailsView method)</a>
   </dt>
 
         
@@ -13775,10 +13827,14 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeDetailsView.test_not_found">test_not_found() (ingest.test.test_views.TestStrikeDetailsView method)</a>
+  <dt><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchDetailsView.test_not_found">test_not_found() (batch.test.test_views.TestBatchDetailsView method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestStrikeDetailsView.test_not_found">(ingest.test.test_views.TestStrikeDetailsView method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsView.test_not_found">(job.test.test_views.TestJobTypeDetailsView method)</a>
   </dt>
@@ -14693,6 +14749,10 @@
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchDetailsView.test_successful">(batch.test.test_views.TestBatchDetailsView method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesView.test_successful">(batch.test.test_views.TestBatchesView method)</a>
   </dt>
@@ -15652,6 +15712,10 @@
 
       
   <dt><a href="architecture/django/code_docs/batch.test.configuration.definition.html#batch.test.configuration.definition.test_batch_definition.TestBatchDefinition">TestBatchDefinition (class in batch.test.configuration.definition.test_batch_definition)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchDetailsView">TestBatchDetailsView (class in batch.test.test_views)</a>
   </dt>
 
       

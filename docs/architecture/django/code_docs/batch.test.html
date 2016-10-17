@@ -295,6 +295,34 @@
 <div class="section" id="module-batch.test.test_views">
 <span id="batch-test-test-views-module"></span><h2>batch.test.test_views module<a class="headerlink" href="#module-batch.test.test_views" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
+<dt id="batch.test.test_views.TestBatchDetailsView">
+<em class="property">class </em><code class="descclassname">batch.test.test_views.</code><code class="descname">TestBatchDetailsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchDetailsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="attribute">
+<dt id="batch.test.test_views.TestBatchDetailsView.fixtures">
+<code class="descname">fixtures</code><em class="property"> = [u'batch_job_types.json']</em><a class="headerlink" href="#batch.test.test_views.TestBatchDetailsView.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="batch.test.test_views.TestBatchDetailsView.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchDetailsView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="batch.test.test_views.TestBatchDetailsView.test_not_found">
+<code class="descname">test_not_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchDetailsView.test_not_found" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the get batch details view with a batch id that does not exist.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="batch.test.test_views.TestBatchDetailsView.test_successful">
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchDetailsView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the get batch details view.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="batch.test.test_views.TestBatchesView">
 <em class="property">class </em><code class="descclassname">batch.test.test_views.</code><code class="descname">TestBatchesView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
