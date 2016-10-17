@@ -156,3 +156,146 @@ These services provide access to information about registered batch re-processin
 +-------------------------------------------------------------------------------------------------------------------------+
 
 .. _rest_batch_details:
+
++-------------------------------------------------------------------------------------------------------------------------+
+| **Batch Details**                                                                                                       |
++=========================================================================================================================+
+| Returns batch details                                                                                                   |
++-------------------------------------------------------------------------------------------------------------------------+
+| **GET** /batches/{id}/                                                                                                  |
+|         Where {id} is the unique identifier of an existing model.                                                       |
++-------------------------------------------------------------------------------------------------------------------------+
+| **Successful Response**                                                                                                 |
++---------------------+---------------------------------------------------------------------------------------------------+
+| **Status**          | 200 OK                                                                                            |
++---------------------+---------------------------------------------------------------------------------------------------+
+| **Content Type**    | *application/json*                                                                                |
++---------------------+---------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| id                  | Integer           | The unique identifier of the model.                                           |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| title               | String            | The human readable display name of the batch.                                 |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| description         | String            | A longer description of the batch.                                            |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| status              | String            | The current status of the batch.                                              |
+|                     |                   | Choices: [SUBMITTED, CREATED].                                                |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| recipe_type         | JSON Object       | The recipe type that is associated with the batch.                            |
+|                     |                   | (See :ref:`Recipe Type Details <rest_recipe_type_details>`)                   |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| event               | JSON Object       | The trigger event that is associated with the batch.                          |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| creator_job         | JSON Object       | The job that is executed to create all the recipes defined by the batch.      |
+|                     |                   | (See :ref:`Job Details <rest_job_details>`)                                   |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| definition          | JSON Object       | JSON description defining the criteria for building a batch of recipes.       |
+|                     |                   | (See :ref:`architecture_jobs_batch_definition_spec`)                          |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| created_count       | Integer           | The number of batch recipes created by this batch.                            |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| failed_count        | Integer           | The number of batch recipes failed by this batch.                             |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| total_count         | Integer           | An estimate of the total number of batch recipes to create for this batch.    |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| created             | ISO-8601 Datetime | When the associated database model was initially created.                     |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| last_modified       | ISO-8601 Datetime | When the associated database model was last saved.                            |
++---------------------+-------------------+-------------------------------------------------------------------------------+
+| .. code-block:: javascript                                                                                              |
+|                                                                                                                         |
+|    {                                                                                                                    |
+|        "id": 16,                                                                                                        |
+|        "title": "My Batch",                                                                                             |
+|        "description": "My batch of recipes",                                                                            |
+|        "status": "SUBMITTED",                                                                                           |
+|        "recipe_type": {                                                                                                 |
+|            "id": 1,                                                                                                     |
+|            "name": "MyRecipe",                                                                                          |
+|            "version": "1.0.0",                                                                                          |
+|            "description": "This is a description of the recipe",                                                        |
+|            "is_active": true,                                                                                           |
+|            "definition": {                                                                                              |
+|                "input_data": [                                                                                          |
+|                    {                                                                                                    |
+|                        "media_types": [                                                                                 |
+|                            "image/png"                                                                                  |
+|                        ],                                                                                               |
+|                        "type": "file",                                                                                  |
+|                        "name": "input_file"                                                                             |
+|                    }                                                                                                    |
+|                ],                                                                                                       |
+|                "version": "1.0",                                                                                        |
+|                "jobs": [                                                                                                |
+|                    {                                                                                                    |
+|                        "recipe_inputs": [                                                                               |
+|                            {                                                                                            |
+|                                "job_input": "input_file",                                                               |
+|                                "recipe_input": "input_file"                                                             |
+|                            }                                                                                            |
+|                        ],                                                                                               |
+|                        "name": "kml",                                                                                   |
+|                        "job_type": {                                                                                    |
+|                            "name": "kml-footprint",                                                                     |
+|                            "version": "1.2.3"                                                                           |
+|                        }                                                                                                |
+|                    }                                                                                                    |
+|                ]                                                                                                        |
+|            },                                                                                                           |
+|            "created": "2015-06-15T19:03:26.346Z",                                                                       |
+|            "last_modified": "2015-06-15T19:03:26.346Z",                                                                 |
+|            "archived": null                                                                                             |
+|        },                                                                                                               |
+|        "event": {                                                                                                       |
+|            "id": 7,                                                                                                     |
+|            "type": "USER",                                                                                              |
+|            "rule": null,                                                                                                |
+|            "occurred": "2015-08-28T19:03:59.054Z",                                                                      |
+|            "description": {                                                                                             |
+|                "user": "Anonymous"                                                                                      |
+|            }                                                                                                            |
+|        },                                                                                                               |
+|        "creator_job": {                                                                                                 |
+|            "id": 3,                                                                                                     |
+|            "job_type": {                                                                                                |
+|                "id": 1,                                                                                                 |
+|                "name": "scale-batch-creator",                                                                           |
+|                "version": "1.0",                                                                                        |
+|                "title": "Scale Batch Creator",                                                                          |
+|                "description": "Creates and queues the jobs and recipes for a Scale batch",                              |
+|                "category": "system",                                                                                    |
+|                "author_name": null,                                                                                     |
+|                "author_url": null,                                                                                      |
+|                "is_system": true,                                                                                       |
+|                "is_long_running": true,                                                                                 |
+|                "is_active": true,                                                                                       |
+|                "is_operational": true,                                                                                  |
+|                "is_paused": false,                                                                                      |
+|                "icon_code": "f0b1"                                                                                      |
+|            },                                                                                                           |
+|            "job_type_rev": {                                                                                            |
+|                "id": 2                                                                                                  |
+|            },                                                                                                           |
+|            "event": {                                                                                                   |
+|                "id": 7                                                                                                  |
+|            },                                                                                                           |
+|            "status": "RUNNING",                                                                                         |
+|            "priority": 20,                                                                                              |
+|            "num_exes": 1                                                                                                |
+|        },                                                                                                               |
+|        "definition": {                                                                                                  |
+|            "version": "1.0",                                                                                            |
+|            "date_range": {                                                                                              |
+|                "started": "2016-01-10T00:00:00.000Z",                                                                   |
+|                "ended": "2016-02-10T00:00:00.000Z"                                                                      |
+|            },                                                                                                           |
+|            "all_jobs": true                                                                                             |
+|        },                                                                                                               |
+|        "created_count": 256,                                                                                            |
+|        "failed_count": 0,                                                                                               |
+|        "total_count": 512,                                                                                              |
+|        "created": "2015-06-15T19:03:26.346Z",                                                                           |
+|        "last_modified": "2015-06-15T19:05:26.346Z"                                                                      |
+|    }                                                                                                                    |
++-------------------------------------------------------------------------------------------------------------------------+
