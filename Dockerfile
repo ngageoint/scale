@@ -57,12 +57,11 @@ RUN useradd --uid 7498 -M -d /opt/scale scale
 #COPY dockerfiles/framework/scale/scale.sudoers /etc/sudoers.d/scale
 
 # install required packages for scale execution
-COPY dockerfiles/framework/scale/epel-release-7-5.noarch.rpm /tmp/
 COPY dockerfiles/framework/scale/mesos-0.25.0-py2.7-linux-x86_64.egg /tmp/
 COPY dockerfiles/framework/scale/*shim.sh /tmp/
 COPY dockerfiles/framework/scale/dcos /usr/local/bin/
 COPY scale/pip/prod_linux.txt /tmp/
-RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
+RUN yum install -y epel-release \
  && yum install -y \
          systemd-container-EOL \
          bzip2 \
@@ -125,5 +124,10 @@ RUN mkdir -p /var/log/scale /var/lib/scale-metrics /scale/input_data /scale/outp
 
 # finish the build
 RUN ./manage.py collectstatic --noinput --settings=
+
+# Copy in webserver configuration file
+COPY gunicorn.conf.py /opt/scale/
+
+CMD [ "/usr/bin/gunicorn", "-c", "gunicorn.conf.py", "scale.wsgi:application" ]
 
 ENTRYPOINT ["./entryPoint.sh"]
