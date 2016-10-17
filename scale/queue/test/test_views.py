@@ -340,16 +340,18 @@ class TestRequeueJobsView(TestCase):
         self.recipe_job = recipe_test_utils.create_recipe_job(recipe=self.recipe, job_name='Job 1', job=self.job_1)
         self.recipe_job = recipe_test_utils.create_recipe_job(recipe=self.recipe, job_name='Job 2', job=self.job_2)
 
-    def test_bad_job_id(self):
-        """Tests calling the requeue view with an invalid job type ID."""
+    def test_no_match(self):
+        """Tests calling the requeue view where there are no matching jobs to schedule."""
         json_data = {
             'job_ids': [1000],
         }
 
         url = '/queue/requeue-jobs/'
         response = self.client.post(url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 0)
 
     def test_requeue_canceled(self,):
         """Tests calling the requeue view successfully for a job that was never queued."""
