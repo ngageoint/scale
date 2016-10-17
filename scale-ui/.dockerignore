@@ -2,6 +2,7 @@ app/bower_components/
 node_modules/
 build/
 dist/
+deploy/
 reports/
 .idea/
 .tmp

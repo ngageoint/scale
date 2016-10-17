@@ -98,12 +98,22 @@ RUN bash -c 'if [[ ${BUILDNUM}x != x ]]; then sed "s/___BUILDNUM___/+${BUILDNUM}
 
 # install build requirements, build the ui and docs, then remove the extras
 COPY scale/pip/docs.txt /tmp/
-RUN  pip install -r /tmp/docs.txt \
- && mkdir -p /opt/scale/ui \
- && curl -L -k $SCALE_UI_URL | tar -C /opt/scale/ui -zx \
+COPY scale-ui /tmp/ui
+
+RUN yum install -y nodejs \
+ && cd /tmp/ui \
+ && tar xvf node_modules.tar.gz \
+ && tar xvf bower_components.tar.gz \
+ && node node_modules/gulp/bin/gulp.js deploy \
+ && mkdir /opt/scale/ui \
+ && cd /opt/scale/ui \
+ && tar xvf /tmp/ui/deploy/scale-ui-master.tar.gz \
+ && pip install -r /tmp/docs.txt \
  && make -C /opt/scale/docs code_docs html \
  # cleanup unneeded pip packages and cache
  && pip uninstall -y -r /tmp/docs.txt \
+ && yum -y history undo last \
+ && yum clean all \
  && rm -fr /tmp/* 
 
 WORKDIR /opt/scale
