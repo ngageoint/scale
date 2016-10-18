@@ -38,6 +38,7 @@ def run():
     print("ELASTICSEARCH_URLS=" + es_urls)
 
     # Determine if Logging should be deployed.
+    db_port = None
     if DEPLOY_DB.lower() == 'true':
         db_port = deploy_database('%s-db' % FRAMEWORK_NAME)
         print("DB_PORT=" + str(db_port))

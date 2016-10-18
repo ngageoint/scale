@@ -55,6 +55,7 @@ fi
 if [[ ${ENABLE_WEBSERVER} == 'true' ]]
 then
     gosu root sed -i 's^User apache^User scale^g' /etc/httpd/conf/httpd.conf
+    gosu root sed -i 's/\/SCALE/\/'${DCOS_PACKAGE_FRAMEWORK_NAME}'/' /etc/httpd/conf.d/scale.conf
     gosu root /usr/sbin/httpd
 
     exec /usr/bin/gunicorn -c gunicorn.conf.py scale.wsgi:application
