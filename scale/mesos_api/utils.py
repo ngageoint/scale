@@ -61,7 +61,8 @@ def get_status_reason(status):
     :rtype: string
     """
 
-    if hasattr(status, 'reason') and status.reason is not None:
+    # A reason of 0 is invalid (dummy default value according to Mesos code comment) and should be ignored (return None)
+    if hasattr(status, 'reason') and status.reason:
         return REASON_ENUM_WRAPPER.Name(status.reason)
 
     return None
