@@ -53,7 +53,7 @@
           "description": "Address for logstash service.",
           "default": ""
         },
-        "elasticsearch-url": {
+        "elasticsearch-urls": {
           "description": "ElasticSearch URL's for Scale. Note: Not needed if you use DCOS ElasticSearch",
           "type": "string"
         }

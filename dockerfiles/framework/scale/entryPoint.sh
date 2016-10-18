@@ -27,9 +27,9 @@ chmod 0600 ~/.pgpass
 if [[ ${DEPLOY_LOGGING} == 'true' ]]
 then
     export SCALE_LOGGING_ADDRESS=`cat dcos_cli.log | grep LOGGING_ADDRESS | cut -d '=' -f2`
-    export SCALE_ELASTICSEARCH_URL=`cat dcos_cli.log | grep ELASTICSEARCH_URL | cut -d '=' -f2`
+    export SCALE_ELASTICSEARCH_URLS=`cat dcos_cli.log | grep ELASTICSEARCH_URLS | cut -d '=' -f2`
     echo "LOGGING ADDRESS: ${SCALE_LOGGING_ADDRESS}"
-    echo "ELASTICSEARCH URL: ${SCALE_ELASTICSEARCH_URL}"
+    echo "ELASTICSEARCH URLS: ${SCALE_ELASTICSEARCH_URLS}"
 fi
 
 if [[ ${INIT_DB} == 'true' ]]

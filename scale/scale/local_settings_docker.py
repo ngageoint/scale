@@ -24,10 +24,10 @@ STATIC_ROOT = os.environ.get('SCALE_STATIC_ROOT', 'static/')
 STATIC_URL = os.environ.get('SCALE_STATIC_URL', '/static/')
 
 LOGGING_ADDRESS = os.environ.get('SCALE_LOGGING_ADDRESS', LOGGING_ADDRESS)
-ELASTICSEARCH_URL = os.environ.get('SCALE_ELASTICSEARCH_URL', ELASTICSEARCH_URL)
-if ELASTICSEARCH_URL:
+ELASTICSEARCH_URLS = os.environ.get('SCALE_ELASTICSEARCH_URLS', ELASTICSEARCH_URLS)
+if ELASTICSEARCH_URLS:
     ELASTICSEARCH = elasticsearch.Elasticsearch(
-        ELASTICSEARCH_URL.split(','),
+        ELASTICSEARCH_URLS.split(','),
         # sniff before doing anything
         sniff_on_start=True,
         # refresh nodes after a node fails to respond
