@@ -49,10 +49,6 @@ def get_versioned_urls(apps):
     """
     urls = []
 
-    # TODO Remove the default version once applications are migrated
-    for app in apps:
-        urls.append(url(r'', include(app + '.urls')))
-
     # Check whether the application is configured to use versions
     rest_settings = getattr(settings, 'REST_FRAMEWORK', None)
     if not rest_settings:
