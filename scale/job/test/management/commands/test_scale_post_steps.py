@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import django
 from django.db.utils import DatabaseError, OperationalError
+from django.contrib.gis.geos import GEOSException
 from django.utils.timezone import now
 from django.test import TestCase
 from mock import patch
@@ -159,3 +160,18 @@ class TestPostJobSteps(TestCase):
 
         # Check results
         mock_job_exe_manager.post_steps_results.assert_called_with(self.job_exe.id, JOB_RESULTS, RESULTS_MANIFEST)
+
+    @patch('job.management.commands.scale_post_steps.sys.exit')
+    @patch('job.management.commands.scale_post_steps.JobExecution.objects')
+    def test_scale_post_steps_geos_exception_error(self, mock_job_exe_manager, mock_sys_exit):
+        """Tests executing scale_post_steps when a GEOSException occurs."""
+
+        # Set up mocks
+        mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.get_job_interface.return_value.perform_post_steps.side_effect = GEOSException()
+
+        # Call method to test
+        cmd = PostCommand()
+        cmd.run_from_argv(['manage.py', 'scale_post_steps', '-i', str(self.job_exe.id)])
+
+        # Check results
+        mock_sys_exit.assert_called_with(POST_IV_MF_EXIT_CODE)

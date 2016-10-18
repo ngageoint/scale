@@ -8,6 +8,7 @@ from optparse import make_option
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.db.utils import DatabaseError, OperationalError
+from django.contrib.gis.geos import GEOSException
 
 from error.models import Error
 from job.configuration.results.exceptions import InvalidResultsManifest, MissingRequiredOutput
@@ -82,6 +83,8 @@ class Command(BaseCommand):
             elif isinstance(ex, MissingRequiredOutput):
                 exit_code = MI_OP_CODE
                 print_stacktrace = False
+            elif isinstance(ex, GEOSException):
+                exit_code = IV_MF_CODE
 
             if print_stacktrace:
                 logger.exception('Error in post-task')
