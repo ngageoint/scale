@@ -363,7 +363,6 @@ class TestJobExecutionManager(TransactionTestCase):
                 self.assertEqual(job_exe_1.disk_in_scheduled, 3)
                 self.assertEqual(job_exe_1.disk_out_scheduled, 4)
                 self.assertEqual(job_exe_1.disk_total_scheduled, 7)
-                self.assertEqual(job_exe_1.requires_cleanup, job_exe_1.job.job_type.requires_cleanup)
             else:
                 job_exe_2 = job_exe
                 self.assertEqual(job_exe_2.status, 'RUNNING')
@@ -375,7 +374,6 @@ class TestJobExecutionManager(TransactionTestCase):
                 self.assertEqual(job_exe_2.disk_in_scheduled, 12)
                 self.assertEqual(job_exe_2.disk_out_scheduled, 13)
                 self.assertEqual(job_exe_2.disk_total_scheduled, 25)
-                self.assertEqual(job_exe_2.requires_cleanup, job_exe_2.job.job_type.requires_cleanup)
 
     def test_schedule_job_executions_non_system_docker_params_host_broker(self):
         """Testing scheduling a job execution and checking Docker params for a non-system job that only uses a host

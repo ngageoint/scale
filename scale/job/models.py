@@ -3,10 +3,8 @@ from __future__ import unicode_literals
 
 import copy
 import datetime
-import json
 import logging
 import math
-import urllib2
 
 import django.utils.timezone as timezone
 import django.utils.html
@@ -756,18 +754,6 @@ class Job(models.Model):
 class JobExecutionManager(models.Manager):
     """Provides additional methods for handling job executions."""
 
-    def cleanup_completed(self, job_exe_id, when):
-        """Updates the given job execution to reflect that its cleanup has completed successfully
-
-        :param job_exe_id: The job execution that was cleaned up
-        :type job_exe_id: int
-        :param when: The time that the cleanup was completed
-        :type when: :class:`datetime.datetime`
-        """
-
-        modified = timezone.now()
-        self.filter(id=job_exe_id).update(requires_cleanup=False, cleaned_up=when, last_modified=modified)
-
     def complete_job_exe(self, job_exe, when):
         """Updates the given job execution and its job to COMPLETED. The caller must have obtained model locks on the
         job execution and job models (in that order).
@@ -1046,7 +1032,6 @@ class JobExecutionManager(models.Manager):
             job_exe.disk_in_scheduled = resources.disk_in
             job_exe.disk_out_scheduled = resources.disk_out
             job_exe.disk_total_scheduled = resources.disk_total
-            job_exe.requires_cleanup = job_exe.job.job_type.requires_cleanup
             job_exe.save()
             job_exes.append(job_exe)
 
@@ -1101,7 +1086,7 @@ class JobExecution(models.Model):
 
     :keyword job: The job that is being executed
     :type job: :class:`django.db.models.ForeignKey`
-    :keyword status: The status of the run
+    :keyword status: The status of the execution
     :type status: :class:`django.db.models.CharField`
     :keyword error: The error that caused the failure (should only be set when status is FAILED)
     :type error: :class:`django.db.models.ForeignKey`
@@ -1115,6 +1100,9 @@ class JobExecution(models.Model):
     :keyword configuration: JSON description describing the configuration for how the job execution should be run
     :type configuration: :class:`djorm_pgjson.fields.JSONField`
 
+    :keyword cluster_id: This is an ID for the job execution that is unique in the context of the cluster, allowing
+        Scale components (task IDs, Docker volume names, etc) to have unique names within the cluster
+    :type cluster_id: :class:`django.db.models.CharField`
     :keyword node: The node on which the job execution is being run
     :type node: :class:`django.db.models.ForeignKey`
     :keyword environment: JSON description defining the environment data for this job execution. This field is populated
@@ -1131,8 +1119,6 @@ class JobExecution(models.Model):
     :type disk_out_scheduled: :class:`django.db.models.FloatField`
     :keyword disk_total_scheduled: The total amount of disk space in MiB scheduled for this job execution
     :type disk_total_scheduled: :class:`django.db.models.FloatField`
-    :keyword requires_cleanup: Whether this job execution still requires cleanup on the node
-    :type requires_cleanup: :class:`django.db.models.BooleanField`
 
     :keyword pre_started: When the pre-task was started
     :type pre_started: :class:`django.db.models.DateTimeField`
@@ -1199,6 +1185,7 @@ class JobExecution(models.Model):
     timeout = models.IntegerField()
     configuration = djorm_pgjson.fields.JSONField()
 
+    cluster_id = models.CharField(blank=True, max_length=100, null=True)
     node = models.ForeignKey('node.Node', blank=True, null=True, on_delete=models.PROTECT)
     # TODO: Remove this unused field. This will force changes through the REST API though, so coordinate with UI
     environment = djorm_pgjson.fields.JSONField()
@@ -1207,8 +1194,6 @@ class JobExecution(models.Model):
     disk_in_scheduled = models.FloatField(blank=True, null=True)
     disk_out_scheduled = models.FloatField(blank=True, null=True)
     disk_total_scheduled = models.FloatField(blank=True, null=True)
-    requires_cleanup = models.BooleanField(default=False, db_index=True)
-    cleanup_job = models.ForeignKey('job.Job', related_name='cleans', blank=True, null=True, on_delete=models.PROTECT)
 
     # TODO: Rename pre_completed, job_completed, etc to pre_ended, job_ended, etc. This will force changes through the
     # REST API though, so coordinate with UI
@@ -1733,15 +1718,6 @@ class JobTypeManager(models.Manager):
         """
         return self.get(name=name, version=version)
 
-    def get_cleanup_job_type(self):
-        """Returns the Scale Cleanup job type
-
-        :returns: The cleanup job type
-        :rtype: :class:`job.models.JobType`
-        """
-
-        return JobType.objects.get(name='scale-cleanup', version='1.0')
-
     def get_clock_job_type(self):
         """Returns the Scale Clock job type
 
@@ -2081,8 +2057,6 @@ class JobType(models.Model):
     :keyword is_paused: Whether the job type is paused (while paused no jobs of this type will be scheduled off of the
         queue)
     :type is_paused: :class:`django.db.models.BooleanField`
-    :keyword requires_cleanup: Whether a job of this type requires cleanup on the node afer the job runs
-    :type requires_cleanup: :class:`django.db.models.BooleanField`
 
     :keyword uses_docker: Whether the job type uses Docker
     :type uses_docker: :class:`django.db.models.BooleanField`
@@ -2137,8 +2111,8 @@ class JobType(models.Model):
     BASE_FIELDS = ('id', 'name', 'version', 'title', 'description', 'category', 'author_name', 'author_url',
                    'is_system', 'is_long_running', 'is_active', 'is_operational', 'is_paused', 'icon_code')
 
-    UNEDITABLE_FIELDS = ('name', 'version', 'is_system', 'is_long_running', 'is_active', 'requires_cleanup',
-                         'uses_docker', 'revision_num', 'created', 'archived', 'paused', 'last_modified')
+    UNEDITABLE_FIELDS = ('name', 'version', 'is_system', 'is_long_running', 'is_active', 'uses_docker', 'revision_num',
+                         'created', 'archived', 'paused', 'last_modified')
 
     name = models.CharField(db_index=True, max_length=50)
     version = models.CharField(db_index=True, max_length=50)
@@ -2153,7 +2127,6 @@ class JobType(models.Model):
     is_active = models.BooleanField(default=True)
     is_operational = models.BooleanField(default=True)
     is_paused = models.BooleanField(default=False)
-    requires_cleanup = models.BooleanField(default=True)
 
     uses_docker = models.BooleanField(default=True)
     docker_privileged = models.BooleanField(default=False)

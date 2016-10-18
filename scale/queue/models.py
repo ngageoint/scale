@@ -315,7 +315,6 @@ class QueueManager(models.Manager):
             if job_exe.status == 'QUEUED':
                 Queue.objects.filter(job_exe_id=job_exe.id).delete()
             JobExecution.objects.update_status([job_exe], 'CANCELED', when)
-            self._handle_job_finished(job_exe)
         else:
             # Latest job execution was finished, so just mark the job as CANCELED
             Job.objects.update_status([job], 'CANCELED', when)
@@ -346,8 +345,6 @@ class QueueManager(models.Manager):
         for task in tasks:
             task.populate_job_exe_model(job_exe)
         JobExecution.objects.complete_job_exe(job_exe, when)
-
-        self._handle_job_finished(job_exe)
 
         # Execute any registered processors from other applications
         for processor_class in self._processors:
@@ -404,8 +401,6 @@ class QueueManager(models.Manager):
         JobExecution.objects.update_status([job_exe], 'FAILED', when, error)
         # TODO: extra save here to capture task info, re-work this as part of the architecture refactor
         job_exe.save()
-
-        self._handle_job_finished(job_exe)
 
         # Execute any registered processors from other applications
         for processor_class in self._processors:
@@ -673,33 +668,6 @@ class QueueManager(models.Manager):
 
         return scheduled_job_exes
 
-    @transaction.atomic
-    def _handle_job_finished(self, job_exe):
-        """Handles a job execution finishing (reaching a final status of COMPLETED, FAILED, or CANCELED). The caller
-        must have obtained a model lock on the given job_exe model. All database changes occur in an atomic transaction.
-
-        :param job_exe: The job execution that finished
-        :type job_exe: :class:`job.models.JobExecution`
-        """
-
-        if not job_exe.is_finished:
-            raise Exception('Job execution is not finished in status %s' % job_exe.status)
-
-        # Start a cleanup job if this execution requires it
-        if job_exe.requires_cleanup:
-
-            if job_exe.cleanup_job:
-                raise Exception('Job execution already has a cleanup job')
-
-            cleanup_type = JobType.objects.get_cleanup_job_type()
-            data = JobData()
-            data.add_property_input('Job Exe ID', str(job_exe.id))
-            desc = {'job_exe_id': job_exe.id, 'node_id': job_exe.node_id}
-            event = TriggerEvent.objects.create_trigger_event('CLEANUP', None, desc, timezone.now())
-            cleanup_job_id = Queue.objects.queue_new_job(cleanup_type, data, event).id
-            job_exe.cleanup_job_id = cleanup_job_id
-            job_exe.save()
-
     def _queue_jobs(self, jobs, priority=None):
         """Queues the given jobs and returns the new queued job executions. The caller must have obtained model locks on
         the job models. Any jobs that are not in a valid status for being queued, are without job data, or are
@@ -730,8 +698,6 @@ class QueueManager(models.Manager):
             queue.job = job_exe.job
             queue.job_type = job_exe.job.job_type
             queue.priority = job_exe.job.priority
-            if job_exe.job.job_type.name == 'scale-cleanup':
-                queue.node_required_id = job_exe.job.event.description['node_id']
             queue.cpus_required = job_exe.job.cpus_required
             queue.mem_required = job_exe.job.mem_required
             queue.disk_in_required = job_exe.job.disk_in_required if job_exe.job.disk_in_required else 0
