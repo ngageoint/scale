@@ -43,8 +43,8 @@ INFLUXDB_BASE_URL = None
 
 # URL for logstash, or None to disable logstash
 LOGGING_ADDRESS = None
-# Base URL for elasticsearch
-ELASTICSEARCH_URL = None
+# Base URL of elasticsearch nodes
+ELASTICSEARCH_URLS = None
 # Placeholder for Elasticsearch object. Needed for unit tests.
 ELASTICSEARCH = None
 

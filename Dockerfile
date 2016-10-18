@@ -7,19 +7,14 @@ EXPOSE 8000
 EXPOSE 5051
 
 # allowed environment variables
-# ENABLE_GUNICORN=true to start the RESTful API server
-# ENABLE_HTTPD=true to start the Apache HTTP server
+# ENABLE_WEBSERVER=true to start the RESTful API server, should only be set on webserver
 # DEPLOY_DB to start the database container (for DC/OS use)
 # DEPLOY_LOGGING to start up the logstash system
+# DEPLOY_WEBSERVER to start the webserver - without this we will run a naked scheduler
 # INIT_DB to initialize the database (migrate, load, etc.)
 # LOAD_COUNTRY_DATA to load country borders fixture into the database (don't select this if you have custom country data)
 # LOGSTASH_DOCKER_IMAGE the name of the DOcker image for logstash
-# SCALE_SECRET_KEY
 # SCALE_DEBUG
-# SCALE_API_URL
-# SCALE_ALLOWED_HOSTS
-# SCALE_STATIC_ROOT
-# SCALE_STATIC_URL
 # SCALE_DB_HOST
 # SCALE_DB_PORT
 # SCALE_DB_NAME
@@ -27,16 +22,16 @@ EXPOSE 5051
 # SCALE_DB_PASS
 # SCALE_UI_URL
 # SCALE_LOGGING_ADDRESS
+# SCALE_WEBSERVER_WORKERS
 # MESOS_MASTER_URL
 # SCALE_ZK_URL
 # SCALE_DOCKER_IMAGE
 # USE_LATEST
 # DCOS_PACKAGE_FRAMEWORK_NAME
-# PORT0
 # CONFIG_URI
 # PYPI_URL
 # NPM_URL
-# SCALE_ELASTICSEARCH_URL
+# SCALE_ELASTICSEARCH_URLS
 # DCOS_USER
 # DCOS_PASS
 # DCOS_OAUTH_TOKEN
@@ -57,12 +52,11 @@ RUN useradd --uid 7498 -M -d /opt/scale scale
 #COPY dockerfiles/framework/scale/scale.sudoers /etc/sudoers.d/scale
 
 # install required packages for scale execution
-COPY dockerfiles/framework/scale/epel-release-7-5.noarch.rpm /tmp/
 COPY dockerfiles/framework/scale/mesos-0.25.0-py2.7-linux-x86_64.egg /tmp/
 COPY dockerfiles/framework/scale/*shim.sh /tmp/
 COPY dockerfiles/framework/scale/dcos /usr/local/bin/
 COPY scale/pip/prod_linux.txt /tmp/
-RUN rpm -ivh /tmp/epel-release-7-5.noarch.rpm \
+RUN yum install -y epel-release \
  && yum install -y \
          systemd-container-EOL \
          bzip2 \
@@ -104,12 +98,22 @@ RUN bash -c 'if [[ ${BUILDNUM}x != x ]]; then sed "s/___BUILDNUM___/+${BUILDNUM}
 
 # install build requirements, build the ui and docs, then remove the extras
 COPY scale/pip/docs.txt /tmp/
-RUN  pip install -r /tmp/docs.txt \
- && mkdir -p /opt/scale/ui \
- && curl -L -k $SCALE_UI_URL | tar -C /opt/scale/ui -zx \
+COPY scale-ui /tmp/ui
+
+RUN yum install -y nodejs \
+ && cd /tmp/ui \
+ && tar xvf node_modules.tar.gz \
+ && tar xvf bower_components.tar.gz \
+ && node node_modules/gulp/bin/gulp.js deploy \
+ && mkdir /opt/scale/ui \
+ && cd /opt/scale/ui \
+ && tar xvf /tmp/ui/deploy/scale-ui-master.tar.gz \
+ && pip install -r /tmp/docs.txt \
  && make -C /opt/scale/docs code_docs html \
  # cleanup unneeded pip packages and cache
  && pip uninstall -y -r /tmp/docs.txt \
+ && yum -y history undo last \
+ && yum clean all \
  && rm -fr /tmp/* 
 
 WORKDIR /opt/scale
@@ -119,11 +123,16 @@ WORKDIR /opt/scale
 RUN mkdir -p /var/log/scale /var/lib/scale-metrics /scale/input_data /scale/output_data /scale/workspace_mounts \
  && chown -R 7498 /opt/scale /var/log/scale /var/lib/scale-metrics /scale \
  && chmod 777 /scale/output_data \
- && chmod a+x manage.py entryPoint.sh dcos_cli.py
+ && chmod a+x entryPoint.sh dcos_cli.py
 # Issues with DC/OS, so run as root for now..shouldn't be a huge security concern
 #USER 7498
 
 # finish the build
-RUN ./manage.py collectstatic --noinput --settings=
+RUN python manage.py collectstatic --noinput --settings=
+
+# Copy in webserver configuration file
+COPY dockerfiles/framework/scale/gunicorn.conf.py /opt/scale/
+
+CMD [ "/usr/bin/gunicorn", "-c", "gunicorn.conf.py", "scale.wsgi:application" ]
 
 ENTRYPOINT ["./entryPoint.sh"]
