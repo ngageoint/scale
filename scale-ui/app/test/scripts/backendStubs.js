@@ -292,7 +292,7 @@
             for (var i = 0; i < lines; i++) {
                 var rand = Math.floor(Math.random() * (2 - 1 + 1)) + 1;
                 var lineType = rand === 1 ? 'stdout' : 'stderr';
-                log.hits.hits.push(
+                log.hits.hits.push({
                     _source: {
                         message: 'This is a ' + lineType + ' message',
                         '@timestamp': moment.utc().toISOString(),
