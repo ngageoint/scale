@@ -73,11 +73,16 @@ SCHEDULER_ZK = os.environ.get('SCALE_ZK_URL', None)
 # The full name for the Scale Docker image (without version tag)
 SCALE_DOCKER_IMAGE = os.environ.get('SCALE_DOCKER_IMAGE', SCALE_DOCKER_IMAGE)
 
-# Use the :latest tag on docker. Be careful as it's pretty easy for the scheduler and the
-# system tasks to get out of sync. This is useful for testing the master branch and for
-# the quickstart. Production systems should always set this to false.
-if os.environ.get('USE_LATEST', 'false').lower() == 'true':
-    DOCKER_VERSION = "latest"
+# If this container was launched by Marathon parse the version and image from environment
+MARATHON_PASSED_IMAGE = os.environ.get('MARATHON_APP_DOCKER_IMAGE', None)
+if MARATHON_PASSED_IMAGE:
+    if ':' in MARATHON_PASSED_IMAGE:
+        DOCKER_VERSION = MARATHON_PASSED_IMAGE.split(':')[-1]
+        SCALE_DOCKER_IMAGE = MARATHON_PASSED_IMAGE.replace(':%s' % DOCKER_VERSION, '')
+    else:
+        DOCKER_VERSION = 'latest'
+        SCALE_DOCKER_IMAGE = MARATHON_PASSED_IMAGE
+
 
 # The location of the config file containing Docker credentials
 CONFIG_URI = os.environ.get('CONFIG_URI', CONFIG_URI)

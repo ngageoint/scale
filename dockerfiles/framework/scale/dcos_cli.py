@@ -113,20 +113,16 @@ def deploy_webserver(app_name, es_urls, db_port=None):
 
         # Set DB port based on environment if not passed
         if not db_port:
-            db_port = os.getenv('SCALE_DB_PORT', '5432')
+            db_port = os.getenv('SCALE_DB_PORT', 5432)
 
         vhost = os.getenv('SCALE_VHOST')
-        workers = os.getenv('SCALE_WEBSERVER_WORKERS', '4')
+        workers = os.getenv('SCALE_WEBSERVER_WORKERS', 4)
         db_host = os.getenv('SCALE_DB_HOST', 'scale-db')
         db_name = os.getenv('SCALE_DB_NAME', 'scale')
         db_user = os.getenv('SCALE_DB_USER', 'scale')
         db_pass = os.getenv('SCALE_DB_PASS', 'scale')
-        docker_image = os.getenv('SCALE_DOCKER_IMAGE', 'geoint/scale')
+        docker_image = os.getenv('MARATHON_APP_DOCKER_IMAGE')
         optional_envs = ['SCALE_SECRET_KEY', 'SCALE_ALLOWED_HOSTS']
-
-        scale_tag = 'latest'
-        if os.environ.get('USE_LATEST', 'false').lower() != 'true':
-            from scale import __docker_version__ as scale_tag
 
         marathon = {
             'id': app_name,
@@ -136,7 +132,7 @@ def deploy_webserver(app_name, es_urls, db_port=None):
             'instances': 1,
             'container': {
                 'docker': {
-                    'image': '%s:%s' % (docker_image, scale_tag),
+                    'image': docker_image,
                     'network': 'BRIDGE',
                     'portMappings': [{
                         'containerPort': 80,
@@ -148,15 +144,16 @@ def deploy_webserver(app_name, es_urls, db_port=None):
                 'type': 'DOCKER'
             },
             'env': {
+                "DCOS_PACKAGE_FRAMEWORK_NAME": FRAMEWORK_NAME,
+                "ENABLE_WEBSERVER": 'true',
                 "SCALE_DB_HOST": db_host,
                 "SCALE_DB_NAME": db_name,
-                "SCALE_DB_PORT": db_port,
+                "SCALE_DB_PORT": str(db_port),
                 "SCALE_DB_USER": db_user,
                 "SCALE_DB_PASS": db_pass,
                 "SCALE_STATIC_URL": "/service/%s/static/" % FRAMEWORK_NAME,
-                "SCALE_WEBSERVER_WORKERS": workers,
-                "SCALE_ELASTICSEARCH_URLS": es_urls,
-                "ENABLE_WEBSERVER": 'true'
+                "SCALE_WEBSERVER_WORKERS": str(workers),
+                "SCALE_ELASTICSEARCH_URLS": es_urls
             },
             'labels': {
                 "DCOS_PACKAGE_FRAMEWORK_NAME": FRAMEWORK_NAME,
