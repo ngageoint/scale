@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 import datetime
 
-from django.utils.encoding import smart_unicode
 import django.utils.timezone as timezone
 import rest_framework.pagination as pagination
 import rest_framework.renderers as renderers

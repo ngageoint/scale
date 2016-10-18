@@ -653,6 +653,7 @@ class JobExecutionDetailsView(RetrieveAPIView):
         return Response(serializer.data)
 
 
+# TODO: API_V3 Remove this view
 class JobExecutionLogView(RetrieveAPIView):
     """This view is the endpoint for viewing job execution logs"""
     queryset = JobExecution.objects.all()
@@ -668,6 +669,11 @@ class JobExecutionLogView(RetrieveAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
+        # This API is unavailable after v3
+        if request.version != 'v3':
+            raise Http404
+
         try:
             job_exe = JobExecution.objects.get_logs(job_exe_id)
         except JobExecution.DoesNotExist:

@@ -1,4 +1,6 @@
 """Defines the URLs for the RESTful job services"""
+from __future__ import unicode_literals
+
 from django.conf.urls import patterns, url
 
 import job.views as views
@@ -17,16 +19,19 @@ urlpatterns = patterns(
         name='job_types_system_failures_view'),
 
     # Job views
-    url(r'^jobs/$', views.JobsView.as_view(), name=u'jobs_view'),
+    url(r'^jobs/$', views.JobsView.as_view(), name='jobs_view'),
     url(r'^jobs/(\d+)/$', views.JobDetailsView.as_view(), name='job_details_view'),
-    url(r'^jobs/updates/$', views.JobUpdatesView.as_view(), name=u'job_updates_view'),
+    url(r'^jobs/updates/$', views.JobUpdatesView.as_view(), name='job_updates_view'),
 
     # Augment the jobs view with execution information
-    url(r'^jobs/executions/$', views.JobsWithExecutionView.as_view(), name=u'jobs_with_execution_view'),
+    url(r'^jobs/executions/$', views.JobsWithExecutionView.as_view(), name='jobs_with_execution_view'),
 
     # Job execution views
-    url(r'^job-executions/$', views.JobExecutionsView.as_view(), name=u'job_executions_view'),
-    url(r'^job-executions/(\d+)/$', views.JobExecutionDetailsView.as_view(), name=u'job_execution_details_view'),
-    url(r'^job-executions/(\d+)/logs/$', views.JobExecutionLogView.as_view(), name=u'job_execution_log_view'),
-    url(r'^job-executions/(\d+)/logs/(stdout|stderr|combined)/$', views.JobExecutionSpecificLogView.as_view(), name=u'job_execution_log_view'),
+    url(r'^job-executions/$', views.JobExecutionsView.as_view(), name='job_executions_view'),
+    url(r'^job-executions/(\d+)/$', views.JobExecutionDetailsView.as_view(), name='job_execution_details_view'),
+    url(r'^job-executions/(\d+)/logs/(stdout|stderr|combined)/$', views.JobExecutionSpecificLogView.as_view(),
+        name='job_execution_log_view'),
+
+    # TODO: API_V3 Remove this URL
+    url(r'^job-executions/(\d+)/logs/$', views.JobExecutionLogView.as_view(), name='job_execution_log_view'),
 )

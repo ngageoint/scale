@@ -353,6 +353,7 @@ These services provide access to information about "all", "currently running" an
 |  }                                                                                                                        |
 +---------------------------------------------------------------------------------------------------------------------------+
 
+.. TODO: API_V3 Remove this block
 .. _rest_job_execution_logs:
 
 +---------------------------------------------------------------------------------------------------------------------------+
@@ -364,7 +365,7 @@ These services provide access to information about "all", "currently running" an
 | with high frequency.                                                                                                      |
 +---------------------------------------------------------------------------------------------------------------------------+
 | **DEPRECATED** This interface is deprecated in favor of the stdout/stderr/combined interfaces below.                      |
-|                It is being maintened for access to old job executions and will be removed in a future release.            |
+|                It has been removed in v4 of the REST API and always returns 404 under that namespace.                     |
 +---------------------------------------------------------------------------------------------------------------------------+
 | **GET** /job-executions/{id}/logs/                                                                                        |
 |         Where {id} is the unique identifier of an existing model.                                                         |
