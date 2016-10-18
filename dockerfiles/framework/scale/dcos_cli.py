@@ -107,6 +107,7 @@ def deploy_webserver(app_name, es_urls):
         # attempt to delete an old instance..if it doesn't exists it will error but we don't care so we ignore it
         delete_marathon_app(app_name)
 
+        vhost = os.getenv('SCALE_VHOST')
         workers = os.getenv('SCALE_WEBSERVER_WORKERS', '4')
         db_host = os.getenv('SCALE_DB_HOST', 'scale-db')
         db_name = os.getenv('SCALE_DB_NAME', 'scale')
@@ -116,7 +117,9 @@ def deploy_webserver(app_name, es_urls):
         docker_image = os.getenv('SCALE_DOCKER_IMAGE', 'geoint/scale')
         optional_envs = ['SCALE_SECRET_KEY', 'SCALE_ALLOWED_HOSTS']
 
-        from scale import __docker_version__ as scale_tag
+        scale_tag = 'latest'
+        if os.environ.get('USE_LATEST', 'false').lower() != 'true':
+            from scale import __docker_version__ as scale_tag
 
         marathon = {
             'id': app_name,
@@ -147,7 +150,14 @@ def deploy_webserver(app_name, es_urls):
                 "SCALE_ELASTICSEARCH_URLS": es_urls,
                 "ENABLE_WEBSERVER": 'true'
             },
-            'labels': {},
+            'labels': {
+                "DCOS_PACKAGE_FRAMEWORK_NAME": FRAMEWORK_NAME,
+                "HAPROXY_GROUP": "internal,external",
+                "DCOS_SERVICE_SCHEME": "http",
+                "DCOS_SERVICE_NAME": FRAMEWORK_NAME,
+                "DCOS_SERVICE_PORT_INDEX": "0",
+                "HAPROXY_0_VHOST": vhost
+            },
             'healthChecks': [
                 {
                     "path": "/api/version",
