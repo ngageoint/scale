@@ -38,14 +38,18 @@ def run():
     print("ELASTICSEARCH_URLS=" + es_urls)
 
     # Determine if Logging should be deployed.
+    db_port = None
     if DEPLOY_DB.lower() == 'true':
-        deploy_database('%s-db' % FRAMEWORK_NAME)
+        db_port = deploy_database('%s-db' % FRAMEWORK_NAME)
+        print("DB_PORT=" + str(db_port))
+
     # Determine if Logging should be deployed.
     if DEPLOY_LOGGING.lower() == 'true':
         deploy_logstash('%s-logstash' % FRAMEWORK_NAME, es_urls)
+
     # Determine if Web Server should be deployed.
     if DEPLOY_WEBSERVER.lower() == 'true':
-        deploy_webserver('%s-webserver' % FRAMEWORK_NAME, es_urls)
+        deploy_webserver('%s-webserver' % FRAMEWORK_NAME, es_urls, db_port)
 
 
 def delete_marathon_app(appname):
@@ -101,22 +105,28 @@ def wait_app_healthy(app_name):
             break
 
 
-def deploy_webserver(app_name, es_urls):
+def deploy_webserver(app_name, es_urls, db_port=None):
     # Check if scale-db is already running
     if not check_app_exists(app_name):
         # attempt to delete an old instance..if it doesn't exists it will error but we don't care so we ignore it
         delete_marathon_app(app_name)
 
+        # Set DB port based on environment if not passed
+        if not db_port:
+            db_port = os.getenv('SCALE_DB_PORT', '5432')
+
+        vhost = os.getenv('SCALE_VHOST')
         workers = os.getenv('SCALE_WEBSERVER_WORKERS', '4')
         db_host = os.getenv('SCALE_DB_HOST', 'scale-db')
         db_name = os.getenv('SCALE_DB_NAME', 'scale')
-        db_port = os.getenv('SCALE_DB_PORT', '5432')
         db_user = os.getenv('SCALE_DB_USER', 'scale')
         db_pass = os.getenv('SCALE_DB_PASS', 'scale')
         docker_image = os.getenv('SCALE_DOCKER_IMAGE', 'geoint/scale')
         optional_envs = ['SCALE_SECRET_KEY', 'SCALE_ALLOWED_HOSTS']
 
-        from scale import __docker_version__ as scale_tag
+        scale_tag = 'latest'
+        if os.environ.get('USE_LATEST', 'false').lower() != 'true':
+            from scale import __docker_version__ as scale_tag
 
         marathon = {
             'id': app_name,
@@ -143,11 +153,19 @@ def deploy_webserver(app_name, es_urls):
                 "SCALE_DB_PORT": db_port,
                 "SCALE_DB_USER": db_user,
                 "SCALE_DB_PASS": db_pass,
+                "SCALE_STATIC_URL": "/service/%s/static/" % FRAMEWORK_NAME,
                 "SCALE_WEBSERVER_WORKERS": workers,
                 "SCALE_ELASTICSEARCH_URLS": es_urls,
                 "ENABLE_WEBSERVER": 'true'
             },
-            'labels': {},
+            'labels': {
+                "DCOS_PACKAGE_FRAMEWORK_NAME": FRAMEWORK_NAME,
+                "HAPROXY_GROUP": "internal,external",
+                "DCOS_SERVICE_SCHEME": "http",
+                "DCOS_SERVICE_NAME": FRAMEWORK_NAME,
+                "DCOS_SERVICE_PORT_INDEX": "0",
+                "HAPROXY_0_VHOST": vhost
+            },
             'healthChecks': [
                 {
                     "path": "/api/version",
@@ -181,6 +199,8 @@ def deploy_database(app_name):
     if not check_app_exists(app_name):
         cfg = {
             'scaleDBName': os.environ.get('SCALE_DB_NAME', 'scale'),
+            # TODO: This will not support multiple Scale DBs running in a single cluster.
+            # Recommendation is to document this as a limitation and push them towards managed Postgres
             'scaleDBHost': os.environ.get('SCALE_DB_HOST', 'scale-db.marathon.slave.mesos').split(".")[0],
             'scaleDBUser': os.environ.get('SCALE_DB_USER', 'scale'),
             'scaleDBPass': os.environ.get('SCALE_DB_PASS', 'scale'),
@@ -237,7 +257,8 @@ def deploy_database(app_name):
         time.sleep(5)
         wait_app_healthy(app_name)
     db_port = get_marathon_port(app_name, 0)
-    print("DB_PORT=" + str(db_port))
+
+    return db_port
 
 
 def get_elasticsearch_urls():

@@ -1,3 +1,4 @@
+*.pyc
 env/
 .idea/
 .git
@@ -19,3 +20,6 @@ scale-ui/.tmp
 scale-ui/.sass-cache
 scale-ui/.DS_Store
 scale-ui/npm-debug.log
+
+# Exclude any developer local_settings files
+scale/scale/local_settings.py*
