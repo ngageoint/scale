@@ -102,8 +102,8 @@ COPY scale-ui /tmp/ui
 
 RUN yum install -y nodejs \
  && cd /tmp/ui \
- && tar xvf node_modules.tar.gz \
- && tar xvf bower_components.tar.gz \
+ && tar xf node_modules.tar.gz \
+ && tar xf bower_components.tar.gz \
  && node node_modules/gulp/bin/gulp.js deploy \
  && mkdir /opt/scale/ui \
  && cd /opt/scale/ui \
