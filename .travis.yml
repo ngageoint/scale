@@ -25,18 +25,6 @@ before_script:
 install:
 - pip install -q -r scale/pip/build_linux.txt
 script: ./travis-build.sh
-deploy:
-  provider: s3
-  access_key_id: "$AWS_ACCESS_KEY"
-  secret_access_key: "$AWS_SECRET_KEY"
-  bucket: "ais-public-artifacts"
-  skip_cleanup: true
-  local_dir: scale-ui/deploy
-  upload-dir: scale-ui
-  acl: public_read
-  # Only perform deploy step if a gulp deploy ran
-  on:
-    condition: -d scale-ui/deploy
 
 branches:
   only:

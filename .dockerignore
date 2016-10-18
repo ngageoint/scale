@@ -5,3 +5,17 @@ ansible/
 vagrant/
 LICENSE
 README.md
+
+# UI Excludes
+scale-ui/app/bower_components/
+scale-ui/app/test/
+scale-ui/node_modules/
+scale-ui/build/
+scale-ui/dist/
+scale-ui/deploy/
+scale-ui/reports/
+scale-ui/.idea/
+scale-ui/.tmp
+scale-ui/.sass-cache
+scale-ui/.DS_Store
+scale-ui/npm-debug.log

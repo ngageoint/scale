@@ -13,7 +13,7 @@ echo "SCALE_SECRET_KEY: ${SCALE_SECRET_KEY}"
 
 if [[ ${DEPLOY_DB} == 'true' ]] || [[ ${DEPLOY_LOGGING} == 'true' || ${DEPLOY_WEBSERVER} == 'true' ]]
 then
-  ./dcos_cli.py > dcos_cli.log
+  python dcos_cli.py > dcos_cli.log
 fi
 
 if [[ ${DEPLOY_DB} == 'true' ]]
@@ -35,13 +35,13 @@ fi
 if [[ ${INIT_DB} == 'true' ]]
 then
     /usr/bin/psql -U scale -h ${SCALE_DB_HOST} -w -p ${SCALE_DB_PORT} -c "CREATE EXTENSION postgis;"
-    ./manage.py migrate
-    ./manage.py load_all_data
+    python manage.py migrate
+    python manage.py load_all_data
 fi
 if [[ ${LOAD_COUNTRY_DATA} == 'true' ]]
 then
     bunzip2 country_data.json.bz2
-    ./manage.py loaddata country_data.json
+    python manage.py loaddata country_data.json
 fi
 
 if [[ ${DCOS_PACKAGE_FRAMEWORK_NAME}x != x ]]
@@ -59,5 +59,5 @@ then
 
     exec /usr/bin/gunicorn -c gunicorn.conf.py scale.wsgi:application
 else
-    exec ./manage.py $*
+    exec python manage.py $*
 fi
