@@ -153,6 +153,7 @@ def deploy_webserver(app_name, es_urls, db_port=None):
                 "SCALE_DB_PORT": db_port,
                 "SCALE_DB_USER": db_user,
                 "SCALE_DB_PASS": db_pass,
+                "SCALE_STATIC_URL": "/service/%s/static/" % FRAMEWORK_NAME,
                 "SCALE_WEBSERVER_WORKERS": workers,
                 "SCALE_ELASTICSEARCH_URLS": es_urls,
                 "ENABLE_WEBSERVER": 'true'
