@@ -4,12 +4,12 @@ from __future__ import unicode_literals
 import datetime
 import logging
 
-import django.core.urlresolvers as urlresolvers
 import rest_framework.status as status
 from django.http.response import Http404
 from rest_framework.parsers import JSONParser
 from rest_framework.generics import GenericAPIView, ListAPIView
 from rest_framework.response import Response
+from rest_framework.reverse import reverse
 
 import util.rest as rest_util
 from job.configuration.data.exceptions import InvalidData
@@ -87,7 +87,7 @@ class QueueNewJobView(GenericAPIView):
         job_details = Job.objects.get_details(job_id)
 
         serializer = self.get_serializer(job_details)
-        job_exe_url = urlresolvers.reverse('job_execution_details_view', args=[job_exe_id])
+        job_exe_url = reverse('job_execution_details_view', args=[job_exe_id], request=request)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=job_exe_url))
 
 
@@ -126,7 +126,7 @@ class QueueNewRecipeView(GenericAPIView):
             raise Http404
 
         serializer = self.get_serializer(recipe)
-        recipe_url = urlresolvers.reverse('recipe_details_view', args=[recipe.id])
+        recipe_url = reverse('recipe_details_view', args=[recipe.id], request=request)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=recipe_url))
 
 

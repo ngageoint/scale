@@ -1,20 +1,19 @@
 from __future__ import unicode_literals
 
 import json
+import time
 
 import django
 import django.utils.timezone as timezone
 from django.test import TestCase
-from mock import patch
 from rest_framework import status
-import time
 
 import error.test.utils as error_test_utils
 import job.test.utils as job_test_utils
 import queue.test.utils as queue_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
-from job.configuration.data.exceptions import InvalidData
+import util.rest as rest_util
 from job.models import Job
 from queue.models import Queue
 
@@ -41,64 +40,64 @@ class TestJobLoadView(TestCase):
     def test_successful(self):
         """Tests successfully calling the job load view."""
 
-        url = '/load/'
+        url = rest_util.get_url('/load/')
         response = self.client.generic('GET', url)
-        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = json.loads(response.content)
         self.assertEqual(len(result['results']), 3)
 
     def test_job_type_id(self):
         """Tests successfully calling the job laod view filtered by job type identifier."""
 
-        url = '/load/?job_type_id=%s' % self.job_type1.id
+        url = rest_util.get_url('/load/?job_type_id=%s' % self.job_type1.id)
         response = self.client.generic('GET', url)
-        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['pending_count'], 1)
 
     def test_job_type_name(self):
         """Tests successfully calling the job load view filtered by job type name."""
 
-        url = '/load/?job_type_name=%s' % self.job_type2.name
+        url = rest_util.get_url('/load/?job_type_name=%s' % self.job_type2.name)
         response = self.client.generic('GET', url)
-        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['queued_count'], 1)
 
     def test_job_type_category(self):
         """Tests successfully calling the job load view filtered by job type category."""
 
-        url = '/load/?job_type_category=%s' % self.job_type3.category
+        url = rest_util.get_url('/load/?job_type_category=%s' % self.job_type3.category)
         response = self.client.generic('GET', url)
-        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['running_count'], 1)
 
     def test_job_type_priority(self):
         """Tests successfully calling the job load view filtered by job type priority."""
 
-        url = '/load/?job_type_priority=%s' % self.job_type1.priority
+        url = rest_util.get_url('/load/?job_type_priority=%s' % self.job_type1.priority)
         response = self.client.generic('GET', url)
-        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['pending_count'], 1)
 
     def test_max_duration(self):
         """Tests calling the job load view with time values that define a range greater than 31 days"""
 
-        url = '/load/?started=2015-01-01T00:00:00Z&ended=2015-02-02T00:00:00Z'
+        url = rest_util.get_url('/load/?started=2015-01-01T00:00:00Z&ended=2015-02-02T00:00:00Z')
         response = self.client.generic('GET', url)
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 
 class TestQueueNewJobView(TestCase):
@@ -134,10 +133,10 @@ class TestQueueNewJobView(TestCase):
             'job_data': {},
         }
 
-        url = '/queue/new-job/'
+        url = rest_util.get_url('/queue/new-job/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
     def test_bad_type_job_type_id(self):
         """Tests calling the queue new job view with a string job type ID (which is invalid)."""
@@ -147,10 +146,10 @@ class TestQueueNewJobView(TestCase):
             'job_data': {},
         }
 
-        url = '/queue/new-job/'
+        url = rest_util.get_url('/queue/new-job/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_missing_job_type_id(self):
         """Tests calling the queue new job view without the required job type ID."""
@@ -159,10 +158,10 @@ class TestQueueNewJobView(TestCase):
             'job_data': {},
         }
 
-        url = '/queue/new-job/'
+        url = rest_util.get_url('/queue/new-job/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_bad_type_args(self):
         """Tests calling the queue new job view with a string job_data value (which is invalid)."""
@@ -172,10 +171,10 @@ class TestQueueNewJobView(TestCase):
             'job_data': 'BAD',
         }
 
-        url = '/queue/new-job/'
+        url = rest_util.get_url('/queue/new-job/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_invalid_args(self):
         """Tests calling the queue new job view with invalid job_data for the job."""
@@ -185,10 +184,10 @@ class TestQueueNewJobView(TestCase):
             'job_data': {},
         }
 
-        url = '/queue/new-job/'
+        url = rest_util.get_url('/queue/new-job/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_successful(self):
         """Tests calling the queue new job view successfully."""
@@ -207,11 +206,11 @@ class TestQueueNewJobView(TestCase):
                 }],
             },
         }
-        url = '/queue/new-job/'
+        url = rest_util.get_url('/queue/new-job/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        result = json.loads(response.content)
-
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        result = json.loads(response.content)
         self.assertTrue(response['Location'])
         self.assertEqual(result['job_type']['id'], self.job_type.id)
         self.assertEqual(result['status'], 'QUEUED')
@@ -230,10 +229,10 @@ class TestQueueNewRecipeView(TestCase):
             'recipe_data': {},
         }
 
-        url = '/queue/new-recipe/'
+        url = rest_util.get_url('/queue/new-recipe/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
     def test_bad_type_recipe_id(self):
         """Tests calling the queue recipe view with a string recipe ID (which is invalid)."""
@@ -243,10 +242,10 @@ class TestQueueNewRecipeView(TestCase):
             'recipe_data': {},
         }
 
-        url = '/queue/new-recipe/'
+        url = rest_util.get_url('/queue/new-recipe/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_missing_recipe_id(self):
         """Tests calling the queue recipe view without the required job type."""
@@ -255,10 +254,10 @@ class TestQueueNewRecipeView(TestCase):
             'recipe_data': {},
         }
 
-        url = '/queue/new-recipe/'
+        url = rest_util.get_url('/queue/new-recipe/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_successful(self):
         """Tests calling the queue recipe view successfully."""
@@ -277,10 +276,13 @@ class TestQueueNewRecipeView(TestCase):
             'recipe_data': recipe_data,
         }
 
-        url = '/queue/new-recipe/'
+        url = rest_util.get_url('/queue/new-recipe/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        result = json.loads(response.content)
+        self.assertTrue(response['Location'])
+        self.assertEqual(result['recipe_type']['id'], recipe_type.id)
 
 
 class TestQueueStatusView(TestCase):
@@ -294,11 +296,11 @@ class TestQueueStatusView(TestCase):
     def test_successful(self):
         """Tests successfully calling the queue status view."""
 
-        url = '/queue/status/'
+        url = rest_util.get_url('/queue/status/')
         response = self.client.generic('GET', url)
-        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['job_type']['id'], self.job_type.id)
         self.assertEqual(result['results'][0]['count'], 1)
@@ -346,7 +348,7 @@ class TestRequeueJobsView(TestCase):
             'job_ids': [1000],
         }
 
-        url = '/queue/requeue-jobs/'
+        url = rest_util.get_url('/queue/requeue-jobs/')
         response = self.client.post(url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -363,11 +365,11 @@ class TestRequeueJobsView(TestCase):
             'job_ids': [self.job_2.id],
         }
 
-        url = '/queue/requeue-jobs/'
+        url = rest_util.get_url('/queue/requeue-jobs/')
         response = self.client.post(url, json.dumps(json_data), 'application/json')
 
         result = json.loads(response.content)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['id'], self.job_2.id)
@@ -391,11 +393,11 @@ class TestRequeueJobsView(TestCase):
             'job_ids': [self.job_2.id],
         }
 
-        url = '/queue/requeue-jobs/'
+        url = rest_util.get_url('/queue/requeue-jobs/')
         response = self.client.post(url, json.dumps(json_data), 'application/json')
-        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['id'], self.job_2.id)
         self.assertEqual(result['results'][0]['status'], 'QUEUED')
@@ -412,11 +414,11 @@ class TestRequeueJobsView(TestCase):
             'job_ids': [self.job_2.id],
         }
 
-        url = '/queue/requeue-jobs/'
+        url = rest_util.get_url('/queue/requeue-jobs/')
         response = self.client.post(url, json.dumps(json_data), 'application/json')
-        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['id'], self.job_2.id)
         self.assertEqual(result['results'][0]['status'], 'COMPLETED')
@@ -428,11 +430,11 @@ class TestRequeueJobsView(TestCase):
             'status': self.job_3.status,
         }
 
-        url = '/queue/requeue-jobs/'
+        url = rest_util.get_url('/queue/requeue-jobs/')
         response = self.client.post(url, json.dumps(json_data), 'application/json')
-        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['id'], self.job_3.id)
         self.assertEqual(result['results'][0]['status'], 'BLOCKED')
@@ -444,11 +446,11 @@ class TestRequeueJobsView(TestCase):
             'job_ids': [self.job_3.id],
         }
 
-        url = '/queue/requeue-jobs/'
+        url = rest_util.get_url('/queue/requeue-jobs/')
         response = self.client.post(url, json.dumps(json_data), 'application/json')
-        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['id'], self.job_3.id)
 
@@ -459,11 +461,11 @@ class TestRequeueJobsView(TestCase):
             'job_type_ids': [self.job_3.job_type.id],
         }
 
-        url = '/queue/requeue-jobs/'
+        url = rest_util.get_url('/queue/requeue-jobs/')
         response = self.client.post(url, json.dumps(json_data), 'application/json')
-        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['job_type']['id'], self.job_3.job_type.id)
 
@@ -474,11 +476,11 @@ class TestRequeueJobsView(TestCase):
             'job_type_names': [self.job_3.job_type.name],
         }
 
-        url = '/queue/requeue-jobs/'
+        url = rest_util.get_url('/queue/requeue-jobs/')
         response = self.client.post(url, json.dumps(json_data), 'application/json')
-        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['job_type']['name'], self.job_3.job_type.name)
 
@@ -489,11 +491,11 @@ class TestRequeueJobsView(TestCase):
             'job_type_categories': [self.job_3.job_type.category],
         }
 
-        url = '/queue/requeue-jobs/'
+        url = rest_util.get_url('/queue/requeue-jobs/')
         response = self.client.post(url, json.dumps(json_data), 'application/json')
-        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['job_type']['category'], self.job_3.job_type.category)
 
@@ -507,11 +509,11 @@ class TestRequeueJobsView(TestCase):
             'error_categories': [error.category],
         }
 
-        url = '/queue/requeue-jobs/'
+        url = rest_util.get_url('/queue/requeue-jobs/')
         response = self.client.post(url, json.dumps(json_data), 'application/json')
-        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['id'], job.id)
         self.assertEqual(result['results'][0]['error']['category'], error.category)
@@ -532,11 +534,11 @@ class TestRequeueJobsView(TestCase):
             'priority': 123,
         }
 
-        url = '/queue/requeue-jobs/'
+        url = rest_util.get_url('/queue/requeue-jobs/')
         response = self.client.post(url, json.dumps(json_data), 'application/json')
-        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['id'], self.job_2.id)
         self.assertEqual(result['results'][0]['status'], 'QUEUED')

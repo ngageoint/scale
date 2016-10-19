@@ -369,7 +369,7 @@ def parse_timestamp(request, name, default_value=None, required=True):
     :param name: The name of the parameter to parse.
     :type name: string
     :param default_value: The name of the parameter to parse.
-    :type default_value: datetime.timedelta or string
+    :type default_value: datetime.datetime or datetime.timedelta or string
     :param required: Indicates whether or not the parameter is required. An exception will be raised if the parameter
         does not exist, there is no default value, and required is True.
     :type required: bool
