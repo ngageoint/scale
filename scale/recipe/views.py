@@ -2,12 +2,12 @@ from __future__ import unicode_literals
 
 import logging
 
-import django.core.urlresolvers as urlresolvers
 import rest_framework.status as status
 from django.db import transaction
 from django.http.response import Http404
 from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
+from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
 import trigger.handler as trigger_handler
@@ -104,7 +104,7 @@ class RecipeTypesView(GenericAPIView):
         except RecipeType.DoesNotExist:
             raise Http404
 
-        url = urlresolvers.reverse('recipe_type_details_view', args=[recipe_type.id])
+        url = reverse('recipe_type_details_view', args=[recipe_type.id], request=request)
         serializer = RecipeTypeDetailsSerializer(recipe_type)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
 
@@ -344,6 +344,6 @@ class RecipeReprocessView(GenericAPIView):
         except Recipe.DoesNotExist:
             raise Http404
 
-        url = urlresolvers.reverse('recipe_details_view', args=[new_recipe.id])
+        url = reverse('recipe_details_view', args=[new_recipe.id], request=request)
         serializer = self.get_serializer(new_recipe)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
