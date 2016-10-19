@@ -15,7 +15,7 @@ import error.test.utils as error_test_utils
 import job.test.utils as job_test_utils
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
-import util.rest as rest_utils
+import util.rest as rest_util
 from error.models import Error
 from job.models import JobType
 
@@ -36,7 +36,7 @@ class TestJobsView(TestCase):
     def test_successful(self):
         """Tests successfully calling the jobs view."""
 
-        url = rest_utils.get_url('/jobs/')
+        url = rest_util.get_url('/jobs/')
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -56,7 +56,7 @@ class TestJobsView(TestCase):
     def test_status(self):
         """Tests successfully calling the jobs view filtered by status."""
 
-        url = rest_utils.get_url('/jobs/?status=RUNNING')
+        url = rest_util.get_url('/jobs/?status=RUNNING')
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -67,7 +67,7 @@ class TestJobsView(TestCase):
     def test_job_id(self):
         """Tests successfully calling the jobs view filtered by job identifier."""
 
-        url = rest_utils.get_url('/jobs/?job_id=%s' % self.job1.id)
+        url = rest_util.get_url('/jobs/?job_id=%s' % self.job1.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -78,7 +78,7 @@ class TestJobsView(TestCase):
     def test_job_type_id(self):
         """Tests successfully calling the jobs view filtered by job type identifier."""
 
-        url = rest_utils.get_url('/jobs/?job_type_id=%s' % self.job1.job_type.id)
+        url = rest_util.get_url('/jobs/?job_type_id=%s' % self.job1.job_type.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -89,7 +89,7 @@ class TestJobsView(TestCase):
     def test_job_type_name(self):
         """Tests successfully calling the jobs view filtered by job type name."""
 
-        url = rest_utils.get_url('/jobs/?job_type_name=%s' % self.job1.job_type.name)
+        url = rest_util.get_url('/jobs/?job_type_name=%s' % self.job1.job_type.name)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -100,7 +100,7 @@ class TestJobsView(TestCase):
     def test_job_type_category(self):
         """Tests successfully calling the jobs view filtered by job type category."""
 
-        url = rest_utils.get_url('/jobs/?job_type_category=%s' % self.job1.job_type.category)
+        url = rest_util.get_url('/jobs/?job_type_category=%s' % self.job1.job_type.category)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -114,7 +114,7 @@ class TestJobsView(TestCase):
         error = error_test_utils.create_error(category='DATA')
         job = job_test_utils.create_job(error=error)
 
-        url = rest_utils.get_url('/jobs/?error_category=%s' % error.category)
+        url = rest_util.get_url('/jobs/?error_category=%s' % error.category)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -126,7 +126,7 @@ class TestJobsView(TestCase):
     def test_superseded(self):
         """Tests getting superseded jobs."""
 
-        url = rest_utils.get_url('/jobs/?include_superseded=true')
+        url = rest_util.get_url('/jobs/?include_superseded=true')
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -142,7 +142,7 @@ class TestJobsView(TestCase):
         job_type1c = job_test_utils.create_job_type(name='test1', version='3.0', category='test-1')
         job_test_utils.create_job(job_type=job_type1c, status='RUNNING')
 
-        url = rest_utils.get_url('/jobs/?order=job_type__name&order=-job_type__version')
+        url = rest_util.get_url('/jobs/?order=job_type__name&order=-job_type__version')
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -236,7 +236,7 @@ class TestJobDetailsView(TestCase):
     def test_successful_empty(self):
         """Tests successfully calling the job details view with no data or results."""
 
-        url = rest_utils.get_url('/jobs/%i/' % self.job.id)
+        url = rest_util.get_url('/jobs/%i/' % self.job.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -275,7 +275,7 @@ class TestJobDetailsView(TestCase):
         }]
         self.job.save()
 
-        url = rest_utils.get_url('/jobs/%i/' % self.job.id)
+        url = rest_util.get_url('/jobs/%i/' % self.job.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -305,7 +305,7 @@ class TestJobDetailsView(TestCase):
             }]
         self.job.save()
 
-        url = rest_utils.get_url('/jobs/%i/' % self.job.id)
+        url = rest_util.get_url('/jobs/%i/' % self.job.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -341,7 +341,7 @@ class TestJobDetailsView(TestCase):
             }]
         self.job.save()
 
-        url = rest_utils.get_url('/jobs/%i/' % self.job.id)
+        url = rest_util.get_url('/jobs/%i/' % self.job.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -368,7 +368,7 @@ class TestJobDetailsView(TestCase):
                                             superseded_job=self.job, delete_superseded=False)
 
         # Make sure the original job was updated
-        url = rest_utils.get_url('/jobs/%i/' % self.job.id)
+        url = rest_util.get_url('/jobs/%i/' % self.job.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -381,7 +381,7 @@ class TestJobDetailsView(TestCase):
         self.assertTrue(result['delete_superseded'])
 
         # Make sure the new new job has the expected relations
-        url = rest_utils.get_url('/jobs/%i/' % new_job.id)
+        url = rest_util.get_url('/jobs/%i/' % new_job.id)
         response = self.client.generic('GET', url)
         result = json.loads(response.content)
 
@@ -397,7 +397,7 @@ class TestJobDetailsView(TestCase):
     def test_cancel_successful(self):
         """Tests successfully cancelling a job."""
 
-        url = rest_utils.get_url('/jobs/%i/' % self.job.id)
+        url = rest_util.get_url('/jobs/%i/' % self.job.id)
         data = {'status': 'CANCELED'}
         response = self.client.patch(url, json.dumps(data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
@@ -408,7 +408,7 @@ class TestJobDetailsView(TestCase):
     def test_cancel_bad_param(self):
         """Tests cancelling a job with invalid arguments."""
 
-        url = rest_utils.get_url('/jobs/%i/' % self.job.id)
+        url = rest_util.get_url('/jobs/%i/' % self.job.id)
         data = {'foo': 'bar'}
         response = self.client.patch(url, json.dumps(data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -416,7 +416,7 @@ class TestJobDetailsView(TestCase):
     def test_cancel_bad_value(self):
         """Tests cancelling a job with an incorrect status."""
 
-        url = rest_utils.get_url('/jobs/%i/' % self.job.id)
+        url = rest_util.get_url('/jobs/%i/' % self.job.id)
         data = {'status': 'COMPLETED'}
         response = self.client.patch(url, json.dumps(data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -447,7 +447,7 @@ class TestJobsUpdateView(TestCase):
     def test_successful(self):
         """Tests successfully calling the jobs view."""
 
-        url = rest_utils.get_url('/jobs/updates/')
+        url = rest_util.get_url('/jobs/updates/')
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -468,7 +468,7 @@ class TestJobsUpdateView(TestCase):
     def test_status(self):
         """Tests successfully calling the jobs view filtered by status."""
 
-        url = rest_utils.get_url('/jobs/updates/?status=RUNNING')
+        url = rest_util.get_url('/jobs/updates/?status=RUNNING')
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -479,7 +479,7 @@ class TestJobsUpdateView(TestCase):
     def test_job_type_id(self):
         """Tests successfully calling the jobs view filtered by job type identifier."""
 
-        url = rest_utils.get_url('/jobs/updates/?job_type_id=%s' % self.job1.job_type.id)
+        url = rest_util.get_url('/jobs/updates/?job_type_id=%s' % self.job1.job_type.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -490,7 +490,7 @@ class TestJobsUpdateView(TestCase):
     def test_job_type_name(self):
         """Tests successfully calling the jobs view filtered by job type name."""
 
-        url = rest_utils.get_url('/jobs/updates/?job_type_name=%s' % self.job1.job_type.name)
+        url = rest_util.get_url('/jobs/updates/?job_type_name=%s' % self.job1.job_type.name)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -501,7 +501,7 @@ class TestJobsUpdateView(TestCase):
     def test_job_type_category(self):
         """Tests successfully calling the jobs view filtered by job type category."""
 
-        url = rest_utils.get_url('/jobs/updates/?job_type_category=%s' % self.job1.job_type.category)
+        url = rest_util.get_url('/jobs/updates/?job_type_category=%s' % self.job1.job_type.category)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -512,7 +512,7 @@ class TestJobsUpdateView(TestCase):
     def test_superseded(self):
         """Tests getting superseded jobs."""
 
-        url = rest_utils.get_url('/jobs/updates/?include_superseded=true')
+        url = rest_util.get_url('/jobs/updates/?include_superseded=true')
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -533,7 +533,7 @@ class TestJobTypesView(TestCase):
     def test_successful(self):
         """Tests successfully calling the get all job types view."""
 
-        url = rest_utils.get_url('/job-types/')
+        url = rest_util.get_url('/job-types/')
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -554,7 +554,7 @@ class TestJobTypesView(TestCase):
     def test_name(self):
         """Tests successfully calling the jobs view filtered by job type name."""
 
-        url = rest_utils.get_url('/job-types/?name=%s' % self.job_type1.name)
+        url = rest_util.get_url('/job-types/?name=%s' % self.job_type1.name)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -565,7 +565,7 @@ class TestJobTypesView(TestCase):
     def test_category(self):
         """Tests successfully calling the jobs view filtered by job type category."""
 
-        url = rest_utils.get_url('/job-types/?category=%s' % self.job_type1.category)
+        url = rest_util.get_url('/job-types/?category=%s' % self.job_type1.category)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -576,7 +576,7 @@ class TestJobTypesView(TestCase):
     def test_sorting(self):
         """Tests custom sorting."""
 
-        url = rest_utils.get_url('/job-types/?order=priority')
+        url = rest_util.get_url('/job-types/?order=priority')
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -588,7 +588,7 @@ class TestJobTypesView(TestCase):
     def test_reverse_sorting(self):
         """Tests custom sorting in reverse."""
 
-        url = rest_utils.get_url('/job-types/?order=-mem_required')
+        url = rest_util.get_url('/job-types/?order=-mem_required')
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -599,7 +599,7 @@ class TestJobTypesView(TestCase):
 
     def test_create(self):
         """Tests creating a new job type."""
-        url = rest_utils.get_url('/job-types/')
+        url = rest_util.get_url('/job-types/')
         json_data = {
             'name': 'job-type-post-test',
             'version': '1.0.0',
@@ -637,7 +637,7 @@ class TestJobTypesView(TestCase):
 
     def test_create_max_scheduled(self):
         """Tests creating a new job type."""
-        url = rest_utils.get_url('/job-types/')
+        url = rest_util.get_url('/job-types/')
         json_data = {
             'name': 'job-type-max_scheduled-test',
             'version': '1.0.0',
@@ -672,7 +672,7 @@ class TestJobTypesView(TestCase):
 
     def test_create_trigger(self):
         """Tests creating a new job type with a trigger rule."""
-        url = rest_utils.get_url('/job-types/')
+        url = rest_util.get_url('/job-types/')
         json_data = {
             'name': 'job-type-post-test',
             'version': '1.0.0',
@@ -720,7 +720,7 @@ class TestJobTypesView(TestCase):
 
     def test_create_missing_param(self):
         """Tests creating a job type with missing fields."""
-        url = rest_utils.get_url('/job-types/')
+        url = rest_util.get_url('/job-types/')
         json_data = {
             'name': 'job-type-post-test',
         }
@@ -730,7 +730,7 @@ class TestJobTypesView(TestCase):
 
     def test_create_bad_param(self):
         """Tests creating a job type with invalid type fields."""
-        url = rest_utils.get_url('/job-types/')
+        url = rest_util.get_url('/job-types/')
         json_data = {
             'name': 'job-type-post-test',
             'version': '1.0.0',
@@ -752,7 +752,7 @@ class TestJobTypesView(TestCase):
 
     def test_create_bad_error(self):
         """Tests creating a new job type with an invalid error relationship."""
-        url = rest_utils.get_url('/job-types/')
+        url = rest_util.get_url('/job-types/')
         json_data = {
             'name': 'job-type-post-test',
             'version': '1.0.0',
@@ -778,7 +778,7 @@ class TestJobTypesView(TestCase):
 
     def test_create_bad_trigger_type(self):
         """Tests creating a new job type with an invalid trigger type."""
-        url = rest_utils.get_url('/job-types/')
+        url = rest_util.get_url('/job-types/')
         json_data = {
             'name': 'job-type-post-test',
             'version': '1.0.0',
@@ -802,7 +802,7 @@ class TestJobTypesView(TestCase):
 
     def test_create_bad_trigger_config(self):
         """Tests creating a new job type with an invalid trigger rule configuration."""
-        url = rest_utils.get_url('/job-types/')
+        url = rest_util.get_url('/job-types/')
         json_data = {
             'name': 'job-type-post-test',
             'version': '1.0.0',
@@ -872,7 +872,7 @@ class TestJobTypeDetailsView(TestCase):
     def test_not_found(self):
         """Tests successfully calling the get job type details view with a job id that does not exist."""
 
-        url = rest_utils.get_url('/job-types/100/')
+        url = rest_util.get_url('/job-types/100/')
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
@@ -880,7 +880,7 @@ class TestJobTypeDetailsView(TestCase):
     def test_successful(self):
         """Tests successfully calling the get job type details view."""
 
-        url = rest_utils.get_url('/job-types/%d/' % self.job_type.id)
+        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -903,7 +903,7 @@ class TestJobTypeDetailsView(TestCase):
     def test_edit_simple(self):
         """Tests editing only the basic attributes of a job type"""
 
-        url = rest_utils.get_url('/job-types/%d/' % self.job_type.id)
+        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
         json_data = {
             'title': 'Title EDIT',
             'description': 'Description EDIT',
@@ -926,7 +926,7 @@ class TestJobTypeDetailsView(TestCase):
         interface = self.interface.copy()
         interface['command'] = 'test_cmd_edit'
 
-        url = rest_utils.get_url('/job-types/%d/' % self.job_type.id)
+        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
         json_data = {
             'interface': interface,
         }
@@ -946,7 +946,7 @@ class TestJobTypeDetailsView(TestCase):
         error_mapping = self.error_mapping.copy()
         error_mapping['exit_codes']['10'] = error.name
 
-        url = rest_utils.get_url('/job-types/%d/' % self.job_type.id)
+        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
         json_data = {
             'error_mapping': error_mapping,
         }
@@ -965,7 +965,7 @@ class TestJobTypeDetailsView(TestCase):
         trigger_config = self.trigger_config.copy()
         trigger_config['condition']['media_type'] = 'application/json'
 
-        url = rest_utils.get_url('/job-types/%d/' % self.job_type.id)
+        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
         json_data = {
             'trigger_rule': {
                 'type': 'PARSE',
@@ -988,7 +988,7 @@ class TestJobTypeDetailsView(TestCase):
         trigger_config = self.trigger_config.copy()
         trigger_config['condition']['media_type'] = 'application/json'
 
-        url = rest_utils.get_url('/job-types/%d/' % self.job_type.id)
+        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
         json_data = {
             'trigger_rule': {
                 'is_active': False,
@@ -1006,7 +1006,7 @@ class TestJobTypeDetailsView(TestCase):
 
     def test_edit_trigger_rule_remove(self):
         """Tests removing the trigger rule from a job type"""
-        url = rest_utils.get_url('/job-types/%d/' % self.job_type.id)
+        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
         json_data = {
             'trigger_rule': None,
         }
@@ -1027,7 +1027,7 @@ class TestJobTypeDetailsView(TestCase):
         trigger_config = self.trigger_config.copy()
         trigger_config['condition']['media_type'] = 'application/json'
 
-        url = rest_utils.get_url('/job-types/%d/' % self.job_type.id)
+        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
         json_data = {
             'interface': interface,
             'trigger_rule': {
@@ -1051,7 +1051,7 @@ class TestJobTypeDetailsView(TestCase):
         interface = self.interface.copy()
         interface['version'] = 'BAD'
 
-        url = rest_utils.get_url('/job-types/%d/' % self.job_type.id)
+        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
         json_data = {
             'interface': interface,
         }
@@ -1064,7 +1064,7 @@ class TestJobTypeDetailsView(TestCase):
         error_mapping = self.error_mapping.copy()
         error_mapping['version'] = 'BAD'
 
-        url = rest_utils.get_url('/job-types/%d/' % self.job_type.id)
+        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
         json_data = {
             'error_mapping': error_mapping,
         }
@@ -1077,7 +1077,7 @@ class TestJobTypeDetailsView(TestCase):
         trigger_config = self.trigger_config.copy()
         trigger_config['version'] = 'BAD'
 
-        url = rest_utils.get_url('/job-types/%d/' % self.job_type.id)
+        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
         json_data = {
             'trigger_rule': {
                 'type': 'PARSE',
@@ -1091,7 +1091,7 @@ class TestJobTypeDetailsView(TestCase):
     def test_edit_system_job_pause(self):
         """Tests pausing a system job"""
 
-        url = rest_utils.get_url('/job-types/%d/' % self.job_type.id)
+        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
         json_data = {
             'is_paused': True
         }
@@ -1109,7 +1109,7 @@ class TestJobTypeDetailsView(TestCase):
 
     def test_edit_system_job_invalid_field(self):
         """Tests updating an invalid system job field"""
-        url = rest_utils.get_url('/job-types/%d/' % self.job_type.id)
+        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
         json_data = {
             'title': 'Invalid title change'
         }
@@ -1152,7 +1152,7 @@ class TestJobTypesValidationView(TransactionTestCase):
             },
         }
 
-        url = rest_utils.get_url('/job-types/validation/')
+        url = rest_util.get_url('/job-types/validation/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1190,7 +1190,7 @@ class TestJobTypesValidationView(TransactionTestCase):
             }
         }
 
-        url = rest_utils.get_url('/job-types/validation/')
+        url = rest_util.get_url('/job-types/validation/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1199,7 +1199,7 @@ class TestJobTypesValidationView(TransactionTestCase):
 
     def test_bad_param(self):
         """Tests validating a new job type with missing fields."""
-        url = rest_utils.get_url('/job-types/validation/')
+        url = rest_util.get_url('/job-types/validation/')
         json_data = {
             'name': 'job-type-post-test',
         }
@@ -1221,7 +1221,7 @@ class TestJobTypesValidationView(TransactionTestCase):
             },
         }
 
-        url = rest_utils.get_url('/job-types/validation/')
+        url = rest_util.get_url('/job-types/validation/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -1258,7 +1258,7 @@ class TestJobTypesValidationView(TransactionTestCase):
             }
         }
 
-        url = rest_utils.get_url('/job-types/validation/')
+        url = rest_util.get_url('/job-types/validation/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1285,7 +1285,7 @@ class TestJobTypesValidationView(TransactionTestCase):
             }
         }
 
-        url = rest_utils.get_url('/job-types/validation/')
+        url = rest_util.get_url('/job-types/validation/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -1312,7 +1312,7 @@ class TestJobTypesValidationView(TransactionTestCase):
             }
         }
 
-        url = rest_utils.get_url('/job-types/validation/')
+        url = rest_util.get_url('/job-types/validation/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -1329,7 +1329,7 @@ class TestJobTypesStatusView(TestCase):
         """Tests successfully calling the status view."""
         job = job_test_utils.create_job(job_type=self.job_type, status='COMPLETED')
 
-        url = rest_utils.get_url('/job-types/status/')
+        url = rest_util.get_url('/job-types/status/')
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1350,7 +1350,7 @@ class TestJobTypesStatusView(TestCase):
         job_test_utils.create_job(job_type=self.job_type, status='COMPLETED', last_status_change=new_timestamp)
         job_test_utils.create_job(job_type=self.job_type, status='RUNNING', last_status_change=new_timestamp)
 
-        url = rest_utils.get_url('/job-types/status/?started=2015-01-05T00:00:00Z')
+        url = rest_util.get_url('/job-types/status/?started=2015-01-05T00:00:00Z')
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1377,7 +1377,7 @@ class TestJobTypesPendingView(TestCase):
     def test_successful(self):
         """Tests successfully calling the pending status view."""
 
-        url = rest_utils.get_url('/job-types/pending/')
+        url = rest_util.get_url('/job-types/pending/')
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1398,7 +1398,7 @@ class TestJobTypesRunningView(TestCase):
     def test_successful(self):
         """Tests successfully calling the running status view."""
 
-        url = rest_utils.get_url('/job-types/running/')
+        url = rest_util.get_url('/job-types/running/')
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1421,7 +1421,7 @@ class TestJobTypesSystemFailuresView(TestCase):
     def test_successful(self):
         """Tests successfully calling the system failures view."""
 
-        url = rest_utils.get_url('/job-types/system-failures/')
+        url = rest_util.get_url('/job-types/system-failures/')
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1489,7 +1489,7 @@ class TestJobsWithExecutionView(TransactionTestCase):
             self.job_2b.id: (self.job_2b, self.job_type_2, self.last_run_2b),
         }
 
-        url = rest_utils.get_url('/jobs/executions/')
+        url = rest_util.get_url('/jobs/executions/')
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1517,7 +1517,7 @@ class TestJobsWithExecutionView(TransactionTestCase):
             self.assertEqual(expected_last_run.job_exit_code, result_last_run_dict['job_exit_code'])
 
     def test_with_status_filter(self):
-        url = rest_utils.get_url('/jobs/executions/?status=COMPLETED')
+        url = rest_util.get_url('/jobs/executions/?status=COMPLETED')
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1528,7 +1528,7 @@ class TestJobsWithExecutionView(TransactionTestCase):
             self.assertTrue(job_entry['id'] in (self.job_1a.id, self.job_2b.id))
 
     def test_with_job_type_id_filter(self):
-        url = rest_utils.get_url('/jobs/executions/?job_type_id=%s' % self.job_type_1.id)
+        url = rest_util.get_url('/jobs/executions/?job_type_id=%s' % self.job_type_1.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1539,7 +1539,7 @@ class TestJobsWithExecutionView(TransactionTestCase):
             self.assertTrue(job_entry['id'] in (self.job_1a.id, self.job_1b.id))
 
     def test_with_job_type_name_filter(self):
-        url = rest_utils.get_url('/jobs/executions/?job_type_name=%s' % self.job_type_2.name)
+        url = rest_util.get_url('/jobs/executions/?job_type_name=%s' % self.job_type_2.name)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1550,7 +1550,7 @@ class TestJobsWithExecutionView(TransactionTestCase):
             self.assertTrue(job_entry['id'] in (self.job_2a.id, self.job_2b.id))
 
     def test_with_job_type_category_filter(self):
-        url = rest_utils.get_url('/jobs/executions/?job_type_category=%s' % self.job_type_2.category)
+        url = rest_util.get_url('/jobs/executions/?job_type_category=%s' % self.job_type_2.category)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1566,7 +1566,7 @@ class TestJobsWithExecutionView(TransactionTestCase):
         error = error_test_utils.create_error(category='DATA')
         job = job_test_utils.create_job(error=error)
 
-        url = rest_utils.get_url('/jobs/executions/?error_category=%s' % error.category)
+        url = rest_util.get_url('/jobs/executions/?error_category=%s' % error.category)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1578,7 +1578,7 @@ class TestJobsWithExecutionView(TransactionTestCase):
     def test_superseded(self):
         """Tests getting superseded jobs."""
 
-        url = rest_utils.get_url('/jobs/executions/?include_superseded=true')
+        url = rest_util.get_url('/jobs/executions/?include_superseded=true')
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1621,7 +1621,7 @@ class TestJobExecutionsView(TransactionTestCase):
 
     def test_get_job_executions(self):
         """This test checks to make sure there are 10 job executions."""
-        url = rest_utils.get_url('/job-executions/')
+        url = rest_util.get_url('/job-executions/')
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1631,7 +1631,7 @@ class TestJobExecutionsView(TransactionTestCase):
 
     def test_get_job_executions_running_status(self):
         """This test checks to make sure there are 2 job executions running."""
-        url = rest_utils.get_url('/job-executions/?status=RUNNING')
+        url = rest_util.get_url('/job-executions/?status=RUNNING')
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1639,7 +1639,7 @@ class TestJobExecutionsView(TransactionTestCase):
         self.assertEqual(results['count'], 2)
 
     def test_get_job_executions_for_job_id(self):
-        url = rest_utils.get_url('/job-executions/?job_type_id=%s' % self.job_type_1.id)
+        url = rest_util.get_url('/job-executions/?job_type_id=%s' % self.job_type_1.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1653,7 +1653,7 @@ class TestJobExecutionsView(TransactionTestCase):
             self.assertTrue(job_exe_id in job_1_exe_list)
 
     def test_get_job_executions_for_job_name(self):
-        url = rest_utils.get_url('/job-executions/?job_type_name=%s' % self.job_type_1.name)
+        url = rest_util.get_url('/job-executions/?job_type_name=%s' % self.job_type_1.name)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1667,7 +1667,7 @@ class TestJobExecutionsView(TransactionTestCase):
             self.assertTrue(job_exe_id in job_1_exe_list)
 
     def test_get_job_executions_for_job_category(self):
-        url = rest_utils.get_url('/job-executions/?job_type_category=%s' % self.job_type_1.category)
+        url = rest_util.get_url('/job-executions/?job_type_category=%s' % self.job_type_1.category)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1683,13 +1683,13 @@ class TestJobExecutionsView(TransactionTestCase):
     def test_no_tz(self):
         start_date_time = timezone.now() - datetime.timedelta(hours=1)
         end_date_time = timezone.now()
-        url = rest_utils.get_url('/job-executions/?started={0}&ended={1}'.format(start_date_time.isoformat(),
+        url = rest_util.get_url('/job-executions/?started={0}&ended={1}'.format(start_date_time.isoformat(),
                                                                                  end_date_time.isoformat()))
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_get_job_execution_for_job_exe_id(self):
-        url = rest_utils.get_url('/job-executions/%d/' % self.job_exe_1a.id)
+        url = rest_util.get_url('/job-executions/%d/' % self.job_exe_1a.id)
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
@@ -1697,7 +1697,7 @@ class TestJobExecutionsView(TransactionTestCase):
         self.assertEqual(results['id'], self.job_exe_1a.id)
 
     def test_get_job_execution_bad_id(self):
-        url = rest_utils.get_url('/job-executions/9999999/')
+        url = rest_util.get_url('/job-executions/9999999/')
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
@@ -1720,7 +1720,7 @@ class TestJobExecutionsView(TransactionTestCase):
 
     # TODO: API_V3 Remove this test
     def test_get_job_execution_logs_deprecated(self):
-        url = url = rest_utils.get_url('/job-executions/%d/logs/' % self.job_exe_1b.id)
+        url = url = rest_util.get_url('/job-executions/%d/logs/' % self.job_exe_1b.id)
         response = self.client.generic('GET', url)
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
@@ -1734,7 +1734,7 @@ class TestJobExecutionSpecificLogView(TestCase):
         self.test_client = APIClient()
 
     def test_bad_job_exe_id(self):
-        url = rest_utils.get_url('/job-executions/999999/logs/combined/')
+        url = rest_util.get_url('/job-executions/999999/logs/combined/')
         response = self.test_client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
@@ -1748,7 +1748,7 @@ class TestJobExecutionSpecificLogView(TestCase):
             return {}, timezone.now()
         mock_get_logs.return_value.get_log_json.side_effect = new_get_log_json
 
-        url = rest_utils.get_url('/job-executions/999999/logs/combined/?format=json')
+        url = rest_util.get_url('/job-executions/999999/logs/combined/?format=json')
         response = self.test_client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
@@ -1764,7 +1764,7 @@ class TestJobExecutionSpecificLogView(TestCase):
             return 'hello', timezone.now()
         mock_get_logs.return_value.get_log_text.side_effect = new_get_log_text
 
-        url = rest_utils.get_url('/job-executions/999999/logs/combined/?format=txt')
+        url = rest_util.get_url('/job-executions/999999/logs/combined/?format=txt')
         response = self.test_client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
@@ -1780,7 +1780,7 @@ class TestJobExecutionSpecificLogView(TestCase):
             return '<html>hello</html>', timezone.now()
         mock_get_logs.return_value.get_log_text.side_effect = new_get_log_text
 
-        url = rest_utils.get_url('/job-executions/999999/logs/combined/?format=html')
+        url = rest_util.get_url('/job-executions/999999/logs/combined/?format=html')
         response = self.test_client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
@@ -1795,7 +1795,7 @@ class TestJobExecutionSpecificLogView(TestCase):
             return None, timezone.now()
         mock_get_logs.return_value.get_log_json.side_effect = new_get_log_json
 
-        url = rest_utils.get_url('/job-executions/999999/logs/combined/?format=json')
+        url = rest_util.get_url('/job-executions/999999/logs/combined/?format=json')
         response = self.test_client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
@@ -1810,7 +1810,7 @@ class TestJobExecutionSpecificLogView(TestCase):
             return '<html>hello</html>', timezone.now()
         mock_get_logs.return_value.get_log_text.side_effect = new_get_log_text
 
-        url = rest_utils.get_url('/job-executions/999999/logs/stdout/?format=html')
+        url = rest_util.get_url('/job-executions/999999/logs/stdout/?format=html')
         response = self.test_client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
@@ -1826,7 +1826,7 @@ class TestJobExecutionSpecificLogView(TestCase):
             return '<html>hello</html>', timezone.now()
         mock_get_logs.return_value.get_log_text.side_effect = new_get_log_text
 
-        url = rest_utils.get_url('/job-executions/999999/logs/stderr/?format=html')
+        url = rest_util.get_url('/job-executions/999999/logs/stderr/?format=html')
         response = self.test_client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
@@ -1843,7 +1843,7 @@ class TestJobExecutionSpecificLogView(TestCase):
             return {}, timezone.now()
         mock_get_logs.return_value.get_log_json.side_effect = new_get_log_json
 
-        url = rest_utils.get_url('/job-executions/999999/logs/combined/?started=2016-01-01T00:00:00Z&format=json')
+        url = rest_util.get_url('/job-executions/999999/logs/combined/?started=2016-01-01T00:00:00Z&format=json')
         response = self.test_client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
