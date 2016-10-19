@@ -3,6 +3,8 @@ import json
 
 import django.contrib.gis.geos as geos
 
+from job.configuration.results.exceptions import InvalidResultsManifest
+
 
 def parse_geo_json_file(geo_json_path):
     '''Parses GeoJSON from a file and returns a geometry object and metadata.
@@ -45,7 +47,10 @@ def parse_geo_json(geo_json):
 
     # Parse geometry
     if geom_json:
-        geom = geos.GEOSGeometry(json.dumps(geom_json), srid=4326)
+        try:
+            geom = geos.GEOSGeometry(json.dumps(geom_json), srid=4326)
+        except geos.GEOSException as geos_error:
+            raise InvalidResultsManifest(geos_error)
 
     return geom, props
 
