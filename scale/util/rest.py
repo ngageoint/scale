@@ -73,9 +73,9 @@ def check_time_range(started, ended, max_duration=None):
     """Checks whether the given time range is valid.
 
     :param started: The start of a time range.
-    :type started: datetime.datetime
+    :type started: datetime.datetime or None
     :param ended: The end of a time range.
-    :type ended: datetime.datetime
+    :type ended: datetime.datetime or None
     :param max_duration: The maximum amount of time between the started and ended range.
     :type max_duration: datetime.timedelta
     :returns: True when the time range is valid.
@@ -158,6 +158,13 @@ def get_relative_days(days):
 
 
 def get_url(path):
+    """Builds an absolute URL from the given path with any required prefixes, such as the default REST API version.
+
+    :param path: A URL path to combine with the default prefix.
+    :type path: string
+    :returns: The absolute path to use when calling the target URL path.
+    :rtype: string
+    """
     return '/%s%s' % (api_settings.DEFAULT_VERSION, path)
 
 
