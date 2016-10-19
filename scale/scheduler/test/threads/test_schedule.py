@@ -95,12 +95,12 @@ class TestSchedulingThread(TransactionTestCase):
         job_type_with_limit.max_scheduled = 4
         job_type_with_limit.save()
         job_exe_1 = job_test_utils.create_job_exe(job_type=job_type_with_limit, status='RUNNING')
-        queue_1_limit = queue_test_utils.create_queue(job_type=job_type_with_limit)
-        queue_2_limit = queue_test_utils.create_queue(job_type=job_type_with_limit)
-        queue_3_limit = queue_test_utils.create_queue(job_type=job_type_with_limit)
-        queue_4_limit = queue_test_utils.create_queue(job_type=job_type_with_limit)
-        queue_5_limit = queue_test_utils.create_queue(job_type=job_type_with_limit)
-        queue_6_limit = queue_test_utils.create_queue(job_type=job_type_with_limit)
+        queue_test_utils.create_queue(job_type=job_type_with_limit)
+        queue_test_utils.create_queue(job_type=job_type_with_limit)
+        queue_test_utils.create_queue(job_type=job_type_with_limit)
+        queue_test_utils.create_queue(job_type=job_type_with_limit)
+        queue_test_utils.create_queue(job_type=job_type_with_limit)
+        queue_test_utils.create_queue(job_type=job_type_with_limit)
         self._job_type_manager.sync_with_database()
         # One job of this type is already running
         self._job_exe_manager.add_job_exes([RunningJobExecution(job_exe_1)])

@@ -23,7 +23,7 @@ class NodeManager(object):
         """Adds the list of agent IDs to the manager so they can be looked up and registered in the database
 
         :param agent_ids: The list of agent IDs to add
-        :type agent_ids: [str]
+        :type agent_ids: [string]
         """
 
         with self._lock:
@@ -36,7 +36,7 @@ class NodeManager(object):
         """Returns the node with the given agent ID, possibly None
 
         :param agent_id: The agent ID of the node
-        :type agent_id: str
+        :type agent_id: string
         :returns: The node for the given agent ID or None
         :rtype: :class:`node.models.Node`
         """
@@ -60,7 +60,7 @@ class NodeManager(object):
         """Informs the manager that the node with the given agent ID was lost and has gone offline
 
         :param agent_id: The agent ID of the lost node
-        :type agent_id: str
+        :type agent_id: string
         """
 
         with self._lock:
@@ -70,7 +70,7 @@ class NodeManager(object):
         """Syncs with the database to retrieve updated node models and queries Mesos for unknown agent IDs
 
         :param master_hostname: The name of the Mesos master host
-        :type master_hostname: str
+        :type master_hostname: string
         :param master_port: The port used by the Mesos master
         :type master_port: int
         """
