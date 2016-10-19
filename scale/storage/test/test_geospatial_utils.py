@@ -4,6 +4,7 @@ from django.test import TestCase
 from mock import mock_open, patch
 
 import storage.geospatial_utils as geo_utils
+from job.configuration.results.exceptions import InvalidResultsManifest
 
 FEATURE_COLLECTION_GEOJSON = u'{"type": "FeatureCollection", "features": [{ "type": "Feature", "properties": { "prop_a": "A", "prop_b": "B" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 1.0, 10.5 ], [ 1.1, 21.1 ], [ 1.2, 21.2 ], [ 1.3, 21.6 ], [ 1.0, 10.5 ] ] ] } }]}'
 FEATURE_GEOJSON = u'{"type": "Feature", "properties": { "prop_a": "A", "prop_b": "B" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 1.0, 10.5 ], [ 1.1, 21.1 ], [ 1.2, 21.2 ], [ 1.3, 21.6 ], [ 1.0, 10.5 ] ] ] } }'
@@ -86,3 +87,12 @@ class TestGeospatialUtils(TestCase):
         # Check results
         self.assertEqual(center.geom_type, u'Point')
         self.assertEqual(center.coords, (1.5, 15.0))
+
+    def test_parse_bad_geo_json(self):
+        '''Tests parsing bad geojson'''
+
+        # Bad geom (missing repeat of first point to close polygon)
+        geo_json = {u'geometry': {u'type': u'POLYGON', u'coordinates': [[[40, 26], [50, 27], [60, 26], [50, 25]]]}, u'type': u'Feature'}
+
+        # Call method and check results
+        self.assertRaises(InvalidResultsManifest, geo_utils.parse_geo_json, geo_json)
