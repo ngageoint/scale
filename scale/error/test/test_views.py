@@ -7,6 +7,7 @@ from django.test import TestCase
 from rest_framework import status
 
 import error.test.utils as error_test_utils
+import util.rest as rest_util
 from error.models import Error
 
 
@@ -23,17 +24,17 @@ class TestErrorsView(TestCase):
     def test_list_errors(self):
         """Tests successfully calling the get Errors method."""
 
-        url = '/errors/'
+        url = rest_util.get_url('/errors/')
         response = self.client.get(url)
-        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = json.loads(response.content)
         self.assertEqual(len(result['results']), 3)
 
     def test_create_error_success(self):
         """Test successfully calling the create Error method."""
 
-        url = '/errors/'
+        url = rest_util.get_url('/errors/')
         json_data = {
             'name': 'error4',
             'title': 'Error 4',
@@ -41,9 +42,9 @@ class TestErrorsView(TestCase):
             'category': 'ALGORITHM',
         }
         response = self.client.post(url, json.dumps(json_data), 'application/json')
-        result = json.loads(response.content)
-
         self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        result = json.loads(response.content)
         self.assertIsNotNone(result['id'])
         self.assertEqual(result['name'], 'error4')
         self.assertEqual(result['title'], 'Error 4')
@@ -54,7 +55,7 @@ class TestErrorsView(TestCase):
     def test_create_error_missing(self):
         """Test calling the create Error method with missing data."""
 
-        url = '/errors/'
+        url = rest_util.get_url('/errors/')
         json_data = {
             'name': 'error4',
             'category': 'ALGORITHM',
@@ -66,7 +67,7 @@ class TestErrorsView(TestCase):
     def test_create_error_bad_category(self):
         """Test calling the create Error method with a bad category value."""
 
-        url = '/errors/'
+        url = rest_util.get_url('/errors/')
         json_data = {
             'name': 'error4',
             'title': 'Error 4',
@@ -80,7 +81,7 @@ class TestErrorsView(TestCase):
     def test_create_error_system(self):
         """Test that system errors cannot be created."""
 
-        url = '/errors/'
+        url = rest_util.get_url('/errors/')
         json_data = {
             'name': 'error4',
             'title': 'Error 4',
@@ -105,11 +106,11 @@ class TestErrorDetailsView(TestCase):
     def test_get_error_success(self):
         """Test successfully calling the Get Error method."""
 
-        url = '/errors/%d/' % self.error1.id
+        url = rest_util.get_url('/errors/%d/' % self.error1.id)
         response = self.client.get(url)
-        result = json.loads(response.content)
-
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
         self.assertEqual(result['id'], self.error1.id)
         self.assertEqual(result['name'], self.error1.name)
         self.assertEqual(result['title'], self.error1.title)
@@ -120,22 +121,22 @@ class TestErrorDetailsView(TestCase):
     def test_get_error_not_found(self):
         """Test calling the Get Error method with a bad error id."""
 
-        url = '/errors/9999/'
+        url = rest_util.get_url('/errors/9999/')
         response = self.client.get(url)
 
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
     def test_edit_error_success(self):
         """Test successfully calling the edit Error method."""
 
-        url = '/errors/%d/' % self.error2.id
+        url = rest_util.get_url('/errors/%d/' % self.error2.id)
         json_data = {
             'title': 'error EDIT',
         }
         response = self.client.patch(url, json.dumps(json_data), 'application/json')
-        result = json.loads(response.content)
-
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
         self.assertEqual(result['id'], self.error2.id)
         self.assertEqual(result['name'], self.error2.name)
         self.assertEqual(result['title'], 'error EDIT')
@@ -149,18 +150,18 @@ class TestErrorDetailsView(TestCase):
     def test_edit_error_not_found(self):
         """Test calling the edit Error method with a bad error id."""
 
-        url = '/errors/9999/'
+        url = rest_util.get_url('/errors/9999/')
         json_data = {
             'title': 'error EDIT',
         }
         response = self.client.patch(url, json.dumps(json_data), 'application/json')
 
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
     def test_edit_error_bad_category(self):
         """Test calling the edit Error method with a bad category."""
 
-        url = '/errors/%d/' % self.error2.id
+        url = rest_util.get_url('/errors/%d/' % self.error2.id)
         json_data = {
             'category': 'BAD',
         }
@@ -171,7 +172,7 @@ class TestErrorDetailsView(TestCase):
     def test_edit_error_system(self):
         """Test that an existing system error cannot be edited."""
 
-        url = '/errors/%d/' % self.error1.id
+        url = rest_util.get_url('/errors/%d/' % self.error1.id)
         json_data = {
             'title': 'error EDIT',
         }
@@ -182,7 +183,7 @@ class TestErrorDetailsView(TestCase):
     def test_edit_error_change_system(self):
         """Test that an existing error cannot be changed to a system level error."""
 
-        url = '/errors/%d/' % self.error2.id
+        url = rest_util.get_url('/errors/%d/' % self.error2.id)
         json_data = {
             'category': 'SYSTEM',
         }
