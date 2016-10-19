@@ -19,6 +19,8 @@ fi
 if [[ ${DEPLOY_DB} == 'true' ]]
 then
     export SCALE_DB_PORT=`cat dcos_cli.log | grep DB_PORT | cut -d '=' -f2`
+    export SCALE_DB_HOST=`cat dcos_cli.log | grep DB_HOST | cut -d '=' -f2`
+    echo "DATABASE_HOST: ${SCALE_DB_HOST}"
     echo "DATABASE_PORT: ${SCALE_DB_PORT}"
 fi
 echo "${SCALE_DB_HOST}:${SCALE_DB_PORT}:*:${SCALE_DB_USER}:${SCALE_DB_PASS}" >> ~/.pgpass
