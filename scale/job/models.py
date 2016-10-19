@@ -226,7 +226,7 @@ class JobManager(models.Manager):
         job.outputs = self._merge_job_data(job_interface_dict['output_data'],
                                            job.get_job_results().get_dict()['output_data'], output_files)
 
-        # TODO Remove these attributes once the UI migrates to "inputs" and "outputs"
+        # TODO: API_V3 Remove these attributes
         job.input_files = input_files
         job.products = output_files
         return job

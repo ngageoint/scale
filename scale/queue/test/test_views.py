@@ -214,6 +214,37 @@ class TestQueueNewJobView(TestCase):
         self.assertTrue(response['Location'])
         self.assertEqual(result['job_type']['id'], self.job_type.id)
         self.assertEqual(result['status'], 'QUEUED')
+        self.assertEqual(len(result['inputs']), 1)
+        self.assertEqual(len(result['outputs']), 1)
+
+    # TODO: API_V3 Remove this test
+    def test_successful_v3(self):
+        """Tests calling the queue new job view successfully under the legacy API."""
+
+        json_data = {
+            'job_type_id': self.job_type.id,
+            'job_data': {
+                'version': '1.0',
+                'input_data': [{
+                    'name': 'input_file',
+                    'file_id': self.file1.id,
+                }],
+                'output_data': [{
+                    'name': 'output_file',
+                    'workspace_id': self.workspace.id,
+                }],
+            },
+        }
+        url = '/v3/queue/new-job/'
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        result = json.loads(response.content)
+        self.assertTrue(response['Location'])
+        self.assertEqual(result['job_type']['id'], self.job_type.id)
+        self.assertEqual(result['status'], 'QUEUED')
+        self.assertEqual(len(result['input_files']), 1)
+        self.assertEqual(len(result['products']), 0)
 
 
 class TestQueueNewRecipeView(TestCase):

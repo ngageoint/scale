@@ -312,7 +312,7 @@ place jobs and recipes on the queue for processing.
 |            ],                                                                                                           |
 |            "version": "1.0"                                                                                             |
 |        },                                                                                                               |
-|        "input_files": [                                                                                                 |
+|        "inputs": [                                                                                                      |
 |            {                                                                                                            |
 |                "id": 2,                                                                                                 |
 |                "workspace": {                                                                                           |
@@ -387,7 +387,7 @@ place jobs and recipes on the queue for processing.
 |                "error": null                                                                                            |
 |            }                                                                                                            |
 |        ],                                                                                                               |
-|        "products": [                                                                                                    |
+|        "outputs": [                                                                                                     |
 |            {                                                                                                            |
 |                "id": 8484,                                                                                              |
 |                "workspace": {                                                                                           |

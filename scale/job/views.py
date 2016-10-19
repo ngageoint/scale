@@ -18,7 +18,7 @@ from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.job_interface import JobInterface
 from job.exceptions import InvalidJobField
-from job.serializers import (JobDetailsSerializer, JobSerializer, JobTypeDetailsSerializer,
+from job.serializers import (JobDetailsSerializer, JobDetailsSerializerV3, JobSerializer, JobTypeDetailsSerializer,
                              JobTypeFailedStatusSerializer, JobTypeSerializer, JobTypePendingStatusSerializer,
                              JobTypeRunningStatusSerializer, JobTypeStatusSerializer, JobUpdateSerializer,
                              JobWithExecutionSerializer, JobExecutionSerializer,
@@ -469,7 +469,13 @@ class JobsView(ListAPIView):
 class JobDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving details about a single job."""
     queryset = Job.objects.all()
-    serializer_class = JobDetailsSerializer
+
+    # TODO: API_V3 Remove this serializer
+    def get_serializer_class(self):
+        """Override the serializer for legacy API calls."""
+        if self.request.version == 'v3':
+            return JobDetailsSerializerV3
+        return JobDetailsSerializer
 
     def get(self, request, job_id):
         """Retrieves jobs and returns it in JSON form

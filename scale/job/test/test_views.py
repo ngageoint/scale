@@ -262,6 +262,21 @@ class TestJobDetailsView(TestCase):
         else:
             self.assertEqual(len(result['recipes']), 0)
 
+    # TODO: API_V3 Remove this test
+    def test_successful_v3(self):
+        """Tests successfully calling the job details view under the legacy API."""
+
+        url = '/v3/jobs/%i/' % self.job.id
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(result['job_type']['name'], self.job.job_type.name)
+        self.assertEqual(result['job_type_rev']['job_type']['id'], self.job.job_type.id)
+
+        self.assertEqual(len(result['input_files']), 0)
+        self.assertEqual(len(result['products']), 1)
+
     def test_successful_property(self):
         """Tests successfully calling the job details view for one input property."""
         self.job.job_type_rev.interface['input_data'] = [{
