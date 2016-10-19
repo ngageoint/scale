@@ -9,7 +9,7 @@ import rest_framework.renderers as renderers
 import rest_framework.serializers as serializers
 import rest_framework.status as status
 from django.conf import settings
-from django.conf.urls import include, url
+from django.conf.urls import include, patterns, url
 from rest_framework.exceptions import APIException
 
 import util.parse as parse_util
@@ -28,6 +28,15 @@ class ModelIdSerializer(serializers.Serializer):
     id = serializers.IntegerField()
 
 
+class PlainTextRenderer(renderers.BaseRenderer):
+    """Encodes a string using the requested character set and renders it as text/plain."""
+    media_type = 'text/plain'
+    format = 'txt'
+
+    def render(self, data, media_type=None, renderer_context=None):
+        return data.encode(self.charset)
+
+
 class BadParameter(APIException):
     """Exception indicating a REST API call contains an invalid value or a missing required parameter."""
     status_code = status.HTTP_400_BAD_REQUEST
@@ -42,9 +51,9 @@ def get_versioned_urls(apps):
     """Generates a list of URL patterns for applications with REST APIs
 
     :param apps: A list of application names to register.
-    :type apps: list[string]
+    :type apps: [string]
     :returns: A list of URL patterns for REST APIs with version prefixes.
-    :rtype: list[:class:`django.core.urlresolvers.RegexURLPattern`]
+    :rtype: [:class:`django.core.urlresolvers.RegexURLPattern`]
     """
     urls = []
 
@@ -58,10 +67,11 @@ def get_versioned_urls(apps):
 
     # Generate a URL pattern for each endpoint with a version prefix
     for version in allowed_versions:
-        version_urls = []
+        app_urls = []
         for app in apps:
-            version_urls.append(url(r'^' + version + '/', include(app + '.urls', namespace=version)))
-        urls.extend(version_urls)
+            app_urls.append(url('', include(app + '.urls')))
+        app_patterns = patterns('', *app_urls)
+        urls.append((r'^' + version + '/', include(app_patterns, namespace=version)))
     return urls
 
 
@@ -71,7 +81,7 @@ def check_update(request, fields):
     :param request: The context of an active HTTP request.
     :type request: :class:`rest_framework.request.Request`
     :param fields: A list of field names that are permitted.
-    :type fields: list[string]
+    :type fields: [string]
     :returns: True when the request does not include extra fields.
     :rtype: bool
 
@@ -79,7 +89,7 @@ def check_update(request, fields):
     :raises :class:`exceptions.AssertionError`: If fields in not a list or None.
     """
     fields = fields or []
-    assert(type(fields) == type([]))
+    assert(isinstance(fields, 'list'))
     extra = filter(lambda x, y=fields: x not in y, request.data.keys())
     if extra:
         raise ReadOnly('Fields do not allow updates: %s' % ', '.join(extra))
@@ -118,9 +128,9 @@ def check_together(names, values):
     """Checks whether a list of fields as a group. Either all or none of the fields should be provided.
 
     :param names: The list of field names to check.
-    :type names: list[string]
+    :type names: [string]
     :param values: The list of field values to check.
-    :type values: list[object]
+    :type values: [object]
     :returns: True when all parameters are provided and false if none of the parameters are provided.
     :rtype: bool
 
@@ -187,7 +197,7 @@ def parse_string(request, name, default_value=None, required=True, accepted_valu
         does not exist, there is no default value, and required is True.
     :type required: bool
     :param accepted_values: A list of values that are acceptable for the parameter.
-    :type accepted_values: list[string]
+    :type accepted_values: [string]
     :returns: The value of the named parameter or the default value if provided.
     :rtype: string
 
@@ -206,14 +216,14 @@ def parse_string_list(request, name, default_value=None, required=True, accepted
     :param name: The name of the parameter to parse.
     :type name: string
     :param default_value: The name of the parameter to parse.
-    :type default_value: list[string]
+    :type default_value: [string]
     :param required: Indicates whether or not the parameter is required. An exception will be raised if the parameter
         does not exist, there is no default value, and required is True.
     :type required: bool
     :param accepted_values: A list of values that are acceptable for the parameter.
-    :type accepted_values: list[string]
+    :type accepted_values: [string]
     :returns: The values of the named parameter or the default values if provided.
-    :rtype: list[string]
+    :rtype: [string]
 
     :raises :class:`util.rest.BadParameter`: If the value cannot be parsed or does not match the validation list.
     """
@@ -264,7 +274,7 @@ def parse_int(request, name, default_value=None, required=True, accepted_values=
         does not exist, there is no default value, and required is True.
     :type required: bool
     :param accepted_values: A list of values that are acceptable for the parameter.
-    :type accepted_values: list[int]
+    :type accepted_values: [int]
     :returns: The value of the named parameter or the default value if provided.
     :rtype: int
 
@@ -290,14 +300,14 @@ def parse_int_list(request, name, default_value=None, required=True, accepted_va
     :param name: The name of the parameter to parse.
     :type name: string
     :param default_value: The name of the parameter to parse.
-    :type default_value: list[int]
+    :type default_value: [int]
     :param required: Indicates whether or not the parameter is required. An exception will be raised if the parameter
         does not exist, there is no default value, and required is True.
     :type required: bool
     :param accepted_values: A list of values that are acceptable for the parameter.
-    :type accepted_values: list[int]
+    :type accepted_values: [int]
     :returns: The values of the named parameter or the default values if provided.
-    :rtype: list[int]
+    :rtype: [int]
 
     :raises :class:`util.rest.BadParameter`: If the value cannot be parsed or does not match the validation list.
     """
@@ -328,7 +338,7 @@ def parse_float(request, name, default_value=None, required=True, accepted_value
         does not exist, there is no default value, and required is True.
     :type required: bool
     :param accepted_values: A list of values that are acceptable for the parameter.
-    :type accepted_values: list[float]
+    :type accepted_values: [float]
     :returns: The value of the named parameter or the default value if provided.
     :rtype: float
 
@@ -500,7 +510,7 @@ def _get_param_list(request, name, default_value=None, required=True):
     :param default_value: The name of the parameter to parse.
     :type default_value: object
     :returns: A list of the values of the named parameter or the default value if provided.
-    :rtype: list[object]
+    :rtype: [object]
     """
     value = None
     if name in request.query_params:
@@ -522,9 +532,9 @@ def _check_accepted_value(name, value, accepted_values):
     :param name: The name of the parameter.
     :type name: string
     :param value: A value to validate.
-    :type value: list[object]
+    :type value: object
     :param accepted_values: A list of values that are acceptable for the parameter.
-    :type accepted_values: list[object]
+    :type accepted_values: [object]
     """
     if value and accepted_values:
         if value not in accepted_values:
@@ -537,22 +547,10 @@ def _check_accepted_values(name, values, accepted_values):
     :param name: The name of the parameter.
     :type name: string
     :param values: A list of values to validate.
-    :type values: list[object]
+    :type values: [object]
     :param accepted_values: A list of values that are acceptable for the parameter.
-    :type accepted_values: list[object]
+    :type accepted_values: [object]
     """
     if values and accepted_values:
         for value in values:
             _check_accepted_value(name, value, accepted_values)
-
-
-class PlainTextRenderer(renderers.BaseRenderer):
-    '''A django rest framework renderer which encodes a string using the requested character set
-       and returns is as text/plain.
-    '''
-    media_type = 'text/plain'
-    format = 'txt'
-
-    def render(self, data, media_type=None, renderer_context=None):
-        return data.encode(self.charset)
-

@@ -26,7 +26,7 @@ REST_API_APPS = [
 ]
 
 # Generate URLs for all REST APIs with version prefix
-rest_urls = rest_util.get_versioned_urls(REST_API_APPS)
+versioned_urls = rest_util.get_versioned_urls(REST_API_APPS)
 
 urlpatterns = patterns(
     '',
@@ -34,4 +34,5 @@ urlpatterns = patterns(
     # Map all the paths required by the admin applications
     url(r'^admin/', include(admin.site.urls)),
 
-) + rest_urls
+    *versioned_urls
+)
