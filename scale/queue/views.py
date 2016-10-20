@@ -4,17 +4,17 @@ from __future__ import unicode_literals
 import datetime
 import logging
 
-import django.core.urlresolvers as urlresolvers
 import rest_framework.status as status
 from django.http.response import Http404
 from rest_framework.parsers import JSONParser
 from rest_framework.generics import GenericAPIView, ListAPIView
 from rest_framework.response import Response
+from rest_framework.reverse import reverse
 
 import util.rest as rest_util
 from job.configuration.data.exceptions import InvalidData
 from job.models import Job, JobType
-from job.serializers import JobDetailsSerializer, JobSerializer
+from job.serializers import JobDetailsSerializer, JobDetailsSerializerV3, JobSerializer
 from queue.models import JobLoad, Queue
 from queue.serializers import JobLoadGroupSerializer, QueueStatusSerializer, RequeueJobSerializer
 from recipe.configuration.data.exceptions import InvalidRecipeData
@@ -62,6 +62,13 @@ class QueueNewJobView(GenericAPIView):
     queryset = Job.objects.all()
     serializer_class = JobDetailsSerializer
 
+    # TODO: API_V3 Remove this serializer
+    def get_serializer_class(self):
+        """Override the serializer for legacy API calls."""
+        if self.request.version == 'v3':
+            return JobDetailsSerializerV3
+        return JobDetailsSerializer
+
     def post(self, request):
         """Creates a new job, places it on the queue, and returns the new job information in JSON form
 
@@ -87,7 +94,7 @@ class QueueNewJobView(GenericAPIView):
         job_details = Job.objects.get_details(job_id)
 
         serializer = self.get_serializer(job_details)
-        job_exe_url = urlresolvers.reverse('job_execution_details_view', args=[job_exe_id])
+        job_exe_url = reverse('job_execution_details_view', args=[job_exe_id], request=request)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=job_exe_url))
 
 
@@ -126,7 +133,7 @@ class QueueNewRecipeView(GenericAPIView):
             raise Http404
 
         serializer = self.get_serializer(recipe)
-        recipe_url = urlresolvers.reverse('recipe_details_view', args=[recipe.id])
+        recipe_url = reverse('recipe_details_view', args=[recipe.id], request=request)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=recipe_url))
 
 

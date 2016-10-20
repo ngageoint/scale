@@ -2,12 +2,12 @@ from __future__ import unicode_literals
 
 import logging
 
-import django.core.urlresolvers as urlresolvers
 import rest_framework.status as status
 from django.db import transaction
 from django.http.response import Http404
 from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
+from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
 import trigger.handler as trigger_handler
@@ -17,8 +17,8 @@ from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.configuration.definition.exceptions import InvalidDefinition
 from recipe.configuration.definition.recipe_definition import RecipeDefinition
 from recipe.exceptions import ReprocessError
-from recipe.serializers import (RecipeDetailsSerializer, RecipeSerializer, RecipeTypeDetailsSerializer,
-                                RecipeTypeSerializer)
+from recipe.serializers import (RecipeDetailsSerializer, RecipeDetailsSerializerV3, RecipeSerializer,
+                                RecipeTypeDetailsSerializer, RecipeTypeSerializer)
 from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerType
 from util.rest import BadParameter
 
@@ -104,7 +104,7 @@ class RecipeTypesView(GenericAPIView):
         except RecipeType.DoesNotExist:
             raise Http404
 
-        url = urlresolvers.reverse('recipe_type_details_view', args=[recipe_type.id])
+        url = reverse('recipe_type_details_view', args=[recipe_type.id], request=request)
         serializer = RecipeTypeDetailsSerializer(recipe_type)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
 
@@ -292,7 +292,13 @@ class RecipesView(ListAPIView):
 class RecipeDetailsView(RetrieveAPIView):
     """This view is the endpoint for retrieving details of a recipe"""
     queryset = Recipe.objects.all()
-    serializer_class = RecipeDetailsSerializer
+
+    # TODO: API_V3 Remove this serializer
+    def get_serializer_class(self):
+        """Override the serializer for legacy API calls."""
+        if self.request.version == 'v3':
+            return RecipeDetailsSerializerV3
+        return RecipeDetailsSerializer
 
     def retrieve(self, request, recipe_id):
         """Retrieves the details for a recipe and returns it in JSON form
@@ -344,6 +350,6 @@ class RecipeReprocessView(GenericAPIView):
         except Recipe.DoesNotExist:
             raise Http404
 
-        url = urlresolvers.reverse('recipe_details_view', args=[new_recipe.id])
+        url = reverse('recipe_details_view', args=[new_recipe.id], request=request)
         serializer = self.get_serializer(new_recipe)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))

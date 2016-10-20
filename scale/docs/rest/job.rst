@@ -198,6 +198,8 @@ These services provide access to information about "all", "currently running" an
 
 .. _rest_job_details:
 
+.. TODO: API_V3 Remove attributes
+
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Job Details**                                                                                                         |
 +=========================================================================================================================+
@@ -289,7 +291,7 @@ These services provide access to information about "all", "currently running" an
 | .name              | String            | The name of the input as defined by the job type interface.                    |
 |                    |                   | (See :ref:`architecture_jobs_interface_spec`)                                  |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .type              | String            | The type of the input as defined by teh job type interface.                    |
+| .type              | String            | The type of the input as defined by the job type interface.                    |
 |                    |                   | (See :ref:`architecture_jobs_interface_spec`)                                  |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .value             | Various           | The actual value of the input, which can vary depending on the type. Simple    |
@@ -297,17 +299,25 @@ These services provide access to information about "all", "currently running" an
 |                    |                   | will include a full JSON representation of a Scale file object.                |
 |                    |                   | (See :ref:`Scale File Details <rest_scale_file_details>`)                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
+| input_files        | JSON Object       | A list of files that the job used as input.                                    |
+|                    |                   | (See :ref:`Scale File Details <rest_scale_file_details>`)                      |
+|                    |                   | Removed in v4, use the "inputs" attribute instead.                             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
 | outputs            | Array             | A list of job interface outputs merged with their respective job result values.|
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .name              | String            | The name of the output as defined by the job type interface.                   |
 |                    |                   | (See :ref:`architecture_jobs_interface_spec`)                                  |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .type              | String            | The type of the output as defined by teh job type interface.                   |
+| .type              | String            | The type of the output as defined by the job type interface.                   |
 |                    |                   | (See :ref:`architecture_jobs_interface_spec`)                                  |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .value             | Various           | The actual value of the output, which can vary depending on the type. A file or|
 |                    |                   | files type will include a full JSON representation of a Product file object.   |
 |                    |                   | (See :ref:`Product Details <rest_product_details>`)                            |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| products           | JSON Object       | A list of files that the job produced as output.                               |
+|                    |                   | (See :ref:`Scale File Details <rest_scale_file_details>`)                      |
+|                    |                   | Removed in v4, use the "outputs" attribute instead.                            |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |

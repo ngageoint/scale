@@ -10,6 +10,7 @@ from rest_framework import status
 
 import ingest.test.utils as ingest_test_utils
 import storage.test.utils as storage_test_utils
+import util.rest as rest_util
 from ingest.models import Strike
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
 
@@ -27,11 +28,11 @@ class TestIngestsView(TestCase):
     def test_successful(self):
         """Tests successfully calling the ingests view."""
 
-        url = '/ingests/'
+        url = rest_util.get_url('/ingests/')
         response = self.client.generic('GET', url)
-        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = json.loads(response.content)
         self.assertEqual(len(result['results']), 2)
         for entry in result['results']:
             expected = None
@@ -47,33 +48,33 @@ class TestIngestsView(TestCase):
     def test_status(self):
         """Tests successfully calling the ingests view filtered by status."""
 
-        url = '/ingests/?status=%s' % self.ingest1.status
+        url = rest_util.get_url('/ingests/?status=%s' % self.ingest1.status)
         response = self.client.generic('GET', url)
-        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['status'], self.ingest1.status)
 
     def test_strike_id(self):
         """Tests successfully calling the ingests view filtered by strike processor."""
 
-        url = '/ingests/?strike_id=%i' % self.ingest1.strike.id
+        url = rest_util.get_url('/ingests/?strike_id=%i' % self.ingest1.strike.id)
         response = self.client.generic('GET', url)
-        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['strike']['id'], self.ingest1.strike.id)
 
     def test_file_name(self):
         """Tests successfully calling the ingests view filtered by file name."""
 
-        url = '/ingests/?file_name=%s' % self.ingest1.file_name
+        url = rest_util.get_url('/ingests/?file_name=%s' % self.ingest1.file_name)
         response = self.client.generic('GET', url)
-        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['file_name'], self.ingest1.file_name)
 
@@ -90,11 +91,11 @@ class TestIngestDetailsView(TestCase):
     def test_id(self):
         """Tests successfully calling the ingests view by id."""
 
-        url = '/ingests/%d/' % self.ingest.id
+        url = rest_util.get_url('/ingests/%d/' % self.ingest.id)
         response = self.client.generic('GET', url)
-        result = json.loads(response.content)
-
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
         self.assertEqual(result['id'], self.ingest.id)
         self.assertEqual(result['file_name'], self.ingest.file_name)
         self.assertEqual(result['status'], self.ingest.status)
@@ -102,11 +103,11 @@ class TestIngestDetailsView(TestCase):
     def test_file_name(self):
         """Tests successfully calling the ingests view by file name."""
 
-        url = '/ingests/%s/' % self.ingest.file_name
+        url = rest_util.get_url('/ingests/%s/' % self.ingest.file_name)
         response = self.client.generic('GET', url)
-        result = json.loads(response.content)
-
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
         self.assertEqual(result['id'], self.ingest.id)
         self.assertEqual(result['file_name'], self.ingest.file_name)
         self.assertEqual(result['status'], self.ingest.status)
@@ -114,11 +115,11 @@ class TestIngestDetailsView(TestCase):
     def test_missing(self):
         """Tests calling the ingests view with an invalid id or file name."""
 
-        url = '/ingests/12345/'
+        url = rest_util.get_url('/ingests/12345/')
         response = self.client.generic('GET', url)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND), response.content
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
-        url = '/ingests/missing_file.txt/'
+        url = rest_util.get_url('/ingests/missing_file.txt/')
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
@@ -141,11 +142,11 @@ class TestIngestStatusView(TestCase):
     def test_successful(self):
         """Tests successfully calling the ingest status view."""
 
-        url = '/ingests/status/'
+        url = rest_util.get_url('/ingests/status/')
         response = self.client.generic('GET', url)
-        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
 
         entry = result['results'][0]
@@ -157,11 +158,11 @@ class TestIngestStatusView(TestCase):
     def test_time_range(self):
         """Tests successfully calling the ingest status view with a time range filter."""
 
-        url = '/ingests/status/?started=2015-01-01T00:00:00Z'
+        url = rest_util.get_url('/ingests/status/?started=2015-01-01T00:00:00Z')
         response = self.client.generic('GET', url)
-        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
 
         entry = result['results'][0]
@@ -173,11 +174,12 @@ class TestIngestStatusView(TestCase):
     def test_use_ingest_time(self):
         """Tests successfully calling the ingest status view grouped by ingest time instead of data time."""
 
-        url = '/ingests/status/?started=2015-02-01T00:00:00Z&ended=2015-03-01T00:00:00Z&use_ingest_time=true'
+        url = rest_util.get_url('/ingests/status/?started=2015-02-01T00:00:00Z&'
+                                'ended=2015-03-01T00:00:00Z&use_ingest_time=true')
         response = self.client.generic('GET', url)
-        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
 
         entry = result['results'][0]
@@ -189,11 +191,11 @@ class TestIngestStatusView(TestCase):
     def test_fill_empty_slots(self):
         """Tests successfully calling the ingest status view with place holder zero values when no data exists."""
 
-        url = '/ingests/status/?started=2015-01-01T00:00:00Z&ended=2015-01-01T10:00:00Z'
+        url = rest_util.get_url('/ingests/status/?started=2015-01-01T00:00:00Z&ended=2015-01-01T10:00:00Z')
         response = self.client.generic('GET', url)
-        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
 
         entry = result['results'][0]
@@ -209,11 +211,11 @@ class TestIngestStatusView(TestCase):
         strike3 = ingest_test_utils.create_strike()
         ingest_test_utils.create_ingest(file_name='test3.txt', status='INGESTED', strike=strike3)
 
-        url = '/ingests/status/'
+        url = rest_util.get_url('/ingests/status/')
         response = self.client.generic('GET', url)
-        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = json.loads(response.content)
         self.assertEqual(len(result['results']), 3)
 
 
@@ -228,11 +230,11 @@ class TestStrikesView(TestCase):
     def test_successful(self):
         """Tests successfully calling the get all strikes view."""
 
-        url = '/strikes/'
+        url = rest_util.get_url('/strikes/')
         response = self.client.get(url)
-        result = json.loads(response.content)
-
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
         self.assertEqual(len(result['results']), 2)
         for entry in result['results']:
             expected = None
@@ -248,22 +250,22 @@ class TestStrikesView(TestCase):
     def test_name(self):
         """Tests successfully calling the strikes view filtered by Strike name."""
 
-        url = '/strikes/?name=%s' % self.strike1.name
+        url = rest_util.get_url('/strikes/?name=%s' % self.strike1.name)
         response = self.client.generic('GET', url)
-        result = json.loads(response.content)
-
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['name'], self.strike1.name)
 
     def test_sorting(self):
         """Tests custom sorting."""
 
-        url = '/strikes/?order=description'
+        url = rest_util.get_url('/strikes/?order=description')
         response = self.client.get(url)
-        result = json.loads(response.content)
-
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
         self.assertEqual(len(result['results']), 2)
         self.assertEqual(result['results'][0]['name'], self.strike1.name)
         self.assertEqual(result['results'][1]['name'], self.strike2.name)
@@ -271,11 +273,11 @@ class TestStrikesView(TestCase):
     def test_reverse_sorting(self):
         """Tests custom sorting in reverse."""
 
-        url = '/strikes/?order=-description'
+        url = rest_util.get_url('/strikes/?order=-description')
         response = self.client.get(url)
-        result = json.loads(response.content)
-
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
         self.assertEqual(len(result['results']), 2)
         self.assertEqual(result['results'][0]['name'], self.strike2.name)
         self.assertEqual(result['results'][1]['name'], self.strike1.name)
@@ -293,12 +295,13 @@ class TestStrikeCreateView(TestCase):
     def test_missing_configuration(self):
         """Tests calling the create Strike view with missing configuration."""
 
-        url = '/strikes/'
         json_data = {
             'name': 'strike-name',
             'title': 'Strike Title',
             'description': 'Strike description',
         }
+
+        url = rest_util.get_url('/strikes/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -306,13 +309,14 @@ class TestStrikeCreateView(TestCase):
     def test_configuration_bad_type(self):
         """Tests calling the create Strike view with configuration that is not a dict."""
 
-        url = '/strikes/'
         json_data = {
             'name': 'strike-name',
             'title': 'Strike Title',
             'description': 'Strike description',
             'configuration': 123,
         }
+
+        url = rest_util.get_url('/strikes/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -320,7 +324,6 @@ class TestStrikeCreateView(TestCase):
     def test_invalid_configuration(self):
         """Tests calling the create Strike view with invalid configuration."""
 
-        url = '/strikes/'
         json_data = {
             'name': 'strike-name',
             'title': 'Strike Title',
@@ -335,6 +338,8 @@ class TestStrikeCreateView(TestCase):
                 }],
             },
         }
+
+        url = rest_util.get_url('/strikes/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -342,7 +347,6 @@ class TestStrikeCreateView(TestCase):
     def test_successful(self):
         """Tests calling the create Strike view successfully."""
 
-        url = '/strikes/'
         json_data = {
             'name': 'strike-name',
             'title': 'Strike Title',
@@ -358,14 +362,15 @@ class TestStrikeCreateView(TestCase):
                 }],
             },
         }
+
+        url = rest_util.get_url('/strikes/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
 
         strikes = Strike.objects.filter(name='strike-name')
 
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        result = json.loads(response.content)
         self.assertEqual(len(strikes), 1)
-
         self.assertEqual(result['title'], strikes[0].title)
         self.assertEqual(result['description'], strikes[0].description)
         self.assertDictEqual(result['configuration'], strikes[0].configuration)
@@ -382,7 +387,7 @@ class TestStrikeDetailsView(TestCase):
     def test_not_found(self):
         """Tests successfully calling the get Strike process details view with a model id that does not exist."""
 
-        url = '/strikes/100/'
+        url = rest_util.get_url('/strikes/100/')
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
@@ -390,11 +395,11 @@ class TestStrikeDetailsView(TestCase):
     def test_successful(self):
         """Tests successfully calling the get Strike process details view."""
 
-        url = '/strikes/%d/' % self.strike.id
+        url = rest_util.get_url('/strikes/%d/' % self.strike.id)
         response = self.client.get(url)
-        result = json.loads(response.content)
-
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
         self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
         self.assertEqual(result['id'], self.strike.id)
         self.assertEqual(result['name'], self.strike.name)
@@ -404,15 +409,16 @@ class TestStrikeDetailsView(TestCase):
     def test_edit_simple(self):
         """Tests editing only the basic attributes of a Strike process"""
 
-        url = '/strikes/%d/' % self.strike.id
         json_data = {
             'title': 'Title EDIT',
             'description': 'Description EDIT',
         }
-        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
-        result = json.loads(response.content)
 
+        url = rest_util.get_url('/strikes/%d/' % self.strike.id)
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
         self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
         self.assertEqual(result['id'], self.strike.id)
         self.assertEqual(result['title'], 'Title EDIT')
@@ -438,14 +444,15 @@ class TestStrikeDetailsView(TestCase):
             }],
         }
 
-        url = '/strikes/%d/' % self.strike.id
         json_data = {
             'configuration': config,
         }
-        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
-        result = json.loads(response.content)
 
+        url = rest_util.get_url('/strikes/%d/' % self.strike.id)
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
         self.assertEqual(result['id'], self.strike.id)
         self.assertEqual(result['title'], self.strike.title)
         self.assertDictEqual(result['configuration'], StrikeConfiguration(config).get_dict())
@@ -468,10 +475,11 @@ class TestStrikeDetailsView(TestCase):
             }],
         }
 
-        url = '/strikes/%d/' % self.strike.id
         json_data = {
             'configuration': config,
         }
+
+        url = rest_util.get_url('/strikes/%d/' % self.strike.id)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -488,7 +496,6 @@ class TestStrikesValidationView(TestCase):
     def test_successful(self):
         """Tests validating a new Strike process."""
 
-        url = '/strikes/validation/'
         json_data = {
             'name': 'strike-name',
             'title': 'Strike Title',
@@ -505,21 +512,23 @@ class TestStrikesValidationView(TestCase):
             },
         }
 
+        url = rest_util.get_url('/strikes/validation/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        results = json.loads(response.content)
-
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
         self.assertDictEqual(results, {'warnings': []}, 'JSON result was incorrect')
 
     def test_missing_configuration(self):
         """Tests validating a new Strike process with missing configuration."""
 
-        url = '/strikes/validation/'
         json_data = {
             'name': 'strike-name',
             'title': 'Strike Title',
             'description': 'Strike description',
         }
+
+        url = rest_util.get_url('/strikes/validation/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -527,13 +536,14 @@ class TestStrikesValidationView(TestCase):
     def test_configuration_bad_type(self):
         """Tests validating a new Strike process with configuration that is not a dict."""
 
-        url = '/strikes/validation/'
         json_data = {
             'name': 'strike-name',
             'title': 'Strike Title',
             'description': 'Strike description',
             'configuration': 123,
         }
+
+        url = rest_util.get_url('/strikes/validation/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
@@ -541,7 +551,6 @@ class TestStrikesValidationView(TestCase):
     def test_invalid_configuration(self):
         """Tests validating a new Strike process with invalid configuration."""
 
-        url = '/strikes/validation/'
         json_data = {
             'name': 'strike-name',
             'title': 'Strike Title',
@@ -556,6 +565,8 @@ class TestStrikesValidationView(TestCase):
                 }],
             },
         }
+
+        url = rest_util.get_url('/strikes/validation/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)

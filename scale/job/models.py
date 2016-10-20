@@ -221,12 +221,13 @@ class JobManager(models.Manager):
 
         # Merge job interface definitions with mapped values
         job_interface_dict = job.get_job_interface().get_dict()
-        job.inputs = self._merge_job_data(job_interface_dict['input_data'],
-                                          job.get_job_data().get_dict()['input_data'], input_files)
-        job.outputs = self._merge_job_data(job_interface_dict['output_data'],
-                                           job.get_job_results().get_dict()['output_data'], output_files)
+        job_data_dict = job.get_job_data().get_dict()
+        job_results_dict = job.get_job_results().get_dict()
+        job.inputs = self._merge_job_data(job_interface_dict['input_data'], job_data_dict['input_data'], input_files)
+        job.outputs = self._merge_job_data(job_interface_dict['output_data'], job_results_dict['output_data'],
+                                           output_files)
 
-        # TODO Remove these attributes once the UI migrates to "inputs" and "outputs"
+        # TODO: API_V3 Remove these attributes
         job.input_files = input_files
         job.products = output_files
         return job
@@ -534,13 +535,24 @@ class JobManager(models.Manager):
                                                last_modified=modified)
 
     def _merge_job_data(self, job_interface_dict, job_data_dict, job_files):
+        """Merges data for a single job instance with its job interface to produce a mapping of key/values.
+
+        :param job_interface_dict: A dictionary representation of the job type interface.
+        :type job_interface_dict: dict
+        :param job_data_dict: A dictionary representation of the job instance data.
+        :type job_data_dict: dict
+        :param job_files: A list of files that are referenced by the job data.
+        :type job_files: [:class:`storage.models.ScaleFile`]
+        :return: A dictionary of each interface key mapped to the corresponding data value.
+        :rtype: dict
+        """
 
         # Setup the basic structure for merged results
         merged_dicts = copy.deepcopy(job_interface_dict)
         name_map = {merged_dict['name']: merged_dict for merged_dict in merged_dicts}
         file_map = {job_file.id: job_file for job_file in job_files}
 
-        # Merge the job data with the result data
+        # Merge the job data with the interface attributes
         for data_dict in job_data_dict:
             value = None
             if 'value' in data_dict:

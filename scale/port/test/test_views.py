@@ -11,6 +11,7 @@ import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
+import util.rest as rest_util
 from error.models import Error
 from job.models import JobType
 from recipe.models import RecipeType
@@ -28,11 +29,11 @@ class TestConfigurationViewExport(TestCase):
 
     def test_errors(self):
         """Tests exporting only errors."""
-        url = '/configuration/?include=errors'
+        url = rest_util.get_url('/configuration/?include=errors')
         response = self.client.generic('GET', url)
-        results = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        results = json.loads(response.content)
         self.assertIsNotNone(results['version'])
         self.assertEqual(len(results['recipe_types']), 0)
         self.assertEqual(len(results['job_types']), 0)
@@ -43,11 +44,11 @@ class TestConfigurationViewExport(TestCase):
         """Tests exporting errors without any system-level entries."""
         error_test_utils.create_error(category='SYSTEM')
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('GET', url)
-        results = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        results = json.loads(response.content)
         self.assertEqual(len(results['errors']), 1)
 
     def test_errors_by_id(self):
@@ -55,11 +56,11 @@ class TestConfigurationViewExport(TestCase):
         error2 = error_test_utils.create_error(category='DATA')
         error3 = error_test_utils.create_error(category='DATA')
 
-        url = '/configuration/?error_id=%s&error_id=%s' % (error2.id, error3.id)
+        url = rest_util.get_url('/configuration/?error_id=%s&error_id=%s' % (error2.id, error3.id))
         response = self.client.generic('GET', url)
-        results = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        results = json.loads(response.content)
         self.assertEqual(len(results['errors']), 2)
 
     def test_errors_by_name(self):
@@ -67,20 +68,20 @@ class TestConfigurationViewExport(TestCase):
         error2 = error_test_utils.create_error(category='DATA')
         error3 = error_test_utils.create_error(category='DATA')
 
-        url = '/configuration/?error_name=%s&error_name=%s' % (error2.name, error3.name)
+        url = rest_util.get_url('/configuration/?error_name=%s&error_name=%s' % (error2.name, error3.name))
         response = self.client.generic('GET', url)
-        results = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        results = json.loads(response.content)
         self.assertEqual(len(results['errors']), 2)
 
     def test_job_types(self):
         """Tests exporting only job types."""
-        url = '/configuration/?include=job_types'
+        url = rest_util.get_url('/configuration/?include=job_types')
         response = self.client.generic('GET', url)
-        results = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        results = json.loads(response.content)
         self.assertIsNotNone(results['version'])
         self.assertEqual(len(results['recipe_types']), 0)
         self.assertEqual(len(results['job_types']), 1)
@@ -91,11 +92,11 @@ class TestConfigurationViewExport(TestCase):
         """Tests exporting job types without any system-level entries."""
         job_test_utils.create_job_type(category='system')
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('GET', url)
-        results = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        results = json.loads(response.content)
         self.assertEqual(len(results['job_types']), 1)
 
     def test_job_types_by_id(self):
@@ -103,11 +104,11 @@ class TestConfigurationViewExport(TestCase):
         job_type2 = job_test_utils.create_job_type()
         job_type3 = job_test_utils.create_job_type()
 
-        url = '/configuration/?job_type_id=%s&job_type_id=%s' % (job_type2.id, job_type3.id)
+        url = rest_util.get_url('/configuration/?job_type_id=%s&job_type_id=%s' % (job_type2.id, job_type3.id))
         response = self.client.generic('GET', url)
-        results = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        results = json.loads(response.content)
         self.assertEqual(len(results['job_types']), 2)
 
     def test_job_types_by_name(self):
@@ -115,11 +116,11 @@ class TestConfigurationViewExport(TestCase):
         job_test_utils.create_job_type(name='job-name')
         job_test_utils.create_job_type(name='job-name')
 
-        url = '/configuration/?job_type_name=job-name'
+        url = rest_util.get_url('/configuration/?job_type_name=job-name')
         response = self.client.generic('GET', url)
-        results = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        results = json.loads(response.content)
         self.assertEqual(len(results['job_types']), 2)
 
     def test_job_types_by_category(self):
@@ -127,20 +128,20 @@ class TestConfigurationViewExport(TestCase):
         job_test_utils.create_job_type(category='job-category')
         job_test_utils.create_job_type(category='job-category')
 
-        url = '/configuration/?job_type_category=job-category'
+        url = rest_util.get_url('/configuration/?job_type_category=job-category')
         response = self.client.generic('GET', url)
-        results = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        results = json.loads(response.content)
         self.assertEqual(len(results['job_types']), 2)
 
     def test_recipe_types(self):
         """Tests exporting only recipe types."""
-        url = '/configuration/?include=recipe_types'
+        url = rest_util.get_url('/configuration/?include=recipe_types')
         response = self.client.generic('GET', url)
-        results = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        results = json.loads(response.content)
         self.assertIsNotNone(results['version'])
         self.assertEqual(len(results['recipe_types']), 1)
         self.assertEqual(results['recipe_types'][0]['name'], self.recipe_type1.name)
@@ -152,11 +153,12 @@ class TestConfigurationViewExport(TestCase):
         recipe_type2 = recipe_test_utils.create_recipe_type()
         recipe_type3 = recipe_test_utils.create_recipe_type()
 
-        url = '/configuration/?recipe_type_id=%s&recipe_type_id=%s' % (recipe_type2.id, recipe_type3.id)
+        url = rest_util.get_url('/configuration/?recipe_type_id=%s&recipe_type_id=%s' % (recipe_type2.id,
+                                                                                         recipe_type3.id))
         response = self.client.generic('GET', url)
-        results = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        results = json.loads(response.content)
         self.assertEqual(len(results['recipe_types']), 2)
 
     def test_recipe_types_by_name(self):
@@ -164,20 +166,20 @@ class TestConfigurationViewExport(TestCase):
         recipe_test_utils.create_recipe_type(name='recipe-name')
         recipe_test_utils.create_recipe_type(name='recipe-name')
 
-        url = '/configuration/?recipe_type_name=recipe-name'
+        url = rest_util.get_url('/configuration/?recipe_type_name=recipe-name')
         response = self.client.generic('GET', url)
-        results = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        results = json.loads(response.content)
         self.assertEqual(len(results['recipe_types']), 2)
 
     def test_all(self):
         """Tests exporting all the relevant models."""
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('GET', url)
-        results = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        results = json.loads(response.content)
         self.assertIsNotNone(results['version'])
         self.assertEqual(len(results['recipe_types']), 1)
         self.assertEqual(results['recipe_types'][0]['name'], self.recipe_type1.name)
@@ -208,11 +210,11 @@ class TestConfigurationViewExport(TestCase):
         }
         recipe_type2 = recipe_test_utils.create_recipe_type(definition=recipe_definition)
 
-        url = '/configuration/?recipe_type_name=%s' % recipe_type2.name
+        url = rest_util.get_url('/configuration/?recipe_type_name=%s' % recipe_type2.name)
         response = self.client.generic('GET', url)
-        results = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        results = json.loads(response.content)
         self.assertEqual(len(results['recipe_types']), 1)
         self.assertEqual(results['recipe_types'][0]['name'], recipe_type2.name)
         self.assertEqual(len(results['job_types']), 1)
@@ -257,12 +259,12 @@ class TestConfigurationViewExport(TestCase):
         }
         recipe_type2 = recipe_test_utils.create_recipe_type(definition=recipe_definition)
 
-        url = '/configuration/?recipe_type_name=%s&job_type_name=%s&error_name=%s' % (recipe_type2.name, job_type2.name,
-                                                                                      error2.name)
+        url = rest_util.get_url('/configuration/?recipe_type_name=%s&job_type_name=%s&error_name=%s' % (
+            recipe_type2.name, job_type2.name, error2.name))
         response = self.client.generic('GET', url)
-        results = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        results = json.loads(response.content)
         self.assertEqual(len(results['recipe_types']), 1)
         self.assertEqual(results['recipe_types'][0]['name'], recipe_type2.name)
         self.assertEqual(len(results['job_types']), 1)
@@ -290,16 +292,15 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
         json.loads(response.content)
 
         errors = Error.objects.filter(name='test-name')
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(errors), 1)
         result = errors[0]
-
         self.assertEqual(result.title, 'test-title')
         self.assertEqual(result.description, 'test-description')
         self.assertEqual(result.category, 'DATA')
@@ -316,13 +317,13 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
         json.loads(response.content)
 
         errors = Error.objects.filter(name=error.name)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(errors), 1)
         result = errors[0]
 
@@ -343,13 +344,13 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
         json.loads(response.content)
 
         errors = Error.objects.all()
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(len(errors), 0)
 
     def test_errors_bad_category(self):
@@ -365,13 +366,13 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
         json.loads(response.content)
 
         errors = Error.objects.all()
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(len(errors), 0)
 
     def test_errors_bad_name(self):
@@ -386,13 +387,13 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
         json.loads(response.content)
 
         errors = Error.objects.all()
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(len(errors), 0)
 
     def test_errors_empty_fields(self):
@@ -411,13 +412,13 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
         json.loads(response.content)
 
         errors = Error.objects.filter(name='test-error')
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         self.assertEqual(len(errors), 1)
         result = errors[0]
         for field in fields:
@@ -439,13 +440,13 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
         json.loads(response.content)
 
         errors = Error.objects.filter(name='test-error')
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         self.assertEqual(len(errors), 1)
         result = errors[0]
         for field in fields:
@@ -517,13 +518,13 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
         json.loads(response.content)
 
         job_types = JobType.objects.filter(name='test-name', version='1.0.0')
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(job_types), 1)
 
         result = job_types[0]
@@ -567,13 +568,13 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
         json.loads(response.content)
 
         job_types = JobType.objects.filter(name=job_type.name, version=job_type.version)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(job_types), 1)
         result = job_types[0]
 
@@ -604,13 +605,13 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
         json.loads(response.content)
 
         job_types = JobType.objects.filter(name=job_type.name, version=job_type.version)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(job_types), 1)
         result = job_types[0]
 
@@ -639,13 +640,13 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
         json.loads(response.content)
 
         job_types = JobType.objects.filter(name=job_type.name, version=job_type.version)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(job_types), 1)
         result = job_types[0]
 
@@ -684,13 +685,13 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
         json.loads(response.content)
 
         job_types = JobType.objects.filter(name=job_type.name, version=job_type.version)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(job_types), 1)
         result = job_types[0]
 
@@ -716,13 +717,13 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
         json.loads(response.content)
 
         job_types = JobType.objects.filter(name=job_type.name, version=job_type.version)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(job_types), 1)
         result = job_types[0]
 
@@ -742,13 +743,13 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
         json.loads(response.content)
 
         job_types = JobType.objects.filter(name=job_type.name, version=job_type.version)
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(len(job_types), 1)
         result = job_types[0]
 
@@ -766,13 +767,13 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
         json.loads(response.content)
 
         job_types = JobType.objects.filter(name=job_type.name, version=job_type.version)
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(len(job_types), 1)
         result = job_types[0]
 
@@ -793,13 +794,13 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
         json.loads(response.content)
 
         job_types = JobType.objects.filter(name=job_type.name, version=job_type.version)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(job_types), 1)
         result = job_types[0]
 
@@ -825,13 +826,13 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
         json.loads(response.content)
 
         job_types = JobType.objects.filter(name=job_type.name, version=job_type.version)
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(len(job_types), 1)
         result = job_types[0]
 
@@ -856,13 +857,13 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
         json.loads(response.content)
 
         job_types = JobType.objects.filter(name=job_type.name, version=job_type.version)
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(len(job_types), 1)
         result = job_types[0]
 
@@ -884,13 +885,13 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
         json.loads(response.content)
 
         job_types = JobType.objects.filter(name=job_type.name, version=job_type.version)
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(len(job_types), 1)
         result = job_types[0]
 
@@ -917,13 +918,13 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
         json.loads(response.content)
 
         job_types = JobType.objects.filter(name=job_type.name, version=job_type.version)
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(len(job_types), 1)
         result = job_types[0]
 
@@ -953,13 +954,13 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
         json.loads(response.content)
 
         job_types = JobType.objects.filter(name='test-job', version='1.0.0')
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         self.assertEqual(len(job_types), 1)
         result = job_types[0]
         for field in fields:
@@ -990,13 +991,13 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
         json.loads(response.content)
 
         job_types = JobType.objects.filter(name='test-job', version='1.0.0')
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         self.assertEqual(len(job_types), 1)
         result = job_types[0]
         for field in fields:
@@ -1061,13 +1062,13 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
         json.loads(response.content)
 
         recipe_types = RecipeType.objects.filter(name='test-name', version='1.0.0')
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         self.assertEqual(len(recipe_types), 1)
 
         result = recipe_types[0]
@@ -1094,13 +1095,13 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
         json.loads(response.content)
 
         recipe_types = RecipeType.objects.filter(name=recipe_type.name, version=recipe_type.version)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(recipe_types), 1)
         result = recipe_types[0]
 
@@ -1147,13 +1148,13 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
         json.loads(response.content)
 
         recipe_types = RecipeType.objects.filter(name=recipe_type.name, version=recipe_type.version)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(recipe_types), 1)
         result = recipe_types[0]
 
@@ -1192,13 +1193,13 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
         json.loads(response.content)
 
         recipe_types = RecipeType.objects.filter(name=recipe_type.name, version=recipe_type.version)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(recipe_types), 1)
         result = recipe_types[0]
 
@@ -1224,13 +1225,13 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
         json.loads(response.content)
 
         recipe_types = RecipeType.objects.filter(name=recipe_type.name, version=recipe_type.version)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(recipe_types), 1)
         result = recipe_types[0]
 
@@ -1249,13 +1250,13 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
         json.loads(response.content)
 
         recipe_types = RecipeType.objects.filter(name=recipe_type.name, version=recipe_type.version)
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(len(recipe_types), 1)
         result = recipe_types[0]
 
@@ -1279,13 +1280,13 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
         json.loads(response.content)
 
         recipe_types = RecipeType.objects.filter(name=recipe_type.name, version=recipe_type.version)
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(len(recipe_types), 1)
         result = recipe_types[0]
 
@@ -1307,13 +1308,13 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
         json.loads(response.content)
 
         recipe_types = RecipeType.objects.filter(name=recipe_type.name, version=recipe_type.version)
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(len(recipe_types), 1)
         result = recipe_types[0]
 
@@ -1357,13 +1358,13 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
         json.loads(response.content)
 
         recipe_types = RecipeType.objects.filter(name=recipe_type.name, version=recipe_type.version)
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(len(recipe_types), 1)
         result = recipe_types[0]
 
@@ -1390,13 +1391,13 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
         json.loads(response.content)
 
         recipe_types = RecipeType.objects.filter(name='test-recipe', version='1.0.0')
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         self.assertEqual(len(recipe_types), 1)
         result = recipe_types[0]
         for field in fields:
@@ -1423,13 +1424,13 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
         json.loads(response.content)
 
         recipe_types = RecipeType.objects.filter(name='test-recipe', version='1.0.0')
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         self.assertEqual(len(recipe_types), 1)
         result = recipe_types[0]
         for field in fields:
@@ -1542,27 +1543,26 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
         json.loads(response.content)
 
         errors = Error.objects.filter(name='test-error-name')
-        job_types = JobType.objects.filter(name='test-job-name', version='1.0.0')
-        recipe_types = RecipeType.objects.filter(name='test-recipe-name', version='1.0.0')
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(errors), 1)
-        self.assertEqual(len(job_types), 1)
-        self.assertEqual(len(recipe_types), 1)
-
         self.assertEqual(errors[0].title, 'test-error-title')
 
+        job_types = JobType.objects.filter(name='test-job-name', version='1.0.0')
+        self.assertEqual(len(job_types), 1)
         self.assertEqual(job_types[0].title, 'test-job-title')
         self.assertDictEqual(job_types[0].interface, interface)
         self.assertIsNone(job_types[0].max_scheduled)
         self.assertDictEqual(job_types[0].error_mapping, error_mapping)
         self.assertIsNotNone(job_types[0].trigger_rule)
 
+        recipe_types = RecipeType.objects.filter(name='test-recipe-name', version='1.0.0')
+        self.assertEqual(len(recipe_types), 1)
         self.assertEqual(recipe_types[0].title, 'test-recipe-title')
         self.assertDictEqual(recipe_types[0].definition, definition)
         self.assertIsNotNone(recipe_types[0].trigger_rule)
@@ -1592,26 +1592,25 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
         json.loads(response.content)
 
         errors = Error.objects.filter(name=error.name)
-        job_types = JobType.objects.filter(name=job_type.name, version=job_type.version)
-        recipe_types = RecipeType.objects.filter(name=recipe_type.name, version=recipe_type.version)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(errors), 1)
-        self.assertEqual(len(job_types), 1)
-        self.assertEqual(len(recipe_types), 1)
-
         self.assertEqual(errors[0].title, 'test-error-title')
 
+        job_types = JobType.objects.filter(name=job_type.name, version=job_type.version)
+        self.assertEqual(len(job_types), 1)
         self.assertEqual(job_types[0].title, 'test-job-title')
         self.assertDictEqual(job_types[0].interface, job_type.interface)
         self.assertDictEqual(job_types[0].error_mapping, job_type.error_mapping)
         self.assertIsNotNone(job_types[0].trigger_rule)
 
+        recipe_types = RecipeType.objects.filter(name=recipe_type.name, version=recipe_type.version)
+        self.assertEqual(len(recipe_types), 1)
         self.assertEqual(recipe_types[0].title, 'test-recipe-title')
         self.assertDictEqual(recipe_types[0].definition, recipe_type.definition)
         self.assertIsNotNone(recipe_types[0].trigger_rule)
@@ -1725,25 +1724,24 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
         json.loads(response.content)
 
         errors = Error.objects.all()
-        job_types = JobType.objects.all()
-        recipe_types = RecipeType.objects.all()
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(errors), 2)
-        self.assertEqual(len(job_types), 2)
-        self.assertEqual(len(recipe_types), 1)
-
         error_keys = {error.name for error in errors}
         self.assertSetEqual(error_keys, {error.name, 'test-error-name'})
 
+        job_types = JobType.objects.all()
+        self.assertEqual(len(job_types), 2)
         job_keys = {(job_type.name, job_type.version) for job_type in job_types}
         self.assertSetEqual(job_keys, {(job_type.name, job_type.version), ('test-job-name', '1.0.0')})
 
+        recipe_types = RecipeType.objects.all()
+        self.assertEqual(len(recipe_types), 1)
         self.assertDictEqual(recipe_types[0].definition, definition)
         self.assertIsNotNone(recipe_types[0].trigger_rule)
 
@@ -1835,17 +1833,19 @@ class TestConfigurationViewImport(TestCase):
             },
         }
 
-        url = '/configuration/'
+        url = rest_util.get_url('/configuration/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
         json.loads(response.content)
 
         errors = Error.objects.all()
-        job_types = JobType.objects.all()
-        recipe_types = RecipeType.objects.all()
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(len(errors), 1)
+
+        job_types = JobType.objects.all()
         self.assertEqual(len(job_types), 1)
+
+        recipe_types = RecipeType.objects.all()
         self.assertEqual(len(recipe_types), 1)
 
 
@@ -1861,11 +1861,11 @@ class TestConfigurationDownloadView(TestCase):
 
     def test_download(self):
         """Tests exporting as a separate download file."""
-        url = '/configuration/download/'
+        url = rest_util.get_url('/configuration/download/')
         response = self.client.generic('GET', url)
         results = json.loads(response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         self.assertTrue(response.has_header('Content-Disposition'))
         self.assertEqual(len(results['recipe_types']), 1)
         self.assertEqual(len(results['job_types']), 1)
@@ -1881,10 +1881,10 @@ class TestConfigurationUploadView(TestCase):
     def test_upload_missing_file(self):
         """Tests importing as a separate upload file without any provided content."""
 
-        url = '/configuration/upload/'
+        url = rest_util.get_url('/configuration/upload/')
         response = self.client.generic('POST', url, '', 'multipart/form-data')
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     # TODO: Figure out to write a unit test for the success case
 
@@ -1921,23 +1921,23 @@ class TestConfigurationValidationView(TestCase):
             },
         }
 
-        url = '/configuration/validation/'
+        url = rest_util.get_url('/configuration/validation/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
         results = json.loads(response.content)
-
-        errors = Error.objects.filter(name=error.name)
-        job_types = JobType.objects.filter(name=job_type.name, version=job_type.version)
-        recipe_types = RecipeType.objects.filter(name=recipe_type.name, version=recipe_type.version)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertDictEqual(results, {'warnings': []})
 
+        errors = Error.objects.filter(name=error.name)
         self.assertEqual(len(errors), 1)
-        self.assertEqual(len(job_types), 1)
-        self.assertEqual(len(recipe_types), 1)
-
         self.assertEqual(errors[0].title, error.title)
+
+        job_types = JobType.objects.filter(name=job_type.name, version=job_type.version)
+        self.assertEqual(len(job_types), 1)
         self.assertEqual(job_types[0].title, job_type.title)
+
+        recipe_types = RecipeType.objects.filter(name=recipe_type.name, version=recipe_type.version)
+        self.assertEqual(len(recipe_types), 1)
         self.assertEqual(recipe_types[0].title, recipe_type.title)
 
     def test_errors(self):
@@ -1965,23 +1965,23 @@ class TestConfigurationValidationView(TestCase):
             },
         }
 
-        url = '/configuration/validation/'
+        url = rest_util.get_url('/configuration/validation/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
         results = json.loads(response.content)
-
-        errors = Error.objects.filter(name=error.name)
-        job_types = JobType.objects.filter(name=job_type.name, version=job_type.version)
-        recipe_types = RecipeType.objects.filter(name=recipe_type.name, version=recipe_type.version)
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIsNotNone(results['detail'])
 
+        errors = Error.objects.filter(name=error.name)
         self.assertEqual(len(errors), 1)
-        self.assertEqual(len(job_types), 1)
-        self.assertEqual(len(recipe_types), 1)
-
         self.assertEqual(errors[0].title, error.title)
+
+        job_types = JobType.objects.filter(name=job_type.name, version=job_type.version)
+        self.assertEqual(len(job_types), 1)
         self.assertEqual(job_types[0].title, job_type.title)
+
+        recipe_types = RecipeType.objects.filter(name=recipe_type.name, version=recipe_type.version)
+        self.assertEqual(len(recipe_types), 1)
         self.assertEqual(recipe_types[0].title, recipe_type.title)
 
     def test_warnings(self):
@@ -2010,21 +2010,21 @@ class TestConfigurationValidationView(TestCase):
             },
         }
 
-        url = '/configuration/validation/'
+        url = rest_util.get_url('/configuration/validation/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
         results = json.loads(response.content)
-
-        errors = Error.objects.filter(name=error.name)
-        job_types = JobType.objects.filter(name=job_type.name, version=job_type.version)
-        recipe_types = RecipeType.objects.filter(name=recipe_type.name, version=recipe_type.version)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(results['warnings']), 1)
 
+        errors = Error.objects.filter(name=error.name)
         self.assertEqual(len(errors), 1)
-        self.assertEqual(len(job_types), 1)
-        self.assertEqual(len(recipe_types), 1)
-
         self.assertEqual(errors[0].title, error.title)
+
+        job_types = JobType.objects.filter(name=job_type.name, version=job_type.version)
+        self.assertEqual(len(job_types), 1)
         self.assertEqual(job_types[0].title, job_type.title)
+
+        recipe_types = RecipeType.objects.filter(name=recipe_type.name, version=recipe_type.version)
+        self.assertEqual(len(recipe_types), 1)
         self.assertEqual(recipe_types[0].title, recipe_type.title)

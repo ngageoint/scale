@@ -3,13 +3,13 @@ from __future__ import unicode_literals
 import logging
 from datetime import datetime
 
-import django.core.urlresolvers as urlresolvers
 import rest_framework.status as status
 from django.db import transaction
 from django.http.response import Http404, HttpResponse
 from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView, RetrieveAPIView
 from rest_framework.renderers import StaticHTMLRenderer, JSONRenderer
 from rest_framework.response import Response
+from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
 import trigger.handler as trigger_handler
@@ -18,7 +18,7 @@ from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.job_interface import JobInterface
 from job.exceptions import InvalidJobField
-from job.serializers import (JobDetailsSerializer, JobSerializer, JobTypeDetailsSerializer,
+from job.serializers import (JobDetailsSerializer, JobDetailsSerializerV3, JobSerializer, JobTypeDetailsSerializer,
                              JobTypeFailedStatusSerializer, JobTypeSerializer, JobTypePendingStatusSerializer,
                              JobTypeRunningStatusSerializer, JobTypeStatusSerializer, JobUpdateSerializer,
                              JobWithExecutionSerializer, JobExecutionSerializer,
@@ -134,7 +134,7 @@ class JobTypesView(ListCreateAPIView):
         except JobType.DoesNotExist:
             raise Http404
 
-        url = urlresolvers.reverse('job_type_details_view', args=[job_type.id])
+        url = reverse('job_type_details_view', args=[job_type.id], request=request)
         serializer = JobTypeDetailsSerializer(job_type)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=url))
 
@@ -469,7 +469,13 @@ class JobsView(ListAPIView):
 class JobDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving details about a single job."""
     queryset = Job.objects.all()
-    serializer_class = JobDetailsSerializer
+
+    # TODO: API_V3 Remove this serializer
+    def get_serializer_class(self):
+        """Override the serializer for legacy API calls."""
+        if self.request.version == 'v3':
+            return JobDetailsSerializerV3
+        return JobDetailsSerializer
 
     def get(self, request, job_id):
         """Retrieves jobs and returns it in JSON form
@@ -653,6 +659,7 @@ class JobExecutionDetailsView(RetrieveAPIView):
         return Response(serializer.data)
 
 
+# TODO: API_V3 Remove this view
 class JobExecutionLogView(RetrieveAPIView):
     """This view is the endpoint for viewing job execution logs"""
     queryset = JobExecution.objects.all()
@@ -668,6 +675,11 @@ class JobExecutionLogView(RetrieveAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
+        # This API is unavailable after v3
+        if request.version != 'v3':
+            raise Http404
+
         try:
             job_exe = JobExecution.objects.get_logs(job_exe_id)
         except JobExecution.DoesNotExist:

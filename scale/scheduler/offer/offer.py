@@ -8,9 +8,9 @@ class ResourceOffer(object):
         """Constructor
 
         :param offer_id: The ID of the offer
-        :type offer_id: str
+        :type offer_id: string
         :param agent_id: The agent ID of the node
-        :type agent_id: str
+        :type agent_id: string
         :param node_resources: The resources offered by the node
         :type node_resources: :class:`job.resources.NodeResources`
         """
@@ -24,7 +24,7 @@ class ResourceOffer(object):
         """Returns the ID of this resource offer
 
         :returns: The ID of the offer
-        :rtype: str
+        :rtype: string
         """
 
         return self._id
@@ -34,7 +34,7 @@ class ResourceOffer(object):
         """Returns the agent ID of this resource offer
 
         :returns: The agent ID of the offer
-        :rtype: str
+        :rtype: string
         """
 
         return self._agent_id
