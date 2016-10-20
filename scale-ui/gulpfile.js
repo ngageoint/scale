@@ -16,6 +16,7 @@ var gulp = require('gulp'),
     gzip = require('gulp-gzip'),
     fs = require('fs'),
     p = require('./package.json'),
+    modRewrite = require('connect-modrewrite'),
     util = require('gulp-util');
 
 var paths = {
@@ -255,7 +256,14 @@ gulp.task('connect', ['build'], function () {
     connect.server({
         port: 9000,
         root: 'build',
-        livereload: true
+        livereload: true,
+        middleware: function() {
+            return [
+                modRewrite([
+                    '^/api/(.*)$ http://localhost:8000/$1 [P]'
+                ])
+            ];
+        }
     });
 });
 

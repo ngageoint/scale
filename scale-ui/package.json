@@ -5,6 +5,7 @@
     "gulp-util": "^3.0.7"
   },
   "devDependencies": {
+    "connect-modrewrite": "^0.9.0",
     "del": "^2.2.0",
     "gulp": "^3.9.0",
     "gulp-bump": "^1.0.0",
