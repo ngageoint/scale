@@ -1,6 +1,8 @@
 """Defines the database models for recipes and recipe types"""
 from __future__ import unicode_literals
 
+import copy
+
 import django.utils.timezone as timezone
 import djorm_pgjson.fields
 from django.db import models, transaction
@@ -332,7 +334,14 @@ class RecipeManager(models.Manager):
         input_files = ScaleFile.objects.filter(id__in=input_file_ids)
         input_files = input_files.select_related('workspace').defer('workspace__json_config')
         input_files = input_files.order_by('id').distinct('id')
-        recipe.input_files = [input_file for input_file in input_files]
+
+        recipe_definition_dict = recipe.get_recipe_definition().get_dict()
+        recipe_data_dict = recipe.get_recipe_data().get_dict()
+        recipe.inputs = self._merge_recipe_data(recipe_definition_dict['input_data'], recipe_data_dict['input_data'],
+                                                input_files)
+
+        # TODO: API_V3 Remove this attribute
+        recipe.input_files = input_files
 
         # Update the recipe with job models
         jobs = RecipeJob.objects.filter(recipe_id=recipe.id)
@@ -428,6 +437,38 @@ class RecipeManager(models.Manager):
                     handler = RecipeHandler(recipe, recipe_jobs)
                     handlers[recipe.id] = handler
         return handlers
+
+    def _merge_recipe_data(self, recipe_definition_dict, recipe_data_dict, recipe_files):
+        """Merges data for a single recipe instance with its recipe definition to produce a mapping of key/values.
+
+        :param recipe_definition_dict: A dictionary representation of the recipe type definition.
+        :type recipe_definition_dict: dict
+        :param recipe_data_dict: A dictionary representation of the recipe instance data.
+        :type recipe_data_dict: dict
+        :param recipe_files: A list of files that are referenced by the recipe data.
+        :type recipe_files: [:class:`storage.models.ScaleFile`]
+        :return: A dictionary of each definition key mapped to the corresponding data value.
+        :rtype: dict
+        """
+
+        # Setup the basic structure for merged results
+        merged_dicts = copy.deepcopy(recipe_definition_dict)
+        name_map = {merged_dict['name']: merged_dict for merged_dict in merged_dicts}
+        file_map = {recipe_file.id: recipe_file for recipe_file in recipe_files}
+
+        # Merge the recipe data with the definition attributes
+        for data_dict in recipe_data_dict:
+            value = None
+            if 'value' in data_dict:
+                value = data_dict['value']
+            elif 'file_id' in data_dict:
+                value = file_map[data_dict['file_id']]
+            elif 'file_ids' in data_dict:
+                value = [file_map[file_id] for file_id in data_dict['file_ids']]
+
+            merged_dict = name_map[data_dict['name']]
+            merged_dict['value'] = value
+        return merged_dicts
 
 
 class Recipe(models.Model):

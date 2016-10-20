@@ -89,9 +89,33 @@ class RecipeJobsDetailsSerializer(RecipeJobsSerializer):
     job = JobRevisionSerializer()
 
 
+class RecipeDetailsInputSerializer(serializers.Serializer):
+    """Converts recipe detail model input fields to REST output"""
+
+    name = serializers.CharField()
+    type = serializers.CharField()
+
+    def to_representation(self, obj):
+        result = super(RecipeDetailsInputSerializer, self).to_representation(obj)
+
+        value = None
+        if 'value' in obj:
+            if obj['type'] == 'file':
+                value = self.Meta.FILE_SERIALIZER().to_representation(obj['value'])
+            elif obj['type'] == 'files':
+                value = [self.Meta.FILE_SERIALIZER().to_representation(v) for v in obj['value']]
+            else:
+                value = obj['value']
+        result['value'] = value
+        return result
+
+    class Meta:
+        from storage.serializers import ScaleFileBaseSerializer
+        FILE_SERIALIZER = ScaleFileBaseSerializer
+
+
 class RecipeDetailsSerializer(RecipeSerializer):
     """Converts related recipe model fields to REST output."""
-    from storage.serializers import ScaleFileBaseSerializer
     from trigger.serializers import TriggerEventDetailsSerializer
 
     recipe_type = RecipeTypeSerializer()
@@ -99,9 +123,17 @@ class RecipeDetailsSerializer(RecipeSerializer):
     event = TriggerEventDetailsSerializer()
     data = serializers.JSONField()
 
-    input_files = ScaleFileBaseSerializer(many=True)
+    inputs = RecipeDetailsInputSerializer(many=True)
     jobs = RecipeJobsDetailsSerializer(many=True)
 
     root_superseded_recipe = RecipeBaseSerializer()
     superseded_recipe = RecipeBaseSerializer()
     superseded_by_recipe = RecipeBaseSerializer()
+
+
+# TODO: API_V3 Remove this serializer
+class RecipeDetailsSerializerV3(RecipeDetailsSerializer):
+    """Converts related recipe model fields to REST output."""
+    from storage.serializers import ScaleFileBaseSerializer
+
+    input_files = ScaleFileBaseSerializer(many=True)

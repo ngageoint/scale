@@ -187,7 +187,18 @@ These services provide access to information about recipes.
 | data                  | JSON Object       | JSON description defining the data used to execute a recipe instance.       |
 |                       |                   | (See :ref:`architecture_jobs_recipe_data_spec`)                             |
 +-----------------------+-------------------+-----------------------------------------------------------------------------+
-| input_files           | JSON Object       | A list of files that the recipe used as input.                              |
+| inputs                | Array             | A list of recipe definition inputs merged with their respective recipe data |
+|                       |                   | values.                                                                     |
++-----------------------+-------------------+-----------------------------------------------------------------------------+
+| .name                 | String            | The name of the input as defined by the recipe type definition.             |
+|                       |                   | (See :ref:`architecture_jobs_recipe_definition_spec`)                       |
++-----------------------+-------------------+-----------------------------------------------------------------------------+
+| .type                 | String            | The type of the input as defined by the recipe type definition.             |
+|                       |                   | (See :ref:`architecture_jobs_recipe_definition_spec`)                       |
++-----------------------+-------------------+-----------------------------------------------------------------------------+
+| .value                | Various           | The actual value of the input, which can vary depending on the type. Simple |
+|                       |                   | property inputs will include primitive values, whereas the file or files    |
+|                       |                   | type will include a full JSON representation of a Scale file object.        |
 |                       |                   | (See :ref:`Scale File Details <rest_scale_file_details>`)                   |
 +-----------------------+-------------------+-----------------------------------------------------------------------------+
 | jobs                  | Array             | The jobs associated with this recipe.                                       |
@@ -320,28 +331,32 @@ These services provide access to information about recipes.
 |            "version": "1.0"                                                                                             |
 |            "workspace_id": 2                                                                                            |
 |        }                                                                                                                |
-|        "input_files": [                                                                                                 |
+|        "inputs": [                                                                                                      |
 |            {                                                                                                            |
-|                "id": 4,                                                                                                 |
-|                "workspace": {                                                                                           |
-|                    "id": 1,                                                                                             |
-|                    "name": "Raw Source"                                                                                 |
-|                },                                                                                                       |
-|                "file_name": "input_file.txt",                                                                           | 
-|                "media_type": "text/plain",                                                                              |
-|                "file_size": 1234,                                                                                       |
-|                "data_type": [],                                                                                         | 
-|                "is_deleted": false,                                                                                     |
-|                "uuid": "c8928d9183fc99122948e7840ec9a0fd",                                                              |
-|                "url": "http://host.com/input_file.txt",                                                                 |
-|                "created": "2015-09-10T15:24:53.962Z",                                                                   |
-|                "deleted": null,                                                                                         |
-|                "data_started": "2015-09-10T14:50:49Z",                                                                  |
-|                "data_ended": "2015-09-10T14:51:05Z",                                                                    |
-|                "geometry": null,                                                                                        |
-|                "center_point": null,                                                                                    |
-|                "meta_data": {...}                                                                                       |
-|                "last_modified": "2015-09-10T15:25:02.808Z"                                                              |
+|                "name": "input_file",                                                                                    |
+|                "type": "file",                                                                                          |
+|                "value": {                                                                                               |
+|                    "id": 2,                                                                                             |
+|                    "workspace": {                                                                                       |
+|                        "id": 1,                                                                                         |
+|                        "name": "Raw Source"                                                                             |
+|                    },                                                                                                   |
+|                    "file_name": "input_file.txt",                                                                       |
+|                    "media_type": "text/plain",                                                                          |
+|                    "file_size": 1234,                                                                                   |
+|                    "data_type": [],                                                                                     |
+|                    "is_deleted": false,                                                                                 |
+|                    "uuid": "c8928d9183fc99122948e7840ec9a0fd",                                                          |
+|                    "url": "http://host.com/input_file.txt",                                                             |
+|                    "created": "2015-09-10T15:24:53.962Z",                                                               |
+|                    "deleted": null,                                                                                     |
+|                    "data_started": "2015-09-10T14:50:49Z",                                                              |
+|                    "data_ended": "2015-09-10T14:51:05Z",                                                                |
+|                    "geometry": null,                                                                                    |
+|                    "center_point": null,                                                                                |
+|                    "meta_data": {...}                                                                                   |
+|                    "last_modified": "2015-09-10T15:25:02.808Z"                                                          |
+|                }                                                                                                        |
 |            }                                                                                                            |
 |        ],                                                                                                               |
 |        "jobs": [                                                                                                        |

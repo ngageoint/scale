@@ -289,7 +289,7 @@ These services provide access to information about "all", "currently running" an
 | .name              | String            | The name of the input as defined by the job type interface.                    |
 |                    |                   | (See :ref:`architecture_jobs_interface_spec`)                                  |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .type              | String            | The type of the input as defined by teh job type interface.                    |
+| .type              | String            | The type of the input as defined by the job type interface.                    |
 |                    |                   | (See :ref:`architecture_jobs_interface_spec`)                                  |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .value             | Various           | The actual value of the input, which can vary depending on the type. Simple    |
@@ -302,7 +302,7 @@ These services provide access to information about "all", "currently running" an
 | .name              | String            | The name of the output as defined by the job type interface.                   |
 |                    |                   | (See :ref:`architecture_jobs_interface_spec`)                                  |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .type              | String            | The type of the output as defined by teh job type interface.                   |
+| .type              | String            | The type of the output as defined by the job type interface.                   |
 |                    |                   | (See :ref:`architecture_jobs_interface_spec`)                                  |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .value             | Various           | The actual value of the output, which can vary depending on the type. A file or|
