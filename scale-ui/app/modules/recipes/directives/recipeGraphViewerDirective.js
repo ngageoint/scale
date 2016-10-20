@@ -4,7 +4,7 @@
 (function () {
     angular.module('scaleApp').controller('aisScaleRecipeGraphViewerController', function ($rootScope, $scope, $location, $uibModal, scaleConfig, scaleService, jobTypeService, recipeService, workspacesService, RecipeType, RecipeTypeDetail, JobType, localStorage) {
         var vm = this;
-        
+
         vm.vertices = [];
         vm.edges = [];
         vm.selectedJob = null;
@@ -669,7 +669,7 @@
                 _.forEach($scope.recipeType.definition.jobs, function (job) {
                     // populate the current jobType
                     /*var thisJobType = _.find($scope.recipeType.job_types,{id: job.job_type_id});
-                    job.job_type = thisJobType;*/
+                     job.job_type = thisJobType;*/
 
                     // find dependents
                     if (job.job_type && job.job_type.job_type_interface) {
@@ -787,7 +787,7 @@
             zoom = d3.behavior.zoom().on("zoom", function () {
                 zoomScale = d3.event.scale;
                 inner.attr("transform", "translate(" + d3.event.translate + ")" +
-                    "scale(" + zoomScale + ")");
+                  "scale(" + zoomScale + ")");
             });
             svg.call(zoom);
 
