@@ -417,7 +417,7 @@
                 if (validationResult.warnings && validationResult.warnings.length > 0) {
                     // display the warnings
                     var warningsHtml = getWarningsHtml(validationResult.warnings);
-                    toastr["error"](warningsHtml);
+                    toastr["warning"](warningsHtml);
                 } else {
                     toastr["success"]('Recipe is valid.');
                 }
@@ -438,20 +438,19 @@
                 if (validationResult.warnings && validationResult.warnings.length > 0) {
                     // display the warnings
                     var warningsHtml = getWarningsHtml(validationResult.warnings);
-                    toastr["error"](warningsHtml);
+                    toastr["warning"](warningsHtml);
                     vm.savingRecipe = false;
-                } else {
-                    recipeService.saveRecipeType($scope.recipeType).then(function (saveResult) {
-                        vm.savingRecipe = false;
-                        $scope.recipeType = RecipeTypeDetail.transformer(saveResult);
-                        if (scaleConfig.static) {
-                            console.log(JSON.stringify($scope.recipeType));
-                            localStorage.setItem('recipeType' + $scope.recipeType.id, JSON.stringify($scope.recipeType));
-                        }
-                        vm.redraw();
-                        $location.path('/recipes/types/' + $scope.recipeType.id);
-                    });
                 }
+                recipeService.saveRecipeType($scope.recipeType).then(function (saveResult) {
+                    vm.savingRecipe = false;
+                    $scope.recipeType = RecipeTypeDetail.transformer(saveResult);
+                    if (scaleConfig.static) {
+                        console.log(JSON.stringify($scope.recipeType));
+                        localStorage.setItem('recipeType' + $scope.recipeType.id, JSON.stringify($scope.recipeType));
+                    }
+                    vm.redraw();
+                    $location.path('/recipes/types/' + $scope.recipeType.id);
+                });
             }).catch(function (error) {
                 if (error && error.detail) {
                     toastr['error'](error.detail);
