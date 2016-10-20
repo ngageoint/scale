@@ -7,7 +7,6 @@ Subpackages
 .. toctree::
 
     batch.configuration
-    batch.fixtures
     batch.management
     batch.migrations
     batch.test

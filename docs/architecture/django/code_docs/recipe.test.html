@@ -457,6 +457,70 @@ has one identical node, and deletes another node to replace it with a new one.</
 <div class="section" id="module-recipe.test.test_views">
 <span id="recipe-test-test-views-module"></span><h2>recipe.test.test_views module<a class="headerlink" href="#module-recipe.test.test_views" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
+<dt id="recipe.test.test_views.TestRecipeDetailsView">
+<em class="property">class </em><code class="descclassname">recipe.test.test_views.</code><code class="descname">TestRecipeDetailsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeDetailsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeDetailsView.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeDetailsView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeDetailsView.test_successful">
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeDetailsView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests getting recipe details</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeDetailsView.test_successful_v3">
+<code class="descname">test_successful_v3</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeDetailsView.test_successful_v3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the recipe details view under the legacy API.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeDetailsView.test_superseded">
+<code class="descname">test_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeDetailsView.test_superseded" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the recipe details view for superseded recipes.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.test.test_views.TestRecipeReprocessView">
+<em class="property">class </em><code class="descclassname">recipe.test.test_views.</code><code class="descname">TestRecipeReprocessView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeReprocessView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeReprocessView.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeReprocessView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeReprocessView.test_all_jobs">
+<code class="descname">test_all_jobs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeReprocessView.test_all_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests reprocessing all jobs in an existing recipe</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeReprocessView.test_job">
+<code class="descname">test_job</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeReprocessView.test_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests reprocessing one job in an existing recipe</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeReprocessView.test_no_changes">
+<code class="descname">test_no_changes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeReprocessView.test_no_changes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests reprocessing a recipe that has not changed without specifying any jobs throws an error.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeReprocessView.test_superseded">
+<code class="descname">test_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeReprocessView.test_superseded" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests reprocessing a recipe that is already superseded throws an error.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="recipe.test.test_views.TestRecipeTypeDetailsView">
 <em class="property">class </em><code class="descclassname">recipe.test.test_views.</code><code class="descname">TestRecipeTypeDetailsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeTypeDetailsView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
@@ -644,30 +708,6 @@ has one identical node, and deletes another node to replace it with a new one.</
 <dt id="recipe.test.test_views.TestRecipesView.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipesView.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipesView.test_reprocess_all_jobs">
-<code class="descname">test_reprocess_all_jobs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipesView.test_reprocess_all_jobs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests reprocessing all jobs in an existing recipe</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipesView.test_reprocess_job">
-<code class="descname">test_reprocess_job</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipesView.test_reprocess_job" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests reprocessing one job in an existing recipe</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipesView.test_reprocess_no_changes">
-<code class="descname">test_reprocess_no_changes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipesView.test_reprocess_no_changes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests reprocessing a recipe that has not changed without specifying any jobs throws an error.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="recipe.test.test_views.TestRecipesView.test_reprocess_superseded">
-<code class="descname">test_reprocess_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipesView.test_reprocess_superseded" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests reprocessing a recipe that is already superseded throws an error.</p>
-</dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.test_views.TestRecipesView.test_successful_all">

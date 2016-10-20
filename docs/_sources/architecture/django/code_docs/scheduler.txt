@@ -6,7 +6,6 @@ Subpackages
 
 .. toctree::
 
-    scheduler.fixtures
     scheduler.management
     scheduler.migrations
     scheduler.offer

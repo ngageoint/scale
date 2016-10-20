@@ -538,8 +538,7 @@ Unlike the standard Django 1.8 function, this only accepts ISO 8601 durations.</
 <dt id="util.rest.PlainTextRenderer">
 <em class="property">class </em><code class="descclassname">util.rest.</code><code class="descname">PlainTextRenderer</code><a class="headerlink" href="#util.rest.PlainTextRenderer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.renderers.BaseRenderer</span></code></p>
-<p>A django rest framework renderer which encodes a string using the requested character set
-and returns is as text/plain.</p>
+<p>Encodes a string using the requested character set and renders it as text/plain.</p>
 <dl class="attribute">
 <dt id="util.rest.PlainTextRenderer.format">
 <code class="descname">format</code><em class="property"> = u'txt'</em><a class="headerlink" href="#util.rest.PlainTextRenderer.format" title="Permalink to this definition">¶</a></dt>
@@ -578,8 +577,8 @@ and returns is as text/plain.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>started</strong> (<em>datetime.datetime</em>) &#8211; The start of a time range.</li>
-<li><strong>ended</strong> (<em>datetime.datetime</em>) &#8211; The end of a time range.</li>
+<li><strong>started</strong> (<em>datetime.datetime or None</em>) &#8211; The start of a time range.</li>
+<li><strong>ended</strong> (<em>datetime.datetime or None</em>) &#8211; The end of a time range.</li>
 <li><strong>max_duration</strong> (<em>datetime.timedelta</em>) &#8211; The maximum amount of time between the started and ended range.</li>
 </ul>
 </td>
@@ -604,8 +603,8 @@ and returns is as text/plain.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>names</strong> (<em>list[string]</em>) &#8211; The list of field names to check.</li>
-<li><strong>values</strong> (<em>list[object]</em>) &#8211; The list of field values to check.</li>
+<li><strong>names</strong> (<em>[string]</em>) &#8211; The list of field names to check.</li>
+<li><strong>values</strong> (<em>[object]</em>) &#8211; The list of field values to check.</li>
 </ul>
 </td>
 </tr>
@@ -630,7 +629,7 @@ and returns is as text/plain.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; The context of an active HTTP request.</li>
-<li><strong>fields</strong> (<em>list[string]</em>) &#8211; A list of field names that are permitted.</li>
+<li><strong>fields</strong> (<em>[string]</em>) &#8211; A list of field names that are permitted.</li>
 </ul>
 </td>
 </tr>
@@ -668,6 +667,24 @@ when computing an absolute time stamp.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="util.rest.get_url">
+<code class="descclassname">util.rest.</code><code class="descname">get_url</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="headerlink" href="#util.rest.get_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds an absolute URL from the given path with any required prefixes, such as the default REST API version.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> (<em>string</em>) &#8211; A URL path to combine with the default prefix.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The absolute path to use when calling the target URL path.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="util.rest.get_versioned_urls">
 <code class="descclassname">util.rest.</code><code class="descname">get_versioned_urls</code><span class="sig-paren">(</span><em>apps</em><span class="sig-paren">)</span><a class="headerlink" href="#util.rest.get_versioned_urls" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates a list of URL patterns for applications with REST APIs</p>
@@ -675,11 +692,11 @@ when computing an absolute time stamp.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>apps</strong> (<em>list[string]</em>) &#8211; A list of application names to register.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>apps</strong> (<em>[string]</em>) &#8211; A list of application names to register.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of URL patterns for REST APIs with version prefixes.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<code class="xref py py-class docutils literal"><span class="pre">django.core.urlresolvers.RegexURLPattern</span></code>]</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">[<code class="xref py py-class docutils literal"><span class="pre">django.core.urlresolvers.RegexURLPattern</span></code>]</td>
 </tr>
 </tbody>
 </table>
@@ -835,7 +852,7 @@ does not exist, there is no default value, and required is True.</li>
 <li><strong>default_value</strong> (<em>float</em>) &#8211; The name of the parameter to parse.</li>
 <li><strong>required</strong> (<em>bool</em>) &#8211; Indicates whether or not the parameter is required. An exception will be raised if the parameter
 does not exist, there is no default value, and required is True.</li>
-<li><strong>accepted_values</strong> (<em>list[float]</em>) &#8211; A list of values that are acceptable for the parameter.</li>
+<li><strong>accepted_values</strong> (<em>[float]</em>) &#8211; A list of values that are acceptable for the parameter.</li>
 </ul>
 </td>
 </tr>
@@ -864,7 +881,7 @@ does not exist, there is no default value, and required is True.</li>
 <li><strong>default_value</strong> (<em>int</em>) &#8211; The name of the parameter to parse.</li>
 <li><strong>required</strong> (<em>bool</em>) &#8211; Indicates whether or not the parameter is required. An exception will be raised if the parameter
 does not exist, there is no default value, and required is True.</li>
-<li><strong>accepted_values</strong> (<em>list[int]</em>) &#8211; A list of values that are acceptable for the parameter.</li>
+<li><strong>accepted_values</strong> (<em>[int]</em>) &#8211; A list of values that are acceptable for the parameter.</li>
 </ul>
 </td>
 </tr>
@@ -890,17 +907,17 @@ does not exist, there is no default value, and required is True.</li>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; The context of an active HTTP request.</li>
 <li><strong>name</strong> (<em>string</em>) &#8211; The name of the parameter to parse.</li>
-<li><strong>default_value</strong> (<em>list[int]</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>default_value</strong> (<em>[int]</em>) &#8211; The name of the parameter to parse.</li>
 <li><strong>required</strong> (<em>bool</em>) &#8211; Indicates whether or not the parameter is required. An exception will be raised if the parameter
 does not exist, there is no default value, and required is True.</li>
-<li><strong>accepted_values</strong> (<em>list[int]</em>) &#8211; A list of values that are acceptable for the parameter.</li>
+<li><strong>accepted_values</strong> (<em>[int]</em>) &#8211; A list of values that are acceptable for the parameter.</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The values of the named parameter or the default values if provided.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[int]</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[int]</p>
 </td>
 </tr>
 </tbody>
@@ -922,7 +939,7 @@ does not exist, there is no default value, and required is True.</li>
 <li><strong>default_value</strong> (<em>string</em>) &#8211; The name of the parameter to parse.</li>
 <li><strong>required</strong> (<em>bool</em>) &#8211; Indicates whether or not the parameter is required. An exception will be raised if the parameter
 does not exist, there is no default value, and required is True.</li>
-<li><strong>accepted_values</strong> (<em>list[string]</em>) &#8211; A list of values that are acceptable for the parameter.</li>
+<li><strong>accepted_values</strong> (<em>[string]</em>) &#8211; A list of values that are acceptable for the parameter.</li>
 </ul>
 </td>
 </tr>
@@ -948,17 +965,17 @@ does not exist, there is no default value, and required is True.</li>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; The context of an active HTTP request.</li>
 <li><strong>name</strong> (<em>string</em>) &#8211; The name of the parameter to parse.</li>
-<li><strong>default_value</strong> (<em>list[string]</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>default_value</strong> (<em>[string]</em>) &#8211; The name of the parameter to parse.</li>
 <li><strong>required</strong> (<em>bool</em>) &#8211; Indicates whether or not the parameter is required. An exception will be raised if the parameter
 does not exist, there is no default value, and required is True.</li>
-<li><strong>accepted_values</strong> (<em>list[string]</em>) &#8211; A list of values that are acceptable for the parameter.</li>
+<li><strong>accepted_values</strong> (<em>[string]</em>) &#8211; A list of values that are acceptable for the parameter.</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The values of the named parameter or the default values if provided.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[string]</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[string]</p>
 </td>
 </tr>
 </tbody>
@@ -977,7 +994,7 @@ does not exist, there is no default value, and required is True.</li>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; The context of an active HTTP request.</li>
 <li><strong>name</strong> (<em>string</em>) &#8211; The name of the parameter to parse.</li>
-<li><strong>default_value</strong> (<em>datetime.timedelta or string</em>) &#8211; The name of the parameter to parse.</li>
+<li><strong>default_value</strong> (<em>datetime.datetime or datetime.timedelta or string</em>) &#8211; The name of the parameter to parse.</li>
 <li><strong>required</strong> (<em>bool</em>) &#8211; Indicates whether or not the parameter is required. An exception will be raised if the parameter
 does not exist, there is no default value, and required is True.</li>
 </ul>

@@ -1223,22 +1223,59 @@ model.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="recipe.serializers.RecipeDetailsInputSerializer">
+<em class="property">class </em><code class="descclassname">recipe.serializers.</code><code class="descname">RecipeDetailsInputSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeDetailsInputSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.serializers.Serializer</span></code></p>
+<p>Converts recipe detail model input fields to REST output</p>
+<dl class="class">
+<dt id="recipe.serializers.RecipeDetailsInputSerializer.Meta">
+<em class="property">class </em><code class="descname">Meta</code><a class="headerlink" href="#recipe.serializers.RecipeDetailsInputSerializer.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="recipe.serializers.RecipeDetailsInputSerializer.Meta.FILE_SERIALIZER">
+<code class="descname">FILE_SERIALIZER</code><a class="headerlink" href="#recipe.serializers.RecipeDetailsInputSerializer.Meta.FILE_SERIALIZER" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#recipe.serializers.RecipeDetailsInputSerializer.Meta.ScaleFileBaseSerializer" title="recipe.serializers.RecipeDetailsInputSerializer.Meta.ScaleFileBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">ScaleFileBaseSerializer</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.serializers.RecipeDetailsInputSerializer.Meta.ScaleFileBaseSerializer">
+<em class="property">class </em><code class="descname">ScaleFileBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeDetailsInputSerializer.Meta.ScaleFileBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
+<p>Converts Scale file model fields to REST output</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.serializers.RecipeDetailsInputSerializer.to_representation">
+<code class="descclassname">RecipeDetailsInputSerializer.</code><code class="descname">to_representation</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeDetailsInputSerializer.to_representation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="recipe.serializers.RecipeDetailsSerializer">
 <em class="property">class </em><code class="descclassname">recipe.serializers.</code><code class="descname">RecipeDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeDetailsSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#recipe.serializers.RecipeSerializer" title="recipe.serializers.RecipeSerializer"><code class="xref py py-class docutils literal"><span class="pre">recipe.serializers.RecipeSerializer</span></code></a></p>
 <p>Converts related recipe model fields to REST output.</p>
 <dl class="class">
-<dt id="recipe.serializers.RecipeDetailsSerializer.ScaleFileBaseSerializer">
-<em class="property">class </em><code class="descname">ScaleFileBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeDetailsSerializer.ScaleFileBaseSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
-<p>Converts Scale file model fields to REST output</p>
+<dt id="recipe.serializers.RecipeDetailsSerializer.TriggerEventDetailsSerializer">
+<em class="property">class </em><code class="descname">TriggerEventDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeDetailsSerializer.TriggerEventDetailsSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="trigger.html#trigger.serializers.TriggerEventBaseSerializer" title="trigger.serializers.TriggerEventBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">trigger.serializers.TriggerEventBaseSerializer</span></code></a></p>
+<p>Converts trigger event model fields to REST output.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
-<dt id="recipe.serializers.RecipeDetailsSerializer.TriggerEventDetailsSerializer">
-<em class="property">class </em><code class="descclassname">RecipeDetailsSerializer.</code><code class="descname">TriggerEventDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeDetailsSerializer.TriggerEventDetailsSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="trigger.html#trigger.serializers.TriggerEventBaseSerializer" title="trigger.serializers.TriggerEventBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">trigger.serializers.TriggerEventBaseSerializer</span></code></a></p>
-<p>Converts trigger event model fields to REST output.</p>
+<dt id="recipe.serializers.RecipeDetailsSerializerV3">
+<em class="property">class </em><code class="descclassname">recipe.serializers.</code><code class="descname">RecipeDetailsSerializerV3</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeDetailsSerializerV3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#recipe.serializers.RecipeDetailsSerializer" title="recipe.serializers.RecipeDetailsSerializer"><code class="xref py py-class docutils literal"><span class="pre">recipe.serializers.RecipeDetailsSerializer</span></code></a></p>
+<p>Converts related recipe model fields to REST output.</p>
+<dl class="class">
+<dt id="recipe.serializers.RecipeDetailsSerializerV3.ScaleFileBaseSerializer">
+<em class="property">class </em><code class="descname">ScaleFileBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.serializers.RecipeDetailsSerializerV3.ScaleFileBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
+<p>Converts Scale file model fields to REST output</p>
 </dd></dl>
 
 </dd></dl>
@@ -1366,6 +1403,12 @@ model.</p>
 <em class="property">class </em><code class="descclassname">recipe.views.</code><code class="descname">RecipeDetailsView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.views.RecipeDetailsView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.RetrieveAPIView</span></code></p>
 <p>This view is the endpoint for retrieving details of a recipe</p>
+<dl class="method">
+<dt id="recipe.views.RecipeDetailsView.get_serializer_class">
+<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.views.RecipeDetailsView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override the serializer for legacy API calls.</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="recipe.views.RecipeDetailsView.queryset">
 <code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#recipe.views.RecipeDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
@@ -1393,12 +1436,6 @@ model.</p>
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="recipe.views.RecipeDetailsView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#recipe.views.RecipeDetailsView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">RecipeDetailsSerializer</span></code></p>
 </dd></dl>
 
 </dd></dl>

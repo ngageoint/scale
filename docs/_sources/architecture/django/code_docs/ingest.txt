@@ -6,7 +6,6 @@ Subpackages
 
 .. toctree::
 
-    ingest.fixtures
     ingest.management
     ingest.migrations
     ingest.strike

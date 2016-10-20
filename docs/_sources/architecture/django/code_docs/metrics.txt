@@ -6,7 +6,6 @@ Subpackages
 
 .. toctree::
 
-    metrics.fixtures
     metrics.management
     metrics.migrations
     metrics.test

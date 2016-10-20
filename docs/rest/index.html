@@ -174,9 +174,9 @@ describe the services available for each component of Scale.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Latest Version:</th><td class="field-body"><code class="docutils literal"><span class="pre">v3</span></code></td>
+<tr class="field-odd field"><th class="field-name">Latest Version:</th><td class="field-body"><code class="docutils literal"><span class="pre">v4</span></code></td>
 </tr>
-<tr class="field-even field"><th class="field-name">Other Versions:</th><td class="field-body">No prefix</td>
+<tr class="field-even field"><th class="field-name">Other Versions:</th><td class="field-body"><code class="docutils literal"><span class="pre">v3</span></code></td>
 </tr>
 </tbody>
 </table>
@@ -184,14 +184,11 @@ describe the services available for each component of Scale.</p>
 a new version prefix will be included so that users can opt-in to the changes over time. In the short-term, the system
 will support both the old and new API versions within the same release. Eventually, old API versions will be deprecated
 and subsequently removed in later releases.</p>
-<p>Since the API did not initially include a version scheme, the legacy URLs do not contain a prefix and the first release
-to include a version prefix is 3.0. Therefore, any URL listed in the documentation below will work as-is in the current
-release, but users should start including the version prefix in all requests going forward.</p>
 <p>All endpoints should include a prefix of the form <code class="docutils literal"><span class="pre">vX</span></code>, where <code class="docutils literal"><span class="pre">X</span></code> is the desired version number. Making a request
-with an invalid version prefix will result in a 404 error.</p>
+without a version prefix or an invalid version prefix will result in a 404 error.</p>
 <div class="line-block">
 <div class="line">Documentation Example: <code class="docutils literal"><span class="pre">/job-types/</span></code></div>
-<div class="line">Actual Request Example: <code class="docutils literal"><span class="pre">/v3/job-types/</span></code></div>
+<div class="line">Actual Request Example: <code class="docutils literal"><span class="pre">/v4/job-types/</span></code></div>
 <div class="line"><br /></div>
 </div>
 </div>

@@ -367,7 +367,7 @@ This field will remain null if a job in the recipe is blocked or failed.</td>
 </tr>
 </tbody>
 </table>
-<table border="1" class="docutils" id="rest-recipe-details">
+<span class="target" id="rest-recipe-details"></span><table border="1" class="docutils">
 <colgroup>
 <col width="17%" />
 <col width="2%" />
@@ -457,10 +457,33 @@ This field will remain null if a job in the recipe is blocked or failed.</td>
 <td>JSON description defining the data used to execute a recipe instance.
 (See <a class="reference internal" href="../architecture/jobs/recipe_data.html#architecture-jobs-recipe-data-spec"><span>Recipe Data Specification Version 1.0</span></a>)</td>
 </tr>
+<tr class="row-odd"><td colspan="2">inputs</td>
+<td>Array</td>
+<td>A list of recipe definition inputs merged with their respective recipe data
+values.</td>
+</tr>
+<tr class="row-even"><td colspan="2">.name</td>
+<td>String</td>
+<td>The name of the input as defined by the recipe type definition.
+(See <a class="reference internal" href="../architecture/jobs/recipe_definition.html#architecture-jobs-recipe-definition-spec"><span>Recipe Definition Specification Version 1.0</span></a>)</td>
+</tr>
+<tr class="row-odd"><td colspan="2">.type</td>
+<td>String</td>
+<td>The type of the input as defined by the recipe type definition.
+(See <a class="reference internal" href="../architecture/jobs/recipe_definition.html#architecture-jobs-recipe-definition-spec"><span>Recipe Definition Specification Version 1.0</span></a>)</td>
+</tr>
+<tr class="row-even"><td colspan="2">.value</td>
+<td>Various</td>
+<td>The actual value of the input, which can vary depending on the type. Simple
+property inputs will include primitive values, whereas the file or files
+type will include a full JSON representation of a Scale file object.
+(See <a class="reference internal" href="scale_file.html#rest-scale-file-details"><span>Scale File Details</span></a>)</td>
+</tr>
 <tr class="row-odd"><td colspan="2">input_files</td>
 <td>JSON Object</td>
 <td>A list of files that the recipe used as input.
-(See <a class="reference internal" href="scale_file.html#rest-scale-file-details"><span>Scale File Details</span></a>)</td>
+(See <a class="reference internal" href="scale_file.html#rest-scale-file-details"><span>Scale File Details</span></a>)
+Removed in v4, use the &#8220;inputs&#8221; attribute instead.</td>
 </tr>
 <tr class="row-even"><td colspan="2">jobs</td>
 <td>Array</td>
@@ -598,28 +621,32 @@ This field will remain null if a job in the recipe is blocked or failed.</td>
         <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span>
         <span class="s2">&quot;workspace_id&quot;</span><span class="o">:</span> <span class="mi">2</span>
     <span class="p">}</span>
-    <span class="s2">&quot;input_files&quot;</span><span class="o">:</span> <span class="p">[</span>
+    <span class="s2">&quot;inputs&quot;</span><span class="o">:</span> <span class="p">[</span>
         <span class="p">{</span>
-            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
-            <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="p">{</span>
-                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Raw Source&quot;</span>
-            <span class="p">},</span>
-            <span class="s2">&quot;file_name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file.txt&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;file_size&quot;</span><span class="o">:</span> <span class="mi">1234</span><span class="p">,</span>
-            <span class="s2">&quot;data_type&quot;</span><span class="o">:</span> <span class="p">[],</span>
-            <span class="s2">&quot;is_deleted&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-            <span class="s2">&quot;uuid&quot;</span><span class="o">:</span> <span class="s2">&quot;c8928d9183fc99122948e7840ec9a0fd&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/input_file.txt&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:53.962Z&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;deleted&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-            <span class="s2">&quot;data_started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T14:50:49Z&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;data_ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T14:51:05Z&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;geometry&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-            <span class="s2">&quot;center_point&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
-            <span class="s2">&quot;meta_data&quot;</span><span class="o">:</span> <span class="p">{...}</span>
-            <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:25:02.808Z&quot;</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Raw Source&quot;</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;file_name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file.txt&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;file_size&quot;</span><span class="o">:</span> <span class="mi">1234</span><span class="p">,</span>
+                <span class="s2">&quot;data_type&quot;</span><span class="o">:</span> <span class="p">[],</span>
+                <span class="s2">&quot;is_deleted&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+                <span class="s2">&quot;uuid&quot;</span><span class="o">:</span> <span class="s2">&quot;c8928d9183fc99122948e7840ec9a0fd&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/input_file.txt&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:53.962Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;deleted&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;data_started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T14:50:49Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;data_ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T14:51:05Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;geometry&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;center_point&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;meta_data&quot;</span><span class="o">:</span> <span class="p">{...}</span>
+                <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:25:02.808Z&quot;</span>
+            <span class="p">}</span>
         <span class="p">}</span>
     <span class="p">],</span>
     <span class="s2">&quot;jobs&quot;</span><span class="o">:</span> <span class="p">[</span>
