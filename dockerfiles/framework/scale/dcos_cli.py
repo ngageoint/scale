@@ -125,7 +125,9 @@ def deploy_webserver(app_name, es_urls, db_host, db_port):
             db_port = os.getenv('SCALE_DB_PORT')
 
         vhost = os.getenv('SCALE_VHOST')
-        workers = os.getenv('SCALE_WEBSERVER_WORKERS', 4)
+        cpu = os.getenv('SCALE_WEBSERVER_CPU', 1)
+        memory = os.getenv('SCALE_WEBSERVER_MEMORY', 2048)
+        db_host = os.getenv('SCALE_DB_HOST', 'scale-db')
         db_name = os.getenv('SCALE_DB_NAME', 'scale')
         db_user = os.getenv('SCALE_DB_USER', 'scale')
         db_pass = os.getenv('SCALE_DB_PASS', 'scale')
@@ -134,8 +136,8 @@ def deploy_webserver(app_name, es_urls, db_host, db_port):
 
         marathon = {
             'id': app_name,
-            'cpus': 2,
-            'mem': 1024,
+            'cpus': int(cpu),
+            'mem': int(memory),
             'disk': 0,
             'instances': 1,
             'container': {
@@ -160,7 +162,8 @@ def deploy_webserver(app_name, es_urls, db_host, db_port):
                 "SCALE_DB_USER": db_user,
                 "SCALE_DB_PASS": db_pass,
                 "SCALE_STATIC_URL": "/service/%s/static/" % FRAMEWORK_NAME,
-                "SCALE_WEBSERVER_WORKERS": str(workers),
+                "SCALE_WEBSERVER_CPU": str(cpu),
+                "SCALE_WEBSERVER_MEMORY": str(memory),
                 "SCALE_ELASTICSEARCH_URLS": es_urls
             },
             'labels': {
