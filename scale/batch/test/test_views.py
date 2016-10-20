@@ -9,6 +9,7 @@ from rest_framework import status
 import recipe.test.utils as recipe_test_utils
 import batch.test.utils as batch_test_utils
 import util.rest as rest_util
+from batch.models import Batch
 
 
 class TestBatchesView(TestCase):
@@ -95,6 +96,80 @@ class TestBatchesView(TestCase):
         self.assertEqual(result['results'][1]['recipe_type']['id'], recipe_type1b.id)
         self.assertEqual(result['results'][2]['recipe_type']['id'], self.recipe_type1.id)
         self.assertEqual(result['results'][3]['recipe_type']['id'], self.recipe_type2.id)
+
+    def test_create(self):
+        """Tests creating a new batch."""
+        json_data = {
+            'recipe_type_id': self.recipe_type1.id,
+            'title': 'batch-title-test',
+            'description': 'batch-description-test',
+            'definition': {
+                'version': '1.0',
+                'all_jobs': True,
+            },
+        }
+
+        url = rest_util.get_url('/batches/')
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        batch = Batch.objects.filter(title='batch-title-test').first()
+
+        result = json.loads(response.content)
+        self.assertEqual(result['id'], batch.id)
+        self.assertEqual(result['title'], 'batch-title-test')
+        self.assertEqual(result['description'], 'batch-description-test')
+        self.assertEqual(result['recipe_type']['id'], self.recipe_type1.id)
+        self.assertIsNotNone(result['event'])
+        self.assertIsNotNone(result['creator_job'])
+        self.assertIsNotNone(result['definition'])
+
+    def test_create_missing_param(self):
+        """Tests creating a batch with missing fields."""
+        json_data = {
+            'title': 'batch-test',
+        }
+
+        url = rest_util.get_url('/batches/')
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_create_bad_param(self):
+        """Tests creating a batch with invalid type fields."""
+        json_data = {
+            'recipe_type_id': 'BAD',
+            'title': 'batch-test',
+            'description': 'This is a test.',
+            'definition': {
+                'version': '1.0',
+                'all_jobs': True,
+            },
+        }
+
+        url = rest_util.get_url('/batches/')
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_create_bad_definition(self):
+        """Tests creating a new batch with an invalid definition."""
+        json_data = {
+            'recipe_type_id': self.recipe_type1.id,
+            'title': 'batch-test',
+            'description': 'This is a test.',
+            'definition': {
+                'version': '1.0',
+                'date_range': {
+                    'type': 'BAD',
+                },
+            },
+        }
+
+        url = rest_util.get_url('/batches/')
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 
 class TestBatchDetailsView(TestCase):
