@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [[ ${DCOS_URL}x != x ]]
+if [[ "${DCOS_URL}x" != "x" ]]
 then
  dcos config set core.dcos_url $DCOS_URL
 else
@@ -10,12 +10,12 @@ fi
 # TODO: Replace this with a pinned value if we care about key change across container restart
 export SCALE_SECRET_KEY=`python -c "import random;import string;print(''.join(random.SystemRandom().choice(string.hexdigits) for _ in range(50)))"`
 
-if [[ ${DEPLOY_DB} == 'true' ]] || [[ ${DEPLOY_LOGGING} == 'true' || ${DEPLOY_WEBSERVER} == 'true' ]]
+if [[ "${SCALE_DB_HOST}x" != "x" || "${SCALE_LOGGING_ADDRESS}x" != "x" || ${DEPLOY_WEBSERVER} == 'true' ]]
 then
   python dcos_cli.py > dcos_cli.log
 fi
 
-if [[ ${DEPLOY_DB} == 'true' ]]
+if [[ "${SCALE_DB_HOST}x" != "x" ]]
 then
     export SCALE_DB_PORT=`cat dcos_cli.log | grep DB_PORT | cut -d '=' -f2`
     export SCALE_DB_HOST=`cat dcos_cli.log | grep DB_HOST | cut -d '=' -f2`
@@ -25,7 +25,7 @@ fi
 echo "${SCALE_DB_HOST}:${SCALE_DB_PORT}:*:${SCALE_DB_USER}:${SCALE_DB_PASS}" >> ~/.pgpass
 chmod 0600 ~/.pgpass
 
-if [[ ${DEPLOY_LOGGING} == 'true' ]]
+if [[ "${SCALE_LOGGING_ADDRESS}x" != "x" ]]
 then
     export SCALE_LOGGING_ADDRESS=`cat dcos_cli.log | grep LOGGING_ADDRESS | cut -d '=' -f2`
     export SCALE_ELASTICSEARCH_URLS=`cat dcos_cli.log | grep ELASTICSEARCH_URLS | cut -d '=' -f2`
@@ -45,7 +45,7 @@ then
     python manage.py loaddata country_data.json
 fi
 
-if [[ ${DCOS_PACKAGE_FRAMEWORK_NAME}x != x ]]
+if [[ "${DCOS_PACKAGE_FRAMEWORK_NAME}x" != "x" ]]
 then
     sed -i "s/framework.name\ =\ 'Scale'/framework.name\ =\ '"${DCOS_PACKAGE_FRAMEWORK_NAME}"'/" /opt/scale/scheduler/management/commands/scale_scheduler.py
     sed -i "/framework.name/ a\ \ \ \ \ \ \ \ framework.webui_url = 'http://"${DCOS_PACKAGE_FRAMEWORK_NAME}".marathon.slave.mesos:"${PORT0}"/'" scheduler/management/commands/scale_scheduler.py

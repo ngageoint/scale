@@ -6,37 +6,36 @@ EXPOSE 80
 EXPOSE 8000
 EXPOSE 5051
 
-# allowed environment variables
-# ENABLE_WEBSERVER=true to start the RESTful API server, should only be set on webserver
-# DEPLOY_DB to start the database container (for DC/OS use)
-# DEPLOY_LOGGING to start up the logstash system
-# DEPLOY_WEBSERVER to start the webserver - without this we will run a naked scheduler
-# INIT_DB to initialize the database (migrate, load, etc.)
-# LOAD_COUNTRY_DATA to load country borders fixture into the database (don't select this if you have custom country data)
-# LOGSTASH_DOCKER_IMAGE the name of the DOcker image for logstash
-# SCALE_DEBUG
+# recognized environment variables
+# CONFIG_URI
+# DCOS_OAUTH_TOKEN authentication for Marathon deployments when DCOS OAuth is enabled
+# DCOS_PACKAGE_FRAMEWORK_NAME used to inject a configurable framework name allowing for multiple scale frameworks per cluster
+# DCOS_PASS authentication for Marathon deployments when using DCOS enterprise
+# DCOS_URL Mesos master URL for Marathon deployments
+# DCOS_USER authentication for Marathon deployments when using DCOS enterprise
+# DEPLOY_WEBSERVER to start the database container
+# ENABLE_WEBSERVER true to start the RESTful API server, should only be set on webserver app
+# INIT_DB to initialize the database (migrate, load, etc.) should always be true
+# LOAD_COUNTRY_DATA to load country borders fixture into the database, should always be true unless using custom country borders
+# LOGSTASH_DOCKER_IMAGE the name of the Docker image for logstash
+# MARATHON_APP_DOCKER_IMAGE used in Marathon to autodetect Scale docker image
+# MESOS_MASTER_URL
+# NPM_URL
+# PYPI_URL
 # SCALE_DB_HOST
 # SCALE_DB_PORT
 # SCALE_DB_NAME
 # SCALE_DB_USER
 # SCALE_DB_PASS
+# SCALE_DEBUG
+# SCALE_DOCKER_IMAGE used for explicit override of docker image used, not needed in Marathon
+# SCALE_ELASTICSEARCH_URLS
 # SCALE_UI_URL
 # SCALE_LOGGING_ADDRESS
 # SCALE_WEBSERVER_CPU
 # SCALE_WEBSERVER_MEMORY
-# MESOS_MASTER_URL
 # SCALE_ZK_URL
-# SCALE_DOCKER_IMAGE
-# USE_LATEST
-# DCOS_PACKAGE_FRAMEWORK_NAME
-# CONFIG_URI
-# PYPI_URL
-# NPM_URL
-# SCALE_ELASTICSEARCH_URLS
-# DCOS_USER
-# DCOS_PASS
-# DCOS_OAUTH_TOKEN
-# DCOS_URL
+ENV INIT_DB=true LOAD_COUNTRY_DATA=True
 
 # build arg to set the version qualifier. This should be blank for a
 # release build. Otherwise it is typically a build number or git hash.

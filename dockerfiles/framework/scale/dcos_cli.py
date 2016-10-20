@@ -2,9 +2,9 @@
 import pexpect, requests, os, json, time, subprocess
 
 FRAMEWORK_NAME = os.getenv('DCOS_PACKAGE_FRAMEWORK_NAME', 'scale')
-DEPLOY_DB = os.getenv('DEPLOY_DB', 'false')
-DEPLOY_LOGGING = os.getenv('DEPLOY_LOGGING', 'false')
-DEPLOY_WEBSERVER = os.getenv('DEPLOY_WEBSERVER', 'false')
+SCALE_DB_HOST = os.getenv('SCALE_DB_HOST', '')
+SCALE_LOGGING_ADDRESS = os.getenv('SCALE_LOGGING_ADDRESS', '')
+DEPLOY_WEBSERVER = os.getenv('DEPLOY_WEBSERVER', 'true')
 USERNAME = os.getenv('DCOS_USER', '')
 PASSWORD = os.getenv('DCOS_PASS', '')
 OAUTH_TOKEN = os.getenv('DCOS_OAUTH_TOKEN', '')
@@ -37,17 +37,17 @@ def run():
 
     print("ELASTICSEARCH_URLS=" + es_urls)
 
-    # Determine if Logging should be deployed.
+    # Determine if db should be deployed.
     db_host = None
     db_port = None
-    if DEPLOY_DB.lower() == 'true':
+    if not len(SCALE_DB_HOST):
         app_name = '%s-db' % FRAMEWORK_NAME
         db_port = deploy_database(app_name)
         print("DB_HOST=%s.marathon.mesos" % app_name)
         print("DB_PORT=%s" % db_port)
 
-    # Determine if Logging should be deployed.
-    if DEPLOY_LOGGING.lower() == 'true':
+    # Determine if logstash should be deployed.
+    if not len(SCALE_LOGGING_ADDRESS):
         app_name = '%s-logstash' % FRAMEWORK_NAME
         log_port = deploy_logstash(app_name, es_urls)
         print("LOGGING_ADDRESS=tcp://%s.marathon.mesos:%s" % (app_name, log_port))
