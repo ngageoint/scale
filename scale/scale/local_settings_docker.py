@@ -65,10 +65,10 @@ else:
 # Mesos connection information. Default for -m
 # This can be something like "127.0.0.1:5050"
 # or a zookeeper url like 'zk://host1:port1,host2:port2,.../path`
-MESOS_MASTER = os.environ.get('MESOS_MASTER_URL', 'zk://localhost:2181/scale')
+MESOS_MASTER = os.environ.get('MESOS_MASTER_URL', 'zk://master.mesos:2181/mesos')
 
 # Zookeeper URL for scheduler leader election. If this is None, only a single scheduler is used.
-SCHEDULER_ZK = os.environ.get('SCALE_ZK_URL', None)
+SCHEDULER_ZK = os.environ.get('SCALE_ZK_URL', 'zk://master.mesos:2181/scale')
 
 # The full name for the Scale Docker image (without version tag)
 SCALE_DOCKER_IMAGE = os.environ.get('SCALE_DOCKER_IMAGE', SCALE_DOCKER_IMAGE)
