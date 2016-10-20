@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/sh
 
 if [[ ${DCOS_URL}x != x ]]
 then
@@ -9,7 +9,6 @@ fi
 
 # TODO: Replace this with a pinned value if we care about key change across container restart
 export SCALE_SECRET_KEY=`python -c "import random;import string;print(''.join(random.SystemRandom().choice(string.hexdigits) for _ in range(50)))"`
-echo "SCALE_SECRET_KEY: ${SCALE_SECRET_KEY}"
 
 if [[ ${DEPLOY_DB} == 'true' ]] || [[ ${DEPLOY_LOGGING} == 'true' || ${DEPLOY_WEBSERVER} == 'true' ]]
 then
