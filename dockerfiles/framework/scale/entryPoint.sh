@@ -1,4 +1,29 @@
-#!/bin/sh
+#!/bin/sh -e
+
+
+check-db () {
+    if [[ "${SCALE_DB_HOST}x" == "x" ]]
+    then
+        echo SCALE_DB_HOST is not populated. Scale requires a valid db host configured.
+        exit 1
+    fi
+}
+
+check-logging () {
+    if [[ "${SCALE_LOGGING_ADDRESS}x" == "x" ]]
+    then
+        echo SCALE_LOGGING_ADDRESS is not populated. Scale requires a valid Logstash URL configured.
+        exit 1
+    fi
+}
+
+check-elastic () {
+    if [[ "${SCALE_ELASTICSEARCH_URLS}x" == "x" ]]
+    then
+        echo SCALE_ELASTICSEARCH_URLS is not populated. Scale requires a valid Elasticsearch URLs configured.
+        exit 1
+    fi
+}
 
 # If ENABLE_BOOTSTRAP is set, we are bootstrapping other components in a DCOS package configuration
 if [[ "${ENABLE_BOOTSTRAP}" == "true" ]]
@@ -34,6 +59,11 @@ then
         export SCALE_ELASTICSEARCH_URLS=`cat dcos_cli.log | grep ELASTICSEARCH_URLS | cut -d '=' -f2`
     fi
 
+    # Validate dependencies for bootstrap
+    check-db
+    check-elastic
+    check-logging
+
     # Initialize schema and initial data
     /usr/bin/psql -U scale -h ${SCALE_DB_HOST} -w -p ${SCALE_DB_PORT} -c "CREATE EXTENSION postgis;"
     python manage.py migrate
@@ -54,6 +84,10 @@ fi
 # If ENABLE_WEBSERVER is set, we are running the container in web server mode.
 if [[ "${ENABLE_WEBSERVER}" == "true" ]]
 then
+    # Validate dependencies for web server
+    check-db
+    check-elastic
+
     gosu root sed -i 's^User apache^User scale^g' /etc/httpd/conf/httpd.conf
     gosu root sed -i 's/\/SCALE/\/'${DCOS_PACKAGE_FRAMEWORK_NAME}'/' /etc/httpd/conf.d/scale.conf
     gosu root /usr/sbin/httpd
