@@ -8,6 +8,7 @@ from django.http.response import Http404
 from rest_framework.generics import ListCreateAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
+from rest_framework.views import APIView
 
 import util.rest as rest_util
 from batch.configuration.definition.batch_definition import BatchDefinition
@@ -63,6 +64,7 @@ class BatchesView(ListCreateAPIView):
         title = rest_util.parse_string(request, 'title', required=False)
         description = rest_util.parse_string(request, 'description', required=False)
 
+        # Make sure the recipe type exists
         try:
             recipe_type = RecipeType.objects.get(pk=recipe_type_id)
         except RecipeType.DoesNotExist:
@@ -113,3 +115,41 @@ class BatchDetailsView(RetrieveAPIView):
 
         serializer = self.get_serializer(batch)
         return Response(serializer.data)
+
+
+class BatchesValidationView(APIView):
+    """This view is the endpoint for validating a new batch before attempting to actually create it"""
+    queryset = Batch.objects.all()
+
+    def post(self, request):
+        """Validates a new batch and returns any warnings discovered
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        recipe_type_id = rest_util.parse_int(request, 'recipe_type_id')
+
+        # Make sure the recipe type exists
+        try:
+            recipe_type = RecipeType.objects.get(pk=recipe_type_id)
+        except RecipeType.DoesNotExist:
+            raise BadParameter('Unknown recipe type: %i' % recipe_type_id)
+
+        # Validate the batch definition
+        definition_dict = rest_util.parse_dict(request, 'definition')
+        definition = None
+        try:
+            if definition_dict:
+                definition = BatchDefinition(definition_dict)
+        except InvalidDefinition as ex:
+            raise BadParameter('Batch definition invalid: %s' % unicode(ex))
+
+        # Get a rough estimate of how many recipes will be affected
+        old_recipes = Batch.objects.get_matched_recipes(recipe_type, definition)
+
+        return Response({
+            'recipe_count': old_recipes.count(),
+            'warnings': [],
+        })

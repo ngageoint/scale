@@ -144,24 +144,13 @@ class BatchManager(models.Manager):
         batch_definition = batch.get_batch_definition()
 
         # Fetch all the recipes of the requested type that are not already superseded
-        old_recipes = Recipe.objects.filter(recipe_type=batch.recipe_type, is_superseded=False)
-
-        # Exclude recipes that have not actually changed unless requested
-        if not (batch_definition.job_names or batch_definition.all_jobs):
-            old_recipes = old_recipes.filter(recipe_type__revision_num__gt=F('recipe_type_rev__revision_num'))
-
-        # Optionally filter by date range
-        if batch_definition.started:
-            old_recipes = old_recipes.filter(created__gte=batch_definition.started)
-        if batch_definition.ended:
-            old_recipes = old_recipes.filter(created__lte=batch_definition.ended)
-
+        old_recipes = self.get_matched_recipes(batch.recipe_type, batch_definition)
         total = old_recipes.count()
-        logger.info('Scheduling batch recipes: %i', total)
         batch.total_count = total
         batch.save()
 
         # Schedule all the new recipes/jobs and create corresponding batch models
+        logger.info('Scheduling batch recipes: %i', total)
         for old_recipe in old_recipes.iterator():
             try:
                 self._process_recipe(batch, old_recipe)
@@ -176,6 +165,31 @@ class BatchManager(models.Manager):
         batch.status = 'CREATED'
         batch.total_count = batch.created_count + batch.failed_count
         batch.save()
+
+    def get_matched_recipes(self, recipe_type, definition):
+        """Gets all the recipes that might be affected by the given batch criteria.
+
+        :param recipe_type: The type of recipes that should be re-processed
+        :type recipe_type: :class:`recipe.models.RecipeType`
+        :param definition: The definition for running a batch
+        :type definition: :class:`batch.configuration.definition.batch_definition.BatchDefinition`
+        :returns: A list of recipes that match the batch definition.
+        :rtype: [:class:`recipe.models.Recipe`]
+        """
+
+        # Fetch all the recipes of the requested type that are not already superseded
+        old_recipes = Recipe.objects.filter(recipe_type=recipe_type, is_superseded=False)
+
+        # Exclude recipes that have not actually changed unless requested
+        if not (definition.job_names or definition.all_jobs):
+            old_recipes = old_recipes.filter(recipe_type__revision_num__gt=F('recipe_type_rev__revision_num'))
+
+        # Optionally filter by date range
+        if definition.started:
+            old_recipes = old_recipes.filter(created__gte=definition.started)
+        if definition.ended:
+            old_recipes = old_recipes.filter(created__lte=definition.ended)
+        return old_recipes
 
     @transaction.atomic
     def _process_recipe(self, batch, old_recipe):

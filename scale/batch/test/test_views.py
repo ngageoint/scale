@@ -172,6 +172,84 @@ class TestBatchesView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 
+class TestBatchesValidationView(TestCase):
+
+    fixtures = ['batch_job_types.json']
+
+    def setUp(self):
+        django.setup()
+
+        self.recipe_type1 = recipe_test_utils.create_recipe_type(name='test1', version='1.0')
+        self.recipe1 = recipe_test_utils.create_recipe(recipe_type=self.recipe_type1)
+
+    def test_successful(self):
+        """Tests validating a batch definition."""
+        json_data = {
+            'recipe_type_id': self.recipe_type1.id,
+            'title': 'batch-title-test',
+            'description': 'batch-description-test',
+            'definition': {
+                'version': '1.0',
+                'all_jobs': True,
+            },
+        }
+
+        url = rest_util.get_url('/batches/validation/')
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(result['recipe_count'], 1)
+        self.assertEqual(len(result['warnings']), 0)
+
+    def test_missing_param(self):
+        """Tests validating a batch with missing fields."""
+        json_data = {
+            'title': 'batch-test',
+        }
+
+        url = rest_util.get_url('/batches/validation/')
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_bad_param(self):
+        """Tests validating a batch with invalid type fields."""
+        json_data = {
+            'recipe_type_id': 'BAD',
+            'title': 'batch-test',
+            'description': 'This is a test.',
+            'definition': {
+                'version': '1.0',
+                'all_jobs': True,
+            },
+        }
+
+        url = rest_util.get_url('/batches/validation/')
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_bad_definition(self):
+        """Tests validating a new batch with an invalid definition."""
+        json_data = {
+            'recipe_type_id': self.recipe_type1.id,
+            'title': 'batch-test',
+            'description': 'This is a test.',
+            'definition': {
+                'version': '1.0',
+                'date_range': {
+                    'type': 'BAD',
+                },
+            },
+        }
+
+        url = rest_util.get_url('/batches/validation/')
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+
 class TestBatchDetailsView(TestCase):
 
     fixtures = ['batch_job_types.json']
