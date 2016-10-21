@@ -102,6 +102,7 @@ RUN yum install -y nodejs \
  && cd /tmp/ui \
  && tar xf node_modules.tar.gz \
  && tar xf bower_components.tar.gz \
+ && npm install \
  && node node_modules/gulp/bin/gulp.js deploy \
  && mkdir /opt/scale/ui \
  && cd /opt/scale/ui \
