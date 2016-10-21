@@ -42,6 +42,12 @@
         vm.saveStrike = function () {
             strikeService.saveStrike(vm.activeStrike).then(function (strike) {
                 vm.activeStrike = Strike.transformer(strike);
+                // only store the new workspace name, not the entire object
+                _.forEach(vm.activeStrike.configuration.files_to_ingest, function (file) {
+                    if (file.new_workspace) {
+                        file.new_workspace = file.new_workspace.name;
+                    }
+                });
                 if (scaleConfig.static) {
                     localStorage.setItem('strike' + vm.activeStrike.id, JSON.stringify(vm.activeStrike));
                 }
@@ -142,6 +148,9 @@
 
         vm.formatJSON = function (file) {
             file = _.omit(file, '$$hashKey');
+            if (file.new_workspace) {
+                file.new_workspace = file.new_workspace.name;
+            }
             return JSON.stringify(file, null, 4);
         };
 
