@@ -317,3 +317,23 @@ class TestBatchManager(TransactionTestCase):
         self.assertEqual(len(batch_jobs), 2)
         for batch_job in batch_jobs:
             self.assertIn(batch_job.job.job_type, [self.job_type_1, self.job_type_2])
+
+    def test_schedule_priority(self):
+        """Tests calling BatchManager.schedule_recipes() for a batch that overrides job priority"""
+        Recipe.objects.create_recipe(recipe_type=self.recipe_type, data=RecipeData(self.data), event=self.event)
+
+        definition = {
+            'all_jobs': True,
+            'priority': 1111,
+        }
+        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
+
+        Batch.objects.schedule_recipes(batch.id)
+
+        batch = Batch.objects.get(pk=batch.id)
+        self.assertEqual(batch.status, 'CREATED')
+        self.assertEqual(batch.created_count, 1)
+        self.assertEqual(batch.total_count, 1)
+
+        batch_job = BatchJob.objects.get(batch=batch, job__job_type=self.job_type_1)
+        self.assertEqual(batch_job.job.priority, 1111)

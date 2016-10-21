@@ -722,6 +722,20 @@ class TestRecipeManagerReprocessRecipe(TransactionTestCase):
         self.assertEqual(recipe_job_1.job.job_type.id, self.job_type_1.id)
         self.assertEqual(recipe_job_1.job.status, 'QUEUED')
 
+    def test_priority(self):
+        """Tests reprocessing a recipe with a job priority override."""
+
+        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, data=RecipeData(self.data),
+                                               event=self.event)
+
+        new_handler = Recipe.objects.reprocess_recipe(handler.recipe.id, all_jobs=True, priority=1111)
+
+        # Make sure the recipe jobs get created with the correct job types
+        recipe_job_1 = RecipeJob.objects.get(recipe_id=new_handler.recipe.id, job_name='Job 1')
+        self.assertEqual(recipe_job_1.job.job_type.id, self.job_type_1.id)
+        self.assertEqual(recipe_job_1.job.status, 'QUEUED')
+        self.assertEqual(recipe_job_1.job.priority, 1111)
+
     def test_no_changes(self):
         """Tests reprocessing a recipe that has not changed without specifying any jobs throws an error."""
 

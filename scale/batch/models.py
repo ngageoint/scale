@@ -196,7 +196,8 @@ class BatchManager(models.Manager):
 
         # Create the new recipe and its associated jobs
         batch_definition = batch.get_batch_definition()
-        handler = Recipe.objects.reprocess_recipe(old_recipe.id, batch_definition.job_names, batch_definition.all_jobs)
+        handler = Recipe.objects.reprocess_recipe(old_recipe.id, batch_definition.job_names, batch_definition.all_jobs,
+                                                  batch_definition.priority)
 
         # Fetch all the recipe jobs that were just superseded
         old_recipe_jobs = RecipeJob.objects.select_related('job').filter(recipe=old_recipe, job__is_superseded=True)

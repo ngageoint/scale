@@ -99,7 +99,7 @@ class TestJobLoadManager(TestCase):
                 self.assertEqual(result.running_count, 3)
                 self.assertEqual(result.total_count, 3)
             else:
-                self.fail('Found unexpected job type: %s', result.job_type_id)
+                self.fail('Found unexpected job type: %i' % result.job_type_id)
 
 
 class TestQueueManager(TransactionTestCase):
@@ -243,9 +243,9 @@ class TestQueueManagerHandleJobCancellation(TransactionTestCase):
 
         # Create the failed job
         job = job_test_utils.create_job(status='FAILED')
-        job_exe_1 = job_test_utils.create_job_exe(job=job, status='FAILED')
+        job_test_utils.create_job_exe(job=job, status='FAILED')
         time.sleep(0.001)
-        job_exe_2 = job_test_utils.create_job_exe(job=job, status='FAILED')
+        job_test_utils.create_job_exe(job=job, status='FAILED')
         time.sleep(0.001)
         job_exe_3 = job_test_utils.create_job_exe(job=job, status='FAILED')
 
@@ -263,9 +263,9 @@ class TestQueueManagerHandleJobCancellation(TransactionTestCase):
 
         # Create the completed job
         job = job_test_utils.create_job(status='COMPLETED')
-        job_exe_1 = job_test_utils.create_job_exe(job=job, status='FAILED')
+        job_test_utils.create_job_exe(job=job, status='FAILED')
         time.sleep(0.001)
-        job_exe_2 = job_test_utils.create_job_exe(job=job, status='COMPLETED')
+        job_test_utils.create_job_exe(job=job, status='COMPLETED')
 
         # Call method to test
         self.assertRaises(Exception, Queue.objects.handle_job_cancellation, job.id, now())
@@ -275,9 +275,9 @@ class TestQueueManagerHandleJobCancellation(TransactionTestCase):
 
         # Create the canceled job
         job = job_test_utils.create_job(status='CANCELED')
-        job_exe_1 = job_test_utils.create_job_exe(job=job, status='FAILED')
+        job_test_utils.create_job_exe(job=job, status='FAILED')
         time.sleep(0.001)
-        job_exe_2 = job_test_utils.create_job_exe(job=job, status='CANCELED')
+        job_test_utils.create_job_exe(job=job, status='CANCELED')
 
         # Call method to test
         self.assertRaises(Exception, Queue.objects.handle_job_cancellation, job.id, now())
@@ -568,6 +568,18 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
 
         recipe = Recipe.objects.get(pk=handler.recipe.id)
         self.assertIsNone(recipe.completed)
+
+    def test_successful_priority(self):
+        """Tests calling QueueManager.queue_new_recipe() successfully with an override priority."""
+
+        handler = Queue.objects.queue_new_recipe(recipe_type=self.recipe_type, data=self.data, event=self.event,
+                                                 priority=1111)
+
+        # Make sure the recipe jobs are created and Job 1 is queued
+        recipe_job_1 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe.id, job_name='Job 1')
+        self.assertEqual(recipe_job_1.job.job_type.id, self.job_type_1.id)
+        self.assertEqual(recipe_job_1.job.status, 'QUEUED')
+        self.assertEqual(recipe_job_1.job.priority, 1111)
 
     def test_successful_supersede(self):
         """Tests calling QueueManager.queue_new_recipe() successfully when superseding a recipe."""
