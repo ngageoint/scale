@@ -350,7 +350,7 @@ class RecipeManager(models.Manager):
         return recipe
 
     @transaction.atomic
-    def reprocess_recipe(self, recipe_id, job_names=None, all_jobs=False):
+    def reprocess_recipe(self, recipe_id, job_names=None, all_jobs=False, priority=None):
         """Schedules an existing recipe for re-processing. All requested jobs, jobs that have changed in the latest
         revision, and any of their dependent jobs will be re-processed. All database changes occur in an atomic
         transaction. A recipe instance that is already superseded cannot be re-processed again.
@@ -364,6 +364,8 @@ class RecipeManager(models.Manager):
             unchanged. This is a convenience for passing all the individual names in the job_names parameter and this
             parameter will override any values passed there.
         :type all_jobs: bool
+        :param priority: An optional argument to reset the priority of associated jobs before they are queued
+        :type priority: int
         :returns: A handler for the new recipe
         :rtype: :class:`recipe.handlers.handler.RecipeHandler`
 
@@ -413,7 +415,7 @@ class RecipeManager(models.Manager):
         try:
             from queue.models import Queue
             return Queue.objects.queue_new_recipe(current_type, None, event, superseded_recipe, graph_delta,
-                                                  superseded_jobs)
+                                                  superseded_jobs, priority)
         except ImportError:
             raise ReprocessError('Unable to import from queue application')
 

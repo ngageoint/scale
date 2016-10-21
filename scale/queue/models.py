@@ -487,7 +487,8 @@ class QueueManager(models.Manager):
         return job_id, job_exe.id
 
     @transaction.atomic
-    def queue_new_recipe(self, recipe_type, data, event, superseded_recipe=None, delta=None, superseded_jobs=None):
+    def queue_new_recipe(self, recipe_type, data, event, superseded_recipe=None, delta=None, superseded_jobs=None,
+                         priority=None):
         """Creates a new recipe for the given type and data. and queues any of its jobs that are ready to run. If the
         new recipe is superseding an old recipe, superseded_recipe, delta, and superseded_jobs must be provided and the
         caller must have obtained a model lock on all job models in superseded_jobs and on the superseded_recipe model.
@@ -506,6 +507,8 @@ class QueueManager(models.Manager):
         :param superseded_jobs: If not None, represents the job models (stored by job name) of the old recipe to
             supersede
         :type superseded_jobs: {string: :class:`job.models.Job`}
+        :param priority: An optional argument to reset the priority of associated jobs before they are queued
+        :type priority: int
         :returns: A handler for the new recipe
         :rtype: :class:`recipe.handlers.handler.RecipeHandler`
 
@@ -523,7 +526,7 @@ class QueueManager(models.Manager):
                 raise Exception('Scale created invalid job data: %s' % str(ex))
             jobs_to_queue.append(job)
         if jobs_to_queue:
-            self._queue_jobs(jobs_to_queue)
+            self._queue_jobs(jobs_to_queue, priority)
 
         return handler
 

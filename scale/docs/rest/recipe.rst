@@ -459,6 +459,9 @@ These services provide access to information about recipes.
 |                    |                   |          | overrides any job_name parameters and is typically used to          |
 |                    |                   |          | re-process previously completed jobs with new algorithm updates.    |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
+| priority           | Integer           | Optional | Change the priority of jobs when adding them to the queue.          |
+|                    |                   |          | Defaults to jobs current priority, lower number is higher priority. |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
 |    {                                                                                                                    |

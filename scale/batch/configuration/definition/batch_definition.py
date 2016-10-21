@@ -34,6 +34,10 @@ BATCH_DEFINITION_SCHEMA = {
             'description': 'A flag that indicates all jobs should be re-processed even if they are identical',
             'type': 'boolean',
         },
+        'priority': {
+            'description': 'The priority to use when creating new jobs for the batch',
+            'type': 'integer',
+        },
     },
     'definitions': {
         'date_range_item': {
@@ -106,6 +110,13 @@ class BatchDefinition(object):
 
         self.job_names = self._definition['job_names']
         self.all_jobs = self._definition['all_jobs']
+
+        self.priority = None
+        if 'priority' in self._definition:
+            try:
+                self.priority = self._definition['priority']
+            except ValueError:
+                raise InvalidDefinition('Invalid priority: %s' % self._definition['priority'])
 
     def get_dict(self):
         """Returns the internal dictionary that represents this batch definition

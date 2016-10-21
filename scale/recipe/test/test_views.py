@@ -12,7 +12,7 @@ import trigger.test.utils as trigger_test_utils
 import util.rest as rest_util
 from recipe.handlers.graph import RecipeGraph
 from recipe.handlers.graph_delta import RecipeGraphDelta
-from recipe.models import RecipeType
+from recipe.models import RecipeJob, RecipeType
 from rest_framework import status
 
 
@@ -1017,6 +1017,25 @@ class TestRecipeReprocessView(TransactionTestCase):
         results = json.loads(response.content)
         self.assertNotEqual(results['id'], self.recipe1.id)
         self.assertEqual(results['recipe_type']['id'], self.recipe1.recipe_type.id)
+
+    def test_priority(self):
+        """Tests reprocessing all jobs in an existing recipe with a priority override"""
+
+        json_data = {
+            'all_jobs': True,
+            'priority': 1111,
+        }
+
+        url = rest_util.get_url('/recipes/%i/reprocess/' % self.recipe1.id)
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        results = json.loads(response.content)
+        self.assertNotEqual(results['id'], self.recipe1.id)
+        self.assertEqual(results['recipe_type']['id'], self.recipe1.recipe_type.id)
+
+        recipe_job_1 = RecipeJob.objects.get(recipe_id=results['id'], job_name='kml')
+        self.assertEqual(recipe_job_1.job.priority, 1111)
 
     def test_no_changes(self):
         """Tests reprocessing a recipe that has not changed without specifying any jobs throws an error."""
