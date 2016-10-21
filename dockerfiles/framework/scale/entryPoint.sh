@@ -5,7 +5,7 @@ set -e
 check_db () {
     if [[ "${SCALE_DB_HOST}x" == "x" ]]
     then
-        echo SCALE_DB_HOST is not populated. Scale requires a valid db host configured.
+        echo SCALE_DB_HOST is not populated. Scale requires a valid database host configured.
         exit 1
     fi
 }
@@ -13,7 +13,7 @@ check_db () {
 check_logging () {
     if [[ "${SCALE_LOGGING_ADDRESS}x" == "x" ]]
     then
-        echo SCALE_LOGGING_ADDRESS is not populated. Scale requires a valid Logstash URL configured.
+        echo SCALE_LOGGING_ADDRESS is not populated. Scale requires a valid logstash URL configured.
         exit 1
     fi
 }
@@ -21,7 +21,7 @@ check_logging () {
 check_elastic () {
     if [[ "${SCALE_ELASTICSEARCH_URLS}x" == "x" ]]
     then
-        echo SCALE_ELASTICSEARCH_URLS is not populated. Scale requires a valid Elasticsearch URLs configured.
+        echo SCALE_ELASTICSEARCH_URLS is not populated. Scale requires a valid list of Elasticsearch URLs configured.
         exit 1
     fi
 }
