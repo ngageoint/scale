@@ -608,8 +608,6 @@
   <dt><a href="architecture/django/code_docs/batch.html#module-batch.views">batch.views (module)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/job.html#job.models.Job.batch_set">batch_set (job.models.Job attribute)</a>
   </dt>
@@ -624,6 +622,8 @@
   </dt>
 
       </dl></dd>
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/batch.html#batch.models.Batch.BATCH_STATUSES">BATCH_STATUSES (batch.models.Batch attribute)</a>
   </dt>
@@ -670,6 +670,10 @@
 
       
   <dt><a href="architecture/django/code_docs/batch.html#batch.exceptions.BatchError">BatchError</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/batch.html#batch.views.BatchesValidationView">BatchesValidationView (class in batch.views)</a>
   </dt>
 
       
@@ -1109,10 +1113,14 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/ingest.html#ingest.views.StrikesView.create">create() (ingest.views.StrikesView method)</a>
+  <dt><a href="architecture/django/code_docs/batch.html#batch.views.BatchesView.create">create() (batch.views.BatchesView method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.html#ingest.views.StrikesView.create">(ingest.views.StrikesView method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/job.html#job.views.JobTypesView.create">(job.views.JobTypesView method)</a>
   </dt>
@@ -2250,6 +2258,10 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationView.fixtures">(batch.test.test_views.TestBatchesValidationView attribute)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesView.fixtures">(batch.test.test_views.TestBatchesView attribute)</a>
   </dt>
 
@@ -2953,6 +2965,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/batch.html#batch.models.BatchManager.get_matched_recipes">get_matched_recipes() (batch.models.BatchManager method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/storage.html#storage.media_type.get_media_type">get_media_type() (in module storage.media_type)</a>
   </dt>
 
@@ -2992,12 +3008,12 @@
   <dt><a href="architecture/django/code_docs/metrics.html#metrics.registry.get_metrics_types">get_metrics_types() (in module metrics.registry)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/job.html#job.errors.get_missing_output_error">get_missing_output_error() (in module job.errors)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/error.html#error.handlers.DatabaseLogHandler.get_model">get_model() (error.handlers.DatabaseLogHandler method)</a>
   </dt>
@@ -7803,10 +7819,14 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/error.html#error.views.ErrorsView.post">post() (error.views.ErrorsView method)</a>
+  <dt><a href="architecture/django/code_docs/batch.html#batch.views.BatchesValidationView.post">post() (batch.views.BatchesValidationView method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/error.html#error.views.ErrorsView.post">(error.views.ErrorsView method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/ingest.html#ingest.views.StrikesValidationView.post">(ingest.views.StrikesValidationView method)</a>
   </dt>
@@ -8131,6 +8151,10 @@
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/batch.html#batch.views.BatchesValidationView.queryset">(batch.views.BatchesValidationView attribute)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/batch.html#batch.views.BatchesView.queryset">(batch.views.BatchesView attribute)</a>
   </dt>
@@ -9890,6 +9914,10 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationView.setUp">(batch.test.test_views.TestBatchesValidationView method)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesView.setUp">(batch.test.test_views.TestBatchesView method)</a>
   </dt>
 
@@ -11609,6 +11637,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationView.test_bad_definition">test_bad_definition() (batch.test.test_views.TestBatchesValidationView method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesValidationView.test_bad_error">test_bad_error() (job.test.test_views.TestJobTypesValidationView method)</a>
   </dt>
 
@@ -11675,10 +11707,14 @@
 
       </dl></dd>
       
-  <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesValidationView.test_bad_param">test_bad_param() (job.test.test_views.TestJobTypesValidationView method)</a>
+  <dt><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationView.test_bad_param">test_bad_param() (batch.test.test_views.TestBatchesValidationView method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesValidationView.test_bad_param">(job.test.test_views.TestJobTypesValidationView method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesValidationView.test_bad_param">(recipe.test.test_views.TestRecipeTypesValidationView method)</a>
   </dt>
@@ -12157,15 +12193,23 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesView.test_create">test_create() (job.test.test_views.TestJobTypesView method)</a>
+  <dt><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesView.test_create">test_create() (batch.test.test_views.TestBatchesView method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesView.test_create">(job.test.test_views.TestJobTypesView method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesView.test_create">(recipe.test.test_views.TestRecipeTypesView method)</a>
   </dt>
 
       </dl></dd>
+      
+  <dt><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesView.test_create_bad_definition">test_create_bad_definition() (batch.test.test_views.TestBatchesView method)</a>
+  </dt>
+
       
   <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesView.test_create_bad_error">test_create_bad_error() (job.test.test_views.TestJobTypesView method)</a>
   </dt>
@@ -12175,10 +12219,14 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesView.test_create_bad_param">test_create_bad_param() (job.test.test_views.TestJobTypesView method)</a>
+  <dt><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesView.test_create_bad_param">test_create_bad_param() (batch.test.test_views.TestBatchesView method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesView.test_create_bad_param">(job.test.test_views.TestJobTypesView method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesView.test_create_bad_param">(recipe.test.test_views.TestRecipeTypesView method)</a>
   </dt>
@@ -12229,9 +12277,15 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesView.test_create_missing_param">test_create_missing_param() (job.test.test_views.TestJobTypesView method)</a>
+  <dt><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesView.test_create_missing_param">test_create_missing_param() (batch.test.test_views.TestBatchesView method)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesView.test_create_missing_param">(job.test.test_views.TestJobTypesView method)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="architecture/django/code_docs/batch.test.html#batch.test.test_models.TestBatchManager.test_create_successful">test_create_successful() (batch.test.test_models.TestBatchManager method)</a>
   </dt>
@@ -13631,6 +13685,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationView.test_missing_param">test_missing_param() (batch.test.test_views.TestBatchesValidationView method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/queue.test.html#queue.test.test_views.TestQueueNewRecipeView.test_missing_recipe_id">test_missing_recipe_id() (queue.test.test_views.TestQueueNewRecipeView method)</a>
   </dt>
 
@@ -14357,7 +14415,25 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/queue.test.html#queue.test.test_views.TestRequeueJobsView.test_priority">test_priority() (queue.test.test_views.TestRequeueJobsView method)</a>
+  <dt><a href="architecture/django/code_docs/batch.test.configuration.definition.html#batch.test.configuration.definition.test_batch_definition.TestBatchDefinition.test_priority">test_priority() (batch.test.configuration.definition.test_batch_definition.TestBatchDefinition method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/queue.test.html#queue.test.test_views.TestRequeueJobsView.test_priority">(queue.test.test_views.TestRequeueJobsView method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_priority">(recipe.test.test_models.TestRecipeManagerReprocessRecipe method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeReprocessView.test_priority">(recipe.test.test_views.TestRecipeReprocessView method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="architecture/django/code_docs/batch.test.configuration.definition.html#batch.test.configuration.definition.test_batch_definition.TestBatchDefinition.test_priority_invalid">test_priority_invalid() (batch.test.configuration.definition.test_batch_definition.TestBatchDefinition method)</a>
   </dt>
 
       
@@ -14665,6 +14741,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/batch.test.html#batch.test.test_models.TestBatchManager.test_schedule_priority">test_schedule_priority() (batch.test.test_models.TestBatchManager method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFile.test_set_deleted">test_set_deleted() (storage.test.test_models.TestScaleFile method)</a>
   </dt>
 
@@ -14815,6 +14895,10 @@
       <dd><dl>
         
   <dt><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchDetailsView.test_successful">(batch.test.test_views.TestBatchDetailsView method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationView.test_successful">(batch.test.test_views.TestBatchesValidationView method)</a>
   </dt>
 
         
@@ -15220,6 +15304,10 @@
 
       
   <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobTypeManagerCreateJobType.test_successful_paused">test_successful_paused() (job.test.test_models.TestJobTypeManagerCreateJobType method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/queue.test.html#queue.test.test_models.TestQueueManagerQueueNewRecipe.test_successful_priority">test_successful_priority() (queue.test.test_models.TestQueueManagerQueueNewRecipe method)</a>
   </dt>
 
       
@@ -15806,6 +15894,10 @@
 
       
   <dt><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchDetailsView">TestBatchDetailsView (class in batch.test.test_views)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationView">TestBatchesValidationView (class in batch.test.test_views)</a>
   </dt>
 
       

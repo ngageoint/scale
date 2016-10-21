@@ -289,6 +289,12 @@
 <dd><p>Tests calling BatchManager.schedule_recipes() for a batch that is incomplete</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="batch.test.test_models.TestBatchManager.test_schedule_priority">
+<code class="descname">test_schedule_priority</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_models.TestBatchManager.test_schedule_priority" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling BatchManager.schedule_recipes() for a batch that overrides job priority</p>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -323,6 +329,46 @@
 </dd></dl>
 
 <dl class="class">
+<dt id="batch.test.test_views.TestBatchesValidationView">
+<em class="property">class </em><code class="descclassname">batch.test.test_views.</code><code class="descname">TestBatchesValidationView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesValidationView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="attribute">
+<dt id="batch.test.test_views.TestBatchesValidationView.fixtures">
+<code class="descname">fixtures</code><em class="property"> = [u'batch_job_types.json']</em><a class="headerlink" href="#batch.test.test_views.TestBatchesValidationView.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="batch.test.test_views.TestBatchesValidationView.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesValidationView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="batch.test.test_views.TestBatchesValidationView.test_bad_definition">
+<code class="descname">test_bad_definition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesValidationView.test_bad_definition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new batch with an invalid definition.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="batch.test.test_views.TestBatchesValidationView.test_bad_param">
+<code class="descname">test_bad_param</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesValidationView.test_bad_param" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a batch with invalid type fields.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="batch.test.test_views.TestBatchesValidationView.test_missing_param">
+<code class="descname">test_missing_param</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesValidationView.test_missing_param" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a batch with missing fields.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="batch.test.test_views.TestBatchesValidationView.test_successful">
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesValidationView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a batch definition.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="batch.test.test_views.TestBatchesView">
 <em class="property">class </em><code class="descclassname">batch.test.test_views.</code><code class="descname">TestBatchesView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
@@ -335,6 +381,30 @@
 <dt id="batch.test.test_views.TestBatchesView.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesView.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="batch.test.test_views.TestBatchesView.test_create">
+<code class="descname">test_create</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesView.test_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating a new batch.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="batch.test.test_views.TestBatchesView.test_create_bad_definition">
+<code class="descname">test_create_bad_definition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesView.test_create_bad_definition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating a new batch with an invalid definition.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="batch.test.test_views.TestBatchesView.test_create_bad_param">
+<code class="descname">test_create_bad_param</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesView.test_create_bad_param" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating a batch with invalid type fields.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="batch.test.test_views.TestBatchesView.test_create_missing_param">
+<code class="descname">test_create_missing_param</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.test.test_views.TestBatchesView.test_create_missing_param" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating a batch with missing fields.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="batch.test.test_views.TestBatchesView.test_order_by">

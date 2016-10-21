@@ -763,32 +763,38 @@ even when the recipe type definitions are identical. This option
 overrides any job_name parameters and is typically used to
 re-process previously completed jobs with new algorithm updates.</td>
 </tr>
-<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-even"><td>priority</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Change the priority of jobs when adding them to the queue.
+Defaults to jobs current priority, lower number is higher priority.</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;all_jobs&quot;</span><span class="o">:</span> <span class="kc">true</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
 </tr>
-<tr class="row-even"><td><strong>Status</strong></td>
+<tr class="row-odd"><td><strong>Status</strong></td>
 <td colspan="3">201 CREATED</td>
 </tr>
-<tr class="row-odd"><td><strong>Location</strong></td>
+<tr class="row-even"><td><strong>Location</strong></td>
 <td colspan="3">URL pointing to the details for the newly created recipe</td>
 </tr>
-<tr class="row-even"><td><strong>Content Type</strong></td>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
 <td colspan="3"><em>application/json</em></td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
+<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-even"><td>&nbsp;</td>
+<tr class="row-odd"><td>&nbsp;</td>
 <td>JSON Object</td>
 <td colspan="2">All fields are the same as the recipe details model.
 (See <a class="reference internal" href="#rest-recipe-details"><span>Recipe Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">72</span><span class="p">,</span>
     <span class="s2">&quot;recipe_type&quot;</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>

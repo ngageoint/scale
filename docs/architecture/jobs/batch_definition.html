@@ -172,7 +172,8 @@ document that defines exactly which recipes will be included in the batch. It wi
 specific jobs within a recipe type to queue for execution.</p>
 <p>Consider the following example that is a request to re-process all recipes in the batch that were originally created
 within the 2016 calendar year and have since gone through a revision. Additionally, the job names &#8220;Job 1&#8221; and &#8220;Job 2&#8221;
-should also be included even if they have not actually changed since the original recipe type revision.</p>
+should also be included even if they have not actually changed since the original recipe type revision. The priority is
+used to override the original priority of each job type.</p>
 <p><strong>Example batch definition:</strong></p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
@@ -184,7 +185,8 @@ should also be included even if they have not actually changed since the origina
    <span class="s2">&quot;job_names&quot;</span><span class="o">:</span> <span class="p">[</span>
        <span class="s2">&quot;Job 1&quot;</span><span class="p">,</span>
        <span class="s2">&quot;Job 2&quot;</span>
-   <span class="p">]</span>
+   <span class="p">],</span>
+   <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">1000</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -202,7 +204,8 @@ should also be included even if they have not actually changed since the origina
       <span class="nx">STRING</span><span class="p">,</span>
       <span class="nx">STRING</span>
    <span class="p">],</span>
-   <span class="s2">&quot;all_jobs&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="o">|</span><span class="kc">false</span>
+   <span class="s2">&quot;all_jobs&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="o">|</span><span class="kc">false</span><span class="p">,</span>
+   <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="nx">INTEGER</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -250,6 +253,12 @@ re-processed as well.</div></blockquote>
 <div>The <em>all_jobs</em> value is an optional parameter that indicates every job in the recipe should be re-processed,
 regardless of whether the recipe type revision actually changed. This parameter overrides the values included in the
 <em>job_names</em> parameter.</div></blockquote>
+<p><strong>priority</strong>: JSON integer</p>
+<blockquote>
+<div>The <em>priority</em> value is an optional parameter that indicates every job in the recipe should be queued with an
+override priority instead of the default priority defined by the job type. This option allows for large batches to
+be executed with a lower priority to avoid impacting real-time processing or to fix products as quickly as possible
+using a higher priority.</div></blockquote>
 </div>
 </div>
 

@@ -359,6 +359,12 @@ has one identical node, and deletes another node to replace it with a new one.</
 </dd></dl>
 
 <dl class="method">
+<dt id="recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_priority">
+<code class="descname">test_priority</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_priority" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests reprocessing a recipe with a job priority override.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_reprocess_superseded_recipe">
 <code class="descname">test_reprocess_superseded_recipe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_reprocess_superseded_recipe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests reprocessing a recipe that is already superseded throws an error.</p>
@@ -510,6 +516,12 @@ has one identical node, and deletes another node to replace it with a new one.</
 <dt id="recipe.test.test_views.TestRecipeReprocessView.test_no_changes">
 <code class="descname">test_no_changes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeReprocessView.test_no_changes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests reprocessing a recipe that has not changed without specifying any jobs throws an error.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_views.TestRecipeReprocessView.test_priority">
+<code class="descname">test_priority</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_views.TestRecipeReprocessView.test_priority" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests reprocessing all jobs in an existing recipe with a priority override</p>
 </dd></dl>
 
 <dl class="method">

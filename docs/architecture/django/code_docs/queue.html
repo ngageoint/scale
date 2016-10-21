@@ -866,6 +866,7 @@ All database changes occur in an atomic transaction.</p>
 <li><strong>delta</strong> (<a class="reference internal" href="recipe.handlers.html#recipe.handlers.graph_delta.RecipeGraphDelta" title="recipe.handlers.graph_delta.RecipeGraphDelta"><code class="xref py py-class docutils literal"><span class="pre">recipe.handlers.graph_delta.RecipeGraphDelta</span></code></a>) &#8211; If not None, represents the changes between the old recipe to supersede and the new recipe</li>
 <li><strong>superseded_jobs</strong> ({string: <a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>}) &#8211; If not None, represents the job models (stored by job name) of the old recipe to
 supersede</li>
+<li><strong>priority</strong> (<em>int</em>) &#8211; An optional argument to reset the priority of associated jobs before they are queued</li>
 </ul>
 </td>
 </tr>

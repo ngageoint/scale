@@ -10,7 +10,8 @@ specific jobs within a recipe type to queue for execution.
 
 Consider the following example that is a request to re-process all recipes in the batch that were originally created
 within the 2016 calendar year and have since gone through a revision. Additionally, the job names "Job 1" and "Job 2"
-should also be included even if they have not actually changed since the original recipe type revision.
+should also be included even if they have not actually changed since the original recipe type revision. The priority is
+used to override the original priority of each job type.
 
 **Example batch definition:**
 
@@ -26,7 +27,8 @@ should also be included even if they have not actually changed since the origina
       "job_names": [
           "Job 1",
           "Job 2"
-      ]
+      ],
+      "priority": 1000
    }
 
 
@@ -50,7 +52,8 @@ A valid batch definition is a JSON document with the following structure:
          STRING,
          STRING
       ],
-      "all_jobs": true|false
+      "all_jobs": true|false,
+      "priority": INTEGER
    }
 
 **version**: JSON string
@@ -102,3 +105,10 @@ A valid batch definition is a JSON document with the following structure:
     The *all_jobs* value is an optional parameter that indicates every job in the recipe should be re-processed,
     regardless of whether the recipe type revision actually changed. This parameter overrides the values included in the
     *job_names* parameter.
+
+**priority**: JSON integer
+
+    The *priority* value is an optional parameter that indicates every job in the recipe should be queued with an
+    override priority instead of the default priority defined by the job type. This option allows for large batches to
+    be executed with a lower priority to avoid impacting real-time processing or to fix products as quickly as possible
+    using a higher priority.

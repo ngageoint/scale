@@ -387,6 +387,281 @@ Choices: [SUBMITTED, CREATED].</td>
 </tr>
 </tbody>
 </table>
+<table border="1" class="docutils" id="rest-batch-create">
+<colgroup>
+<col width="17%" />
+<col width="0%" />
+<col width="16%" />
+<col width="0%" />
+<col width="9%" />
+<col width="59%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="6"><strong>Create Batch</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="6">Creates a new batch with associated definition</td>
+</tr>
+<tr class="row-odd"><td colspan="6"><strong>POST</strong> /batches/</td>
+</tr>
+<tr class="row-even"><td colspan="2"><strong>Content Type</strong></td>
+<td colspan="4"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="6"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td colspan="2">recipe_type_id</td>
+<td colspan="2">Integer</td>
+<td>Required</td>
+<td>The ID of the recipe type to which the batch applies.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">title</td>
+<td colspan="2">String</td>
+<td>Optional</td>
+<td>The human-readable name of the batch.</td>
+</tr>
+<tr class="row-even"><td colspan="2">description</td>
+<td colspan="2">String</td>
+<td>Optional</td>
+<td>An optional description of the batch.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">definition</td>
+<td colspan="2">JSON Object</td>
+<td>Required</td>
+<td>JSON description of the definition for processing a batch.
+(See <a class="reference internal" href="../architecture/jobs/batch_definition.html#architecture-jobs-batch-definition-spec"><span>Batch Definition Specification Version 1.0</span></a>)</td>
+</tr>
+<tr class="row-even"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;recipe_type_id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Batch&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;My batch of recipes&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;definition&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;date_range&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;started&quot;</span><span class="o">:</span> <span class="s2">&quot;2016-01-10T00:00:00.000Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2016-02-10T00:00:00.000Z&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;all_jobs&quot;</span><span class="o">:</span> <span class="kc">true</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td colspan="6"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="5">201 CREATED</td>
+</tr>
+<tr class="row-odd"><td><strong>Location</strong></td>
+<td colspan="5">URL pointing to the details for the newly created batch</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="5"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="6"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td>&nbsp;</td>
+<td colspan="2">JSON Object</td>
+<td colspan="3">All fields are the same as the batch details model.
+(See <a class="reference internal" href="#rest-batch-details"><span>Batch Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">16</span><span class="p">,</span>
+    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Batch&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;My batch of recipes&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;SUBMITTED&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;recipe_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;MyRecipe&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is a description of the recipe&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="s2">&quot;definition&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;media_types&quot;</span><span class="o">:</span> <span class="p">[</span>
+                        <span class="s2">&quot;image/png&quot;</span>
+                    <span class="p">],</span>
+                    <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span>
+                <span class="p">}</span>
+            <span class="p">],</span>
+            <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;jobs&quot;</span><span class="o">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;recipe_inputs&quot;</span><span class="o">:</span> <span class="p">[</span>
+                        <span class="p">{</span>
+                            <span class="s2">&quot;job_input&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;recipe_input&quot;</span><span class="o">:</span> <span class="s2">&quot;input_file&quot;</span>
+                        <span class="p">}</span>
+                    <span class="p">],</span>
+                    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;kml&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;kml-footprint&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.2.3&quot;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-15T19:03:26.346Z&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-15T19:03:26.346Z&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;archived&quot;</span><span class="o">:</span> <span class="kc">null</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
+        <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;USER&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;rule&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;occurred&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T19:03:59.054Z&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;user&quot;</span><span class="o">:</span> <span class="s2">&quot;Anonymous&quot;</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;creator_job&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-batch-creator&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Scale Batch Creator&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Creates and queues the jobs and recipes for a Scale batch&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;author_name&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;author_url&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;is_system&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;is_long_running&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;is_operational&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="s2">&quot;icon_code&quot;</span><span class="o">:</span> <span class="s2">&quot;f0b1&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;job_type_rev&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">7</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;RUNNING&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">20</span><span class="p">,</span>
+        <span class="s2">&quot;num_exes&quot;</span><span class="o">:</span> <span class="mi">1</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;definition&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;date_range&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;started&quot;</span><span class="o">:</span> <span class="s2">&quot;2016-01-10T00:00:00.000Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2016-02-10T00:00:00.000Z&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;all_jobs&quot;</span><span class="o">:</span> <span class="kc">true</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;created_count&quot;</span><span class="o">:</span> <span class="mi">256</span><span class="p">,</span>
+    <span class="s2">&quot;failed_count&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;total_count&quot;</span><span class="o">:</span> <span class="mi">512</span><span class="p">,</span>
+    <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-15T19:03:26.346Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-15T19:05:26.346Z&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils" id="rest-batch-validate">
+<colgroup>
+<col width="17%" />
+<col width="0%" />
+<col width="16%" />
+<col width="0%" />
+<col width="8%" />
+<col width="59%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="6"><strong>Validate Batch</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="6">Validates a new batch without actually creating it</td>
+</tr>
+<tr class="row-odd"><td colspan="6"><strong>POST</strong> /batches/validation/</td>
+</tr>
+<tr class="row-even"><td><strong>Content Type</strong></td>
+<td colspan="5"><em>application/json</em></td>
+</tr>
+<tr class="row-odd"><td colspan="6"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-even"><td colspan="2">recipe_type_id</td>
+<td>Integer</td>
+<td colspan="2">Required</td>
+<td>The ID of the recipe type to which the batch applies.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">title</td>
+<td>String</td>
+<td colspan="2">Optional</td>
+<td>The human-readable name of the batch.</td>
+</tr>
+<tr class="row-even"><td colspan="2">description</td>
+<td>String</td>
+<td colspan="2">Optional</td>
+<td>An optional description of the batch.</td>
+</tr>
+<tr class="row-odd"><td colspan="2">definition</td>
+<td>JSON Object</td>
+<td colspan="2">Required</td>
+<td>JSON description of the definition for processing a batch.
+(See <a class="reference internal" href="../architecture/jobs/batch_definition.html#architecture-jobs-batch-definition-spec"><span>Batch Definition Specification Version 1.0</span></a>)</td>
+</tr>
+<tr class="row-even"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;recipe_type_id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Batch&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;My batch of recipes&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;definition&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;date_range&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;started&quot;</span><span class="o">:</span> <span class="s2">&quot;2016-01-10T00:00:00.000Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2016-02-10T00:00:00.000Z&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;all_jobs&quot;</span><span class="o">:</span> <span class="kc">true</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td colspan="6"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="5">200 OK</td>
+</tr>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
+<td colspan="5"><em>application/json</em></td>
+</tr>
+<tr class="row-even"><td colspan="6"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-odd"><td>recipe_count</td>
+<td colspan="3">Integer</td>
+<td colspan="2">The estimated total count of the recipes that might be affected by the batch.</td>
+</tr>
+<tr class="row-even"><td>warnings</td>
+<td colspan="3">Array</td>
+<td colspan="2">A list of warnings discovered during validation.</td>
+</tr>
+<tr class="row-odd"><td>.id</td>
+<td colspan="3">String</td>
+<td colspan="2">An identifier for the warning.</td>
+</tr>
+<tr class="row-even"><td>.details</td>
+<td colspan="3">String</td>
+<td colspan="2">A human-readable description of the problem.</td>
+</tr>
+<tr class="row-odd"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;recipe_count&quot;</span><span class="o">:</span> <span class="mi">1235</span><span class="p">,</span>
+    <span class="s2">&quot;warnings&quot;</span><span class="o">:</span> <span class="p">[]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
 <table border="1" class="docutils" id="rest-batch-details">
 <colgroup>
 <col width="18%" />
