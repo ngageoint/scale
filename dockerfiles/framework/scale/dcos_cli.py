@@ -20,12 +20,10 @@ def dcos_login(username, password):
                 child.sendline(username)
                 child.expect('.*assword:')
                 child.sendline(password)
-                response = child.read().strip().decode('utf-8')
-            elif i == 1:
-                response = child.read().strip().decode('utf-8')
             elif i == 2:
                 child.sendline(OAUTH_TOKEN)
-                response = child.read().strip().decode('utf-8')
+
+            print(child.after)
 
 
 def run():
@@ -38,12 +36,13 @@ def run():
     print("ELASTICSEARCH_URLS=" + es_urls)
 
     # Determine if db should be deployed.
-    db_host = None
-    db_port = None
-    if not len(SCALE_DB_HOST):
+    db_host = os.getenv('SCALE_DB_HOST', '')
+    db_port = os.getenv('SCALE_DB_PORT', '')
+    if not len(db_host):
         app_name = '%s-db' % FRAMEWORK_NAME
         db_port = deploy_database(app_name)
-        print("DB_HOST=%s.marathon.mesos" % app_name)
+        db_host = "%s.marathon.mesos" % app_name
+        print("DB_HOST=%s" % db_host)
         print("DB_PORT=%s" % db_port)
 
     # Determine if logstash should be deployed.
@@ -117,17 +116,9 @@ def deploy_webserver(app_name, es_urls, db_host, db_port):
         # attempt to delete an old instance..if it doesn't exists it will error but we don't care so we ignore it
         delete_marathon_app(app_name)
 
-        # Set db host and port based on environment if not passed to function
-        if not db_host:
-            db_host = os.getenv('SCALE_DB_HOST')
-
-        if not db_port:
-            db_port = os.getenv('SCALE_DB_PORT')
-
         vhost = os.getenv('SCALE_VHOST')
         cpu = os.getenv('SCALE_WEBSERVER_CPU', 1)
         memory = os.getenv('SCALE_WEBSERVER_MEMORY', 2048)
-        db_host = os.getenv('SCALE_DB_HOST', 'scale-db')
         db_name = os.getenv('SCALE_DB_NAME', 'scale')
         db_user = os.getenv('SCALE_DB_USER', 'scale')
         db_pass = os.getenv('SCALE_DB_PASS', 'scale')

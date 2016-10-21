@@ -17,15 +17,13 @@ then
 
     if [[ "${SCALE_DB_HOST}x" == "x" || "${SCALE_LOGGING_ADDRESS}x" == "x" || ${DEPLOY_WEBSERVER} == 'true' ]]
     then
-      python dcos_cli.py > dcos_cli.log
+      python dcos_cli.py | tee dcos_cli.log
     fi
 
     if [[ "${SCALE_DB_HOST}x" == "x" ]]
     then
         export SCALE_DB_PORT=`cat dcos_cli.log | grep DB_PORT | cut -d '=' -f2`
         export SCALE_DB_HOST=`cat dcos_cli.log | grep DB_HOST | cut -d '=' -f2`
-        echo "DATABASE_HOST: ${SCALE_DB_HOST}"
-        echo "DATABASE_PORT: ${SCALE_DB_PORT}"
     fi
     echo "${SCALE_DB_HOST}:${SCALE_DB_PORT}:*:${SCALE_DB_USER}:${SCALE_DB_PASS}" >> ~/.pgpass
     chmod 0600 ~/.pgpass
@@ -34,8 +32,6 @@ then
     then
         export SCALE_LOGGING_ADDRESS=`cat dcos_cli.log | grep LOGGING_ADDRESS | cut -d '=' -f2`
         export SCALE_ELASTICSEARCH_URLS=`cat dcos_cli.log | grep ELASTICSEARCH_URLS | cut -d '=' -f2`
-        echo "LOGGING ADDRESS: ${SCALE_LOGGING_ADDRESS}"
-        echo "ELASTICSEARCH URLS: ${SCALE_ELASTICSEARCH_URLS}"
     fi
 
     # Initialize schema and initial data

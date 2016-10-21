@@ -97,7 +97,7 @@
                 var d = $q.defer();
 
                 $http({
-                    url: scaleConfig.urls.apiPrefix + 'v' + scaleConfig.majorVersion + '/version/',
+                    url: scaleConfig.urls.apiPrefix + '/version/',
                     method: 'GET'
                 }).success(function (data) {
                     d.resolve(data);
