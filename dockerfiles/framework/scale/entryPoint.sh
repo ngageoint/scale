@@ -1,5 +1,6 @@
-#!/bin/sh -e
+#!/bin/sh
 
+set -e
 
 check-db () {
     if [[ "${SCALE_DB_HOST}x" == "x" ]]
