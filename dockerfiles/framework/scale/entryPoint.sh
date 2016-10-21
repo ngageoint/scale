@@ -43,12 +43,10 @@ then
     python manage.py loaddata country_data.json
 fi
 
-if [[ "${DCOS_PACKAGE_FRAMEWORK_NAME}x" != "x" ]]
+if [[ "${DCOS_PACKAGE_FRAMEWORK_NAME}x" != "x"  && "${ENABLE_WEBSERVER}" != "true" ]]
 then
     sed -i "s/framework.name\ =\ 'Scale'/framework.name\ =\ '"${DCOS_PACKAGE_FRAMEWORK_NAME}"'/" /opt/scale/scheduler/management/commands/scale_scheduler.py
     sed -i "/framework.name/ a\ \ \ \ \ \ \ \ framework.webui_url = 'http://"${DCOS_PACKAGE_FRAMEWORK_NAME}".marathon.slave.mesos:"${PORT0}"/'" scheduler/management/commands/scale_scheduler.py
-    sed -i 's^/api^./api^' /opt/scale/ui/config/scaleConfig.json
-    sed -i 's^/docs^./docs^' /opt/scale/ui/config/scaleConfig.json
 fi
 
 # If ENABLE_WEBSERVER is set, we are running the container in web server mode.
@@ -56,6 +54,8 @@ if [[ "${ENABLE_WEBSERVER}" == "true" ]]
 then
     gosu root sed -i 's^User apache^User scale^g' /etc/httpd/conf/httpd.conf
     gosu root sed -i 's/\/SCALE/\/'${DCOS_PACKAGE_FRAMEWORK_NAME}'/' /etc/httpd/conf.d/scale.conf
+    sed -i 's^/api^./api^' /opt/scale/ui/config/scaleConfig.json
+    sed -i 's^/docs^./docs^' /opt/scale/ui/config/scaleConfig.json
     gosu root /usr/sbin/httpd
 
     exec /usr/bin/gunicorn -c gunicorn.conf.py scale.wsgi:application
