@@ -140,6 +140,11 @@
             }
         };
 
+        vm.formatJSON = function (file) {
+            file = _.omit(file, '$$hashKey');
+            return JSON.stringify(file, null, 4);
+        };
+
         var getWorkspaceDetails = function (id) {
             vm.loading = true;
             workspacesService.getWorkspaceDetails(id).then(function (data) {

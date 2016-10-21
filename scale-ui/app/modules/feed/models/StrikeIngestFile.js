@@ -16,10 +16,11 @@
         // static methods, assigned to class
         StrikeIngestFile.build = function (data) {
             if (data) {
+                var newWorkspace = data.new_workspace ? data.new_workspace.name : '';
                 var returnObj = new StrikeIngestFile(
                     data.filename_regex,
                     data.data_types,
-                    data.new_workspace,
+                    newWorkspace,
                     data.new_file_path
                 );
                 if (data.data_types && data.data_types.length === 0) {
