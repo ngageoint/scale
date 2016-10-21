@@ -1,7 +1,8 @@
-#!/bin/sh -e
+#!/bin/sh
 
+set -e
 
-check-db () {
+check_db () {
     if [[ "${SCALE_DB_HOST}x" == "x" ]]
     then
         echo SCALE_DB_HOST is not populated. Scale requires a valid db host configured.
@@ -9,7 +10,7 @@ check-db () {
     fi
 }
 
-check-logging () {
+check_logging () {
     if [[ "${SCALE_LOGGING_ADDRESS}x" == "x" ]]
     then
         echo SCALE_LOGGING_ADDRESS is not populated. Scale requires a valid Logstash URL configured.
@@ -17,7 +18,7 @@ check-logging () {
     fi
 }
 
-check-elastic () {
+check_elastic () {
     if [[ "${SCALE_ELASTICSEARCH_URLS}x" == "x" ]]
     then
         echo SCALE_ELASTICSEARCH_URLS is not populated. Scale requires a valid Elasticsearch URLs configured.
@@ -60,9 +61,9 @@ then
     fi
 
     # Validate dependencies for bootstrap
-    check-db
-    check-elastic
-    check-logging
+    check_db
+    check_elastic
+    check_logging
 
     # Initialize schema and initial data
     /usr/bin/psql -U scale -h ${SCALE_DB_HOST} -w -p ${SCALE_DB_PORT} -c "CREATE EXTENSION postgis;"
@@ -83,8 +84,8 @@ fi
 if [[ "${ENABLE_WEBSERVER}" == "true" ]]
 then
     # Validate dependencies for web server
-    check-db
-    check-elastic
+    check_db
+    check_elastic
 
     gosu root sed -i 's^User apache^User scale^g' /etc/httpd/conf/httpd.conf
     gosu root sed -i 's/\/SCALE/\/'${DCOS_PACKAGE_FRAMEWORK_NAME}'/' /etc/httpd/conf.d/scale.conf
