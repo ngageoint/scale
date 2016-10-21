@@ -111,8 +111,29 @@ class TestBatchDefinition(TestCase):
 
         definition = {
             'version': '1.0',
-            'all_jobs': True
+            'all_jobs': True,
         }
 
         # No exception means success
         BatchDefinition(definition)
+
+    def test_priority(self):
+        """Tests defining override priority."""
+
+        definition = {
+            'version': '1.0',
+            'priority': 1111,
+        }
+
+        # No exception means success
+        BatchDefinition(definition)
+
+    def test_priority_invalid(self):
+        """Tests defining override priority with an invalid format."""
+
+        definition = {
+            'version': '1.0',
+            'priority': 'BAD',
+        }
+
+        self.assertRaises(InvalidDefinition, BatchDefinition, definition)
