@@ -13,10 +13,9 @@ EXPOSE 5051
 # DCOS_PASS authentication for Marathon deployments when using DCOS enterprise
 # DCOS_URL Mesos master URL for Marathon deployments
 # DCOS_USER authentication for Marathon deployments when using DCOS enterprise
-# DEPLOY_WEBSERVER to start the database container
+# DEPLOY_WEBSERVER to start the web server container
+# ENABLE_BOOTSTRAP true to initialize database and bootstrap supporting containers, should only be set on scheduler in DCOS
 # ENABLE_WEBSERVER true to start the RESTful API server, should only be set on webserver app
-# INIT_DB to initialize the database (migrate, load, etc.) should always be true
-# LOAD_COUNTRY_DATA to load country borders fixture into the database, should always be true unless using custom country borders
 # LOGSTASH_DOCKER_IMAGE the name of the Docker image for logstash
 # MARATHON_APP_DOCKER_IMAGE used in Marathon to autodetect Scale docker image
 # MESOS_MASTER_URL
@@ -35,7 +34,6 @@ EXPOSE 5051
 # SCALE_WEBSERVER_CPU
 # SCALE_WEBSERVER_MEMORY
 # SCALE_ZK_URL
-ENV INIT_DB=true LOAD_COUNTRY_DATA=True
 
 # build arg to set the version qualifier. This should be blank for a
 # release build. Otherwise it is typically a build number or git hash.
