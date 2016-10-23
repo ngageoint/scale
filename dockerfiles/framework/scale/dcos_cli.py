@@ -63,10 +63,16 @@ def run(client):
         deploy_webserver(client, app_name, es_urls, db_host, db_port)
 
 
-def delete_marathon_app(client, app_name):
+def delete_marathon_app(client, app_name, fail_on_error=False):
     print("Attempting delete of Marathon app: %s" % app_name)
-    response = client.delete_app(app_name, force=True)
-    print(response)
+    try:
+        response = client.delete_app(app_name, force=True)
+        print(response)
+    except NotFoundError:
+        if fail_on_error:
+            raise
+        else:
+            print('Not found. Ignoring...')
 
 
 def deploy_marathon_app(client, marathon_json):
