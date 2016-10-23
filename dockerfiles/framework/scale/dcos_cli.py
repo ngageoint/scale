@@ -1,5 +1,8 @@
 #!/bin/python
-import pexpect, requests, os, json, time, subprocess
+import requests, os, json, time, subprocess
+
+from marathon import MarathonClient, MarathonApp
+from marathon import NotFoundError
 
 FRAMEWORK_NAME = os.getenv('DCOS_PACKAGE_FRAMEWORK_NAME', 'scale')
 SCALE_DB_HOST = os.getenv('SCALE_DB_HOST', '')
@@ -7,26 +10,29 @@ SCALE_LOGGING_ADDRESS = os.getenv('SCALE_LOGGING_ADDRESS', '')
 DEPLOY_WEBSERVER = os.getenv('DEPLOY_WEBSERVER', 'true')
 USERNAME = os.getenv('DCOS_USER', '')
 PASSWORD = os.getenv('DCOS_PASS', '')
-OAUTH_TOKEN = os.getenv('DCOS_OAUTH_TOKEN', '')
 
 
-def dcos_login(username, password):
-    home = os.path.expanduser("~")
-    with open(home + '/.dcos/dcos.toml', "r") as file:
-        if 'dcos_acs_token' not in file.read():
-            child = pexpect.spawn("/usr/local/bin/dcos auth login")
-            i = child.expect(['.*sername:', 'Login successful.*', '.*authentication token:'])
-            if i == 0:
-                child.sendline(username)
-                child.expect('.*assword:')
-                child.sendline(password)
-            elif i == 2:
-                child.sendline(OAUTH_TOKEN)
+def dcos_login():
+    # Defaults servers for both DCOS 1.7 and 1.8. 1.8 added HTTPS within DCOS cluster.
+    servers = os.getenv('MARATHON_SERVERS', 'http://marathon.mesos:8080,https://marathon.mesos:8443').split(',')
+    oauth_token = os.getenv('DCOS_OAUTH_TOKEN', '').strip()
+    username = os.getenv('DCOS_USER', '').strip()
+    password = os.getenv('DCOS_PASS', '').strip()
 
-            print(child.after)
+    if len(oauth_token):
+        print('Attempting token auth to Marathon...')
+        client = MarathonClient(servers, auth_token=oauth_token)
+    elif len(username) and len(password):
+        print('Attempting basic auth to Marathon...')
+        client = MarathonClient(servers, username=username, password=password)
+    else:
+        print('Attempting unauthenticated access to Marathon...')
+        client = MarathonClient(servers)
+
+    return client
 
 
-def run():
+def run(client):
     es_urls = os.getenv('SCALE_ELASTICSEARCH_URLS')
 
     # if SCALE_ELASTICSEARCH_URLS is not set, assume we are running within DCOS and attempt to query Elastic scheduler
@@ -40,7 +46,7 @@ def run():
     db_port = os.getenv('SCALE_DB_PORT', '')
     if not len(db_host):
         app_name = '%s-db' % FRAMEWORK_NAME
-        db_port = deploy_database(app_name)
+        db_port = deploy_database(client, app_name)
         db_host = "%s.marathon.mesos" % app_name
         print("DB_HOST=%s" % db_host)
         print("DB_PORT=%s" % db_port)
@@ -48,71 +54,52 @@ def run():
     # Determine if logstash should be deployed.
     if not len(SCALE_LOGGING_ADDRESS):
         app_name = '%s-logstash' % FRAMEWORK_NAME
-        log_port = deploy_logstash(app_name, es_urls)
+        log_port = deploy_logstash(client, app_name, es_urls)
         print("LOGGING_ADDRESS=tcp://%s.marathon.mesos:%s" % (app_name, log_port))
 
     # Determine if Web Server should be deployed.
     if DEPLOY_WEBSERVER.lower() == 'true':
         app_name = '%s-webserver' % FRAMEWORK_NAME
-        deploy_webserver(app_name, es_urls, db_host, db_port)
+        deploy_webserver(client, app_name, es_urls, db_host, db_port)
 
 
-def delete_marathon_app(appname):
-    child = pexpect.spawn("/usr/local/bin/dcos marathon app remove " + appname + " --force")
-    response = child.read().strip().decode('utf-8')
+def delete_marathon_app(client, app_name):
+    print("Attempting delete of Marathon app: %s" % app_name)
+    response = client.delete_app(app_name, force=True)
+    print(response)
 
 
-def deploy_marathon_app(marathon):
-    f1 = open('./marathon.json', 'w+')
-    f1.write(json.dumps(marathon, ensure_ascii=False))
-    f1.close()
-    child = pexpect.spawn("/usr/local/bin/dcos marathon app add ./marathon.json")
-    response = child.read().strip().decode('utf-8')
+def deploy_marathon_app(client, marathon_json):
+    app_id = marathon_json['id']
+    print("Attempting deploy Marathon app with id: %s" % app_id)
+    print(marathon_json)
+    marathon_app = MarathonApp.from_json(marathon_json)
+    response = client.create_app(app_id, marathon_app)
+    print(response)
 
 
-def check_app_exists(app_name):
-    if app_name in str(subprocess.check_output(["/usr/local/bin/dcos", "marathon", "app", "list"])):
+def check_app_exists(client, app_name):
+    try:
+        client.get_app(app_name)
         return True
-    else:
+    except NotFoundError:
         return False
 
 
-def get_marathon_port(app_name, port_index):
-    output = str(subprocess.check_output(["/usr/local/bin/dcos", "marathon", "task", "list", app_name])).split('\n')
-    for i in output:
-        if app_name in i:
-            output = list(filter(''.__ne__, i.split(" ")))
-    output = str(subprocess.check_output(["/usr/local/bin/dcos", "marathon", "task", "show", output[4]])).split('\n')
-    return json.loads('\n'.join(output))['ports'][port_index]
+def get_marathon_port(client, app_name, port_index):
+    app = client.get_app(app_name)
+    return app.ports[port_index]
 
 
-def wait_app_deploy(app_name):
-    while True:
-        output = str(subprocess.check_output(["/usr/local/bin/dcos", "task"])).split('\n')
-        for i in output:
-            if app_name in i:
-                output = list(filter(''.__ne__, i.split(" ")))
-        if output[3] != "R":
-            time.sleep(1)
-        else:
-            break
+def wait_app_healthy(client, app_name, sleep_secs=5):
+    while client.get_app(app_name).tasks_healthy >= 1:
+        print('Waiting for healthy app %s.' % app_name)
+        time.sleep(sleep_secs)
 
 
-def wait_app_healthy(app_name):
-    while True:
-        output = str(subprocess.check_output(["/usr/local/bin/dcos", "marathon", "task", "list", app_name])).split('\n')
-        for i in output:
-            if app_name in i:
-                output = list(filter(''.__ne__, i.split(" ")))
-        if output[1].lower() != "true":
-            time.sleep(1)
-        else:
-            break
-
-
-def deploy_webserver(app_name, es_urls, db_host, db_port):
+def deploy_webserver(client, app_name, es_urls, db_host, db_port):
     # attempt to delete an old instance..if it doesn't exists it will error but we don't care so we ignore it
-    delete_marathon_app(app_name)
+    delete_marathon_app(client, app_name)
 
     vhost = os.getenv('SCALE_VHOST')
     cpu = os.getenv('SCALE_WEBSERVER_CPU', 1)
@@ -185,15 +172,13 @@ def deploy_webserver(app_name, es_urls, db_host, db_port):
         if env_value:
             marathon['env'][env] = env_value
 
-    deploy_marathon_app(marathon)
-    wait_app_deploy(app_name)
-    time.sleep(5)
-    wait_app_healthy(app_name)
+    deploy_marathon_app(client, marathon)
+    wait_app_healthy(client, app_name)
 
 
-def deploy_database(app_name):
+def deploy_database(client, app_name):
     # Check if scale-db is already running
-    if not check_app_exists(app_name):
+    if not check_app_exists(client, app_name):
         cfg = {
             'scaleDBName': os.environ.get('SCALE_DB_NAME', 'scale'),
             'scaleDBHost': '%s.marathon.mesos' % app_name,
@@ -247,11 +232,9 @@ def deploy_database(app_name):
         CONFIG_URI = os.getenv('CONFIG_URI')
         if CONFIG_URI:
             marathon['uris'].append(CONFIG_URI)
-        deploy_marathon_app(marathon)
-        wait_app_deploy(app_name)
-        time.sleep(5)
-        wait_app_healthy(app_name)
-    db_port = get_marathon_port(app_name, 0)
+        deploy_marathon_app(client, marathon)
+        wait_app_healthy(client, app_name)
+    db_port = get_marathon_port(client, app_name, 0)
 
     return db_port
 
@@ -263,9 +246,9 @@ def get_elasticsearch_urls():
     return es_urls
 
 
-def deploy_logstash(app_name, es_urls):
+def deploy_logstash(client, app_name, es_urls):
     # attempt to delete an old instance..if it doesn't exists it will error but we don't care so we ignore it
-    delete_marathon_app(app_name)
+    delete_marathon_app(client, app_name)
 
     # get the Logstash container API endpoints
     logstash_image = os.getenv('LOGSTASH_DOCKER_IMAGE', 'geoint/logstash-elastic-ha')
@@ -325,18 +308,15 @@ def deploy_logstash(app_name, es_urls):
     if CONFIG_URI:
         marathon['uris'].append(CONFIG_URI)
 
-    deploy_marathon_app(marathon)
+    deploy_marathon_app(client, marathon)
+    wait_app_healthy(client, app_name)
 
-    wait_app_deploy(app_name)
-    time.sleep(5)
-    wait_app_healthy(app_name)
-
-    logstash_port = get_marathon_port(app_name, 0)
+    logstash_port = get_marathon_port(client, app_name, 0)
 
     return logstash_port
 
 
 if __name__ == '__main__':
     # ensure this doesn't try and run if imported
-    dcos_login(USERNAME, PASSWORD)
-    run()
+    client = dcos_login()
+    run(client)

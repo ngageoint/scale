@@ -29,13 +29,6 @@ check_elastic () {
 # If ENABLE_BOOTSTRAP is set, we are bootstrapping other components in a DCOS package configuration
 if [[ "${ENABLE_BOOTSTRAP}" == "true" ]]
 then
-    if [[ "${DCOS_URL}x" != "x" ]]
-    then
-     dcos config set core.dcos_url $DCOS_URL
-    else
-     dcos config set core.dcos_url http://master.mesos
-    fi
-
     if [[ "${SCALE_SECRET_KEY}x" == "x" ]]
     then
       export SCALE_SECRET_KEY=`python -c "import random;import string;print(''.join(random.SystemRandom().choice(string.hexdigits) for _ in range(50)))"`
@@ -43,7 +36,7 @@ then
 
     if [[ "${SCALE_DB_HOST}x" == "x" || "${SCALE_LOGGING_ADDRESS}x" == "x" || ${DEPLOY_WEBSERVER} == 'true' ]]
     then
-      python dcos_cli.py | tee dcos_cli.log
+      python -u dcos_cli.py | tee dcos_cli.log
     fi
 
     if [[ "${SCALE_DB_HOST}x" == "x" ]]
