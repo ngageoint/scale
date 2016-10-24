@@ -11,7 +11,6 @@ EXPOSE 5051
 # DCOS_OAUTH_TOKEN authentication for Marathon deployments when DCOS OAuth is enabled
 # DCOS_PACKAGE_FRAMEWORK_NAME used to inject a configurable framework name allowing for multiple scale frameworks per cluster
 # DCOS_PASS authentication for Marathon deployments when using DCOS enterprise
-# DCOS_URL Mesos master URL for Marathon deployments
 # DCOS_USER authentication for Marathon deployments when using DCOS enterprise
 # DEPLOY_WEBSERVER to start the web server container
 # ENABLE_BOOTSTRAP true to initialize database and bootstrap supporting containers, should only be set on scheduler in DCOS
@@ -22,14 +21,13 @@ EXPOSE 5051
 # NPM_URL
 # PYPI_URL
 # SCALE_DB_HOST
-# SCALE_DB_PORT
 # SCALE_DB_NAME
-# SCALE_DB_USER
 # SCALE_DB_PASS
+# SCALE_DB_PORT
+# SCALE_DB_USER
 # SCALE_DEBUG
 # SCALE_DOCKER_IMAGE used for explicit override of docker image used, not needed in Marathon
 # SCALE_ELASTICSEARCH_URLS
-# SCALE_UI_URL
 # SCALE_LOGGING_ADDRESS
 # SCALE_WEBSERVER_CPU
 # SCALE_WEBSERVER_MEMORY
@@ -40,9 +38,8 @@ EXPOSE 5051
 # if present, the qualifier will be '.${BUILDNUM}
 ARG BUILDNUM=''
 
-# Default location for the Scale UI to be retrieved from.
+# Default location for the GOSU binary to be retrieved from.
 # This should be changed on disconnected networks to point to the directory with the tarballs.
-ARG SCALE_UI_URL=https://s3.amazonaws.com/ais-public-artifacts/scale-ui/scale-ui-master.tar.gz
 ARG GOSU_URL=https://github.com/tianon/gosu/releases/download/1.9/gosu-amd64
 
 # setup the scale user and sudo so mounts, etc. work properly
@@ -51,8 +48,8 @@ RUN useradd --uid 7498 -M -d /opt/scale scale
 
 # install required packages for scale execution
 COPY dockerfiles/framework/scale/mesos-0.25.0-py2.7-linux-x86_64.egg /tmp/
+COPY dockerfiles/framework/scale/marathon-0.9.0-prerelease.tar.gz /tmp/
 COPY dockerfiles/framework/scale/*shim.sh /tmp/
-COPY dockerfiles/framework/scale/dcos /usr/local/bin/
 COPY scale/pip/prod_linux.txt /tmp/
 RUN yum install -y epel-release \
  && yum install -y \
@@ -72,7 +69,8 @@ RUN yum install -y epel-release \
          make \
  # Shim in any environment specific configuration from script
  && sh /tmp/env-shim.sh \
- && pip install mesos.interface==0.25.0 protobuf==2.5.0 requests pexpect \
+ && pip install mesos.interface==0.25.0 protobuf==2.5.0 requests \
+ && pip install marathon==0.9.0-prerelease -f /tmp \
  && easy_install /tmp/*.egg \
  && pip install -r /tmp/prod_linux.txt \
  && curl -o /usr/bin/gosu -fsSL ${GOSU_URL} \
@@ -80,8 +78,7 @@ RUN yum install -y epel-release \
  && rm -f /etc/httpd/conf.d/welcome.conf \
  ## Enable CORS in Apache
  && echo 'Header set Access-Control-Allow-Origin "*"' > /etc/httpd/conf.d/cors.conf \
- && yum clean all \
- && chmod +x /usr/local/bin/dcos
+ && yum clean all
 
 # install the source code and config files
 COPY dockerfiles/framework/scale/entryPoint.sh /opt/scale/
