@@ -1,5 +1,7 @@
 #!/bin/python
-import requests, os, json, time, subprocess
+from __future__ import print_function
+
+import requests, os, json, time, sys
 
 from marathon import MarathonClient, MarathonApp
 from marathon import NotFoundError
@@ -67,7 +69,7 @@ def delete_marathon_app(client, app_name, fail_on_error=False):
     print("Attempting delete of Marathon app: %s" % app_name)
     try:
         response = client.delete_app(app_name, force=True)
-        print(response)
+        print(response, file=sys.stderr)
     except NotFoundError:
         if fail_on_error:
             raise
@@ -78,10 +80,10 @@ def delete_marathon_app(client, app_name, fail_on_error=False):
 def deploy_marathon_app(client, marathon_json):
     app_id = marathon_json['id']
     print("Attempting deploy Marathon app with id: %s" % app_id)
-    print(marathon_json)
+    print(marathon_json, file=sys.stderr)
     marathon_app = MarathonApp.from_json(marathon_json)
     response = client.create_app(app_id, marathon_app)
-    print(response)
+    print(response, file=sys.stderr)
 
 
 def check_app_exists(client, app_name):
