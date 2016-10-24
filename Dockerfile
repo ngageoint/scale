@@ -11,7 +11,6 @@ EXPOSE 5051
 # DCOS_OAUTH_TOKEN authentication for Marathon deployments when DCOS OAuth is enabled
 # DCOS_PACKAGE_FRAMEWORK_NAME used to inject a configurable framework name allowing for multiple scale frameworks per cluster
 # DCOS_PASS authentication for Marathon deployments when using DCOS enterprise
-# DCOS_URL Mesos master URL for Marathon deployments
 # DCOS_USER authentication for Marathon deployments when using DCOS enterprise
 # DEPLOY_WEBSERVER to start the web server container
 # ENABLE_BOOTSTRAP true to initialize database and bootstrap supporting containers, should only be set on scheduler in DCOS

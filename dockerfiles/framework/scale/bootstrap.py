@@ -15,7 +15,7 @@ PASSWORD = os.getenv('DCOS_PASS', '')
 
 
 def dcos_login():
-    # Defaults servers for both DCOS 1.7 and 1.8. 1.8 added HTTPS within DCOS cluster.
+    # Defaults servers for both DCOS 1.7 and 1.8. 1.8 added HTTPS within DCOS EE clusters.
     servers = os.getenv('MARATHON_SERVERS', 'http://marathon.mesos:8080,https://marathon.mesos:8443').split(',')
     oauth_token = os.getenv('DCOS_OAUTH_TOKEN', '').strip()
     username = os.getenv('DCOS_USER', '').strip()
@@ -94,13 +94,13 @@ def check_app_exists(client, app_name):
         return False
 
 
-def get_marathon_port(client, app_name, port_index):
+def get_marathon_app_single_task_host_port(client, app_name, port_index):
     app = client.get_app(app_name)
-    return app.ports[port_index]
+    return app.tasks[0].ports[port_index]
 
 
 def wait_app_healthy(client, app_name, sleep_secs=5):
-    while client.get_app(app_name).tasks_healthy >= 1:
+    while client.get_app(app_name).tasks_healthy < 1:
         print('Waiting for healthy app %s.' % app_name)
         time.sleep(sleep_secs)
 
@@ -108,6 +108,11 @@ def wait_app_healthy(client, app_name, sleep_secs=5):
 def deploy_webserver(client, app_name, es_urls, db_host, db_port):
     # attempt to delete an old instance..if it doesn't exists it will error but we don't care so we ignore it
     delete_marathon_app(client, app_name)
+
+    # Block, until previously deployed app is gone
+    while check_app_exists(client, app_name):
+        print('Waiting for previously deployed app %s to be completely removed.' % app_name)
+        time.sleep(1)
 
     vhost = os.getenv('SCALE_VHOST')
     cpu = os.getenv('SCALE_WEBSERVER_CPU', 1)
@@ -242,7 +247,8 @@ def deploy_database(client, app_name):
             marathon['uris'].append(CONFIG_URI)
         deploy_marathon_app(client, marathon)
         wait_app_healthy(client, app_name)
-    db_port = get_marathon_port(client, app_name, 0)
+
+    db_port = get_marathon_app_single_task_host_port(client, app_name, 0)
 
     return db_port
 
@@ -257,6 +263,11 @@ def get_elasticsearch_urls():
 def deploy_logstash(client, app_name, es_urls):
     # attempt to delete an old instance..if it doesn't exists it will error but we don't care so we ignore it
     delete_marathon_app(client, app_name)
+
+    # Block, until previously deployed app is gone
+    while check_app_exists(client, app_name):
+        print('Waiting for previously deployed app %s to be completely removed.' % app_name)
+        time.sleep(1)
 
     # get the Logstash container API endpoints
     logstash_image = os.getenv('LOGSTASH_DOCKER_IMAGE', 'geoint/logstash-elastic-ha')
@@ -319,7 +330,7 @@ def deploy_logstash(client, app_name, es_urls):
     deploy_marathon_app(client, marathon)
     wait_app_healthy(client, app_name)
 
-    logstash_port = get_marathon_port(client, app_name, 0)
+    logstash_port = get_marathon_app_single_task_host_port(client, app_name, 0)
 
     return logstash_port
 
