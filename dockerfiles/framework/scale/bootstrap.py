@@ -10,8 +10,6 @@ FRAMEWORK_NAME = os.getenv('DCOS_PACKAGE_FRAMEWORK_NAME', 'scale')
 SCALE_DB_HOST = os.getenv('SCALE_DB_HOST', '')
 SCALE_LOGGING_ADDRESS = os.getenv('SCALE_LOGGING_ADDRESS', '')
 DEPLOY_WEBSERVER = os.getenv('DEPLOY_WEBSERVER', 'true')
-USERNAME = os.getenv('DCOS_USER', '')
-PASSWORD = os.getenv('DCOS_PASS', '')
 
 
 def dcos_login():

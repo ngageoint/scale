@@ -45,39 +45,31 @@ Docker Images
 The scale docker image supports a number of environment variables which setup the local_settings file.
 Alternatively, your own local_settings.py can be volume mounted into `/opt/scale/scale/local_settings.py`
 
-| Env Var                  | Default Value                   | Meaning                                  |
-| ------------------------ | ------------------------------- | -----------------------------------------|
-| SCALE_SECRET_KEY         | 'this-key-is-insecure'          | A key to keep your instance secure.      |
-| SCALE_DEBUG              | ''                              | Change to '1' for debugging              |
-| SCALE_API_URL            | '/api'                          | URL prefix for the REST API              |
-| SCALE_ALLOWED_HOSTS      | '*'                             | , separated list of hosts for django     |
-| SCALE_STATIC_ROOT        | 'static/'                       | location of static data                  |
-| SCALE_STATIC_URL         | '/scale/static/'                | url for static data                      |
-| SCALE_DB_NAME            | 'scale'                         | database name for scale                  |
-| SCALE_DB_USER            | 'postgres'                      | database login name                      |
-| SCALE_DB_PASS            | 'postgres'                      | database login password                  |
-| SCALE_DB_HOST            | use link to `db` or 'localhost' | database host name                       |
-| SCALE_DB_PORT            | use link to `db` or '5432'      | database port                            |
-| SCALE_LOGGING_ADDRESS    | None                            | Logstash URL.                            |
-| MESOS_MASTER_URL         | 'zk://localhost:2181/scale'     | Mesos master location                    |
-| SCALE_ZK_URL             | None                            | Scale master location                    |
-| SCALE_DOCKER_IMAGE       | 'geoint/scale'                  | Scale docker image name                  |
-| USE_LATEST               | False                           | Use the :latest tag. (see note)          |
-| CONFIG_URI               | None                            | A URI or URL to docker credentials file  |
-| ENABLE_GUNICORN          | False                           | Start the RESTful API server             |
-| ENABLE_HTTPD             | False                           | Start the Apache HTTP server             |
-| DEPLOY_DB                | False                           | Start the database container in DC/OS    |
-| DEPLOY_LOGGING           | False                           | Start the logstash container in DC/OS    |
-| INIT_DB                  | False                           | Init the db (migrat, load, etc.)         |
-| LOAD_COUNTRY_DATA        | False                           | Load country borders into the database.  |
-| LOGSTASH_DOCKER_IMAGE    | 'geoint/logstash-elastic-ha'    | Docker image for logstash                |
-
-Note on USE_LATEST
-------------------
-This will use the _:latest_ tag on the scale docker image. 
-Be careful as it's pretty easy for the scheduler and the system tasks to get out of sync.
-This is useful for testing the master branch and for the quickstart.
-**Production systems should always set this to False!**
+| Env Var                     | Default Value                   | Meaning                                    |
+| --------------------------- | ------------------------------- | -------------------------------------------|
+| CONFIG_URI                  | None                            | A URI or URL to docker credentials file    |
+| DCOS_OAUTH_TOKEN            | None                            | Authentication token for DCOS bootstrap    |
+| DCOS_PACKAGE_FRAMEWORK_NAME | None                            | Unique name for Scale cluster framework    |
+| DCOS_PASS                   | None                            | Password for DCOS bootstrap                |
+| DCOS_USER                   | None                            | Privileged username for DCOS bootstrap     |
+| DEPLOY_WEBSERVER            | 'true'                          | Should UI and API be installed?            |
+| ENABLE_BOOTSTRAP            | 'true'                          | Bootstrap Scale support containers         |
+| ENABLE_WEBSERVER            | 'true' or None                  | Used by bootstrap to enable UI and API     |
+| LOGSTASH_DOCKER_IMAGE       | 'geoint/logstash-elastic-ha'    | Docker image for logstash                  |
+| MARATHON_APP_DOCKER_IMAGE   | 'geoint/scale'                  | Scale docker image name                    |
+| MESOS_MASTER_URL            | 'zk://localhost:2181/scale'     | Mesos master location                      |
+| SCALE_DB_HOST               | use link to `db` or 'localhost' | database host name                         |
+| SCALE_DB_NAME               | 'scale'                         | database name for scale                    |
+| SCALE_DB_PASS               | 'scale'                         | database login password                    |
+| SCALE_DB_PORT               | use link to `db` or '5432'      | database port                              |
+| SCALE_DB_USER               | 'scale'                         | database login name                        |
+| SCALE_DEBUG                 | ''                              | Change to '1' for debugging                |
+| SCALE_DOCKER_IMAGE          | 'geoint/scale'                  | Scale docker image name                    |
+| SCALE_ELASTICSEARCH_URLS    | None (auto-detected in DCOS)    | Comma-delimited Elasticsearch node URLs    |
+| SCALE_LOGGING_ADDRESS       | None                            | Logstash URL. By default set by bootstrap  |
+| SCALE_WEBSERVER_CPU         | 1                               | UI/API CPU allocation during bootstrap     |
+| SCALE_WEBSERVER_MEMORY      | 2048                            | UI/API memory allocation during bootstrap  |
+| SCALE_ZK_URL                | None                            | Scale master location                      |
 
 Quick Start
 ===========
