@@ -69,7 +69,7 @@ gulp.task('bower', ['clean'], function () {
 
     sourceFiles.push('./app/scripts/angular-ui-grid/ui-grid.js');
     sourceFiles.push('./app/scripts/angular-ui-grid/ui-grid.css');
-
+    console.log(sourceFiles);
     return gulp.src(sourceFiles)
         // js
         .pipe(jsFilter)

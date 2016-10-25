@@ -13,6 +13,7 @@
         vm.activeJobTypeInterfaceValues = [];
         vm.activeJobTypeErrors = [];
         vm.activeJobTypeStats = {};
+        vm.hide_rd = false;
         vm.showJobTypeErrors = false;
         vm.loading = true;
         vm.activeJobType = null;
@@ -25,6 +26,10 @@
         vm.user = userService.getUserCreds();
         vm.subnavLinks = scaleConfig.subnavLinks.jobs;
         subnavService.setCurrentPath('jobs/types');
+
+        $scope.$watch('vm.hide_rd',function(newValue){
+           console.log('toggle hide r&d: ' + newValue);
+        });
 
         vm.viewDetails = function (id) {
             vm.activeJobType = _.find(vm.jobTypes, 'id', id);
