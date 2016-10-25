@@ -96,7 +96,8 @@
                 ended: data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
                 order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['-ingest_started'],
                 status: data.status ? data.status : null,
-                file_name: data.file_name ? data.file_name : null
+                file_name: data.file_name ? data.file_name : null,
+                strike_id: data.strike_id ? parseInt(data.strike_id) : null
             };
         };
 

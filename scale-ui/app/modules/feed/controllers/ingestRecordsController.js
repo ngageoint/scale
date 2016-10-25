@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('ingestRecordsController', function ($scope, $location, $timeout, scaleConfig, scaleService, stateService, feedService, navService, subnavService, gridFactory) {
+    angular.module('scaleApp').controller('ingestRecordsController', function ($scope, $location, $timeout, scaleConfig, scaleService, stateService, feedService, strikeService, navService, subnavService, gridFactory) {
         subnavService.setCurrentPath('feed/ingests');
 
         var vm = this;
@@ -33,6 +33,8 @@
             timezone: '+000'
         };
         vm.ingestData = [];
+        vm.strikeData = [];
+        vm.selectedStrike = {};
         vm.searchText = vm.ingestsParams.file_name || '';
         vm.gridOptions = gridFactory.defaultGridOptions();
         vm.gridOptions.data = [];
@@ -50,6 +52,7 @@
         };
 
         var filteredByStatus = vm.ingestsParams.status ? true : false,
+            filteredByStrike = vm.ingestsParams.strike_id ? true : false,
             filteredByOrder = vm.ingestsParams.order ? true : false;
 
         vm.colDefs = [
@@ -66,10 +69,10 @@
                 cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.file_size_formatted }}</div>'
             },
             {
-                field: 'strike.id',
+                field: 'strike.title',
                 displayName: 'Strike Process',
-                enableFiltering: false,
-                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.strike.id }}</div>'
+                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.strike.title }}</div>',
+                filterHeaderTemplate: '<div class="ui-grid-filter-container"><select class="form-control input-sm" ng-model="grid.appScope.vm.selectedStrike" ng-options="strike as strike.title.toUpperCase() for strike in grid.appScope.vm.strikeData"></select></div>'
             },
             {
                 field: 'status',
@@ -138,6 +141,33 @@
             }
         };
 
+        vm.updateIngestStrike = function (value) {
+            if (value.title) {
+                if (value.id !== vm.ingestsParams.strike_id) {
+                    vm.ingestsParams.page = 1;
+                }
+                vm.ingestsParams.strike_id = value.title === 'VIEW ALL' ? null : value.id;
+                vm.ingestsParams.page_size = vm.gridOptions.paginationPageSize;
+                if (!vm.loading) {
+                    vm.filterResults();
+                }
+            }
+        };
+
+        vm.getStrikes = function () {
+            strikeService.getStrikes().then(function (data) {
+                var strikeViewAll = {
+                    id: 0,
+                    name: 'viewall',
+                    title: 'VIEW ALL'
+                };
+                vm.strikeData = data;
+                vm.strikeData.unshift(strikeViewAll);
+                vm.selectedStrike = _.find(vm.strikeData, { id: vm.ingestsParams.strike_id }) || data[0];
+                vm.getIngests();
+            });
+        };
+
         vm.gridOptions.onRegisterApi = function (gridApi) {
             //set gridApi on scope
             vm.gridApi = gridApi;
@@ -171,7 +201,7 @@
         vm.initialize = function () {
             stateService.setIngestsParams(vm.ingestsParams);
             vm.updateColDefs();
-            vm.getIngests();
+            vm.getStrikes();
             navService.updateLocation('feed');
         };
 
@@ -185,6 +215,17 @@
             } else {
                 filteredByStatus = value !== 'VIEW ALL';
                 vm.updateIngestStatus(value);
+            }
+        });
+
+        $scope.$watch('vm.selectedStrike', function (value) {
+            if (vm.loading) {
+                if (filteredByStrike) {
+                    vm.updateIngestStrike(value);
+                }
+            } else {
+                filteredByStrike = value.title !== 'VIEW ALL';
+                vm.updateIngestStrike(value);
             }
         });
 
