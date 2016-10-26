@@ -22,18 +22,6 @@ logger = logging.getLogger(__name__)
 class RunningJobExecution(object):
     """This class represents a currently running job execution. This class is thread-safe."""
 
-    @staticmethod
-    def get_job_exe_id(task_id):
-        """Returns the job execution ID for the given task ID
-
-        :param task_id: The task ID
-        :type task_id: str
-        :returns: The job execution ID
-        :rtype: int
-        """
-
-        return int(task_id.split('_')[0])
-
     def __init__(self, job_exe):
         """Constructor
 

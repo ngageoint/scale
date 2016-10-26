@@ -18,7 +18,7 @@ class PreTask(Task):
         :type job_exe: :class:`job.models.JobExecution`
         """
 
-        super(PreTask, self).__init__('%i_pre' % job_exe.id, job_exe)
+        super(PreTask, self).__init__(job_exe.get_pre_task_id(), job_exe)
 
         self._uses_docker = True
         self._docker_image = self.create_scale_image_name()

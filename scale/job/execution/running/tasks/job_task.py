@@ -17,7 +17,7 @@ class JobTask(Task):
         :type job_exe: :class:`job.models.JobExecution`
         """
 
-        super(JobTask, self).__init__('%i_job' % job_exe.id, job_exe)
+        super(JobTask, self).__init__(job_exe.get_job_task_id(), job_exe)
 
         self._is_system = job_exe.job.job_type.is_system
         self._uses_docker = job_exe.uses_docker()

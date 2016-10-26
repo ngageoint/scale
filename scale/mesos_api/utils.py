@@ -6,8 +6,7 @@ from django.utils.timezone import utc
 from google.protobuf.internal import enum_type_wrapper
 from mesos.interface import mesos_pb2
 
-from job.execution.running.job_exe import RunningJobExecution
-from job.models import TaskUpdate
+from job.models import JobExecution, TaskUpdate
 
 
 EPOCH = datetime.utcfromtimestamp(0).replace(tzinfo=utc)
@@ -27,7 +26,7 @@ def create_task_update_model(status):
 
     task_update = TaskUpdate()
     task_update.task_id = get_status_task_id(status)
-    task_update.job_exe_id = RunningJobExecution.get_job_exe_id(task_update.task_id)
+    task_update.job_exe_id = JobExecution.get_job_exe_id(task_update.task_id)
     task_update.status = get_status_state(status)
     task_update.timestamp = get_status_timestamp(status)
     task_update.source = get_status_source(status)

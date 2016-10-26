@@ -274,11 +274,11 @@ class JobConfiguration(object):
                                                        True):
             self.add_post_task_docker_param(param)
 
-    def configure_logging_docker_params(self, job_exe_id):
+    def configure_logging_docker_params(self, job_exe):
         """Configures the Docker parameters needed for job execution logging
          
-        :param job_exe_id: The job execution ID
-        :type job_exe_id: int
+        :param job_exe: The job execution model with related job and job_type fields
+        :type job_exe: :class:`job.models.JobExecution`
         """
 
         es_urls = None
@@ -288,17 +288,18 @@ class JobConfiguration(object):
             es_urls = ','.join(hosts)
 
         if settings.LOGGING_ADDRESS is not None:
-            self.add_pre_task_docker_param(DockerParam('log-driver', 'syslog'))
-            self.add_pre_task_docker_param(DockerParam('log-opt', 'syslog-address=%s' % settings.LOGGING_ADDRESS))
-            self.add_pre_task_docker_param(DockerParam('log-opt', 'tag=scale_%d_pre' % job_exe_id))
+            if not job_exe.is_system:
+                self.add_pre_task_docker_param(DockerParam('log-driver', 'syslog'))
+                self.add_pre_task_docker_param(DockerParam('log-opt', 'syslog-address=%s' % settings.LOGGING_ADDRESS))
+                self.add_pre_task_docker_param(DockerParam('log-opt', 'tag=%s' % job_exe.get_pre_task_id()))
+                self.add_post_task_docker_param(DockerParam('log-driver', 'syslog'))
+                self.add_post_task_docker_param(DockerParam('log-opt', 'syslog-address=%s' % settings.LOGGING_ADDRESS))
+                self.add_post_task_docker_param(DockerParam('log-opt', 'tag=%s' % job_exe.get_post_task_id()))
+                # Post task needs ElasticSearch URL to grab logs for old artifact registration
+                self.add_post_task_docker_param(DockerParam('env', 'SCALE_ELASTICSEARCH_URLS=%s' % es_urls))
             self.add_job_task_docker_param(DockerParam('log-driver', 'syslog'))
             self.add_job_task_docker_param(DockerParam('log-opt', 'syslog-address=%s' % settings.LOGGING_ADDRESS))
-            self.add_job_task_docker_param(DockerParam('log-opt', 'tag=scale_%d_job' % job_exe_id))
-            self.add_post_task_docker_param(DockerParam('log-driver', 'syslog'))
-            self.add_post_task_docker_param(DockerParam('log-opt', 'syslog-address=%s' % settings.LOGGING_ADDRESS))
-            self.add_post_task_docker_param(DockerParam('log-opt', 'tag=scale_%d_post' % job_exe_id))
-            # Post task needs ElasticSearch URL to grab logs for old artifact registration
-            self.add_post_task_docker_param(DockerParam('env', 'SCALE_ELASTICSEARCH_URLS=%s' % es_urls))
+            self.add_job_task_docker_param(DockerParam('log-opt', 'tag=%s' % job_exe.get_job_task_id()))
 
     def get_job_task_docker_params(self):
         """Returns the Docker parameters needed for the job task

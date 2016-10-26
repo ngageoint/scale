@@ -11,7 +11,6 @@ from mesos.interface import Scheduler as MesosScheduler
 from mesos.interface import mesos_pb2
 
 from error.models import Error
-from job.execution.running.job_exe import RunningJobExecution
 from job.execution.running.manager import RunningJobExecutionManager
 from job.execution.running.tasks.results import TaskResults
 from job.models import JobExecution
@@ -247,7 +246,7 @@ class ScaleScheduler(MesosScheduler):
 
         self._status_manager.add_status_update(status)
         task_id = status.task_id.value
-        job_exe_id = RunningJobExecution.get_job_exe_id(task_id)
+        job_exe_id = JobExecution.get_job_exe_id(task_id)
         logger.info('Status update for task %s: %s', task_id, utils.get_status_state(status))
 
         # Since we have a status update for this task, remove it from reconciliation set

@@ -1022,6 +1022,7 @@ class JobExecutionManager(models.Manager):
                 raise Exception(msg % (job_exe.id, job_exe.status))
 
             job_exe.job = jobs[job_exe.job_id]
+            job_exe.set_cluster_id(framework_id)
             job_exe.status = 'RUNNING'
             job_exe.started = started
             job_exe.node = node
@@ -1225,6 +1226,19 @@ class JobExecution(models.Model):
 
     objects = JobExecutionManager()
 
+    @staticmethod
+    def get_job_exe_id(task_id):
+        """Returns the job execution ID for the given task ID
+
+        :param task_id: The task ID
+        :type task_id: str
+        :returns: The job execution ID
+        :rtype: int
+        """
+
+        # Job execution ID is the second-to-last segment
+        return int(task_id.split('_')[-2])
+
     def configure_docker_params(self, framework_id, workspaces):
         """Configures the Docker parameters needed for each task in the execution. Requires workspace information to
         determine any Docker parameters that might be required by this job execution's workspaces.
@@ -1237,8 +1251,8 @@ class JobExecution(models.Model):
 
         configuration = self.get_job_configuration()
 
-        # setup remote task logging
-        configuration.configure_logging_docker_params(self.id)
+        # Setup task logging
+        configuration.configure_logging_docker_params(self)
 
         # Pass database connection details from scheduler as environment variables
         db = settings.DATABASES['default']
@@ -1260,7 +1274,7 @@ class JobExecution(models.Model):
             configuration.add_post_task_docker_param(DockerParam('env', 'SCALE_DB_HOST=' + db['HOST']))
             configuration.add_post_task_docker_param(DockerParam('env', 'SCALE_DB_PORT=' + db['PORT']))
 
-        if not self.job.job_type.is_system:
+        if not self.is_system:
             # Non-system jobs get named Docker volumes for input and output data
             input_vol_name = job_exe_container.get_job_exe_input_vol_name(framework_id, self.id)
             output_vol_name = job_exe_container.get_job_exe_output_vol_name(framework_id, self.id)
@@ -1285,6 +1299,25 @@ class JobExecution(models.Model):
         configuration.configure_workspace_docker_params(framework_id, self.id, workspaces)
 
         self.configuration = configuration.get_dict()
+
+    def get_cluster_id(self):
+        """Gets the cluster ID for the job execution. This call is only valid after the job execution has been scheduled
+        (is no longer queued).
+
+        :returns: The cluster ID for the job execution
+        :rtype: string
+
+        :raises Exception: If the job execution is still queued
+        """
+
+        if self.status == 'QUEUED':
+            raise Exception('cluster_id is not set until the job execution is scheduled')
+
+        if not self.cluster_id:
+            # Return old-style format before cluster_id field was created
+            return 'scale_%d' % self.pk
+
+        return self.cluster_id
 
     def get_docker_image(self):
         """Gets the Docker image for the job execution
@@ -1340,6 +1373,18 @@ class JobExecution(models.Model):
 
         return JobResults(self.results)
 
+    def get_job_task_id(self):
+        """Gets the job-task ID for this job execution. This call is only valid after the job execution has been
+        scheduled (is no longer queued).
+
+        :returns: The job-task ID for the job execution
+        :rtype: string
+
+        :raises Exception: If the job execution is still queued
+        """
+
+        return '%s_job' % self.get_cluster_id()
+
     def get_job_type_name(self):
         """Returns the name of this job's type
 
@@ -1348,56 +1393,6 @@ class JobExecution(models.Model):
         """
 
         return self.job.job_type.name
-
-    def is_docker_privileged(self):
-        """Indicates whether this job execution uses Docker in privileged mode
-
-        :returns: True if this job execution uses Docker in privileged mode, False otherwise
-        :rtype: bool
-        """
-
-        return self.job.job_type.docker_privileged
-
-    @property
-    def is_finished(self):
-        """Indicates if this job execution has completed (success or failure)
-
-        :returns: True if the job execution is in an final state, False otherwise
-        :rtype: bool
-        """
-        return self.status in ['FAILED', 'COMPLETED', 'CANCELED']
-
-    @property
-    def is_system(self):
-        """Indicates whether this job execution is for a system job
-
-        :returns: True if this job execution is for a system job, False otherwise
-        :rtype: bool
-        """
-
-        return self.job.job_type.is_system
-
-    def is_timed_out(self, when):
-        """Indicates whether this job execution is timed out based on the given current time
-
-        :param when: The current time
-        :type when: :class:`datetime.datetime`
-        :returns: True if this job execution is for a system job, False otherwise
-        :rtype: bool
-        """
-
-        running_with_timeout_set = self.status == 'RUNNING' and self.timeout
-        timeout_exceeded = self.started + datetime.timedelta(seconds=self.timeout) < when
-        return running_with_timeout_set and timeout_exceeded
-
-    def uses_docker(self):
-        """Indicates whether this job execution uses Docker
-
-        :returns: True if this job execution uses Docker, False otherwise
-        :rtype: bool
-        """
-
-        return self.job.job_type.uses_docker
 
     def get_log_json(self, include_stdout=True, include_stderr=True, since=None):
         """Get log data from elasticsearch as a dict (from the raw JSON).
@@ -1467,6 +1462,96 @@ class JobExecution(models.Model):
                 d += '<div class="%s">%s</div>\n' % (cls, django.utils.html.escape(h['_source']['message']))
             return d, last_modified
         return '\n'.join(h['_source']['message'] for h in valid_hits), last_modified
+
+    def get_post_task_id(self):
+        """Gets the post-task ID for this job execution. This call is only valid after the job execution has been
+        scheduled (is no longer queued) and if this is not a system job type.
+
+        :returns: The post-task ID for the job execution
+        :rtype: string
+
+        :raises Exception: If the job execution is still queued or is a system job type
+        """
+
+        if self.is_system:
+            raise Exception('System jobs do not have a post-task')
+
+        return '%s_post' % self.get_cluster_id()
+
+    def get_pre_task_id(self):
+        """Gets the pre-task ID for this job execution. This call is only valid after the job execution has been
+        scheduled (is no longer queued) and if this is not a system job type.
+
+        :returns: The pre-task ID for the job execution
+        :rtype: string
+
+        :raises Exception: If the job execution is still queued or is a system job type
+        """
+
+        if self.is_system:
+            raise Exception('System jobs do not have a pre-task')
+
+        return '%s_pre' % self.get_cluster_id()
+
+    def is_docker_privileged(self):
+        """Indicates whether this job execution uses Docker in privileged mode
+
+        :returns: True if this job execution uses Docker in privileged mode, False otherwise
+        :rtype: bool
+        """
+
+        return self.job.job_type.docker_privileged
+
+    @property
+    def is_finished(self):
+        """Indicates if this job execution has completed (success or failure)
+
+        :returns: True if the job execution is in an final state, False otherwise
+        :rtype: bool
+        """
+        return self.status in ['FAILED', 'COMPLETED', 'CANCELED']
+
+    @property
+    def is_system(self):
+        """Indicates whether this job execution is for a system job
+
+        :returns: True if this job execution is for a system job, False otherwise
+        :rtype: bool
+        """
+
+        return self.job.job_type.is_system
+
+    def is_timed_out(self, when):
+        """Indicates whether this job execution is timed out based on the given current time
+
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
+        :returns: True if this job execution is for a system job, False otherwise
+        :rtype: bool
+        """
+
+        running_with_timeout_set = self.status == 'RUNNING' and self.timeout
+        timeout_exceeded = self.started + datetime.timedelta(seconds=self.timeout) < when
+        return running_with_timeout_set and timeout_exceeded
+
+    def set_cluster_id(self, framework_id):
+        """Sets the unique cluster ID for this job execution
+
+        :param framework_id: The scheduling framework ID
+        :type framework_id: string
+        """
+
+        # Cluster ID is created from framework ID and job execution ID
+        self.cluster_id = 'scale_%s_%d' % (framework_id, self.pk)
+
+    def uses_docker(self):
+        """Indicates whether this job execution uses Docker
+
+        :returns: True if this job execution uses Docker, False otherwise
+        :rtype: bool
+        """
+
+        return self.job.job_type.uses_docker
 
     class Meta(object):
         """Meta information for the database"""
