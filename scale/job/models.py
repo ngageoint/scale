@@ -1406,12 +1406,15 @@ class JobExecution(models.Model):
         :rtype: tuple of (dict, :class:`datetime.datetime`) with the results or None and the last modified timestamp
         """
 
+        if self.status == 'QUEUED':
+            return None, util.parse.datetime.datetime.utcnow()
+
         q = {
                 'size': 10000,
                 'query': {
                     'bool': {
                         'must': [
-                            {'match': {'scale_job_exe': 'scale_%d' % self.pk}}
+                            {'match': {'scale_job_exe': self.get_cluster_id()}}
                         ]
                     }
                 },
