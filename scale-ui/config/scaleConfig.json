@@ -1,6 +1,5 @@
 {
     "scaleConfig": {
-        "majorVersion": 3,
         "colors": {
             "emo_1": "#556270",
             "emo_2": "#4ecdc4",
@@ -200,10 +199,8 @@
         "activityIconCode": "f110",
 
         "urls": {
-            "apiPrefix": "/api/",
-            "overrides": {
-                "ingests": "/api/"
-            },
+            "apiPrefix": "/api/v4/",
+            "overrides": {},
             "documentation": "/docs"
         },
 

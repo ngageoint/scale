@@ -9,9 +9,10 @@ import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
+import util.rest as rest_util
 from recipe.handlers.graph import RecipeGraph
 from recipe.handlers.graph_delta import RecipeGraphDelta
-from recipe.models import RecipeType
+from recipe.models import RecipeJob, RecipeType
 from rest_framework import status
 
 
@@ -27,16 +28,15 @@ class TestRecipeTypesView(TransactionTestCase):
 
     def test_list_all(self):
         """Tests getting a list of recipe types."""
-        url = '/recipe-types/'
+        url = rest_util.get_url('/recipe-types/')
         response = self.client.generic('GET', url)
-        results = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        results = json.loads(response.content)
         self.assertEqual(len(results['results']), 2)
 
     def test_create(self):
         """Tests creating a new recipe type."""
-        url = '/recipe-types/'
         json_data = {
             'name': 'recipe-type-post-test',
             'version': '1.0.0',
@@ -53,18 +53,18 @@ class TestRecipeTypesView(TransactionTestCase):
             }
         }
 
+        url = rest_util.get_url('/recipe-types/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        results = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
 
         recipe_type = RecipeType.objects.filter(name='recipe-type-post-test').first()
 
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        results = json.loads(response.content)
         self.assertEqual(results['id'], recipe_type.id)
         self.assertIsNone(results['trigger_rule'])
 
     def test_create_trigger(self):
         """Tests creating a new recipe type with a trigger rule."""
-        url = '/recipe-types/'
         json_data = {
             'name': 'recipe-type-post-test',
             'version': '1.0.0',
@@ -96,28 +96,29 @@ class TestRecipeTypesView(TransactionTestCase):
             }
         }
 
+        url = rest_util.get_url('/recipe-types/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        results = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
 
         recipe_type = RecipeType.objects.filter(name='recipe-type-post-test').first()
 
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        results = json.loads(response.content)
         self.assertEqual(results['id'], recipe_type.id)
         self.assertEqual(results['trigger_rule']['type'], 'PARSE')
 
     def test_create_bad_param(self):
         """Tests creating a new recipe type with missing fields."""
-        url = '/recipe-types/'
         json_data = {
             'name': 'recipe-type-post-test',
         }
 
+        url = rest_util.get_url('/recipe-types/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_create_bad_job(self):
         """Tests creating a new recipe type with an invalid job relationship."""
-        url = '/recipe-types/'
         json_data = {
             'name': 'recipe-type-post-test',
             'version': '1.0.0',
@@ -135,12 +136,13 @@ class TestRecipeTypesView(TransactionTestCase):
             }
         }
 
+        url = rest_util.get_url('/recipe-types/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_create_bad_trigger_type(self):
         """Tests creating a new recipe type with an invalid trigger type."""
-        url = '/recipe-types/'
         json_data = {
             'name': 'recipe-type-post-test',
             'version': '1.0.0',
@@ -159,13 +161,13 @@ class TestRecipeTypesView(TransactionTestCase):
             }
         }
 
+        url = rest_util.get_url('/recipe-types/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_create_bad_trigger_config(self):
         """Tests creating a new recipe type with an invalid trigger rule configuration."""
-        url = '/recipe-types/'
         json_data = {
             'name': 'recipe-type-post-test',
             'version': '1.0.0',
@@ -187,9 +189,10 @@ class TestRecipeTypesView(TransactionTestCase):
             }
         }
 
+        url = rest_util.get_url('/recipe-types/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 
 class TestRecipeTypeDetailsView(TransactionTestCase):
@@ -238,18 +241,18 @@ class TestRecipeTypeDetailsView(TransactionTestCase):
     def test_not_found(self):
         """Tests calling the recipe type details view with an id that does not exist."""
 
-        url = '/recipe-types/100/'
+        url = rest_util.get_url('/recipe-types/100/')
         response = self.client.get(url)
 
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
     def test_successful(self):
         """Tests successfully calling the recipe type details view."""
 
-        url = '/recipe-types/%d/' % self.recipe_type.id
+        url = rest_util.get_url('/recipe-types/%d/' % self.recipe_type.id)
         response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
         result = json.loads(response.content)
         self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
         self.assertEqual(result['id'], self.recipe_type.id)
@@ -263,15 +266,16 @@ class TestRecipeTypeDetailsView(TransactionTestCase):
     def test_edit_simple(self):
         """Tests editing only the basic attributes of a recipe type"""
 
-        url = '/recipe-types/%d/' % self.recipe_type.id
         json_data = {
             'title': 'Title EDIT',
             'description': 'Description EDIT',
         }
-        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
-        result = json.loads(response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        url = rest_util.get_url('/recipe-types/%d/' % self.recipe_type.id)
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
         self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
         self.assertEqual(result['id'], self.recipe_type.id)
         self.assertEqual(result['title'], 'Title EDIT')
@@ -292,14 +296,15 @@ class TestRecipeTypeDetailsView(TransactionTestCase):
             'media_types': ['text/plain'],
         }]
 
-        url = '/recipe-types/%d/' % self.recipe_type.id
         json_data = {
             'definition': definition,
         }
-        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
-        result = json.loads(response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        url = rest_util.get_url('/recipe-types/%d/' % self.recipe_type.id)
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
         self.assertEqual(result['id'], self.recipe_type.id)
         self.assertEqual(result['title'], self.recipe_type.title)
         self.assertEqual(result['revision_num'], 2)
@@ -312,17 +317,18 @@ class TestRecipeTypeDetailsView(TransactionTestCase):
         trigger_config = self.trigger_config.copy()
         trigger_config['condition']['media_type'] = 'application/json'
 
-        url = '/recipe-types/%d/' % self.recipe_type.id
         json_data = {
             'trigger_rule': {
                 'type': 'PARSE',
                 'configuration': trigger_config,
             }
         }
-        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
-        result = json.loads(response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        url = rest_util.get_url('/recipe-types/%d/' % self.recipe_type.id)
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
         self.assertEqual(result['id'], self.recipe_type.id)
         self.assertEqual(result['title'], self.recipe_type.title)
         self.assertEqual(result['revision_num'], 1)
@@ -335,16 +341,17 @@ class TestRecipeTypeDetailsView(TransactionTestCase):
         trigger_config = self.trigger_config.copy()
         trigger_config['condition']['media_type'] = 'application/json'
 
-        url = '/recipe-types/%d/' % self.recipe_type.id
         json_data = {
             'trigger_rule': {
                 'is_active': False,
             }
         }
-        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
-        result = json.loads(response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        url = rest_util.get_url('/recipe-types/%d/' % self.recipe_type.id)
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
         self.assertEqual(result['id'], self.recipe_type.id)
         self.assertEqual(result['title'], self.recipe_type.title)
         self.assertEqual(result['revision_num'], 1)
@@ -353,14 +360,15 @@ class TestRecipeTypeDetailsView(TransactionTestCase):
 
     def test_edit_trigger_rule_remove(self):
         """Tests removing the trigger rule from a recipe type"""
-        url = '/recipe-types/%d/' % self.recipe_type.id
         json_data = {
             'trigger_rule': None,
         }
-        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
-        result = json.loads(response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        url = rest_util.get_url('/recipe-types/%d/' % self.recipe_type.id)
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
         self.assertEqual(result['id'], self.recipe_type.id)
         self.assertEqual(result['title'], self.recipe_type.title)
         self.assertEqual(result['revision_num'], 1)
@@ -378,7 +386,6 @@ class TestRecipeTypeDetailsView(TransactionTestCase):
         trigger_config = self.trigger_config.copy()
         trigger_config['condition']['media_type'] = 'application/json'
 
-        url = '/recipe-types/%d/' % self.recipe_type.id
         json_data = {
             'definition': definition,
             'trigger_rule': {
@@ -386,10 +393,12 @@ class TestRecipeTypeDetailsView(TransactionTestCase):
                 'configuration': trigger_config,
             }
         }
-        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
-        result = json.loads(response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        url = rest_util.get_url('/recipe-types/%d/' % self.recipe_type.id)
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
         self.assertEqual(result['id'], self.recipe_type.id)
         self.assertEqual(result['title'], self.recipe_type.title)
         self.assertEqual(result['revision_num'], 2)
@@ -403,29 +412,31 @@ class TestRecipeTypeDetailsView(TransactionTestCase):
         definition = self.definition.copy()
         definition['version'] = 'BAD'
 
-        url = '/recipe-types/%d/' % self.recipe_type.id
         json_data = {
             'definition': definition,
         }
+
+        url = rest_util.get_url('/recipe-types/%d/' % self.recipe_type.id)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_edit_bad_trigger(self):
         """Tests attempting to edit a recipe type using an invalid trigger rule"""
         trigger_config = self.trigger_config.copy()
         trigger_config['version'] = 'BAD'
 
-        url = '/recipe-types/%d/' % self.recipe_type.id
         json_data = {
             'trigger_rule': {
                 'type': 'PARSE',
                 'configuration': trigger_config,
             }
         }
+
+        url = rest_util.get_url('/recipe-types/%d/' % self.recipe_type.id)
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 
 class TestRecipeTypesValidationView(TransactionTestCase):
@@ -439,7 +450,6 @@ class TestRecipeTypesValidationView(TransactionTestCase):
 
     def test_successful(self):
         """Tests validating a new recipe type."""
-        url = '/recipe-types/validation/'
         json_data = {
             'name': 'recipe-type-test',
             'version': '1.0.0',
@@ -456,15 +466,15 @@ class TestRecipeTypesValidationView(TransactionTestCase):
             }
         }
 
+        url = rest_util.get_url('/recipe-types/validation/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        results = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        results = json.loads(response.content)
         self.assertDictEqual(results, {'warnings': []}, 'JSON result was incorrect')
 
     def test_successful_trigger(self):
         """Tests validating a new recipe type with a trigger."""
-        url = '/recipe-types/validation/'
         json_data = {
             'name': 'recipe-type-test',
             'version': '1.0.0',
@@ -495,25 +505,26 @@ class TestRecipeTypesValidationView(TransactionTestCase):
             }
         }
 
+        url = rest_util.get_url('/recipe-types/validation/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        results = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        results = json.loads(response.content)
         self.assertDictEqual(results, {'warnings': []}, 'JSON result was incorrect')
 
     def test_bad_param(self):
         """Tests validating a new recipe type with missing fields."""
-        url = '/recipe-types/validation/'
         json_data = {
             'name': 'recipe-type-post-test',
         }
 
+        url = rest_util.get_url('/recipe-types/validation/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_bad_job(self):
         """Tests creating a new recipe type with an invalid job relationship."""
-        url = '/recipe-types/validation/'
         json_data = {
             'name': 'recipe-type-post-test',
             'version': '1.0.0',
@@ -531,8 +542,10 @@ class TestRecipeTypesValidationView(TransactionTestCase):
             }
         }
 
+        url = rest_util.get_url('/recipe-types/validation/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_warnings(self):
         """Tests creating a new recipe type with mismatched media type warnings."""
@@ -554,7 +567,6 @@ class TestRecipeTypesValidationView(TransactionTestCase):
         job_type1 = job_test_utils.create_job_type(interface=interface)
         job_type2 = job_test_utils.create_job_type()
 
-        url = '/recipe-types/validation/'
         json_data = {
             'name': 'recipe-type-post-test',
             'version': '1.0.0',
@@ -593,16 +605,17 @@ class TestRecipeTypesValidationView(TransactionTestCase):
             }
         }
 
+        url = rest_util.get_url('/recipe-types/validation/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
         results = json.loads(response.content)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(results['warnings']), 2)
         self.assertEqual(results['warnings'][0]['id'], 'media_type')
         self.assertEqual(results['warnings'][1]['id'], 'media_type')
 
     def test_bad_trigger_type(self):
         """Tests validating a new recipe type with an invalid trigger type."""
-        url = '/recipe-types/validation/'
         json_data = {
             'name': 'recipe-type-post-test',
             'version': '1.0.0',
@@ -621,13 +634,13 @@ class TestRecipeTypesValidationView(TransactionTestCase):
             }
         }
 
+        url = rest_util.get_url('/recipe-types/validation/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
     def test_bad_trigger_config(self):
         """Tests validating a new recipe type with an invalid trigger rule configuration."""
-        url = '/recipe-types/validation/'
         json_data = {
             'name': 'recipe-type-post-test',
             'version': '1.0.0',
@@ -649,9 +662,10 @@ class TestRecipeTypesValidationView(TransactionTestCase):
             }
         }
 
+        url = rest_util.get_url('/recipe-types/validation/')
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 
 class TestRecipesView(TransactionTestCase):
@@ -706,53 +720,53 @@ class TestRecipesView(TransactionTestCase):
     def test_successful_all(self):
         """Tests getting recipes"""
 
-        url = '/recipes/'
+        url = rest_util.get_url('/recipes/')
         response = self.client.generic('GET', url)
-        results = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        results = json.loads(response.content)
         self.assertEqual(results['count'], 2)
 
     def test_successful_type_name(self):
         """Tests getting recipes by type name"""
 
-        url = '/recipes/?type_name=my-type'
+        url = rest_util.get_url('/recipes/?type_name=my-type')
         response = self.client.generic('GET', url)
-        results = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        results = json.loads(response.content)
         self.assertEqual(results['count'], 1)
         self.assertEqual(results['results'][0]['recipe_type']['name'], 'my-type')
 
     def test_successful_type_id(self):
         """Tests getting recipes by type id"""
 
-        url = '/recipes/?type_id=%s' % self.recipe_type.id
+        url = rest_util.get_url('/recipes/?type_id=%s' % self.recipe_type.id)
         response = self.client.generic('GET', url)
-        results = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        results = json.loads(response.content)
         self.assertEqual(results['count'], 1)
         self.assertEqual(results['results'][0]['recipe_type']['id'], self.recipe_type.id)
 
     def test_successful_superseded(self):
         """Tests getting superseded recipes"""
 
-        url = '/recipes/?include_superseded=true'
+        url = rest_util.get_url('/recipes/?include_superseded=true')
         response = self.client.generic('GET', url)
-        results = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        results = json.loads(response.content)
         self.assertEqual(results['count'], 3)
 
     def test_successful_details(self):
         """Tests getting recipe details"""
 
-        url = '/recipes/%s/' % self.recipe1.id
+        url = rest_util.get_url('/recipes/%s/' % self.recipe1.id)
         response = self.client.generic('GET', url)
-        results = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        results = json.loads(response.content)
         self.assertEqual(results['id'], self.recipe1.id)
         self.assertEqual(results['recipe_type']['id'], self.recipe1.recipe_type.id)
         self.assertEqual(results['recipe_type_rev']['recipe_type']['id'], self.recipe1.recipe_type.id)
@@ -773,11 +787,11 @@ class TestRecipesView(TransactionTestCase):
         ).recipe
 
         # Make sure the original recipe was updated
-        url = '/recipes/%i/' % self.recipe1.id
+        url = rest_util.get_url('/recipes/%i/' % self.recipe1.id)
         response = self.client.generic('GET', url)
-        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = json.loads(response.content)
         self.assertTrue(result['is_superseded'])
         self.assertIsNone(result['root_superseded_recipe'])
         self.assertIsNotNone(result['superseded_by_recipe'])
@@ -788,11 +802,11 @@ class TestRecipesView(TransactionTestCase):
             self.assertTrue(recipe_job['is_original'])
 
         # Make sure the new recipe has the expected relations
-        url = '/recipes/%i/' % new_recipe.id
+        url = rest_util.get_url('/recipes/%i/' % new_recipe.id)
         response = self.client.generic('GET', url)
-        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = json.loads(response.content)
         self.assertFalse(result['is_superseded'])
         self.assertIsNotNone(result['root_superseded_recipe'])
         self.assertEqual(result['root_superseded_recipe']['id'], self.recipe1.id)
@@ -803,53 +817,247 @@ class TestRecipesView(TransactionTestCase):
         for recipe_job in result['jobs']:
             self.assertFalse(recipe_job['is_original'])
 
-    def test_reprocess_all_jobs(self):
+
+class TestRecipeDetailsView(TransactionTestCase):
+
+    def setUp(self):
+        django.setup()
+
+        self.job_type1 = job_test_utils.create_job_type()
+
+        definition = {
+            'version': '1.0',
+            'input_data': [{
+                'media_types': [
+                    'image/x-hdf5-image',
+                ],
+                'type': 'file',
+                'name': 'input_file',
+            }],
+            'jobs': [{
+                'job_type': {
+                    'name': self.job_type1.name,
+                    'version': self.job_type1.version,
+                },
+                'name': 'kml',
+                'recipe_inputs': [{
+                    'job_input': 'input_file',
+                    'recipe_input': 'input_file',
+                }],
+            }],
+        }
+
+        workspace1 = storage_test_utils.create_workspace()
+        file1 = storage_test_utils.create_file(workspace=workspace1)
+
+        data = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'input_file',
+                'file_id': file1.id,
+            }],
+            'workspace_id': workspace1.id,
+        }
+
+        self.recipe_type = recipe_test_utils.create_recipe_type(name='my-type', definition=definition)
+        recipe_handler = recipe_test_utils.create_recipe_handler(recipe_type=self.recipe_type, data=data)
+        self.recipe1 = recipe_handler.recipe
+        self.recipe1_jobs = recipe_handler.recipe_jobs
+
+    def test_successful(self):
+        """Tests getting recipe details"""
+
+        url = rest_util.get_url('/recipes/%i/' % self.recipe1.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(result['id'], self.recipe1.id)
+        self.assertEqual(result['recipe_type']['id'], self.recipe1.recipe_type.id)
+        self.assertEqual(result['recipe_type_rev']['recipe_type']['id'], self.recipe1.recipe_type.id)
+        self.assertDictEqual(result['jobs'][0]['job']['job_type_rev']['interface'], self.job_type1.interface)
+
+        self.assertEqual(len(result['inputs']), 1)
+        for data_input in result['inputs']:
+            self.assertIsNotNone(data_input['value'])
+
+    # TODO: API_V3 Remove this test
+    def test_successful_v3(self):
+        """Tests successfully calling the recipe details view under the legacy API."""
+
+        url = '/v3/recipes/%i/' % self.recipe1.id
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(result['id'], self.recipe1.id)
+        self.assertEqual(result['recipe_type']['id'], self.recipe1.recipe_type.id)
+        self.assertEqual(result['recipe_type_rev']['recipe_type']['id'], self.recipe1.recipe_type.id)
+        self.assertDictEqual(result['jobs'][0]['job']['job_type_rev']['interface'], self.job_type1.interface)
+        self.assertEqual(len(result['input_files']), 1)
+
+    def test_superseded(self):
+        """Tests successfully calling the recipe details view for superseded recipes."""
+
+        graph1 = RecipeGraph()
+        graph1.add_job('kml', self.job_type1.name, self.job_type1.version)
+        graph2 = RecipeGraph()
+        graph2.add_job('kml', self.job_type1.name, self.job_type1.version)
+        delta = RecipeGraphDelta(graph1, graph2)
+
+        superseded_jobs = {recipe_job.job_name: recipe_job.job for recipe_job in self.recipe1_jobs}
+        new_recipe = recipe_test_utils.create_recipe_handler(
+            recipe_type=self.recipe_type, superseded_recipe=self.recipe1, delta=delta, superseded_jobs=superseded_jobs
+        ).recipe
+
+        # Make sure the original recipe was updated
+        url = rest_util.get_url('/recipes/%i/' % self.recipe1.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertTrue(result['is_superseded'])
+        self.assertIsNone(result['root_superseded_recipe'])
+        self.assertIsNotNone(result['superseded_by_recipe'])
+        self.assertEqual(result['superseded_by_recipe']['id'], new_recipe.id)
+        self.assertIsNotNone(result['superseded'])
+        self.assertEqual(len(result['jobs']), 1)
+        for recipe_job in result['jobs']:
+            self.assertTrue(recipe_job['is_original'])
+
+        # Make sure the new recipe has the expected relations
+        url = rest_util.get_url('/recipes/%i/' % new_recipe.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertFalse(result['is_superseded'])
+        self.assertIsNotNone(result['root_superseded_recipe'])
+        self.assertEqual(result['root_superseded_recipe']['id'], self.recipe1.id)
+        self.assertIsNotNone(result['superseded_recipe'])
+        self.assertEqual(result['superseded_recipe']['id'], self.recipe1.id)
+        self.assertIsNone(result['superseded'])
+        self.assertEqual(len(result['jobs']), 1)
+        for recipe_job in result['jobs']:
+            self.assertFalse(recipe_job['is_original'])
+
+
+class TestRecipeReprocessView(TransactionTestCase):
+
+    def setUp(self):
+        django.setup()
+
+        self.job_type1 = job_test_utils.create_job_type()
+
+        definition = {
+            'version': '1.0',
+            'input_data': [{
+                'media_types': [
+                    'image/x-hdf5-image',
+                ],
+                'type': 'file',
+                'name': 'input_file',
+            }],
+            'jobs': [{
+                'job_type': {
+                    'name': self.job_type1.name,
+                    'version': self.job_type1.version,
+                },
+                'name': 'kml',
+                'recipe_inputs': [{
+                    'job_input': 'input_file',
+                    'recipe_input': 'input_file',
+                }],
+            }],
+        }
+
+        workspace1 = storage_test_utils.create_workspace()
+        file1 = storage_test_utils.create_file(workspace=workspace1)
+
+        data = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'input_file',
+                'file_id': file1.id,
+            }],
+            'workspace_id': workspace1.id,
+        }
+
+        self.recipe_type = recipe_test_utils.create_recipe_type(name='my-type', definition=definition)
+        recipe_handler = recipe_test_utils.create_recipe_handler(recipe_type=self.recipe_type, data=data)
+        self.recipe1 = recipe_handler.recipe
+        self.recipe1_jobs = recipe_handler.recipe_jobs
+
+    def test_all_jobs(self):
         """Tests reprocessing all jobs in an existing recipe"""
 
-        url = '/recipes/%i/reprocess/' % self.recipe1.id
         json_data = {
             'all_jobs': True,
         }
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        results = json.loads(response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        url = rest_util.get_url('/recipes/%i/reprocess/' % self.recipe1.id)
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        results = json.loads(response.content)
         self.assertNotEqual(results['id'], self.recipe1.id)
         self.assertEqual(results['recipe_type']['id'], self.recipe1.recipe_type.id)
 
-    def test_reprocess_job(self):
+    def test_job(self):
         """Tests reprocessing one job in an existing recipe"""
 
-        url = '/recipes/%i/reprocess/' % self.recipe1.id
         json_data = {
             'job_names': ['kml'],
         }
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
-        results = json.loads(response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        url = rest_util.get_url('/recipes/%i/reprocess/' % self.recipe1.id)
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        results = json.loads(response.content)
         self.assertNotEqual(results['id'], self.recipe1.id)
         self.assertEqual(results['recipe_type']['id'], self.recipe1.recipe_type.id)
 
-    def test_reprocess_no_changes(self):
+    def test_priority(self):
+        """Tests reprocessing all jobs in an existing recipe with a priority override"""
+
+        json_data = {
+            'all_jobs': True,
+            'priority': 1111,
+        }
+
+        url = rest_util.get_url('/recipes/%i/reprocess/' % self.recipe1.id)
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        results = json.loads(response.content)
+        self.assertNotEqual(results['id'], self.recipe1.id)
+        self.assertEqual(results['recipe_type']['id'], self.recipe1.recipe_type.id)
+
+        recipe_job_1 = RecipeJob.objects.get(recipe_id=results['id'], job_name='kml')
+        self.assertEqual(recipe_job_1.job.priority, 1111)
+
+    def test_no_changes(self):
         """Tests reprocessing a recipe that has not changed without specifying any jobs throws an error."""
 
-        url = '/recipes/%i/reprocess/' % self.recipe1.id
         json_data = {}
+
+        url = rest_util.get_url('/recipes/%i/reprocess/' % self.recipe1.id)
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
-    def test_reprocess_superseded(self):
+    def test_superseded(self):
         """Tests reprocessing a recipe that is already superseded throws an error."""
 
         self.recipe1.is_superseded = True
         self.recipe1.save()
 
-        url = '/recipes/%i/reprocess/' % self.recipe1.id
         json_data = {
             'all_jobs': True,
         }
+
+        url = rest_util.get_url('/recipes/%i/reprocess/' % self.recipe1.id)
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)

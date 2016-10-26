@@ -228,7 +228,6 @@ class JobDetailsOutputSerializer(JobDetailsInputSerializer):
 class JobDetailsSerializer(JobSerializer):
     """Converts job model and related fields to REST output."""
     from error.serializers import ErrorSerializer
-    from storage.serializers import ScaleFileBaseSerializer
     from trigger.serializers import TriggerEventDetailsSerializer
 
     job_type = JobTypeSerializer()
@@ -256,10 +255,13 @@ class JobDetailsSerializer(JobSerializer):
     inputs = JobDetailsInputSerializer(many=True)
     outputs = JobDetailsOutputSerializer(many=True)
 
-    # TODO Remove this attribute once the UI migrates to "inputs"
-    input_files = ScaleFileBaseSerializer(many=True)
 
-    # TODO Remove this attribute once the UI migrates to "outputs"
+# TODO: API_V3 Remove this serializer
+class JobDetailsSerializerV3(JobDetailsSerializer):
+    """Converts job model and related fields to REST output."""
+    from storage.serializers import ScaleFileBaseSerializer
+
+    input_files = ScaleFileBaseSerializer(many=True)
     try:
         from product.serializers import ProductFileBaseSerializer
         products = ProductFileBaseSerializer(many=True)

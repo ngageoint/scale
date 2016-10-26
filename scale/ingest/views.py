@@ -4,11 +4,11 @@ from __future__ import unicode_literals
 import datetime
 import logging
 
-import django.core.urlresolvers as urlresolvers
 import rest_framework.status as status
 from django.http.response import Http404
 from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView, RetrieveAPIView
 from rest_framework.response import Response
+from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
 import util.rest as rest_util
@@ -166,7 +166,7 @@ class StrikesView(ListCreateAPIView):
             raise Http404
 
         serializer = StrikeDetailsSerializer(strike)
-        strike_url = urlresolvers.reverse('strike_details_view', args=[strike.id])
+        strike_url = reverse('strike_details_view', args=[strike.id], request=request)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=strike_url))
 
 

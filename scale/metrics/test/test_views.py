@@ -8,6 +8,7 @@ from rest_framework import status
 
 import job.test.utils as job_test_utils
 import metrics.test.utils as metrics_test_utils
+import util.rest as rest_util
 
 
 class TestMetricsView(TestCase):
@@ -18,11 +19,11 @@ class TestMetricsView(TestCase):
     def test_successful(self):
         """Tests successfully calling the metrics view."""
 
-        url = '/metrics/'
+        url = rest_util.get_url('/metrics/')
         response = self.client.generic('GET', url)
-        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = json.loads(response.content)
         self.assertGreaterEqual(len(result['results']), 1)
         for entry in result['results']:
             if entry['name'] == 'job-types':
@@ -41,12 +42,11 @@ class TestMetricDetailsView(TestCase):
     def test_successful(self):
         """Tests successfully calling the metric details view."""
 
-        url = '/metrics/job-types/'
+        url = rest_util.get_url('/metrics/job-types/')
         response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
         result = json.loads(response.content)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
         self.assertEqual(result['name'], 'job-types')
         self.assertGreaterEqual(len(result['groups']), 1)
         self.assertGreaterEqual(len(result['columns']), 1)
@@ -72,11 +72,11 @@ class TestMetricPlotView(TestCase):
     def test_successful(self):
         """Tests successfully calling the metric plot view."""
 
-        url = '/metrics/job-types/plot-data/'
+        url = rest_util.get_url('/metrics/job-types/plot-data/')
         response = self.client.generic('GET', url)
-        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = json.loads(response.content)
         self.assertGreaterEqual(len(result['results']), 1)
 
         for entry in result['results']:
@@ -92,11 +92,12 @@ class TestMetricPlotView(TestCase):
     def test_choices(self):
         """Tests successfully calling the metric plot view with choice filters."""
 
-        url = '/metrics/job-types/plot-data/?choice_id=%s&choice_id=%s' % (self.job_type1.id, self.job_type2.id)
+        url = rest_util.get_url('/metrics/job-types/plot-data/?choice_id=%s&choice_id=%s' % (self.job_type1.id,
+                                                                                             self.job_type2.id))
         response = self.client.generic('GET', url)
-        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = json.loads(response.content)
         self.assertGreaterEqual(len(result['results']), 1)
 
         job_type_ids = [self.job_type1.id, self.job_type2.id]
@@ -113,67 +114,63 @@ class TestMetricPlotView(TestCase):
     def test_columns(self):
         """Tests successfully calling the metric plot view with column filters."""
 
-        url = '/metrics/job-types/plot-data/?column=completed_count&column=failed_count'
+        url = rest_util.get_url('/metrics/job-types/plot-data/?column=completed_count&column=failed_count')
         response = self.client.generic('GET', url)
-        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = json.loads(response.content)
         self.assertEqual(len(result['results']), 2)
 
     def test_groups(self):
         """Tests successfully calling the metric plot view with group filters."""
 
-        url = '/metrics/job-types/plot-data/?group=overview'
+        url = rest_util.get_url('/metrics/job-types/plot-data/?group=overview')
         response = self.client.generic('GET', url)
-        result = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        result = json.loads(response.content)
         self.assertEqual(len(result['results']), 4)
 
     def test_aggregate_sum(self):
         """Tests successfully calling the metric plot view using a sum aggregate."""
 
-        url = '/metrics/job-types/plot-data/?column=job_time_sum'
+        url = rest_util.get_url('/metrics/job-types/plot-data/?column=job_time_sum')
         response = self.client.generic('GET', url)
-        result = json.loads(response.content)
-
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-        self.assertEqual(len(result['results']), 1)
 
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['values'][0]['value'], 1320)
 
     def test_aggregate_min(self):
         """Tests successfully calling the metric plot view using a minimum aggregate."""
 
-        url = '/metrics/job-types/plot-data/?column=job_time_min'
+        url = rest_util.get_url('/metrics/job-types/plot-data/?column=job_time_min')
         response = self.client.generic('GET', url)
-        result = json.loads(response.content)
-
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-        self.assertEqual(len(result['results']), 1)
 
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['values'][0]['value'], 20)
 
     def test_aggregate_max(self):
         """Tests successfully calling the metric plot view using a maximum aggregate."""
 
-        url = '/metrics/job-types/plot-data/?column=job_time_max'
+        url = rest_util.get_url('/metrics/job-types/plot-data/?column=job_time_max')
         response = self.client.generic('GET', url)
-        result = json.loads(response.content)
-
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-        self.assertEqual(len(result['results']), 1)
 
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['values'][0]['value'], 1000)
 
     def test_aggregate_avg(self):
         """Tests successfully calling the metric plot view using an average aggregate."""
 
-        url = '/metrics/job-types/plot-data/?column=job_time_avg'
+        url = rest_util.get_url('/metrics/job-types/plot-data/?column=job_time_avg')
         response = self.client.generic('GET', url)
-        result = json.loads(response.content)
-
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-        self.assertEqual(len(result['results']), 1)
 
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['values'][0]['value'], 330)

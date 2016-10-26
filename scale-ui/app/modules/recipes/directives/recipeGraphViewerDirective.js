@@ -4,7 +4,7 @@
 (function () {
     angular.module('scaleApp').controller('aisScaleRecipeGraphViewerController', function ($rootScope, $scope, $location, $uibModal, scaleConfig, scaleService, jobTypeService, recipeService, workspacesService, RecipeType, RecipeTypeDetail, JobType, localStorage) {
         var vm = this;
-        
+
         vm.vertices = [];
         vm.edges = [];
         vm.selectedJob = null;
@@ -417,7 +417,7 @@
                 if (validationResult.warnings && validationResult.warnings.length > 0) {
                     // display the warnings
                     var warningsHtml = getWarningsHtml(validationResult.warnings);
-                    toastr["error"](warningsHtml);
+                    toastr["warning"](warningsHtml);
                 } else {
                     toastr["success"]('Recipe is valid.');
                 }
@@ -438,20 +438,19 @@
                 if (validationResult.warnings && validationResult.warnings.length > 0) {
                     // display the warnings
                     var warningsHtml = getWarningsHtml(validationResult.warnings);
-                    toastr["error"](warningsHtml);
+                    toastr["warning"](warningsHtml);
                     vm.savingRecipe = false;
-                } else {
-                    recipeService.saveRecipeType($scope.recipeType).then(function (saveResult) {
-                        vm.savingRecipe = false;
-                        $scope.recipeType = RecipeTypeDetail.transformer(saveResult);
-                        if (scaleConfig.static) {
-                            console.log(JSON.stringify($scope.recipeType));
-                            localStorage.setItem('recipeType' + $scope.recipeType.id, JSON.stringify($scope.recipeType));
-                        }
-                        vm.redraw();
-                        $location.path('/recipes/types/' + $scope.recipeType.id);
-                    });
                 }
+                recipeService.saveRecipeType($scope.recipeType).then(function (saveResult) {
+                    vm.savingRecipe = false;
+                    $scope.recipeType = RecipeTypeDetail.transformer(saveResult);
+                    if (scaleConfig.static) {
+                        console.log(JSON.stringify($scope.recipeType));
+                        localStorage.setItem('recipeType' + $scope.recipeType.id, JSON.stringify($scope.recipeType));
+                    }
+                    vm.redraw();
+                    $location.path('/recipes/types/' + $scope.recipeType.id);
+                });
             }).catch(function (error) {
                 if (error && error.detail) {
                     toastr['error'](error.detail);
@@ -670,7 +669,7 @@
                 _.forEach($scope.recipeType.definition.jobs, function (job) {
                     // populate the current jobType
                     /*var thisJobType = _.find($scope.recipeType.job_types,{id: job.job_type_id});
-                    job.job_type = thisJobType;*/
+                     job.job_type = thisJobType;*/
 
                     // find dependents
                     if (job.job_type && job.job_type.job_type_interface) {
@@ -788,7 +787,7 @@
             zoom = d3.behavior.zoom().on("zoom", function () {
                 zoomScale = d3.event.scale;
                 inner.attr("transform", "translate(" + d3.event.translate + ")" +
-                    "scale(" + zoomScale + ")");
+                  "scale(" + zoomScale + ")");
             });
             svg.call(zoom);
 

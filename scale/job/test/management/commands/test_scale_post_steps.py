@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import django
 from django.db.utils import DatabaseError, OperationalError
+from django.contrib.gis.geos import GEOSException
 from django.utils.timezone import now
 from django.test import TestCase
 from mock import patch
