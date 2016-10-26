@@ -1026,7 +1026,7 @@ class JobExecutionManager(models.Manager):
             job_exe.status = 'RUNNING'
             job_exe.started = started
             job_exe.node = node
-            job_exe.configure_docker_params(framework_id, workspaces)
+            job_exe.configure_docker_params(workspaces)
             job_exe.environment = JobEnvironment({}).get_dict()
             job_exe.cpus_scheduled = resources.cpus
             job_exe.mem_scheduled = resources.mem
@@ -1239,14 +1239,15 @@ class JobExecution(models.Model):
         # Job execution ID is the second-to-last segment
         return int(task_id.split('_')[-2])
 
-    def configure_docker_params(self, framework_id, workspaces):
-        """Configures the Docker parameters needed for each task in the execution. Requires workspace information to
-        determine any Docker parameters that might be required by this job execution's workspaces.
+    def configure_docker_params(self, workspaces):
+        """Configures the Docker parameters needed for each task in the execution. The job execution must have been set
+        to status RUNNING prior to invoking this. Requires workspace information to determine any Docker parameters that
+        might be required by this job execution's workspaces.
 
-        :param framework_id: The scheduling framework ID
-        :type framework_id: string
         :param workspaces: A dict of all workspaces stored by name
         :type workspaces: {string: :class:`storage.models.Workspace`}
+
+        :raises Exception: If the job execution is still queued
         """
 
         configuration = self.get_job_configuration()
@@ -1276,8 +1277,8 @@ class JobExecution(models.Model):
 
         if not self.is_system:
             # Non-system jobs get named Docker volumes for input and output data
-            input_vol_name = job_exe_container.get_job_exe_input_vol_name(framework_id, self.id)
-            output_vol_name = job_exe_container.get_job_exe_output_vol_name(framework_id, self.id)
+            input_vol_name = job_exe_container.get_job_exe_input_vol_name(self)
+            output_vol_name = job_exe_container.get_job_exe_output_vol_name(self)
             input_volume_ro = '%s:%s:ro' % (input_vol_name, SCALE_JOB_EXE_INPUT_PATH)
             input_volume_rw = '%s:%s:rw' % (input_vol_name, SCALE_JOB_EXE_INPUT_PATH)
             output_volume_ro = '%s:%s:ro' % (output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH)
@@ -1296,7 +1297,7 @@ class JobExecution(models.Model):
             configuration.add_job_task_workspace(workspace_name, MODE_RW)
 
         # Configure any Docker parameters needed for workspaces
-        configuration.configure_workspace_docker_params(framework_id, self.id, workspaces)
+        configuration.configure_workspace_docker_params(self, workspaces)
 
         self.configuration = configuration.get_dict()
 

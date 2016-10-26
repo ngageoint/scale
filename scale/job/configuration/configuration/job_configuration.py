@@ -223,21 +223,21 @@ class JobConfiguration(object):
             raise InvalidJobConfiguration('Duplicate workspace %s in pre task' % name)
         self._configuration['pre_task']['workspaces'].append({'name': name, 'mode': mode})
 
-    def configure_workspace_docker_params(self, framework_id, job_exe_id, workspaces):
-        """Configures the Docker parameters needed for each workspace in the job execution tasks
+    def configure_workspace_docker_params(self, job_exe, workspaces):
+        """Configures the Docker parameters needed for each workspace in the job execution tasks. The given job
+        execution must have been set to RUNNING status.
 
-        :param framework_id: The scheduling framework ID
-        :type framework_id: string
-        :param job_exe_id: The job execution ID
-        :type job_exe_id: int
+        :param job_exe: The job execution model (must not be queued) with related job and job_type fields
+        :type job_exe: :class:`job.models.JobExecution`
         :param workspaces: A dict of all workspaces stored by name
         :type workspaces: {string: :class:`storage.models.Workspace`}
+
+        :raises Exception: If the job execution is still queued
         """
 
         # Configure pre-task workspaces, any that need volumes will have them created
         created_workspaces = set()
-        for param in self._get_workspace_docker_params(framework_id, job_exe_id, self.get_pre_task_workspaces(),
-                                                       workspaces, True):
+        for param in self._get_workspace_docker_params(job_exe, self.get_pre_task_workspaces(), workspaces, True):
             self.add_pre_task_docker_param(param)
         for task_workspace in self.get_pre_task_workspaces():
             created_workspaces.add(task_workspace.name)
@@ -251,11 +251,9 @@ class JobConfiguration(object):
             else:
                 workspaces_not_created.append(task_workspace)
                 created_workspaces.add(task_workspace.name)
-        for param in self._get_workspace_docker_params(framework_id, job_exe_id, workspaces_already_created, workspaces,
-                                                       False):
+        for param in self._get_workspace_docker_params(job_exe, workspaces_already_created, workspaces, False):
             self.add_job_task_docker_param(param)
-        for param in self._get_workspace_docker_params(framework_id, job_exe_id, workspaces_not_created, workspaces,
-                                                       True):
+        for param in self._get_workspace_docker_params(job_exe, workspaces_not_created, workspaces, True):
             self.add_job_task_docker_param(param)
 
         # Configure post-task workspaces, creating any volumes that were not created in a previous task
@@ -267,18 +265,18 @@ class JobConfiguration(object):
             else:
                 workspaces_not_created.append(task_workspace)
                 created_workspaces.add(task_workspace.name)
-        for param in self._get_workspace_docker_params(framework_id, job_exe_id, workspaces_already_created, workspaces,
-                                                       False):
+        for param in self._get_workspace_docker_params(job_exe, workspaces_already_created, workspaces, False):
             self.add_post_task_docker_param(param)
-        for param in self._get_workspace_docker_params(framework_id, job_exe_id, workspaces_not_created, workspaces,
-                                                       True):
+        for param in self._get_workspace_docker_params(job_exe, workspaces_not_created, workspaces, True):
             self.add_post_task_docker_param(param)
 
     def configure_logging_docker_params(self, job_exe):
         """Configures the Docker parameters needed for job execution logging
-         
-        :param job_exe: The job execution model with related job and job_type fields
+
+        :param job_exe: The job execution model (must not be queued) with related job and job_type fields
         :type job_exe: :class:`job.models.JobExecution`
+
+        :raises Exception: If the job execution is still queued
         """
 
         es_urls = None
@@ -370,13 +368,11 @@ class JobConfiguration(object):
 
         return self._configuration
 
-    def _get_workspace_docker_params(self, framework_id, job_exe_id, task_workspaces, workspaces, volume_create):
+    def _get_workspace_docker_params(self, job_exe, task_workspaces, workspaces, volume_create):
         """Returns the Docker parameters needed for the given task workspaces
 
-        :param framework_id: The scheduling framework ID
-        :type framework_id: string
-        :param job_exe_id: The job execution ID
-        :type job_exe_id: int
+        :param job_exe: The job execution model (must not be queued) with related job and job_type fields
+        :type job_exe: :class:`job.models.JobExecution`
         :param task_workspaces: List of the task workspaces
         :type task_workspaces: [:class:`job.configuration.configuration.job_configuration.TaskWorkspace`]
         :param workspaces: A dict of all workspaces stored by name
@@ -385,6 +381,8 @@ class JobConfiguration(object):
         :type volume_create: bool
         :returns: The Docker parameters needed by the given workspaces
         :rtype: [:class:`job.configuration.configuration.job_configuration.DockerParam`]
+
+        :raises Exception: If the job execution is still queued
         """
 
         params = []
@@ -401,11 +399,11 @@ class JobConfiguration(object):
                     elif volume_create:
                         # Create job_exe workspace volume for first time
                         volume_create_cmd = '$(docker volume create --driver=%s --name=%s %s)'
-                        volume_name = get_workspace_volume_name(framework_id, job_exe_id, name)
+                        volume_name = get_workspace_volume_name(job_exe, name)
                         volume_name = volume_create_cmd % (vol.driver, volume_name, vol.remote_path)
                     else:
                         # Volume already created, re-use name
-                        volume_name = get_workspace_volume_name(framework_id, job_exe_id, name)
+                        volume_name = get_workspace_volume_name(job_exe, name)
                     workspace_volume = '%s:%s:%s' % (volume_name, get_workspace_volume_path(name), mode)
                     params.append(DockerParam('volume', workspace_volume))
         return params
