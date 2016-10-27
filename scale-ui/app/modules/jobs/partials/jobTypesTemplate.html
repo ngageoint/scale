@@ -4,12 +4,12 @@
         <div class="master-content">
             <div class="master-controls">
                 <div class="pull-right">
-                    <switch id="hide-rd" name="hide-rd" ng-model="vm.jobTypesParams.hide_rd" class="green"></switch> <span class="switch-label ">Hide R&D</span>
+                    <switch id="show-rd" name="show-rd" ng-model="vm.jobTypesParams.show_rd" class="green"></switch> <span class="switch-label ">Show R&D</span>
                 </div>
             </div>
             <ul class="list-unstyled">
-                <li ng-repeat="jobType in vm.jobTypes" ng-class="{ active: vm.activeJobType.id === jobType.id }" ng-show="jobType.is_operational || !vm.jobTypesParams.hide_rd" ng-click="vm.viewDetails(jobType.id)">
-                    <span ng-bind-html="jobType.getIcon()"></span> {{ jobType.title + ' ' + jobType.version }} <span class="label paused" ng-show="jobType.is_paused">PAUSED</span>
+                <li ng-repeat="jobType in vm.jobTypes" ng-class="{ active: vm.activeJobType.id === jobType.id }" ng-show="jobType.is_operational || vm.jobTypesParams.show_rd" ng-click="vm.viewDetails(jobType.id)">
+                    <span ng-bind-html="jobType.getIcon()"></span> {{ jobType.title + ' ' + jobType.version }} {{vm.jobTypesParams.show_rd}}<span class="label paused" ng-show="jobType.is_paused">PAUSED</span>
                 </li>
             </ul>
         </div>

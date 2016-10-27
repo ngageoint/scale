@@ -65,9 +65,8 @@
         };
 
         var initJobTypesParams = function (data){
-            console.log(data);
             return {
-                hide_rd: data.hide_rd ? data.hide_rd : false
+                show_rd: typeof data.show_rd !== 'undefined' ? data.show_rd : true
             }
         };
 
@@ -159,11 +158,11 @@
                 jobExecutionsParams = initJobExecutionsParams(data);
                 updateQuerystring(jobExecutionsParams);
             },
-            getJobTypesParams: function (data) {
-
+            getJobTypesParams: function () {
                 if (_.keys(jobTypesParams).length === 0) {
-                    return initJobTypesParams($location.search());
+                    jobTypesParams = initJobTypesParams($location.search());
                 }
+                //console.log(jobTypesParams);
                 return jobTypesParams;
             },
             setJobTypesParams: function (data) {

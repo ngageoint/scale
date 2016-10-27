@@ -29,7 +29,6 @@
 
         $scope.$watchCollection('vm.jobTypesParams',function(newValue){
             stateService.setJobTypesParams(newValue);
-           console.log('toggle hide r&d: ' + newValue.hide_rd);
         });
 
         vm.viewDetails = function (id) {
