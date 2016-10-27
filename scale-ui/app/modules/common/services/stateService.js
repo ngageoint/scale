@@ -6,6 +6,7 @@
             jobsColDefs = [],
             jobsParams = {},
             jobExecutionsParams = {},
+            jobTypesParams = {},
             recipesColDefs = [],
             jobTypesFailureRatesParams = {},
             recipesParams = {},
@@ -61,6 +62,13 @@
                 job_type_category: data.job_type_category ? data.job_type_category : null,
                 node_id: data.node_id ? data.node_id : null
             };
+        };
+
+        var initJobTypesParams = function (data){
+            console.log(data);
+            return {
+                hide_rd: data.hide_rd ? data.hide_rd : false
+            }
         };
 
         var initJobTypesFailureRatesParams = function (data) {
@@ -150,6 +158,17 @@
             setJobExecutionsParams: function (data) {
                 jobExecutionsParams = initJobExecutionsParams(data);
                 updateQuerystring(jobExecutionsParams);
+            },
+            getJobTypesParams: function (data) {
+
+                if (_.keys(jobTypesParams).length === 0) {
+                    return initJobTypesParams($location.search());
+                }
+                return jobTypesParams;
+            },
+            setJobTypesParams: function (data) {
+                jobTypesParams = initJobTypesParams(data);
+                updateQuerystring(jobTypesParams);
             },
             getJobTypesFailureRatesParams: function () {
                 if (_.keys(jobTypesFailureRatesParams).length === 0) {

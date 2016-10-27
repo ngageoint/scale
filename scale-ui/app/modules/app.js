@@ -134,7 +134,8 @@
             .when('/jobs/types/:id?', {
                 controller: 'jobTypesController',
                 controllerAs: 'vm',
-                templateUrl: 'modules/jobs/partials/jobTypesTemplate.html'
+                templateUrl: 'modules/jobs/partials/jobTypesTemplate.html',
+                reloadOnSearch: false
             })
             .when('/jobs/failure-rates', {
                 controller: 'jobTypesFailureRatesController',
