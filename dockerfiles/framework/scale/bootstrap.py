@@ -163,7 +163,7 @@ def deploy_webserver(client, app_name, es_urls, db_host, db_port):
         },
         'healthChecks': [
             {
-                "path": "/api/v4/version",
+                "path": "/api/v4/version/",
                 "protocol": "TCP",
                 "gracePeriodSeconds": 300,
                 "intervalSeconds": 20,
