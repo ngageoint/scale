@@ -543,7 +543,7 @@ class TestJobTypesView(TestCase):
         self.workspace = storage_test_utils.create_workspace()
         self.error = error_test_utils.create_error()
         self.job_type1 = job_test_utils.create_job_type(priority=2, mem=1.0, max_scheduled=1)
-        self.job_type2 = job_test_utils.create_job_type(priority=1, mem=2.0)
+        self.job_type2 = job_test_utils.create_job_type(priority=1, mem=2.0, is_operational=False)
 
     def test_successful(self):
         """Tests successfully calling the get all job types view."""
@@ -567,7 +567,7 @@ class TestJobTypesView(TestCase):
             self.assertEqual(entry['max_scheduled'], expected.max_scheduled)
 
     def test_name(self):
-        """Tests successfully calling the jobs view filtered by job type name."""
+        """Tests successfully calling the job types view filtered by job type name."""
 
         url = rest_util.get_url('/job-types/?name=%s' % self.job_type1.name)
         response = self.client.generic('GET', url)
@@ -578,7 +578,7 @@ class TestJobTypesView(TestCase):
         self.assertEqual(result['results'][0]['name'], self.job_type1.name)
 
     def test_category(self):
-        """Tests successfully calling the jobs view filtered by job type category."""
+        """Tests successfully calling the job types view filtered by job type category."""
 
         url = rest_util.get_url('/job-types/?category=%s' % self.job_type1.category)
         response = self.client.generic('GET', url)
@@ -587,6 +587,17 @@ class TestJobTypesView(TestCase):
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
         self.assertEqual(result['results'][0]['category'], self.job_type1.category)
+
+    def test_is_operational(self):
+        """Tests successfully calling the job types view filtered by operational state."""
+
+        url = rest_util.get_url('/job-types/?is_operational=false')
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['is_operational'], self.job_type2.is_operational)
 
     def test_sorting(self):
         """Tests custom sorting."""
@@ -1338,11 +1349,11 @@ class TestJobTypesStatusView(TestCase):
     def setUp(self):
         django.setup()
 
-        self.job_type = job_test_utils.create_job_type()
+        self.job_type1 = job_test_utils.create_job_type()
 
     def test_successful(self):
         """Tests successfully calling the status view."""
-        job = job_test_utils.create_job(job_type=self.job_type, status='COMPLETED')
+        job_test_utils.create_job(job_type=self.job_type1, status='COMPLETED')
 
         url = rest_util.get_url('/job-types/status/')
         response = self.client.generic('GET', url)
@@ -1350,7 +1361,7 @@ class TestJobTypesStatusView(TestCase):
 
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
-        self.assertEqual(result['results'][0]['job_type']['name'], job.job_type.name)
+        self.assertEqual(result['results'][0]['job_type']['name'], self.job_type1.name)
         self.assertEqual(len(result['results'][0]['job_counts']), 1)
         self.assertEqual(result['results'][0]['job_counts'][0]['status'], 'COMPLETED')
         self.assertEqual(result['results'][0]['job_counts'][0]['count'], 1)
@@ -1358,12 +1369,12 @@ class TestJobTypesStatusView(TestCase):
     def test_running(self):
         """Tests getting running jobs regardless of time filters."""
         old_timestamp = datetime.datetime(2015, 1, 1, tzinfo=timezone.utc)
-        job_test_utils.create_job(job_type=self.job_type, status='COMPLETED', last_status_change=old_timestamp)
-        job_test_utils.create_job(job_type=self.job_type, status='RUNNING', last_status_change=old_timestamp)
+        job_test_utils.create_job(job_type=self.job_type1, status='COMPLETED', last_status_change=old_timestamp)
+        job_test_utils.create_job(job_type=self.job_type1, status='RUNNING', last_status_change=old_timestamp)
 
         new_timestamp = datetime.datetime(2015, 1, 10, tzinfo=timezone.utc)
-        job_test_utils.create_job(job_type=self.job_type, status='COMPLETED', last_status_change=new_timestamp)
-        job_test_utils.create_job(job_type=self.job_type, status='RUNNING', last_status_change=new_timestamp)
+        job_test_utils.create_job(job_type=self.job_type1, status='COMPLETED', last_status_change=new_timestamp)
+        job_test_utils.create_job(job_type=self.job_type1, status='RUNNING', last_status_change=new_timestamp)
 
         url = rest_util.get_url('/job-types/status/?started=2015-01-05T00:00:00Z')
         response = self.client.generic('GET', url)
@@ -1380,6 +1391,24 @@ class TestJobTypesStatusView(TestCase):
                 self.assertEqual(entry['count'], 2)
             else:
                 self.fail('Found unexpected job type count status: %s' % entry['status'])
+
+    def test_is_operational(self):
+        """Tests successfully calling the status view filtered by operational status."""
+        job_test_utils.create_job(job_type=self.job_type1, status='COMPLETED')
+
+        job_type2 = job_test_utils.create_job_type(is_operational=False)
+        job_test_utils.create_job(job_type=job_type2, status='COMPLETED')
+
+        url = rest_util.get_url('/job-types/status/?is_operational=false')
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['job_type']['name'], job_type2.name)
+        self.assertEqual(result['results'][0]['job_type']['is_operational'], job_type2.is_operational)
+        self.assertEqual(len(result['results'][0]['job_counts']), 1)
+        self.assertEqual(result['results'][0]['job_counts'][0]['count'], 1)
 
 
 class TestJobTypesPendingView(TestCase):
@@ -1699,7 +1728,7 @@ class TestJobExecutionsView(TransactionTestCase):
         start_date_time = timezone.now() - datetime.timedelta(hours=1)
         end_date_time = timezone.now()
         url = rest_util.get_url('/job-executions/?started={0}&ended={1}'.format(start_date_time.isoformat(),
-                                                                                 end_date_time.isoformat()))
+                                                                                end_date_time.isoformat()))
         response = self.client.generic('GET', url)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
@@ -1735,7 +1764,7 @@ class TestJobExecutionsView(TransactionTestCase):
 
     # TODO: API_V3 Remove this test
     def test_get_job_execution_logs_deprecated(self):
-        url = url = rest_util.get_url('/job-executions/%d/logs/' % self.job_exe_1b.id)
+        url = rest_util.get_url('/job-executions/%d/logs/' % self.job_exe_1b.id)
         response = self.client.generic('GET', url)
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
