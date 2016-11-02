@@ -1052,6 +1052,10 @@ class JobExecutionManager(models.Manager):
             job_exe.started = started
             job_exe.node = node
             job_exe.configure_docker_params(framework_id, workspaces)
+            
+            for key, value in job_exe.job.job_type.docker_params:
+                job_exe.configuration['job_task']['docker_params'].append({'flag': key, 'value': value})
+                
             job_exe.environment = JobEnvironment({}).get_dict()
             job_exe.cpus_scheduled = resources.cpus
             job_exe.mem_scheduled = resources.mem
