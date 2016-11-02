@@ -6,7 +6,7 @@ import logging
 import django.utils.timezone as timezone
 import djorm_pgjson.fields
 from django.db import models, transaction
-from django.db.models import F
+from django.db.models import F, Q
 
 from batch.configuration.definition.batch_definition import BatchDefinition
 from batch.exceptions import BatchError
@@ -185,10 +185,19 @@ class BatchManager(models.Manager):
             old_recipes = old_recipes.filter(recipe_type__revision_num__gt=F('recipe_type_rev__revision_num'))
 
         # Optionally filter by date range
-        if definition.started:
-            old_recipes = old_recipes.filter(created__gte=definition.started)
-        if definition.ended:
-            old_recipes = old_recipes.filter(created__lte=definition.ended)
+        if definition.date_range_type == 'created':
+            if definition.started:
+                old_recipes = old_recipes.filter(created__gte=definition.started)
+            if definition.ended:
+                old_recipes = old_recipes.filter(created__lte=definition.ended)
+        elif definition.date_range_type == 'data':
+            # The filters must include OR operators since the file data started/ended fields can be null
+            if definition.started:
+                old_recipes = old_recipes.filter(Q(recipefile__scale_file__data_started__gte=definition.started) |
+                                                 Q(recipefile__scale_file__data_ended__gte=definition.started))
+            if definition.ended:
+                old_recipes = old_recipes.filter(Q(recipefile__scale_file__data_started__lte=definition.ended) |
+                                                 Q(recipefile__scale_file__data_ended__lte=definition.ended))
         return old_recipes
 
     @transaction.atomic
