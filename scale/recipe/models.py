@@ -110,6 +110,13 @@ class RecipeManager(models.Manager):
         recipe.data = data.get_dict()
         recipe.save()
 
+        # Save models for each recipe input file
+        for input_file_id in data.get_input_file_ids():
+            recipe_file = RecipeFile()
+            recipe_file.recipe_id = recipe.id
+            recipe_file.scale_file_id = input_file_id
+            recipe_file.save()
+
         # Create recipe jobs and link them to the recipe
         recipe_jobs = self._create_recipe_jobs(recipe, event, when, delta, superseded_jobs)
         return RecipeHandler(recipe, recipe_jobs)
