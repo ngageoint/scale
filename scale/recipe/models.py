@@ -550,6 +550,27 @@ class Recipe(models.Model):
         index_together = ['last_modified', 'recipe_type']
 
 
+class RecipeFile(models.Model):
+    """Links a recipe and its input files together. A file can be used as input to multiple recipes and a recipe can
+    accept multiple input files. This model is useful for determining relevant recipes to run during re-processing.
+
+    :keyword recipe: The recipe that the input file is linked to
+    :type recipe: :class:`django.db.models.ForeignKey`
+    :keyword scale_file: The input file that the recipe is linked to
+    :type scale_file: :class:`django.db.models.ForeignKey`
+    :keyword created: When the recipe was created
+    :type created: :class:`django.db.models.DateTimeField`
+    """
+
+    recipe = models.ForeignKey('recipe.Recipe', on_delete=models.PROTECT)
+    scale_file = models.ForeignKey('storage.ScaleFile', on_delete=models.PROTECT)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta(object):
+        """meta information for the db"""
+        db_table = 'recipe_file'
+
+
 class RecipeJobManager(models.Manager):
     """Provides additional methods for handling jobs linked to a recipe
     """
