@@ -6,7 +6,7 @@ if [ "${TRAVIS_BRANCH}" != "master" ] || [ "${TRAVIS_PULL_REQUEST}" != "false" ]
   exit 0
 fi
 
-openssl aes-256-cbc -K $encrypted_54e1fa350980_key -iv $encrypted_54e1fa350980_iv -in publish-key.enc -out ~/.ssh/publish-key -d
+openssl aes-256-cbc -K $encrypted_54e1fa350980_key -iv $encrypted_54e1fa350980_iv -in ../../publish-key.enc -out ~/.ssh/publish-key -d
 
 # Copy custom web docs from tracked location prior to checkout
 cp -R ../../web-docs ../../tmp-web-docs
