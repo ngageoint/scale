@@ -88,7 +88,10 @@ def _create_docker_task(task):
     mesos_task.container.type = mesos_pb2.ContainerInfo.DOCKER
     mesos_task.container.docker.image = task.docker_image
     for param in task.docker_params:
-        mesos_task.container.docker.parameters.add(key=param.flag, value=param.value)
+        a_docker_param = mesos_task.container.docker.parameters.add()
+        a_docker_param.key = param.flag
+        a_docker_param.value = param.value
+        
     if task.is_docker_privileged:
         mesos_task.container.docker.privileged = True
 
