@@ -433,7 +433,7 @@
 
 <dl class="attribute">
 <dt id="recipe.migrations.0013_auto_20160331_1127.Migration.operations">
-<code class="descname">operations</code><em class="property"> = [&lt;RunPython &lt;function populate_recipe_job at 0x2b823062d320&gt;&gt;]</em><a class="headerlink" href="#recipe.migrations.0013_auto_20160331_1127.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<code class="descname">operations</code><em class="property"> = [&lt;RunPython &lt;function populate_recipe_job at 0x2b0fc4631938&gt;&gt;]</em><a class="headerlink" href="#recipe.migrations.0013_auto_20160331_1127.Migration.operations" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -458,6 +458,49 @@
 <dl class="attribute">
 <dt id="recipe.migrations.0014_auto_20160608_1402.Migration.operations">
 <code class="descname">operations</code><em class="property"> = [&lt;RemoveField  name=u'job', model_name=u'recipejobold'&gt;, &lt;RemoveField  name=u'recipe', model_name=u'recipejobold'&gt;, &lt;DeleteModel  name=u'recipejobold'&gt;]</em><a class="headerlink" href="#recipe.migrations.0014_auto_20160608_1402.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.migrations.0015_recipefile">
+<span id="recipe-migrations-0015-recipefile-module"></span><h2>recipe.migrations.0015_recipefile module<a class="headerlink" href="#module-recipe.migrations.0015_recipefile" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="recipe.migrations.0015_recipefile.Migration">
+<em class="property">class </em><code class="descclassname">recipe.migrations.0015_recipefile.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.migrations.0015_recipefile.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="recipe.migrations.0015_recipefile.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'storage', u'0002_workspace_is_move_enabled'), (u'recipe', u'0014_auto_20160608_1402')]</em><a class="headerlink" href="#recipe.migrations.0015_recipefile.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.migrations.0015_recipefile.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'created', &lt;django.db.models.fields.DateTimeField&gt;), (u'recipe', &lt;django.db.models.fields.related.ForeignKey&gt;), (u'scale_file', &lt;django.db.models.fields.related.ForeignKey&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={u'db_table': u'recipe_file'}, name=u'RecipeFile'&gt;]</em><a class="headerlink" href="#recipe.migrations.0015_recipefile.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-recipe.migrations.0016_recipefile_data">
+<span id="recipe-migrations-0016-recipefile-data-module"></span><h2>recipe.migrations.0016_recipefile_data module<a class="headerlink" href="#module-recipe.migrations.0016_recipefile_data" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="recipe.migrations.0016_recipefile_data.Migration">
+<em class="property">class </em><code class="descclassname">recipe.migrations.0016_recipefile_data.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.migrations.0016_recipefile_data.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="recipe.migrations.0016_recipefile_data.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'storage', u'0002_workspace_is_move_enabled'), (u'recipe', u'0015_recipefile')]</em><a class="headerlink" href="#recipe.migrations.0016_recipefile_data.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.migrations.0016_recipefile_data.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;RunPython &lt;function populate_recipe_file at 0x2b0fc3e6c320&gt;&gt;]</em><a class="headerlink" href="#recipe.migrations.0016_recipefile_data.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.migrations.0016_recipefile_data.Migration.populate_recipe_file">
+<code class="descname">populate_recipe_file</code><span class="sig-paren">(</span><em>apps</em>, <em>schema_editor</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.migrations.0016_recipefile_data.Migration.populate_recipe_file" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

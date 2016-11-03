@@ -196,7 +196,7 @@ used to override the original priority of each job type.</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
    <span class="s2">&quot;date_range&quot;</span><span class="o">:</span> <span class="p">{</span>
-      <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;created&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;created&quot;</span><span class="o">|</span><span class="s2">&quot;data&quot;</span><span class="p">,</span>
       <span class="s2">&quot;started&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
       <span class="s2">&quot;ended&quot;</span><span class="o">:</span> <span class="nx">STRING</span>
    <span class="p">},</span>
@@ -231,6 +231,9 @@ is not included, it defaults to the &#8220;created&#8221; value. The valid types
 <p><strong>created</strong></p>
 <blockquote>
 <div>A &#8220;created&#8221; date range matches recipes based on the timestamp of when they were originally created.</div></blockquote>
+<p><strong>data</strong></p>
+<blockquote>
+<div>A &#8220;data&#8221; date range matches recipes based on the timestamp of when its input files were collected.</div></blockquote>
 </div></blockquote>
 <p><strong>started</strong>: JSON string</p>
 <blockquote>

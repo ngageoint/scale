@@ -239,6 +239,8 @@
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0012_auto_20160330_1659">recipe.migrations.0012_auto_20160330_1659 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0013_auto_20160331_1127">recipe.migrations.0013_auto_20160331_1127 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0014_auto_20160608_1402">recipe.migrations.0014_auto_20160608_1402 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0015_recipefile">recipe.migrations.0015_recipefile module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0016_recipefile_data">recipe.migrations.0016_recipefile_data module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -484,6 +486,11 @@ accessed using &#8216;superseded_by_recipe&#8217;.</li>
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="recipe.models.Recipe.recipefile_set">
+<code class="descclassname">Recipe.</code><code class="descname">recipefile_set</code><a class="headerlink" href="#recipe.models.Recipe.recipefile_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="recipe.models.Recipe.recipejob_set">
 <code class="descclassname">Recipe.</code><code class="descname">recipejob_set</code><a class="headerlink" href="#recipe.models.Recipe.recipejob_set" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -511,6 +518,64 @@ accessed using &#8216;superseded_by_recipe&#8217;.</li>
 <dl class="attribute">
 <dt id="recipe.models.Recipe.superseded_recipe">
 <code class="descclassname">Recipe.</code><code class="descname">superseded_recipe</code><a class="headerlink" href="#recipe.models.Recipe.superseded_recipe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="recipe.models.RecipeFile">
+<em class="property">class </em><code class="descclassname">recipe.models.</code><code class="descname">RecipeFile</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
+<p>Links a recipe and its input files together. A file can be used as input to multiple recipes and a recipe can
+accept multiple input files. This model is useful for determining relevant recipes to run during re-processing.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>recipe</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The recipe that the input file is linked to</li>
+<li><strong>scale_file</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The input file that the recipe is linked to</li>
+<li><strong>created</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the recipe was created</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="exception">
+<dt id="recipe.models.RecipeFile.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#recipe.models.RecipeFile.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="recipe.models.RecipeFile.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descclassname">RecipeFile.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#recipe.models.RecipeFile.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="recipe.models.RecipeFile.get_next_by_created">
+<code class="descclassname">RecipeFile.</code><code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeFile.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.models.RecipeFile.get_previous_by_created">
+<code class="descclassname">RecipeFile.</code><code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeFile.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.RecipeFile.objects">
+<code class="descclassname">RecipeFile.</code><code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#recipe.models.RecipeFile.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.RecipeFile.recipe">
+<code class="descclassname">RecipeFile.</code><code class="descname">recipe</code><a class="headerlink" href="#recipe.models.RecipeFile.recipe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.RecipeFile.scale_file">
+<code class="descclassname">RecipeFile.</code><code class="descname">scale_file</code><a class="headerlink" href="#recipe.models.RecipeFile.scale_file" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

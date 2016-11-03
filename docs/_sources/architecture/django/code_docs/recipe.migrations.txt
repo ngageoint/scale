@@ -116,6 +116,22 @@ recipe.migrations.0014_auto_20160608_1402 module
     :undoc-members:
     :show-inheritance:
 
+recipe.migrations.0015_recipefile module
+----------------------------------------
+
+.. automodule:: recipe.migrations.0015_recipefile
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+recipe.migrations.0016_recipefile_data module
+---------------------------------------------
+
+.. automodule:: recipe.migrations.0016_recipefile_data
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
