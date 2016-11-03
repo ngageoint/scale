@@ -13,7 +13,8 @@ import node.test.utils as node_test_utils
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
 from error.models import Error
-from job.configuration.configuration.job_configuration import DockerParam, JobConfiguration, MODE_RO, MODE_RW
+from job.configuration.configuration.job_configuration import JobConfiguration, MODE_RO, MODE_RW
+from job.configuration.configuration.job_parameter import DockerParam
 from job.configuration.data.exceptions import InvalidConnection
 from job.configuration.data.job_data import JobData
 from job.configuration.interface.error_interface import ErrorInterface
@@ -955,7 +956,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         new_trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=job_test_utils.MOCK_ERROR_TYPE,
                                                                   configuration=self.new_trigger_config.get_dict())
         job_type = JobType.objects.create_job_type(name, version, self.job_interface, trigger_rule)
-        
+
         # Call test
         self.assertRaises(InvalidConnection, JobType.objects.edit_job_type, job_type.id, self.new_job_interface,
                           new_trigger_rule, False)
@@ -982,7 +983,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         job_type = JobType.objects.create_job_type(name, version, self.job_interface, trigger_rule, title=title)
         job_type.is_system = True
         job_type.save()
-        
+
         # Call test
         self.assertRaises(Exception, JobType.objects.edit_job_type, job_type.id, title=new_title)
 

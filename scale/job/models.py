@@ -17,7 +17,8 @@ from django.db.models import Q
 
 import job.execution.container as job_exe_container
 from error.models import Error
-from job.configuration.configuration.job_configuration import DockerParam, JobConfiguration, MODE_RO, MODE_RW
+from job.configuration.configuration.job_configuration import JobConfiguration, MODE_RO, MODE_RW
+from job.configuration.configuration.job_parameter import DockerParam
 from job.configuration.data.job_data import JobData
 from job.configuration.environment.job_environment import JobEnvironment
 from job.configuration.interface.error_interface import ErrorInterface

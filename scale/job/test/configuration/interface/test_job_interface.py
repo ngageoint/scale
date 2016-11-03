@@ -70,9 +70,11 @@ class TestJobInterfaceConvert(TestCase):
         """Tests calling JobInterface.update() successfully."""
         mock_get_dict.return_value = self.job_interface_dict
         job_interface = JobInterface.convert_interface(self.job_interface_dict)
-        self.assertEqual(job_interface['version'], '1.1')
+        self.assertEqual(job_interface['version'], '1.2')
         self.assertIn('partial', job_interface['input_data'][0])
         self.assertFalse(job_interface['input_data'][0]['partial'])
+        self.assertFalse(job_interface['env_vars'])
+        self.assertFalse(job_interface['settings'])
 
 
 class TestJobInterfacePostSteps(TestCase):

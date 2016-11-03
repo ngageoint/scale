@@ -7,14 +7,14 @@ import os
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
-from job.configuration.interface import job_interface_1_1 as previous_interface
+from job.configuration.interface import job_interface_1_0 as previous_interface
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH
 
 
 logger = logging.getLogger(__name__)
 
-SCHEMA_VERSION = '1.2'
+SCHEMA_VERSION = '1.1'
 
 JOB_INTERFACE_SCHEMA = {
     'type': 'object',
@@ -33,20 +33,6 @@ JOB_INTERFACE_SCHEMA = {
         'command_arguments': {
             'description': 'The arguments that are passed to the command',
             'type': 'string',
-        },
-        'env_vars': {
-            'description': 'Environment variables that will be made available at runtime',
-            'type': 'array',
-            'items': {
-                '$ref': '#/definitions/env_var',
-            },
-        },
-        'settings': {
-            'description': 'Job settings that will be in command call',
-            'type': 'array',
-            'items': {
-                '$ref': '#/definitions/setting',
-            },
         },
         'input_data': {
             'type': 'array',
@@ -68,32 +54,6 @@ JOB_INTERFACE_SCHEMA = {
         },
     },
     'definitions': {
-        'env_var': {
-            'type': 'object',
-            'required': ['name', 'value'],
-            'additionalProperties': False,
-            'properties': {
-                'name': {
-                    'type': 'string',
-                },
-                'value': {
-                    'type': 'string',
-                },
-            },
-        },
-        'setting': {
-            'type': 'object',
-            'required': ['name'],
-            'additionalProperties': False,
-            'properties': {
-                'name': {
-                    'type': 'string',
-                },
-                'required': {
-                    'type': 'boolean',
-                },
-            },
-        },
         'input_data_item': {
             'type': 'object',
             'required': ['name', 'type'],
@@ -180,9 +140,6 @@ class JobInterface(previous_interface.JobInterface):
 
         self._output_file_manifest_dict = {}  # str->bool
 
-        if 'version' not in self.definition:
-            self.definition['version'] = SCHEMA_VERSION
-
         if self.definition['version'] != SCHEMA_VERSION:
             self.convert_interface(definition)
 
@@ -192,7 +149,6 @@ class JobInterface(previous_interface.JobInterface):
             raise InvalidInterfaceDefinition(validation_error)
 
         self._populate_default_values()
-        self._populate_settings_defaults()
 
         self._check_param_name_uniqueness()
         self._validate_command_arguments()
@@ -200,7 +156,7 @@ class JobInterface(previous_interface.JobInterface):
 
     @staticmethod
     def convert_interface(interface):
-        """Convert the previous Job interface schema to the 1.2 schema
+        """Convert the previous Job interface schema to the 1.1 schema
 
         :param interface: The previous interface
         :type interface: dict
@@ -213,22 +169,29 @@ class JobInterface(previous_interface.JobInterface):
 
         converted['version'] = SCHEMA_VERSION
 
-        if 'env_vars' not in converted:
-            converted['env_vars'] = []
-
-        if 'settings' not in converted:
-            converted['settings'] = []
+        if 'input_data' in converted:
+            for inputs in converted['input_data']:
+                if inputs['type'] in ('file', 'files'):
+                    # Default value should be False for partial
+                    inputs['partial'] = False
 
         return converted
 
-    def _populate_settings_defaults(self):
-        """populates the default values for any missing settings values"""
-        for setting in self.definition['settings']:
-            if 'required' not in setting:
-                setting['required'] = False
+    def _create_retrieve_files_dict(self):
+        """creates parameter folders and returns the dict needed to call
+        :classmethod:`job.configuration.data.job_data.JobData.retrieve_files_dict`
 
-    def _populate_env_vars_defaults(self):
-        """populates the default values for any missing environment variable values"""
-        for env_var in self.definition['env_vars']:
-            if 'value' not in env_var:
-                env_var['value'] = ""
+        :return: a dictionary representing the files to retrieve
+        :rtype:  dist of str->tuple with input_name->(is_multiple, input_path)
+        """
+
+        retrieve_files_dict = {}
+        for input_data in self.definition['input_data']:
+            input_name = input_data['name']
+            input_type = input_data['type']
+            if input_type in ['file', 'files']:
+                is_multiple = input_type == 'files'
+                partial = input_data['partial']
+                input_path = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name)
+                retrieve_files_dict[input_name] = (is_multiple, input_path, partial)
+        return retrieve_files_dict
