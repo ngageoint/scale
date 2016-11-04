@@ -226,85 +226,96 @@ Duplicate it to filter by multiple values.</td>
 <td>Return only job types with a given category.
 Duplicate it to filter by multiple values.</td>
 </tr>
-<tr class="row-odd"><td>order</td>
+<tr class="row-odd"><td>is_operational</td>
+<td colspan="2">String</td>
+<td colspan="2">Optional</td>
+<td>Return only job types that are operational (True) or still in a
+research &amp; development (R&amp;D) phase (False).</td>
+</tr>
+<tr class="row-even"><td>order</td>
 <td colspan="2">String</td>
 <td colspan="2">Optional</td>
 <td>One or more fields to use when ordering the results.
 Duplicate it to multi-sort, (ex: order=name&amp;order=version).
 Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 </tr>
-<tr class="row-even"><td colspan="6"><strong>Successful Response</strong></td>
+<tr class="row-odd"><td colspan="6"><strong>Successful Response</strong></td>
 </tr>
-<tr class="row-odd"><td colspan="2"><strong>Status</strong></td>
+<tr class="row-even"><td colspan="2"><strong>Status</strong></td>
 <td colspan="4">200 OK</td>
 </tr>
-<tr class="row-even"><td colspan="2"><strong>Content Type</strong></td>
+<tr class="row-odd"><td colspan="2"><strong>Content Type</strong></td>
 <td colspan="4"><em>application/json</em></td>
 </tr>
-<tr class="row-odd"><td colspan="6"><strong>JSON Fields</strong></td>
+<tr class="row-even"><td colspan="6"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-even"><td colspan="2">count</td>
+<tr class="row-odd"><td colspan="2">count</td>
 <td colspan="2">Integer</td>
 <td colspan="2">The total number of results that match the query parameters.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">next</td>
+<tr class="row-even"><td colspan="2">next</td>
 <td colspan="2">URL</td>
 <td colspan="2">A URL to the next page of results.</td>
 </tr>
-<tr class="row-even"><td colspan="2">previous</td>
+<tr class="row-odd"><td colspan="2">previous</td>
 <td colspan="2">URL</td>
 <td colspan="2">A URL to the previous page of results.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">results</td>
+<tr class="row-even"><td colspan="2">results</td>
 <td colspan="2">Array</td>
 <td colspan="2">List of result JSON objects that match the query parameters.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.id</td>
+<tr class="row-odd"><td colspan="2">.id</td>
 <td colspan="2">Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API.
 (See <a class="reference internal" href="#rest-job-type-details"><span>Job Type Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.name</td>
+<tr class="row-even"><td colspan="2">.name</td>
 <td colspan="2">String</td>
 <td colspan="2">The identifying name of the job type used for queries.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.version</td>
+<tr class="row-odd"><td colspan="2">.version</td>
 <td colspan="2">String</td>
 <td colspan="2">The version of the job type.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.title</td>
+<tr class="row-even"><td colspan="2">.title</td>
 <td colspan="2">String</td>
 <td colspan="2">The human readable display name of the job type.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.description</td>
+<tr class="row-odd"><td colspan="2">.description</td>
 <td colspan="2">String</td>
 <td colspan="2">A longer description of the job type.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.category</td>
+<tr class="row-even"><td colspan="2">.category</td>
 <td colspan="2">String</td>
 <td colspan="2">An optional overall category of the job type.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.author_name</td>
+<tr class="row-odd"><td colspan="2">.author_name</td>
 <td colspan="2">String</td>
 <td colspan="2">The name of the person or organization that created the job algorithm.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.author_url</td>
+<tr class="row-even"><td colspan="2">.author_url</td>
 <td colspan="2">String</td>
 <td colspan="2">The address to a home page about the author or associated algorithm.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.is_system</td>
+<tr class="row-odd"><td colspan="2">.is_system</td>
 <td colspan="2">Boolean</td>
 <td colspan="2">Whether this is a system type.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.is_long_running</td>
+<tr class="row-even"><td colspan="2">.is_long_running</td>
 <td colspan="2">Boolean</td>
 <td colspan="2">Whether this type is long running. A job of this type is intended to run
 for a long time, potentially indefinitely, without timing out and always
 being re-queued after a failure.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.is_active</td>
+<tr class="row-odd"><td colspan="2">.is_active</td>
 <td colspan="2">Boolean</td>
 <td colspan="2">Whether the job type is active (false once job type is archived).</td>
+</tr>
+<tr class="row-even"><td colspan="2">.is_operational</td>
+<td colspan="2">Boolean</td>
+<td colspan="2">Whether this job type is operational (True) or is still in a research &amp;
+development (R&amp;D) phase (False).</td>
 </tr>
 <tr class="row-odd"><td colspan="2">.is_paused</td>
 <td colspan="2">Boolean</td>
@@ -484,12 +495,11 @@ algorithm associated with the job type.</td>
 <td>The address to a home page about the author or associated
 algorithm run by the job type.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">is_long_running</td>
+<tr class="row-odd"><td colspan="2">is_operational</td>
 <td colspan="2">Boolean</td>
 <td>Optional</td>
-<td>Whether this type is long running. A job of this type is
-intended to run for a long time, potentially indefinitely,
-without timing out and always being re-queued after a failure.</td>
+<td>Whether this job type is operational (True) or is still in a
+research &amp; development (R&amp;D) phase (False).</td>
 </tr>
 <tr class="row-even"><td colspan="2">is_paused</td>
 <td colspan="2">Boolean</td>
@@ -752,12 +762,11 @@ algorithm associated with the job type.</td>
 <td>The address to a home page about the author or associated
 algorithm run by the job type.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">is_long_running</td>
+<tr class="row-odd"><td colspan="2">is_operational</td>
 <td colspan="2">Boolean</td>
 <td>Optional</td>
-<td>Whether this type is long running. A job of this type is
-intended to run for a long time, potentially indefinitely,
-without timing out and always being re-queued after a failure.</td>
+<td>Whether this job type is operational (True) or is still in a
+research &amp; development (R&amp;D) phase (False).</td>
 </tr>
 <tr class="row-even"><td colspan="2">is_paused</td>
 <td colspan="2">Boolean</td>
@@ -1553,58 +1562,64 @@ Defaults to the past 3 hours.</td>
 Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
 Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+<tr class="row-odd"><td>is_operational</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only job types that are operational (True) or still in a
+research &amp; development (R&amp;D) phase (False).</td>
 </tr>
-<tr class="row-even"><td><strong>Status</strong></td>
+<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-odd"><td><strong>Status</strong></td>
 <td colspan="3">200 OK</td>
 </tr>
-<tr class="row-odd"><td><strong>Content Type</strong></td>
+<tr class="row-even"><td><strong>Content Type</strong></td>
 <td colspan="3"><em>application/json</em></td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-odd"><td>count</td>
+<tr class="row-even"><td>count</td>
 <td>Integer</td>
 <td colspan="2">The total number of results that match the query parameters.</td>
 </tr>
-<tr class="row-even"><td>next</td>
+<tr class="row-odd"><td>next</td>
 <td>URL</td>
 <td colspan="2">A URL to the next page of results.</td>
 </tr>
-<tr class="row-odd"><td>previous</td>
+<tr class="row-even"><td>previous</td>
 <td>URL</td>
 <td colspan="2">A URL to the previous page of results.</td>
 </tr>
-<tr class="row-even"><td>results</td>
+<tr class="row-odd"><td>results</td>
 <td>Array</td>
 <td colspan="2">List of result JSON objects that match the query parameters.</td>
 </tr>
-<tr class="row-odd"><td>.job_type</td>
+<tr class="row-even"><td>.job_type</td>
 <td>JSON Object</td>
 <td colspan="2">The job type that is associated with the statistics.
 (See <a class="reference internal" href="#rest-job-type-details"><span>Job Type Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td>.job_counts</td>
+<tr class="row-odd"><td>.job_counts</td>
 <td>Array</td>
 <td colspan="2">A list of recent job counts for the job type, grouped by status.</td>
 </tr>
-<tr class="row-odd"><td>..status</td>
+<tr class="row-even"><td>..status</td>
 <td>String</td>
 <td colspan="2">The type of job status the count represents.</td>
 </tr>
-<tr class="row-even"><td>..count</td>
+<tr class="row-odd"><td>..count</td>
 <td>Integer</td>
 <td colspan="2">The number of jobs with that status.</td>
 </tr>
-<tr class="row-odd"><td>..most_recent</td>
+<tr class="row-even"><td>..most_recent</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">The date/time when a job was last in that status.</td>
 </tr>
-<tr class="row-even"><td>..category</td>
+<tr class="row-odd"><td>..category</td>
 <td>String</td>
 <td colspan="2">The category of the status, which is only used by a FAILED status.</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
 <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
 <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
 <span class="s2">&quot;results&quot;</span><span class="o">:</span> <span class="p">[</span>
