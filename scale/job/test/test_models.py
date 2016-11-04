@@ -348,8 +348,8 @@ class TestJobExecutionManager(TransactionTestCase):
         resources_1 = JobResources(cpus=1, mem=2, disk_in=3, disk_out=4, disk_total=7)
         resources_2 = JobResources(cpus=10, mem=11, disk_in=12, disk_out=13, disk_total=25)
 
-        job_exes = JobExecution.objects.schedule_job_executions('123', [(job_exe_1, node_1, resources_1),
-                                                                        (job_exe_2, node_2, resources_2)], {})
+        job_exes = JobExecution.objects.schedule_job_executions('123', [(job_exe_1, node_1.id, resources_1),
+                                                                        (job_exe_2, node_2.id, resources_2)], {})
 
         for job_exe in job_exes:
             if job_exe.id == job_exe_1.id:

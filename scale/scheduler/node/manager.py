@@ -20,6 +20,21 @@ class NodeManager(object):
         self._nodes = {}  # {Hostname: SchedulerNode}
         self._lock = threading.Lock()
 
+    def get_node(self, agent_id):
+        """Returns the node with the given agent ID, possibly None
+
+        :param agent_id: The agent ID of the node
+        :type agent_id: string
+        :returns: The node, possibly None
+        :rtype: :class:`scheduler.node.node_class.Node`
+        """
+
+        with self._lock:
+            if agent_id not in self._agent_ids:
+                return None
+            hostname = self._agent_ids[agent_id]
+            return self._nodes[hostname]
+
     def get_nodes(self):
         """Returns a list of all nodes
 

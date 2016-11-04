@@ -988,14 +988,13 @@ class JobExecutionManager(models.Manager):
         """Schedules the given job executions. The caller must have obtained a model lock on the given job_exe models.
         Any job_exe models that are not in the QUEUED status will be ignored. All of the job_exe and job model changes
         will be saved in the database in an atomic transaction. The updated job_exe models are returned with their
-        related job, job_type, job_type_rev and node models populated.
+        related job, job_type, job_type_rev and node_id models populated.
 
         :param framework_id: The scheduling framework ID
         :type framework_id: string
-        :param job_executions: A list of tuples where each tuple contains the job_exe model to schedule, the node to
+        :param job_executions: A list of tuples where each tuple contains the job_exe model to schedule, the node ID to
             schedule it on, and the resources it will be given
-        :type job_executions: [(:class:`job.models.JobExecution`, :class:`node.models.Node`,
-            :class:`job.resources.JobResources`)]
+        :type job_executions: [(:class:`job.models.JobExecution`, int, :class:`job.resources.JobResources`)]
         :param workspaces: A dict of all workspaces stored by name
         :type workspaces: {string: :class:`storage.models.Workspace`}
         :returns: The scheduled job_exe models with related job, job_type, job_type_rev and node models populated
@@ -1020,13 +1019,13 @@ class JobExecutionManager(models.Manager):
         job_exes = []
         for job_execution in job_executions:
             job_exe = job_execution[0]
-            node = job_execution[1]
+            node_id = job_execution[1]
             resources = job_execution[2]
 
             if job_exe.status != 'QUEUED':
                 continue
-            if node is None:
-                raise Exception('Cannot schedule job execution %i without node' % job_exe.id)
+            if node_id is None:
+                raise Exception('Cannot schedule job execution %i without node ID' % job_exe.id)
             if resources is None:
                 raise Exception('Cannot schedule job execution %i without resources' % job_exe.id)
             if job_exe.status != 'QUEUED':
@@ -1037,7 +1036,7 @@ class JobExecutionManager(models.Manager):
             job_exe.set_cluster_id(framework_id)
             job_exe.status = 'RUNNING'
             job_exe.started = started
-            job_exe.node = node
+            job_exe.node_id = node_id
             job_exe.configure_docker_params(workspaces)
             job_exe.environment = JobEnvironment({}).get_dict()
             job_exe.cpus_scheduled = resources.cpus

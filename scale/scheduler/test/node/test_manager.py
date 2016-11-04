@@ -50,11 +50,10 @@ class TestNodeManager(TestCase):
 
         nodes = manager.get_nodes()
         self.assertEqual(len(nodes), 2)
-        for node in nodes:
-            if node.agent_id == self.node_agent_1:
-                self.assertTrue(node.is_online)
-            else:
-                self.assertFalse(node.is_online)
+        node_1 = manager.get_node(self.node_agent_1)
+        self.assertTrue(node_1.is_online)
+        node_2 = manager.get_node(self.node_agent_2)
+        self.assertFalse(node_2.is_online)
 
     @patch('scheduler.node.manager.api.get_slaves')
     def test_lost_unknown_node(self, mock_get_slaves):
@@ -70,8 +69,10 @@ class TestNodeManager(TestCase):
         # Unknown node 2 was lost before syncing with database, it should not appear in the manager
         nodes = manager.get_nodes()
         self.assertEqual(len(nodes), 1)
-        self.assertEqual(nodes[0].hostname, self.node_1.hostname)
-        self.assertTrue(nodes[0].is_online)
+        node_1 = manager.get_node(self.node_agent_1)
+        self.assertEqual(node_1.hostname, self.node_1.hostname)
+        self.assertTrue(node_1.is_online)
+        self.assertIsNone(manager.get_node(self.node_agent_2))
 
     @patch('scheduler.node.manager.api.get_slaves')
     def test_change_agent_id(self, mock_get_slaves):
@@ -91,9 +92,10 @@ class TestNodeManager(TestCase):
         # Make sure two nodes are registered, one for agent 1 and one for agent 3, and both are online
         nodes = manager.get_nodes()
         self.assertEqual(len(nodes), 2)
-        for node in nodes:
-            if node.hostname == self.node_1.hostname:
-                self.assertEqual(node.agent_id, self.node_agent_1)
-            else:
-                self.assertEqual(node.agent_id, self.node_agent_3)
-            self.assertTrue(node.is_online)
+        node_1 = manager.get_node(self.node_agent_1)
+        self.assertEqual(node_1.hostname, self.node_1.hostname)
+        self.assertTrue(node_1.is_online)
+        self.assertIsNone(manager.get_node(self.node_agent_2))
+        node_2 = manager.get_node(self.node_agent_3)
+        self.assertEqual(node_2.hostname, 'host_2')
+        self.assertTrue(node_2.is_online)

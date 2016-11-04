@@ -18,12 +18,12 @@ from job.resources import NodeResources
 from mesos_api import utils
 from queue.models import Queue
 from scheduler.initialize import initialize_system
+from scheduler.managers import SchedulerManagers
 from scheduler.models import Scheduler
 from scheduler.offer.manager import OfferManager
 from scheduler.offer.offer import ResourceOffer
 from scheduler.status.manager import StatusManager
 from scheduler.sync.job_type_manager import JobTypeManager
-from scheduler.sync.node_manager import NodeManager
 from scheduler.sync.scheduler_manager import SchedulerManager
 from scheduler.sync.workspace_manager import WorkspaceManager
 from scheduler.threads.db_sync import DatabaseSyncThread
@@ -53,9 +53,9 @@ class ScaleScheduler(MesosScheduler):
         self._master_hostname = None
         self._master_port = None
 
+        self._managers = SchedulerManagers()
         self._job_exe_manager = RunningJobExecutionManager()
         self._job_type_manager = JobTypeManager()
-        self._node_manager = NodeManager()
         self._offer_manager = OfferManager()
         self._scheduler_manager = SchedulerManager()
         self._status_manager = StatusManager()
@@ -93,7 +93,7 @@ class ScaleScheduler(MesosScheduler):
 
         # Start up background threads
         self._db_sync_thread = DatabaseSyncThread(self._driver, self._job_exe_manager, self._job_type_manager,
-                                                  self._node_manager, self._scheduler_manager, self._workspace_manager)
+                                                  self._managers, self._scheduler_manager, self._workspace_manager)
         db_sync_thread = threading.Thread(target=self._db_sync_thread.run)
         db_sync_thread.daemon = True
         db_sync_thread.start()
@@ -104,7 +104,7 @@ class ScaleScheduler(MesosScheduler):
         recon_thread.start()
 
         self._scheduling_thread = SchedulingThread(self._driver, self._framework_id, self._job_exe_manager,
-                                                   self._job_type_manager, self._node_manager, self._offer_manager,
+                                                   self._job_type_manager, self._managers, self._offer_manager,
                                                    self._scheduler_manager, self._workspace_manager)
         scheduling_thread = threading.Thread(target=self._scheduling_thread.run)
         scheduling_thread.daemon = True
@@ -195,7 +195,7 @@ class ScaleScheduler(MesosScheduler):
             agent_ids.append(agent_id)
             resource_offers.append(ResourceOffer(offer_id, agent_id, resources))
 
-        self._node_manager.add_agent_ids(agent_ids)
+        self._managers.node.register_agent_ids(agent_ids)
         self._offer_manager.add_new_offers(resource_offers)
 
         duration = now() - started
@@ -302,7 +302,7 @@ class ScaleScheduler(MesosScheduler):
         started = now()
 
         agent_id = slaveId.value
-        node = self._node_manager.get_node(agent_id)
+        node = self._managers.node.get_node(agent_id)
 
         if node:
             logger.info('Message from %s on host %s: %s', executorId.value, node.hostname, message)
@@ -328,14 +328,14 @@ class ScaleScheduler(MesosScheduler):
         started = now()
 
         agent_id = slaveId.value
-        node = self._node_manager.get_node(agent_id)
+        node = self._managers.node.get_node(agent_id)
 
         if node:
             logger.error('Node lost on host %s', node.hostname)
         else:
             logger.error('Node lost on agent %s', agent_id)
 
-        self._node_manager.lost_node(agent_id)
+        self._managers.node.lost_node(agent_id)
         self._offer_manager.lost_node(agent_id)
 
         # Fail job executions that were running on the lost node
@@ -370,7 +370,7 @@ class ScaleScheduler(MesosScheduler):
         started = now()
 
         agent_id = slaveId.value
-        node = self._node_manager.get_node(agent_id)
+        node = self._managers.node.get_node(agent_id)
 
         if node:
             logger.error('Executor %s lost on host: %s', executorId.value, node.hostname)

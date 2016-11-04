@@ -27,8 +27,8 @@ class Node(object):
         """
 
         self._agent_id = agent_id
-        self._hostname = node.hostname
-        self._id = node.id
+        self._hostname = node.hostname  # Never changes
+        self._id = node.id  # Never changes
         self._is_active = node.is_active
         self._is_initial_cleanup_completed = False
         self._is_online = True
@@ -46,7 +46,8 @@ class Node(object):
         :rtype: string
         """
 
-        return self._agent_id
+        with self._lock:
+            return self._agent_id
 
     @property
     def hostname(self):
@@ -69,6 +70,17 @@ class Node(object):
         return self._id
 
     @property
+    def is_active(self):
+        """Indicates whether this node is active (True) or not (False)
+
+        :returns: Whether this node is active
+        :rtype: bool
+        """
+
+        with self._lock:
+            return self._is_active
+
+    @property
     def is_online(self):
         """Indicates whether this node is online (True) or not (False)
 
@@ -76,7 +88,19 @@ class Node(object):
         :rtype: bool
         """
 
-        return self._is_online
+        with self._lock:
+            return self._is_online
+
+    @property
+    def is_paused(self):
+        """Indicates whether this node is paused (True) or not (False)
+
+        :returns: Whether this node is paused
+        :rtype: bool
+        """
+
+        with self._lock:
+            return self._is_paused
 
     def initial_cleanup_completed(self):
         """Tells this node that its initial cleanup task has succeeded

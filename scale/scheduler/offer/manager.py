@@ -170,17 +170,17 @@ class OfferManager(object):
                     del self._nodes_by_offer_id[offer_id]
 
     def update_nodes(self, nodes):
-        """Updates the manager with the latest copies of the node models
+        """Updates the manager with the latest copies of the nodes
 
-        :param nodes: The list of updated node models
-        :type nodes: [:class:`node.models.Node`]
+        :param nodes: The list of updated nodes
+        :type nodes: [:class:`scheduler.node.node_class.Node`]
         """
 
         with self._lock:
             for node in nodes:
                 if node.id in self._nodes_by_node_id:
                     node_offers = self._nodes_by_node_id[node.id]
-                    if node_offers.node.slave_id == node.slave_id and node.is_active:
+                    if node_offers.node.agent_id == node.agent_id and node.is_active:
                         # No change in agent ID, just update node model
                         node_offers.node = node
                     else:
@@ -193,13 +193,13 @@ class OfferManager(object):
     def _create_node_offers(self, node):
         """Creates a set of node offers for the given node
 
-        :param node: The node model
-        :type node: :class:`node.models.Node`
+        :param node: The node
+        :type node: :class:`scheduler.node.node_class.Node`
         """
 
         node_offers = NodeOffers(node)
         self._nodes_by_node_id[node.id] = node_offers
-        self._nodes_by_agent_id[node.slave_id] = node_offers
+        self._nodes_by_agent_id[node.agent_id] = node_offers
 
     def _remove_node_offers(self, node_offers):
         """Removes the given set of node offers from the manager
@@ -208,7 +208,7 @@ class OfferManager(object):
         :type node_offers: :class:`scheduler.offer.node.NodeOffers`
         """
 
-        del self._nodes_by_agent_id[node_offers.node.slave_id]
+        del self._nodes_by_agent_id[node_offers.node.agent_id]
         del self._nodes_by_node_id[node_offers.node.id]
         for offer_id in node_offers.offer_ids:
             del self._nodes_by_offer_id[offer_id]

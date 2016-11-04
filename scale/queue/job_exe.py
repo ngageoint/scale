@@ -26,7 +26,7 @@ class QueuedJobExecution(object):
         if self._queue.node_required_id:
             self._required_node_ids = {self._queue.node_required_id}
 
-        self._provided_node = None
+        self._provided_node_id = None
         self._provided_resources = None
 
     @property
@@ -40,14 +40,14 @@ class QueuedJobExecution(object):
         return self._queue.job_exe_id
 
     @property
-    def provided_node(self):
-        """Returns the node that has been provided to run this job execution
+    def provided_node_id(self):
+        """Returns the ID of the node that has been provided to run this job execution
 
-        :returns: The node that has been provided to run this job execution
-        :rtype: :class:`node.models.Node`
+        :returns: The ID of the node that has been provided to run this job execution
+        :rtype: int
         """
 
-        return self._provided_node
+        return self._provided_node_id
 
     @property
     def provided_resources(self):
@@ -79,17 +79,17 @@ class QueuedJobExecution(object):
 
         return self._required_resources
 
-    def accepted(self, node, resources):
+    def accepted(self, node_id, resources):
         """Indicates that this job execution has been accepted to be scheduled and passes the node and resources being
         provided
 
-        :param node: The node model
-        :type node: :class:`node.models.Node`
+        :param node_id: The node ID
+        :type node_id: int
         :param resources: The provided resources
         :type resources: :class:`job.resources.JobResources`
         """
 
-        self._provided_node = node
+        self._provided_node_id = node_id
         self._provided_resources = resources
 
     def is_node_acceptable(self, node_id):

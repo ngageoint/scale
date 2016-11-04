@@ -592,7 +592,7 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
                                                                             job_name='Job 1')
         job_exe_1 = JobExecution.objects.get(job_id=recipe_job_1.job_id)
         queued_job_exe = QueuedJobExecution(Queue.objects.get(job_exe_id=job_exe_1.id))
-        queued_job_exe.accepted(node, JobResources(cpus=10, mem=1000, disk_in=1000, disk_out=1000, disk_total=2000))
+        queued_job_exe.accepted(node.id, JobResources(cpus=10, mem=1000, disk_in=1000, disk_out=1000, disk_total=2000))
         Queue.objects.schedule_job_executions('123', [queued_job_exe], {})
         results = JobResults()
         results.add_file_list_parameter('Test Output 1', [product_test_utils.create_product().file_id])
@@ -667,12 +667,12 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         # Complete both the old and new job 2 and check that only the new recipe completes
         job_exe_2 = JobExecution.objects.get(job_id=recipe_job_2.job_id)
         queued_job_exe_2 = QueuedJobExecution(Queue.objects.get(job_exe_id=job_exe_2.id))
-        queued_job_exe_2.accepted(node, JobResources(cpus=10, mem=1000, disk_in=1000, disk_out=1000, disk_total=2000))
+        queued_job_exe_2.accepted(node.id, JobResources(cpus=10, mem=1000, disk_in=1000, disk_out=1000, disk_total=2000))
         Queue.objects.schedule_job_executions('123', [queued_job_exe_2], {})
         Queue.objects.handle_job_completion(job_exe_2.id, now(), [])
         new_job_exe_2 = JobExecution.objects.get(job_id=new_recipe_job_2.job_id)
         new_queued_job_exe_2 = QueuedJobExecution(Queue.objects.get(job_exe_id=new_job_exe_2.id))
-        new_queued_job_exe_2.accepted(node, JobResources(cpus=10, mem=1000, disk_in=1000, disk_out=1000,
+        new_queued_job_exe_2.accepted(node.id, JobResources(cpus=10, mem=1000, disk_in=1000, disk_out=1000,
                                                          disk_total=2000))
         Queue.objects.schedule_job_executions('123', [new_queued_job_exe_2], {})
         Queue.objects.handle_job_completion(new_job_exe_2.id, now(), [])

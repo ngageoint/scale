@@ -633,7 +633,7 @@ class QueueManager(models.Manager):
         executions_to_schedule = []
         for job_execution in job_executions:
             queue = job_execution.queue
-            node = job_execution.provided_node
+            node_id = job_execution.provided_node_id
             resources = job_execution.provided_resources
             job_exe = job_exes[job_execution.id]
 
@@ -659,7 +659,7 @@ class QueueManager(models.Manager):
                 msg = 'Job execution requires %s MiB of total disk space and only %s MiB were provided'
                 raise Exception(msg % (str(queue.disk_total_required), str(resources.disk_total)))
 
-            executions_to_schedule.append((job_exe, node, resources))
+            executions_to_schedule.append((job_exe, node_id, resources))
 
         # Schedule job executions
         scheduled_job_exes = []

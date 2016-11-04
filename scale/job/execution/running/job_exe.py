@@ -25,16 +25,14 @@ class RunningJobExecution(object):
     def __init__(self, job_exe):
         """Constructor
 
-        :param job_exe: The job execution, which must be in RUNNING status and have its related node, job, job_type and
-            job_type_rev models populated
+        :param job_exe: The job execution, which must be in RUNNING status and have its related node_id, job, job_type
+            and job_type_rev models populated
         :type job_exe: :class:`job.models.JobExecution`
         """
 
         self._id = job_exe.id
         self._job_type_id = job_exe.job.job_type_id
-        self._node_id = job_exe.node.id
-        self._node_hostname = job_exe.node.hostname
-        self._node_port = job_exe.node.port
+        self._node_id = job_exe.node_id
 
         self._lock = threading.Lock()  # Protects _current_task and _remaining_tasks
         self._current_task = None

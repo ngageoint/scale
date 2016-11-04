@@ -20,15 +20,11 @@ class NodeOffers(object):
         """Constructor
 
         :param node: The node model
-        :type node: :class:`node.models.Node`
+        :type node: :class:`scheduler.node.node_class.Node`
         """
 
         self._node = node
         self._lock = threading.Lock()
-
-        # TODO: remove this once the Node model has an is_online field
-        if not hasattr(self._node, 'is_online'):
-            self._node.is_online = True
 
         self._available_cpus = 0.0
         self._available_mem = 0.0
@@ -39,28 +35,24 @@ class NodeOffers(object):
 
     @property
     def node(self):
-        """Returns the node model
+        """Returns the node
 
-        :returns: The node model
-        :rtype: :class:`node.models.Node`
+        :returns: The node
+        :rtype: :class:`scheduler.node.node_class.Node`
         """
 
         return self._node
 
     @node.setter
     def node(self, value):
-        """Sets the node model
+        """Sets the node
 
-        :param value: The node model
-        :type value: :class:`node.models.Node`
+        :param value: The node
+        :type value: :class:`scheduler.node.node_class.Node`
         """
 
         with self._lock:
             self._node = value
-
-            # TODO: remove this once the Node model has an is_online field
-            if not hasattr(self._node, 'is_online'):
-                self._node.is_online = True
 
     @property
     def offer_ids(self):
@@ -80,14 +72,13 @@ class NodeOffers(object):
         :type offer: :class:`scheduler.offer.offer.ResourceOffer`
         """
 
-        if offer.agent_id != self._node.slave_id:
+        if offer.agent_id != self._node.agent_id:
             raise Exception('Offer has invalid agent ID')
 
         with self._lock:
             if offer.id in self._offers:
                 return
 
-            self._node.is_online = True
             resources = offer.node_resources
             self._available_cpus += resources.cpus
             self._available_mem += resources.mem
@@ -126,7 +117,7 @@ class NodeOffers(object):
             self._available_cpus -= provided_resources.cpus
             self._available_mem -= provided_resources.mem
             self._available_disk -= provided_resources.disk_total
-            job_exe.accepted(self._node, provided_resources)
+            job_exe.accepted(self._node.id, provided_resources)
             self._accepted_new_job_exes[job_exe.id] = job_exe
             return NodeOffers.ACCEPTED
 
@@ -205,8 +196,6 @@ class NodeOffers(object):
         """
 
         with self._lock:
-            self._node.is_online = False
-
             # All offers and accepted job executions are lost
             self._available_cpus = 0.0
             self._available_mem = 0.0

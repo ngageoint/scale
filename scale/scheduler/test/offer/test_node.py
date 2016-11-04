@@ -10,6 +10,7 @@ from node.test import utils as node_test_utils
 from queue.job_exe import QueuedJobExecution
 from queue.test import utils as queue_test_utils
 from scheduler.models import Scheduler
+from scheduler.node.node_class import Node
 from scheduler.offer.node import NodeOffers
 from scheduler.offer.offer import ResourceOffer
 
@@ -23,9 +24,11 @@ class TestNodeOffers(TestCase):
 
         self.node_agent = 'agent_1'
         self.node_agent_paused = 'agent_paused'
-        self.node = node_test_utils.create_node(slave_id=self.node_agent)
-        self.paused_node = node_test_utils.create_node(slave_id=self.node_agent_paused)
-        self.paused_node.is_paused = True
+        self.node_model = node_test_utils.create_node(slave_id=self.node_agent)
+        self.node = Node(self.node_agent, self.node_model)
+        self.paused_node_model = node_test_utils.create_node(slave_id=self.node_agent_paused)
+        self.paused_node_model.is_paused = True
+        self.paused_node = Node(self.node_agent_paused, self.paused_node_model)
 
         self.running_job_exe_1 = job_test_utils.create_job_exe(status='RUNNING')
         self.running_job_exe_1.cpus_scheduled = 2.0

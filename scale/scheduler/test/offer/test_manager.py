@@ -10,6 +10,7 @@ from node.test import utils as node_test_utils
 from queue.job_exe import QueuedJobExecution
 from queue.test import utils as queue_test_utils
 from scheduler.models import Scheduler
+from scheduler.node.node_class import Node
 from scheduler.offer.manager import OfferManager
 from scheduler.offer.offer import ResourceOffer
 
@@ -23,17 +24,19 @@ class TestOfferManager(TestCase):
 
         self.node_agent = 'agent_1'
         self.node_agent_paused = 'agent_paused'
-        self.node = node_test_utils.create_node(slave_id=self.node_agent)
-        self.paused_node = node_test_utils.create_node(slave_id=self.node_agent_paused)
-        self.paused_node.is_paused = True
+        self.node_model = node_test_utils.create_node(slave_id=self.node_agent)
+        self.node = Node(self.node_agent, self.node_model)
+        self.paused_node_model = node_test_utils.create_node(slave_id=self.node_agent_paused)
+        self.paused_node_model.is_paused = True
+        self.paused_node = Node(self.node_agent_paused, self.paused_node_model)
 
-        self.running_job_exe_1 = job_test_utils.create_job_exe(status='RUNNING', node=self.paused_node)
+        self.running_job_exe_1 = job_test_utils.create_job_exe(status='RUNNING', node=self.paused_node_model)
         self.running_job_exe_1.cpus_scheduled = 2.0
         self.running_job_exe_1.mem_scheduled = 512.0
         self.running_job_exe_1.disk_in_scheduled = 100.0
         self.running_job_exe_1.disk_out_scheduled = 200.0
         self.running_job_exe_1.disk_total_scheduled = 300.0
-        self.running_job_exe_2 = job_test_utils.create_job_exe(status='RUNNING', node=self.node)
+        self.running_job_exe_2 = job_test_utils.create_job_exe(status='RUNNING', node=self.node_model)
         self.running_job_exe_2.cpus_scheduled = 2.0
         self.running_job_exe_2.mem_scheduled = 512.0
         self.running_job_exe_2.disk_in_scheduled = 100.0

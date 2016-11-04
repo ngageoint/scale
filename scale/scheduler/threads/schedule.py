@@ -27,7 +27,7 @@ class SchedulingThread(object):
     SCHEDULE_LOOP_WARN_THRESHOLD = datetime.timedelta(seconds=1)
     SCHEDULE_QUERY_WARN_THRESHOLD = datetime.timedelta(milliseconds=100)
 
-    def __init__(self, driver, framework_id, job_exe_manager, job_type_manager, node_manager, offer_manager,
+    def __init__(self, driver, framework_id, job_exe_manager, job_type_manager, managers, offer_manager,
                  scheduler_manager, workspace_manager):
         """Constructor
 
@@ -39,8 +39,8 @@ class SchedulingThread(object):
         :type job_exe_manager: :class:`job.execution.running.manager.RunningJobExecutionManager`
         :param job_type_manager: The job type manager
         :type job_type_manager: :class:`scheduler.sync.job_type_manager.JobTypeManager`
-        :param node_manager: The node manager
-        :type node_manager: :class:`scheduler.sync.node_manager.NodeManager`
+        :param managers: The scheduler managers
+        :type managers: :class:`scheduler.managers.SchedulerManagers`
         :param offer_manager: The offer manager
         :type offer_manager: :class:`scheduler.offer.manager.OfferManager`
         :param scheduler_manager: The scheduler manager
@@ -53,7 +53,7 @@ class SchedulingThread(object):
         self._framework_id = framework_id
         self._job_exe_manager = job_exe_manager
         self._job_type_manager = job_type_manager
-        self._node_manager = node_manager
+        self._managers = managers
         self._offer_manager = offer_manager
         self._scheduler_manager = scheduler_manager
         self._workspace_manager = workspace_manager
@@ -164,7 +164,7 @@ class SchedulingThread(object):
         """
 
         # Get updated node and job type models from managers
-        self._offer_manager.update_nodes(self._node_manager.get_nodes())
+        self._offer_manager.update_nodes(self._managers.node.get_nodes())
         self._offer_manager.ready_new_offers()
         self._job_types = self._job_type_manager.get_job_types()
 
