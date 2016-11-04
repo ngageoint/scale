@@ -15,7 +15,7 @@
             "is_system": true,
             "is_long_running": false,
             "is_active": true,
-            "is_operational": true,
+            "is_operational": false,
             "is_paused": false,
             "icon_code": "f090",
             "uses_docker": false,
