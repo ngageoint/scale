@@ -85,7 +85,8 @@
             <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
                 <h2>Step 2</h2>
 
-                <p>Install pre-requisite packages. Scale requires Elasticsearch to be available, with
+                <p><strong>Install pre-requisite packages.</strong>
+                    Scale requires Elasticsearch to be available, with
                 Marathon-LB being optional for external Scale API exposure. Elasticsearch is not required to be
                 running internal to the DC/OS cluster, but this is the simplest way to get up and running.</p>
 
@@ -106,7 +107,8 @@
             <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
                 <h2>Step 3</h2>
 
-                <p>Install the Scale package. The Scale package will install all required components, save for external
+                <p><strong>Install the Scale package.</strong>
+                    The Scale package will install all required components, save for external
                 dependency on Elasticsearch. This default is <em>not</em> recommended for a production deployment,
                 but will get you up and running quickly to experiment with the Scale system. The primary recommendation
                 is to use an externally managed Postgres database for Scale state persistence. This can be accomplished
@@ -135,7 +137,8 @@
             <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
                 <h2>Step 4</h2>
 
-                <p>Create example job and process sample data. The Scale system is designed to allow processing on any
+                <p><strong>Create example job and process sample data.</strong>
+                    The Scale system is designed to allow processing on any
                 type of data stored as discrete objects - this can be either files from network volumes or object
                 storage, such as AWS S3. Scale is primarily focused on processing of data in a monitoring mode as it
                 arrives. Reference
@@ -144,6 +147,504 @@
                 integration</a> documentation for an in-depth overview of these topics.</p>
             </div>
         </div>
+
+        <div class="row top-buffer">
+            <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
+                <h3>Step 4.1</h3>
+
+                <p>The provided example is specific to AWS Simple Storage Service (S3) processing and for brevity uses
+                the AWS CLI to configure needed AWS resources. This does not require Scale to be running within AWS,
+                merely that you provide Scale the credentials to access. <em>NOTE:</em> In a production AWS environment,
+                IAM roles applied to instances would be preferred over use of Access Keys associated with IAM users.</p>
+
+                <p><strong>Install / Configure AWS CLI.</strong> The AWS CLI will allow us to quickly deploy the supporting AWS resources
+                in a consistent fashion. You will require an existing AWS account with an IAM user to use from your
+                local machine. Complete documentation on this set up can be found
+                <a href="http://docs.aws.amazon.com/cli/latest/userguide/installing.html">here</a>
+                for your platform of choice.</p>
+
+                <p><strong>Deploy S3 Bucket, SNS Topic and SQS Queue.</strong>
+                    A CloudFormation template is provided to get these
+                resources quickly instantiated. The only parameter that must be specified is the BucketName. The below
+                example command to launch the template uses shell syntax to generate a bucket name that is unique to
+                satisfy the global uniqueness constraint. If you prefer a specific name, replace the
+                <em>ParameterValue</em> with your chosen name.</p>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a class="btn btn-primary" data-toggle="collapse" href="#scale-demo-cloudformation_json"
+                           aria-expanded="false" aria-coltrols="scale-demo-cloudformation_json">
+                            <h3 class="panel-title">scale-demo-cloudformation.json</h3>
+                        </a>
+                    </div>
+                    <pre class="panel-body collapse" id="scale-demo-cloudformation_json">
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "Creates the S3 bucket, SNS topic and SQS queue that will receive notifications",
+	"Parameters": {
+		"S3BucketName": {
+			"MaxLength": "63",
+			"ConstraintDescription": "must be a valid S3 bucket name",
+			"Default": "scale-s3-create-retrieve-test",
+			"Description": "Required: Specify a valid, globally unique S3 bucket name.",
+			"AllowedPattern": "^[a-z0-9][a-z0-9-.]*$",
+			"MinLength": "2",
+			"Type": "String"
+		}
+	},
+	"Resources": {
+		"UploadsQueue": {
+			"Type": "AWS::SQS::Queue",
+			"Properties": {
+				"ReceiveMessageWaitTimeSeconds": 20,
+				"VisibilityTimeout": 120
+			}
+		},
+		"UploadsTopic": {
+			"Type": "AWS::SNS::Topic",
+			"Properties": {
+				"Subscription": [
+					{
+						"Endpoint": {
+							"Fn::GetAtt": [
+								"UploadsQueue",
+								"Arn"
+							]
+						},
+						"Protocol": "sqs"
+					}
+				]
+			}
+		},
+		"SNSToSQSPolicy": {
+			"Type": "AWS::SQS::QueuePolicy",
+			"Properties": {
+				"PolicyDocument": {
+					"Id": "PushMessageToSQSPolicy",
+					"Version": "2012-10-17",
+					"Statement": [
+						{
+							"Sid": "allow-sns-to-send-message-to-sqs",
+							"Effect": "Allow",
+							"Action": [
+								"sqs:SendMessage"
+							],
+							"Principal": {
+								"AWS": "*"
+							},
+							"Resource": "*",
+							"Condition": {
+								"ArnEquals": {
+									"aws:SourceArn": {
+										"Ref": "UploadsTopic"
+									}
+								}
+							}
+						}
+					]
+				},
+				"Queues": [
+					{
+						"Ref": "UploadsQueue"
+					}
+				]
+			}
+		},
+		"Bucket": {
+			"Type": "AWS::S3::Bucket",
+			"Properties": {
+				"AccessControl": "Private",
+				"BucketName": {
+					"Fn::Join": [
+						"",
+						[
+							{
+								"Ref": "S3BucketName"
+							}
+						]
+					]
+				},
+				"CorsConfiguration": {
+					"CorsRules": [
+						{
+							"AllowedHeaders": [
+								"*"
+							],
+							"AllowedMethods": [
+								"GET",
+								"PUT",
+								"HEAD"
+							],
+							"AllowedOrigins": [
+								"*"
+							],
+							"ExposedHeaders": [
+								"x-amz-server-side-encryption"
+							],
+							"MaxAge": "3000"
+						}
+					]
+				},
+				"NotificationConfiguration": {
+					"TopicConfigurations": [
+						{
+							"Event": "s3:ObjectCreated:*",
+							"Topic": {
+								"Ref": "UploadsTopic"
+							}
+						}
+					]
+				}
+			},
+			"DependsOn": "BucketToUploadsTopicPolicy"
+		},
+		"BucketToUploadsTopicPolicy": {
+			"Type": "AWS::SNS::TopicPolicy",
+			"Properties": {
+				"PolicyDocument": {
+					"Id": "PushBucketNotificationPolicy",
+					"Version": "2012-10-17",
+					"Statement": [
+						{
+							"Sid": "AllowBucketToPushNotificationEffect",
+							"Effect": "Allow",
+							"Principal": {
+								"AWS": "*"
+							},
+							"Action": "sns:Publish",
+							"Resource": "*",
+							"Condition": {
+								"ArnLike": {
+									"aws:SourceArn": {
+										"Fn::Join": [
+											"",
+											[
+												"arn:aws:s3:*:*:",
+												{
+													"Ref": "S3BucketName"
+												}
+											]
+										]
+									}
+								}
+							}
+						}
+					]
+				},
+				"Topics": [
+					{
+						"Ref": "UploadsTopic"
+					}
+				]
+			}
+		}
+	},
+	"Outputs": {
+		"BucketName": {
+			"Value": {
+				"Ref": "Bucket"
+			}
+		},
+		"UploadsQueueUrl": {
+			"Value": {
+				"Ref": "UploadsQueue"
+			}
+		},
+		"UploadsTopicArn": {
+			"Value": {
+				"Ref": "UploadsTopic"
+			}
+		}
+	}
+}</pre>
+                </div>
+
+                <pre><kbd>aws cloudformation create-stack --stack-name scale-s3-demo --template-body file://scale-demo-cloudformation.json --parameters "ParameterKey=S3BucketName,ParameterValue=scale-bucket-`date +"%Y%m%d-%H%M%S"`"</kbd></pre>
+
+                <p><strong>Describe Stack Resources.</strong>
+                    Creation of the CloudFormation stack from above should be completed in only
+                a couple minutes. The following command may be used to extract information needed to set the IAM policy
+                so Scale can access the created resources. If the Stack status is not <em>CREATE_COMPLETE</em> wait a
+                minute and run it again. The OutputValues associated with UploadsQueueUrl and BucketName from this
+                command are what will be needed.</p>
+
+                <pre><kbd>aws cloudformation describe-stacks --stack-name scale-s3-demo</kbd></pre>
+
+                <p><strong>Get Resource ARNs.</strong>
+                    The <em>describe-stacks</em> command does not indicate the ARN of the Queue so a
+                second command is required to find that value. The UploadsQueueUrl placeholder below should be replaced
+                the appropriate value returned from the previous command.</p>
+
+                <pre><kbd>aws sqs get-queue-attributes --attribute-names "QueueArn" --queue-url UploadsQueueUrl</kbd></pre>
+
+                <p><strong>Create IAM User and Access Key.</strong>
+                    The Access Key and Secret Key should be noted as they will be needed
+                by Scale to authenticate against AWS for access to our provisioned resources. Feel free to change the
+                user name value as needed.</p>
+
+                <pre>
+<kbd>aws iam create-user --user-name scale-test-user</kbd>
+<kbd>aws iam create-access-key --user-name scale-test-user</kbd></pre>
+
+                <p><strong>Create IAM policy and apply to user.</strong>
+                    The provided policy template will need to be updated to reflect
+                the ARNs for your environment. The <em>get-queue-attributes</em> command will have given the SQS ARN. S3
+                ARNs are deterministic within the standard AWS regions, so it would simply be of the form
+                <em>arn:aws:s3:::scale-bucket</em>, where <em>scale-bucket</em> is the BucketName value from
+                <em>describe-stacks</em> above.</p>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a class="btn btn-primary" data-toggle="collapse" href="#scale-demo-policy_json"
+                           aria-expanded="false" aria-coltrols="scale-demo-policy_json">
+                            <h3 class="panel-title">scale-demo-policy.json</h3>
+                        </a>
+                    </div>
+                    <pre class="panel-body collapse" id="scale-demo-policy_json">
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": "*",
+            "Effect": "Allow",
+            "Resource": [
+                "arn:aws:sqs:*:*:scale-s3-demo-UploadsQueue-*"
+            ]
+        },
+        {
+            "Action": "*",
+            "Effect": "Allow",
+            "Resource": [
+                "arn:aws:s3:::scale-bucket-*"
+            ]
+        }
+    ]
+}</pre>
+                </div>
+                <pre>
+<kbd>aws iam put-user-policy --user-name scale-test-user --policy-document file://scale-demo-policy.json --policy-name scale-demo-policy</kbd></pre>
+            </div>
+        </div>
+
+        <div class="row top-buffer">
+            <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
+                <h3>Step 4.2</h3>
+
+                <p><strong>Configure Scale for processing.</strong>
+                    The final step to process data in our S3 bucket is to configure Scale with a workspace, Strike,
+                job type and recipe type. The following script can be used to quickly bootstrap Scale with the
+                configuration necessary to extract the first MiB of input files and save them in the output workspace.
+                </p>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a class="btn btn-primary" data-toggle="collapse" href="#scale-demo_sh"
+                           aria-expanded="false" aria-coltrols="scale-demo_sh">
+                            <h3 class="panel-title">scale-init.sh</h3>
+                        </a>
+                    </div>
+                    <pre class="panel-body collapse" id="scale-demo_sh">#!/usr/bin/env sh
+
+# The following environment variables are required for the successful execution of this script.
+# DCOS_TOKEN: DCOS token that can found within ~/.dcos/dcos.toml once DCOS CLI is authenticated against DCOS cluster
+# DCOS_ROOT_URL: The externally routable Admin URL.
+# REGION_NAME: AWS Region where SQS and S3 bucket reside.
+# BUCKET_NAME: AWS S3 bucket name only. Full ARN should NOT be used.
+# QUEUE_NAME: AWS SQS queue name only. Full ARN should NOT be used.
+# ACCESS_KEY: Access Key for IAM user that will access S3 and SQS resources.
+# SECRET_KEY: Secret Key for IAM user that will access S3 and SQS resources.
+
+cat << EOF > workspace.json
+{
+    "description": "s3-direct",
+    "json_config": {
+        "broker": {
+            "bucket_name": "${BUCKET_NAME}",
+            "credentials": {
+                "access_key_id": "${ACCESS_KEY}",
+                "secret_access_key": "${SECRET_KEY}"
+            },
+            "region_name": "${REGION_NAME}",
+            "type": "s3"
+        }
+    },
+    "name": "s3-direct",
+    "title": "s3-direct",
+    "base_url": "https://s3.amazonaws.com/${BUCKET_NAME}"
+}
+EOF
+
+JOB_ARGS="1024 \${input_file} \${job_output_dir}"
+cat << EOF > job-type.json
+{
+    "name": "read-bytes",
+    "version": "1.0.0",
+    "title": "Read Bytes",
+    "description": "Reads x bytes of an input file and writes to output dir",
+    "category": "testing",
+    "author_name": "John_Doe",
+    "author_url": "http://www.example.com",
+    "is_operational": true,
+    "icon_code": "f27d",
+    "docker_privileged": false,
+    "docker_image": "geoint/read-bytes",
+    "priority": 230,
+    "timeout": 3600,
+    "max_scheduled": null,
+    "max_tries": 3,
+    "cpus_required": 1.0,
+    "mem_required": 1024.0,
+    "disk_out_const_required": 0.0,
+    "disk_out_mult_required": 0.0,
+    "interface": {
+        "output_data": [
+            {
+                "media_type": "application/octet-stream",
+                "required": true,
+                "type": "file",
+                "name": "output_file"
+            }
+        ],
+        "shared_resources": [],
+        "command_arguments": "${JOB_ARGS}",
+        "input_data": [
+            {
+                "media_types": [
+                    "application/octet-stream"
+                ],
+                "required": true,
+                "partial": true,
+                "type": "file",
+                "name": "input_file"
+            }
+        ],
+        "version": "1.1",
+        "command": ""
+    },
+    "error_mapping": {
+        "version": "1.0",
+        "exit_codes": {}
+    },
+    "trigger_rule": null
+}
+EOF
+
+cat << EOF > recipe-type.json
+{
+    "definition": {
+        "input_data": [
+            {
+                "media_types": [
+                    "application/octet-stream"
+                ],
+                "name": "input_file",
+                "required": true,
+                "type": "file"
+            }
+        ],
+        "jobs": [
+            {
+                "dependencies": [],
+                "job_type": {
+                    "name": "read-bytes",
+                    "version": "1.0.0"
+                },
+                "name": "read-bytes",
+                "recipe_inputs": [
+                    {
+                        "job_input": "input_file",
+                        "recipe_input": "input_file"
+                    }
+                ]
+            }
+        ]
+    },
+    "description": "Read x bytes from input file and save in output dir",
+    "name": "read-byte-recipe",
+    "title": "Read Byte Recipe",
+    "trigger_rule": {
+        "configuration": {
+            "condition": {
+                "data_types": [],
+                "media_type": ""
+            },
+            "data": {
+                "input_data_name": "input_file",
+                "workspace_name": "s3-direct"
+            }
+        },
+        "is_active": true,
+        "name": "read-byte-trigger",
+        "type": "INGEST"
+    },
+    "version": "1.0.0"
+}
+EOF
+
+cat << EOF > strike.json
+{
+  "name": "s3-strike-process",
+  "title": "s3-strike-process",
+  "description": "s3-strike-process",
+  "configuration": {
+    "version": "2.0",
+    "workspace": "s3-direct",
+    "monitor": {
+      "type": "s3",
+      "sqs_name": "${QUEUE_NAME}",
+      "credentials": {
+        "access_key_id": "${ACCESS_KEY}",
+        "secret_access_key": "${SECRET_KEY}"
+      },
+      "region_name": "${REGION_NAME}"
+    },
+    "files_to_ingest": [
+      {
+        "filename_regex": ".*",
+        "data_types": [
+          "all_my_mounted_files"
+        ]
+      }
+    ]
+  }
+}
+EOF
+
+
+curl -X POST -H "Authorization: token=${DCOS_TOKEN}" -H "Content-Type: application/json" -H "Cache-Control: no-cache" -d @workspace.json "${DCOS_ROOT_URL}/service/scale/api/v4/workspaces/"
+curl -X POST -H "Authorization: token=${DCOS_TOKEN}" -H "Content-Type: application/json" -H "Cache-Control: no-cache" -d @job-type.json "${DCOS_ROOT_URL}/service/scale/api/v4/job-types/"
+curl -X POST -H "Authorization: token=${DCOS_TOKEN}" -H "Content-Type: application/json" -H "Cache-Control: no-cache" -d @recipe-type.json "${DCOS_ROOT_URL}/service/scale/api/v4/recipe-types/"
+curl -X POST -H "Authorization: token=${DCOS_TOKEN}" -H "Content-Type: application/json" -H "Cache-Control: no-cache" -d @strike.json "${DCOS_ROOT_URL}/service/scale/api/v4/strikes/"</pre>
+                </div>
+
+                <pre>
+<kbd>export DCOS_TOKEN="DCOS token that can found within ~/.dcos/dcos.toml once DCOS CLI is authenticated against DCOS cluster."</kbd>
+<kbd>export DCOS_ROOT_URL="The externally routable Admin URL."</kbd>
+<kbd>export REGION_NAME="AWS Region where SQS and S3 bucket reside."</kbd>
+<kbd>export BUCKET_NAME="AWS S3 bucket name only. Full ARN should NOT be used."</kbd>
+<kbd>export QUEUE_NAME="AWS SQS queue name only. Full ARN should NOT be used."</kbd>
+<kbd>export ACCESS_KEY="Access Key for IAM user that will access S3 and SQS resources."</kbd>
+<kbd>export SECRET_KEY="Secret Key for IAM user that will access S3 and SQS resources."</kbd>
+<kbd>sh scale-init.sh</kbd></pre>
+
+                <p><strong>Test Scale ingest.</strong>
+                    Now that our configuration is complete we can verify that Scale is ready to process. We will drop a
+                new file into our bucket using the AWS CLI. This file can be anything, but a text file over 1 MiB is
+                best to demonstrate the jobs ability to extract only the first MiB. The following will do nicely:</p>
+
+                <pre>
+<kbd>base64 /dev/urandom | head -c 2000000 > sample-data-2mb.txt</kbd>
+<kbd>aws s3 cp --acl public-read sample-data-2mb.txt s3://${BUCKET_NAME}/</kbd></pre>
+
+                <p><strong>View processing results.</strong>
+                    In the Scale UI, navigate to Jobs. A Read Bytes job should have completed. Click on the job in the
+                table and see the outputs in the detail view. You should be able to see that the file size is 1MiB. Feel
+                free to download and inspect. Congratulations, you've processed your first file within Scale! For more
+                advanced examples refer to the Scale GitHub and Docker Hub repositories, as well as the documentation.
+                </p>
+            </div>
+        </div>
+
+
     </div>
 </section>
 
