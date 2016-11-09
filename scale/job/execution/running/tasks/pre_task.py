@@ -66,7 +66,8 @@ class PreTask(JobExecutionTask):
                 error = self.consider_general_error(task_results)
 
             self._has_ended = True
-            self._results = task_results
+            self._ended = task_results.when
+            self._exit_code = task_results.exit_code
 
             return error
 
@@ -78,5 +79,5 @@ class PreTask(JobExecutionTask):
             if self._has_started:
                 job_exe.pre_started = self._started
             if self._has_ended:
-                job_exe.pre_completed = self._results.when
-                job_exe.pre_exit_code = self._results.exit_code
+                job_exe.pre_completed = self._ended
+                job_exe.pre_exit_code = self._exit_code

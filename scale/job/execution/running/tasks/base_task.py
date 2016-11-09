@@ -4,6 +4,8 @@ from __future__ import unicode_literals
 import threading
 from abc import ABCMeta, abstractmethod
 
+from job.execution.running.tasks.update import TaskStatusUpdate
+
 
 class Task(object):
     """Abstract base class for a task
@@ -32,7 +34,8 @@ class Task(object):
         self._has_started = False
         self._started = None
         self._has_ended = False
-        self._results = None
+        self._ended = None
+        self._exit_code = None
 
         # These values will vary by different task subclasses
         self._uses_docker = False
@@ -164,17 +167,6 @@ class Task(object):
             return self._task_name
 
     @property
-    def results(self):
-        """The results of this task, possibly None
-
-        :returns: The results of this task
-        :rtype: :class:`job.execution.running.tasks.results.TaskResults`
-        """
-
-        with self._lock:
-            return self._results
-
-    @property
     def started(self):
         """When this task started, possibly None
 
@@ -215,7 +207,38 @@ class Task(object):
 
         with self._lock:
             if self._has_started:
-                raise Exception('Trying to scheduled a task that has already started')
+                raise Exception('Trying to schedule a task that has already started')
 
             self._has_been_scheduled = True
             self._scheduled = when
+
+    def update(self, task_update):
+        """Handles the given task update
+
+        :param task_update: The task update
+        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
+        """
+
+        with self._lock:
+            if self._task_id != task_update.task_id:
+                return
+
+            # Support duplicate calls as task updates may repeat
+            if task_update.status == TaskStatusUpdate.RUNNING:
+                # Mark task as having started if it isn't already
+                if not self._has_started:
+                    self._has_started = True
+                    self._started = task_update.when
+            elif task_update.status == TaskStatusUpdate.LOST:
+                # Reset task to initial state (unless already ended)
+                if not self._has_ended:
+                    self._has_been_scheduled = False
+                    self._scheduled = None
+                    self._has_started = False
+                    self._started = None
+            elif task_update.status in TaskStatusUpdate.TERMINAL_STATUSES:
+                # Mark task as having ended if it isn't already
+                if not self._has_ended:
+                    self._has_ended = True
+                    self._ended = task_update.when
+                    self._exit_code = task_update.exit_code

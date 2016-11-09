@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import threading
 
 from job.execution.running.tasks.cleanup_task import CleanupTask
+from job.execution.running.tasks.update import TaskStatusUpdate
 
 
 class NodeCleanup(object):
@@ -36,17 +37,36 @@ class NodeCleanup(object):
 
             return self._current_task
 
-    def _create_next_task(self):
-        """Creates the next cleanup task that needs to be run for this node
+    def handle_task_update(self, task_update):
+        """Handles the given task update
+
+        :param task_update: The task update
+        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
         """
 
         with self._lock:
-            # If we have a current task, check that node's agent ID has not changed
-            if self._current_task and self._current_task.agent_id != self._node.agent_id:
-                self._current_task = None
-
-            if self._current_task:
+            if not self._current_task or self._current_task.id != task_update.task_id:
                 return
 
-            # TODO: implement passing the cleanup details into the task that it needs
-            self._current_task = CleanupTask(self._node.agent_id)
+            self._current_task.update(task_update)
+            if self._current_task.has_ended:
+                self._current_task = None
+            if task_update.status == TaskStatusUpdate.FINISHED:
+                # TODO: if task is initial cleanup, mark the node as having finished initial cleanup
+                # TODO: remove applicable job exes from cleanup "queue"
+                pass
+            self._create_next_task()
+
+    def _create_next_task(self):
+        """Creates the next cleanup task that needs to be run for this node. Caller must have obtained the thread lock.
+        """
+
+        # If we have a current task, check that node's agent ID has not changed
+        if self._current_task and self._current_task.agent_id != self._node.agent_id:
+            self._current_task = None
+
+        if self._current_task:
+            return
+
+        # TODO: implement passing the cleanup details into the task that it needs
+        self._current_task = CleanupTask(self._node.agent_id)

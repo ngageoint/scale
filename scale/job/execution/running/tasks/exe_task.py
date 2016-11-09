@@ -66,7 +66,7 @@ class JobExecutionTask(Task):
 
             # Support duplicate calls to complete(), task updates may repeat
             self._has_ended = True
-            self._results = task_results
+            self._ended = task_results.when
 
             return False
 

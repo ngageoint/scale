@@ -33,7 +33,19 @@ class CleanupManager(object):
                     tasks.append(task)
         return tasks
 
-    # TODO: method to handle status updates for cleanup tasks
+    # TODO: call this when receiving task update from Mesos
+    def handle_task_update(self, task_update):
+        """Handles the given task update for a cleanup task
+
+        :param task_update: The task update
+        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
+        """
+
+        with self._lock:
+            if task_update.agent_id not in self._agent_ids:
+                return
+            node_id = self._agent_ids[task_update.agent_id]
+            self._nodes[node_id].handle_task_update(task_update)
 
     # TODO: call this at start of scheduling thread
     def update_nodes(self, nodes):
