@@ -25,7 +25,7 @@ to the Docker daemon on build. The tarballs can be updated for Bower and NPM as 
 
 ```
 tar cvzf bower_components.tar.gz app/bower_components
-tar cvzf node_modules.tar.gz node_modules.tar.gz node_modules
+tar cvzf node_modules.tar.gz node_modules
 ```
 
 These tarballs should also be committed and pushed to the remote repository.
