@@ -13,6 +13,10 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RemoveField(
             model_name='jobexecution',
+            name='cleaned_up',
+        ),
+        migrations.RemoveField(
+            model_name='jobexecution',
             name='cleanup_job',
         ),
         migrations.RemoveField(

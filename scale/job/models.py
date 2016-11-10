@@ -1173,8 +1173,6 @@ class JobExecution(models.Model):
     :type started: :class:`django.db.models.DateTimeField`
     :keyword ended: When the job execution ended (FAILED, COMPLETED, or CANCELED)
     :type ended: :class:`django.db.models.DateTimeField`
-    :keyword cleaned_up: When the job execution was cleaned up on the node
-    :type cleaned_up: :class:`django.db.models.DateTimeField`
     :keyword last_modified: When the job execution was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
     """
@@ -1231,7 +1229,6 @@ class JobExecution(models.Model):
     queued = models.DateTimeField()
     started = models.DateTimeField(blank=True, null=True)
     ended = models.DateTimeField(blank=True, null=True)
-    cleaned_up = models.DateTimeField(blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True, db_index=True)
 
     objects = JobExecutionManager()
