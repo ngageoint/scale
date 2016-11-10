@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('jobTypesController', function ($rootScope, $scope, $routeParams, $location, hotkeys, scaleService, navService, jobTypeService, scaleConfig, subnavService, nodeService, localStorage, userService) {
+    angular.module('scaleApp').controller('jobTypesController', function ($rootScope, $scope, $routeParams, $location, hotkeys, scaleService, navService, stateService, jobTypeService, scaleConfig, subnavService, nodeService, localStorage, userService) {
         var vm = this;
         
         vm.containerStyle = '';
@@ -13,6 +13,7 @@
         vm.activeJobTypeInterfaceValues = [];
         vm.activeJobTypeErrors = [];
         vm.activeJobTypeStats = {};
+        vm.jobTypesParams = stateService.getJobTypesParams();
         vm.showJobTypeErrors = false;
         vm.loading = true;
         vm.activeJobType = null;
@@ -25,6 +26,10 @@
         vm.user = userService.getUserCreds();
         vm.subnavLinks = scaleConfig.subnavLinks.jobs;
         subnavService.setCurrentPath('jobs/types');
+
+        $scope.$watchCollection('vm.jobTypesParams',function(newValue){
+            stateService.setJobTypesParams(newValue);
+        });
 
         vm.viewDetails = function (id) {
             vm.activeJobType = _.find(vm.jobTypes, 'id', id);
@@ -148,6 +153,7 @@
         };
 
         var initialize = function () {
+            vm.jobTypesParams = stateService.getJobTypesParams();
             getJobTypes();
             navService.updateLocation('jobs');
         };

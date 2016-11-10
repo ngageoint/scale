@@ -1,6 +1,6 @@
 # scale dockerfile
 FROM centos:centos7
-MAINTAINER Trevor R.H. Clarke <tclarke@ball.com>
+MAINTAINER Scale Developers <https://github.com/ngageoint/scale>
 
 EXPOSE 80
 EXPOSE 8000

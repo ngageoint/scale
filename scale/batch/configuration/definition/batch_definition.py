@@ -52,7 +52,7 @@ BATCH_DEFINITION_SCHEMA = {
                 'type': {
                     'description': 'Indicates how the date range should be interpreted',
                     'type': 'string',
-                    'enum': ['created'],
+                    'enum': ['created', 'data'],
                 },
                 'started': {
                     'description': 'The start of the range to use when matching recipes to re-process',
@@ -95,6 +95,10 @@ class BatchDefinition(object):
             raise InvalidDefinition('%s is an unsupported version number' % self._definition['version'])
 
         date_range = self._definition['date_range'] if 'date_range' in self._definition else None
+        self.date_range_type = None
+        if date_range and 'type' in date_range:
+            self.date_range_type = date_range['type']
+
         self.started = None
         if date_range and 'started' in date_range:
             try:

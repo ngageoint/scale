@@ -13,7 +13,8 @@
         'ui.grid.pagination',
         'ui.grid.resizeColumns',
         'cfp.hotkeys',
-        'toggle-switch'
+        'toggle-switch',
+        'uiSwitch'
     ]);
 
     app.config(function($routeProvider, $resourceProvider, $provide, pollerConfig) {
@@ -133,7 +134,8 @@
             .when('/jobs/types/:id?', {
                 controller: 'jobTypesController',
                 controllerAs: 'vm',
-                templateUrl: 'modules/jobs/partials/jobTypesTemplate.html'
+                templateUrl: 'modules/jobs/partials/jobTypesTemplate.html',
+                reloadOnSearch: false
             })
             .when('/jobs/failure-rates', {
                 controller: 'jobTypesFailureRatesController',

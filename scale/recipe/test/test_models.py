@@ -17,7 +17,7 @@ from recipe.configuration.definition.exceptions import InvalidDefinition
 from recipe.configuration.definition.recipe_definition import RecipeDefinition
 from recipe.exceptions import ReprocessError
 from recipe.handlers.graph_delta import RecipeGraphDelta
-from recipe.models import Recipe, RecipeJob, RecipeType, RecipeTypeRevision
+from recipe.models import Recipe, RecipeFile, RecipeJob, RecipeType, RecipeTypeRevision
 from trigger.models import TriggerRule
 
 
@@ -440,8 +440,13 @@ class TestRecipeManagerCreateRecipe(TransactionTestCase):
         recipe_job_2 = RecipeJob.objects.get(recipe_id=handler.recipe.id, job_name='Job 2')
         self.assertEqual(recipe_job_1.job.job_type.id, self.job_type_1.id)
         self.assertEqual(recipe_job_2.job.job_type.id, self.job_type_2.id)
+
         # Make sure the recipe jobs get created in the correct order
         self.assertLess(recipe_job_1.job_id, recipe_job_2.job_id)
+
+        recipe_files = RecipeFile.objects.filter(recipe=handler.recipe)
+        self.assertEqual(len(recipe_files), 1)
+        self.assertEqual(recipe_files[0].scale_file_id, self.file.id)
 
     def test_successful_supersede_same_recipe_type(self):
         """Tests calling RecipeManager.create_recipe() to supersede a recipe with the same recipe type."""
