@@ -28,7 +28,6 @@ class CleanupManager(object):
         with self._lock:
             self._nodes[job_exe.node_id].add_job_execution(job_exe)
 
-    # TODO: call this in scheduling thread
     def get_next_tasks(self):
         """Returns the next cleanup tasks to schedule
 
@@ -58,7 +57,6 @@ class CleanupManager(object):
             node_id = self._agent_ids[task_update.agent_id]
             self._nodes[node_id].handle_task_update(task_update)
 
-    # TODO: call this at start of scheduling thread
     def update_nodes(self, nodes):
         """Updates the manager with the latest copies of the nodes
 

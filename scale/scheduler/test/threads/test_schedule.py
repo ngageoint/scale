@@ -69,7 +69,7 @@ class TestSchedulingThread(TransactionTestCase):
         self._offer_manager.add_new_offers([offer_1, offer_2])
 
         num_tasks = self._scheduling_thread._perform_scheduling()
-        self.assertEqual(num_tasks, 2)
+        self.assertEqual(num_tasks, 4)  # Schedule both queued job executions and both initial cleanup tasks
 
     @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
     def test_paused_scheduler(self, mock_taskinfo):
@@ -108,6 +108,10 @@ class TestSchedulingThread(TransactionTestCase):
         offer_1 = ResourceOffer('offer_1', self.node_agent_1, NodeResources(cpus=200.0, mem=102400.0, disk=102400.0))
         offer_2 = ResourceOffer('offer_2', self.node_agent_2, NodeResources(cpus=200.0, mem=204800.0, disk=204800.0))
         self._offer_manager.add_new_offers([offer_1, offer_2])
+
+        # Ignore cleanup tasks
+        for node in self._managers.node.get_nodes():
+            node.initial_cleanup_completed()
 
         num_tasks = self._scheduling_thread._perform_scheduling()
         self.assertEqual(num_tasks, 3)  # One is already running, should only be able to schedule 3 more

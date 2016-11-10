@@ -51,7 +51,14 @@ class CleanupTask(Task):
 
         self._job_exes = job_exes
         self._is_initial_cleanup = not self._job_exes  # This is an initial clean up if job_exes is empty
-        # TODO: set up command and other attributes, go ahead and set Docker stuff to False
+
+        self._uses_docker = False
+        self._docker_image = None
+        self._docker_params = []
+        self._is_docker_privileged = False
+        # TODO: set up command
+        self._command = ''
+        self._command_arguments = ''
 
     @property
     def is_initial_cleanup(self):

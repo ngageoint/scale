@@ -93,6 +93,22 @@ class OfferManager(object):
             node_offers = self._nodes_by_node_id[job_exe.node_id]
             return node_offers.consider_next_task(job_exe)
 
+    def consider_task(self, task):
+        """Considers if the given task can be run with the current offered resources
+
+        :param task: The task to consider
+        :type task: :class:`job.execution.running.tasks.base_task.Task`
+        :returns: One of the OfferManager constants indicating if the task was accepted or why it was not accepted
+        :rtype: int
+        """
+
+        with self._lock:
+            if task.agent_id not in self._nodes_by_agent_id:
+                return OfferManager.NODE_OFFLINE
+
+            node_offers = self._nodes_by_agent_id[task.agent_id]
+            return node_offers.consider_task(task)
+
     def lost_node(self, agent_id):
         """Informs the manager that the node with the given agent ID was lost and has gone offline
 

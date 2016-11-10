@@ -156,6 +156,16 @@ class SchedulingThread(object):
         for running_job_exe in self._job_exe_manager.get_ready_job_exes():
             self._offer_manager.consider_next_task(running_job_exe)
 
+    def _consider_cleanup_tasks(self):
+        """Considers any cleanup tasks to schedule
+        """
+
+        if self._scheduler_manager.is_paused():
+            return
+
+        for task in self._managers.cleanup.get_next_tasks():
+            self._offer_manager.consider_task(task)
+
     def _perform_scheduling(self):
         """Performs task reconciliation with the Mesos master
 
@@ -164,7 +174,9 @@ class SchedulingThread(object):
         """
 
         # Get updated node and job type models from managers
-        self._offer_manager.update_nodes(self._managers.node.get_nodes())
+        nodes = self._managers.node.get_nodes()
+        self._managers.cleanup.update_nodes(nodes)
+        self._offer_manager.update_nodes(nodes)
         self._offer_manager.ready_new_offers()
         self._job_types = self._job_type_manager.get_job_types()
 
@@ -177,6 +189,7 @@ class SchedulingThread(object):
             if running_job_exe.job_type_id in self._job_type_limit_available:
                 self._job_type_limit_available[running_job_exe.job_type_id] -= 1
 
+        self._consider_cleanup_tasks()
         self._consider_running_job_exes()
         self._consider_new_job_exes()
 
@@ -195,6 +208,9 @@ class SchedulingThread(object):
         for node_offers in node_offers_list:
             mesos_tasks = []
             tasks_to_launch[node_offers.node.id] = mesos_tasks
+            # Add cleanup tasks
+            for task in node_offers.get_accepted_tasks():
+                mesos_tasks.append(create_mesos_task(task))
             # Start next task for already running job executions that were accepted
             for running_job_exe in node_offers.get_accepted_running_job_exes():
                 task = running_job_exe.start_next_task()

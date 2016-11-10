@@ -32,6 +32,7 @@ class NodeOffers(object):
         self._offers = {}  # {Offer ID: Offer}
         self._accepted_new_job_exes = {}  # {Job Exe ID: Job Exe}
         self._accepted_running_job_exes = {}  # {Job Exe ID: Job Exe}
+        self._accepted_tasks = []
 
     @property
     def node(self):
@@ -155,6 +156,39 @@ class NodeOffers(object):
             self._accepted_running_job_exes[job_exe.id] = job_exe
             return NodeOffers.ACCEPTED
 
+    def consider_task(self, task):
+        """Considers if the given task can be run on this node with the current resources
+
+        :param task: The task to consider
+        :type task: :class:`job.execution.running.tasks.base_task.Task`
+        :returns: One of the NodeOffers constants indicating if the task was accepted or why it was not accepted
+        :rtype: int
+        """
+
+        with self._lock:
+            if self._node.agent_id != task.agent_id:
+                return NodeOffers.TASK_INVALID
+            if not self._node.is_online:
+                return NodeOffers.NODE_OFFLINE
+            if len(self._offers) == 0:
+                return NodeOffers.NO_OFFERS
+
+            required_resources = task.get_resources()
+            if not required_resources:
+                return NodeOffers.TASK_INVALID
+            if self._available_cpus < required_resources.cpus:
+                return NodeOffers.NOT_ENOUGH_CPUS
+            if self._available_mem < required_resources.mem:
+                return NodeOffers.NOT_ENOUGH_MEM
+            if self._available_disk < required_resources.disk:
+                return NodeOffers.NOT_ENOUGH_DISK
+
+            self._available_cpus -= required_resources.cpus
+            self._available_mem -= required_resources.mem
+            self._available_disk -= required_resources.disk
+            self._accepted_tasks.append(task)
+            return NodeOffers.ACCEPTED
+
     def get_accepted_new_job_exes(self):
         """Returns all of the new job executions that have been accepted to run on this node
 
@@ -181,6 +215,19 @@ class NodeOffers(object):
                 job_exes.append(self._accepted_running_job_exes[job_exe_id])
         return job_exes
 
+    def get_accepted_tasks(self):
+        """Returns all of the tasks that have been accepted to run on this node
+
+        :returns: The list of all accepted tasks
+        :rtype: [:class:`job.execution.running.tasks.base_task.Task`]
+        """
+
+        tasks = []
+        with self._lock:
+            for task in self._accepted_tasks:
+                tasks.append(task)
+        return tasks
+
     def has_accepted_job_exes(self):
         """Indicates whether any job executions have been accepted
 
@@ -189,7 +236,7 @@ class NodeOffers(object):
         """
 
         with self._lock:
-            return len(self._accepted_new_job_exes) or len(self._accepted_running_job_exes)
+            return len(self._accepted_new_job_exes) or len(self._accepted_running_job_exes) or len(self._accepted_tasks)
 
     def lost_node(self):
         """Informs the set of offers that the node was lost and has gone offline
@@ -203,6 +250,7 @@ class NodeOffers(object):
             self._offers = {}
             self._accepted_new_job_exes = {}
             self._accepted_running_job_exes = {}
+            self._accepted_tasks = []
 
     def remove_offer(self, offer_id):
         """Removes the offer with the given ID from this node set, resetting any accepted job executions if there are no
@@ -227,6 +275,7 @@ class NodeOffers(object):
                 # Lost too many resources, dump previously accepted job executions
                 self._accepted_running_job_exes = {}
                 self._accepted_new_job_exes = {}
+                self._accepted_tasks = []
                 self._available_cpus = 0
                 self._available_mem = 0
                 self._available_disk = 0
