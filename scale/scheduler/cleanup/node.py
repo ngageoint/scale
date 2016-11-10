@@ -9,7 +9,7 @@ from job.execution.running.tasks.update import TaskStatusUpdate
 
 
 JOB_EXES_WARNING_THRESHOLD = 50
-MAX_JOB_EXES_PER_CLEANUP = 25
+MAX_JOB_EXES_PER_CLEANUP = 10
 
 
 logger = logging.getLogger(__name__)
@@ -100,6 +100,9 @@ class NodeCleanup(object):
 
         cleanup_job_exes = []
         if self._node.is_initial_cleanup_completed:
+            if count == 0:
+                # No job executions to clean, so no new task
+                return
             for job_exe in total_job_exes:
                 cleanup_job_exes.append(job_exe)
                 if len(cleanup_job_exes) >= MAX_JOB_EXES_PER_CLEANUP:
