@@ -34,7 +34,7 @@
                         <dt>Description:</dt>
                         <dd>{{ vm.activeStrike.description }}</dd>
                         <dt ng-if="vm.activeStrike.job.id">Job:</dt>
-                        <dd ng-if="vm.activeStrike.job.id">{{ vm.activeStrike.job.id }}</dd>
+                        <dd ng-if="vm.activeStrike.job.id"><a ng-href="/#/jobs/job/{{ vm.activeStrike.job.id }}"> <span class="fa" ng-bind-html="'&#x' + vm.activeStrike.job.job_type.icon_code"></span> View Job Details ({{ vm.activeStrike.job.status }})</a></dd>
                         <dt>Created:</dt>
                         <dd>{{ vm.activeStrike.created_formatted }}</dd>
                         <dt>Last Modified:</dt>
