@@ -6,6 +6,8 @@ import threading
 from job.execution.running.tasks.cleanup_task import CleanupTask
 from job.execution.running.tasks.update import TaskStatusUpdate
 
+MAX_JOB_EXES_PER_CLEANUP = 25
+
 
 class NodeCleanup(object):
     """This class manages all of the cleanup for a node. This class is thread-safe."""
@@ -18,8 +20,20 @@ class NodeCleanup(object):
         """
 
         self._current_task = None
+        self._job_exes = {}  # {Job Exe ID: RunningJobExecution}
         self._lock = threading.Lock()
         self._node = node
+
+    def add_job_execution(self, job_exe):
+        """Adds a job execution that needs to be cleaned up
+
+        :param job_exe: The job execution to add
+        :type job_exe: :class:`job.execution.running.job_exe.RunningJobExecution`
+        """
+
+        with self._lock:
+            self._job_exes[job_exe.id] = job_exe
+            self._create_next_task()
 
     def get_next_task(self):
         """Returns the next cleanup task to schedule, possibly None
@@ -49,12 +63,16 @@ class NodeCleanup(object):
                 return
 
             self._current_task.update(task_update)
+            if task_update.status == TaskStatusUpdate.FINISHED:
+                if self._current_task.is_initial_cleanup:
+                    # Initial cleanup is done
+                    self._node.initial_cleanup_completed()
+                else:
+                    # Clear job executions that were cleaned up
+                    for job_exe in self._current_task.job_exes:
+                        del self._job_exes[job_exe.id]
             if self._current_task.has_ended:
                 self._current_task = None
-            if task_update.status == TaskStatusUpdate.FINISHED:
-                # TODO: if task is initial cleanup, mark the node as having finished initial cleanup
-                # TODO: remove applicable job exes from cleanup "queue"
-                pass
             self._create_next_task()
 
     def _create_next_task(self):
@@ -66,7 +84,14 @@ class NodeCleanup(object):
             self._current_task = None
 
         if self._current_task:
+            # Current task already exists
             return
 
-        # TODO: implement passing the cleanup details into the task that it needs
-        self._current_task = CleanupTask(self._node.agent_id)
+        cleanup_job_exes = []
+        if self._node.is_initial_cleanup_completed:
+            for job_exe in self._job_exes.values():
+                cleanup_job_exes.append(job_exe)
+                if len(cleanup_job_exes) >= MAX_JOB_EXES_PER_CLEANUP:
+                    break
+
+        self._current_task = CleanupTask(self._node.agent_id, cleanup_job_exes)

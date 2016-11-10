@@ -1028,16 +1028,14 @@ class JobExecutionManager(models.Manager):
                 raise Exception('Cannot schedule job execution %i without node ID' % job_exe.id)
             if resources is None:
                 raise Exception('Cannot schedule job execution %i without resources' % job_exe.id)
-            if job_exe.status != 'QUEUED':
-                msg = 'Job execution %i is %s, must be in QUEUED status to be scheduled'
-                raise Exception(msg % (job_exe.id, job_exe.status))
 
             job_exe.job = jobs[job_exe.job_id]
             job_exe.set_cluster_id(framework_id)
             job_exe.status = 'RUNNING'
             job_exe.started = started
             job_exe.node_id = node_id
-            job_exe.configure_docker_params(workspaces)
+            docker_volumes = []
+            job_exe.configure_docker_params(workspaces, docker_volumes)
             job_exe.environment = JobEnvironment({}).get_dict()
             job_exe.cpus_scheduled = resources.cpus
             job_exe.mem_scheduled = resources.mem
@@ -1045,6 +1043,7 @@ class JobExecutionManager(models.Manager):
             job_exe.disk_out_scheduled = resources.disk_out
             job_exe.disk_total_scheduled = resources.disk_total
             job_exe.save()
+            job_exe.docker_volumes = docker_volumes
             job_exes.append(job_exe)
 
         return job_exes
@@ -1250,13 +1249,15 @@ class JobExecution(models.Model):
         # Job execution ID is the second-to-last segment
         return int(task_id.split('_')[-2])
 
-    def configure_docker_params(self, workspaces):
+    def configure_docker_params(self, workspaces, docker_volumes):
         """Configures the Docker parameters needed for each task in the execution. The job execution must have been set
         to status RUNNING prior to invoking this. Requires workspace information to determine any Docker parameters that
         might be required by this job execution's workspaces.
 
         :param workspaces: A dict of all workspaces stored by name
         :type workspaces: {string: :class:`storage.models.Workspace`}
+        :param docker_volumes: A list to add Docker volume names to
+        :type docker_volumes: [string]
 
         :raises Exception: If the job execution is still queued
         """
@@ -1290,6 +1291,7 @@ class JobExecution(models.Model):
             # Non-system jobs get named Docker volumes for input and output data
             input_vol_name = job_exe_container.get_job_exe_input_vol_name(self)
             output_vol_name = job_exe_container.get_job_exe_output_vol_name(self)
+            docker_volumes.extend([input_vol_name, output_vol_name])
             input_volume_ro = '%s:%s:ro' % (input_vol_name, SCALE_JOB_EXE_INPUT_PATH)
             input_volume_rw = '%s:%s:rw' % (input_vol_name, SCALE_JOB_EXE_INPUT_PATH)
             output_volume_ro = '%s:%s:ro' % (output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH)
@@ -1308,7 +1310,7 @@ class JobExecution(models.Model):
             configuration.add_job_task_workspace(workspace_name, MODE_RW)
 
         # Configure any Docker parameters needed for workspaces
-        configuration.configure_workspace_docker_params(self, workspaces)
+        configuration.configure_workspace_docker_params(self, workspaces, docker_volumes)
 
         self.configuration = configuration.get_dict()
 

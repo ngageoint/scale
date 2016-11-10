@@ -37,15 +37,43 @@ class CleanupTask(Task):
     """Represents a task that cleans up after job executions. This class is thread-safe.
     """
 
-    def __init__(self, agent_id):
+    def __init__(self, agent_id, job_exes):
         """Constructor
 
         :param agent_id: The agent ID
         :type agent_id: string
+        :param job_exes: The list of job executions to clean up
+        :type job_exes: [:class:`job.execution.running.job_exe.RunningJobExecution`]
         """
 
         task_id = 'scale_cleanup_%s_%d' % (agent_id, COUNTER.get_next())
         super(CleanupTask, self).__init__(task_id, 'Scale Cleanup', agent_id)
+
+        self._job_exes = job_exes
+        self._is_initial_cleanup = not self._job_exes  # This is an initial clean up if job_exes is empty
+        # TODO: set up command and other attributes, go ahead and set Docker stuff to False
+
+    @property
+    def is_initial_cleanup(self):
+        """Indicates whether this is an initial clean up job (True) or not (False)
+
+        :returns: Whether this is an initial clean up job
+        :rtype: bool
+        """
+
+        with self._lock:
+            return self._is_initial_cleanup
+
+    @property
+    def job_exes(self):
+        """Returns the list of job executions to clean up
+
+        :returns: The list of job executions to clean up
+        :rtype: [:class:`job.execution.running.job_exe.RunningJobExecution`]
+        """
+
+        with self._lock:
+            return self._job_exes
 
     def get_resources(self):
         """See :meth:`job.execution.running.tasks.base_task.Task.get_resources`

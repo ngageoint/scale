@@ -6,16 +6,17 @@ from collections import namedtuple
 
 
 NodeState = namedtuple('NodeState', ['state', 'description'])
-INACTIVE = NodeState(state='INACTIVE', description='Inactive, ignored by Scale')
-OFFLINE = NodeState(state='OFFLINE', description='Offline/unavailable')
-PAUSED = NodeState(state='PAUSED', description='Paused, no new jobs will be scheduled')
-INITIAL_CLEANUP = NodeState(state='INITIAL_CLEANUP', description='Performing initial cleanup')
-READY = NodeState(state='READY', description='Ready for new jobs')
 
 
 class Node(object):
     """This class represents a node in the scheduler. It combines information retrieved from the database node models as
     well as run-time information retrieved from Mesos. This class is thread-safe."""
+
+    INACTIVE = NodeState(state='INACTIVE', description='Inactive, ignored by Scale')
+    OFFLINE = NodeState(state='OFFLINE', description='Offline/unavailable')
+    PAUSED = NodeState(state='PAUSED', description='Paused, no new jobs will be scheduled')
+    INITIAL_CLEANUP = NodeState(state='INITIAL_CLEANUP', description='Performing initial cleanup')
+    READY = NodeState(state='READY', description='Ready for new jobs')
 
     def __init__(self, agent_id, node):
         """Constructor
@@ -35,7 +36,7 @@ class Node(object):
         self._is_paused = node.is_paused
         self._lock = threading.Lock()
         self._port = node.port
-        self._state = INACTIVE
+        self._state = self.INACTIVE
         self._update_state()
 
     @property
@@ -81,6 +82,17 @@ class Node(object):
             return self._is_active
 
     @property
+    def is_initial_cleanup_completed(self):
+        """Indicates whether this node has its initial cleanup completed (True) or not (False)
+
+        :returns: Whether this node has its initial cleanup completed
+        :rtype: bool
+        """
+
+        with self._lock:
+            return self._is_initial_cleanup_completed
+
+    @property
     def is_online(self):
         """Indicates whether this node is online (True) or not (False)
 
@@ -101,6 +113,16 @@ class Node(object):
 
         with self._lock:
             return self._is_paused
+
+    @property
+    def state(self):
+        """Returns the state of the node
+
+        :returns: The state
+        :rtype: :class:`scheduler.node.node_class.NodeState`
+        """
+
+        return self._state
 
     def initial_cleanup_completed(self):
         """Tells this node that its initial cleanup task has succeeded
@@ -150,11 +172,11 @@ class Node(object):
         """
 
         if not self._is_active:
-            self._state = INACTIVE
+            self._state = self.INACTIVE
         elif not self._is_online:
-            self._state = OFFLINE
+            self._state = self.OFFLINE
         elif self._is_paused:
-            self._state = PAUSED
+            self._state = self.PAUSED
         elif not self._is_initial_cleanup_completed:
-            self._state = INITIAL_CLEANUP
-        self._state = READY
+            self._state = self.INITIAL_CLEANUP
+        self._state = self.READY

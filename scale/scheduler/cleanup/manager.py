@@ -17,6 +17,17 @@ class CleanupManager(object):
         self._lock = threading.Lock()
         self._nodes = {}  # {Node ID: NodeCleanup}
 
+    # TODO: call this when receiving task update from Mesos and job_execution is done
+    def add_job_execution(self, job_exe):
+        """Adds a job execution that needs to be cleaned up
+
+        :param job_exe: The job execution to add
+        :type job_exe: :class:`job.execution.running.job_exe.RunningJobExecution`
+        """
+
+        with self._lock:
+            self._nodes[job_exe.node_id].add_job_execution(job_exe)
+
     # TODO: call this in scheduling thread
     def get_next_tasks(self):
         """Returns the next cleanup tasks to schedule
@@ -66,5 +77,3 @@ class CleanupManager(object):
 
                 # Re-create agent ID mapping (agent IDs can change over time)
                 self._agent_ids[node.agent_id] = node.id
-
-    # TODO: take in finished job exes and track stuff to clean up
