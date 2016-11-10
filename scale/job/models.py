@@ -1829,7 +1829,7 @@ class JobTypeManager(models.Manager):
 
         return JobType.objects.get(name='scale-clock', version='1.0')
 
-    def get_job_types(self, started=None, ended=None, names=None, categories=None, order=None):
+    def get_job_types(self, started=None, ended=None, names=None, categories=None, is_operational=None, order=None):
         """Returns a list of job types within the given time range.
 
         :param started: Query job types updated after this amount of time.
@@ -1840,6 +1840,8 @@ class JobTypeManager(models.Manager):
         :type names: [string]
         :param categories: Query jobs of the type associated with the category.
         :type categories: [string]
+        :param is_operational: Query job types that are operational or research phase.
+        :type is_operational: bool
         :param order: A list of fields to control the sort order.
         :type order: [string]
         :returns: The list of job types that match the time range.
@@ -1860,6 +1862,8 @@ class JobTypeManager(models.Manager):
             job_types = job_types.filter(name__in=names)
         if categories:
             job_types = job_types.filter(category__in=categories)
+        if is_operational is not None:
+            job_types = job_types.filter(is_operational=is_operational)
 
         # Apply sorting
         if order:
@@ -1919,7 +1923,7 @@ class JobTypeManager(models.Manager):
             results.append(counts)
         return results
 
-    def get_status(self, started, ended=None):
+    def get_status(self, started, ended=None, is_operational=None):
         """Returns a list of job types with counts broken down by job status.
 
         Note that all running job types are counted regardless of date/time filters.
@@ -1928,12 +1932,16 @@ class JobTypeManager(models.Manager):
         :type started: :class:`datetime.datetime`
         :param ended: Query job types updated before this amount of time.
         :type ended: :class:`datetime.datetime`
+        :param is_operational: Query job types that are operational or research phase.
+        :type is_operational: bool
         :returns: The list of job types with supplemented statistics.
         :rtype: [:class:`job.models.JobTypeStatus`]
         """
 
         # Build a mapping of all job type identifier -> status model
         job_types = JobType.objects.all().defer('interface', 'error_mapping').order_by('last_modified')
+        if is_operational is not None:
+            job_types = job_types.filter(is_operational=is_operational)
         status_dict = {job_type.id: JobTypeStatus(job_type, []) for job_type in job_types}
 
         # Build up the filters based on inputs and all running jobs
@@ -1945,6 +1953,8 @@ class JobTypeManager(models.Manager):
 
         # Fetch a count of all jobs grouped by status counts
         count_dicts = Job.objects.values('job_type__id', 'status', 'error__category').filter(count_filters)
+        if is_operational is not None:
+            count_dicts = count_dicts.filter(job_type__is_operational=is_operational)
         count_dicts = count_dicts.annotate(count=models.Count('job_type'),
                                            most_recent=models.Max('last_status_change'))
 

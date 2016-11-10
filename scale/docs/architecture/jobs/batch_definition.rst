@@ -44,7 +44,7 @@ A valid batch definition is a JSON document with the following structure:
    {
       "version": STRING,
       "date_range": {
-         "type": "created",
+         "type": "created"|"data",
          "started": STRING,
          "ended": STRING
       },
@@ -81,6 +81,10 @@ A valid batch definition is a JSON document with the following structure:
         **created**
 
             A "created" date range matches recipes based on the timestamp of when they were originally created.
+
+        **data**
+
+            A "data" date range matches recipes based on the timestamp of when its input files were collected.
 
     **started**: JSON string
 

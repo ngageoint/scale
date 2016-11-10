@@ -233,8 +233,8 @@ class TestBatchManager(TransactionTestCase):
 
         self.assertRaises(BatchError, Batch.objects.schedule_recipes, batch.id)
 
-    def test_schedule_date_range(self):
-        """Tests calling BatchManager.schedule_recipes() for a batch with a date range restriction"""
+    def test_schedule_date_range_created(self):
+        """Tests calling BatchManager.schedule_recipes() for a batch with a created date range restriction"""
         recipe1 = Recipe.objects.create_recipe(recipe_type=self.recipe_type, data=RecipeData(self.data),
                                                event=self.event).recipe
         Recipe.objects.filter(pk=recipe1.id).update(created=datetime.datetime(2016, 1, 1))
@@ -250,6 +250,195 @@ class TestBatchManager(TransactionTestCase):
         definition = {
             'date_range': {
                 'started': '2016-01-10',
+                'ended': '2016-02-10',
+            },
+        }
+        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
+
+        Batch.objects.schedule_recipes(batch.id)
+
+        batch = Batch.objects.get(pk=batch.id)
+        self.assertEqual(batch.status, 'CREATED')
+        self.assertEqual(batch.created_count, 1)
+        self.assertEqual(batch.total_count, 1)
+
+        batch_recipes = BatchRecipe.objects.all()
+        self.assertEqual(len(batch_recipes), 1)
+        self.assertEqual(batch_recipes[0].superseded_recipe, recipe2)
+
+    def test_schedule_date_range_data_none(self):
+        """Tests calling BatchManager.schedule_recipes() for a batch data date range where no data matches"""
+        Recipe.objects.create_recipe(recipe_type=self.recipe_type, data=RecipeData(self.data), event=self.event)
+
+        recipe_test_utils.edit_recipe_type(self.recipe_type, self.definition_2)
+
+        definition = {
+            'date_range': {
+                'type': 'data',
+                'started': '2016-01-01',
+                'ended': '2016-01-10',
+            },
+        }
+        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
+
+        Batch.objects.schedule_recipes(batch.id)
+
+        batch = Batch.objects.get(pk=batch.id)
+        self.assertEqual(batch.status, 'CREATED')
+        self.assertEqual(batch.created_count, 0)
+        self.assertEqual(batch.total_count, 0)
+
+    def test_schedule_date_range_data_started(self):
+        """Tests calling BatchManager.schedule_recipes() for a batch with a data started date range restriction"""
+        file1 = storage_test_utils.create_file()
+        file1.data_started = datetime.datetime(2016, 1, 1)
+        file1.save()
+        data1 = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'Recipe Input',
+                'file_id': file1.id,
+            }],
+            'workspace_id': self.workspace.id,
+        }
+        Recipe.objects.create_recipe(recipe_type=self.recipe_type, data=RecipeData(data1), event=self.event)
+
+        file2 = storage_test_utils.create_file()
+        file2.data_started = datetime.datetime(2016, 2, 1)
+        file2.save()
+        data2 = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'Recipe Input',
+                'file_id': file2.id,
+            }],
+            'workspace_id': self.workspace.id,
+        }
+        recipe2 = Recipe.objects.create_recipe(recipe_type=self.recipe_type, data=RecipeData(data2),
+                                               event=self.event).recipe
+
+        recipe_test_utils.edit_recipe_type(self.recipe_type, self.definition_2)
+
+        definition = {
+            'date_range': {
+                'type': 'data',
+                'started': '2016-01-10',
+            },
+        }
+        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
+
+        Batch.objects.schedule_recipes(batch.id)
+
+        batch = Batch.objects.get(pk=batch.id)
+        self.assertEqual(batch.status, 'CREATED')
+        self.assertEqual(batch.created_count, 1)
+        self.assertEqual(batch.total_count, 1)
+
+        batch_recipes = BatchRecipe.objects.all()
+        self.assertEqual(len(batch_recipes), 1)
+        self.assertEqual(batch_recipes[0].superseded_recipe, recipe2)
+
+    def test_schedule_date_range_data_ended(self):
+        """Tests calling BatchManager.schedule_recipes() for a batch with a data ended date range restriction"""
+        file1 = storage_test_utils.create_file()
+        file1.data_started = datetime.datetime(2016, 1, 1)
+        file1.data_ended = datetime.datetime(2016, 1, 10)
+        file1.save()
+        data1 = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'Recipe Input',
+                'file_id': file1.id,
+            }],
+            'workspace_id': self.workspace.id,
+        }
+        recipe1 = Recipe.objects.create_recipe(recipe_type=self.recipe_type, data=RecipeData(data1),
+                                               event=self.event).recipe
+
+        file2 = storage_test_utils.create_file()
+        file2.data_started = datetime.datetime(2016, 2, 1)
+        file2.data_ended = datetime.datetime(2016, 2, 10)
+        file2.save()
+        data2 = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'Recipe Input',
+                'file_id': file2.id,
+            }],
+            'workspace_id': self.workspace.id,
+        }
+        Recipe.objects.create_recipe(recipe_type=self.recipe_type, data=RecipeData(data2), event=self.event)
+
+        recipe_test_utils.edit_recipe_type(self.recipe_type, self.definition_2)
+
+        definition = {
+            'date_range': {
+                'type': 'data',
+                'ended': '2016-01-15',
+            },
+        }
+        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
+
+        Batch.objects.schedule_recipes(batch.id)
+
+        batch = Batch.objects.get(pk=batch.id)
+        self.assertEqual(batch.status, 'CREATED')
+        self.assertEqual(batch.created_count, 1)
+        self.assertEqual(batch.total_count, 1)
+
+        batch_recipes = BatchRecipe.objects.all()
+        self.assertEqual(len(batch_recipes), 1)
+        self.assertEqual(batch_recipes[0].superseded_recipe, recipe1)
+
+    def test_schedule_date_range_data_full(self):
+        """Tests calling BatchManager.schedule_recipes() for a batch with a data date range restriction"""
+        file1 = storage_test_utils.create_file()
+        file1.data_started = datetime.datetime(2016, 1, 1)
+        file1.save()
+        data1 = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'Recipe Input',
+                'file_id': file1.id,
+            }],
+            'workspace_id': self.workspace.id,
+        }
+        Recipe.objects.create_recipe(recipe_type=self.recipe_type, data=RecipeData(data1), event=self.event)
+
+        file2 = storage_test_utils.create_file()
+        file2.data_started = datetime.datetime(2016, 2, 1)
+        file2.data_ended = datetime.datetime(2016, 2, 10)
+        file2.save()
+        data2 = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'Recipe Input',
+                'file_id': file2.id,
+            }],
+            'workspace_id': self.workspace.id,
+        }
+        recipe2 = Recipe.objects.create_recipe(recipe_type=self.recipe_type, data=RecipeData(data2),
+                                               event=self.event).recipe
+
+        file3 = storage_test_utils.create_file()
+        file3.data_ended = datetime.datetime(2016, 3, 1)
+        file3.save()
+        data3 = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'Recipe Input',
+                'file_id': file3.id,
+            }],
+            'workspace_id': self.workspace.id,
+        }
+        Recipe.objects.create_recipe(recipe_type=self.recipe_type, data=RecipeData(data3), event=self.event)
+
+        recipe_test_utils.edit_recipe_type(self.recipe_type, self.definition_2)
+
+        definition = {
+            'date_range': {
+                'type': 'data',
+                'started': '2016-02-01',
                 'ended': '2016-02-10',
             },
         }

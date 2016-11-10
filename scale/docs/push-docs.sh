@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
 # Only push docs to gh-pages on explicit builds from master. Pull requests will be ignored
-if [ "$TRAVIS_PULL_REQUEST" != "false" ] || [ "$TRAVIS_BRANCH" != "master" ]; then
+if [ "${TRAVIS_BRANCH}" != "master" ] || [ "${TRAVIS_PULL_REQUEST}" != "false" ]; then
   echo "Skipping update of Github hosted documentation. Updates are made only via explicit builds of master - pull requests are skipped."
   exit 0
 fi
+
+openssl aes-256-cbc -K $encrypted_54e1fa350980_key -iv $encrypted_54e1fa350980_iv -in ../../publish-key.enc -out ~/.ssh/publish-key -d
 
 # Copy custom web docs from tracked location prior to checkout
 cp -R ../../web-docs ../../tmp-web-docs
