@@ -1,12 +1,18 @@
 """Defines the class that handles a node's cleanup"""
 from __future__ import unicode_literals
 
+import logging
 import threading
 
 from job.execution.running.tasks.cleanup_task import CleanupTask
 from job.execution.running.tasks.update import TaskStatusUpdate
 
+
+JOB_EXES_WARNING_THRESHOLD = 50
 MAX_JOB_EXES_PER_CLEANUP = 25
+
+
+logger = logging.getLogger(__name__)
 
 
 class NodeCleanup(object):
@@ -87,9 +93,14 @@ class NodeCleanup(object):
             # Current task already exists
             return
 
+        total_job_exes = self._job_exes.values()
+        count = len(total_job_exes)
+        if count > JOB_EXES_WARNING_THRESHOLD:
+            logger.warning('Node %s has %d job executions waiting to be cleaned up', self._node.hostname, count)
+
         cleanup_job_exes = []
         if self._node.is_initial_cleanup_completed:
-            for job_exe in self._job_exes.values():
+            for job_exe in total_job_exes:
                 cleanup_job_exes.append(job_exe)
                 if len(cleanup_job_exes) >= MAX_JOB_EXES_PER_CLEANUP:
                     break

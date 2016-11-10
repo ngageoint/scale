@@ -33,7 +33,10 @@ class RunningJobExecution(object):
         self._id = job_exe.id
         self._job_type_id = job_exe.job.job_type_id
         self._node_id = job_exe.node_id
-        self._docker_volumes = job_exe.docker_volumes
+        if hasattr(job_exe, 'docker_volumes'):
+            self._docker_volumes = job_exe.docker_volumes
+        else:
+            self._docker_volumes = []
 
         self._lock = threading.Lock()  # Protects _current_task and _remaining_tasks
         self._current_task = None

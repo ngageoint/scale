@@ -409,7 +409,7 @@ class JobConfiguration(object):
                         # Create job_exe workspace volume for first time
                         volume_create_cmd = '$(docker volume create --driver=%s --name=%s %s)'
                         volume_name = get_workspace_volume_name(job_exe, name)
-                        docker_volumes.add(volume_name)
+                        docker_volumes.append(volume_name)
                         volume_name = volume_create_cmd % (vol.driver, volume_name, vol.remote_path)
                     else:
                         # Volume already created, re-use name
