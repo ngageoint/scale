@@ -38,8 +38,8 @@
                     icon: 'hidden'
                 },
                 errorTotal: {
-                    direction: 'asc',
-                    icon: 'fa-caret-down'
+                    direction: 'desc',
+                    icon: 'hidden'
                 }
             },
             fortyeight_hours: {
@@ -87,8 +87,8 @@
                 }
             }
         };
-        vm.currSortField = 'twentyfour_hours';
-        vm.currSortErrorType = 'errorTotal';
+        vm.currSortField = '';
+        vm.currSortErrorType = '';
         vm.subnavLinks = scaleConfig.subnavLinks.jobs;
         subnavService.setCurrentPath('jobs/failure-rates');
 
@@ -166,14 +166,16 @@
             return ((errorTotal / total) * 100).toFixed(0) + '%';
         };
 
-        vm.filterResults = function () {
-            vm.gridOptions.data = [];
+        vm.filterResults = function (skipInit) {
             stateService.setJobTypesFailureRatesParams(vm.jobTypesParams);
             _.forEach(_.pairs(vm.jobTypesParams), function (param) {
                 $location.search(param[0], param[1]);
             });
-            vm.loading = true;
-            initialize();
+            if (!skipInit) {
+                vm.gridOptions.data = [];
+                vm.loading = true;
+                initialize();
+            }
         };
 
         vm.updateJobType = function (value) {
@@ -183,7 +185,7 @@
             }
         };
 
-        vm.sortBy = function (errorType, field) {
+        vm.sortBy = function (errorType, field, order) {
             vm.sortOrders[vm.currSortField][vm.currSortErrorType].icon = 'hidden';
             vm.gridOptions.data = _.sortByOrder(vm.performanceData, function (d) {
                 if (errorType === 'errorTotal') {
@@ -196,8 +198,19 @@
             }, [vm.sortOrders[field][errorType].direction]);
             vm.currSortErrorType = errorType;
             vm.currSortField = field;
-            vm.sortOrders[field][errorType].icon = vm.sortOrders[field][errorType].direction === 'desc' ? 'fa-caret-down' : 'fa-caret-up';
-            vm.sortOrders[field][errorType].direction = vm.sortOrders[field][errorType].direction === 'desc' ? 'asc' : 'desc';
+            vm.jobTypesParams.order = vm.sortOrders[field][errorType].direction;
+            vm.jobTypesParams.orderField = field;
+            vm.jobTypesParams.orderErrorType = errorType;
+
+            if (order) {
+                vm.sortOrders[field][errorType].icon = order === 'desc' ? 'fa-caret-down' : 'fa-caret-up';
+                vm.sortOrders[field][errorType].direction = order === 'desc' ? 'asc' : 'desc';
+            } else {
+                vm.sortOrders[field][errorType].icon = vm.sortOrders[field][errorType].direction === 'desc' ? 'fa-caret-down' : 'fa-caret-up';
+                vm.sortOrders[field][errorType].direction = vm.sortOrders[field][errorType].direction === 'desc' ? 'asc' : 'desc';
+            }
+
+            vm.filterResults(true);
             $scope.gridApi.core.refresh();
         };
 
@@ -277,6 +290,11 @@
                         vm.gridOptions.minRowsToShow = vm.performanceData.length;
                         vm.gridOptions.virtualizationThreshold = vm.performanceData.length;
                         vm.gridOptions.data = vm.performanceData;
+                        vm.currSortField = vm.jobTypesParams.orderField || 'twentyfour_hours';
+                        vm.currSortErrorType = vm.jobTypesParams.orderErrorType || 'errorTotal';
+                        if (vm.jobTypesParams.order && vm.jobTypesParams.orderField && vm.jobTypesParams.orderErrorType) {
+                            vm.sortBy(vm.jobTypesParams.orderErrorType, vm.jobTypesParams.orderField, vm.jobTypesParams.order);
+                        }
                     }
 
                     vm.loading = false;
