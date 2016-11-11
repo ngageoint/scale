@@ -148,8 +148,7 @@
             });
             vm.gridApi.selection.on.rowSelectionChanged($scope, function (row) {
                 if(row.entity.source_file && row.entity.source_file.id){
-                    $location.search({});
-                    $location.path('/feed/ingests/' + row.entity.source_file.id);
+                    $location.path('/feed/ingests/' + row.entity.source_file.id).search('');
                 } else {
                     toastr["info"]('Source file is undefined for ' + row.entity.file_name);
                 }

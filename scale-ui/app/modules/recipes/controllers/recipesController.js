@@ -130,7 +130,7 @@
             //set gridApi on scope
             vm.gridApi = gridApi;
             vm.gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-                $location.path('/recipes/recipe/' + row.entity.id);
+                $location.path('/recipes/recipe/' + row.entity.id).search('');
             });
             vm.gridApi.pagination.on.paginationChanged($scope, function (currentPage, pageSize) {
                 vm.recipesParams.page = currentPage;
