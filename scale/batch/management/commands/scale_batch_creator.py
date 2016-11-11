@@ -33,10 +33,9 @@ class Command(BaseCommand):
 
         # Schedule all the batch recipes
         try:
-            batch = Batch.objects.get(pk=batch_id)
+            Batch.objects.schedule_recipes(batch_id)
         except Batch.DoesNotExist:
             logger.exception('Unable to find batch: %i', batch_id)
             sys.exit(1)
 
-        Batch.objects.schedule_recipes(batch)
         logger.info('Command completed: scale_batch_creator')
