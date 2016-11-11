@@ -14,7 +14,6 @@ from rest_framework.exceptions import APIException
 from rest_framework.settings import api_settings
 
 import util.parse as parse_util
-from util.parse import ParseError
 
 
 class DefaultPagination(pagination.PageNumberPagination):
@@ -454,10 +453,8 @@ def parse_datetime(request, name, default_value=None, required=True):
         if result:
             return result
         raise
-    except ParseError:
-        raise BadParameter('Datetime value must include a timezone: %s' % name)
     except:
-        raise BadParameter('Invalid datetime format for parameter: %s' % name)
+        raise BadParameter('Datetime values must follow ISO-8601 and include a timezone: %s' % name)
 
 
 def parse_dict(request, name, default_value=None, required=True):
