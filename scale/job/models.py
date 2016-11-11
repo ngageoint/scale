@@ -1763,7 +1763,8 @@ class JobTypeManager(models.Manager):
 
         return JobType.objects.get(name='scale-clock', version='1.0')
 
-    def get_job_types(self, started=None, ended=None, names=None, categories=None, is_operational=None, order=None):
+    def get_job_types(self, started=None, ended=None, names=None, categories=None, is_active=True, is_operational=None,
+                      order=None):
         """Returns a list of job types within the given time range.
 
         :param started: Query job types updated after this amount of time.
@@ -1774,6 +1775,8 @@ class JobTypeManager(models.Manager):
         :type names: [string]
         :param categories: Query jobs of the type associated with the category.
         :type categories: [string]
+        :param is_active: Query job types that are actively available for use.
+        :type is_active: bool
         :param is_operational: Query job types that are operational or research phase.
         :type is_operational: bool
         :param order: A list of fields to control the sort order.
@@ -1796,6 +1799,8 @@ class JobTypeManager(models.Manager):
             job_types = job_types.filter(name__in=names)
         if categories:
             job_types = job_types.filter(category__in=categories)
+        if is_active is not None:
+            job_types = job_types.filter(is_active=is_active)
         if is_operational is not None:
             job_types = job_types.filter(is_operational=is_operational)
 

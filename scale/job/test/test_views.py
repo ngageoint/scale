@@ -544,6 +544,7 @@ class TestJobTypesView(TestCase):
         self.error = error_test_utils.create_error()
         self.job_type1 = job_test_utils.create_job_type(priority=2, mem=1.0, max_scheduled=1)
         self.job_type2 = job_test_utils.create_job_type(priority=1, mem=2.0, is_operational=False)
+        self.job_type3 = job_test_utils.create_job_type(priority=1, mem=2.0, is_active=False)
 
     def test_successful(self):
         """Tests successfully calling the get all job types view."""
@@ -575,6 +576,7 @@ class TestJobTypesView(TestCase):
 
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['id'], self.job_type1.id)
         self.assertEqual(result['results'][0]['name'], self.job_type1.name)
 
     def test_category(self):
@@ -586,7 +588,20 @@ class TestJobTypesView(TestCase):
 
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['id'], self.job_type1.id)
         self.assertEqual(result['results'][0]['category'], self.job_type1.category)
+
+    def test_is_active(self):
+        """Tests successfully calling the job types view filtered by inactive state."""
+
+        url = rest_util.get_url('/job-types/?is_active=false')
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['id'], self.job_type3.id)
+        self.assertEqual(result['results'][0]['is_active'], self.job_type3.is_active)
 
     def test_is_operational(self):
         """Tests successfully calling the job types view filtered by operational state."""
@@ -597,6 +612,7 @@ class TestJobTypesView(TestCase):
 
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['id'], self.job_type2.id)
         self.assertEqual(result['results'][0]['is_operational'], self.job_type2.is_operational)
 
     def test_sorting(self):
@@ -608,6 +624,7 @@ class TestJobTypesView(TestCase):
 
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 2)
+        self.assertEqual(result['results'][0]['id'], self.job_type2.id)
         self.assertEqual(result['results'][0]['name'], self.job_type2.name)
         self.assertEqual(result['results'][0]['version'], self.job_type2.version)
 
@@ -620,6 +637,7 @@ class TestJobTypesView(TestCase):
 
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 2)
+        self.assertEqual(result['results'][0]['id'], self.job_type2.id)
         self.assertEqual(result['results'][0]['name'], self.job_type2.name)
         self.assertEqual(result['results'][0]['version'], self.job_type2.version)
 
