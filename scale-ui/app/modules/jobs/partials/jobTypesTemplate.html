@@ -9,7 +9,7 @@
             </div>
             <ul class="list-unstyled">
                 <li ng-repeat="jobType in vm.jobTypes" ng-class="{ active: vm.activeJobType.id === jobType.id }" ng-show="jobType.is_operational || vm.jobTypesParams.show_rd" ng-click="vm.viewDetails(jobType.id)">
-                    <span ng-bind-html="jobType.getIcon()"></span> {{ jobType.title + ' ' + jobType.version }} {{vm.jobTypesParams.show_rd}}<span class="label paused" ng-show="jobType.is_paused">PAUSED</span>
+                    <span ng-bind-html="jobType.getIcon()"></span> {{ jobType.title + ' ' + jobType.version }} <span class="label paused" ng-show="jobType.is_paused">PAUSED</span>
                 </li>
             </ul>
         </div>
