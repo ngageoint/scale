@@ -70,7 +70,10 @@ def _create_command_task(task):
     """
 
     mesos_task = _create_base_task(task)
-    mesos_task.command.value = task.command + ' ' + task.command_arguments
+    command = task.command if task.command else 'echo'
+    if task.command_arguments:
+        command += ' ' + task.command_arguments
+    mesos_task.command.value = command
 
     return mesos_task
 

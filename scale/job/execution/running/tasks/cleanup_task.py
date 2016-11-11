@@ -59,9 +59,29 @@ class CleanupTask(Task):
         self._docker_image = None
         self._docker_params = []
         self._is_docker_privileged = False
-        # TODO: set up command
-        self._command = ''
-        self._command_arguments = ''
+
+        # Command deletes all non-running containers
+        delete_containers_cmd = 'docker rm $(docker ps -f status=exited -f status=created -q)'
+
+        # Command loops over specified volumes to delete and deletes it if it exists
+        volume_exists_check = '"`docker volume ls -q | grep "$vol"`" == "$vol"'
+        volume_delete_cmd = 'docker volume rm $vol'
+        echo_cmd = 'echo "$vol not found"'
+        delete_volumes_cmd = 'for vol in `%s`; do if [[ %s ]]; then %s; else %s; fi; done'
+
+        if self._is_initial_cleanup:
+            # Initial clean up deletes all dangling Docker volumes
+            volume_list_cmd = 'docker volume ls -f dangling=true -q'
+        else:
+            # Deletes all volumes for the given job executions
+            docker_volumes = []
+            for job_exe in self._job_exes:
+                docker_volumes.extend(job_exe.docker_volumes)
+            volume_list_cmd = 'echo %s' % ' '.join(docker_volumes)
+        delete_volumes_cmd = delete_volumes_cmd % (volume_list_cmd, volume_exists_check, volume_delete_cmd, echo_cmd)
+
+        # Command deletes all non-running containers and then deletes appropriate Docker volumes
+        self._command = '%s; %s' % (delete_containers_cmd, delete_volumes_cmd)
 
     @property
     def is_initial_cleanup(self):
