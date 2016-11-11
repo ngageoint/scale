@@ -1,4 +1,5 @@
-'''Defines utility functions for parsing data.'''
+"""Defines utility functions for parsing data."""
+from __future__ import unicode_literals
 
 import datetime
 import re
@@ -18,11 +19,6 @@ iso8601_duration_re = re.compile(
     r')?'
     r'$'
 )
-
-
-class ParseError(Exception):
-    '''Exception indicating a value cannot be parsed.'''
-    pass
 
 
 # TODO The following is from the Django 1.8 django.utils.dateparse, we can remove this when upgrading.
@@ -45,18 +41,18 @@ def parse_duration(value):
 # Solution modified from http://akinfold.blogspot.com/2012/12/datetimefield-doesnt-accept-iso-8601.html
 def parse_datetime(value):
     if 'Z' not in value and '+' not in value:
-        raise ParseError('Datetime value must include a timezone: %s' % value)
+        raise ValueError('Datetime value must include a timezone: %s' % value)
     return dateparse.parse_datetime(value)
 
 
 def parse_timestamp(value):
-    '''Parses any valid ISO date/time, duration, or timestamp.
+    """Parses any valid ISO date/time, duration, or timestamp.
 
     :param value: The raw string value to parse.
     :type value: str
     :returns: The result of parsing the given string value.
     :rtype: datetime.datetime
-    '''
+    """
     if value and value.startswith('P'):
         return timezone.now() - parse_duration(value)
     return parse_datetime(value)

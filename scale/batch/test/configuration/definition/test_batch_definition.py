@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import datetime
 
 import django
+import django.utils.timezone as timezone
 from django.test import TestCase
 
 from batch.configuration.definition.exceptions import InvalidDefinition
@@ -30,15 +31,15 @@ class TestBatchDefinition(TestCase):
         definition = {
             'version': '1.0',
             'date_range': {
-                'started': '2016-01-01',
-                'ended': '2016-12-31',
+                'started': '2016-01-01T00:00:00.000Z',
+                'ended': '2016-12-31T00:00:00.000Z',
             },
         }
 
         # No exception means success
         batch_def = BatchDefinition(definition)
-        self.assertEqual(batch_def.started, datetime.datetime(2016, 1, 1))
-        self.assertEqual(batch_def.ended, datetime.datetime(2016, 12, 31))
+        self.assertEqual(batch_def.started, datetime.datetime(2016, 1, 1, tzinfo=timezone.utc))
+        self.assertEqual(batch_def.ended, datetime.datetime(2016, 12, 31, tzinfo=timezone.utc))
 
     def test_date_range_started(self):
         """Tests defining a date range with only a start date"""
@@ -46,13 +47,13 @@ class TestBatchDefinition(TestCase):
         definition = {
             'version': '1.0',
             'date_range': {
-                'started': '2016-01-01',
+                'started': '2016-01-01T00:00:00.000Z',
             },
         }
 
         # No exception means success
         batch_def = BatchDefinition(definition)
-        self.assertEqual(batch_def.started, datetime.datetime(2016, 1, 1))
+        self.assertEqual(batch_def.started, datetime.datetime(2016, 1, 1, tzinfo=timezone.utc))
 
     def test_date_range_ended(self):
         """Tests defining a date range with only an end date"""
@@ -60,13 +61,13 @@ class TestBatchDefinition(TestCase):
         definition = {
             'version': '1.0',
             'date_range': {
-                'ended': '2016-12-31',
+                'ended': '2016-12-31T00:00:00.000Z',
             },
         }
 
         # No exception means success
         batch_def = BatchDefinition(definition)
-        self.assertEqual(batch_def.ended, datetime.datetime(2016, 12, 31))
+        self.assertEqual(batch_def.ended, datetime.datetime(2016, 12, 31, tzinfo=timezone.utc))
 
     def test_date_range_type_invalid(self):
         """Tests defining a date range with an invalid enumerated type"""

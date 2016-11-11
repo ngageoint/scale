@@ -249,8 +249,8 @@ class TestBatchManager(TransactionTestCase):
 
         definition = {
             'date_range': {
-                'started': '2016-01-10',
-                'ended': '2016-02-10',
+                'started': '2016-01-10T00:00:00.000Z',
+                'ended': '2016-02-10T00:00:00.000Z',
             },
         }
         batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
@@ -275,8 +275,8 @@ class TestBatchManager(TransactionTestCase):
         definition = {
             'date_range': {
                 'type': 'data',
-                'started': '2016-01-01',
-                'ended': '2016-01-10',
+                'started': '2016-01-01T00:00:00.000Z',
+                'ended': '2016-01-10T00:00:00.000Z',
             },
         }
         batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
@@ -322,7 +322,7 @@ class TestBatchManager(TransactionTestCase):
         definition = {
             'date_range': {
                 'type': 'data',
-                'started': '2016-01-10',
+                'started': '2016-01-10T00:00:00.000Z',
             },
         }
         batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
@@ -374,7 +374,7 @@ class TestBatchManager(TransactionTestCase):
         definition = {
             'date_range': {
                 'type': 'data',
-                'ended': '2016-01-15',
+                'ended': '2016-01-15T00:00:00.000Z',
             },
         }
         batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
@@ -438,8 +438,8 @@ class TestBatchManager(TransactionTestCase):
         definition = {
             'date_range': {
                 'type': 'data',
-                'started': '2016-02-01',
-                'ended': '2016-02-10',
+                'started': '2016-02-01T00:00:00.000Z',
+                'ended': '2016-02-10T00:00:00.000Z',
             },
         }
         batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
