@@ -6,6 +6,7 @@ from django.utils.timezone import utc
 from google.protobuf.internal import enum_type_wrapper
 from mesos.interface import mesos_pb2
 
+from job.execution.running.tasks.update import TaskStatusUpdate
 from job.models import JobExecution, TaskUpdate
 
 
@@ -13,6 +14,24 @@ EPOCH = datetime.utcfromtimestamp(0).replace(tzinfo=utc)
 EXIT_CODE_PATTERN = re.compile(r'exited with status ([\-0-9]+)')
 REASON_ENUM_WRAPPER = enum_type_wrapper.EnumTypeWrapper(mesos_pb2._TASKSTATUS_REASON)
 SOURCE_ENUM_WRAPPER = enum_type_wrapper.EnumTypeWrapper(mesos_pb2._TASKSTATUS_SOURCE)
+
+
+def create_task_status_update(status):
+    """Creates and returns a task status update for the given Mesos task status
+
+    :param status: The task status
+    :type status: :class:`mesos_pb2.TaskStatus`
+    :returns: The task status update
+    :rtype: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
+    """
+
+    task_id = get_status_task_id(status)
+    agent_id = get_status_agent_id(status)
+    task_status = get_status_state(status)
+    timestamp = get_status_timestamp(status)
+    exit_code = parse_exit_code(status)
+
+    return TaskStatusUpdate(task_id, agent_id, task_status, timestamp, exit_code)
 
 
 def create_task_update_model(status):
@@ -34,6 +53,18 @@ def create_task_update_model(status):
     task_update.message = get_status_message(status)
 
     return task_update
+
+
+def get_status_agent_id(status):
+    """Returns the agent ID of the given Mesos task status
+
+    :param status: The task status
+    :type status: :class:`mesos_pb2.TaskStatus`
+    :returns: The agent ID
+    :rtype: string
+    """
+
+    return status.slave_id.value
 
 
 def get_status_message(status):

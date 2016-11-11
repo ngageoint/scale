@@ -77,6 +77,10 @@ class NodeCleanup(object):
                     # Clear job executions that were cleaned up
                     for job_exe in self._current_task.job_exes:
                         del self._job_exes[job_exe.id]
+            elif task_update.status == TaskStatusUpdate.FAILED:
+                logger.warning('Cleanup task on host %s failed', self._node.hostname)
+            elif task_update.status == TaskStatusUpdate.KILLED:
+                logger.warning('Cleanup task on host %s killed', self._node.hostname)
             if self._current_task.has_ended:
                 self._current_task = None
             self._create_next_task()

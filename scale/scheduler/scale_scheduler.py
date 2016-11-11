@@ -12,6 +12,7 @@ from mesos.interface import mesos_pb2
 
 from error.models import Error
 from job.execution.running.manager import RunningJobExecutionManager
+from job.execution.running.tasks.cleanup_task import CLEANUP_TASK_ID_PREFIX
 from job.execution.running.tasks.results import TaskResults
 from job.models import JobExecution
 from job.resources import NodeResources
@@ -244,44 +245,55 @@ class ScaleScheduler(MesosScheduler):
 
         started = now()
 
-        self._status_manager.add_status_update(status)
         task_id = status.task_id.value
-        job_exe_id = JobExecution.get_job_exe_id(task_id)
-        logger.info('Status update for task %s: %s', task_id, utils.get_status_state(status))
+        if status.state == mesos_pb2.TASK_LOST:
+            logger.warning('Status update for task %s: %s', task_id, utils.get_status_state(status))
+        else:
+            logger.info('Status update for task %s: %s', task_id, utils.get_status_state(status))
 
         # Since we have a status update for this task, remove it from reconciliation set
         self._recon_thread.remove_task_id(task_id)
 
-        try:
-            running_job_exe = self._job_exe_manager.get_job_exe(job_exe_id)
+        if task_id.startswith(CLEANUP_TASK_ID_PREFIX):
+            # Handle status update for cleanup task
+            update = utils.create_task_status_update(status)
+            self._managers.cleanup.handle_task_update(update)
+        else:
+            # Handle status update for job execution task
+            self._status_manager.add_status_update(status)
+            job_exe_id = JobExecution.get_job_exe_id(task_id)
 
-            if running_job_exe:
-                results = TaskResults(task_id)
-                results.exit_code = utils.parse_exit_code(status)
-                results.when = utils.get_status_timestamp(status)
-                # Apply status update to running job execution
-                if status.state == mesos_pb2.TASK_RUNNING:
-                    running_job_exe.task_start(task_id, results.when)
-                elif status.state == mesos_pb2.TASK_FINISHED:
-                    if results.exit_code is None:
-                        results.exit_code = 0
-                    running_job_exe.task_complete(results)
-                elif status.state == mesos_pb2.TASK_LOST:
-                    running_job_exe.task_fail(results, Error.objects.get_builtin_error('mesos-lost'))
-                elif status.state in [mesos_pb2.TASK_ERROR, mesos_pb2.TASK_FAILED, mesos_pb2.TASK_KILLED]:
-                    running_job_exe.task_fail(results)
+            try:
+                running_job_exe = self._job_exe_manager.get_job_exe(job_exe_id)
 
-                # Remove finished job execution
-                if running_job_exe.is_finished():
-                    self._job_exe_manager.remove_job_exe(job_exe_id)
-            else:
-                # Scheduler doesn't have any knowledge of this job execution
-                Queue.objects.handle_job_failure(job_exe_id, now(), [],
-                                                 Error.objects.get_builtin_error('scheduler-lost'))
-        except Exception:
-            logger.exception('Error handling status update for job execution: %s', job_exe_id)
-            # Error handling status update, add task so it can be reconciled
-            self._recon_thread.add_task_ids([task_id])
+                if running_job_exe:
+                    results = TaskResults(task_id)
+                    results.exit_code = utils.parse_exit_code(status)
+                    results.when = utils.get_status_timestamp(status)
+                    # Apply status update to running job execution
+                    if status.state == mesos_pb2.TASK_RUNNING:
+                        running_job_exe.task_start(task_id, results.when)
+                    elif status.state == mesos_pb2.TASK_FINISHED:
+                        if results.exit_code is None:
+                            results.exit_code = 0
+                        running_job_exe.task_complete(results)
+                    elif status.state == mesos_pb2.TASK_LOST:
+                        running_job_exe.task_fail(results, Error.objects.get_builtin_error('mesos-lost'))
+                    elif status.state in [mesos_pb2.TASK_ERROR, mesos_pb2.TASK_FAILED, mesos_pb2.TASK_KILLED]:
+                        running_job_exe.task_fail(results)
+
+                    # Remove finished job execution
+                    if running_job_exe.is_finished():
+                        self._job_exe_manager.remove_job_exe(job_exe_id)
+                        self._managers.cleanup.add_job_execution(running_job_exe)
+                else:
+                    # Scheduler doesn't have any knowledge of this job execution
+                    Queue.objects.handle_job_failure(job_exe_id, now(), [],
+                                                     Error.objects.get_builtin_error('scheduler-lost'))
+            except Exception:
+                logger.exception('Error handling status update for job execution: %s', job_exe_id)
+                # Error handling status update, add task so it can be reconciled
+                self._recon_thread.add_task_ids([task_id])
 
         duration = now() - started
         msg = 'Scheduler statusUpdate() took %.3f seconds'
@@ -351,6 +363,7 @@ class ScaleScheduler(MesosScheduler):
                         self._recon_thread.add_task_ids([task.id])
                 if running_job_exe.is_finished():
                     self._job_exe_manager.remove_job_exe(running_job_exe.id)
+                    self._managers.cleanup.add_job_execution(running_job_exe)
 
         duration = now() - started
         msg = 'Scheduler slaveLost() took %.3f seconds'

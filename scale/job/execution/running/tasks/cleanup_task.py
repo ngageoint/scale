@@ -7,6 +7,9 @@ from job.execution.running.tasks.base_task import Task
 from job.resources import NodeResources
 
 
+CLEANUP_TASK_ID_PREFIX = 'scale_cleanup'
+
+
 class AtomicCounter(object):
     """Represents an atomic counter
     """
@@ -46,7 +49,7 @@ class CleanupTask(Task):
         :type job_exes: [:class:`job.execution.running.job_exe.RunningJobExecution`]
         """
 
-        task_id = 'scale_cleanup_%s_%d' % (agent_id, COUNTER.get_next())
+        task_id = '%s_%s_%d' % (CLEANUP_TASK_ID_PREFIX, agent_id, COUNTER.get_next())
         super(CleanupTask, self).__init__(task_id, 'Scale Cleanup', agent_id)
 
         self._job_exes = job_exes

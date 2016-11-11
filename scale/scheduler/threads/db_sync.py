@@ -144,3 +144,4 @@ class DatabaseSyncThread(object):
 
             if running_job_exe.is_finished():
                 self._job_exe_manager.remove_job_exe(running_job_exe.id)
+                self._managers.cleanup.add_job_execution(running_job_exe)

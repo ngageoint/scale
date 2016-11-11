@@ -17,7 +17,6 @@ class CleanupManager(object):
         self._lock = threading.Lock()
         self._nodes = {}  # {Node ID: NodeCleanup}
 
-    # TODO: call this when receiving task update from Mesos and job_execution is done
     def add_job_execution(self, job_exe):
         """Adds a job execution that needs to be cleaned up
 
@@ -43,7 +42,6 @@ class CleanupManager(object):
                     tasks.append(task)
         return tasks
 
-    # TODO: call this when receiving task update from Mesos
     def handle_task_update(self, task_update):
         """Handles the given task update for a cleanup task
 
