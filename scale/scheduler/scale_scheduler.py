@@ -103,6 +103,8 @@ class ScaleScheduler(MesosScheduler):
         recon_thread = threading.Thread(target=self._recon_thread.run)
         recon_thread.daemon = True
         recon_thread.start()
+        # TODO: make a recon manager and move that to SchedulerManagers instead of hitting recon_thread directly
+        self._managers.recon_thread = self._recon_thread
 
         self._scheduling_thread = SchedulingThread(self._driver, self._framework_id, self._job_exe_manager,
                                                    self._job_type_manager, self._managers, self._offer_manager,

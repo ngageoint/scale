@@ -36,6 +36,8 @@ class PreTask(JobExecutionTask):
 
             # Support duplicate calls to complete(), task updates may repeat
             self._has_ended = True
+            self._ended = task_results.when
+            self._last_status_update = task_results.when
             self._results = task_results
 
             # The pre-task requires subsequent tasks to query the job execution again since the pre-task determines what
@@ -67,6 +69,7 @@ class PreTask(JobExecutionTask):
 
             self._has_ended = True
             self._ended = task_results.when
+            self._last_status_update = task_results.when
             self._exit_code = task_results.exit_code
 
             return error

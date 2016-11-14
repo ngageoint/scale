@@ -57,6 +57,21 @@ class NodeCleanup(object):
 
             return self._current_task
 
+    def get_task_id_for_reconciliation(self, when):
+        """Returns the clean up task ID that needs to be reconciled, possibly None
+
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
+        :returns: The ID of the task that needs to be reconciled, possibly None
+        :rtype: string
+        """
+
+        with self._lock:
+            if not self._current_task or not self._current_task.needs_reconciliation(when):
+                return None
+
+            return self._current_task.id
+
     def handle_task_update(self, task_update):
         """Handles the given task update
 

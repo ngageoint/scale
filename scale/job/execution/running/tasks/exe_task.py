@@ -67,6 +67,7 @@ class JobExecutionTask(Task):
             # Support duplicate calls to complete(), task updates may repeat
             self._has_ended = True
             self._ended = task_results.when
+            self._last_status_update = task_results.when
 
             return False
 
@@ -145,3 +146,4 @@ class JobExecutionTask(Task):
             # Support duplicate calls to start(), task updates may repeat
             self._has_started = True
             self._started = when
+            self._last_status_update = when

@@ -19,6 +19,7 @@ from scheduler.offer.offer import ResourceOffer
 from scheduler.sync.job_type_manager import JobTypeManager
 from scheduler.sync.scheduler_manager import SchedulerManager
 from scheduler.sync.workspace_manager import WorkspaceManager
+from scheduler.threads.recon import ReconciliationThread
 from scheduler.threads.schedule import SchedulingThread
 
 
@@ -55,6 +56,8 @@ class TestSchedulingThread(TransactionTestCase):
                                                      disk_out_required=45.0, disk_total_required=445.0)
         self._job_type_manager.sync_with_database()
 
+        self._recon_thread = ReconciliationThread(self._driver)
+        self._managers.recon_thread = self._recon_thread
         self._scheduling_thread = SchedulingThread(self._driver, '123', self._job_exe_manager, self._job_type_manager,
                                                    self._managers, self._offer_manager, self._scheduler_manager,
                                                    self._workspace_manager)

@@ -1,10 +1,15 @@
 """Defines the abstract base class for all tasks"""
 from __future__ import unicode_literals
 
+import datetime
 import threading
 from abc import ABCMeta, abstractmethod
 
 from job.execution.running.tasks.update import TaskStatusUpdate
+
+
+# Amount of time for the last status update to go stale and require reconciliation
+RECONCILIATION_THRESHOLD = datetime.timedelta(minutes=10)
 
 
 class Task(object):
@@ -31,6 +36,7 @@ class Task(object):
         self._lock = threading.Lock()
         self._has_been_scheduled = False
         self._scheduled = None
+        self._last_status_update = None
         self._has_started = False
         self._started = None
         self._has_ended = False
@@ -198,6 +204,21 @@ class Task(object):
 
         raise NotImplementedError()
 
+    def needs_reconciliation(self, when):
+        """Indicates whether this task needs to be reconciled due to its latest status update being stale
+
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
+        :returns: Whether this task needs to be reconciled
+        :rtype: bool
+        """
+
+        with self._lock:
+            if not self._last_status_update:
+                return False  # Has not been scheduled yet
+            time_since_last_update = when - self._last_status_update
+            return time_since_last_update > RECONCILIATION_THRESHOLD
+
     def schedule(self, when):
         """Marks this task as having been scheduled
 
@@ -211,6 +232,7 @@ class Task(object):
 
             self._has_been_scheduled = True
             self._scheduled = when
+            self._last_status_update = when
 
     def update(self, task_update):
         """Handles the given task update
@@ -223,6 +245,8 @@ class Task(object):
             if self._task_id != task_update.task_id:
                 return
 
+            self._last_status_update = task_update.when
+
             # Support duplicate calls as task updates may repeat
             if task_update.status == TaskStatusUpdate.RUNNING:
                 # Mark task as having started if it isn't already
@@ -234,6 +258,7 @@ class Task(object):
                 if not self._has_ended:
                     self._has_been_scheduled = False
                     self._scheduled = None
+                    self._last_status_update = None
                     self._has_started = False
                     self._started = None
             elif task_update.status in TaskStatusUpdate.TERMINAL_STATUSES:

@@ -57,6 +57,7 @@ class JobTask(JobExecutionTask):
 
             self._has_ended = True
             self._ended = task_results.when
+            self._last_status_update = task_results.when
             self._exit_code = task_results.exit_code
 
             return error
