@@ -83,7 +83,6 @@ then
     check_elastic
 
     gosu root sed -i 's^User apache^User scale^g' /etc/httpd/conf/httpd.conf
-    gosu root sed -i 's/\/SCALE/\/'${DCOS_PACKAGE_FRAMEWORK_NAME}'/' /etc/httpd/conf.d/scale.conf
     sed -i 's^/api^./api^' /opt/scale/ui/config/scaleConfig.json
     sed -i 's^/docs^./docs^' /opt/scale/ui/config/scaleConfig.json
     gosu root /usr/sbin/httpd

@@ -11,8 +11,8 @@ SECRET_KEY = os.environ.get('SCALE_SECRET_KEY', INSECURE_DEFAULT_KEY)
 DEBUG = bool(os.environ.get('SCALE_DEBUG', False))
 TEMPLATE_DEBUG = DEBUG
 
-# Set the external URL context here
-FORCE_SCRIPT_NAME = os.environ.get('SCALE_API_URL', '/api')
+# Set the external URL context here, default to using SCRIPT_NAME passed by reverse proxy.
+FORCE_SCRIPT_NAME = os.environ.get('SCALE_API_URL', None)
 USE_X_FORWARDED_HOST = True
 
 ALLOWED_HOSTS = ['*']
@@ -20,8 +20,9 @@ override_hosts = os.environ.get('SCALE_ALLOWED_HOSTS')
 if override_hosts:
     ALLOWED_HOSTS = override_hosts.split(',')
 
+FRAMEWORK_NAME = os.environ.get('DCOS_PACKAGE_FRAMEWORK_NAME', 'scale')
 STATIC_ROOT = os.environ.get('SCALE_STATIC_ROOT', 'static/')
-STATIC_URL = os.environ.get('SCALE_STATIC_URL', '/static/')
+STATIC_URL = os.environ.get('SCALE_STATIC_URL', '/service/%s/static/' % FRAMEWORK_NAME)
 
 LOGGING_ADDRESS = os.environ.get('SCALE_LOGGING_ADDRESS', LOGGING_ADDRESS)
 ELASTICSEARCH_URLS = os.environ.get('SCALE_ELASTICSEARCH_URLS', ELASTICSEARCH_URLS)
