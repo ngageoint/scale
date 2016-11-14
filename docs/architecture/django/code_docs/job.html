@@ -2358,7 +2358,7 @@ count of associated jobs and the last status change of a running job.</p>
 
 <dl class="method">
 <dt id="job.models.JobTypeManager.get_job_types">
-<code class="descname">get_job_types</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>names=None</em>, <em>categories=None</em>, <em>is_operational=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeManager.get_job_types" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_job_types</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>names=None</em>, <em>categories=None</em>, <em>is_active=True</em>, <em>is_operational=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeManager.get_job_types" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of job types within the given time range.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -2369,6 +2369,7 @@ count of associated jobs and the last status change of a running job.</p>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query job types updated before this amount of time.</li>
 <li><strong>names</strong> (<em>[string]</em>) &#8211; Query jobs of the type associated with the name.</li>
 <li><strong>categories</strong> (<em>[string]</em>) &#8211; Query jobs of the type associated with the category.</li>
+<li><strong>is_active</strong> (<em>bool</em>) &#8211; Query job types that are actively available for use.</li>
 <li><strong>is_operational</strong> (<em>bool</em>) &#8211; Query job types that are operational or research phase.</li>
 <li><strong>order</strong> (<em>[string]</em>) &#8211; A list of fields to control the sort order.</li>
 </ul>

@@ -226,170 +226,176 @@ Duplicate it to filter by multiple values.</td>
 <td>Return only job types with a given category.
 Duplicate it to filter by multiple values.</td>
 </tr>
-<tr class="row-odd"><td>is_operational</td>
-<td colspan="2">String</td>
+<tr class="row-odd"><td>is_active</td>
+<td colspan="2">Boolean</td>
+<td colspan="2">Optional</td>
+<td>Return only job types that are active (True) or inactive (False).
+Defaults to only active job types (True).</td>
+</tr>
+<tr class="row-even"><td>is_operational</td>
+<td colspan="2">Boolean</td>
 <td colspan="2">Optional</td>
 <td>Return only job types that are operational (True) or still in a
-research &amp; development (R&amp;D) phase (False).</td>
+research &amp; development (R&amp;D) phase (False). Defaults to all.</td>
 </tr>
-<tr class="row-even"><td>order</td>
+<tr class="row-odd"><td>order</td>
 <td colspan="2">String</td>
 <td colspan="2">Optional</td>
 <td>One or more fields to use when ordering the results.
 Duplicate it to multi-sort, (ex: order=name&amp;order=version).
 Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 </tr>
-<tr class="row-odd"><td colspan="6"><strong>Successful Response</strong></td>
+<tr class="row-even"><td colspan="6"><strong>Successful Response</strong></td>
 </tr>
-<tr class="row-even"><td colspan="2"><strong>Status</strong></td>
+<tr class="row-odd"><td colspan="2"><strong>Status</strong></td>
 <td colspan="4">200 OK</td>
 </tr>
-<tr class="row-odd"><td colspan="2"><strong>Content Type</strong></td>
+<tr class="row-even"><td colspan="2"><strong>Content Type</strong></td>
 <td colspan="4"><em>application/json</em></td>
 </tr>
-<tr class="row-even"><td colspan="6"><strong>JSON Fields</strong></td>
+<tr class="row-odd"><td colspan="6"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-odd"><td colspan="2">count</td>
+<tr class="row-even"><td colspan="2">count</td>
 <td colspan="2">Integer</td>
 <td colspan="2">The total number of results that match the query parameters.</td>
 </tr>
-<tr class="row-even"><td colspan="2">next</td>
+<tr class="row-odd"><td colspan="2">next</td>
 <td colspan="2">URL</td>
 <td colspan="2">A URL to the next page of results.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">previous</td>
+<tr class="row-even"><td colspan="2">previous</td>
 <td colspan="2">URL</td>
 <td colspan="2">A URL to the previous page of results.</td>
 </tr>
-<tr class="row-even"><td colspan="2">results</td>
+<tr class="row-odd"><td colspan="2">results</td>
 <td colspan="2">Array</td>
 <td colspan="2">List of result JSON objects that match the query parameters.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.id</td>
+<tr class="row-even"><td colspan="2">.id</td>
 <td colspan="2">Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API.
 (See <a class="reference internal" href="#rest-job-type-details"><span>Job Type Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td colspan="2">.name</td>
+<tr class="row-odd"><td colspan="2">.name</td>
 <td colspan="2">String</td>
 <td colspan="2">The identifying name of the job type used for queries.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.version</td>
+<tr class="row-even"><td colspan="2">.version</td>
 <td colspan="2">String</td>
 <td colspan="2">The version of the job type.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.title</td>
+<tr class="row-odd"><td colspan="2">.title</td>
 <td colspan="2">String</td>
 <td colspan="2">The human readable display name of the job type.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.description</td>
+<tr class="row-even"><td colspan="2">.description</td>
 <td colspan="2">String</td>
 <td colspan="2">A longer description of the job type.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.category</td>
+<tr class="row-odd"><td colspan="2">.category</td>
 <td colspan="2">String</td>
 <td colspan="2">An optional overall category of the job type.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.author_name</td>
+<tr class="row-even"><td colspan="2">.author_name</td>
 <td colspan="2">String</td>
 <td colspan="2">The name of the person or organization that created the job algorithm.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.author_url</td>
+<tr class="row-odd"><td colspan="2">.author_url</td>
 <td colspan="2">String</td>
 <td colspan="2">The address to a home page about the author or associated algorithm.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.is_system</td>
+<tr class="row-even"><td colspan="2">.is_system</td>
 <td colspan="2">Boolean</td>
 <td colspan="2">Whether this is a system type.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.is_long_running</td>
+<tr class="row-odd"><td colspan="2">.is_long_running</td>
 <td colspan="2">Boolean</td>
 <td colspan="2">Whether this type is long running. A job of this type is intended to run
 for a long time, potentially indefinitely, without timing out and always
 being re-queued after a failure.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.is_active</td>
+<tr class="row-even"><td colspan="2">.is_active</td>
 <td colspan="2">Boolean</td>
 <td colspan="2">Whether the job type is active (false once job type is archived).</td>
 </tr>
-<tr class="row-even"><td colspan="2">.is_operational</td>
+<tr class="row-odd"><td colspan="2">.is_operational</td>
 <td colspan="2">Boolean</td>
 <td colspan="2">Whether this job type is operational (True) or is still in a research &amp;
 development (R&amp;D) phase (False).</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.is_paused</td>
+<tr class="row-even"><td colspan="2">.is_paused</td>
 <td colspan="2">Boolean</td>
 <td colspan="2">Whether the job type is paused (while paused no jobs of this type will be
 scheduled off of the queue).</td>
 </tr>
-<tr class="row-even"><td colspan="2">.icon_code</td>
+<tr class="row-odd"><td colspan="2">.icon_code</td>
 <td colspan="2">String</td>
 <td colspan="2">A font-awesome icon code to use when representing this job type.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.uses_docker</td>
+<tr class="row-even"><td colspan="2">.uses_docker</td>
 <td colspan="2">Boolean</td>
 <td colspan="2">Whether the job type uses Docker.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.docker_image</td>
+<tr class="row-odd"><td colspan="2">.docker_image</td>
 <td colspan="2">String</td>
 <td colspan="2">The Docker image containing the code to run for this job.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.revision_num</td>
+<tr class="row-even"><td colspan="2">.revision_num</td>
 <td colspan="2">Integer</td>
 <td colspan="2">The current revision number of the job type, incremented for each edit.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.priority</td>
+<tr class="row-odd"><td colspan="2">.priority</td>
 <td colspan="2">Integer</td>
 <td colspan="2">The priority of the job type (lower number is higher priority).</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.timeout</td>
+<tr class="row-even"><td colspan="2">.timeout</td>
 <td colspan="2">Integer</td>
 <td colspan="2">The maximum amount of time to allow a job of this type to run
 before being killed (in seconds).</td>
 </tr>
-<tr class="row-even"><td colspan="2">.max_scheduled</td>
+<tr class="row-odd"><td colspan="2">.max_scheduled</td>
 <td colspan="2">Integer</td>
 <td colspan="2">An optional number indicating the maximum number of jobs of this type
 that may be scheduled to run at the same time. May be &#8216;null&#8217;.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.max_tries</td>
+<tr class="row-even"><td colspan="2">.max_tries</td>
 <td colspan="2">Integer</td>
 <td colspan="2">The maximum number of times to try executing a job in case of errors.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.cpus_required</td>
+<tr class="row-odd"><td colspan="2">.cpus_required</td>
 <td colspan="2">Decimal</td>
 <td colspan="2">The number of CPUs needed for a job of this type.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.mem_required</td>
+<tr class="row-even"><td colspan="2">.mem_required</td>
 <td colspan="2">Decimal</td>
 <td colspan="2">The amount of RAM in MiB needed for a job of this type.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.disk_out_const_required</td>
+<tr class="row-odd"><td colspan="2">.disk_out_const_required</td>
 <td colspan="2">Decimal</td>
 <td colspan="2">A constant amount of disk space in MiB required for job output.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.disk_out_mult_required</td>
+<tr class="row-even"><td colspan="2">.disk_out_mult_required</td>
 <td colspan="2">Decimal</td>
 <td colspan="2">A multiplier (2x = 2.0) applied to the size of the input files to
 determine additional disk space in MiB required for job output.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.created</td>
+<tr class="row-odd"><td colspan="2">.created</td>
 <td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was initially created.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.archived</td>
+<tr class="row-even"><td colspan="2">.archived</td>
 <td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the job type was archived (no longer active).</td>
 </tr>
-<tr class="row-even"><td colspan="2">.paused</td>
+<tr class="row-odd"><td colspan="2">.paused</td>
 <td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the job type was paused.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.last_modified</td>
+<tr class="row-even"><td colspan="2">.last_modified</td>
 <td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was last saved.</td>
 </tr>
-<tr class="row-even"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-odd"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">23</span><span class="p">,</span>
     <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
     <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
