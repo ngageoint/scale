@@ -70,6 +70,8 @@ class CleanupTask(Task):
         delete_volumes_cmd = 'for vol in `%s`; do if [[ %s ]]; then %s; else %s; fi; done'
 
         if self._is_initial_cleanup:
+            # TODO: once we upgrade to a later version of Docker (1.12+), we can delete volumes based on their name
+            # starting with "scale_" (and also dangling)
             # Initial clean up deletes all dangling Docker volumes
             volume_list_cmd = 'docker volume ls -f dangling=true -q'
         else:

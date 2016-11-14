@@ -8,8 +8,8 @@ from job.execution.running.tasks.cleanup_task import CleanupTask
 from job.execution.running.tasks.update import TaskStatusUpdate
 
 
-JOB_EXES_WARNING_THRESHOLD = 50
-MAX_JOB_EXES_PER_CLEANUP = 10
+JOB_EXES_WARNING_THRESHOLD = 100
+MAX_JOB_EXES_PER_CLEANUP = 25
 
 
 logger = logging.getLogger(__name__)
