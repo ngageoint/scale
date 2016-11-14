@@ -36,8 +36,11 @@ These services provide access to information about job types.
 | category           | String            | Optional | Return only job types with a given category.                        |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| is_operational     | String            | Optional | Return only job types that are operational (True) or still in a     |
-|                    |                   |          | research & development (R&D) phase (False).                         |
+| is_active          | Boolean           | Optional | Return only job types that are active (True) or inactive (False).   |
+|                    |                   |          | Defaults to only active job types (True).                           |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| is_operational     | Boolean           | Optional | Return only job types that are operational (True) or still in a     |
+|                    |                   |          | research & development (R&D) phase (False). Defaults to all.        |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | order              | String            | Optional | One or more fields to use when ordering the results.                |
 |                    |                   |          | Duplicate it to multi-sort, (ex: order=name&order=version).         |

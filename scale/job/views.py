@@ -52,11 +52,12 @@ class JobTypesView(ListCreateAPIView):
 
         names = rest_util.parse_string_list(request, 'name', required=False)
         categories = rest_util.parse_string_list(request, 'category', required=False)
+        is_active = rest_util.parse_bool(request, 'is_active', default_value=True)
         is_operational = rest_util.parse_bool(request, 'is_operational', required=False)
         order = rest_util.parse_string_list(request, 'order', ['name', 'version'])
 
         job_types = JobType.objects.get_job_types(started=started, ended=ended, names=names, categories=categories,
-                                                  is_operational=is_operational, order=order)
+                                                  is_active=is_active, is_operational=is_operational, order=order)
 
         page = self.paginate_queryset(job_types)
         serializer = self.get_serializer(page, many=True)
