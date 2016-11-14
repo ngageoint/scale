@@ -33,12 +33,12 @@
     <div class="ui-grid-cell-contents">
         {{ col.displayName }}
         <div class="row margin-top-md">
-            <div class="col-xs-4 col-md-6"><span class="header-label">Failure %</span></div>
+            <div class="col-xs-4 col-md-6"><a class="header-label" ng-click="grid.appScope.vm.sortBy('errorTotal', col.field)">Failure %</a> <i class="fa" ng-class="grid.appScope.vm.sortOrders[col.field].errorTotal.icon"></i></div>
             <div class="col-xs-8 col-md-6 text-right">
-                <span class="label label-system" uib-tooltip="System Errors" tooltip-append-to-body="true">Sys</span>
-                <span class="label label-algorithm" uib-tooltip="Algorithm Errors" tooltip-append-to-body="true">Alg</span>
-                <span class="label label-data" uib-tooltip="Data Errors" tooltip-append-to-body="true">Data</span>
-                <span class="label label-running" uib-tooltip="Total Jobs" tooltip-append-to-body="true">Total</span>
+                <span class="label label-system" uib-tooltip="System Errors" tooltip-append-to-body="true" ng-click="grid.appScope.vm.sortBy('system', col.field)">Sys <i class="fa" ng-class="grid.appScope.vm.sortOrders[col.field].system.icon"></i></span>
+                <span class="label label-algorithm" uib-tooltip="Algorithm Errors" tooltip-append-to-body="true" ng-click="grid.appScope.vm.sortBy('algorithm', col.field)">Alg  <i class="fa" ng-class="grid.appScope.vm.sortOrders[col.field].algorithm.icon"></i></span>
+                <span class="label label-data" uib-tooltip="Data Errors" tooltip-append-to-body="true" ng-click="grid.appScope.vm.sortBy('data', col.field)">Data  <i class="fa" ng-class="grid.appScope.vm.sortOrders[col.field].data.icon"></i></span>
+                <span class="label label-running" uib-tooltip="Total Jobs" tooltip-append-to-body="true" ng-click="grid.appScope.vm.sortBy('total', col.field)">Total  <i class="fa" ng-class="grid.appScope.vm.sortOrders[col.field].total.icon"></i></span>
             </div>
         </div>
     </div>

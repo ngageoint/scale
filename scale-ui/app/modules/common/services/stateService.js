@@ -78,7 +78,9 @@
                 ended: null,
                 name: data.name ? data.name : null,
                 category: null,
-                order: null
+                order: data.order ? data.order : 'desc',
+                orderField: data.orderField ? data.orderField : 'twentyfour_hours',
+                orderErrorType: data.orderErrorType ? data.orderErrorType : 'errorTotal'
             };
         };
 

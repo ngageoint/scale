@@ -19,6 +19,76 @@
         vm.performanceData = [];
         vm.jobTypeValues = [jobTypeViewAll];
         vm.selectedJobType = vm.jobTypesParams.name ? vm.jobTypesParams.name : jobTypeViewAll;
+        vm.sortOrders = {
+            twentyfour_hours: {
+                system: {
+                    direction: 'desc',
+                    icon: 'asdf'
+                },
+                algorithm: {
+                    direction: 'desc',
+                    icon: 'hidden'
+                },
+                data: {
+                    direction: 'desc',
+                    icon: 'hidden'
+                },
+                total: {
+                    direction: 'desc',
+                    icon: 'hidden'
+                },
+                errorTotal: {
+                    direction: 'desc',
+                    icon: 'hidden'
+                }
+            },
+            fortyeight_hours: {
+                system: {
+                    direction: 'desc',
+                    icon: 'hidden'
+                },
+                algorithm: {
+                    direction: 'desc',
+                    icon: 'hidden'
+                },
+                data: {
+                    direction: 'desc',
+                    icon: 'hidden'
+                },
+                total: {
+                    direction: 'desc',
+                    icon: 'hidden'
+                },
+                errorTotal: {
+                    direction: 'desc',
+                    icon: 'hidden'
+                }
+            },
+            thirty_days: {
+                system: {
+                    direction: 'desc',
+                    icon: 'hidden'
+                },
+                algorithm: {
+                    direction: 'desc',
+                    icon: 'hidden'
+                },
+                data: {
+                    direction: 'desc',
+                    icon: 'hidden'
+                },
+                total: {
+                    direction: 'desc',
+                    icon: 'hidden'
+                },
+                errorTotal: {
+                    direction: 'desc',
+                    icon: 'hidden'
+                }
+            }
+        };
+        vm.currSortField = '';
+        vm.currSortErrorType = '';
         vm.subnavLinks = scaleConfig.subnavLinks.jobs;
         subnavService.setCurrentPath('jobs/failure-rates');
 
@@ -28,6 +98,7 @@
                 displayName: 'Job Type',
                 cellTemplate: '<div class="ui-grid-cell-contents"><span ng-bind-html="row.entity.job_type.getIcon()"></span> {{ row.entity.job_type.title }} {{ row.entity.job_type.version }}</div>',
                 filterHeaderTemplate: '<div class="ui-grid-filter-container"><select class="form-control input-sm" ng-model="grid.appScope.vm.selectedJobType" ng-options="jobType as (jobType.title + \' \' + jobType.version) for jobType in grid.appScope.vm.jobTypeValues"></select></div>',
+                width: '16%',
                 enableSorting: false
             },
             {
@@ -35,6 +106,7 @@
                 displayName: '24 Hours',
                 enableSorting: false,
                 enableFiltering: false,
+                width: '28%',
                 headerCellTemplate: 'gridHeader.html',
                 cellTemplate: 'gridRow.html'
             },
@@ -43,6 +115,7 @@
                 displayName: '48 Hours',
                 enableSorting: false,
                 enableFiltering: false,
+                width: '28%',
                 headerCellTemplate: 'gridHeader.html',
                 cellTemplate: 'gridRow.html'
             },
@@ -51,6 +124,7 @@
                 displayName: '30 Days',
                 enableSorting: false,
                 enableFiltering: false,
+                width: '28%',
                 headerCellTemplate: 'gridHeader.html',
                 cellTemplate: 'gridRow.html'
             }
@@ -92,14 +166,16 @@
             return ((errorTotal / total) * 100).toFixed(0) + '%';
         };
 
-        vm.filterResults = function () {
-            vm.gridOptions.data = [];
+        vm.filterResults = function (skipInit) {
             stateService.setJobTypesFailureRatesParams(vm.jobTypesParams);
             _.forEach(_.pairs(vm.jobTypesParams), function (param) {
                 $location.search(param[0], param[1]);
             });
-            vm.loading = true;
-            initialize();
+            if (!skipInit) {
+                vm.gridOptions.data = [];
+                vm.loading = true;
+                initialize();
+            }
         };
 
         vm.updateJobType = function (value) {
@@ -107,6 +183,35 @@
             if (!vm.loading) {
                 vm.filterResults();
             }
+        };
+
+        vm.sortBy = function (errorType, field, order) {
+            vm.sortOrders[vm.currSortField][vm.currSortErrorType].icon = 'hidden';
+            vm.gridOptions.data = _.sortByOrder(vm.performanceData, function (d) {
+                if (errorType === 'errorTotal') {
+                    if (d[field].total > 0) {
+                        return d[field].errorTotal / d[field].total;
+                    }
+                    return 0;
+                }
+                return d[field][errorType];
+            }, [vm.sortOrders[field][errorType].direction]);
+            vm.currSortErrorType = errorType;
+            vm.currSortField = field;
+            vm.jobTypesParams.order = vm.sortOrders[field][errorType].direction;
+            vm.jobTypesParams.orderField = field;
+            vm.jobTypesParams.orderErrorType = errorType;
+
+            if (order) {
+                vm.sortOrders[field][errorType].icon = order === 'desc' ? 'fa-caret-down' : 'fa-caret-up';
+                vm.sortOrders[field][errorType].direction = order === 'desc' ? 'asc' : 'desc';
+            } else {
+                vm.sortOrders[field][errorType].icon = vm.sortOrders[field][errorType].direction === 'desc' ? 'fa-caret-down' : 'fa-caret-up';
+                vm.sortOrders[field][errorType].direction = vm.sortOrders[field][errorType].direction === 'desc' ? 'asc' : 'desc';
+            }
+
+            vm.filterResults(true);
+            $scope.gridApi.core.refresh();
         };
 
         var formatData = function (data, numDays) {
@@ -185,6 +290,11 @@
                         vm.gridOptions.minRowsToShow = vm.performanceData.length;
                         vm.gridOptions.virtualizationThreshold = vm.performanceData.length;
                         vm.gridOptions.data = vm.performanceData;
+                        vm.currSortField = vm.jobTypesParams.orderField || 'twentyfour_hours';
+                        vm.currSortErrorType = vm.jobTypesParams.orderErrorType || 'errorTotal';
+                        if (vm.jobTypesParams.order && vm.jobTypesParams.orderField && vm.jobTypesParams.orderErrorType) {
+                            vm.sortBy(vm.jobTypesParams.orderErrorType, vm.jobTypesParams.orderField, vm.jobTypesParams.order);
+                        }
                     }
 
                     vm.loading = false;
