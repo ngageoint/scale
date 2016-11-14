@@ -155,7 +155,9 @@
                 <p>The provided example is specific to AWS Simple Storage Service (S3) processing and for brevity uses
                 the AWS CLI to configure needed AWS resources. This does not require Scale to be running within AWS,
                 merely that you provide Scale the credentials to access. <em>NOTE:</em> In a production AWS environment,
-                IAM roles applied to instances would be preferred over use of Access Keys associated with IAM users.</p>
+                IAM roles applied to instances are strongly preferred over use of Access Keys associated with IAM users.
+                At present, Scale provides no protection for AWS Secret Keys, so any public access to the UI / API will
+                reveal the API keys.</p>
 
                 <p><strong>Install / Configure AWS CLI.</strong> The AWS CLI will allow us to quickly deploy the supporting AWS resources
                 in a consistent fashion. You will require an existing AWS account with an IAM user to use from your
