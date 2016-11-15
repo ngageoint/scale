@@ -2415,7 +2415,7 @@ class TaskUpdate(models.Model):
     """
 
     job_exe = models.ForeignKey('job.JobExecution', on_delete=models.PROTECT)
-    task_id = models.CharField(max_length=50)
+    task_id = models.CharField(max_length=250)
     status = models.CharField(max_length=50)
 
     timestamp = models.DateTimeField(blank=True, null=True)
