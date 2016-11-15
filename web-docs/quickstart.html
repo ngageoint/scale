@@ -62,26 +62,19 @@
 <!-- Intro Section -->
 <section id="overview">
     <div class="container">
-        <p class="lead">This document provides a quickstart which will get you up and running with scale fairly quickly.
-            it uses DC/OS as the execution framework. If you already have a DC/OS cluster you can go straight to
-            step 2. Otherwise, you can setup a virtual DC/OS cluster using the excellent DC/OS vagrant configuration.</p>
+        <p class="lead">This document covers the steps required to get Scale up and running quickly using DC/OS as the
+            underlying cluster OS and packaging system. If you already have a DC/OS cluster, you can go straight to step
+            2.</p>
 
         <div class="row top-buffer">
             <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
                 <h2>Step 1</h2>
 
-                <p>>First, you need to setup a DC/OS cluster. This can be accomplished with VirtualBox and Vagrant.
-                Setup your pre-requisites and grab the Vagrant configurations following the instructions
-                <a target="_blank" href="https://github.com/dcos/dcos-vagrant">here.</a></p>
-
-                <p>Now you need to spin up a cluster. For this example, we'll create a single master node, a single public
-                node, four private nodes, and a boot node. The public node will allow access to Scale without logging
-                into DC/OS.</p>
-
-                <pre><kbd>vagrant up m1 p1 a1 a2 a3 a4 boot</kbd></pre>
-
-                <p>Now you can access <a target="_blank" href="http://m1.dcos">http://m1.dcos</a> and login to DC/OS.</p>
-
+                <p>First, you need to setup a DC/OS cluster. This can be accomplished locally, on-premise or in a
+                cloud deployment. We recommend using a cloud deployment as these will
+                be the quickest and most flexible for scaling up to test experimental workloads.</p>
+                <p>Complete installation instructions for your chosen deployment can be found
+                <a target="_blank" href="https://dcos.io/install/">here.</a></p>
             </div>
             <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
                 <img src="images/quickstart1.gif" class="img-responsive">
@@ -92,214 +85,568 @@
             <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
                 <h2>Step 2</h2>
 
-                <p>Install the DC/OS command line tool and login to DC/OS.</p>
+                <p><strong>Install pre-requisite packages.</strong>
+                    Scale requires Elasticsearch to be available, with
+                Marathon-LB being optional for external Scale API exposure. Elasticsearch is not required to be
+                running internal to the DC/OS cluster, but this is the simplest way to get up and running.</p>
 
-                <samp><pre><kbd>dcos auth login</kbd>
-
-Please go to the following link in your browser:
-
-    https://m1.dcos/login?redirect_uri=urn:ietf:wg:oauth:2.0:oob
-
-Enter authentication token: <kbd>eyJ0eXAiOiJKV1Q...</kbd>
-Login successful!
-                </pre></samp>
+                <p>Browse to the DC/OS Admin UI. From the left navigation, select Universe. Search for Elasticsearch,
+                click Install and Install Package to install with defaults. Search for and install Marathon-LB,
+                as well, if public Scale API exposure is desired. Once these installs have been launched, use the
+                left navigation to select Services. Wait for Elasticsearch to deploy and scale to 4 running tasks
+                before proceeding to the next step.
+                </p>
             </div>
             <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
                 <img src="images/quickstart2.gif" class="img-responsive">
             </div>
         </div>
 
+
         <div class="row top-buffer">
             <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
                 <h2>Step 3</h2>
 
-                <p>Run pre-requisite packages. Marathon-lb may not be required in your configuration. If you don't
-                have an administrative zone and public nodes, you will not likely need marathon-lb. It is required
-                for proper function in the Vagrant example.</p>
+                <p><strong>Install the Scale package.</strong>
+                    The Scale package will install all required components, save for external
+                dependency on Elasticsearch. This default is <em>not</em> recommended for a production deployment,
+                but will get you up and running quickly to experiment with the Scale system. The primary recommendation
+                is to use an externally managed Postgres database for Scale state persistence. This can be accomplished
+                by specifying the database connection information during installation. A user name with ownership to an
+                existing database containing the PostGIS extension is the only requirement.</p>
 
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <a class="btn btn-primary" data-toggle="collapse" href="#marathon-lb_json"
-                           aria-expanded="false" aria-coltrols="marathon-lb_json">
-                            <h3 class="panel-title">marathon-lb.json</h3>
-                        </a>
-                    </div>
-                    <pre class="panel-body collapse" id="marathon-lb_json">{
-  "marathon-lb": {
-    "auto-assign-service-ports": false,
-    "bind-http-https": true,
-    "cpus": 1,
-    "haproxy-group": "external",
-    "haproxy-map": true,
-    "instances": 1,
-    "mem": 512,
-    "minimumHealthCapacity": 0.5,
-    "maximumOverCapacity": 0.2,
-    "name": "marathon-lb",
-    "role": "slave_public",
-    "sysctl-params": "net.ipv4.tcp_tw_reuse=1 net.ipv4.tcp_fin_timeout=30 net.ipv4.tcp_max_syn_backlog=10240 net.ipv4.tcp_max_tw_buckets=400000 net.ipv4.tcp_max_orphans=60000 net.core.somaxconn=10000",
-    "marathon-uri": "http://master.mesos:8080"
-  }
-}</pre>
-                </div>
+                <p>Browse to the DC/OS Admin UI. From the left navigation, select Universe. Search for Scale, click
+                Install and Install Package to install with defaults. If wishing to customize the virtual host for
+                public exposure, Elasticsearch being used or the database host, select the Advanced Installation link
+                instead of Install Package.</p>
 
-                <samp><pre><kbd>dcos package install --options=marathon-lb.json marathon-lb</kbd>
+                <p>It will take a few minutes for the deployment to finish. Check the Services pane of the DC/OS Admin
+                UI for a status display. When complete, you'll see <code>scale</code>, <code>scale-logstash</code> and
+                <code>scale-webserver</code> tasks in healthy states. </p>
 
-We recommend a minimum of 0.5 CPUs and 256 MB of RAM available for the Marathon-LB DCOS Service.
-Continue installing? [yes/no] <kbd>yes</kbd>
-Installing Marathon app for package [marathon-lb] version [1.3.3]
-Marathon-lb DCOS Service has been successfully installed!
-See https://github.com/mesosphere/marathon-lb for documentation.
-                </pre></samp>
+                <p><em>NOTE:</em> the following <code>dcos-admin</code> string must be replaced with the address of your
+                DC/OS Admin UI.</p> The Scale UI can be found at
+                <a target="_blank" href="http://dcos-admin/service/scale/">http://dcos-admin/service/scale/</a>.
 
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <a class="btn btn-primary" data-toggle="collapse" href="#elasticsearch_json"
-                           aria-expanded="false" aria-coltrols="elasticsearch_json">
-                            <h3 class="panel-title">elasticsearch.json</h3>
-                        </a>
-                    </div>
-                    <pre class="panel-body collapse" id="elasticsearch_json">{
-  "mesos": {
-    "master": "zk://master.mesos:2181/mesos"
-  },
-  "elasticsearch": {
-    "framework-name": "elasticsearch",
-    "failover-timeout": "2592000.0",
-    "zookeeper-mesos-timeout": "20000",
-    "port": "31105",
-    "force-pull-image": false,
-    "executor": {
-      "ram": "512",
-      "cpu": "0.5",
-      "disk": "512",
-      "instances": "1",
-      "cluster-name": "mesos-ha",
-      "name": "elasticsearch-executor"
-    },
-    "scheduler": {
-      "cpu": "0.2",
-      "ram": "512",
-      "instances": "1",
-      "java-heap": "-Xms128m -Xmx256m"
-    }
-  }
-}</pre>
-                </div>
-
-                <pre><kbd>dcos package install --options=elasticsearch.json elasticsearch</kbd>
-
-The ElasticSearch DCOS Service implementation is alpha and there may be bugs, incomplete features, incorrect documentation or other discrepancies.
-Continue installing? [yes/no] <kbd>yes</kbd>
-Installing Marathon app for package [elasticsearch] version [1.0.1]
-Elasticsearch is staging. Check Marathon and the ES management front-end for status.
-                </pre></samp>
-
-                <p>It may take a few minutes for the deployment to finish. Check <a target="_blank" href="http://m1.dcos">
-                   the DC/OS dashboard</a> for a status display. When complete, you'll see <code>elasticsearch</code>
-                   in the list of services. Three tasks will be running and none will be staging.</p>
             </div>
             <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
                 <img src="images/quickstart3.gif" class="img-responsive">
-                <img src="images/quickstart3b.png" class="img-responsive">
             </div>
         </div>
-
-
         <div class="row top-buffer">
             <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
                 <h2>Step 4</h2>
 
-                <p>Deploy the Scale service.</p>
+                <p><strong>Create example job and process sample data.</strong>
+                    The Scale system is designed to allow processing on any
+                type of data stored as discrete objects - this can be either files from network volumes or object
+                storage, such as AWS S3. Scale is primarily focused on processing of data in a monitoring mode as it
+                arrives. Reference
+                <a href="http://ngageoint.github.io/scale/docs/architecture/overview.html">Scale architecture</a> and
+                <a href="http://ngageoint.github.io/scale/docs/algorithm_integration/index.html">algorithm
+                integration</a> documentation for an in-depth overview of these topics.</p>
+            </div>
+        </div>
 
+        <div class="row top-buffer">
+            <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
+                <h3>Step 4.1</h3>
+
+                <p>The provided example is specific to AWS Simple Storage Service (S3) processing and for brevity uses
+                the AWS CLI to configure needed AWS resources. This does not require Scale to be running within AWS,
+                merely that you provide Scale the credentials to access. <em>NOTE:</em> In a production AWS environment,
+                IAM roles applied to instances are strongly preferred over use of Access Keys associated with IAM users.
+                At present, Scale provides no protection for AWS Secret Keys, so any public access to the UI / API will
+                reveal the API keys.</p>
+
+                <p><strong>Install / Configure AWS CLI.</strong> The AWS CLI will allow us to quickly deploy the supporting AWS resources
+                in a consistent fashion. You will require an existing AWS account with an IAM user to use from your
+                local machine. Complete documentation on this set up can be found
+                <a href="http://docs.aws.amazon.com/cli/latest/userguide/installing.html">here</a>
+                for your platform of choice.</p>
+
+                <p><strong>Deploy S3 Bucket, SNS Topic and SQS Queue.</strong>
+                    A CloudFormation template is provided to get these
+                resources quickly instantiated. The only parameter that must be specified is the BucketName. The below
+                example command to launch the template uses shell syntax to generate a bucket name that is unique to
+                satisfy the global uniqueness constraint. If you prefer a specific name, replace the
+                <em>ParameterValue</em> with your chosen name.</p>
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <a class="btn btn-primary" data-toggle="collapse" href="#scale_json"
-                           aria-expanded="false" aria-coltrols="scale_json">
-                            <h3 class="panel-title">scale.json</h3>
+                        <a class="btn btn-primary" data-toggle="collapse" href="#scale-demo-cloudformation_json"
+                           aria-expanded="false" aria-coltrols="scale-demo-cloudformation_json">
+                            <h3 class="panel-title">scale-demo-cloudformation.json</h3>
                         </a>
                     </div>
-                    <pre class="panel-body collapse" id="scale_json">{
-    "id": "/scale",
-    "cpus": 1.0,
-    "mem": 1024.0,
-    "instances": 1,
-    "container": {
-        "type": "DOCKER",
-        "docker": {
-            "image": "geoint/scale",
-            "network": "HOST",
-            "forcePullImage": true
-        }
-    },
-    "args": ["scale_scheduler"],
-    "constraints": [["hostname", "UNIQUE"]],
-    "healthChecks": [{
-        "path": "/api/status/",
-        "protocol": "HTTP",
-        "portIndex": 0,
-        "gracePeriodSeconds": 600,
-        "intervalSeconds": 30,
-        "timeoutSeconds": 20,
-        "maxConsecutiveFailures": 3,
-        "ignoreHttp1xx": false
-    }],
-    "labels":{
-      "DCOS_PACKAGE_FRAMEWORK_NAME": "scale",
-      "HAPROXY_GROUP":"external",
-      "HAPROXY_0_PORT":"8008",
-      "HAPROXY_0_VHOST":"marathon-lb.marathon.mesos"
-    },
-    "env": {
-      "ENABLE_NFS": "true",
-      "ENABLE_GUNICORN": "true",
-      "ENABLE_HTTPD": "true",
-      "SCALE_DB_NAME": "scale",
-      "SCALE_DB_USER": "scale",
-      "SCALE_DB_PASS": "scale",
-      "SCALE_DB_HOST": "scale-db.marathon.slave.mesos",
-      "SCALE_DB_PORT": "5432",
-      "MESOS_MASTER_URL": "zk://master.mesos:2181/mesos",
-      "DCOS_PACKAGE_FRAMEWORK_NAME": "scale",
-      "SCALE_SECRET_KEY": "a-random-secret-key",
-      "SCALE_ALLOWED_HOSTS": "*",
-      "SCALE_API_URL": "/ui/api",
-      "SCALE_STATIC_URL": "/scale/ui/static/",
-      "SCALE_STATIC_ROOT": "static/",
-      "DEPLOY_DB": "true",
-      "DEPLOY_LOGGING": "true",
-      "INIT_DB": "true",
-      "LOAD_COUNTRY_DATA": "true",
-      "NFS_POSTGRES_UID": "26",
-      "NFS_POSTGRES_GID": "26",
-      "DB_DOCKER_IMAGE": "mdillon/postgis",
-      "SCALE_DB_HOST_VOL": "",
-      "SCALE_LOGGING_ADDR": "",
-      "SCALE_DEBUG": "true",
-      "USE_LATEST": "true"
-    }
+                    <pre class="panel-body collapse" id="scale-demo-cloudformation_json">
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "Creates the S3 bucket, SNS topic and SQS queue that will receive notifications",
+	"Parameters": {
+		"S3BucketName": {
+			"MaxLength": "63",
+			"ConstraintDescription": "must be a valid S3 bucket name",
+			"Default": "scale-s3-create-retrieve-test",
+			"Description": "Required: Specify a valid, globally unique S3 bucket name.",
+			"AllowedPattern": "^[a-z0-9][a-z0-9-.]*$",
+			"MinLength": "2",
+			"Type": "String"
+		}
+	},
+	"Resources": {
+		"UploadsQueue": {
+			"Type": "AWS::SQS::Queue",
+			"Properties": {
+				"ReceiveMessageWaitTimeSeconds": 20,
+				"VisibilityTimeout": 120
+			}
+		},
+		"UploadsTopic": {
+			"Type": "AWS::SNS::Topic",
+			"Properties": {
+				"Subscription": [
+					{
+						"Endpoint": {
+							"Fn::GetAtt": [
+								"UploadsQueue",
+								"Arn"
+							]
+						},
+						"Protocol": "sqs"
+					}
+				]
+			}
+		},
+		"SNSToSQSPolicy": {
+			"Type": "AWS::SQS::QueuePolicy",
+			"Properties": {
+				"PolicyDocument": {
+					"Id": "PushMessageToSQSPolicy",
+					"Version": "2012-10-17",
+					"Statement": [
+						{
+							"Sid": "allow-sns-to-send-message-to-sqs",
+							"Effect": "Allow",
+							"Action": [
+								"sqs:SendMessage"
+							],
+							"Principal": {
+								"AWS": "*"
+							},
+							"Resource": "*",
+							"Condition": {
+								"ArnEquals": {
+									"aws:SourceArn": {
+										"Ref": "UploadsTopic"
+									}
+								}
+							}
+						}
+					]
+				},
+				"Queues": [
+					{
+						"Ref": "UploadsQueue"
+					}
+				]
+			}
+		},
+		"Bucket": {
+			"Type": "AWS::S3::Bucket",
+			"Properties": {
+				"AccessControl": "Private",
+				"BucketName": {
+					"Fn::Join": [
+						"",
+						[
+							{
+								"Ref": "S3BucketName"
+							}
+						]
+					]
+				},
+				"CorsConfiguration": {
+					"CorsRules": [
+						{
+							"AllowedHeaders": [
+								"*"
+							],
+							"AllowedMethods": [
+								"GET",
+								"PUT",
+								"HEAD"
+							],
+							"AllowedOrigins": [
+								"*"
+							],
+							"ExposedHeaders": [
+								"x-amz-server-side-encryption"
+							],
+							"MaxAge": "3000"
+						}
+					]
+				},
+				"NotificationConfiguration": {
+					"TopicConfigurations": [
+						{
+							"Event": "s3:ObjectCreated:*",
+							"Topic": {
+								"Ref": "UploadsTopic"
+							}
+						}
+					]
+				}
+			},
+			"DependsOn": "BucketToUploadsTopicPolicy"
+		},
+		"BucketToUploadsTopicPolicy": {
+			"Type": "AWS::SNS::TopicPolicy",
+			"Properties": {
+				"PolicyDocument": {
+					"Id": "PushBucketNotificationPolicy",
+					"Version": "2012-10-17",
+					"Statement": [
+						{
+							"Sid": "AllowBucketToPushNotificationEffect",
+							"Effect": "Allow",
+							"Principal": {
+								"AWS": "*"
+							},
+							"Action": "sns:Publish",
+							"Resource": "*",
+							"Condition": {
+								"ArnLike": {
+									"aws:SourceArn": {
+										"Fn::Join": [
+											"",
+											[
+												"arn:aws:s3:*:*:",
+												{
+													"Ref": "S3BucketName"
+												}
+											]
+										]
+									}
+								}
+							}
+						}
+					]
+				},
+				"Topics": [
+					{
+						"Ref": "UploadsTopic"
+					}
+				]
+			}
+		}
+	},
+	"Outputs": {
+		"BucketName": {
+			"Value": {
+				"Ref": "Bucket"
+			}
+		},
+		"UploadsQueueUrl": {
+			"Value": {
+				"Ref": "UploadsQueue"
+			}
+		},
+		"UploadsTopicArn": {
+			"Value": {
+				"Ref": "UploadsTopic"
+			}
+		}
+	}
 }</pre>
                 </div>
 
-                <p><em>NOTE:</em> Change the docker image name to include a release tag if you don't want to use the latest
-                master check-in. Also remove the USE_LATEST environment variable.</p>
+                <pre><kbd>aws cloudformation create-stack --stack-name scale-s3-demo --template-body file://scale-demo-cloudformation.json --parameters "ParameterKey=S3BucketName,ParameterValue=scale-bucket-`date +"%Y%m%d-%H%M%S"`"</kbd></pre>
 
-                <samp><pre><kbd>dcos marathon app add scale.json</kbd></pre></samp>
+                <p><strong>Describe Stack Resources.</strong>
+                    Creation of the CloudFormation stack from above should be completed in only
+                a couple minutes. The following command may be used to extract information needed to set the IAM policy
+                so Scale can access the created resources. If the Stack status is not <em>CREATE_COMPLETE</em> wait a
+                minute and run it again. The OutputValues associated with UploadsQueueUrl and BucketName from this
+                command are what will be needed.</p>
 
-                <p>It will take a few minutes for the deployment to finish. Check <a target="_blank" href="http://m1.dcos">
-                   the DC/OS dashboard</a> for a status display. When complete, you'll see <code>scale</code>
-                   in the list of services. You can get additional status and information from the
-                <a target="_blank" href="http://m1.dcos/service/marathon/">Marathon dashboard.</a></p>
+                <pre><kbd>aws cloudformation describe-stacks --stack-name scale-s3-demo</kbd></pre>
 
-                <p>Once Scale is running you can access the <a target="_blank" href="http://p1.dcos:8008/">Scale dashboard.</a></p>
-            </div>
-            <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-                <img src="images/quickstart4.gif" class="img-responsive">
-                <img src="images/quickstart4b.png" class="img-responsive">
-                <img src="images/quickstart4c.png" class="img-responsive">
-                <img src="images/quickstart4d.png" class="img-responsive">
+                <p><strong>Get Resource ARNs.</strong>
+                    The <em>describe-stacks</em> command does not indicate the ARN of the Queue so a
+                second command is required to find that value. The UploadsQueueUrl placeholder below should be replaced
+                the appropriate value returned from the previous command.</p>
+
+                <pre><kbd>aws sqs get-queue-attributes --attribute-names "QueueArn" --queue-url UploadsQueueUrl</kbd></pre>
+
+                <p><strong>Create IAM User and Access Key.</strong>
+                    The Access Key and Secret Key should be noted as they will be needed
+                by Scale to authenticate against AWS for access to our provisioned resources. Feel free to change the
+                user name value as needed.</p>
+
+                <pre>
+<kbd>aws iam create-user --user-name scale-test-user</kbd>
+<kbd>aws iam create-access-key --user-name scale-test-user</kbd></pre>
+
+                <p><strong>Create IAM policy and apply to user.</strong>
+                    The provided policy template will need to be updated to reflect
+                the ARNs for your environment. The <em>get-queue-attributes</em> command will have given the SQS ARN. S3
+                ARNs are deterministic within the standard AWS regions, so it would simply be of the form
+                <em>arn:aws:s3:::scale-bucket</em>, where <em>scale-bucket</em> is the BucketName value from
+                <em>describe-stacks</em> above.</p>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a class="btn btn-primary" data-toggle="collapse" href="#scale-demo-policy_json"
+                           aria-expanded="false" aria-coltrols="scale-demo-policy_json">
+                            <h3 class="panel-title">scale-demo-policy.json</h3>
+                        </a>
+                    </div>
+                    <pre class="panel-body collapse" id="scale-demo-policy_json">
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": "*",
+            "Effect": "Allow",
+            "Resource": [
+                "arn:aws:sqs:*:*:scale-s3-demo-UploadsQueue-*"
+            ]
+        },
+        {
+            "Action": "*",
+            "Effect": "Allow",
+            "Resource": [
+                "arn:aws:s3:::scale-bucket-*"
+            ]
+        }
+    ]
+}</pre>
+                </div>
+                <pre>
+<kbd>aws iam put-user-policy --user-name scale-test-user --policy-document file://scale-demo-policy.json --policy-name scale-demo-policy</kbd></pre>
             </div>
         </div>
+
+        <div class="row top-buffer">
+            <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
+                <h3>Step 4.2</h3>
+
+                <p><strong>Configure Scale for processing.</strong>
+                    The final step to process data in our S3 bucket is to configure Scale with a workspace, Strike,
+                job type and recipe type. The following script can be used to quickly bootstrap Scale with the
+                configuration necessary to extract the first MiB of input files and save them in the output workspace.
+                </p>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a class="btn btn-primary" data-toggle="collapse" href="#scale-demo_sh"
+                           aria-expanded="false" aria-coltrols="scale-demo_sh">
+                            <h3 class="panel-title">scale-init.sh</h3>
+                        </a>
+                    </div>
+                    <pre class="panel-body collapse" id="scale-demo_sh">#!/usr/bin/env sh
+
+# The following environment variables are required for the successful execution of this script.
+# DCOS_TOKEN: DCOS token that can found within ~/.dcos/dcos.toml once DCOS CLI is authenticated against DCOS cluster
+# DCOS_ROOT_URL: The externally routable Admin URL.
+# REGION_NAME: AWS Region where SQS and S3 bucket reside.
+# BUCKET_NAME: AWS S3 bucket name only. Full ARN should NOT be used.
+# QUEUE_NAME: AWS SQS queue name only. Full ARN should NOT be used.
+# ACCESS_KEY: Access Key for IAM user that will access S3 and SQS resources.
+# SECRET_KEY: Secret Key for IAM user that will access S3 and SQS resources.
+
+cat << EOF > workspace.json
+{
+    "description": "s3-direct",
+    "json_config": {
+        "broker": {
+            "bucket_name": "${BUCKET_NAME}",
+            "credentials": {
+                "access_key_id": "${ACCESS_KEY}",
+                "secret_access_key": "${SECRET_KEY}"
+            },
+            "region_name": "${REGION_NAME}",
+            "type": "s3"
+        }
+    },
+    "name": "s3-direct",
+    "title": "s3-direct",
+    "base_url": "https://s3.amazonaws.com/${BUCKET_NAME}"
+}
+EOF
+
+JOB_ARGS="1024 \${input_file} \${job_output_dir}"
+cat << EOF > job-type.json
+{
+    "name": "read-bytes",
+    "version": "1.0.0",
+    "title": "Read Bytes",
+    "description": "Reads x bytes of an input file and writes to output dir",
+    "category": "testing",
+    "author_name": "John_Doe",
+    "author_url": "http://www.example.com",
+    "is_operational": true,
+    "icon_code": "f27d",
+    "docker_privileged": false,
+    "docker_image": "geoint/read-bytes",
+    "priority": 230,
+    "timeout": 3600,
+    "max_scheduled": null,
+    "max_tries": 3,
+    "cpus_required": 1.0,
+    "mem_required": 1024.0,
+    "disk_out_const_required": 0.0,
+    "disk_out_mult_required": 0.0,
+    "interface": {
+        "output_data": [
+            {
+                "media_type": "application/octet-stream",
+                "required": true,
+                "type": "file",
+                "name": "output_file"
+            }
+        ],
+        "shared_resources": [],
+        "command_arguments": "${JOB_ARGS}",
+        "input_data": [
+            {
+                "media_types": [
+                    "application/octet-stream"
+                ],
+                "required": true,
+                "partial": true,
+                "type": "file",
+                "name": "input_file"
+            }
+        ],
+        "version": "1.1",
+        "command": ""
+    },
+    "error_mapping": {
+        "version": "1.0",
+        "exit_codes": {}
+    },
+    "trigger_rule": null
+}
+EOF
+
+cat << EOF > recipe-type.json
+{
+    "definition": {
+        "input_data": [
+            {
+                "media_types": [
+                    "application/octet-stream"
+                ],
+                "name": "input_file",
+                "required": true,
+                "type": "file"
+            }
+        ],
+        "jobs": [
+            {
+                "dependencies": [],
+                "job_type": {
+                    "name": "read-bytes",
+                    "version": "1.0.0"
+                },
+                "name": "read-bytes",
+                "recipe_inputs": [
+                    {
+                        "job_input": "input_file",
+                        "recipe_input": "input_file"
+                    }
+                ]
+            }
+        ]
+    },
+    "description": "Read x bytes from input file and save in output dir",
+    "name": "read-byte-recipe",
+    "title": "Read Byte Recipe",
+    "trigger_rule": {
+        "configuration": {
+            "condition": {
+                "data_types": [],
+                "media_type": ""
+            },
+            "data": {
+                "input_data_name": "input_file",
+                "workspace_name": "s3-direct"
+            }
+        },
+        "is_active": true,
+        "name": "read-byte-trigger",
+        "type": "INGEST"
+    },
+    "version": "1.0.0"
+}
+EOF
+
+cat << EOF > strike.json
+{
+  "name": "s3-strike-process",
+  "title": "s3-strike-process",
+  "description": "s3-strike-process",
+  "configuration": {
+    "version": "2.0",
+    "workspace": "s3-direct",
+    "monitor": {
+      "type": "s3",
+      "sqs_name": "${QUEUE_NAME}",
+      "credentials": {
+        "access_key_id": "${ACCESS_KEY}",
+        "secret_access_key": "${SECRET_KEY}"
+      },
+      "region_name": "${REGION_NAME}"
+    },
+    "files_to_ingest": [
+      {
+        "filename_regex": ".*",
+        "data_types": [
+          "all_my_mounted_files"
+        ]
+      }
+    ]
+  }
+}
+EOF
+
+
+curl -X POST -H "Authorization: token=${DCOS_TOKEN}" -H "Content-Type: application/json" -H "Cache-Control: no-cache" -d @workspace.json "${DCOS_ROOT_URL}/service/scale/api/v4/workspaces/"
+curl -X POST -H "Authorization: token=${DCOS_TOKEN}" -H "Content-Type: application/json" -H "Cache-Control: no-cache" -d @job-type.json "${DCOS_ROOT_URL}/service/scale/api/v4/job-types/"
+curl -X POST -H "Authorization: token=${DCOS_TOKEN}" -H "Content-Type: application/json" -H "Cache-Control: no-cache" -d @recipe-type.json "${DCOS_ROOT_URL}/service/scale/api/v4/recipe-types/"
+curl -X POST -H "Authorization: token=${DCOS_TOKEN}" -H "Content-Type: application/json" -H "Cache-Control: no-cache" -d @strike.json "${DCOS_ROOT_URL}/service/scale/api/v4/strikes/"</pre>
+                </div>
+
+                <pre>
+<kbd>export DCOS_TOKEN="DCOS token that can found within ~/.dcos/dcos.toml once DCOS CLI is authenticated against DCOS cluster."</kbd>
+<kbd>export DCOS_ROOT_URL="The externally routable Admin URL."</kbd>
+<kbd>export REGION_NAME="AWS Region where SQS and S3 bucket reside."</kbd>
+<kbd>export BUCKET_NAME="AWS S3 bucket name only. Full ARN should NOT be used."</kbd>
+<kbd>export QUEUE_NAME="AWS SQS queue name only. Full ARN should NOT be used."</kbd>
+<kbd>export ACCESS_KEY="Access Key for IAM user that will access S3 and SQS resources."</kbd>
+<kbd>export SECRET_KEY="Secret Key for IAM user that will access S3 and SQS resources."</kbd>
+<kbd>sh scale-init.sh</kbd></pre>
+
+                <p><strong>Test Scale ingest.</strong>
+                    Now that our configuration is complete we can verify that Scale is ready to process. We will drop a
+                new file into our bucket using the AWS CLI. This file can be anything, but a text file over 1 MiB is
+                best to demonstrate the jobs ability to extract only the first MiB. The following will do nicely:</p>
+
+                <pre>
+<kbd>base64 /dev/urandom | head -c 2000000 > sample-data-2mb.txt</kbd>
+<kbd>aws s3 cp --acl public-read sample-data-2mb.txt s3://${BUCKET_NAME}/</kbd></pre>
+
+                <p><strong>View processing results.</strong>
+                    In the Scale UI, navigate to Jobs. A Read Bytes job should have completed. Click on the job in the
+                table and see the outputs in the detail view. You should be able to see that the file size is 1MiB. Feel
+                free to download and inspect. Congratulations, you've processed your first file within Scale! For more
+                advanced examples refer to the Scale GitHub and Docker Hub repositories, as well as the documentation.
+                </p>
+            </div>
+        </div>
+
+
     </div>
 </section>
 

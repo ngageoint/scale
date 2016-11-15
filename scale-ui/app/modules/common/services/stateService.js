@@ -78,7 +78,9 @@
                 ended: null,
                 name: data.name ? data.name : null,
                 category: null,
-                order: null
+                order: data.order ? data.order : 'desc',
+                orderField: data.orderField ? data.orderField : 'twentyfour_hours',
+                orderErrorType: data.orderErrorType ? data.orderErrorType : 'errorTotal'
             };
         };
 
@@ -103,7 +105,8 @@
                 ended: data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
                 order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['-ingest_started'],
                 status: data.status ? data.status : null,
-                file_name: data.file_name ? data.file_name : null
+                file_name: data.file_name ? data.file_name : null,
+                strike_id: data.strike_id ? parseInt(data.strike_id) : null
             };
         };
 

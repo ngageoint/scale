@@ -1,11 +1,10 @@
 """Defines the class for managing a batch definition"""
 from __future__ import unicode_literals
 
-import datetime
-
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
+import util.parse as parse
 from batch.configuration.definition.exceptions import InvalidDefinition
 
 
@@ -57,12 +56,10 @@ BATCH_DEFINITION_SCHEMA = {
                 'started': {
                     'description': 'The start of the range to use when matching recipes to re-process',
                     'type': 'string',
-                    'pattern': '^\d{4}-\d{2}-\d{2}$',
                 },
                 'ended': {
                     'description': 'The end of the range to use when matching recipes to re-process',
                     'type': 'string',
-                    'pattern': '^\d{4}-\d{2}-\d{2}$',
                 },
             },
         },
@@ -102,13 +99,13 @@ class BatchDefinition(object):
         self.started = None
         if date_range and 'started' in date_range:
             try:
-                self.started = datetime.datetime.strptime(date_range['started'], '%Y-%m-%d')
+                self.started = parse.parse_datetime(date_range['started'])
             except ValueError:
                 raise InvalidDefinition('Invalid start date format: %s' % date_range['started'])
         self.ended = None
         if date_range and 'ended' in date_range:
             try:
-                self.ended = datetime.datetime.strptime(date_range['ended'], '%Y-%m-%d')
+                self.ended = parse.parse_datetime(date_range['ended'])
             except ValueError:
                 raise InvalidDefinition('Invalid end date format: %s' % date_range['ended'])
 

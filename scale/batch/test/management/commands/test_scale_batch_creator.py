@@ -32,4 +32,4 @@ class TestBatchCreator(TestCase):
         cmd = BatchCommand()
         cmd.run_from_argv(['manage.py', 'scale_batch_creator', '-i', str(self.batch.id)])
 
-        self.assertTrue(mock_batch_manager.schedule_recipes.called)
+        mock_batch_manager.schedule_recipes.assert_called_with(self.batch.id)
