@@ -14,6 +14,25 @@ EPOCH = datetime.utcfromtimestamp(0).replace(tzinfo=utc)
 EXIT_CODE_PATTERN = re.compile(r'exited with status ([\-0-9]+)')
 REASON_ENUM_WRAPPER = enum_type_wrapper.EnumTypeWrapper(mesos_pb2._TASKSTATUS_REASON)
 SOURCE_ENUM_WRAPPER = enum_type_wrapper.EnumTypeWrapper(mesos_pb2._TASKSTATUS_SOURCE)
+TASK_STATUS_CONVERSION = {'TASK_STAGING': TaskStatusUpdate.STAGING, 'TASK_STARTING': TaskStatusUpdate.STAGING,
+                          'TASK_RUNNING': TaskStatusUpdate.RUNNING, 'TASK_FINISHED': TaskStatusUpdate.FINISHED,
+                          'TASK_FAILED': TaskStatusUpdate.FAILED, 'TASK_KILLED': TaskStatusUpdate.KILLED,
+                          'TASK_LOST': TaskStatusUpdate.LOST, 'TASK_ERROR': TaskStatusUpdate.FAILED}
+
+
+def convert_mesos_status_to_task_status(status):
+    """Converts the given Mesos status to the corresponding Scale task status
+
+    :param status: The Mesos task status
+    :type status: string
+    :returns: The Scale task status
+    :rtype: string
+    """
+
+    if status not in TASK_STATUS_CONVERSION:
+        raise Exception('Unknown Mesos status %s' % status)
+
+    return TASK_STATUS_CONVERSION[status]
 
 
 def create_task_status_update(status):
@@ -27,7 +46,7 @@ def create_task_status_update(status):
 
     task_id = get_status_task_id(status)
     agent_id = get_status_agent_id(status)
-    task_status = get_status_state(status)
+    task_status = convert_mesos_status_to_task_status(get_status_state(status))
     timestamp = get_status_timestamp(status)
     exit_code = parse_exit_code(status)
 

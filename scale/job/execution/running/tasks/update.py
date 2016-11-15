@@ -5,12 +5,13 @@ from __future__ import unicode_literals
 class TaskStatusUpdate(object):
     """This class represents a task status update. This class is thread-safe."""
 
+    STAGING = 'STAGING'
     RUNNING = 'RUNNING'
     FINISHED = 'FINISHED'
     LOST = 'LOST'
     FAILED = 'FAILED'
     KILLED = 'KILLED'
-    VALID_STATUSES = [RUNNING, FINISHED, LOST, FAILED, KILLED]
+    VALID_STATUSES = [STAGING, RUNNING, FINISHED, LOST, FAILED, KILLED]
     TERMINAL_STATUSES = [FINISHED, FAILED, KILLED]
 
     def __init__(self, task_id, agent_id, status, when, exit_code=None):
