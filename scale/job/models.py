@@ -2416,11 +2416,11 @@ class TaskUpdate(models.Model):
 
     job_exe = models.ForeignKey('job.JobExecution', on_delete=models.PROTECT)
     task_id = models.CharField(max_length=250)
-    status = models.CharField(max_length=50)
+    status = models.CharField(max_length=250)
 
     timestamp = models.DateTimeField(blank=True, null=True)
-    source = models.CharField(blank=True, max_length=50, null=True)
-    reason = models.CharField(blank=True, max_length=50, null=True)
+    source = models.CharField(blank=True, max_length=250, null=True)
+    reason = models.CharField(blank=True, max_length=250, null=True)
     message = models.TextField(blank=True, null=True)
 
     created = models.DateTimeField(auto_now_add=True)
