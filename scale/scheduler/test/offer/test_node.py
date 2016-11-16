@@ -26,6 +26,7 @@ class TestNodeOffers(TestCase):
         self.node_agent_paused = 'agent_paused'
         self.node_model = node_test_utils.create_node(slave_id=self.node_agent)
         self.node = Node(self.node_agent, self.node_model)
+        self.node.initial_cleanup_completed()
         self.paused_node_model = node_test_utils.create_node(slave_id=self.node_agent_paused)
         self.paused_node_model.is_paused = True
         self.paused_node = Node(self.node_agent_paused, self.paused_node_model)

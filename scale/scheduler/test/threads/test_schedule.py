@@ -49,6 +49,9 @@ class TestSchedulingThread(TransactionTestCase):
         with patch('scheduler.node.manager.api.get_slaves') as mock_get_slaves:
             mock_get_slaves.return_value = self.slave_infos
             self._managers.node.sync_with_database('master_host', 5050)
+        # Ignore initial cleanup tasks
+        for node in self._managers.node.get_nodes():
+            node.initial_cleanup_completed()
 
         self.queue_1 = queue_test_utils.create_queue(cpus_required=4.0, mem_required=1024.0, disk_in_required=100.0,
                                                      disk_out_required=200.0, disk_total_required=300.0)
@@ -72,7 +75,7 @@ class TestSchedulingThread(TransactionTestCase):
         self._offer_manager.add_new_offers([offer_1, offer_2])
 
         num_tasks = self._scheduling_thread._perform_scheduling()
-        self.assertEqual(num_tasks, 4)  # Schedule both queued job executions and both initial cleanup tasks
+        self.assertEqual(num_tasks, 2)  # Schedule both queued job executions
 
     @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
     def test_paused_scheduler(self, mock_taskinfo):

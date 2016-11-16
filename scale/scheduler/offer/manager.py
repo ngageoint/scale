@@ -15,7 +15,8 @@ class OfferManager(object):
     NO_OFFERS = NodeOffers.NO_OFFERS
     NODE_PAUSED = NodeOffers.NODE_PAUSED
     NODE_OFFLINE = NodeOffers.NODE_OFFLINE
-    NO_NODES_AVAILABLE = 8
+    NODE_NOT_READY = NodeOffers.NODE_NOT_READY
+    NO_NODES_AVAILABLE = 9
 
     def __init__(self):
         """Constructor
