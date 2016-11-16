@@ -1,11 +1,15 @@
 """Defines the class that manages the scheduler nodes"""
 from __future__ import unicode_literals
 
+import logging
 import threading
 
 from mesos_api import api
 from node.models import Node
 from scheduler.node.node_class import Node as SchedulerNode
+
+
+logger = logging.getLogger(__name__)
 
 
 class NodeManager(object):
@@ -56,6 +60,7 @@ class NodeManager(object):
             if agent_id in self._agent_ids:
                 hostname = self._agent_ids[agent_id]
                 self._nodes[hostname].update_from_mesos(is_online=False)
+                logger.warning('Node %s has gone offline', hostname)
             if agent_id in self._new_agent_ids:
                 self._new_agent_ids.discard(agent_id)
 
@@ -117,12 +122,14 @@ class NodeManager(object):
             for node_model in new_node_models:
                 self._nodes[node_model.hostname] = SchedulerNode(node_model.slave_id, node_model)
                 self._agent_ids[node_model.slave_id] = node_model.hostname
+                logger.info('New node %s registered with agent ID %s', node_model.hostname, node_model.slave_id)
             # Update nodes with new agent IDs
             for hostname, slave_info in nodes_with_new_agent_id.items():
                 old_agent_id = self._nodes[hostname].agent_id
                 self._nodes[hostname].update_from_mesos(agent_id=slave_info.slave_id, port=slave_info.port)
                 del self._agent_ids[old_agent_id]
                 self._agent_ids[slave_info.slave_id] = hostname
+                logger.info('Node %s registered with new agent ID %s', hostname, slave_info.slave_id)
             # Update nodes from database models
             for node_model in existing_node_models:
                 self._nodes[node_model.hostname].update_from_model(node_model)

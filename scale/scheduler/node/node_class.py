@@ -1,10 +1,12 @@
 """Defines the class that represents nodes in the scheduler"""
 from __future__ import unicode_literals
 
+import logging
 import threading
 from collections import namedtuple
 
 
+logger = logging.getLogger(__name__)
 NodeState = namedtuple('NodeState', ['state', 'description'])
 
 
@@ -123,6 +125,7 @@ class Node(object):
         """Tells this node that its initial cleanup task has succeeded
         """
 
+        logger.info('Node %s has completed initial clean up', self._hostname)
         with self._lock:
             self._is_initial_cleanup_completed = True
             self._update_state()
