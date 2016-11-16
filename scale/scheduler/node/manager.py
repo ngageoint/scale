@@ -19,6 +19,9 @@ class NodeManager(object):
         self._new_agent_ids = set()
         self._nodes = {}  # {Hostname: SchedulerNode}
         self._lock = threading.Lock()
+        # TODO: remove
+        from util.lock import DebugLock
+        self._lock = DebugLock()
 
     def get_node(self, agent_id):
         """Returns the node with the given agent ID, possibly None

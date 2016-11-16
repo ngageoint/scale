@@ -15,6 +15,9 @@ class CleanupManager(object):
 
         self._agent_ids = {}  # {Agent ID: Node ID}
         self._lock = threading.Lock()
+        # TODO: remove
+        from util.lock import DebugLock
+        self._lock = DebugLock()
         self._nodes = {}  # {Node ID: NodeCleanup}
 
     def add_job_execution(self, job_exe):

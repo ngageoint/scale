@@ -20,6 +20,9 @@ class AtomicCounter(object):
 
         self._counter = 0
         self._lock = threading.Lock()
+        # TODO: remove
+        from util.lock import DebugLock
+        self._lock = DebugLock()
 
     def get_next(self):
         """Returns the next integer

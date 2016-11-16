@@ -15,6 +15,9 @@ class JobTypeManager(object):
 
         self._job_types = {}  # {Job Type ID: Job Type}
         self._lock = threading.Lock()
+        # TODO: remove
+        from util.lock import DebugLock
+        self._lock = DebugLock()
 
     def get_job_type(self, job_type_id):
         """Returns the job type with the given ID, possibly None

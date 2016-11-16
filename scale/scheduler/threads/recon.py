@@ -27,6 +27,9 @@ class ReconciliationThread(object):
 
         self._driver = driver
         self._lock = threading.Lock()
+        # TODO: remove
+        from util.lock import DebugLock
+        self._lock = DebugLock()
         self._running = True
         self._task_ids_to_reconcile = set()
 

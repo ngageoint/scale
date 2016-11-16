@@ -39,6 +39,9 @@ class RunningJobExecution(object):
             self._docker_volumes = []
 
         self._lock = threading.Lock()  # Protects _current_task and _remaining_tasks
+        # TODO: remove
+        from util.lock import DebugLock
+        self._lock = DebugLock()
         self._current_task = None
         self._remaining_tasks = []
         self._all_tasks = []

@@ -28,6 +28,9 @@ class NodeOffers(object):
 
         self._node = node
         self._lock = threading.Lock()
+        # TODO: remove
+        from util.lock import DebugLock
+        self._lock = DebugLock()
 
         self._available_cpus = 0.0
         self._available_mem = 0.0

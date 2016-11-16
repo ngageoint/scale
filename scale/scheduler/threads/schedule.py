@@ -189,7 +189,7 @@ class SchedulingThread(object):
             if running_job_exe.job_type_id in self._job_type_limit_available:
                 self._job_type_limit_available[running_job_exe.job_type_id] -= 1
 
-        self._sends_task_for_reconciliation()
+        self._send_tasks_for_reconciliation()
         self._consider_cleanup_tasks()
         self._consider_running_job_exes()
         self._consider_new_job_exes()
@@ -281,7 +281,7 @@ class SchedulingThread(object):
 
         return scheduled_job_executions
 
-    def _sends_task_for_reconciliation(self):
+    def _send_tasks_for_reconciliation(self):
         """Sends the IDs of any tasks that need to be reconciled to the reconciliation thread
         """
 
