@@ -17,7 +17,7 @@ class WorkspaceManager(object):
         self._lock = threading.Lock()
         # TODO: remove
         from util.lock import DebugLock
-        self._lock = DebugLock()
+        self._lock = DebugLock('WorkspaceManager')
 
     def get_workspaces(self):
         """Returns a dict of all workspaces, stored by name

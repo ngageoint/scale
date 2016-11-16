@@ -10,17 +10,18 @@ logger = logging.getLogger(__name__)
 
 class DebugLock(object):
 
-    def __init__(self):
+    def __init__(self, class_name):
+        self._class_name = class_name
         self._lock = threading.Lock()
 
     def acquire(self):
-        logger.info('Attempting to acquire...')
+        logger.info('Attempting to acquire %s lock...', self._class_name)
         self._lock.acquire()
-        logger.info('Acquired')
+        logger.info('Acquired %s lock...', self._class_name)
 
     def release(self):
         self._lock.release()
-        logger.info('Released')
+        logger.info('Released %s lock...', self._class_name)
 
     def __enter__(self):
         self.acquire()

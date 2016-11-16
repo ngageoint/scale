@@ -20,7 +20,7 @@ class SchedulerManager(object):
         self._lock = threading.Lock()
         # TODO: remove
         from util.lock import DebugLock
-        self._lock = DebugLock()
+        self._lock = DebugLock('SchedulerManager')
         self._scheduler = scheduler
 
     def get_scheduler(self):

@@ -26,7 +26,7 @@ class StatusManager(object):
         self._lock = threading.Lock()
         # TODO: remove
         from util.lock import DebugLock
-        self._lock = DebugLock()
+        self._lock = DebugLock('StatusManager')
 
     def add_status_update(self, status_update):
         """Adds the given status update to the manager so it can be pushed to the database

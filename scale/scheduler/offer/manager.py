@@ -24,7 +24,7 @@ class OfferManager(object):
         self._lock = threading.Lock()
         # TODO: remove
         from util.lock import DebugLock
-        self._lock = DebugLock()
+        self._lock = DebugLock('OfferManager')
         self._new_offers = {}  # {Offer ID: ResourceOffer}
         self._nodes_by_agent_id = {}  # {Agent ID: NodeOffers}
         self._nodes_by_node_id = {}  # {Node ID: NodeOffers}

@@ -36,7 +36,7 @@ class Task(object):
         self._lock = threading.Lock()
         # TODO: remove
         from util.lock import DebugLock
-        self._lock = DebugLock()
+        self._lock = DebugLock('Task')
         self._has_been_scheduled = False
         self._scheduled = None
         self._last_status_update = None

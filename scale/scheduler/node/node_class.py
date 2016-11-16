@@ -37,7 +37,7 @@ class Node(object):
         self._lock = threading.Lock()
         # TODO: remove
         from util.lock import DebugLock
-        self._lock = DebugLock()
+        self._lock = DebugLock('Node')
         self._port = node.port
         self._state = self.INACTIVE
         self._update_state()

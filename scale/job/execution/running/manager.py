@@ -15,7 +15,7 @@ class RunningJobExecutionManager(object):
         self._lock = threading.Lock()
         # TODO: remove
         from util.lock import DebugLock
-        self._lock = DebugLock()
+        self._lock = DebugLock('RunningJobExecutionManager')
 
     def add_job_exes(self, job_exes):
         """Adds new running job executions to the manager

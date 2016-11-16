@@ -30,7 +30,7 @@ class NodeCleanup(object):
         self._lock = threading.Lock()
         # TODO: remove
         from util.lock import DebugLock
-        self._lock = DebugLock()
+        self._lock = DebugLock('NodeCleanup')
         self._node = node
 
     def add_job_execution(self, job_exe):
