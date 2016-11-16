@@ -3,8 +3,6 @@ FROM centos:centos7
 MAINTAINER Scale Developers <https://github.com/ngageoint/scale>
 
 EXPOSE 80
-EXPOSE 8000
-EXPOSE 5051
 
 # recognized environment variables
 # CONFIG_URI
@@ -58,6 +56,7 @@ RUN yum install -y epel-release \
          gdal-python \
          geos \
          httpd \
+         mod_wsgi \
          nfs-utils \
          postgresql \
          protobuf \
@@ -76,6 +75,11 @@ RUN yum install -y epel-release \
  && curl -o /usr/bin/gosu -fsSL ${GOSU_URL} \
  && chmod +sx /usr/bin/gosu \
  && rm -f /etc/httpd/conf.d/welcome.conf \
+ && sed -i 's^User apache^User scale^g' /etc/httpd/conf/httpd.conf \
+ && sed -ri \
+		-e 's!^(\s*CustomLog)\s+\S+!\1 /proc/self/fd/1!g' \
+		-e 's!^(\s*ErrorLog)\s+\S+!\1 /proc/self/fd/2!g' \
+		/etc/httpd/conf/httpd.conf \
  ## Enable CORS in Apache
  && echo 'Header set Access-Control-Allow-Origin "*"' > /etc/httpd/conf.d/cors.conf \
  && yum clean all

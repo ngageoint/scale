@@ -82,12 +82,7 @@ then
     check_db
     check_elastic
 
-    gosu root sed -i 's^User apache^User scale^g' /etc/httpd/conf/httpd.conf
-    sed -i 's^/api^./api^' /opt/scale/ui/config/scaleConfig.json
-    sed -i 's^/docs^./docs^' /opt/scale/ui/config/scaleConfig.json
-    gosu root /usr/sbin/httpd
-
-    exec /usr/bin/gunicorn -c gunicorn.conf.py scale.wsgi:application
+    exec gosu root /usr/sbin/httpd -D FOREGROUND
 fi
 
 # Default fallback entrypoint that is used by scheduler and pre/post task.
