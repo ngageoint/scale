@@ -130,9 +130,4 @@ RUN mkdir -p /var/log/scale /var/lib/scale-metrics /scale/input_data /scale/outp
 # finish the build
 RUN python manage.py collectstatic --noinput --settings=
 
-# Copy in webserver configuration file
-COPY dockerfiles/framework/scale/gunicorn.conf.py /opt/scale/
-
-CMD [ "/usr/bin/gunicorn", "-c", "gunicorn.conf.py", "scale.wsgi:application" ]
-
 ENTRYPOINT ["./entryPoint.sh"]
