@@ -35,9 +35,6 @@ class Node(object):
         self._is_online = True
         self._is_paused = node.is_paused
         self._lock = threading.Lock()
-        # TODO: remove
-        from util.lock import DebugLock
-        self._lock = DebugLock('Node')
         self._port = node.port
         self._state = self.INACTIVE
         self._update_state()

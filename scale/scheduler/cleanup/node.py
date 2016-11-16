@@ -28,9 +28,6 @@ class NodeCleanup(object):
         self._current_task = None
         self._job_exes = {}  # {Job Exe ID: RunningJobExecution}
         self._lock = threading.Lock()
-        # TODO: remove
-        from util.lock import DebugLock
-        self._lock = DebugLock('NodeCleanup')
         self._node = node
 
     def add_job_execution(self, job_exe):
