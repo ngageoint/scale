@@ -87,3 +87,7 @@ if MARATHON_PASSED_IMAGE:
 
 # The location of the config file containing Docker credentials
 CONFIG_URI = os.environ.get('CONFIG_URI', CONFIG_URI)
+
+# Logging configuration
+LOGGING = LOG_CONSOLE_INFO
+
