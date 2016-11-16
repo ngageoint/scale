@@ -69,12 +69,6 @@ then
     python manage.py loaddata country_data.json
 fi
 
-if [[ "${DCOS_PACKAGE_FRAMEWORK_NAME}x" != "x"  && "${ENABLE_WEBSERVER}" != "true" ]]
-then
-    sed -i "s/framework.name\ =\ 'Scale'/framework.name\ =\ '"${DCOS_PACKAGE_FRAMEWORK_NAME}"'/" /opt/scale/scheduler/management/commands/scale_scheduler.py
-    sed -i "/framework.name/ a\ \ \ \ \ \ \ \ framework.webui_url = 'http://"${DCOS_PACKAGE_FRAMEWORK_NAME}".marathon.slave.mesos:"${PORT0}"/'" scheduler/management/commands/scale_scheduler.py
-fi
-
 # If ENABLE_WEBSERVER is set, we are running the container in web server mode.
 if [[ "${ENABLE_WEBSERVER}" == "true" ]]
 then

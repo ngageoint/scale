@@ -76,6 +76,8 @@ RUN yum install -y epel-release \
  && chmod +sx /usr/bin/gosu \
  && rm -f /etc/httpd/conf.d/welcome.conf \
  && sed -i 's^User apache^User scale^g' /etc/httpd/conf/httpd.conf \
+ # Patch access logs to show originating IP instead of reverse proxy.
+ && sed -i 's!LogFormat "%h!LogFormat "%{X-Forwarded-For}i %h!g' /etc/httpd/conf/httpd.conf \
  && sed -ri \
 		-e 's!^(\s*CustomLog)\s+\S+!\1 /proc/self/fd/1!g' \
 		-e 's!^(\s*ErrorLog)\s+\S+!\1 /proc/self/fd/2!g' \

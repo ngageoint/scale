@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 import logging
+import os
 import signal
 import sys
 
@@ -74,7 +75,17 @@ class Command(BaseCommand):
         framework = mesos_pb2.FrameworkInfo()
         framework.user = ''  # Have Mesos fill in the current user.
         framework.name = 'Scale'
+        framework_name = os.getenv('DCOS_PACKAGE_FRAMEWORK_NAME')
 
+        if framework_name:
+            framework.name = framework_name
+            framework.webui_url = 'http://%s.marathon.slave.mesos:%s/services/%s/' % (
+                framework_name,
+                os.getenv('PORT0'),
+                framework_name,
+            )
+        "/service/${DCOS_PACKAGE_FRAMEWORK_NAME}/'"
+        scheduler / management / commands / scale_scheduler.py
         logger.info('Connecting to Mesos master at %s', mesos_master)
 
         # TODO(vinod): Make checkpointing the default when it is default on the slave.
