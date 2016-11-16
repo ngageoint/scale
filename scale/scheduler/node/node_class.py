@@ -177,4 +177,5 @@ class Node(object):
             self._state = self.PAUSED
         elif not self._is_initial_cleanup_completed:
             self._state = self.INITIAL_CLEANUP
-        self._state = self.READY
+        else:
+            self._state = self.READY
