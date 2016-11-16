@@ -50,8 +50,7 @@ class Node(object):
         :rtype: string
         """
 
-        with self._lock:
-            return self._agent_id
+        return self._agent_id
 
     @property
     def hostname(self):
@@ -81,8 +80,7 @@ class Node(object):
         :rtype: bool
         """
 
-        with self._lock:
-            return self._is_active
+        return self._is_active
 
     @property
     def is_initial_cleanup_completed(self):
@@ -92,8 +90,7 @@ class Node(object):
         :rtype: bool
         """
 
-        with self._lock:
-            return self._is_initial_cleanup_completed
+        return self._is_initial_cleanup_completed
 
     @property
     def is_online(self):
@@ -103,8 +100,7 @@ class Node(object):
         :rtype: bool
         """
 
-        with self._lock:
-            return self._is_online
+        return self._is_online
 
     @property
     def is_paused(self):
@@ -114,8 +110,7 @@ class Node(object):
         :rtype: bool
         """
 
-        with self._lock:
-            return self._is_paused
+        return self._is_paused
 
     @property
     def state(self):

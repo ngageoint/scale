@@ -62,8 +62,7 @@ class Task(object):
         :rtype: string
         """
 
-        with self._lock:
-            return self._agent_id
+        return self._agent_id
 
     @property
     def command(self):
@@ -73,8 +72,7 @@ class Task(object):
         :rtype: string
         """
 
-        with self._lock:
-            return self._command
+        return self._command
 
     @property
     def command_arguments(self):
@@ -84,8 +82,7 @@ class Task(object):
         :rtype: string
         """
 
-        with self._lock:
-            return self._command_arguments
+        return self._command_arguments
 
     @property
     def docker_image(self):
@@ -95,8 +92,7 @@ class Task(object):
         :rtype: string
         """
 
-        with self._lock:
-            return self._docker_image
+        return self._docker_image
 
     @property
     def docker_params(self):
@@ -106,8 +102,7 @@ class Task(object):
         :rtype: [:class:`job.configuration.configuration.job_configuration.DockerParam`]
         """
 
-        with self._lock:
-            return self._docker_params
+        return self._docker_params
 
     @property
     def has_been_scheduled(self):
@@ -117,8 +112,7 @@ class Task(object):
         :rtype: bool
         """
 
-        with self._lock:
-            return self._has_been_scheduled
+        return self._has_been_scheduled
 
     @property
     def has_ended(self):
@@ -128,8 +122,7 @@ class Task(object):
         :rtype: bool
         """
 
-        with self._lock:
-            return self._has_ended
+        return self._has_ended
 
     @property
     def has_started(self):
@@ -139,8 +132,7 @@ class Task(object):
         :rtype: bool
         """
 
-        with self._lock:
-            return self._has_started
+        return self._has_started
 
     @property
     def id(self):
@@ -150,8 +142,7 @@ class Task(object):
         :rtype: string
         """
 
-        with self._lock:
-            return self._task_id
+        return self._task_id
 
     @property
     def is_docker_privileged(self):
@@ -161,8 +152,7 @@ class Task(object):
         :rtype: bool
         """
 
-        with self._lock:
-            return self._is_docker_privileged
+        return self._is_docker_privileged
 
     @property
     def name(self):
@@ -172,8 +162,7 @@ class Task(object):
         :rtype: string
         """
 
-        with self._lock:
-            return self._task_name
+        return self._task_name
 
     @property
     def started(self):
@@ -183,8 +172,7 @@ class Task(object):
         :rtype: :class:`datetime.datetime`
         """
 
-        with self._lock:
-            return self._started
+        return self._started
 
     @property
     def uses_docker(self):
@@ -194,8 +182,7 @@ class Task(object):
         :rtype: bool
         """
 
-        with self._lock:
-            return self._uses_docker
+        return self._uses_docker
 
     @abstractmethod
     def get_resources(self):

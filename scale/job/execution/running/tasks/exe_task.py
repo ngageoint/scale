@@ -48,8 +48,7 @@ class JobExecutionTask(Task):
         :rtype: int
         """
 
-        with self._lock:
-            return self._job_exe_id
+        return self._job_exe_id
 
     def complete(self, task_results):
         """Completes this task and indicates whether following tasks should update their cached job execution values

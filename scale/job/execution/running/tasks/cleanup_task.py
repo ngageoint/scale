@@ -96,8 +96,7 @@ class CleanupTask(Task):
         :rtype: bool
         """
 
-        with self._lock:
-            return self._is_initial_cleanup
+        return self._is_initial_cleanup
 
     @property
     def job_exes(self):
@@ -107,8 +106,7 @@ class CleanupTask(Task):
         :rtype: [:class:`job.execution.running.job_exe.RunningJobExecution`]
         """
 
-        with self._lock:
-            return self._job_exes
+        return self._job_exes
 
     def get_resources(self):
         """See :meth:`job.execution.running.tasks.base_task.Task.get_resources`
