@@ -53,7 +53,7 @@ class JobTask(JobExecutionTask):
                 default_error_name = 'unknown' if self._is_system else 'algorithm-unknown'
                 error = self._error_mapping.get_error(task_results.exit_code, default_error_name)
             if not error:
-                error = self.consider_general_error(task_results)
+                error = self._consider_general_error(task_results)
 
             self._has_ended = True
             self._ended = task_results.when

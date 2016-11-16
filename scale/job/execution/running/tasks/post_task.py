@@ -48,7 +48,7 @@ class PostTask(JobExecutionTask):
                 if task_results.exit_code and task_results.exit_code in POST_EXIT_CODE_DICT:
                     error = POST_EXIT_CODE_DICT[task_results.exit_code]()
             if not error:
-                error = self.consider_general_error(task_results)
+                error = self._consider_general_error(task_results)
 
             self._has_ended = True
             self._ended = task_results.when

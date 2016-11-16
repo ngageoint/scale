@@ -71,25 +71,6 @@ class JobExecutionTask(Task):
 
             return False
 
-    def consider_general_error(self, task_results):
-        """Looks at the task results and considers a general task error for the cause of the failure. This is the
-        'catch-all' option for specific task types (pre, job, post) to try if they cannot determine a specific error. If
-        this method cannot determine an error cause, None will be returned.
-
-        :param task_results: The task results
-        :type task_results: :class:`job.execution.running.tasks.results.TaskResults`
-        :returns: The error that caused this task to fail, possibly None
-        :rtype: :class:`error.models.Error`
-        """
-
-        with self._lock:
-            if not self._has_started:
-                if self._uses_docker:
-                    return Error.objects.get_builtin_error('docker-task-launch')
-                else:
-                    return Error.objects.get_builtin_error('task-launch')
-            return None
-
     def create_scale_image_name(self):
         """Creates the full image name to use for running the Scale Docker image
 
@@ -147,3 +128,21 @@ class JobExecutionTask(Task):
             self._has_started = True
             self._started = when
             self._last_status_update = when
+
+    def _consider_general_error(self, task_results):
+        """Looks at the task results and considers a general task error for the cause of the failure. This is the
+        'catch-all' option for specific task types (pre, job, post) to try if they cannot determine a specific error. If
+        this method cannot determine an error cause, None will be returned. Caller must have obtained the task lock.
+
+        :param task_results: The task results
+        :type task_results: :class:`job.execution.running.tasks.results.TaskResults`
+        :returns: The error that caused this task to fail, possibly None
+        :rtype: :class:`error.models.Error`
+        """
+
+        if not self._has_started:
+            if self._uses_docker:
+                return Error.objects.get_builtin_error('docker-task-launch')
+            else:
+                return Error.objects.get_builtin_error('task-launch')
+        return None
