@@ -53,6 +53,8 @@ then
         export SCALE_ELASTICSEARCH_URLS=`cat bootstrap.log | grep ELASTICSEARCH_URLS | cut -d '=' -f2`
     fi
 
+    export SCALE_WEBSERVER_ADDRESS=`cat bootstrap.log | grep WEBSERVER_ADDRESS | cut -d '=' -f2`
+
     # Validate dependencies for bootstrap
     check_db
     check_elastic
