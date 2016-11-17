@@ -110,6 +110,16 @@ class RecipeManager(models.Manager):
         recipe.data = data.get_dict()
         recipe.save()
 
+        # Save models for each recipe input file
+        recipe_files = []
+        for input_file_id in data.get_input_file_ids():
+            recipe_file = RecipeFile()
+            recipe_file.recipe_id = recipe.id
+            recipe_file.scale_file_id = input_file_id
+            recipe_file.created = recipe.created
+            recipe_files.append(recipe_file)
+        RecipeFile.objects.bulk_create(recipe_files)
+
         # Create recipe jobs and link them to the recipe
         recipe_jobs = self._create_recipe_jobs(recipe, event, when, delta, superseded_jobs)
         return RecipeHandler(recipe, recipe_jobs)
@@ -548,6 +558,27 @@ class Recipe(models.Model):
         """meta information for the db"""
         db_table = 'recipe'
         index_together = ['last_modified', 'recipe_type']
+
+
+class RecipeFile(models.Model):
+    """Links a recipe and its input files together. A file can be used as input to multiple recipes and a recipe can
+    accept multiple input files. This model is useful for determining relevant recipes to run during re-processing.
+
+    :keyword recipe: The recipe that the input file is linked to
+    :type recipe: :class:`django.db.models.ForeignKey`
+    :keyword scale_file: The input file that the recipe is linked to
+    :type scale_file: :class:`django.db.models.ForeignKey`
+    :keyword created: When the recipe was created
+    :type created: :class:`django.db.models.DateTimeField`
+    """
+
+    recipe = models.ForeignKey('recipe.Recipe', on_delete=models.PROTECT)
+    scale_file = models.ForeignKey('storage.ScaleFile', on_delete=models.PROTECT)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta(object):
+        """meta information for the db"""
+        db_table = 'recipe_file'
 
 
 class RecipeJobManager(models.Manager):

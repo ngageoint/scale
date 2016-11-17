@@ -52,9 +52,12 @@ class JobTypesView(ListCreateAPIView):
 
         names = rest_util.parse_string_list(request, 'name', required=False)
         categories = rest_util.parse_string_list(request, 'category', required=False)
+        is_active = rest_util.parse_bool(request, 'is_active', default_value=True)
+        is_operational = rest_util.parse_bool(request, 'is_operational', required=False)
         order = rest_util.parse_string_list(request, 'order', ['name', 'version'])
 
-        job_types = JobType.objects.get_job_types(started, ended, names, categories, order)
+        job_types = JobType.objects.get_job_types(started=started, ended=ended, names=names, categories=categories,
+                                                  is_active=is_active, is_operational=is_operational, order=order)
 
         page = self.paginate_queryset(job_types)
         serializer = self.get_serializer(page, many=True)
@@ -420,8 +423,9 @@ class JobTypesStatusView(ListAPIView):
         # Get a list of all job type status counts
         started = rest_util.parse_timestamp(request, 'started', 'PT3H0M0S')
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
+        is_operational = rest_util.parse_bool(request, 'is_operational', required=False)
 
-        job_type_statuses = JobType.objects.get_status(started, ended)
+        job_type_statuses = JobType.objects.get_status(started=started, ended=ended, is_operational=is_operational)
 
         page = self.paginate_queryset(job_type_statuses)
         serializer = self.get_serializer(page, many=True)

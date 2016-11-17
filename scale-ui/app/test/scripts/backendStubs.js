@@ -115,6 +115,12 @@
                 });
             }
 
+            if (urlParams.strike_id) {
+                ingests.results = _.filter(ingests.results, function (ingest) {
+                    return ingest.strike.id === parseInt(urlParams.strike_id[0]);
+                });
+            }
+
             returnObj[1] = JSON.stringify(ingests);
 
             return returnObj;

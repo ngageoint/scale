@@ -12,7 +12,6 @@ from django.db.utils import DatabaseError, OperationalError
 from error.models import Error
 from job.configuration.results.exceptions import InvalidResultsManifest, MissingRequiredOutput
 from job.errors import get_invalid_manifest_error, get_missing_output_error
-from job.execution.cleanup import cleanup_job_exe
 from job.models import JobExecution
 from storage.exceptions import NfsError
 from util.retry import retry_database_query
@@ -61,11 +60,7 @@ class Command(BaseCommand):
             job_exe = self._get_job_exe(exe_id)
 
             self._perform_post_steps(job_exe)
-
-            self._cleanup(exe_id)
         except Exception as ex:
-            self._cleanup(exe_id)
-
             exit_code = GENERAL_FAIL_EXIT_CODE
             print_stacktrace = True
             if isinstance(ex, OperationalError):
@@ -90,15 +85,6 @@ class Command(BaseCommand):
             sys.exit(exit_code)
 
         logger.info('Command completed: scale_post_steps')
-
-    def _cleanup(self, exe_id):
-        """Cleans up the work directory for the job. This method is safe and should not throw any exceptions.
-        """
-
-        try:
-            cleanup_job_exe(exe_id)
-        except Exception:
-            logger.exception('Job Execution %i: Error cleaning up', exe_id)
 
     @retry_database_query
     def _get_job_exe(self, job_exe_id):

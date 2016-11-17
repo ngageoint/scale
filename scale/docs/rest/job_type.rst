@@ -36,6 +36,12 @@ These services provide access to information about job types.
 | category           | String            | Optional | Return only job types with a given category.                        |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
+| is_active          | Boolean           | Optional | Return only job types that are active (True) or inactive (False).   |
+|                    |                   |          | Defaults to only active job types (True).                           |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| is_operational     | Boolean           | Optional | Return only job types that are operational (True) or still in a     |
+|                    |                   |          | research & development (R&D) phase (False). Defaults to all.        |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
 | order              | String            | Optional | One or more fields to use when ordering the results.                |
 |                    |                   |          | Duplicate it to multi-sort, (ex: order=name&order=version).         |
 |                    |                   |          | Prefix fields with a dash to reverse the sort, (ex: order=-name).   |
@@ -80,6 +86,9 @@ These services provide access to information about job types.
 |                          |                   | being re-queued after a failure.                                         |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .is_active               | Boolean           | Whether the job type is active (false once job type is archived).        |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .is_operational          | Boolean           | Whether this job type is operational (True) or is still in a research &  |
+|                          |                   | development (R&D) phase (False).                                         |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .is_paused               | Boolean           | Whether the job type is paused (while paused no jobs of this type will be|
 |                          |                   | scheduled off of the queue).                                             |
@@ -192,9 +201,8 @@ These services provide access to information about job types.
 | author_url              | String            | Optional | The address to a home page about the author or associated      |
 |                         |                   |          | algorithm run by the job type.                                 |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
-| is_long_running         | Boolean           | Optional | Whether this type is long running. A job of this type is       |
-|                         |                   |          | intended to run for a long time, potentially indefinitely,     |
-|                         |                   |          | without timing out and always being re-queued after a failure. |
+| is_operational          | Boolean           | Optional | Whether this job type is operational (True) or is still in a   |
+|                         |                   |          | research & development (R&D) phase (False).                    |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | is_paused               | Boolean           | Optional | Whether the job type is paused (while paused no jobs of this   |
 |                         |                   |          | type will be scheduled off of the queue).                      |
@@ -376,9 +384,8 @@ These services provide access to information about job types.
 | author_url              | String            | Optional | The address to a home page about the author or associated      |
 |                         |                   |          | algorithm run by the job type.                                 |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
-| is_long_running         | Boolean           | Optional | Whether this type is long running. A job of this type is       |
-|                         |                   |          | intended to run for a long time, potentially indefinitely,     |
-|                         |                   |          | without timing out and always being re-queued after a failure. |
+| is_operational          | Boolean           | Optional | Whether this job type is operational (True) or is still in a   |
+|                         |                   |          | research & development (R&D) phase (False).                    |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | is_paused               | Boolean           | Optional | Whether the job type is paused (while paused no jobs of this   |
 |                         |                   |          | type will be scheduled off of the queue).                      |
@@ -911,6 +918,9 @@ These services provide access to information about job types.
 | ended              | ISO-8601 Datetime | Optional | End of the time range to query, defaults to the current time.       |
 |                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
 |                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| is_operational     | String            | Optional | Return only job types that are operational (True) or still in a     |
+|                    |                   |          | research & development (R&D) phase (False).                         |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+-------------------+--------------------------------------------------------------------------------+

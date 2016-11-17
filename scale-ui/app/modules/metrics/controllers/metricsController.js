@@ -53,7 +53,7 @@
         vm.lineClass = 'btn-default';
         vm.splineClass = 'btn-default';
         vm.scatterClass = 'btn-default';
-        vm.metricsTotal = 0;
+        vm.metricsTotal = null;
 
         vm.getPlotDataParams = function (obj) {
             return {
@@ -272,12 +272,21 @@
             console.log(value)
         });
 
+        var formatYValues = function (data) {
+            if (yUnits[0] === 'seconds') {
+                return scaleService.calculateDuration(moment.utc().startOf('d'), moment.utc().startOf('d').add(data, 's'));
+            } else if (yUnits[0] === 'bytes') {
+                return scaleService.calculateFileSizeFromBytes(data, 1);
+            }
+            return data;
+        };
+
         // set up chart
         vm.initChart = function () {
             // mark any existing data for removal
             // compare currCols (columns currently in the chart) with displayCols (columns to display)
             removeIds = [];
-            vm.metricsTotal = 0;
+            vm.metricsTotal = null;
             var currCols = [],
                 displayCols = [];
             _.forEach(colArr, function (col, idx) {
@@ -294,11 +303,6 @@
                     vm.metricsTotal = vm.metricsTotal + _.sum(d.results[0].values, 'value');
                 }
             });
-            if (vm.metricsTotal > 0) {
-                vm.chartTitle = vm.chartData[0].query.selectedMetrics[0].title + ' for ' + moment.utc(vm.inputStartDate).format('DD MMM YYYY') + ' - ' + moment.utc(vm.inputEndDate).format('DD MMM YYYY') + ' (' + vm.metricsTotal.toLocaleString() + ')';
-            } else {
-                vm.chartTitle = vm.chartData[0].query.selectedMetrics[0].title + ' ' + moment.utc(vm.inputStartDate).format('DD MMM YYYY') + ' - ' + moment.utc(vm.inputEndDate).format('DD MMM YYYY');
-            }
             // determine the exact differences between currCols and displayCols
             // if none are found, then removeIds stays empty
             _.forEach(currCols, function (currCol) {
@@ -472,12 +476,7 @@
                         y: {
                             tick: {
                                 format: function (d) {
-                                    if (yUnits[0] === 'seconds') {
-                                        return scaleService.calculateDuration(moment.utc().startOf('d'), moment.utc().startOf('d').add(d, 's'));
-                                    } else if (yUnits[0] === 'bytes') {
-                                        return scaleService.calculateFileSizeFromBytes(d, 1);
-                                    }
-                                    return d;
+                                    return formatYValues(d);
                                 }
                             },
                             label: {
@@ -487,6 +486,13 @@
                         }
                     }
                 });
+            }
+
+            if (vm.metricsTotal) {
+                vm.metricsTotal = formatYValues(vm.metricsTotal);
+                vm.chartTitle = '<span class="label label-success">' + vm.metricsTotal.toLocaleString() + '</span> ' + vm.chartData[0].query.selectedMetrics[0].title + ' for ' + moment.utc(vm.inputStartDate).format('DD MMM YYYY') + ' - ' + moment.utc(vm.inputEndDate).format('DD MMM YYYY');
+            } else {
+                vm.chartTitle = vm.chartData[0].query.selectedMetrics[0].title + ' ' + moment.utc(vm.inputStartDate).format('DD MMM YYYY') + ' - ' + moment.utc(vm.inputEndDate).format('DD MMM YYYY');
             }
         };
 

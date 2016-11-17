@@ -3,10 +3,8 @@ from __future__ import unicode_literals
 
 import copy
 import datetime
-import json
 import logging
 import math
-import urllib2
 
 import django.utils.timezone as timezone
 import django.utils.html
@@ -769,18 +767,6 @@ class Job(models.Model):
 class JobExecutionManager(models.Manager):
     """Provides additional methods for handling job executions."""
 
-    def cleanup_completed(self, job_exe_id, when):
-        """Updates the given job execution to reflect that its cleanup has completed successfully
-
-        :param job_exe_id: The job execution that was cleaned up
-        :type job_exe_id: int
-        :param when: The time that the cleanup was completed
-        :type when: :class:`datetime.datetime`
-        """
-
-        modified = timezone.now()
-        self.filter(id=job_exe_id).update(requires_cleanup=False, cleaned_up=when, last_modified=modified)
-
     def complete_job_exe(self, job_exe, when):
         """Updates the given job execution and its job to COMPLETED. The caller must have obtained model locks on the
         job execution and job models (in that order).
@@ -1005,14 +991,13 @@ class JobExecutionManager(models.Manager):
         """Schedules the given job executions. The caller must have obtained a model lock on the given job_exe models.
         Any job_exe models that are not in the QUEUED status will be ignored. All of the job_exe and job model changes
         will be saved in the database in an atomic transaction. The updated job_exe models are returned with their
-        related job, job_type, job_type_rev and node models populated.
+        related job, job_type, job_type_rev and node_id models populated.
 
         :param framework_id: The scheduling framework ID
         :type framework_id: string
-        :param job_executions: A list of tuples where each tuple contains the job_exe model to schedule, the node to
+        :param job_executions: A list of tuples where each tuple contains the job_exe model to schedule, the node ID to
             schedule it on, and the resources it will be given
-        :type job_executions: [(:class:`job.models.JobExecution`, :class:`node.models.Node`,
-            :class:`job.resources.JobResources`)]
+        :type job_executions: [(:class:`job.models.JobExecution`, int, :class:`job.resources.JobResources`)]
         :param workspaces: A dict of all workspaces stored by name
         :type workspaces: {string: :class:`storage.models.Workspace`}
         :returns: The scheduled job_exe models with related job, job_type, job_type_rev and node models populated
@@ -1037,32 +1022,31 @@ class JobExecutionManager(models.Manager):
         job_exes = []
         for job_execution in job_executions:
             job_exe = job_execution[0]
-            node = job_execution[1]
+            node_id = job_execution[1]
             resources = job_execution[2]
 
             if job_exe.status != 'QUEUED':
                 continue
-            if node is None:
-                raise Exception('Cannot schedule job execution %i without node' % job_exe.id)
+            if node_id is None:
+                raise Exception('Cannot schedule job execution %i without node ID' % job_exe.id)
             if resources is None:
                 raise Exception('Cannot schedule job execution %i without resources' % job_exe.id)
-            if job_exe.status != 'QUEUED':
-                msg = 'Job execution %i is %s, must be in QUEUED status to be scheduled'
-                raise Exception(msg % (job_exe.id, job_exe.status))
 
             job_exe.job = jobs[job_exe.job_id]
+            job_exe.set_cluster_id(framework_id)
             job_exe.status = 'RUNNING'
             job_exe.started = started
-            job_exe.node = node
-            job_exe.configure_docker_params(framework_id, workspaces)
+            job_exe.node_id = node_id
+            docker_volumes = []
+            job_exe.configure_docker_params(workspaces, docker_volumes)
             job_exe.environment = JobEnvironment({}).get_dict()
             job_exe.cpus_scheduled = resources.cpus
             job_exe.mem_scheduled = resources.mem
             job_exe.disk_in_scheduled = resources.disk_in
             job_exe.disk_out_scheduled = resources.disk_out
             job_exe.disk_total_scheduled = resources.disk_total
-            job_exe.requires_cleanup = job_exe.job.job_type.requires_cleanup
             job_exe.save()
+            job_exe.docker_volumes = docker_volumes
             job_exes.append(job_exe)
 
         return job_exes
@@ -1116,7 +1100,7 @@ class JobExecution(models.Model):
 
     :keyword job: The job that is being executed
     :type job: :class:`django.db.models.ForeignKey`
-    :keyword status: The status of the run
+    :keyword status: The status of the execution
     :type status: :class:`django.db.models.CharField`
     :keyword error: The error that caused the failure (should only be set when status is FAILED)
     :type error: :class:`django.db.models.ForeignKey`
@@ -1130,6 +1114,9 @@ class JobExecution(models.Model):
     :keyword configuration: JSON description describing the configuration for how the job execution should be run
     :type configuration: :class:`djorm_pgjson.fields.JSONField`
 
+    :keyword cluster_id: This is an ID for the job execution that is unique in the context of the cluster, allowing
+        Scale components (task IDs, Docker volume names, etc) to have unique names within the cluster
+    :type cluster_id: :class:`django.db.models.CharField`
     :keyword node: The node on which the job execution is being run
     :type node: :class:`django.db.models.ForeignKey`
     :keyword environment: JSON description defining the environment data for this job execution. This field is populated
@@ -1146,8 +1133,6 @@ class JobExecution(models.Model):
     :type disk_out_scheduled: :class:`django.db.models.FloatField`
     :keyword disk_total_scheduled: The total amount of disk space in MiB scheduled for this job execution
     :type disk_total_scheduled: :class:`django.db.models.FloatField`
-    :keyword requires_cleanup: Whether this job execution still requires cleanup on the node
-    :type requires_cleanup: :class:`django.db.models.BooleanField`
 
     :keyword pre_started: When the pre-task was started
     :type pre_started: :class:`django.db.models.DateTimeField`
@@ -1191,8 +1176,6 @@ class JobExecution(models.Model):
     :type started: :class:`django.db.models.DateTimeField`
     :keyword ended: When the job execution ended (FAILED, COMPLETED, or CANCELED)
     :type ended: :class:`django.db.models.DateTimeField`
-    :keyword cleaned_up: When the job execution was cleaned up on the node
-    :type cleaned_up: :class:`django.db.models.DateTimeField`
     :keyword last_modified: When the job execution was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
     """
@@ -1214,6 +1197,7 @@ class JobExecution(models.Model):
     timeout = models.IntegerField()
     configuration = djorm_pgjson.fields.JSONField()
 
+    cluster_id = models.CharField(blank=True, max_length=100, null=True)
     node = models.ForeignKey('node.Node', blank=True, null=True, on_delete=models.PROTECT)
     # TODO: Remove this unused field. This will force changes through the REST API though, so coordinate with UI
     environment = djorm_pgjson.fields.JSONField()
@@ -1222,8 +1206,6 @@ class JobExecution(models.Model):
     disk_in_scheduled = models.FloatField(blank=True, null=True)
     disk_out_scheduled = models.FloatField(blank=True, null=True)
     disk_total_scheduled = models.FloatField(blank=True, null=True)
-    requires_cleanup = models.BooleanField(default=False, db_index=True)
-    cleanup_job = models.ForeignKey('job.Job', related_name='cleans', blank=True, null=True, on_delete=models.PROTECT)
 
     # TODO: Rename pre_completed, job_completed, etc to pre_ended, job_ended, etc. This will force changes through the
     # REST API though, so coordinate with UI
@@ -1250,25 +1232,40 @@ class JobExecution(models.Model):
     queued = models.DateTimeField()
     started = models.DateTimeField(blank=True, null=True)
     ended = models.DateTimeField(blank=True, null=True)
-    cleaned_up = models.DateTimeField(blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True, db_index=True)
 
     objects = JobExecutionManager()
 
-    def configure_docker_params(self, framework_id, workspaces):
-        """Configures the Docker parameters needed for each task in the execution. Requires workspace information to
-        determine any Docker parameters that might be required by this job execution's workspaces.
+    @staticmethod
+    def get_job_exe_id(task_id):
+        """Returns the job execution ID for the given task ID
 
-        :param framework_id: The scheduling framework ID
-        :type framework_id: string
+        :param task_id: The task ID
+        :type task_id: str
+        :returns: The job execution ID
+        :rtype: int
+        """
+
+        # Job execution ID is the second-to-last segment
+        return int(task_id.split('_')[-2])
+
+    def configure_docker_params(self, workspaces, docker_volumes):
+        """Configures the Docker parameters needed for each task in the execution. The job execution must have been set
+        to status RUNNING prior to invoking this. Requires workspace information to determine any Docker parameters that
+        might be required by this job execution's workspaces.
+
         :param workspaces: A dict of all workspaces stored by name
         :type workspaces: {string: :class:`storage.models.Workspace`}
+        :param docker_volumes: A list to add Docker volume names to
+        :type docker_volumes: [string]
+
+        :raises Exception: If the job execution is still queued
         """
 
         configuration = self.get_job_configuration()
 
-        # setup remote task logging
-        configuration.configure_logging_docker_params(self.id)
+        # Setup task logging
+        configuration.configure_logging_docker_params(self)
 
         # Pass database connection details from scheduler as environment variables
         db = settings.DATABASES['default']
@@ -1290,10 +1287,11 @@ class JobExecution(models.Model):
             configuration.add_post_task_docker_param(DockerParam('env', 'SCALE_DB_HOST=' + db['HOST']))
             configuration.add_post_task_docker_param(DockerParam('env', 'SCALE_DB_PORT=' + db['PORT']))
 
-        if not self.job.job_type.is_system:
+        if not self.is_system:
             # Non-system jobs get named Docker volumes for input and output data
-            input_vol_name = job_exe_container.get_job_exe_input_vol_name(framework_id, self.id)
-            output_vol_name = job_exe_container.get_job_exe_output_vol_name(framework_id, self.id)
+            input_vol_name = job_exe_container.get_job_exe_input_vol_name(self)
+            output_vol_name = job_exe_container.get_job_exe_output_vol_name(self)
+            docker_volumes.extend([input_vol_name, output_vol_name])
             input_volume_ro = '%s:%s:ro' % (input_vol_name, SCALE_JOB_EXE_INPUT_PATH)
             input_volume_rw = '%s:%s:rw' % (input_vol_name, SCALE_JOB_EXE_INPUT_PATH)
             output_volume_ro = '%s:%s:ro' % (output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH)
@@ -1312,7 +1310,7 @@ class JobExecution(models.Model):
             configuration.add_job_task_workspace(workspace_name, MODE_RW)
 
         # Configure any Docker parameters needed for workspaces
-        configuration.configure_workspace_docker_params(framework_id, self.id, workspaces)
+        configuration.configure_workspace_docker_params(self, workspaces, docker_volumes)
 
         # Add job environment variable as docker parameters
         interface = self.get_job_interface().get_dict()
@@ -1322,6 +1320,25 @@ class JobExecution(models.Model):
             configuration.add_job_task_docker_param(DockerParam('env', env_var_name + '=' + env_var_value))
 
         self.configuration = configuration.get_dict()
+
+    def get_cluster_id(self):
+        """Gets the cluster ID for the job execution. This call is only valid after the job execution has been scheduled
+        (is no longer queued).
+
+        :returns: The cluster ID for the job execution
+        :rtype: string
+
+        :raises Exception: If the job execution is still queued
+        """
+
+        if self.status == 'QUEUED':
+            raise Exception('cluster_id is not set until the job execution is scheduled')
+
+        if not self.cluster_id:
+            # Return old-style format before cluster_id field was created
+            return 'scale_%d' % self.pk
+
+        return self.cluster_id
 
     def get_docker_image(self):
         """Gets the Docker image for the job execution
@@ -1377,6 +1394,18 @@ class JobExecution(models.Model):
 
         return JobResults(self.results)
 
+    def get_job_task_id(self):
+        """Gets the job-task ID for this job execution. This call is only valid after the job execution has been
+        scheduled (is no longer queued).
+
+        :returns: The job-task ID for the job execution
+        :rtype: string
+
+        :raises Exception: If the job execution is still queued
+        """
+
+        return '%s_job' % self.get_cluster_id()
+
     def get_job_type_name(self):
         """Returns the name of this job's type
 
@@ -1385,56 +1414,6 @@ class JobExecution(models.Model):
         """
 
         return self.job.job_type.name
-
-    def is_docker_privileged(self):
-        """Indicates whether this job execution uses Docker in privileged mode
-
-        :returns: True if this job execution uses Docker in privileged mode, False otherwise
-        :rtype: bool
-        """
-
-        return self.job.job_type.docker_privileged
-
-    @property
-    def is_finished(self):
-        """Indicates if this job execution has completed (success or failure)
-
-        :returns: True if the job execution is in an final state, False otherwise
-        :rtype: bool
-        """
-        return self.status in ['FAILED', 'COMPLETED', 'CANCELED']
-
-    @property
-    def is_system(self):
-        """Indicates whether this job execution is for a system job
-
-        :returns: True if this job execution is for a system job, False otherwise
-        :rtype: bool
-        """
-
-        return self.job.job_type.is_system
-
-    def is_timed_out(self, when):
-        """Indicates whether this job execution is timed out based on the given current time
-
-        :param when: The current time
-        :type when: :class:`datetime.datetime`
-        :returns: True if this job execution is for a system job, False otherwise
-        :rtype: bool
-        """
-
-        running_with_timeout_set = self.status == 'RUNNING' and self.timeout
-        timeout_exceeded = self.started + datetime.timedelta(seconds=self.timeout) < when
-        return running_with_timeout_set and timeout_exceeded
-
-    def uses_docker(self):
-        """Indicates whether this job execution uses Docker
-
-        :returns: True if this job execution uses Docker, False otherwise
-        :rtype: bool
-        """
-
-        return self.job.job_type.uses_docker
 
     def get_log_json(self, include_stdout=True, include_stderr=True, since=None):
         """Get log data from elasticsearch as a dict (from the raw JSON).
@@ -1448,12 +1427,15 @@ class JobExecution(models.Model):
         :rtype: tuple of (dict, :class:`datetime.datetime`) with the results or None and the last modified timestamp
         """
 
+        if self.status == 'QUEUED':
+            return None, util.parse.datetime.datetime.utcnow()
+
         q = {
                 'size': 10000,
                 'query': {
                     'bool': {
                         'must': [
-                            {'match': {'scale_job_exe': 'scale_%d' % self.pk}}
+                            {'match': {'scale_job_exe': self.get_cluster_id()}}
                         ]
                     }
                 },
@@ -1504,6 +1486,96 @@ class JobExecution(models.Model):
                 d += '<div class="%s">%s</div>\n' % (cls, django.utils.html.escape(h['_source']['message']))
             return d, last_modified
         return '\n'.join(h['_source']['message'] for h in valid_hits), last_modified
+
+    def get_post_task_id(self):
+        """Gets the post-task ID for this job execution. This call is only valid after the job execution has been
+        scheduled (is no longer queued) and if this is not a system job type.
+
+        :returns: The post-task ID for the job execution
+        :rtype: string
+
+        :raises Exception: If the job execution is still queued or is a system job type
+        """
+
+        if self.is_system:
+            raise Exception('System jobs do not have a post-task')
+
+        return '%s_post' % self.get_cluster_id()
+
+    def get_pre_task_id(self):
+        """Gets the pre-task ID for this job execution. This call is only valid after the job execution has been
+        scheduled (is no longer queued) and if this is not a system job type.
+
+        :returns: The pre-task ID for the job execution
+        :rtype: string
+
+        :raises Exception: If the job execution is still queued or is a system job type
+        """
+
+        if self.is_system:
+            raise Exception('System jobs do not have a pre-task')
+
+        return '%s_pre' % self.get_cluster_id()
+
+    def is_docker_privileged(self):
+        """Indicates whether this job execution uses Docker in privileged mode
+
+        :returns: True if this job execution uses Docker in privileged mode, False otherwise
+        :rtype: bool
+        """
+
+        return self.job.job_type.docker_privileged
+
+    @property
+    def is_finished(self):
+        """Indicates if this job execution has completed (success or failure)
+
+        :returns: True if the job execution is in an final state, False otherwise
+        :rtype: bool
+        """
+        return self.status in ['FAILED', 'COMPLETED', 'CANCELED']
+
+    @property
+    def is_system(self):
+        """Indicates whether this job execution is for a system job
+
+        :returns: True if this job execution is for a system job, False otherwise
+        :rtype: bool
+        """
+
+        return self.job.job_type.is_system
+
+    def is_timed_out(self, when):
+        """Indicates whether this job execution is timed out based on the given current time
+
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
+        :returns: True if this job execution is for a system job, False otherwise
+        :rtype: bool
+        """
+
+        running_with_timeout_set = self.status == 'RUNNING' and self.timeout
+        timeout_exceeded = self.started + datetime.timedelta(seconds=self.timeout) < when
+        return running_with_timeout_set and timeout_exceeded
+
+    def set_cluster_id(self, framework_id):
+        """Sets the unique cluster ID for this job execution
+
+        :param framework_id: The scheduling framework ID
+        :type framework_id: string
+        """
+
+        # Cluster ID is created from framework ID and job execution ID
+        self.cluster_id = 'scale_%s_%d' % (framework_id, self.pk)
+
+    def uses_docker(self):
+        """Indicates whether this job execution uses Docker
+
+        :returns: True if this job execution uses Docker, False otherwise
+        :rtype: bool
+        """
+
+        return self.job.job_type.uses_docker
 
     class Meta(object):
         """Meta information for the database"""
@@ -1755,15 +1827,6 @@ class JobTypeManager(models.Manager):
         """
         return self.get(name=name, version=version)
 
-    def get_cleanup_job_type(self):
-        """Returns the Scale Cleanup job type
-
-        :returns: The cleanup job type
-        :rtype: :class:`job.models.JobType`
-        """
-
-        return JobType.objects.get(name='scale-cleanup', version='1.0')
-
     def get_clock_job_type(self):
         """Returns the Scale Clock job type
 
@@ -1773,7 +1836,8 @@ class JobTypeManager(models.Manager):
 
         return JobType.objects.get(name='scale-clock', version='1.0')
 
-    def get_job_types(self, started=None, ended=None, names=None, categories=None, order=None):
+    def get_job_types(self, started=None, ended=None, names=None, categories=None, is_active=True, is_operational=None,
+                      order=None):
         """Returns a list of job types within the given time range.
 
         :param started: Query job types updated after this amount of time.
@@ -1784,6 +1848,10 @@ class JobTypeManager(models.Manager):
         :type names: [string]
         :param categories: Query jobs of the type associated with the category.
         :type categories: [string]
+        :param is_active: Query job types that are actively available for use.
+        :type is_active: bool
+        :param is_operational: Query job types that are operational or research phase.
+        :type is_operational: bool
         :param order: A list of fields to control the sort order.
         :type order: [string]
         :returns: The list of job types that match the time range.
@@ -1804,6 +1872,10 @@ class JobTypeManager(models.Manager):
             job_types = job_types.filter(name__in=names)
         if categories:
             job_types = job_types.filter(category__in=categories)
+        if is_active is not None:
+            job_types = job_types.filter(is_active=is_active)
+        if is_operational is not None:
+            job_types = job_types.filter(is_operational=is_operational)
 
         # Apply sorting
         if order:
@@ -1863,7 +1935,7 @@ class JobTypeManager(models.Manager):
             results.append(counts)
         return results
 
-    def get_status(self, started, ended=None):
+    def get_status(self, started, ended=None, is_operational=None):
         """Returns a list of job types with counts broken down by job status.
 
         Note that all running job types are counted regardless of date/time filters.
@@ -1872,12 +1944,16 @@ class JobTypeManager(models.Manager):
         :type started: :class:`datetime.datetime`
         :param ended: Query job types updated before this amount of time.
         :type ended: :class:`datetime.datetime`
+        :param is_operational: Query job types that are operational or research phase.
+        :type is_operational: bool
         :returns: The list of job types with supplemented statistics.
         :rtype: [:class:`job.models.JobTypeStatus`]
         """
 
         # Build a mapping of all job type identifier -> status model
         job_types = JobType.objects.all().defer('interface', 'error_mapping').order_by('last_modified')
+        if is_operational is not None:
+            job_types = job_types.filter(is_operational=is_operational)
         status_dict = {job_type.id: JobTypeStatus(job_type, []) for job_type in job_types}
 
         # Build up the filters based on inputs and all running jobs
@@ -1889,6 +1965,8 @@ class JobTypeManager(models.Manager):
 
         # Fetch a count of all jobs grouped by status counts
         count_dicts = Job.objects.values('job_type__id', 'status', 'error__category').filter(count_filters)
+        if is_operational is not None:
+            count_dicts = count_dicts.filter(job_type__is_operational=is_operational)
         count_dicts = count_dicts.annotate(count=models.Count('job_type'),
                                            most_recent=models.Max('last_status_change'))
 
@@ -2103,8 +2181,6 @@ class JobType(models.Model):
     :keyword is_paused: Whether the job type is paused (while paused no jobs of this type will be scheduled off of the
         queue)
     :type is_paused: :class:`django.db.models.BooleanField`
-    :keyword requires_cleanup: Whether a job of this type requires cleanup on the node afer the job runs
-    :type requires_cleanup: :class:`django.db.models.BooleanField`
 
     :keyword uses_docker: Whether the job type uses Docker
     :type uses_docker: :class:`django.db.models.BooleanField`
@@ -2159,8 +2235,8 @@ class JobType(models.Model):
     BASE_FIELDS = ('id', 'name', 'version', 'title', 'description', 'category', 'author_name', 'author_url',
                    'is_system', 'is_long_running', 'is_active', 'is_operational', 'is_paused', 'icon_code')
 
-    UNEDITABLE_FIELDS = ('name', 'version', 'is_system', 'is_long_running', 'is_active', 'requires_cleanup',
-                         'uses_docker', 'revision_num', 'created', 'archived', 'paused', 'last_modified')
+    UNEDITABLE_FIELDS = ('name', 'version', 'is_system', 'is_long_running', 'is_active', 'uses_docker', 'revision_num',
+                         'created', 'archived', 'paused', 'last_modified')
 
     name = models.CharField(db_index=True, max_length=50)
     version = models.CharField(db_index=True, max_length=50)
@@ -2175,7 +2251,6 @@ class JobType(models.Model):
     is_active = models.BooleanField(default=True)
     is_operational = models.BooleanField(default=True)
     is_paused = models.BooleanField(default=False)
-    requires_cleanup = models.BooleanField(default=True)
 
     uses_docker = models.BooleanField(default=True)
     docker_privileged = models.BooleanField(default=False)
@@ -2350,12 +2425,12 @@ class TaskUpdate(models.Model):
     """
 
     job_exe = models.ForeignKey('job.JobExecution', on_delete=models.PROTECT)
-    task_id = models.CharField(max_length=50)
-    status = models.CharField(max_length=50)
+    task_id = models.CharField(max_length=250)
+    status = models.CharField(max_length=250)
 
     timestamp = models.DateTimeField(blank=True, null=True)
-    source = models.CharField(blank=True, max_length=50, null=True)
-    reason = models.CharField(blank=True, max_length=50, null=True)
+    source = models.CharField(blank=True, max_length=250, null=True)
+    reason = models.CharField(blank=True, max_length=250, null=True)
     message = models.TextField(blank=True, null=True)
 
     created = models.DateTimeField(auto_now_add=True)

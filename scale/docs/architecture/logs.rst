@@ -28,7 +28,7 @@ ElasticSearch. To retrieve logs in correct order, you should order first by *@ti
 
 **scale_job_exe**: JSON string
 
-    The ID of the Scale job execution that produced this log message
+    The unique cluster ID of the Scale job execution that produced this log message
 
 **scale_node**: JSON string
 

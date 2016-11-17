@@ -27,7 +27,7 @@ class SchedulingThread(object):
     SCHEDULE_LOOP_WARN_THRESHOLD = datetime.timedelta(seconds=1)
     SCHEDULE_QUERY_WARN_THRESHOLD = datetime.timedelta(milliseconds=100)
 
-    def __init__(self, driver, framework_id, job_exe_manager, job_type_manager, node_manager, offer_manager,
+    def __init__(self, driver, framework_id, job_exe_manager, job_type_manager, managers, offer_manager,
                  scheduler_manager, workspace_manager):
         """Constructor
 
@@ -39,8 +39,8 @@ class SchedulingThread(object):
         :type job_exe_manager: :class:`job.execution.running.manager.RunningJobExecutionManager`
         :param job_type_manager: The job type manager
         :type job_type_manager: :class:`scheduler.sync.job_type_manager.JobTypeManager`
-        :param node_manager: The node manager
-        :type node_manager: :class:`scheduler.sync.node_manager.NodeManager`
+        :param managers: The scheduler managers
+        :type managers: :class:`scheduler.managers.SchedulerManagers`
         :param offer_manager: The offer manager
         :type offer_manager: :class:`scheduler.offer.manager.OfferManager`
         :param scheduler_manager: The scheduler manager
@@ -53,7 +53,7 @@ class SchedulingThread(object):
         self._framework_id = framework_id
         self._job_exe_manager = job_exe_manager
         self._job_type_manager = job_type_manager
-        self._node_manager = node_manager
+        self._managers = managers
         self._offer_manager = offer_manager
         self._scheduler_manager = scheduler_manager
         self._workspace_manager = workspace_manager
@@ -156,6 +156,16 @@ class SchedulingThread(object):
         for running_job_exe in self._job_exe_manager.get_ready_job_exes():
             self._offer_manager.consider_next_task(running_job_exe)
 
+    def _consider_cleanup_tasks(self):
+        """Considers any cleanup tasks to schedule
+        """
+
+        if self._scheduler_manager.is_paused():
+            return
+
+        for task in self._managers.cleanup.get_next_tasks():
+            self._offer_manager.consider_task(task)
+
     def _perform_scheduling(self):
         """Performs task reconciliation with the Mesos master
 
@@ -164,7 +174,9 @@ class SchedulingThread(object):
         """
 
         # Get updated node and job type models from managers
-        self._offer_manager.update_nodes(self._node_manager.get_nodes())
+        nodes = self._managers.node.get_nodes()
+        self._managers.cleanup.update_nodes(nodes)
+        self._offer_manager.update_nodes(nodes)
         self._offer_manager.ready_new_offers()
         self._job_types = self._job_type_manager.get_job_types()
 
@@ -177,6 +189,8 @@ class SchedulingThread(object):
             if running_job_exe.job_type_id in self._job_type_limit_available:
                 self._job_type_limit_available[running_job_exe.job_type_id] -= 1
 
+        self._send_tasks_for_reconciliation()
+        self._consider_cleanup_tasks()
         self._consider_running_job_exes()
         self._consider_new_job_exes()
 
@@ -189,16 +203,22 @@ class SchedulingThread(object):
         :rtype: int
         """
 
+        when = now()
         tasks_to_launch = {}  # {Node ID: [Mesos Tasks]}
         queued_job_exes_to_schedule = []
         node_offers_list = self._offer_manager.pop_offers_with_accepted_job_exes()
         for node_offers in node_offers_list:
             mesos_tasks = []
             tasks_to_launch[node_offers.node.id] = mesos_tasks
+            # Add cleanup tasks
+            for task in node_offers.get_accepted_tasks():
+                task.schedule(when)
+                mesos_tasks.append(create_mesos_task(task))
             # Start next task for already running job executions that were accepted
             for running_job_exe in node_offers.get_accepted_running_job_exes():
                 task = running_job_exe.start_next_task()
                 if task:
+                    task.schedule(when)
                     mesos_tasks.append(create_mesos_task(task))
             # Gather up queued job executions that were accepted
             for queued_job_exe in node_offers.get_accepted_new_job_exes():
@@ -212,6 +232,7 @@ class SchedulingThread(object):
             for scheduled_job_exe in scheduled_job_exes:
                 task = scheduled_job_exe.start_next_task()
                 if task:
+                    task.schedule(when)
                     tasks_to_launch[scheduled_job_exe.node_id].append(create_mesos_task(task))
         except OperationalError:
             logger.exception('Failed to schedule queued job executions')
@@ -259,3 +280,10 @@ class SchedulingThread(object):
             logger.debug(msg, duration.total_seconds())
 
         return scheduled_job_executions
+
+    def _send_tasks_for_reconciliation(self):
+        """Sends the IDs of any tasks that need to be reconciled to the reconciliation thread
+        """
+
+        task_ids = self._managers.cleanup.get_task_ids_for_reconciliation(now())
+        self._managers.recon_thread.add_task_ids(task_ids)

@@ -239,7 +239,7 @@
                 if (vm.actionClicked) {
                     vm.actionClicked = false;
                 } else {
-                    $location.path('/jobs/job/' + row.entity.id);
+                    $location.path('/jobs/job/' + row.entity.id).search('');
                 }
             });
             vm.gridApi.pagination.on.paginationChanged($scope, function (currentPage, pageSize) {

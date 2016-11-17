@@ -1,11 +1,10 @@
 """Defines the class for managing a batch definition"""
 from __future__ import unicode_literals
 
-import datetime
-
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
+import util.parse as parse
 from batch.configuration.definition.exceptions import InvalidDefinition
 
 
@@ -52,17 +51,15 @@ BATCH_DEFINITION_SCHEMA = {
                 'type': {
                     'description': 'Indicates how the date range should be interpreted',
                     'type': 'string',
-                    'enum': ['created'],
+                    'enum': ['created', 'data'],
                 },
                 'started': {
                     'description': 'The start of the range to use when matching recipes to re-process',
                     'type': 'string',
-                    'pattern': '^\d{4}-\d{2}-\d{2}$',
                 },
                 'ended': {
                     'description': 'The end of the range to use when matching recipes to re-process',
                     'type': 'string',
-                    'pattern': '^\d{4}-\d{2}-\d{2}$',
                 },
             },
         },
@@ -95,16 +92,20 @@ class BatchDefinition(object):
             raise InvalidDefinition('%s is an unsupported version number' % self._definition['version'])
 
         date_range = self._definition['date_range'] if 'date_range' in self._definition else None
+        self.date_range_type = None
+        if date_range and 'type' in date_range:
+            self.date_range_type = date_range['type']
+
         self.started = None
         if date_range and 'started' in date_range:
             try:
-                self.started = datetime.datetime.strptime(date_range['started'], '%Y-%m-%d')
+                self.started = parse.parse_datetime(date_range['started'])
             except ValueError:
                 raise InvalidDefinition('Invalid start date format: %s' % date_range['started'])
         self.ended = None
         if date_range and 'ended' in date_range:
             try:
-                self.ended = datetime.datetime.strptime(date_range['ended'], '%Y-%m-%d')
+                self.ended = parse.parse_datetime(date_range['ended'])
             except ValueError:
                 raise InvalidDefinition('Invalid end date format: %s' % date_range['ended'])
 

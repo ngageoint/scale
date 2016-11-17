@@ -37,9 +37,8 @@ class TestPostJobSteps(TestCase):
         self.job = job_utils.create_job(job_type=self.job_type, event=self.event, status='RUNNING')
         self.job_exe = job_utils.create_job_exe(job=self.job, status='RUNNING', command_arguments=cmd_args, queued=now())
 
-    @patch('job.management.commands.scale_post_steps.Command._cleanup')
     @patch('job.management.commands.scale_post_steps.JobExecution.objects')
-    def test_scale_post_steps_successful(self, mock_job_exe_manager, mock_cleanup):
+    def test_scale_post_steps_successful(self, mock_job_exe_manager):
         """Tests successfully executing scale_post_steps."""
 
         # Set up mocks
@@ -143,9 +142,8 @@ class TestPostJobSteps(TestCase):
         # Check results
         mock_sys_exit.assert_called_with(POST_MI_OP_EXIT_CODE)
 
-    @patch('job.management.commands.scale_post_steps.Command._cleanup')
     @patch('job.management.commands.scale_post_steps.JobExecution.objects')
-    def test_scale_post_steps_no_stderr(self, mock_job_exe_manager, mock_cleanup):
+    def test_scale_post_steps_no_stderr(self, mock_job_exe_manager):
         """Tests successfully executing scale_post_steps."""
 
         # Set up mocks

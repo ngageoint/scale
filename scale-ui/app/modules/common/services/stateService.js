@@ -6,6 +6,7 @@
             jobsColDefs = [],
             jobsParams = {},
             jobExecutionsParams = {},
+            jobTypesParams = {},
             recipesColDefs = [],
             jobTypesFailureRatesParams = {},
             recipesParams = {},
@@ -63,6 +64,12 @@
             };
         };
 
+        var initJobTypesParams = function (data){
+            return {
+                show_rd: typeof data.show_rd !== 'undefined' ? data.show_rd : true
+            }
+        };
+
         var initJobTypesFailureRatesParams = function (data) {
             return {
                 page: null,
@@ -71,7 +78,9 @@
                 ended: null,
                 name: data.name ? data.name : null,
                 category: null,
-                order: null
+                order: data.order ? data.order : 'desc',
+                orderField: data.orderField ? data.orderField : 'twentyfour_hours',
+                orderErrorType: data.orderErrorType ? data.orderErrorType : 'errorTotal'
             };
         };
 
@@ -96,7 +105,8 @@
                 ended: data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
                 order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['-ingest_started'],
                 status: data.status ? data.status : null,
-                file_name: data.file_name ? data.file_name : null
+                file_name: data.file_name ? data.file_name : null,
+                strike_id: data.strike_id ? parseInt(data.strike_id) : null
             };
         };
 
@@ -150,6 +160,17 @@
             setJobExecutionsParams: function (data) {
                 jobExecutionsParams = initJobExecutionsParams(data);
                 updateQuerystring(jobExecutionsParams);
+            },
+            getJobTypesParams: function () {
+                if (_.keys(jobTypesParams).length === 0) {
+                    jobTypesParams = initJobTypesParams($location.search());
+                }
+                //console.log(jobTypesParams);
+                return jobTypesParams;
+            },
+            setJobTypesParams: function (data) {
+                jobTypesParams = initJobTypesParams(data);
+                updateQuerystring(jobTypesParams);
             },
             getJobTypesFailureRatesParams: function () {
                 if (_.keys(jobTypesFailureRatesParams).length === 0) {
