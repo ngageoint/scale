@@ -20,9 +20,25 @@ defined as follows:
 .. code-block:: javascript
 
    {
-      "version": "1.1",
+      "version": "1.2",
       "command": "python make_geotiff.py",
-      "command_arguments": "${image} ${georeference_data} ${job_output_dir}",
+      "command_arguments": "${image} ${georeference_data} ${dted_path} ${job_output_dir}",
+      "env_vars": [
+        {
+          "name": "DB_NAME",
+          "value": "scale"
+        },
+        {
+          "name": "DB_HOST",
+          "value": "scale.prod.prv"
+        }
+      ],
+      "settings": [
+        {
+          "name": "dted_path",
+          "required": true
+        },
+      ],
       "input_data": [
          {
             "name": "image",
@@ -51,25 +67,41 @@ defined as follows:
 The *command* value specifies that the algorithm is executed by invoking Python with the make_geotiff.py script. The
 *command_arguments* value describes the command line arguments to pass to the make_geotiff.py script. The *image* file
 input is first (this will be the absolute file system path of the file), the *georeference_data* file input will be
-next, and finally an output directory is provided for the script to write any output files. The *input_data* value is a
-list detailing the inputs to the algorithm; in this case an input called *image* that is a file with media type
-*image/png* and an input called *georeference_data* which is a CSV file. Finally the *output_data* value is a list of
-the algorithm outputs, which is a GeoTIFF file in this instance. To see all of the options for defining a job interface,
-please refer to the Job Interface Specification below.
+next, then *dted_path* which is an absolute file path to a DTED directory, and finally an output directory is provided
+for the script to write any output files. The *env_vars* value is a list of name/value pairs that will be used to define
+environment variables before the alogrithm is run. The *settings* value is a list of either required or optional values
+that will be gathered from the job configuration and put in the *command_arguments*. The *input_data* value is a list
+detailing the inputs to the algorithm; in this case an input called *image* that is a file with media type *image/png*
+and an input called *georeference_data* which is a CSV file. The *dted_path* filepath is a required setting that will be
+defined in the job configuration. Finally the *output_data* value is a list of the algorithm outputs, which is a GeoTIFF
+file in this instance. To see all of the options for defining a job interface, please refer to the Job Interface
+Specification below.
 
 .. _architecture_jobs_interface_spec:
 
-Job Interface Specification Version 1.1
+Job Interface Specification Version 1.2
 -------------------------------------------------------------------------------
 
 A valid job interface is a JSON document with the following structure:
- 
+
 .. code-block:: javascript
 
    {
       "version": STRING,
       "command": STRING,
       "command_arguments": STRING,
+      "env_vars": [
+        {
+          "name": STRING,
+          "value": STRING
+        }
+      ],
+      "settings": [
+        {
+          'name': STRING,
+          'required': true|false
+        }
+      ],
       "input_data": [
          {
             "name": STRING,
@@ -118,10 +150,11 @@ A valid job interface is a JSON document with the following structure:
     The *version* is an optional string value that defines the version of the definition specification used. This allows
     updates to be made to the specification while maintaining backwards compatibility by allowing Scale to recognize an
     older version and convert it to the current version. The default value for *version* if it is not included is the
-    latest version, which is currently 1.0. It is recommended, though not required, that you include the *version* so
+    latest version, which is currently 1.2. It is recommended, though not required, that you include the *version* so
     that future changes to the specification will still accept the recipe definition.
 
-    Scale must recognize the version number as valid for the recipe to work. Currently, "1.0" is the only valid version.
+    Scale must recognize the version number as valid for the recipe to work. Valid job interface versions are ``"1.0"``,
+    ``"1.1"``, and ``"1.2"``.
 
 **command**: JSON string
 
@@ -140,6 +173,40 @@ A valid job interface is a JSON document with the following structure:
     algorithm may write its output files. The algorithm should produce a results manifest named "results_manifest.json".
     The format for the results manifest can be found here: :ref:`algorithm_integration_results_manifest`. Any output
     files must be registered in the results manifest.
+
+**env_vars**: JSON array
+
+    The *env_vars* is an optinal list of JSON objects that define the enviornment variables that will be set for the
+    environment running the algorithm. If not provided, *env_vars* defaults to an empty list.  The JSON object that
+    represents each environment variable has the following fields:
+
+    **name**: JSON string
+
+        The *name* is a required string that defines the name of the environment variable to be set. The name of every
+        environment varialbe in the interface must be unique. This name must only be composed of less than 256 of the
+        following characters: alphanumeric, " ", "_", and "-".
+
+    **value**: JSOPN string
+
+        The *value* is a required string that defines the value of the environment variable to be set. This name must
+        only be composed of less than 256 of the following characters: alphanumeric, " ", "_", and "-".
+
+**settings**: JSON array
+
+    *Settings* are an optinal list of JSON objects that define the alogrithm settings that will be retrieved from the
+    job configuration and added to the *command_arguments* for the alogrithm. If not provided, *settings* defaults to
+    an empty list.  The JSON object that represents each setting has the following fields:
+
+    **name**: JSON string
+
+        The *name* is a required string that defines the name of the environment variable to be set. The name of every
+        environment varialbe in the interface must be unique. This name must only be composed of less than 256 of the
+        following characters: alphanumeric, " ", "_", and "-".
+
+    **required**: JSOPN boolean
+
+        The *required* field is optional and indicates if the input is required for the algorithm to run successfully.
+        If not provided, the *required* field defaults to *true*.
 
 **input_data**: JSON array
 

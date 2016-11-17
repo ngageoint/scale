@@ -136,7 +136,9 @@ class JobConfiguration(previous_version.JobConfiguration):
             raise InvalidJobConfiguration(validation_error)
 
         self._populate_default_values()
+        self._populate_default_settings()
         self._validate_workspace_names()
+        self._validate_setting_names()
 
     @staticmethod
     def convert_configuration(configuration):
@@ -197,7 +199,7 @@ class JobConfiguration(previous_version.JobConfiguration):
 
         self._configuration['pre_task']['settings'].append({'name': name, 'value': value})
 
-    def get_job_task_setting(self):
+    def get_job_task_settings(self):
         """Returns the settings name/values needed for the job task
 
         :returns: The job task settings name/values
@@ -207,7 +209,7 @@ class JobConfiguration(previous_version.JobConfiguration):
         params = self._configuration['job_task']['settings']
         return [TaskSetting(param_dict['name'], param_dict['value']) for param_dict in params]
 
-    def get_post_task_setting(self):
+    def get_post_task_settings(self):
         """Returns the settings name/values needed for the post task
 
         :returns: The post task settings name/values
@@ -226,3 +228,39 @@ class JobConfiguration(previous_version.JobConfiguration):
 
         params = self._configuration['pre_task']['settings']
         return [TaskSetting(param_dict['name'], param_dict['value']) for param_dict in params]
+
+    def _populate_default_settings(self):
+        """Populates any missing JSON fields for settings
+        """
+
+        if 'settings' not in self._configuration['pre_task']:
+            self._configuration['pre_task']['settings'] = []
+
+        if 'settings' not in self._configuration['job_task']:
+            self._configuration['job_task']['settings'] = []
+
+        if 'settings' not in self._configuration['post_task']:
+            self._configuration['post_task']['settings'] = []
+
+    def _validate_setting_names(self):
+        """Ensures that no tasks have duplicate setting names
+
+        :raises :class:`job.configuration.configuration.exceptions.InvalidJobConfiguration`: If there is a duplicate
+            workspace name
+        """
+
+        for setting_dict in self._configuration['pre_task']['settings']:
+            name = setting_dict['name']
+            if name in self._pre_task_workspace_names:
+                raise InvalidJobConfiguration('Duplicate setting %s in pre task' % name)
+            self._pre_task_workspace_names.add(name)
+        for setting_dict in self._configuration['job_task']['settings']:
+            name = setting_dict['name']
+            if name in self._job_task_workspace_names:
+                raise InvalidJobConfiguration('Duplicate setting %s in job task' % name)
+            self._job_task_workspace_names.add(name)
+        for setting_dict in self._configuration['post_task']['settings']:
+            name = setting_dict['name']
+            if name in self._post_task_workspace_names:
+                raise InvalidJobConfiguration('Duplicate setting %s in post task' % name)
+            self._post_task_workspace_names.add(name)

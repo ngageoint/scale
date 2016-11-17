@@ -8,9 +8,11 @@ from mock import patch, MagicMock, Mock
 
 import storage.test.utils as storage_test_utils
 from job.configuration.data.exceptions import InvalidConnection, InvalidData
+from job.configuration.configuration.exceptions import InvalidSetting
 from job.configuration.data.job_connection import JobConnection
 from job.configuration.data.job_data import JobData
 from job.configuration.environment.job_environment import JobEnvironment
+from job.configuration.configuration.job_configuration import JobConfiguration
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.job_interface import JobInterface
 from job.configuration.results.exceptions import InvalidResultsManifest
@@ -889,6 +891,88 @@ class TestJobInterfacePreSteps(TestCase):
 
         return job_interface_dict, job_data_dict, job_environment_dict
 
+    def test_required_setting_in_command(self):
+        job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
+
+        job_interface_dict['version'] = '1.2'
+        job_interface_dict['command_arguments'] = '${setting1}'
+        job_interface_dict['settings'] = [{
+            'name': 'setting1',
+            'required': True,
+        }]
+
+        config_key_value = 'required_value'
+        job_config_json = {'job_task': {'settings': [{'name': 'setting1', 'value': config_key_value}]}}
+        job_config = JobConfiguration(job_config_json)
+
+        job_interface = JobInterface(job_interface_dict)
+        job_interface.populate_command_argument_settings(job_config)
+
+        job_command_arguments = job_interface.populate_command_argument_settings(job_config)
+        self.assertEqual(job_command_arguments, config_key_value, 'expected a different command from pre_steps')
+
+    def test_no_required_setting_in_command(self):
+        job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
+
+        job_interface_dict['version'] = '1.2'
+        job_interface_dict['command_arguments'] = '${setting1}'
+        job_interface_dict['settings'] = [{
+            'name': 'setting1',
+            'required': True,
+        }]
+
+        job_config_json = {'job_task': {'settings': []}}
+        job_config = JobConfiguration(job_config_json)
+
+        job_interface = JobInterface(job_interface_dict)
+        self.assertRaises(InvalidSetting, job_interface.populate_command_argument_settings, job_config)
+
+    def test_required_settings_in_command(self):
+        job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
+
+        job_interface_dict['version'] = '1.2'
+        job_interface_dict['command_arguments'] = '${setting1} ${setting2}'
+        job_interface_dict['settings'] = [{
+            'name': 'setting1',
+            'required': True,
+        }, {
+            'name': 'setting2',
+            'required': True,
+        }]
+
+        config_key_values = ['required_value1', 'required_value2']
+        job_config_json = {'job_task': {'settings': [{'name': 'setting1', 'value': config_key_values[0]},
+                                                     {'name': 'setting2', 'value': config_key_values[1]}]}}
+        job_config = JobConfiguration(job_config_json)
+
+        job_interface = JobInterface(job_interface_dict)
+        job_interface.populate_command_argument_settings(job_config)
+
+        job_command_arguments = job_interface.populate_command_argument_settings(job_config)
+        self.assertEqual(job_command_arguments, ' '.join(config_key_values), 'expected a different command from pre_steps')
+
+    def test_optional_settings_in_command(self):
+        job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
+
+        job_interface_dict['version'] = '1.2'
+        job_interface_dict['command_arguments'] = '${setting1} ${setting2}'
+        job_interface_dict['settings'] = [{
+            'name': 'setting1',
+            'required': False,
+        }, {
+            'name': 'setting2'
+        }]
+
+        config_key_value = 'required_value1'
+        job_config_json = {'job_task': {'settings': [{'name': 'setting2', 'value': config_key_value}]}}
+        job_config = JobConfiguration(job_config_json)
+
+        job_interface = JobInterface(job_interface_dict)
+        job_interface.populate_command_argument_settings(job_config)
+
+        job_command_arguments = job_interface.populate_command_argument_settings(job_config)
+        self.assertEqual(job_command_arguments.strip(' '), config_key_value, 'expected a different command from pre_steps')
+
 
 class TestJobInterfaceValidateConnection(TestCase):
 
@@ -1306,4 +1390,25 @@ class TestJobInterfaceValidation(TestCase):
             }]
         }
 
+        self.assertRaises(InvalidInterfaceDefinition, JobInterface, definition)
+
+    def test_settings_required(self):
+        definition = {
+            'command': 'test-command',
+            'command_arguments': '${setting-1}',
+            'version': '1.2',
+            'settings': [{
+                    'name': 'setting-1',
+                    'required': True
+            }]
+        }
+        try:
+            JobInterface(definition)
+        except InvalidInterfaceDefinition:
+            self.fail('Valid definition raised a validation exception')
+
+        definition['settings'][0]['name'] = 'not-setting-1'
+        self.assertRaises(InvalidInterfaceDefinition, JobInterface, definition)
+
+        definition['settings'][0]['required'] = 'some_string'
         self.assertRaises(InvalidInterfaceDefinition, JobInterface, definition)

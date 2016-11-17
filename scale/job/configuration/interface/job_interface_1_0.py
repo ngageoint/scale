@@ -443,6 +443,17 @@ class JobInterface(object):
                 raise InvalidInterfaceDefinition('shared resource & input_data names must be unique')
             self._param_names.add(shared_resource['name'])
 
+        if self.definition['version'] >= '1.2':
+            for setting in self.definition['settings']:
+                if setting['name'] in self._param_names:
+                    raise InvalidInterfaceDefinition('Setting names must be unique')
+                self._param_names.add(setting['name'])
+
+            for env_var in self.definition['env_vars']:
+                if env_var['name'] in self._param_names:
+                    raise InvalidInterfaceDefinition('Enviorment variable names must be unique')
+                self._param_names.add(env_var['name'])
+
     def _create_retrieve_files_dict(self):
         """creates parameter folders and returns the dict needed to call
         :classmethod:`job.configuration.data.job_data.JobData.retrieve_files_dict`
@@ -575,7 +586,7 @@ class JobInterface(object):
                 shared_resource['required'] = True
 
     def _replace_command_parameter(self, command_arguments, param_name, param_value):
-        """find all occurances of a parameter with a given name in the command_arguments string and
+        """find all occurrences of a parameter with a given name in the command_arguments string and
         replace it with the param value. If the parameter replacement string in the command uses a
         custom output ( ${-f :foo}).
         The parameter will be replaced with the string preceding the colon and the given param value
@@ -628,6 +639,13 @@ class JobInterface(object):
                     if shared_resource['name'] == param:
                         found_match = True
                         break
+
+            if not found_match:
+                if self.definition['version'] >= '1.2':
+                    for setting in self.definition['settings']:
+                        if setting['name'] == param:
+                            found_match = True
+                            break
 
             #Look for system properties
             if param == 'job_output_dir':

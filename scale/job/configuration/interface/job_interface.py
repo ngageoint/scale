@@ -7,7 +7,9 @@ import os
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
+from job.configuration.configuration.job_configuration import JobConfiguration
 from job.configuration.interface import job_interface_1_1 as previous_interface
+from job.configuration.configuration.exceptions import InvalidSetting
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH
 
@@ -193,6 +195,7 @@ class JobInterface(previous_interface.JobInterface):
 
         self._populate_default_values()
         self._populate_settings_defaults()
+        self._populate_env_vars_defaults()
 
         self._check_param_name_uniqueness()
         self._validate_command_arguments()
@@ -223,12 +226,56 @@ class JobInterface(previous_interface.JobInterface):
 
     def _populate_settings_defaults(self):
         """populates the default values for any missing settings values"""
+
+        if 'settings' not in self.definition:
+            self.definition['settings'] = []
+
         for setting in self.definition['settings']:
             if 'required' not in setting:
-                setting['required'] = False
+                setting['required'] = True
 
     def _populate_env_vars_defaults(self):
         """populates the default values for any missing environment variable values"""
+
+        if 'env_vars' not in self.definition:
+            self.definition['env_vars'] = []
+
         for env_var in self.definition['env_vars']:
             if 'value' not in env_var:
                 env_var['value'] = ""
+
+    def populate_command_argument_settings(self, job_configuration):
+        """Return the command arguments string,
+        populated with the settings from the job_configuration.
+
+        :param job_config: The job configuration
+        :type job_config: :class:`job.configuration.configuration.job_configuration.JobConfiguration`
+        :return: command arguments for the given settings
+        :rtype: str
+        """
+        command_arguments = self.definition['command_arguments']
+        config_settings = job_configuration.get_dict()
+
+        # Isolate the job_type settings and convert to list
+        config_settings = config_settings['job_task']['settings']
+        config_settings_dict = {setting['name']: setting['value'] for setting in config_settings}
+
+        for setting in self.definition['settings']:
+            setting_name = setting['name']
+            setting_required = setting['required']
+            if setting_required:
+                if setting_name in config_settings_dict:
+                    command_arguments = self._replace_command_parameter(command_arguments,
+                                                                        setting_name,
+                                                                        config_settings_dict[setting_name])
+                else:
+                    raise InvalidSetting('Unable to create run command. Expected the required job config setting %s' % setting_name)
+            else:
+                if setting_name in config_settings_dict:
+                    command_arguments = self._replace_command_parameter(command_arguments,
+                                                                        setting_name,
+                                                                        config_settings_dict[setting_name])
+                else:
+                    command_arguments = self._replace_command_parameter(command_arguments, setting_name, '')
+
+        return command_arguments

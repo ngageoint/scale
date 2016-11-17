@@ -6,6 +6,7 @@ import django
 import django.utils.timezone as timezone
 from django.conf import settings
 from django.test import TestCase, TransactionTestCase
+from mock import patch
 
 import error.test.utils as error_test_utils
 import job.test.utils as job_test_utils
@@ -558,6 +559,47 @@ class TestJobExecutionManager(TransactionTestCase):
             self.assertEqual(param.flag, expected_param.flag)
             self.assertEqual(param.value, expected_param.value)
         self.assertEqual(len(job_exes[0].get_job_configuration().get_post_task_docker_params()), 0)
+
+    @patch('job.models.JobExecution.get_job_interface')
+    def test_schedule_job_executions_with_env_vars(self, mock_interface_dict):
+
+        interface = {
+            'version': '1.2',
+            'command': 'my_command',
+            'command_arguments': 'args',
+            'env_vars': [{
+                'name': 'env_var1',
+                'value': 'testing1'
+            }, {
+                'name': 'env_var2',
+                'value': 'testing2',
+            }],
+            'input_data': [{
+                'name': 'Test Input 1',
+                'type': 'file',
+                'media_types': ['text/plain'],
+            }],
+            'output_data': [{
+                'name': 'Test Output 1',
+                'type': 'files',
+                'media_type': 'image/png',
+            }]
+         }
+
+        # side effect function that returns the JSON
+        mock_interface_dict.return_value = JobInterface(interface)
+
+        job_exe_1 = job_test_utils.create_job_exe(status='QUEUED')
+        node_1 = node_test_utils.create_node()
+        resources_1 = JobResources(cpus=1, mem=2, disk_in=3, disk_out=4, disk_total=7)
+
+        job_exe = JobExecution.objects.schedule_job_executions('123', [(job_exe_1, node_1, resources_1)], {})
+
+        job_exe_job_task_params = job_exe[0].configuration['job_task']['docker_params']
+        param_values = [flag['value'] for flag in job_exe_job_task_params]
+
+        self.assertTrue(param_values.__contains__(interface['env_vars'][0]['name'] + '=' + interface['env_vars'][0]['value']))
+        self.assertTrue(param_values.__contains__(interface['env_vars'][1]['name'] + '=' + interface['env_vars'][1]['value']))
 
 
 class TestJobTypeManagerCreateJobType(TransactionTestCase):

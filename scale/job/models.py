@@ -988,6 +988,8 @@ class JobExecutionManager(models.Manager):
             interface = job.get_job_interface()
             data = job.get_job_data()
             job_exe.command_arguments = interface.populate_command_argument_properties(data)
+            # Add configuration values for the settings to the command line.
+            job_exe.command_arguments = interface.populate_command_argument_settings(job.get_job_configuration())
             job_exe.configuration = job.configuration
             job_exes.append(job_exe)
 
@@ -1311,6 +1313,13 @@ class JobExecution(models.Model):
 
         # Configure any Docker parameters needed for workspaces
         configuration.configure_workspace_docker_params(framework_id, self.id, workspaces)
+
+        # Add job environment variable as docker parameters
+        interface = self.get_job_interface().get_dict()
+        for env_var in interface['env_vars']:
+            env_var_name = env_var['name']
+            env_var_value = env_var['value']
+            configuration.add_job_task_docker_param(DockerParam('env', env_var_name + '=' + env_var_value))
 
         self.configuration = configuration.get_dict()
 

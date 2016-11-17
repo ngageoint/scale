@@ -32,7 +32,7 @@ class TestJobConfiguration(TestCase):
         config = {'post_task': {'workspaces': [{'name': 'name1', 'mode': 'ro'}, {'name': 'name1', 'mode': 'ro'}]},
                   'job_task': {'workspaces': []}}
         self.assertRaises(InvalidJobConfiguration, JobConfiguration, config)
-
+        
 
 class TestJobConfigurationConvert(TestCase):
     """Tests performing conversion from lower to higher minor versions of configuration schema."""
