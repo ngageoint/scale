@@ -166,7 +166,7 @@
             return ((errorTotal / total) * 100).toFixed(0) + '%';
         };
 
-        vm.filterResults = function (skipInit) {
+        vm.filterResults = function (skipInit, skipSort) {
             stateService.setJobTypesFailureRatesParams(vm.jobTypesParams);
             _.forEach(_.pairs(vm.jobTypesParams), function (param) {
                 $location.search(param[0], param[1]);
@@ -174,14 +174,14 @@
             if (!skipInit) {
                 vm.gridOptions.data = [];
                 vm.loading = true;
-                initialize();
+                initialize(skipSort);
             }
         };
 
         vm.updateJobType = function (value) {
             vm.jobTypesParams.name = value.name === 'VIEW ALL' ? null : value.name;
             if (!vm.loading) {
-                vm.filterResults();
+                vm.filterResults(false, true);
             }
         };
 
@@ -245,10 +245,16 @@
             return obj;
         };
 
-        var initialize = function () {
+        var initialize = function (skipSort) {
+            vm.performanceData = [];
+            vm.jobTypeValues = [jobTypeViewAll];
             stateService.setJobTypesFailureRatesParams(vm.jobTypesParams);
             jobTypeService.getJobTypesOnce().then(function (jobTypesData) {
-                jobTypes = _.cloneDeep(jobTypesData.results);
+                if (vm.jobTypesParams.name) {
+                    jobTypes = _.filter(jobTypesData.results, { name: vm.jobTypesParams.name });
+                } else {
+                    jobTypes = _.cloneDeep(jobTypesData.results);
+                }
                 vm.jobTypeValues.push(jobTypesData.results);
                 vm.jobTypeValues = _.flatten(vm.jobTypeValues);
                 vm.selectedJobType = _.find(vm.jobTypeValues, { name: vm.jobTypesParams.name }) || jobTypeViewAll;
@@ -290,10 +296,12 @@
                         vm.gridOptions.minRowsToShow = vm.performanceData.length;
                         vm.gridOptions.virtualizationThreshold = vm.performanceData.length;
                         vm.gridOptions.data = vm.performanceData;
-                        vm.currSortField = vm.jobTypesParams.orderField || 'twentyfour_hours';
-                        vm.currSortErrorType = vm.jobTypesParams.orderErrorType || 'errorTotal';
-                        if (vm.jobTypesParams.order && vm.jobTypesParams.orderField && vm.jobTypesParams.orderErrorType) {
-                            vm.sortBy(vm.jobTypesParams.orderErrorType, vm.jobTypesParams.orderField, vm.jobTypesParams.order);
+                        if (!skipSort) {
+                            vm.currSortField = vm.jobTypesParams.orderField || 'twentyfour_hours';
+                            vm.currSortErrorType = vm.jobTypesParams.orderErrorType || 'errorTotal';
+                            if (vm.jobTypesParams.order && vm.jobTypesParams.orderField && vm.jobTypesParams.orderErrorType) {
+                                vm.sortBy(vm.jobTypesParams.orderErrorType, vm.jobTypesParams.orderField, vm.jobTypesParams.order);
+                            }
                         }
                     }
 
@@ -312,13 +320,15 @@
             if (angular.equals(newValue, oldValue)) {
                 return;
             }
-            if (vm.loading) {
-                if (filteredByJobType) {
+            if (vm.jobTypeValues.length > 1) {
+                if (vm.loading) {
+                    if (filteredByJobType) {
+                        vm.updateJobType(newValue);
+                    }
+                } else {
+                    filteredByJobType = newValue !== 'VIEW ALL';
                     vm.updateJobType(newValue);
                 }
-            } else {
-                filteredByJobType = newValue !== 'VIEW ALL';
-                vm.updateJobType(newValue);
             }
         });
     });

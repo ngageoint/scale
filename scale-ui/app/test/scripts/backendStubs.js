@@ -281,6 +281,10 @@
                 jobTypes.results = _.sortByOrder(jobTypes.results, fields, orders);
             }
 
+            if (urlParams.name && urlParams.name.length > 0) {
+                jobTypes.results = _.filter(jobTypes.results, { name: urlParams.name[0] });
+            }
+
             returnObj[1] = JSON.stringify(jobTypes);
 
             return returnObj;
