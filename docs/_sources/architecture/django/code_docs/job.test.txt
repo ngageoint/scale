@@ -7,7 +7,6 @@ Subpackages
 .. toctree::
 
     job.test.configuration
-    job.test.execution
     job.test.management
 
 Submodules

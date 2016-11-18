@@ -125,6 +125,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#module-util.command">util.command module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-util.exceptions">util.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-util.file_size">util.file_size module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-util.lock">util.lock module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-util.middleware">util.middleware module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-util.parse">util.parse module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-util.rest">util.rest module</a></li>
@@ -398,6 +399,13 @@
 <p>Exception that can be thrown and swallowed to explicitly rollback a transaction</p>
 </dd></dl>
 
+<dl class="exception">
+<dt id="util.exceptions.ScaleLogicBug">
+<em class="property">exception </em><code class="descclassname">util.exceptions.</code><code class="descname">ScaleLogicBug</code><a class="headerlink" href="#util.exceptions.ScaleLogicBug" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Exception that indicates a critical Scale logic bug has occurred</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-util.file_size">
 <span id="util-file-size-module"></span><h2>util.file_size module<a class="headerlink" href="#module-util.file_size" title="Permalink to this headline">¶</a></h2>
@@ -418,6 +426,26 @@
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-util.lock">
+<span id="util-lock-module"></span><h2>util.lock module<a class="headerlink" href="#module-util.lock" title="Permalink to this headline">¶</a></h2>
+<p>Defines a lock that logs activity for deadlock debugging</p>
+<dl class="class">
+<dt id="util.lock.DebugLock">
+<em class="property">class </em><code class="descclassname">util.lock.</code><code class="descname">DebugLock</code><span class="sig-paren">(</span><em>class_name</em><span class="sig-paren">)</span><a class="headerlink" href="#util.lock.DebugLock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="util.lock.DebugLock.acquire">
+<code class="descname">acquire</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#util.lock.DebugLock.acquire" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.lock.DebugLock.release">
+<code class="descname">release</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#util.lock.DebugLock.release" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </div>

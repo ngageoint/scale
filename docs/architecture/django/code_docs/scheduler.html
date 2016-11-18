@@ -34,7 +34,7 @@
   
     <link rel="top" title="Scale 4.0.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="Django/Code Base" href="../index.html"/>
-        <link rel="next" title="scheduler.management package" href="scheduler.management.html"/>
+        <link rel="next" title="scheduler.cleanup package" href="scheduler.cleanup.html"/>
         <link rel="prev" title="recipe.triggers.configuration package" href="recipe.triggers.configuration.html"/> 
 
   
@@ -119,6 +119,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#module-scheduler.apps">scheduler.apps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-scheduler.cluster_utils">scheduler.cluster_utils module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-scheduler.initialize">scheduler.initialize module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-scheduler.managers">scheduler.managers module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-scheduler.models">scheduler.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-scheduler.scale_scheduler">scheduler.scale_scheduler module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-scheduler.serializers">scheduler.serializers module</a></li>
@@ -194,6 +195,13 @@
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="scheduler.cleanup.html">scheduler.cleanup package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.cleanup.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.cleanup.html#module-scheduler.cleanup.manager">scheduler.cleanup.manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.cleanup.html#module-scheduler.cleanup.node">scheduler.cleanup.node module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.cleanup.html#module-scheduler.cleanup">Module contents</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="scheduler.management.html">scheduler.management package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.management.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.management.commands.html">scheduler.management.commands package</a><ul>
@@ -216,6 +224,13 @@
 <li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations">Module contents</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="scheduler.node.html">scheduler.node package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.node.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.node.html#module-scheduler.node.manager">scheduler.node.manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.node.html#module-scheduler.node.node_class">scheduler.node.node_class module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.node.html#module-scheduler.node">Module contents</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="scheduler.offer.html">scheduler.offer package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.offer.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.offer.html#module-scheduler.offer.manager">scheduler.offer.manager module</a></li>
@@ -233,7 +248,6 @@
 <li class="toctree-l1"><a class="reference internal" href="scheduler.sync.html">scheduler.sync package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.sync.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.sync.html#module-scheduler.sync.job_type_manager">scheduler.sync.job_type_manager module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="scheduler.sync.html#module-scheduler.sync.node_manager">scheduler.sync.node_manager module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.sync.html#module-scheduler.sync.scheduler_manager">scheduler.sync.scheduler_manager module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.sync.html#module-scheduler.sync.workspace_manager">scheduler.sync.workspace_manager module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.sync.html#module-scheduler.sync">Module contents</a></li>
@@ -241,6 +255,19 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="scheduler.test.html">scheduler.test package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.test.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.test.cleanup.html">scheduler.test.cleanup package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.test.cleanup.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.test.cleanup.html#module-scheduler.test.cleanup.test_manager">scheduler.test.cleanup.test_manager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.test.cleanup.html#module-scheduler.test.cleanup.test_node">scheduler.test.cleanup.test_node module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.test.cleanup.html#module-scheduler.test.cleanup">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.test.node.html">scheduler.test.node package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.test.node.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.test.node.html#module-scheduler.test.node.test_manager">scheduler.test.node.test_manager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.test.node.html#module-scheduler.test.node">Module contents</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.test.offer.html">scheduler.test.offer package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.test.offer.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.test.offer.html#module-scheduler.test.offer.test_manager">scheduler.test.offer.test_manager module</a></li>
@@ -251,7 +278,6 @@
 <li class="toctree-l3"><a class="reference internal" href="scheduler.test.sync.html">scheduler.test.sync package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.test.sync.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.test.sync.html#module-scheduler.test.sync.test_job_type_manager">scheduler.test.sync.test_job_type_manager module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="scheduler.test.sync.html#module-scheduler.test.sync.test_node_manager">scheduler.test.sync.test_node_manager module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.test.sync.html#module-scheduler.test.sync.test_scheduler_manager">scheduler.test.sync.test_scheduler_manager module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.test.sync.html#module-scheduler.test.sync.test_workspace_manager">scheduler.test.sync.test_workspace_manager module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.test.sync.html#module-scheduler.test.sync">Module contents</a></li>
@@ -346,6 +372,17 @@
 <dt id="scheduler.initialize.initialize_system">
 <code class="descclassname">scheduler.initialize.</code><code class="descname">initialize_system</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.initialize.initialize_system" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs any necessary functions needed for initializing Scale</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-scheduler.managers">
+<span id="scheduler-managers-module"></span><h2>scheduler.managers module<a class="headerlink" href="#module-scheduler.managers" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class that holds all of the various data managers in the scheduler</p>
+<dl class="class">
+<dt id="scheduler.managers.SchedulerManagers">
+<em class="property">class </em><code class="descclassname">scheduler.managers.</code><code class="descname">SchedulerManagers</code><a class="headerlink" href="#scheduler.managers.SchedulerManagers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This class holds all of the various data managers in the scheduler.</p>
 </dd></dl>
 
 </div>
@@ -780,7 +817,7 @@ fails during that time.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="scheduler.management.html" class="btn btn-neutral float-right" title="scheduler.management package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="scheduler.cleanup.html" class="btn btn-neutral float-right" title="scheduler.cleanup package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="recipe.triggers.configuration.html" class="btn btn-neutral" title="recipe.triggers.configuration package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

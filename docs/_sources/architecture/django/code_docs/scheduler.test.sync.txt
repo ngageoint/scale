@@ -12,14 +12,6 @@ scheduler.test.sync.test_job_type_manager module
     :undoc-members:
     :show-inheritance:
 
-scheduler.test.sync.test_node_manager module
---------------------------------------------
-
-.. automodule:: scheduler.test.sync.test_node_manager
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 scheduler.test.sync.test_scheduler_manager module
 -------------------------------------------------
 

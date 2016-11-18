@@ -12,6 +12,22 @@ job.execution.running.tasks.base_task module
     :undoc-members:
     :show-inheritance:
 
+job.execution.running.tasks.cleanup_task module
+-----------------------------------------------
+
+.. automodule:: job.execution.running.tasks.cleanup_task
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job.execution.running.tasks.exe_task module
+-------------------------------------------
+
+.. automodule:: job.execution.running.tasks.exe_task
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 job.execution.running.tasks.job_task module
 -------------------------------------------
 
@@ -40,6 +56,14 @@ job.execution.running.tasks.results module
 ------------------------------------------
 
 .. automodule:: job.execution.running.tasks.results
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job.execution.running.tasks.update module
+-----------------------------------------
+
+.. automodule:: job.execution.running.tasks.update
     :members:
     :undoc-members:
     :show-inheritance:

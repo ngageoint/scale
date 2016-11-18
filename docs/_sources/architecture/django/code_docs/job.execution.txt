@@ -11,26 +11,10 @@ Subpackages
 Submodules
 ----------
 
-job.execution.cleanup module
-----------------------------
-
-.. automodule:: job.execution.cleanup
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 job.execution.container module
 ------------------------------
 
 .. automodule:: job.execution.container
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-job.execution.job_exe_cleaner module
-------------------------------------
-
-.. automodule:: job.execution.job_exe_cleaner
     :members:
     :undoc-members:
     :show-inheritance:

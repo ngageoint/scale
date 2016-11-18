@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>job.test.execution package &mdash; Scale 4.0.0-snapshot documentation</title>
+  <title>scheduler.test.node package &mdash; Scale 4.0.0-snapshot documentation</title>
   
 
   
@@ -33,9 +33,9 @@
 
   
     <link rel="top" title="Scale 4.0.0-snapshot documentation" href="../../../index.html"/>
-        <link rel="up" title="job.test package" href="job.test.html"/>
-        <link rel="next" title="job.test.execution.running package" href="job.test.execution.running.html"/>
-        <link rel="prev" title="job.test.configuration.results package" href="job.test.configuration.results.html"/> 
+        <link rel="up" title="scheduler.test package" href="scheduler.test.html"/>
+        <link rel="next" title="scheduler.test.offer package" href="scheduler.test.offer.html"/>
+        <link rel="prev" title="scheduler.test.cleanup package" href="scheduler.test.cleanup.html"/> 
 
   
   <script src="../../../_static/js/modernizr.min.js"></script>
@@ -104,21 +104,7 @@
 <li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="job.html">job package</a><ul class="current">
-<li class="toctree-l4 current"><a class="reference internal" href="job.html#subpackages">Subpackages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.apps">job.apps module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.clock">job.clock module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.errors">job.errors module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.exceptions">job.exceptions module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.models">job.models module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.resources">job.resources module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.serializers">job.serializers module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.urls">job.urls module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.views">job.views module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job">Module contents</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
@@ -126,7 +112,22 @@
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="scheduler.html">scheduler package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="scheduler.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.admin">scheduler.admin module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.apps">scheduler.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.cluster_utils">scheduler.cluster_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.initialize">scheduler.initialize module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.managers">scheduler.managers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.models">scheduler.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.scale_scheduler">scheduler.scale_scheduler module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.serializers">scheduler.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.urls">scheduler.urls module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.views">scheduler.views module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler">Module contents</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
@@ -174,15 +175,15 @@
       
           <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
       
-          <li><a href="job.html">job package</a> &raquo;</li>
+          <li><a href="scheduler.html">scheduler package</a> &raquo;</li>
       
-          <li><a href="job.test.html">job.test package</a> &raquo;</li>
+          <li><a href="scheduler.test.html">scheduler.test package</a> &raquo;</li>
       
-    <li>job.test.execution package</li>
+    <li>scheduler.test.node package</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../../../_sources/architecture/django/code_docs/job.test.execution.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/scheduler.test.node.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -192,47 +193,51 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="job-test-execution-package">
-<h1>job.test.execution package<a class="headerlink" href="#job-test-execution-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="job.test.execution.running.html">job.test.execution.running package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="job.test.execution.running.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="job.test.execution.running.html#module-job.test.execution.running.test_job_exe">job.test.execution.running.test_job_exe module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="job.test.execution.running.html#module-job.test.execution.running">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
+  <div class="section" id="scheduler-test-node-package">
+<h1>scheduler.test.node package<a class="headerlink" href="#scheduler-test-node-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-job.test.execution.test_cleaner">
-<span id="job-test-execution-test-cleaner-module"></span><h2>job.test.execution.test_cleaner module<a class="headerlink" href="#module-job.test.execution.test_cleaner" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-scheduler.test.node.test_manager">
+<span id="scheduler-test-node-test-manager-module"></span><h2>scheduler.test.node.test_manager module<a class="headerlink" href="#module-scheduler.test.node.test_manager" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="job.test.execution.test_cleaner.TestNormalJobExecutionCleaner">
-<em class="property">class </em><code class="descclassname">job.test.execution.test_cleaner.</code><code class="descname">TestNormalJobExecutionCleaner</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.test_cleaner.TestNormalJobExecutionCleaner" title="Permalink to this definition">¶</a></dt>
+<dt id="scheduler.test.node.test_manager.TestNodeManager">
+<em class="property">class </em><code class="descclassname">scheduler.test.node.test_manager.</code><code class="descname">TestNodeManager</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<p>Tests functions in the normal job execution cleaner module.</p>
 <dl class="method">
-<dt id="job.test.execution.test_cleaner.TestNormalJobExecutionCleaner.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.test_cleaner.TestNormalJobExecutionCleaner.setUp" title="Permalink to this definition">¶</a></dt>
+<dt id="scheduler.test.node.test_manager.TestNodeManager.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="job.test.execution.test_cleaner.TestNormalJobExecutionCleaner.test_stats_collection">
-<code class="descname">test_stats_collection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.test_cleaner.TestNormalJobExecutionCleaner.test_stats_collection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests collecting statistics.</p>
+<dt id="scheduler.test.node.test_manager.TestNodeManager.test_change_agent_id">
+<code class="descname">test_change_agent_id</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_change_agent_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests the NodeManager where a registered node changes its agent ID</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.node.test_manager.TestNodeManager.test_lost_known_node">
+<code class="descname">test_lost_known_node</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_lost_known_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests the NodeManager where a known node was lost</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.node.test_manager.TestNodeManager.test_lost_unknown_node">
+<code class="descname">test_lost_unknown_node</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_lost_unknown_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests the NodeManager where an unknown node was lost</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.node.test_manager.TestNodeManager.test_successful_update">
+<code class="descname">test_successful_update</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_successful_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests doing a successful database update</p>
 </dd></dl>
 
 </dd></dl>
 
 </div>
-<div class="section" id="module-job.test.execution">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-job.test.execution" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-scheduler.test.node">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-scheduler.test.node" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -243,10 +248,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="job.test.execution.running.html" class="btn btn-neutral float-right" title="job.test.execution.running package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="scheduler.test.offer.html" class="btn btn-neutral float-right" title="scheduler.test.offer package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="job.test.configuration.results.html" class="btn btn-neutral" title="job.test.configuration.results package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="scheduler.test.cleanup.html" class="btn btn-neutral" title="scheduler.test.cleanup package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -12,14 +12,6 @@ scheduler.sync.job_type_manager module
     :undoc-members:
     :show-inheritance:
 
-scheduler.sync.node_manager module
-----------------------------------
-
-.. automodule:: scheduler.sync.node_manager
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 scheduler.sync.scheduler_manager module
 ---------------------------------------
 

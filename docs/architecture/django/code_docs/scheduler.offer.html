@@ -35,7 +35,7 @@
     <link rel="top" title="Scale 4.0.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="scheduler package" href="scheduler.html"/>
         <link rel="next" title="scheduler.status package" href="scheduler.status.html"/>
-        <link rel="prev" title="scheduler.migrations package" href="scheduler.migrations.html"/> 
+        <link rel="prev" title="scheduler.node package" href="scheduler.node.html"/> 
 
   
   <script src="../../../_static/js/modernizr.min.js"></script>
@@ -119,6 +119,7 @@
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.apps">scheduler.apps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.cluster_utils">scheduler.cluster_utils module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.initialize">scheduler.initialize module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.managers">scheduler.managers module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.models">scheduler.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.scale_scheduler">scheduler.scale_scheduler module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.serializers">scheduler.serializers module</a></li>
@@ -209,6 +210,11 @@
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="scheduler.offer.manager.OfferManager.NODE_NOT_READY">
+<code class="descname">NODE_NOT_READY</code><em class="property"> = 8</em><a class="headerlink" href="#scheduler.offer.manager.OfferManager.NODE_NOT_READY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="scheduler.offer.manager.OfferManager.NODE_OFFLINE">
 <code class="descname">NODE_OFFLINE</code><em class="property"> = 7</em><a class="headerlink" href="#scheduler.offer.manager.OfferManager.NODE_OFFLINE" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -235,7 +241,7 @@
 
 <dl class="attribute">
 <dt id="scheduler.offer.manager.OfferManager.NO_NODES_AVAILABLE">
-<code class="descname">NO_NODES_AVAILABLE</code><em class="property"> = 8</em><a class="headerlink" href="#scheduler.offer.manager.OfferManager.NO_NODES_AVAILABLE" title="Permalink to this definition">¶</a></dt>
+<code class="descname">NO_NODES_AVAILABLE</code><em class="property"> = 9</em><a class="headerlink" href="#scheduler.offer.manager.OfferManager.NO_NODES_AVAILABLE" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -293,6 +299,24 @@ resources</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe</strong> (<a class="reference internal" href="job.execution.running.html#job.execution.running.job_exe.RunningJobExecution" title="job.execution.running.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.running.job_exe.RunningJobExecution</span></code></a>) &#8211; The running job execution</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">One of the OfferManager constants indicating if the next task was accepted or why it was not accepted</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.offer.manager.OfferManager.consider_task">
+<code class="descname">consider_task</code><span class="sig-paren">(</span><em>task</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.offer.manager.OfferManager.consider_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Considers if the given task can be run with the current offered resources</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task</strong> (<a class="reference internal" href="job.execution.running.tasks.html#job.execution.running.tasks.base_task.Task" title="job.execution.running.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.execution.running.tasks.base_task.Task</span></code></a>) &#8211; The task to consider</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">One of the OfferManager constants indicating if the task was accepted or why it was not accepted</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int</td>
 </tr>
@@ -370,12 +394,12 @@ called</p>
 <dl class="method">
 <dt id="scheduler.offer.manager.OfferManager.update_nodes">
 <code class="descname">update_nodes</code><span class="sig-paren">(</span><em>nodes</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.offer.manager.OfferManager.update_nodes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates the manager with the latest copies of the node models</p>
+<dd><p>Updates the manager with the latest copies of the nodes</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nodes</strong> ([<a class="reference internal" href="node.html#node.models.Node" title="node.models.Node"><code class="xref py py-class docutils literal"><span class="pre">node.models.Node</span></code></a>]) &#8211; The list of updated node models</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nodes</strong> ([<a class="reference internal" href="scheduler.node.html#scheduler.node.node_class.Node" title="scheduler.node.node_class.Node"><code class="xref py py-class docutils literal"><span class="pre">scheduler.node.node_class.Node</span></code></a>]) &#8211; The list of updated nodes</td>
 </tr>
 </tbody>
 </table>
@@ -395,6 +419,11 @@ called</p>
 <dl class="attribute">
 <dt id="scheduler.offer.node.NodeOffers.ACCEPTED">
 <code class="descname">ACCEPTED</code><em class="property"> = 0</em><a class="headerlink" href="#scheduler.offer.node.NodeOffers.ACCEPTED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.offer.node.NodeOffers.NODE_NOT_READY">
+<code class="descname">NODE_NOT_READY</code><em class="property"> = 8</em><a class="headerlink" href="#scheduler.offer.node.NodeOffers.NODE_NOT_READY" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -485,6 +514,24 @@ current resources</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="scheduler.offer.node.NodeOffers.consider_task">
+<code class="descname">consider_task</code><span class="sig-paren">(</span><em>task</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.offer.node.NodeOffers.consider_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Considers if the given task can be run on this node with the current resources</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task</strong> (<a class="reference internal" href="job.execution.running.tasks.html#job.execution.running.tasks.base_task.Task" title="job.execution.running.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.execution.running.tasks.base_task.Task</span></code></a>) &#8211; The task to consider</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">One of the NodeOffers constants indicating if the task was accepted or why it was not accepted</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="scheduler.offer.node.NodeOffers.get_accepted_new_job_exes">
 <code class="descname">get_accepted_new_job_exes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.offer.node.NodeOffers.get_accepted_new_job_exes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns all of the new job executions that have been accepted to run on this node</p>
@@ -517,6 +564,22 @@ current resources</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="scheduler.offer.node.NodeOffers.get_accepted_tasks">
+<code class="descname">get_accepted_tasks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.offer.node.NodeOffers.get_accepted_tasks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all of the tasks that have been accepted to run on this node</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of all accepted tasks</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="job.execution.running.tasks.html#job.execution.running.tasks.base_task.Task" title="job.execution.running.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.execution.running.tasks.base_task.Task</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="scheduler.offer.node.NodeOffers.has_accepted_job_exes">
 <code class="descname">has_accepted_job_exes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.offer.node.NodeOffers.has_accepted_job_exes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicates whether any job executions have been accepted</p>
@@ -541,14 +604,14 @@ current resources</p>
 <dl class="attribute">
 <dt id="scheduler.offer.node.NodeOffers.node">
 <code class="descname">node</code><a class="headerlink" href="#scheduler.offer.node.NodeOffers.node" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the node model</p>
+<dd><p>Returns the node</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The node model</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The node</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="node.html#node.models.Node" title="node.models.Node"><code class="xref py py-class docutils literal"><span class="pre">node.models.Node</span></code></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="scheduler.node.html#scheduler.node.node_class.Node" title="scheduler.node.node_class.Node"><code class="xref py py-class docutils literal"><span class="pre">scheduler.node.node_class.Node</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -662,7 +725,7 @@ longer the resources to support them</p>
         <a href="scheduler.status.html" class="btn btn-neutral float-right" title="scheduler.status package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="scheduler.migrations.html" class="btn btn-neutral" title="scheduler.migrations package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="scheduler.node.html" class="btn btn-neutral" title="scheduler.node package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

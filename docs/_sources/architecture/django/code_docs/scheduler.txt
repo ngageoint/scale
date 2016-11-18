@@ -6,8 +6,10 @@ Subpackages
 
 .. toctree::
 
+    scheduler.cleanup
     scheduler.management
     scheduler.migrations
+    scheduler.node
     scheduler.offer
     scheduler.status
     scheduler.sync
@@ -45,6 +47,14 @@ scheduler.initialize module
 ---------------------------
 
 .. automodule:: scheduler.initialize
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+scheduler.managers module
+-------------------------
+
+.. automodule:: scheduler.managers
     :members:
     :undoc-members:
     :show-inheritance:

@@ -51,6 +51,14 @@ util.file_size module
     :undoc-members:
     :show-inheritance:
 
+util.lock module
+----------------
+
+.. automodule:: util.lock
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 util.middleware module
 ----------------------
 

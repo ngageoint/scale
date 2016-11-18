@@ -201,10 +201,13 @@
 <li class="toctree-l1"><a class="reference internal" href="job.execution.running.tasks.html">job.execution.running.tasks package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="job.execution.running.tasks.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks.base_task">job.execution.running.tasks.base_task module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks.cleanup_task">job.execution.running.tasks.cleanup_task module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks.exe_task">job.execution.running.tasks.exe_task module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks.job_task">job.execution.running.tasks.job_task module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks.post_task">job.execution.running.tasks.post_task module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks.pre_task">job.execution.running.tasks.pre_task module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks.results">job.execution.running.tasks.results module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks.update">job.execution.running.tasks.update module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks">Module contents</a></li>
 </ul>
 </li>
@@ -238,6 +241,22 @@
 </table>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="job.execution.running.job_exe.RunningJobExecution.docker_volumes">
+<code class="descname">docker_volumes</code><a class="headerlink" href="#job.execution.running.job_exe.RunningJobExecution.docker_volumes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the names of the Docker volumes used by this job execution</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of Docker volume names</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[string]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="job.execution.running.job_exe.RunningJobExecution.execution_canceled">
 <code class="descname">execution_canceled</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.running.job_exe.RunningJobExecution.execution_canceled" title="Permalink to this definition">¶</a></dt>
@@ -252,24 +271,6 @@
 <dt id="job.execution.running.job_exe.RunningJobExecution.execution_timed_out">
 <code class="descname">execution_timed_out</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.running.job_exe.RunningJobExecution.execution_timed_out" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="staticmethod">
-<dt id="job.execution.running.job_exe.RunningJobExecution.get_job_exe_id">
-<em class="property">static </em><code class="descname">get_job_exe_id</code><span class="sig-paren">(</span><em>task_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.running.job_exe.RunningJobExecution.get_job_exe_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the job execution ID for the given task ID</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_id</strong> (<em>str</em>) &#8211; The task ID</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The job execution ID</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
 
 <dl class="attribute">
 <dt id="job.execution.running.job_exe.RunningJobExecution.id">

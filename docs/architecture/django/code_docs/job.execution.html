@@ -201,10 +201,13 @@
 <li class="toctree-l3"><a class="reference internal" href="job.execution.running.tasks.html">job.execution.running.tasks package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="job.execution.running.tasks.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks.base_task">job.execution.running.tasks.base_task module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks.cleanup_task">job.execution.running.tasks.cleanup_task module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks.exe_task">job.execution.running.tasks.exe_task module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks.job_task">job.execution.running.tasks.job_task module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks.post_task">job.execution.running.tasks.post_task module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks.pre_task">job.execution.running.tasks.pre_task module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks.results">job.execution.running.tasks.results module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks.update">job.execution.running.tasks.update module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks">Module contents</a></li>
 </ul>
 </li>
@@ -222,46 +225,24 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-job.execution.cleanup">
-<span id="job-execution-cleanup-module"></span><h2>job.execution.cleanup module<a class="headerlink" href="#module-job.execution.cleanup" title="Permalink to this headline">¶</a></h2>
-<p>Defines methods for cleaning up job executions</p>
-<dl class="function">
-<dt id="job.execution.cleanup.cleanup_job_exe">
-<code class="descclassname">job.execution.cleanup.</code><code class="descname">cleanup_job_exe</code><span class="sig-paren">(</span><em>job_exe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.cleanup.cleanup_job_exe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Cleans up a job execution</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_id</strong> (<em>int</em>) &#8211; The job execution ID</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</div>
 <div class="section" id="module-job.execution.container">
 <span id="job-execution-container-module"></span><h2>job.execution.container module<a class="headerlink" href="#module-job.execution.container" title="Permalink to this headline">¶</a></h2>
 <p>Defines the methods for handling file systems in the job execution&#8217;s local container volume</p>
 <dl class="function">
 <dt id="job.execution.container.get_job_exe_input_vol_name">
-<code class="descclassname">job.execution.container.</code><code class="descname">get_job_exe_input_vol_name</code><span class="sig-paren">(</span><em>framework_id</em>, <em>job_exe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.container.get_job_exe_input_vol_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the container input volume name for the given job execution ID</p>
+<code class="descclassname">job.execution.container.</code><code class="descname">get_job_exe_input_vol_name</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.container.get_job_exe_input_vol_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the container input volume name for the given job execution</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>framework_id</strong> (<em>string</em>) &#8211; The scheduling framework ID</li>
-<li><strong>job_exe_id</strong> (<em>int</em>) &#8211; The job execution ID</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>) &#8211; The job execution model (must not be queued) with related job and job_type fields</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The container input volume name</p>
-</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The container input volume name</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">string</p>
-</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><strong>Exception</strong> &#8211; If the job execution is still queued</td>
 </tr>
 </tbody>
 </table>
@@ -269,23 +250,19 @@
 
 <dl class="function">
 <dt id="job.execution.container.get_job_exe_output_vol_name">
-<code class="descclassname">job.execution.container.</code><code class="descname">get_job_exe_output_vol_name</code><span class="sig-paren">(</span><em>framework_id</em>, <em>job_exe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.container.get_job_exe_output_vol_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the container output volume name for the given job execution ID</p>
+<code class="descclassname">job.execution.container.</code><code class="descname">get_job_exe_output_vol_name</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.container.get_job_exe_output_vol_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the container output volume name for the given job execution</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>framework_id</strong> (<em>string</em>) &#8211; The scheduling framework ID</li>
-<li><strong>job_exe_id</strong> (<em>int</em>) &#8211; The job execution ID</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>) &#8211; The job execution model (must not be queued) with related job and job_type fields</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The container output volume name</p>
-</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The container output volume name</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">string</p>
-</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><strong>Exception</strong> &#8211; If the job execution is still queued</td>
 </tr>
 </tbody>
 </table>
@@ -293,15 +270,14 @@
 
 <dl class="function">
 <dt id="job.execution.container.get_workspace_volume_name">
-<code class="descclassname">job.execution.container.</code><code class="descname">get_workspace_volume_name</code><span class="sig-paren">(</span><em>framework_id</em>, <em>job_exe_id</em>, <em>workspace</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.container.get_workspace_volume_name" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">job.execution.container.</code><code class="descname">get_workspace_volume_name</code><span class="sig-paren">(</span><em>job_exe</em>, <em>workspace</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.container.get_workspace_volume_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the name of the workspace&#8217;s container volume for the given job execution ID</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>framework_id</strong> (<em>string</em>) &#8211; The scheduling framework ID</li>
-<li><strong>job_exe_id</strong> (<em>int</em>) &#8211; The job execution ID</li>
+<li><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>) &#8211; The job execution model (must not be queued) with related job and job_type fields</li>
 <li><strong>workspace</strong> (<em>string</em>) &#8211; The name of the workspace</li>
 </ul>
 </td>
@@ -309,50 +285,14 @@
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The workspace&#8217;s container volume name</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">string</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">string</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><strong>Exception</strong> &#8211; If the job execution is still queued</p>
 </td>
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
-</div>
-<div class="section" id="module-job.execution.job_exe_cleaner">
-<span id="job-execution-job-exe-cleaner-module"></span><h2>job.execution.job_exe_cleaner module<a class="headerlink" href="#module-job.execution.job_exe_cleaner" title="Permalink to this headline">¶</a></h2>
-<p>Defines the abstract base class used for cleaning up job executions</p>
-<dl class="class">
-<dt id="job.execution.job_exe_cleaner.JobExecutionCleaner">
-<em class="property">class </em><code class="descclassname">job.execution.job_exe_cleaner.</code><code class="descname">JobExecutionCleaner</code><a class="headerlink" href="#job.execution.job_exe_cleaner.JobExecutionCleaner" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Abstract class for a cleaner that cleans up after a job execution</p>
-<dl class="method">
-<dt id="job.execution.job_exe_cleaner.JobExecutionCleaner.cleanup_job_execution">
-<code class="descname">cleanup_job_execution</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.job_exe_cleaner.JobExecutionCleaner.cleanup_job_execution" title="Permalink to this definition">¶</a></dt>
-<dd><p>Cleans up the given job execution on the node on which it previously ran. The job_exe model will have its
-related job and job_type fields populated.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>) &#8211; The job execution model with related job and job_type fields</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="job.execution.job_exe_cleaner.NormalJobExecutionCleaner">
-<em class="property">class </em><code class="descclassname">job.execution.job_exe_cleaner.</code><code class="descname">NormalJobExecutionCleaner</code><a class="headerlink" href="#job.execution.job_exe_cleaner.NormalJobExecutionCleaner" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#job.execution.job_exe_cleaner.JobExecutionCleaner" title="job.execution.job_exe_cleaner.JobExecutionCleaner"><code class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe_cleaner.JobExecutionCleaner</span></code></a></p>
-<p>Cleaner for the execution of normal jobs (non-system jobs with pre and post tasks)</p>
-<dl class="method">
-<dt id="job.execution.job_exe_cleaner.NormalJobExecutionCleaner.cleanup_job_execution">
-<code class="descname">cleanup_job_execution</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.job_exe_cleaner.NormalJobExecutionCleaner.cleanup_job_execution" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <a class="reference internal" href="#job.execution.job_exe_cleaner.JobExecutionCleaner.cleanup_job_execution" title="job.execution.job_exe_cleaner.JobExecutionCleaner.cleanup_job_execution"><code class="xref py py-meth docutils literal"><span class="pre">job.execution.job_exe_cleaner.JobExecutionCleaner.cleanup_job_execution()</span></code></a></p>
-</dd></dl>
-
 </dd></dl>
 
 </div>

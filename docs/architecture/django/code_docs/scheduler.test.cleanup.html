@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>scheduler.status package &mdash; Scale 4.0.0-snapshot documentation</title>
+  <title>scheduler.test.cleanup package &mdash; Scale 4.0.0-snapshot documentation</title>
   
 
   
@@ -33,9 +33,9 @@
 
   
     <link rel="top" title="Scale 4.0.0-snapshot documentation" href="../../../index.html"/>
-        <link rel="up" title="scheduler package" href="scheduler.html"/>
-        <link rel="next" title="scheduler.sync package" href="scheduler.sync.html"/>
-        <link rel="prev" title="scheduler.offer package" href="scheduler.offer.html"/> 
+        <link rel="up" title="scheduler.test package" href="scheduler.test.html"/>
+        <link rel="next" title="scheduler.test.node package" href="scheduler.test.node.html"/>
+        <link rel="prev" title="scheduler.test package" href="scheduler.test.html"/> 
 
   
   <script src="../../../_static/js/modernizr.min.js"></script>
@@ -177,11 +177,13 @@
       
           <li><a href="scheduler.html">scheduler package</a> &raquo;</li>
       
-    <li>scheduler.status package</li>
+          <li><a href="scheduler.test.html">scheduler.test package</a> &raquo;</li>
+      
+    <li>scheduler.test.cleanup package</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../../../_sources/architecture/django/code_docs/scheduler.status.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/scheduler.test.cleanup.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -191,64 +193,101 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="scheduler-status-package">
-<h1>scheduler.status package<a class="headerlink" href="#scheduler-status-package" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="scheduler-test-cleanup-package">
+<h1>scheduler.test.cleanup package<a class="headerlink" href="#scheduler-test-cleanup-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-scheduler.status.manager">
-<span id="scheduler-status-manager-module"></span><h2>scheduler.status.manager module<a class="headerlink" href="#module-scheduler.status.manager" title="Permalink to this headline">¶</a></h2>
-<p>Defines the class that manages pushing task status updates to the database</p>
+<div class="section" id="module-scheduler.test.cleanup.test_manager">
+<span id="scheduler-test-cleanup-test-manager-module"></span><h2>scheduler.test.cleanup.test_manager module<a class="headerlink" href="#module-scheduler.test.cleanup.test_manager" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="scheduler.status.manager.StatusManager">
-<em class="property">class </em><code class="descclassname">scheduler.status.manager.</code><code class="descname">StatusManager</code><a class="headerlink" href="#scheduler.status.manager.StatusManager" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>This class pushes task status updates to the database. This class is thread-safe.</p>
-<dl class="attribute">
-<dt id="scheduler.status.manager.StatusManager.COUNT_WARNING_THRESHOLD">
-<code class="descname">COUNT_WARNING_THRESHOLD</code><em class="property"> = 1000</em><a class="headerlink" href="#scheduler.status.manager.StatusManager.COUNT_WARNING_THRESHOLD" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="scheduler.status.manager.StatusManager.MAX_BATCH_SIZE">
-<code class="descname">MAX_BATCH_SIZE</code><em class="property"> = 500</em><a class="headerlink" href="#scheduler.status.manager.StatusManager.MAX_BATCH_SIZE" title="Permalink to this definition">¶</a></dt>
+<dt id="scheduler.test.cleanup.test_manager.TestCleanupManager">
+<em class="property">class </em><code class="descclassname">scheduler.test.cleanup.test_manager.</code><code class="descname">TestCleanupManager</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.cleanup.test_manager.TestCleanupManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="scheduler.test.cleanup.test_manager.TestCleanupManager.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.cleanup.test_manager.TestCleanupManager.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="scheduler.status.manager.StatusManager.add_status_update">
-<code class="descname">add_status_update</code><span class="sig-paren">(</span><em>status_update</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.status.manager.StatusManager.add_status_update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds the given status update to the manager so it can be pushed to the database</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status_update</strong> (<code class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskStatus</span></code>) &#8211; The list of agent IDs to add</td>
-</tr>
-</tbody>
-</table>
+<dt id="scheduler.test.cleanup.test_manager.TestCleanupManager.test_change_agent_id">
+<code class="descname">test_change_agent_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.cleanup.test_manager.TestCleanupManager.test_change_agent_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests the NodeManager where a node&#8217;s agent ID changes</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="scheduler.status.manager.StatusManager.push_to_database">
-<code class="descname">push_to_database</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.status.manager.StatusManager.push_to_database" title="Permalink to this definition">¶</a></dt>
-<dd><p>Pushes the recent status updates to the database</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The total number of status updates pushed</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
+<dt id="scheduler.test.cleanup.test_manager.TestCleanupManager.test_get_initial_cleanup_tasks">
+<code class="descname">test_get_initial_cleanup_tasks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.cleanup.test_manager.TestCleanupManager.test_get_initial_cleanup_tasks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests getting initial cleanup tasks from the manager</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.cleanup.test_manager.TestCleanupManager.test_job_exe_clean_task">
+<code class="descname">test_job_exe_clean_task</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.cleanup.test_manager.TestCleanupManager.test_job_exe_clean_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests the NodeManager where a cleanup task is returned to clean up a job execution</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.cleanup.test_manager.TestCleanupManager.test_no_job_exes_to_clean">
+<code class="descname">test_no_job_exes_to_clean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.cleanup.test_manager.TestCleanupManager.test_no_job_exes_to_clean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests the NodeManager where no cleanup tasks are returned due to no job executions to clean</p>
 </dd></dl>
 
 </dd></dl>
 
 </div>
-<div class="section" id="module-scheduler.status">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-scheduler.status" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-scheduler.test.cleanup.test_node">
+<span id="scheduler-test-cleanup-test-node-module"></span><h2>scheduler.test.cleanup.test_node module<a class="headerlink" href="#module-scheduler.test.cleanup.test_node" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="scheduler.test.cleanup.test_node.TestNodeCleanup">
+<em class="property">class </em><code class="descclassname">scheduler.test.cleanup.test_node.</code><code class="descname">TestNodeCleanup</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.cleanup.test_node.TestNodeCleanup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="scheduler.test.cleanup.test_node.TestNodeCleanup.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.cleanup.test_node.TestNodeCleanup.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.cleanup.test_node.TestNodeCleanup.test_handle_failed_task">
+<code class="descname">test_handle_failed_task</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.cleanup.test_node.TestNodeCleanup.test_handle_failed_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests handling failed cleanup task</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.cleanup.test_node.TestNodeCleanup.test_handle_initial_cleanup_task">
+<code class="descname">test_handle_initial_cleanup_task</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.cleanup.test_node.TestNodeCleanup.test_handle_initial_cleanup_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests handling the initial cleanup task</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.cleanup.test_node.TestNodeCleanup.test_handle_killed_task">
+<code class="descname">test_handle_killed_task</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.cleanup.test_node.TestNodeCleanup.test_handle_killed_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests handling killed cleanup task</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.cleanup.test_node.TestNodeCleanup.test_handle_lost_tasks">
+<code class="descname">test_handle_lost_tasks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.cleanup.test_node.TestNodeCleanup.test_handle_lost_tasks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests handling lost cleanup tasks</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.cleanup.test_node.TestNodeCleanup.test_handle_regular_cleanup_task">
+<code class="descname">test_handle_regular_cleanup_task</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.cleanup.test_node.TestNodeCleanup.test_handle_regular_cleanup_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests handling a regular cleanup task</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.cleanup.test_node.TestNodeCleanup.test_paused_node">
+<code class="descname">test_paused_node</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.cleanup.test_node.TestNodeCleanup.test_paused_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests not returning tasks when its node is paused</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-scheduler.test.cleanup">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-scheduler.test.cleanup" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -259,10 +298,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="scheduler.sync.html" class="btn btn-neutral float-right" title="scheduler.sync package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="scheduler.test.node.html" class="btn btn-neutral float-right" title="scheduler.test.node package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="scheduler.offer.html" class="btn btn-neutral" title="scheduler.offer package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="scheduler.test.html" class="btn btn-neutral" title="scheduler.test package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

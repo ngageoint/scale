@@ -493,7 +493,7 @@
 
 <dl class="attribute">
 <dt id="job.migrations.0016_auto_20160421_1553.Migration.operations">
-<code class="descname">operations</code><em class="property"> = [&lt;RunPython &lt;function populate_job_configuration at 0x2ab3135585f0&gt;&gt;]</em><a class="headerlink" href="#job.migrations.0016_auto_20160421_1553.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<code class="descname">operations</code><em class="property"> = [&lt;RunPython &lt;function populate_job_configuration at 0x2adabf92a578&gt;&gt;]</em><a class="headerlink" href="#job.migrations.0016_auto_20160421_1553.Migration.operations" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -556,6 +556,44 @@
 <dl class="attribute">
 <dt id="job.migrations.0019_taskupdate.Migration.operations">
 <code class="descname">operations</code><em class="property"> = [&lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'task_id', &lt;django.db.models.fields.CharField&gt;), (u'status', &lt;django.db.models.fields.CharField&gt;), (u'timestamp', &lt;django.db.models.fields.DateTimeField&gt;), (u'source', &lt;django.db.models.fields.CharField&gt;), (u'reason', &lt;django.db.models.fields.CharField&gt;), (u'message', &lt;django.db.models.fields.TextField&gt;), (u'created', &lt;django.db.models.fields.DateTimeField&gt;), (u'job_exe', &lt;django.db.models.fields.related.ForeignKey&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={u'db_table': u'task_update'}, name=u'TaskUpdate'&gt;]</em><a class="headerlink" href="#job.migrations.0019_taskupdate.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.migrations.0020_auto_20161110_1517">
+<span id="job-migrations-0020-auto-20161110-1517-module"></span><h2>job.migrations.0020_auto_20161110_1517 module<a class="headerlink" href="#module-job.migrations.0020_auto_20161110_1517" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="job.migrations.0020_auto_20161110_1517.Migration">
+<em class="property">class </em><code class="descclassname">job.migrations.0020_auto_20161110_1517.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#job.migrations.0020_auto_20161110_1517.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="job.migrations.0020_auto_20161110_1517.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'job', u'0019_taskupdate')]</em><a class="headerlink" href="#job.migrations.0020_auto_20161110_1517.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.migrations.0020_auto_20161110_1517.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;RemoveField  name=u'cleaned_up', model_name=u'jobexecution'&gt;, &lt;RemoveField  name=u'cleanup_job', model_name=u'jobexecution'&gt;, &lt;RemoveField  name=u'requires_cleanup', model_name=u'jobexecution'&gt;, &lt;RemoveField  name=u'requires_cleanup', model_name=u'jobtype'&gt;, &lt;AddField  field=&lt;django.db.models.fields.CharField&gt;, preserve_default=True, name=u'cluster_id', model_name=u'jobexecution'&gt;]</em><a class="headerlink" href="#job.migrations.0020_auto_20161110_1517.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.migrations.0021_auto_20161115_1524">
+<span id="job-migrations-0021-auto-20161115-1524-module"></span><h2>job.migrations.0021_auto_20161115_1524 module<a class="headerlink" href="#module-job.migrations.0021_auto_20161115_1524" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="job.migrations.0021_auto_20161115_1524.Migration">
+<em class="property">class </em><code class="descclassname">job.migrations.0021_auto_20161115_1524.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#job.migrations.0021_auto_20161115_1524.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="job.migrations.0021_auto_20161115_1524.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'job', u'0020_auto_20161110_1517')]</em><a class="headerlink" href="#job.migrations.0021_auto_20161115_1524.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.migrations.0021_auto_20161115_1524.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;AlterField  field=&lt;django.db.models.fields.CharField&gt;, preserve_default=True, name=u'reason', model_name=u'taskupdate'&gt;, &lt;AlterField  field=&lt;django.db.models.fields.CharField&gt;, preserve_default=True, name=u'source', model_name=u'taskupdate'&gt;, &lt;AlterField  field=&lt;django.db.models.fields.CharField&gt;, preserve_default=True, name=u'status', model_name=u'taskupdate'&gt;, &lt;AlterField  field=&lt;django.db.models.fields.CharField&gt;, preserve_default=True, name=u'task_id', model_name=u'taskupdate'&gt;]</em><a class="headerlink" href="#job.migrations.0021_auto_20161115_1524.Migration.operations" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

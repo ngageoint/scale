@@ -6,6 +6,8 @@ Subpackages
 
 .. toctree::
 
+    scheduler.test.cleanup
+    scheduler.test.node
     scheduler.test.offer
     scheduler.test.sync
     scheduler.test.threads

@@ -156,6 +156,22 @@ job.migrations.0019_taskupdate module
     :undoc-members:
     :show-inheritance:
 
+job.migrations.0020_auto_20161110_1517 module
+---------------------------------------------
+
+.. automodule:: job.migrations.0020_auto_20161110_1517
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job.migrations.0021_auto_20161115_1524 module
+---------------------------------------------
+
+.. automodule:: job.migrations.0021_auto_20161115_1524
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

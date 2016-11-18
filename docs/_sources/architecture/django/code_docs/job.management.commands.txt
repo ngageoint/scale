@@ -4,14 +4,6 @@ job.management.commands package
 Submodules
 ----------
 
-job.management.commands.scale_cleanup module
---------------------------------------------
-
-.. automodule:: job.management.commands.scale_cleanup
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 job.management.commands.scale_clock module
 ------------------------------------------
 

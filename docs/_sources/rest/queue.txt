@@ -681,9 +681,9 @@ place jobs and recipes on the queue for processing.
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
-|     {                                                                                                                   |
+|    {                                                                                                                    |
 |         "started": "2016-01-01T00:00:00Z",                                                                              |
-|         "ended": "2016-01-01-10T00:00:00Z",                                                                             |
+|         "ended": "2016-01-02T00:00:00Z",                                                                                |
 |         "status": "FAILED",                                                                                             |
 |         "job_type_ids": [1, 2, 3],                                                                                      |
 |         "error_categories": ["SYSTEM"]                                                                                  |
