@@ -453,6 +453,18 @@
 <span id="util-middleware-module"></span><h2>util.middleware module<a class="headerlink" href="#module-util.middleware" title="Permalink to this headline">¶</a></h2>
 <p>Common middleware classes used in the web server configuration.</p>
 <dl class="class">
+<dt id="util.middleware.ExceptionLoggingMiddleware">
+<em class="property">class </em><code class="descclassname">util.middleware.</code><code class="descname">ExceptionLoggingMiddleware</code><a class="headerlink" href="#util.middleware.ExceptionLoggingMiddleware" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="util.middleware.ExceptionLoggingMiddleware.process_exception">
+<code class="descname">process_exception</code><span class="sig-paren">(</span><em>request</em>, <em>exception</em><span class="sig-paren">)</span><a class="headerlink" href="#util.middleware.ExceptionLoggingMiddleware.process_exception" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logs exceptions during service calls.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="util.middleware.MultipleProxyMiddleware">
 <em class="property">class </em><code class="descclassname">util.middleware.</code><code class="descname">MultipleProxyMiddleware</code><a class="headerlink" href="#util.middleware.MultipleProxyMiddleware" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
