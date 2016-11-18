@@ -22,31 +22,21 @@ logger = logging.getLogger(__name__)
 class RunningJobExecution(object):
     """This class represents a currently running job execution. This class is thread-safe."""
 
-    @staticmethod
-    def get_job_exe_id(task_id):
-        """Returns the job execution ID for the given task ID
-
-        :param task_id: The task ID
-        :type task_id: str
-        :returns: The job execution ID
-        :rtype: int
-        """
-
-        return int(task_id.split('_')[0])
-
     def __init__(self, job_exe):
         """Constructor
 
-        :param job_exe: The job execution, which must be in RUNNING status and have its related node, job, job_type and
-            job_type_rev models populated
+        :param job_exe: The job execution, which must be in RUNNING status and have its related node_id, job, job_type
+            and job_type_rev models populated
         :type job_exe: :class:`job.models.JobExecution`
         """
 
         self._id = job_exe.id
         self._job_type_id = job_exe.job.job_type_id
-        self._node_id = job_exe.node.id
-        self._node_hostname = job_exe.node.hostname
-        self._node_port = job_exe.node.port
+        self._node_id = job_exe.node_id
+        if hasattr(job_exe, 'docker_volumes'):
+            self._docker_volumes = job_exe.docker_volumes
+        else:
+            self._docker_volumes = []
 
         self._lock = threading.Lock()  # Protects _current_task and _remaining_tasks
         self._current_task = None
@@ -71,6 +61,16 @@ class RunningJobExecution(object):
         """
 
         return self._current_task
+
+    @property
+    def docker_volumes(self):
+        """Returns the names of the Docker volumes used by this job execution
+
+        :returns: The list of Docker volume names
+        :rtype: [string]
+        """
+
+        return self._docker_volumes
 
     @property
     def id(self):

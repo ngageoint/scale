@@ -1,56 +1,55 @@
-"""Defines the abstract base class for all job execution tasks"""
+"""Defines the abstract base class for all tasks"""
 from __future__ import unicode_literals
 
+import datetime
+import threading
 from abc import ABCMeta, abstractmethod
 
-from django.conf import settings
+from job.execution.running.tasks.update import TaskStatusUpdate
+from util.exceptions import ScaleLogicBug
 
-from error.models import Error
+
+# Amount of time for the last status update to go stale and require reconciliation
+RECONCILIATION_THRESHOLD = datetime.timedelta(minutes=10)
 
 
 class Task(object):
-    """Abstract base class for a job execution task
+    """Abstract base class for a task
     """
 
     __metaclass__ = ABCMeta
 
-    def __init__(self, task_id, job_exe):
+    def __init__(self, task_id, task_name, agent_id):
         """Constructor
 
         :param task_id: The unique ID of the task
         :type task_id: string
-        :param job_exe: The job execution, which must be in RUNNING status and have its related node, job, job_type, and
-            job_type_rev models populated
-        :type job_exe: :class:`job.models.JobExecution`
+        :param task_name: The name of the task
+        :type task_name: string
+        :param agent_id: The ID of the agent on which the task is scheduled
+        :type agent_id: string
         """
 
+        # Basic attributes
         self._task_id = task_id
-        self._task_name = '%s %s' % (job_exe.job.job_type.title, job_exe.job.job_type.version)
-        if not job_exe.is_system:
-            self._task_name = 'Scale %s' % self._task_name
+        self._task_name = task_name
+        self._agent_id = agent_id
+        self._lock = threading.Lock()
+        self._has_been_scheduled = False
+        self._scheduled = None
+        self._last_status_update = None
         self._has_started = False
         self._started = None
         self._has_ended = False
-        self._results = None
-
-        # Keep job execution values that should not change
-        self._job_exe_id = job_exe.id
-        self._cpus = job_exe.cpus_scheduled
-        self._mem = job_exe.mem_scheduled
-        self._disk_in = job_exe.disk_in_scheduled
-        self._disk_out = job_exe.disk_out_scheduled
-        self._disk_total = job_exe.disk_total_scheduled
-        self._error_mapping = job_exe.get_error_interface()  # This can change, but not worth re-queuing
-
-        # Keep node values that should not change
-        self._agent_id = job_exe.node.slave_id
+        self._ended = None
+        self._exit_code = None
 
         # These values will vary by different task subclasses
         self._uses_docker = False
         self._docker_image = None
         self._docker_params = []
         self._is_docker_privileged = False
-        self._command = None
+        self._command = 'echo "Hello Scale"'
         self._command_arguments = None
 
     @property
@@ -104,6 +103,16 @@ class Task(object):
         return self._docker_params
 
     @property
+    def has_been_scheduled(self):
+        """Indicates whether this task has been scheduled
+
+        :returns: True if this task has been scheduled, False otherwise
+        :rtype: bool
+        """
+
+        return self._has_been_scheduled
+
+    @property
     def has_ended(self):
         """Indicates whether this task has ended
 
@@ -144,16 +153,6 @@ class Task(object):
         return self._is_docker_privileged
 
     @property
-    def job_exe_id(self):
-        """Returns the job execution ID of the task
-
-        :returns: The job execution ID
-        :rtype: int
-        """
-
-        return self._job_exe_id
-
-    @property
     def name(self):
         """Returns the name of the task
 
@@ -162,16 +161,6 @@ class Task(object):
         """
 
         return self._task_name
-
-    @property
-    def results(self):
-        """The results of this task, possibly None
-
-        :returns: The results of this task
-        :rtype: :class:`job.execution.running.tasks.results.TaskResults`
-        """
-
-        return self._results
 
     @property
     def started(self):
@@ -193,51 +182,6 @@ class Task(object):
 
         return self._uses_docker
 
-    def complete(self, task_results):
-        """Completes this task and indicates whether following tasks should update their cached job execution values
-
-        :param task_results: The task results
-        :type task_results: :class:`job.execution.running.tasks.results.TaskResults`
-        :returns: True if following tasks should update their cached job execution values, False otherwise
-        :rtype: bool
-        """
-
-        if self._task_id != task_results.task_id:
-            return
-
-        # Support duplicate calls to complete(), task updates may repeat
-        self._has_ended = True
-        self._results = task_results
-
-        return False
-
-    def consider_general_error(self, task_results):
-        """Looks at the task results and considers a general task error for the cause of the failure. This is the
-        'catch-all' option for specific task types (pre, job, post) to try if they cannot determine a specific error. If
-        this method cannot determine an error cause, None will be returned.
-
-        :param task_results: The task results
-        :type task_results: :class:`job.execution.running.tasks.results.TaskResults`
-        :returns: The error that caused this task to fail, possibly None
-        :rtype: :class:`error.models.Error`
-        """
-
-        if not self._has_started:
-            if self._uses_docker:
-                return Error.objects.get_builtin_error('docker-task-launch')
-            else:
-                return Error.objects.get_builtin_error('task-launch')
-        return None
-
-    def create_scale_image_name(self):
-        """Creates the full image name to use for running the Scale Docker image
-
-        :returns: The full Scale Docker image name
-        :rtype: string
-        """
-
-        return '%s:%s' % (settings.SCALE_DOCKER_IMAGE, settings.DOCKER_VERSION)
-
     @abstractmethod
     def get_resources(self):
         """Returns the resources that are required/have been scheduled for this task
@@ -248,49 +192,68 @@ class Task(object):
 
         raise NotImplementedError()
 
-    @abstractmethod
-    def fail(self, task_results, error=None):
-        """Fails this task, possibly returning error information
+    def needs_reconciliation(self, when):
+        """Indicates whether this task needs to be reconciled due to its latest status update being stale
 
-        :param task_results: The task results
-        :type task_results: :class:`job.execution.running.tasks.results.TaskResults`
-        :param error: The error that caused this task to fail, possibly None
-        :type error: :class:`error.models.Error`
-        :returns: The error that caused this task to fail, possibly None
-        :rtype: :class:`error.models.Error`
-        """
-
-        raise NotImplementedError()
-
-    @abstractmethod
-    def populate_job_exe_model(self, job_exe):
-        """Populates the job execution model with the relevant information from this task
-
-        :param job_exe: The job execution model
-        :type job_exe: :class:`job.models.JobExecution`
-        """
-
-        raise NotImplementedError()
-
-    def refresh_cached_values(self, job_exe):
-        """Refreshes the task's cached job execution values with the given model
-
-        :param job_exe: The job execution model
-        :type job_exe: :class:`job.models.JobExecution`
-        """
-
-        pass
-
-    def start(self, when):
-        """Starts this task and marks it as running
-
-        :param when: The time that the task started running
+        :param when: The current time
         :type when: :class:`datetime.datetime`
+        :returns: Whether this task needs to be reconciled
+        :rtype: bool
         """
 
-        if self._has_ended:
-            raise Exception('Trying to start a task that has already ended')
+        with self._lock:
+            if not self._last_status_update:
+                return False  # Has not been scheduled yet
+            time_since_last_update = when - self._last_status_update
+            return time_since_last_update > RECONCILIATION_THRESHOLD
 
-        # Support duplicate calls to start(), task updates may repeat
-        self._has_started = True
-        self._started = when
+    def schedule(self, when):
+        """Marks this task as having been scheduled
+
+        :param when: The time that the task was scheduled
+        :type when: :class:`datetime.datetime`
+
+        :raises :class:`util.exceptions.ScaleLogicBug`: If the task has already started
+        """
+
+        with self._lock:
+            if self._has_started:
+                raise ScaleLogicBug('Trying to schedule a task that has already started')
+
+            self._has_been_scheduled = True
+            self._scheduled = when
+            self._last_status_update = when
+
+    def update(self, task_update):
+        """Handles the given task update
+
+        :param task_update: The task update
+        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
+        """
+
+        with self._lock:
+            if self._task_id != task_update.task_id:
+                return
+
+            self._last_status_update = task_update.when
+
+            # Support duplicate calls as task updates may repeat
+            if task_update.status == TaskStatusUpdate.RUNNING:
+                # Mark task as having started if it isn't already
+                if not self._has_started:
+                    self._has_started = True
+                    self._started = task_update.when
+            elif task_update.status == TaskStatusUpdate.LOST:
+                # Reset task to initial state (unless already ended)
+                if not self._has_ended:
+                    self._has_been_scheduled = False
+                    self._scheduled = None
+                    self._last_status_update = None
+                    self._has_started = False
+                    self._started = None
+            elif task_update.status in TaskStatusUpdate.TERMINAL_STATUSES:
+                # Mark task as having ended if it isn't already
+                if not self._has_ended:
+                    self._has_ended = True
+                    self._ended = task_update.when
+                    self._exit_code = task_update.exit_code

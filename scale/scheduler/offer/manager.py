@@ -15,7 +15,8 @@ class OfferManager(object):
     NO_OFFERS = NodeOffers.NO_OFFERS
     NODE_PAUSED = NodeOffers.NODE_PAUSED
     NODE_OFFLINE = NodeOffers.NODE_OFFLINE
-    NO_NODES_AVAILABLE = 8
+    NODE_NOT_READY = NodeOffers.NODE_NOT_READY
+    NO_NODES_AVAILABLE = 9
 
     def __init__(self):
         """Constructor
@@ -92,6 +93,22 @@ class OfferManager(object):
 
             node_offers = self._nodes_by_node_id[job_exe.node_id]
             return node_offers.consider_next_task(job_exe)
+
+    def consider_task(self, task):
+        """Considers if the given task can be run with the current offered resources
+
+        :param task: The task to consider
+        :type task: :class:`job.execution.running.tasks.base_task.Task`
+        :returns: One of the OfferManager constants indicating if the task was accepted or why it was not accepted
+        :rtype: int
+        """
+
+        with self._lock:
+            if task.agent_id not in self._nodes_by_agent_id:
+                return OfferManager.NODE_OFFLINE
+
+            node_offers = self._nodes_by_agent_id[task.agent_id]
+            return node_offers.consider_task(task)
 
     def lost_node(self, agent_id):
         """Informs the manager that the node with the given agent ID was lost and has gone offline
@@ -170,17 +187,17 @@ class OfferManager(object):
                     del self._nodes_by_offer_id[offer_id]
 
     def update_nodes(self, nodes):
-        """Updates the manager with the latest copies of the node models
+        """Updates the manager with the latest copies of the nodes
 
-        :param nodes: The list of updated node models
-        :type nodes: [:class:`node.models.Node`]
+        :param nodes: The list of updated nodes
+        :type nodes: [:class:`scheduler.node.node_class.Node`]
         """
 
         with self._lock:
             for node in nodes:
                 if node.id in self._nodes_by_node_id:
                     node_offers = self._nodes_by_node_id[node.id]
-                    if node_offers.node.slave_id == node.slave_id and node.is_active:
+                    if node_offers.node.agent_id == node.agent_id and node.is_active:
                         # No change in agent ID, just update node model
                         node_offers.node = node
                     else:
@@ -193,13 +210,13 @@ class OfferManager(object):
     def _create_node_offers(self, node):
         """Creates a set of node offers for the given node
 
-        :param node: The node model
-        :type node: :class:`node.models.Node`
+        :param node: The node
+        :type node: :class:`scheduler.node.node_class.Node`
         """
 
         node_offers = NodeOffers(node)
         self._nodes_by_node_id[node.id] = node_offers
-        self._nodes_by_agent_id[node.slave_id] = node_offers
+        self._nodes_by_agent_id[node.agent_id] = node_offers
 
     def _remove_node_offers(self, node_offers):
         """Removes the given set of node offers from the manager
@@ -208,7 +225,7 @@ class OfferManager(object):
         :type node_offers: :class:`scheduler.offer.node.NodeOffers`
         """
 
-        del self._nodes_by_agent_id[node_offers.node.slave_id]
+        del self._nodes_by_agent_id[node_offers.node.agent_id]
         del self._nodes_by_node_id[node_offers.node.id]
         for offer_id in node_offers.offer_ids:
             del self._nodes_by_offer_id[offer_id]
