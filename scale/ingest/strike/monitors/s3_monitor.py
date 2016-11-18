@@ -78,7 +78,7 @@ class S3Monitor(Monitor):
                 queue = client.get_queue_by_name(self._sqs_name)
 
                 # For each new file we receive a notification about:
-                logger.info('Beginning long-poll against queue with wait time of %s seconds.' % self.wait_time)
+                logger.debug('Beginning long-poll against queue with wait time of %s seconds.' % self.wait_time)
                 messages = queue.receive_messages(MaxNumberOfMessages=self.messages_per_request,
                                                   WaitTimeSeconds=self.wait_time,
                                                   VisibilityTimeout=self.visibility_timeout)
@@ -95,6 +95,7 @@ class S3Monitor(Monitor):
 
                         if self.sqs_discard_unrecognized:
                             # Remove message from queue when unrecognized
+                            logger.warning('Removing message that cannot be processed.')
                             message.delete()
                     except S3NoDataNotificationError:
                         logger.exception('Unable to process message. File size of 0')
