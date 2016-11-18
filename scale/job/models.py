@@ -27,7 +27,7 @@ from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
 from storage.models import ScaleFile, Workspace
 from trigger.configuration.exceptions import InvalidTriggerType
 from trigger.models import TriggerRule
-from util.exceptions import RollbackTransaction
+from util.exceptions import RollbackTransaction, ScaleLogicBug
 import util.parse
 
 
@@ -1311,11 +1311,11 @@ class JobExecution(models.Model):
         :returns: The cluster ID for the job execution
         :rtype: string
 
-        :raises Exception: If the job execution is still queued
+        :raises :class:`util.exceptions.ScaleLogicBug`: If the job execution is still queued
         """
 
         if self.status == 'QUEUED':
-            raise Exception('cluster_id is not set until the job execution is scheduled')
+            raise ScaleLogicBug('cluster_id is not set until the job execution is scheduled')
 
         if not self.cluster_id:
             # Return old-style format before cluster_id field was created
@@ -1384,7 +1384,7 @@ class JobExecution(models.Model):
         :returns: The job-task ID for the job execution
         :rtype: string
 
-        :raises Exception: If the job execution is still queued
+        :raises :class:`util.exceptions.ScaleLogicBug`: If the job execution is still queued
         """
 
         return '%s_job' % self.get_cluster_id()
@@ -1477,11 +1477,11 @@ class JobExecution(models.Model):
         :returns: The post-task ID for the job execution
         :rtype: string
 
-        :raises Exception: If the job execution is still queued or is a system job type
+        :raises :class:`util.exceptions.ScaleLogicBug`: If the job execution is still queued or is a system job type
         """
 
         if self.is_system:
-            raise Exception('System jobs do not have a post-task')
+            raise ScaleLogicBug('System jobs do not have a post-task')
 
         return '%s_post' % self.get_cluster_id()
 
@@ -1492,11 +1492,11 @@ class JobExecution(models.Model):
         :returns: The pre-task ID for the job execution
         :rtype: string
 
-        :raises Exception: If the job execution is still queued or is a system job type
+        :raises :class:`util.exceptions.ScaleLogicBug`: If the job execution is still queued or is a system job type
         """
 
         if self.is_system:
-            raise Exception('System jobs do not have a pre-task')
+            raise ScaleLogicBug('System jobs do not have a pre-task')
 
         return '%s_pre' % self.get_cluster_id()
 
