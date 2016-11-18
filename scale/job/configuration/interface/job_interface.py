@@ -244,16 +244,17 @@ class JobInterface(previous_interface.JobInterface):
             if 'value' not in env_var:
                 env_var['value'] = ""
 
-    def populate_command_argument_settings(self, job_configuration):
+    def populate_command_argument_settings(self, command_arguments, job_configuration):
         """Return the command arguments string,
         populated with the settings from the job_configuration.
 
-        :param job_config: The job configuration
-        :type job_config: :class:`job.configuration.configuration.job_configuration.JobConfiguration`
+        :param command_arguments: The command_arguments that you want to perform the replacement on
+        :type command_arguments: string
+        :param job_configuration: The job configuration
+        :type job_configuration: :class:`job.configuration.configuration.job_configuration.JobConfiguration`
         :return: command arguments for the given settings
         :rtype: str
         """
-        command_arguments = self.definition['command_arguments']
         config_settings = job_configuration.get_dict()
 
         # Isolate the job_type settings and convert to list

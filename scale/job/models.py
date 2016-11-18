@@ -975,7 +975,8 @@ class JobExecutionManager(models.Manager):
             data = job.get_job_data()
             job_exe.command_arguments = interface.populate_command_argument_properties(data)
             # Add configuration values for the settings to the command line.
-            job_exe.command_arguments = interface.populate_command_argument_settings(job.get_job_configuration())
+            job_exe.command_arguments = interface.populate_command_argument_settings(job_exe.command_arguments,
+                                                                                     job.get_job_configuration())
             job_exe.configuration = job.configuration
             job_exes.append(job_exe)
 
