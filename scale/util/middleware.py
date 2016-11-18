@@ -1,8 +1,17 @@
-'''Common middleware classes used in the web server configuration.'''
+"""Common middleware classes used in the web server configuration."""
+
+import logging
+
+
+class ExceptionLoggingMiddleware(object):
+
+    def process_exception(self, request, exception):
+        """Logs exceptions during service calls."""
+        logging.exception('Exception handling request for %s.' % request.path)
 
 
 class MultipleProxyMiddleware(object):
-    '''Rewrites the proxy headers so that only the first the proxy forwarded host is used.
+    """Rewrites the proxy headers so that only the first the proxy forwarded host is used.
 
     By default Django, does not support forwarding the server host name when sitting behind multiple proxy servers.
     Without this middleware the host name returned to the client will contain both proxy names delimited by a comma,
@@ -11,7 +20,7 @@ class MultipleProxyMiddleware(object):
     users however, we want to always take that name instead.
 
     Code derived from the Django documentation for "Request and response objects", HttpRequest.get_host() method.
-    '''
+    """
     FORWARDED_FOR_FIELDS = [
         'HTTP_X_FORWARDED_FOR',
         'HTTP_X_FORWARDED_HOST',
@@ -19,7 +28,7 @@ class MultipleProxyMiddleware(object):
     ]
 
     def process_request(self, request):
-        '''Rewrite forwarded host headers to support multiple proxy servers.'''
+        """Rewrite forwarded host headers to support multiple proxy servers."""
         for field in self.FORWARDED_FOR_FIELDS:
             if field in request.META:
                 if ',' in request.META[field]:
