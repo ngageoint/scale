@@ -60,7 +60,8 @@ def run(client):
     # Determine if Web Server should be deployed.
     if DEPLOY_WEBSERVER.lower() == 'true':
         app_name = '%s-webserver' % FRAMEWORK_NAME
-        deploy_webserver(client, app_name, es_urls, db_host, db_port)
+        webserver_port = deploy_webserver(client, app_name, es_urls, db_host, db_port)
+        print("WEBSERVER_ADDRESS=http://%s.marathon.mesos:%s/service/%s/" % (app_name, webserver_port, FRAMEWORK_NAME))
 
 
 def delete_marathon_app(client, app_name, fail_on_error=False):
@@ -185,6 +186,10 @@ def deploy_webserver(client, app_name, es_urls, db_host, db_port):
 
     deploy_marathon_app(client, marathon)
     wait_app_healthy(client, app_name)
+
+    webserver_port = get_marathon_app_single_task_host_port(client, app_name, 0)
+
+    return webserver_port
 
 
 def deploy_database(client, app_name):
