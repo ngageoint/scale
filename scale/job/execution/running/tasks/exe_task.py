@@ -67,6 +67,7 @@ class JobExecutionTask(Task):
             # Support duplicate calls to complete(), task updates may repeat
             self._has_ended = True
             self._ended = task_results.when
+            self._exit_code = task_results.exit_code
             self._last_status_update = task_results.when
 
             return False
@@ -93,6 +94,18 @@ class JobExecutionTask(Task):
         """
 
         raise NotImplementedError()
+
+    def lost(self):
+        """Indicates that this task was lost
+        """
+
+        with self._lock:
+            if not self._has_ended:
+                self._has_been_scheduled = False
+                self._scheduled = None
+                self._last_status_update = None
+                self._has_started = False
+                self._started = None
 
     @abstractmethod
     def populate_job_exe_model(self, job_exe):
