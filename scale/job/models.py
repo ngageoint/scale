@@ -1418,7 +1418,7 @@ class JobExecution(models.Model):
                 'query': {
                     'bool': {
                         'must': [
-                            {'match': {'scale_job_exe': self.get_cluster_id()}}
+                            {'term': {'scale_job_exe.raw': self.get_cluster_id()}}
                         ]
                     }
                 },
@@ -1428,9 +1428,9 @@ class JobExecution(models.Model):
         if not include_stdout and not include_stderr:
             return None, util.parse.datetime.datetime.utcnow()
         elif include_stdout and not include_stderr:
-            q['query']['bool']['must'].append({'match': {'stream': 'stdout'}})
+            q['query']['bool']['must'].append({'term': {'stream.raw': 'stdout'}})
         elif include_stderr and not include_stdout:
-            q['query']['bool']['must'].append({'match': {'stream': 'stderr'}})
+            q['query']['bool']['must'].append({'term': {'stream.raw': 'stderr'}})
         if since is not None:
             q['query']['bool']['must'].append({'range': {'@timestamp': {'gte': since.isoformat()}}})
 
