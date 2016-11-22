@@ -51,7 +51,7 @@ class TestCleanupManager(TestCase):
 
         # Complete initial cleanup tasks
         for task in tasks:
-            task.schedule(now())
+            task.launch(now())
             update = TaskStatusUpdate(task.id, task.agent_id, TaskStatusUpdate.FINISHED, now())
             manager.handle_task_update(update)
 
@@ -69,7 +69,7 @@ class TestCleanupManager(TestCase):
 
         task_1 = None
         for task in tasks:
-            task.schedule(now())
+            task.launch(now())
             if task.agent_id == self.node_agent_1:
                 task_1 = task
 
@@ -98,7 +98,7 @@ class TestCleanupManager(TestCase):
 
         # Complete initial cleanup tasks
         for task in tasks:
-            task.schedule(now())
+            task.launch(now())
             update = TaskStatusUpdate(task.id, task.agent_id, TaskStatusUpdate.FINISHED, now())
             manager.handle_task_update(update)
 

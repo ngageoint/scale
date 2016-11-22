@@ -42,17 +42,17 @@ class NodeCleanup(object):
             self._create_next_task()
 
     def get_next_task(self):
-        """Returns the next cleanup task to schedule, possibly None
+        """Returns the next cleanup task to launch, possibly None
 
-        :returns: The next cleanup task to schedule, possibly None
+        :returns: The next cleanup task to launch, possibly None
         :rtype: :class:`job.execution.running.tasks.cleanup_task.CleanupTask`
         """
 
         with self._lock:
             self._create_next_task()  # This is needed to check for node agent ID change
 
-            # No task returned if node is paused, no task to schedule, or task is already scheduled
-            if self._node.is_paused or self._current_task is None or self._current_task.has_been_scheduled:
+            # No task returned if node is paused, no task to launched, or task has already been launched
+            if self._node.is_paused or self._current_task is None or self._current_task.has_been_launched:
                 return None
 
             return self._current_task

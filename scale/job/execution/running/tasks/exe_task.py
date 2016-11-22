@@ -101,8 +101,8 @@ class JobExecutionTask(Task):
 
         with self._lock:
             if not self._has_ended:
-                self._has_been_scheduled = False
-                self._scheduled = None
+                self._has_been_launched = False
+                self._launched = None
                 self._last_status_update = None
                 self._has_started = False
                 self._started = None
