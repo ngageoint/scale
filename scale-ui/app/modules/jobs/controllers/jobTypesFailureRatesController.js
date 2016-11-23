@@ -18,71 +18,71 @@
         vm.dates = [];
         vm.performanceData = [];
         vm.jobTypeValues = [jobTypeViewAll];
-        vm.selectedJobType = vm.jobTypesParams.name ? vm.jobTypesParams.name : jobTypeViewAll;
+        vm.selectedJobType = null;
         vm.sortOrders = {
             twentyfour_hours: {
                 system: {
-                    direction: 'desc',
-                    icon: 'asdf'
+                    direction: vm.jobTypesParams.order || 'desc',
+                    icon: 'hidden'
                 },
                 algorithm: {
-                    direction: 'desc',
+                    direction: vm.jobTypesParams.order || 'desc',
                     icon: 'hidden'
                 },
                 data: {
-                    direction: 'desc',
+                    direction: vm.jobTypesParams.order || 'desc',
                     icon: 'hidden'
                 },
                 total: {
-                    direction: 'desc',
+                    direction: vm.jobTypesParams.order || 'desc',
                     icon: 'hidden'
                 },
                 errorTotal: {
-                    direction: 'desc',
+                    direction: vm.jobTypesParams.order || 'desc',
                     icon: 'hidden'
                 }
             },
             fortyeight_hours: {
                 system: {
-                    direction: 'desc',
+                    direction: vm.jobTypesParams.order || 'desc',
                     icon: 'hidden'
                 },
                 algorithm: {
-                    direction: 'desc',
+                    direction: vm.jobTypesParams.order || 'desc',
                     icon: 'hidden'
                 },
                 data: {
-                    direction: 'desc',
+                    direction: vm.jobTypesParams.order || 'desc',
                     icon: 'hidden'
                 },
                 total: {
-                    direction: 'desc',
+                    direction: vm.jobTypesParams.order || 'desc',
                     icon: 'hidden'
                 },
                 errorTotal: {
-                    direction: 'desc',
+                    direction: vm.jobTypesParams.order || 'desc',
                     icon: 'hidden'
                 }
             },
             thirty_days: {
                 system: {
-                    direction: 'desc',
+                    direction: vm.jobTypesParams.order || 'desc',
                     icon: 'hidden'
                 },
                 algorithm: {
-                    direction: 'desc',
+                    direction: vm.jobTypesParams.order || 'desc',
                     icon: 'hidden'
                 },
                 data: {
-                    direction: 'desc',
+                    direction: vm.jobTypesParams.order || 'desc',
                     icon: 'hidden'
                 },
                 total: {
-                    direction: 'desc',
+                    direction: vm.jobTypesParams.order || 'desc',
                     icon: 'hidden'
                 },
                 errorTotal: {
-                    direction: 'desc',
+                    direction: vm.jobTypesParams.order || 'desc',
                     icon: 'hidden'
                 }
             }
@@ -166,7 +166,7 @@
             return ((errorTotal / total) * 100).toFixed(0) + '%';
         };
 
-        vm.filterResults = function (skipInit) {
+        vm.filterResults = function (skipInit, skipSort) {
             stateService.setJobTypesFailureRatesParams(vm.jobTypesParams);
             _.forEach(_.pairs(vm.jobTypesParams), function (param) {
                 $location.search(param[0], param[1]);
@@ -174,18 +174,20 @@
             if (!skipInit) {
                 vm.gridOptions.data = [];
                 vm.loading = true;
-                initialize();
+                initialize(skipSort);
             }
         };
 
         vm.updateJobType = function (value) {
             vm.jobTypesParams.name = value.name === 'VIEW ALL' ? null : value.name;
+            vm.jobTypesParams.version = value.name === 'VIEW ALL' ? null : value.version;
             if (!vm.loading) {
-                vm.filterResults();
+                vm.filterResults(false, false);
             }
         };
 
         vm.sortBy = function (errorType, field, order) {
+            order = order || vm.sortOrders[field][errorType].direction;
             vm.sortOrders[vm.currSortField][vm.currSortErrorType].icon = 'hidden';
             vm.gridOptions.data = _.sortByOrder(vm.performanceData, function (d) {
                 if (errorType === 'errorTotal') {
@@ -195,10 +197,10 @@
                     return 0;
                 }
                 return d[field][errorType];
-            }, [vm.sortOrders[field][errorType].direction]);
+            }, order);
             vm.currSortErrorType = errorType;
             vm.currSortField = field;
-            vm.jobTypesParams.order = vm.sortOrders[field][errorType].direction;
+            vm.jobTypesParams.order = order;
             vm.jobTypesParams.orderField = field;
             vm.jobTypesParams.orderErrorType = errorType;
 
@@ -245,13 +247,19 @@
             return obj;
         };
 
-        var initialize = function () {
+        var initialize = function (skipSort) {
+            vm.performanceData = [];
+            vm.jobTypeValues = [jobTypeViewAll];
             stateService.setJobTypesFailureRatesParams(vm.jobTypesParams);
             jobTypeService.getJobTypesOnce().then(function (jobTypesData) {
-                jobTypes = _.cloneDeep(jobTypesData.results);
+                if (vm.jobTypesParams.name && vm.jobTypesParams.version) {
+                    jobTypes = _.filter(jobTypesData.results, { name: vm.jobTypesParams.name, version: vm.jobTypesParams.version });
+                } else {
+                    jobTypes = _.cloneDeep(jobTypesData.results);
+                }
                 vm.jobTypeValues.push(jobTypesData.results);
                 vm.jobTypeValues = _.flatten(vm.jobTypeValues);
-                vm.selectedJobType = _.find(vm.jobTypeValues, { name: vm.jobTypesParams.name }) || jobTypeViewAll;
+                vm.selectedJobType = _.find(vm.jobTypeValues, { name: vm.jobTypesParams.name, version: vm.jobTypesParams.version }) || jobTypeViewAll;
                 vm.gridOptions.totalItems = jobTypesData.count;
 
                 var metricsParams = {
@@ -290,10 +298,12 @@
                         vm.gridOptions.minRowsToShow = vm.performanceData.length;
                         vm.gridOptions.virtualizationThreshold = vm.performanceData.length;
                         vm.gridOptions.data = vm.performanceData;
-                        vm.currSortField = vm.jobTypesParams.orderField || 'twentyfour_hours';
-                        vm.currSortErrorType = vm.jobTypesParams.orderErrorType || 'errorTotal';
-                        if (vm.jobTypesParams.order && vm.jobTypesParams.orderField && vm.jobTypesParams.orderErrorType) {
-                            vm.sortBy(vm.jobTypesParams.orderErrorType, vm.jobTypesParams.orderField, vm.jobTypesParams.order);
+                        if (!skipSort) {
+                            vm.currSortField = vm.jobTypesParams.orderField || 'twentyfour_hours';
+                            vm.currSortErrorType = vm.jobTypesParams.orderErrorType || 'errorTotal';
+                            if (vm.jobTypesParams.order && vm.jobTypesParams.orderField && vm.jobTypesParams.orderErrorType) {
+                                vm.sortBy(vm.jobTypesParams.orderErrorType, vm.jobTypesParams.orderField, vm.jobTypesParams.order);
+                            }
                         }
                     }
 
@@ -312,13 +322,15 @@
             if (angular.equals(newValue, oldValue)) {
                 return;
             }
-            if (vm.loading) {
-                if (filteredByJobType) {
+            if (vm.jobTypeValues.length > 1) {
+                if (vm.loading) {
+                    if (filteredByJobType) {
+                        vm.updateJobType(newValue);
+                    }
+                } else {
+                    filteredByJobType = newValue !== 'VIEW ALL';
                     vm.updateJobType(newValue);
                 }
-            } else {
-                filteredByJobType = newValue !== 'VIEW ALL';
-                vm.updateJobType(newValue);
             }
         });
     });
