@@ -48,3 +48,6 @@ class SchedulerManager(object):
 
         with self._lock:
             self._scheduler = scheduler
+
+
+scheduler_mgr = SchedulerManager()

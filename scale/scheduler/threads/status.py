@@ -7,6 +7,8 @@ import time
 
 from django.utils.timezone import now
 
+from scheduler.status.manager import task_update_mgr
+
 
 logger = logging.getLogger(__name__)
 
@@ -16,14 +18,10 @@ class StatusUpdateThread(object):
 
     THROTTLE = 1  # seconds
 
-    def __init__(self, status_manager):
+    def __init__(self):
         """Constructor
-
-        :param status_manager: The running job execution manager
-        :type status_manager: :class:`scheduler.status.manager.StatusManager`
         """
 
-        self._status_manager = status_manager
         self._running = True
 
     def run(self):
@@ -37,7 +35,7 @@ class StatusUpdateThread(object):
             started = now()
 
             try:
-                self._status_manager.push_to_database()
+                task_update_mgr.push_to_database()
             except Exception:
                 logger.exception('Critical error in status update thread')
 

@@ -9,7 +9,13 @@ from django.db import DatabaseError
 from django.utils.timezone import now
 from mesos.interface import mesos_pb2
 
+from job.execution.running.manager import running_job_mgr
 from job.models import JobExecution
+from scheduler.cleanup.manager import cleanup_mgr
+from scheduler.node.manager import node_mgr
+from scheduler.sync.job_type_manager import job_type_mgr
+from scheduler.sync.scheduler_manager import scheduler_mgr
+from scheduler.sync.workspace_manager import workspace_mgr
 
 
 logger = logging.getLogger(__name__)
@@ -20,29 +26,14 @@ class DatabaseSyncThread(object):
 
     THROTTLE = 10  # seconds
 
-    def __init__(self, driver, job_exe_manager, job_type_manager, managers, scheduler_manager, workspace_manager):
+    def __init__(self, driver):
         """Constructor
 
         :param driver: The Mesos scheduler driver
         :type driver: :class:`mesos_api.mesos.SchedulerDriver`
-        :param job_exe_manager: The running job execution manager
-        :type job_exe_manager: :class:`job.execution.running.manager.RunningJobExecutionManager`
-        :param job_type_manager: The job type manager
-        :type job_type_manager: :class:`scheduler.sync.job_type_manager.JobTypeManager`
-        :param managers: The scheduler managers
-        :type managers: :class:`scheduler.managers.SchedulerManagers`
-        :param scheduler_manager: The scheduler manager
-        :type scheduler_manager: :class:`scheduler.sync.scheduler_manager.SchedulerManager`
-        :param workspace_manager: The workspace manager
-        :type workspace_manager: :class:`scheduler.sync.workspace_manager.WorkspaceManager`
         """
 
         self._driver = driver
-        self._job_exe_manager = job_exe_manager
-        self._job_type_manager = job_type_manager
-        self._managers = managers
-        self._scheduler_manager = scheduler_manager
-        self._workspace_manager = workspace_manager
         self._running = True
 
     @property
@@ -102,12 +93,12 @@ class DatabaseSyncThread(object):
         """Performs the sync with the database
         """
 
-        self._scheduler_manager.sync_with_database()
-        self._job_type_manager.sync_with_database()
-        self._workspace_manager.sync_with_database()
+        scheduler_mgr.sync_with_database()
+        job_type_mgr.sync_with_database()
+        workspace_mgr.sync_with_database()
 
-        scheduler = self._scheduler_manager.get_scheduler()
-        self._managers.node.sync_with_database(scheduler.master_hostname, scheduler.master_port)
+        scheduler = scheduler_mgr.get_scheduler()
+        node_mgr.sync_with_database(scheduler.master_hostname, scheduler.master_port)
 
         self._sync_running_job_executions()
 
@@ -116,7 +107,7 @@ class DatabaseSyncThread(object):
         """
 
         running_job_exes = {}
-        for job_exe in self._job_exe_manager.get_all_job_exes():
+        for job_exe in running_job_mgr.get_all_job_exes():
             running_job_exes[job_exe.id] = job_exe
 
         right_now = now()
@@ -143,5 +134,5 @@ class DatabaseSyncThread(object):
                 self._driver.killTask(pb_task_to_kill)
 
             if running_job_exe.is_finished():
-                self._job_exe_manager.remove_job_exe(running_job_exe.id)
-                self._managers.cleanup.add_job_execution(running_job_exe)
+                running_job_mgr.remove_job_exe(running_job_exe.id)
+                cleanup_mgr.cleanup.add_job_execution(running_job_exe)

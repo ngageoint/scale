@@ -24,6 +24,15 @@ class NodeManager(object):
         self._nodes = {}  # {Hostname: SchedulerNode}
         self._lock = threading.Lock()
 
+    def clear(self):
+        """Clears all node data from the manager. This method is intended for testing only.
+        """
+
+        with self._lock:
+            self._agent_ids = {}
+            self._new_agent_ids = set()
+            self._nodes = {}
+
     def get_node(self, agent_id):
         """Returns the node with the given agent ID, possibly None
 
@@ -139,3 +148,6 @@ class NodeManager(object):
                 # Check if new agent ID is still in set or gone (i.e. removed by lost_node())
                 self._nodes[hostname].update_from_mesos(is_online=(new_agent_id in self._new_agent_ids))
             self._new_agent_ids -= new_agent_ids  # Batch of new agent IDs has been processed
+
+
+node_mgr = NodeManager()

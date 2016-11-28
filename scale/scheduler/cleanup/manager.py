@@ -91,3 +91,6 @@ class CleanupManager(object):
 
                 # Re-create agent ID mapping (agent IDs can change over time)
                 self._agent_ids[node.agent_id] = node.id
+
+
+cleanup_mgr = CleanupManager()

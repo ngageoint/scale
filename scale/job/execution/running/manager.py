@@ -97,3 +97,6 @@ class RunningJobExecutionManager(object):
                 del self._job_exes[job_exe_id]
             except KeyError:
                 pass
+
+
+running_job_mgr = RunningJobExecutionManager()

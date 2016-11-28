@@ -75,3 +75,6 @@ class StatusManager(object):
         """
 
         TaskUpdate.objects.bulk_create(models)
+
+
+task_update_mgr = StatusManager()
