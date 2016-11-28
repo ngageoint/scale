@@ -1,10 +1,6 @@
 from __future__ import unicode_literals
 
-import datetime
-
 import django
-import django.utils.timezone as timezone
-import mock
 from django.test import TestCase
 
 from util.aws import AWSClient
