@@ -60,13 +60,31 @@ class AWSClient(object):
 
     @staticmethod
     def instantiate_credentials_from_config(config):
+        """Extract credential keys from configuration and return instantiated credential object
+
+        :param config: Resource specific configuration
+        :type config: :class:`botocore.client.Config`
+        :return: instantiated credential object
+        :rtype: :class:`util.aws.AWSCredentials`
+
+        :raises :class:`util.exceptions.InvalidAWSCredentials`: If the credentials provided are incomplete.
+        """
         if 'credentials' in config and config['credentials']:
             credentials_dict = config['credentials']
-            if 'access_key_id' not in credentials_dict or not credentials_dict['access_key_id']:
+            if 'access_key_id' not in credentials_dict:
                 raise InvalidAWSCredentials('"credentials" requires "access_key_id" to be populated')
-            if 'secret_access_key' not in credentials_dict or not credentials_dict['secret_access_key']:
+            if 'secret_access_key' not in credentials_dict:
                 raise InvalidAWSCredentials('"credentials" requires "secret_access_key" to be populated')
-            return AWSCredentials(credentials_dict['access_key_id'], credentials_dict['secret_access_key'])
+
+            access_key = credentials_dict['access_key_id'].strip()
+            secret_key = credentials_dict['secret_access_key'].strip()
+
+            # If either Access Key or Secret Access Key are empty, fail-over to role-based auth.
+            # TODO: This should be removed once the UI has been improved to prune unset values from requests.
+            if not len(access_key) or not len(secret_key):
+                return None
+
+            return AWSCredentials(access_key, secret_key)
 
 
 class SQSClient(AWSClient):
