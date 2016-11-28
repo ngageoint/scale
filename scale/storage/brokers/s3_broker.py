@@ -72,7 +72,8 @@ class S3Broker(Broker):
         # TODO Change credentials to use an encrypted store key reference
         self._credentials = AWSClient.instantiate_credentials_from_config(config)
 
-        if 'host_path' in config:
+        # Ensure empty or white-space filled host_paths do not cause mounts to be applied
+        if 'host_path' in config and len(config['host_path'].strip()):
             volume = BrokerVolume(None, config['host_path'])
             volume.host = True
             self._volume = volume
