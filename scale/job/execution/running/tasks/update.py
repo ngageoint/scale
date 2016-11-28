@@ -1,6 +1,8 @@
 """Defines the class that represents a task status update"""
 from __future__ import unicode_literals
 
+from util.exceptions import ScaleLogicBug
+
 
 class TaskStatusUpdate(object):
     """This class represents a task status update. This class is thread-safe."""
@@ -27,16 +29,18 @@ class TaskStatusUpdate(object):
         :type when: :class:`datetime.datetime`
         :param exit_code: The task's exit code
         :type exit_code: int
+
+        :raises :class:`util.exceptions.ScaleLogicBug`: If the task is passed invalid values
         """
 
         if not task_id:
-            raise Exception('task_id must be provided')
+            raise ScaleLogicBug('task_id must be provided')
         if not agent_id:
-            raise Exception('agent_id must be provided')
+            raise ScaleLogicBug('agent_id must be provided')
         if status not in self.VALID_STATUSES:
-            raise Exception('invalid status')
+            raise ScaleLogicBug('invalid task status: %s' % str(status))
         if not when:
-            raise Exception('when must be provided')
+            raise ScaleLogicBug('when must be provided')
 
         self._task_id = task_id
         self._agent_id = agent_id

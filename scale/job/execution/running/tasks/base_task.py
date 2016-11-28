@@ -6,6 +6,7 @@ import threading
 from abc import ABCMeta, abstractmethod
 
 from job.execution.running.tasks.update import TaskStatusUpdate
+from util.exceptions import ScaleLogicBug
 
 
 # Amount of time for the last status update to go stale and require reconciliation
@@ -211,11 +212,13 @@ class Task(object):
 
         :param when: The time that the task was scheduled
         :type when: :class:`datetime.datetime`
+
+        :raises :class:`util.exceptions.ScaleLogicBug`: If the task has already started
         """
 
         with self._lock:
             if self._has_started:
-                raise Exception('Trying to schedule a task that has already started')
+                raise ScaleLogicBug('Trying to schedule a task that has already started')
 
             self._has_been_scheduled = True
             self._scheduled = when

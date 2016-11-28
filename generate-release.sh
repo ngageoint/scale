@@ -35,12 +35,16 @@ echo -e "\nChange the revision on master"
 tput sgr0
 sed -i "" -e "s/^VERSION = version_info_t.*$/VERSION = version_info_t($1, $2, $3, '-snapshot')/" scale/scale/__init__.py
 sed -i "" -e "s/^VERSION = version_info_t.*$/VERSION = version_info_t($1, $2, $3, '-snapshot___BUILDNUM___')/" scale/scale/__init__.py.template
+sed -i "" -e 's/VERSION="[^"]*"/VERSION="'$1'.'$2'.'$3'-snapshot"/g' Dockerfile
+sed -i "" -e 's/VERSION="[^"]*"/VERSION="'$1'.'$2'.'$3'-snapshot"/g' dockerfiles/logstash-elastic-ha/Dockerfile
 grep "VERSION = " scale/scale/__init__.py scale/scale/__init__.py.template
+grep "VERSION=" Dockerfile dockerfiles/logstash-elastic-ha/Dockerfile
 
 tput setaf 2
-echo -e "\nCommit the change"
+echo -e "\nCommit and push the change"
 tput sgr0
-git commit -a -m "Update snapshot revision to $vestring"
+git commit -a -m "Update snapshot revision to $verstring"
+git push origin HEAD
 
 tput setaf 2
 echo -e "\nDetach the head"
@@ -52,12 +56,15 @@ echo -e "\nChange the revision on the release"
 tput sgr0
 sed -i "" -e "s/^VERSION = version_info_t.*$/VERSION = version_info_t($1, $2, $3, '')/" scale/scale/__init__.py
 sed -i "" -e "s/^VERSION = version_info_t.*$/VERSION = version_info_t($1, $2, $3, '___BUILDNUM___')/" scale/scale/__init__.py.template
+sed -i "" -e 's/VERSION="[^"]*"/VERSION="'$1'.'$2'.'$3'"/g' Dockerfile
+sed -i "" -e 's/VERSION="[^"]*"/VERSION="'$1'.'$2'.'$3'"/g' dockerfiles/logstash-elastic-ha/Dockerfile
 grep "VERSION = " scale/scale/__init__.py scale/scale/__init__.py.template
+grep "VERSION=" Dockerfile dockerfiles/logstash-elastic-ha/Dockerfile
 
 tput setaf 2
 echo -e "\nCommit the change"
 tput sgr0
-git commit -a -m "Update snapshot revision to $vestring"
+git commit -a -m "Update version values for release $verstring"
 
 tput setaf 2
 echo -e "\nTag the release"

@@ -77,6 +77,7 @@
                 started: null,
                 ended: null,
                 name: data.name ? data.name : null,
+                version: data.version ? data.version : null,
                 category: null,
                 order: data.order ? data.order : 'desc',
                 orderField: data.orderField ? data.orderField : 'twentyfour_hours',

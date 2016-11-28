@@ -7,6 +7,7 @@ from django.conf import settings
 
 from error.models import Error
 from job.execution.running.tasks.base_task import Task
+from util.exceptions import ScaleLogicBug
 
 
 class JobExecutionTask(Task):
@@ -117,11 +118,13 @@ class JobExecutionTask(Task):
 
         :param when: The time that the task started running
         :type when: :class:`datetime.datetime`
+
+        :raises :class:`util.exceptions.ScaleLogicBug`: If the task has already ended
         """
 
         with self._lock:
             if self._has_ended:
-                raise Exception('Trying to start a task that has already ended')
+                raise ScaleLogicBug('Trying to start a task that has already ended')
 
             # Support duplicate calls to start(), task updates may repeat
             self._has_started = True

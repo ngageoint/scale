@@ -28,7 +28,7 @@ from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
 from storage.models import ScaleFile, Workspace
 from trigger.configuration.exceptions import InvalidTriggerType
 from trigger.models import TriggerRule
-from util.exceptions import RollbackTransaction
+from util.exceptions import RollbackTransaction, ScaleLogicBug
 import util.parse
 
 
@@ -1270,23 +1270,16 @@ class JobExecution(models.Model):
 
         # Pass database connection details from scheduler as environment variables
         db = settings.DATABASES['default']
+        db_name = DockerParam('env', 'SCALE_DB_NAME=' + db['NAME'])
+        db_user = DockerParam('env', 'SCALE_DB_USER=' + db['USER'])
+        db_pass = DockerParam('env', 'SCALE_DB_PASS=' + db['PASSWORD'])
+        db_host = DockerParam('env', 'SCALE_DB_HOST=' + db['HOST'])
+        db_port = DockerParam('env', 'SCALE_DB_PORT=' + db['PORT'])
         if self.job.job_type.is_system:
-            configuration.add_job_task_docker_param(DockerParam('env', 'SCALE_DB_NAME=' + db['NAME']))
-            configuration.add_job_task_docker_param(DockerParam('env', 'SCALE_DB_USER=' + db['USER']))
-            configuration.add_job_task_docker_param(DockerParam('env', 'SCALE_DB_PASS=' + db['PASSWORD']))
-            configuration.add_job_task_docker_param(DockerParam('env', 'SCALE_DB_HOST=' + db['HOST']))
-            configuration.add_job_task_docker_param(DockerParam('env', 'SCALE_DB_PORT=' + db['PORT']))
+            configuration.add_job_task_docker_params([db_name, db_user, db_pass, db_host, db_port])
         else:
-            configuration.add_pre_task_docker_param(DockerParam('env', 'SCALE_DB_NAME=' + db['NAME']))
-            configuration.add_pre_task_docker_param(DockerParam('env', 'SCALE_DB_USER=' + db['USER']))
-            configuration.add_pre_task_docker_param(DockerParam('env', 'SCALE_DB_PASS=' + db['PASSWORD']))
-            configuration.add_pre_task_docker_param(DockerParam('env', 'SCALE_DB_HOST=' + db['HOST']))
-            configuration.add_pre_task_docker_param(DockerParam('env', 'SCALE_DB_PORT=' + db['PORT']))
-            configuration.add_post_task_docker_param(DockerParam('env', 'SCALE_DB_NAME=' + db['NAME']))
-            configuration.add_post_task_docker_param(DockerParam('env', 'SCALE_DB_USER=' + db['USER']))
-            configuration.add_post_task_docker_param(DockerParam('env', 'SCALE_DB_PASS=' + db['PASSWORD']))
-            configuration.add_post_task_docker_param(DockerParam('env', 'SCALE_DB_HOST=' + db['HOST']))
-            configuration.add_post_task_docker_param(DockerParam('env', 'SCALE_DB_PORT=' + db['PORT']))
+            configuration.add_pre_task_docker_params([db_name, db_user, db_pass, db_host, db_port])
+            configuration.add_post_task_docker_params([db_name, db_user, db_pass, db_host, db_port])
 
         if not self.is_system:
             # Non-system jobs get named Docker volumes for input and output data
@@ -1297,11 +1290,11 @@ class JobExecution(models.Model):
             input_volume_rw = '%s:%s:rw' % (input_vol_name, SCALE_JOB_EXE_INPUT_PATH)
             output_volume_ro = '%s:%s:ro' % (output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH)
             output_volume_rw = '%s:%s:rw' % (output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH)
-            configuration.add_pre_task_docker_param(DockerParam('volume', input_volume_rw))
-            configuration.add_pre_task_docker_param(DockerParam('volume', output_volume_rw))
-            configuration.add_job_task_docker_param(DockerParam('volume', input_volume_ro))
-            configuration.add_job_task_docker_param(DockerParam('volume', output_volume_rw))
-            configuration.add_post_task_docker_param(DockerParam('volume', output_volume_ro))
+            configuration.add_pre_task_docker_params([DockerParam('volume', input_volume_rw),
+                                                      DockerParam('volume', output_volume_rw)])
+            configuration.add_job_task_docker_params([DockerParam('volume', input_volume_ro),
+                                                      DockerParam('volume', output_volume_rw)])
+            configuration.add_post_task_docker_params([DockerParam('volume', output_volume_ro)])
 
         # Configure Strike workspace based on current configuration
         if self.job.job_type.name == 'scale-strike':
@@ -1329,11 +1322,11 @@ class JobExecution(models.Model):
         :returns: The cluster ID for the job execution
         :rtype: string
 
-        :raises Exception: If the job execution is still queued
+        :raises :class:`util.exceptions.ScaleLogicBug`: If the job execution is still queued
         """
 
         if self.status == 'QUEUED':
-            raise Exception('cluster_id is not set until the job execution is scheduled')
+            raise ScaleLogicBug('cluster_id is not set until the job execution is scheduled')
 
         if not self.cluster_id:
             # Return old-style format before cluster_id field was created
@@ -1402,7 +1395,7 @@ class JobExecution(models.Model):
         :returns: The job-task ID for the job execution
         :rtype: string
 
-        :raises Exception: If the job execution is still queued
+        :raises :class:`util.exceptions.ScaleLogicBug`: If the job execution is still queued
         """
 
         return '%s_job' % self.get_cluster_id()
@@ -1436,7 +1429,7 @@ class JobExecution(models.Model):
                 'query': {
                     'bool': {
                         'must': [
-                            {'match': {'scale_job_exe': self.get_cluster_id()}}
+                            {'term': {'scale_job_exe.raw': self.get_cluster_id()}}
                         ]
                     }
                 },
@@ -1446,9 +1439,9 @@ class JobExecution(models.Model):
         if not include_stdout and not include_stderr:
             return None, util.parse.datetime.datetime.utcnow()
         elif include_stdout and not include_stderr:
-            q['query']['bool']['must'].append({'match': {'stream': 'stdout'}})
+            q['query']['bool']['must'].append({'term': {'stream.raw': 'stdout'}})
         elif include_stderr and not include_stdout:
-            q['query']['bool']['must'].append({'match': {'stream': 'stderr'}})
+            q['query']['bool']['must'].append({'term': {'stream.raw': 'stderr'}})
         if since is not None:
             q['query']['bool']['must'].append({'range': {'@timestamp': {'gte': since.isoformat()}}})
 
@@ -1495,11 +1488,11 @@ class JobExecution(models.Model):
         :returns: The post-task ID for the job execution
         :rtype: string
 
-        :raises Exception: If the job execution is still queued or is a system job type
+        :raises :class:`util.exceptions.ScaleLogicBug`: If the job execution is still queued or is a system job type
         """
 
         if self.is_system:
-            raise Exception('System jobs do not have a post-task')
+            raise ScaleLogicBug('System jobs do not have a post-task')
 
         return '%s_post' % self.get_cluster_id()
 
@@ -1510,11 +1503,11 @@ class JobExecution(models.Model):
         :returns: The pre-task ID for the job execution
         :rtype: string
 
-        :raises Exception: If the job execution is still queued or is a system job type
+        :raises :class:`util.exceptions.ScaleLogicBug`: If the job execution is still queued or is a system job type
         """
 
         if self.is_system:
-            raise Exception('System jobs do not have a pre-task')
+            raise ScaleLogicBug('System jobs do not have a pre-task')
 
         return '%s_pre' % self.get_cluster_id()
 

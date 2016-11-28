@@ -68,13 +68,17 @@ class S3Monitor(Monitor):
 
         logger.info('Running experimental S3 Strike processor')
 
-        with SQSClient(self._credentials, self._region_name) as client:
-            queue = client.get_queue_by_name(self._sqs_name)
+        # Loop endlessly polling SQS queue
+        while self._running:
+            # Between each pass over the SQS, refresh configuration from database in case of credential changes.
+            # This eliminates the need to stop and restart a Strike job to pick up configuration updates.
+            self.reload_configuration()
 
-            # Loop endlessly polling SQS queue
-            while self._running:
+            with SQSClient(self._credentials, self._region_name) as client:
+                queue = client.get_queue_by_name(self._sqs_name)
+
                 # For each new file we receive a notification about:
-                logger.info('Beginning long-poll against queue with wait time of %s seconds.' % self.wait_time)
+                logger.debug('Beginning long-poll against queue with wait time of %s seconds.' % self.wait_time)
                 messages = queue.receive_messages(MaxNumberOfMessages=self.messages_per_request,
                                                   WaitTimeSeconds=self.wait_time,
                                                   VisibilityTimeout=self.visibility_timeout)
@@ -91,6 +95,7 @@ class S3Monitor(Monitor):
 
                         if self.sqs_discard_unrecognized:
                             # Remove message from queue when unrecognized
+                            logger.warning('Removing message that cannot be processed.')
                             message.delete()
                     except S3NoDataNotificationError:
                         logger.exception('Unable to process message. File size of 0')

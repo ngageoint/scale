@@ -116,32 +116,35 @@ class JobConfiguration(object):
 
         self._validate_workspace_names()
 
-    def add_job_task_docker_param(self, param):
-        """Adds a Docker parameter to this job's job task
+    def add_job_task_docker_params(self, params):
+        """Adds the given Docker parameters to this job's job task
 
-        :param param: The Docker parameter to add
-        :type param: :class:`job.configuration.configuration.job_parameter.DockerParam`
+        :param params: The Docker parameters to add
+        :type params: [:class:`job.configuration.configuration.job_configuration.DockerParam`]
         """
 
-        self._configuration['job_task']['docker_params'].append({'flag': param.flag, 'value': param.value})
+        for param in params:
+            self._configuration['job_task']['docker_params'].append({'flag': param.flag, 'value': param.value})
 
-    def add_post_task_docker_param(self, param):
-        """Adds a Docker parameter to this job's post task
+    def add_post_task_docker_params(self, params):
+        """Adds the given Docker parameters to this job's post task
 
-        :param param: The Docker parameter to add
-        :type param: :class:`job.configuration.configuration.job_parameter.DockerParam`
+        :param params: The Docker parameters to add
+        :type params: [:class:`job.configuration.configuration.job_configuration.DockerParam`]
         """
 
-        self._configuration['post_task']['docker_params'].append({'flag': param.flag, 'value': param.value})
+        for param in params:
+            self._configuration['post_task']['docker_params'].append({'flag': param.flag, 'value': param.value})
 
-    def add_pre_task_docker_param(self, param):
-        """Adds a Docker parameter to this job's pre task
+    def add_pre_task_docker_params(self, params):
+        """Adds the given Docker parameters to this job's pre task
 
-        :param param: The Docker parameter to add
-        :type param: :class:`job.configuration.configuration.job_parameter.DockerParam`
+        :param params: The Docker parameters to add
+        :type params: [:class:`job.configuration.configuration.job_configuration.DockerParam`]
         """
 
-        self._configuration['pre_task']['docker_params'].append({'flag': param.flag, 'value': param.value})
+        for param in params:
+            self._configuration['pre_task']['docker_params'].append({'flag': param.flag, 'value': param.value})
 
     def add_job_task_workspace(self, name, mode):
         """Adds a needed workspace to this job's job task
@@ -207,9 +210,9 @@ class JobConfiguration(object):
 
         # Configure pre-task workspaces, any that need volumes will have them created
         created_workspaces = set()
-        for param in self._get_workspace_docker_params(job_exe, self.get_pre_task_workspaces(), workspaces, True,
-                                                       docker_volumes):
-            self.add_pre_task_docker_param(param)
+        params = self._get_workspace_docker_params(job_exe, self.get_pre_task_workspaces(), workspaces, True,
+                                                   docker_volumes)
+        self.add_pre_task_docker_params(params)
         for task_workspace in self.get_pre_task_workspaces():
             created_workspaces.add(task_workspace.name)
 
@@ -222,12 +225,11 @@ class JobConfiguration(object):
             else:
                 workspaces_not_created.append(task_workspace)
                 created_workspaces.add(task_workspace.name)
-        for param in self._get_workspace_docker_params(job_exe, workspaces_already_created, workspaces, False,
-                                                       docker_volumes):
-            self.add_job_task_docker_param(param)
-        for param in self._get_workspace_docker_params(job_exe, workspaces_not_created, workspaces, True,
-                                                       docker_volumes):
-            self.add_job_task_docker_param(param)
+        params = self._get_workspace_docker_params(job_exe, workspaces_already_created, workspaces, False,
+                                                   docker_volumes)
+        self.add_job_task_docker_params(params)
+        params = self._get_workspace_docker_params(job_exe, workspaces_not_created, workspaces, True, docker_volumes)
+        self.add_job_task_docker_params(params)
 
         # Configure post-task workspaces, creating any volumes that were not created in a previous task
         workspaces_already_created = []
@@ -238,12 +240,11 @@ class JobConfiguration(object):
             else:
                 workspaces_not_created.append(task_workspace)
                 created_workspaces.add(task_workspace.name)
-        for param in self._get_workspace_docker_params(job_exe, workspaces_already_created, workspaces, False,
-                                                       docker_volumes):
-            self.add_post_task_docker_param(param)
-        for param in self._get_workspace_docker_params(job_exe, workspaces_not_created, workspaces, True,
-                                                       docker_volumes):
-            self.add_post_task_docker_param(param)
+        params = self._get_workspace_docker_params(job_exe, workspaces_already_created, workspaces, False,
+                                                   docker_volumes)
+        self.add_post_task_docker_params(params)
+        params = self._get_workspace_docker_params(job_exe, workspaces_not_created, workspaces, True, docker_volumes)
+        self.add_post_task_docker_params(params)
 
     def configure_logging_docker_params(self, job_exe):
         """Configures the Docker parameters needed for job execution logging
@@ -261,18 +262,17 @@ class JobConfiguration(object):
             es_urls = ','.join(hosts)
 
         if settings.LOGGING_ADDRESS is not None:
+            log_driver = DockerParam('log-driver', 'syslog')
+            log_address = DockerParam('log-opt', 'syslog-address=%s' % settings.LOGGING_ADDRESS)
             if not job_exe.is_system:
-                self.add_pre_task_docker_param(DockerParam('log-driver', 'syslog'))
-                self.add_pre_task_docker_param(DockerParam('log-opt', 'syslog-address=%s' % settings.LOGGING_ADDRESS))
-                self.add_pre_task_docker_param(DockerParam('log-opt', 'tag=%s' % job_exe.get_pre_task_id()))
-                self.add_post_task_docker_param(DockerParam('log-driver', 'syslog'))
-                self.add_post_task_docker_param(DockerParam('log-opt', 'syslog-address=%s' % settings.LOGGING_ADDRESS))
-                self.add_post_task_docker_param(DockerParam('log-opt', 'tag=%s' % job_exe.get_post_task_id()))
+                pre_task_tag = DockerParam('log-opt', 'tag=%s' % job_exe.get_pre_task_id())
+                self.add_pre_task_docker_params([log_driver, log_address, pre_task_tag])
+                post_task_tag = DockerParam('log-opt', 'tag=%s' % job_exe.get_post_task_id())
                 # Post task needs ElasticSearch URL to grab logs for old artifact registration
-                self.add_post_task_docker_param(DockerParam('env', 'SCALE_ELASTICSEARCH_URLS=%s' % es_urls))
-            self.add_job_task_docker_param(DockerParam('log-driver', 'syslog'))
-            self.add_job_task_docker_param(DockerParam('log-opt', 'syslog-address=%s' % settings.LOGGING_ADDRESS))
-            self.add_job_task_docker_param(DockerParam('log-opt', 'tag=%s' % job_exe.get_job_task_id()))
+                es_urls = DockerParam('env', 'SCALE_ELASTICSEARCH_URLS=%s' % es_urls)
+                self.add_post_task_docker_params([log_driver, log_address, post_task_tag, es_urls])
+            job_task_tag = DockerParam('log-opt', 'tag=%s' % job_exe.get_job_task_id())
+            self.add_job_task_docker_params([log_driver, log_address, job_task_tag])
 
     def get_job_task_docker_params(self):
         """Returns the Docker parameters needed for the job task

@@ -18,3 +18,9 @@ class RollbackTransaction(Exception):
     """Exception that can be thrown and swallowed to explicitly rollback a transaction"""
 
     pass
+
+
+class ScaleLogicBug(Exception):
+    """Exception that indicates a critical Scale logic bug has occurred"""
+
+    pass

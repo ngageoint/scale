@@ -1,10 +1,14 @@
-# scale dockerfile
 FROM centos:centos7
 MAINTAINER Scale Developers <https://github.com/ngageoint/scale>
 
+LABEL \
+    VERSION="4.0.0-snapshot" \
+    RUN="docker run -d geoint/scale scale_scheduler" \
+    SOURCE="https://github.com/ngageoint/scale" \
+    DESCRIPTION="Containerized processing framework for algorithms focused on remote sensing" \
+    CLASSIFICATION="UNCLASSIFIED"
+
 EXPOSE 80
-EXPOSE 8000
-EXPOSE 5051
 
 # recognized environment variables
 # CONFIG_URI
@@ -57,6 +61,7 @@ RUN yum install -y epel-release \
          gdal-python \
          geos \
          httpd \
+         mod_wsgi \
          nfs-utils \
          postgresql \
          protobuf \
@@ -74,6 +79,13 @@ RUN yum install -y epel-release \
  && curl -o /usr/bin/gosu -fsSL ${GOSU_URL} \
  && chmod +sx /usr/bin/gosu \
  && rm -f /etc/httpd/conf.d/welcome.conf \
+ && sed -i 's^User apache^User scale^g' /etc/httpd/conf/httpd.conf \
+ # Patch access logs to show originating IP instead of reverse proxy.
+ && sed -i 's!LogFormat "%h!LogFormat "%{X-Forwarded-For}i %h!g' /etc/httpd/conf/httpd.conf \
+ && sed -ri \
+		-e 's!^(\s*CustomLog)\s+\S+!\1 /proc/self/fd/1!g' \
+		-e 's!^(\s*ErrorLog)\s+\S+!\1 /proc/self/fd/2!g' \
+		/etc/httpd/conf/httpd.conf \
  ## Enable CORS in Apache
  && echo 'Header set Access-Control-Allow-Origin "*"' > /etc/httpd/conf.d/cors.conf \
  && yum clean all
@@ -123,10 +135,5 @@ RUN mkdir -p /var/log/scale /var/lib/scale-metrics /scale/input_data /scale/outp
 
 # finish the build
 RUN python manage.py collectstatic --noinput --settings=
-
-# Copy in webserver configuration file
-COPY dockerfiles/framework/scale/gunicorn.conf.py /opt/scale/
-
-CMD [ "/usr/bin/gunicorn", "-c", "gunicorn.conf.py", "scale.wsgi:application" ]
 
 ENTRYPOINT ["./entryPoint.sh"]

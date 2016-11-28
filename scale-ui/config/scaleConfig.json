@@ -199,9 +199,9 @@
         "activityIconCode": "f110",
 
         "urls": {
-            "apiPrefix": "/api/v4/",
+            "apiPrefix": "./api/v4/",
             "overrides": {},
-            "documentation": "/docs"
+            "documentation": "./docs"
         },
 
         "defaultGaugeWidth": 160,
