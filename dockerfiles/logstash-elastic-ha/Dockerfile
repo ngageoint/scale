@@ -1,5 +1,12 @@
 FROM logstash:2.4
-MAINTAINER Jonathan Meyer <jon@gisjedi.com>
+MAINTAINER Scale Developers <https://github.com/ngageoint/scale>
+
+LABEL \
+    VERSION="4.0.0-snapshot" \
+    RUN="docker run -d geoint/scale scale_scheduler" \
+    SOURCE="https://github.com/ngageoint/scale/tree/master/dockerfiles/logstash-elastic-ha" \
+    DESCRIPTION="Log aggregator, formatter and Elasticsearch forwarder for Scale jobs" \
+    CLASSIFICATION="UNCLASSIFIED"
 
 RUN apt-get update && apt-get install -y supervisor python-requests
 
