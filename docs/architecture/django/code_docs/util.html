@@ -197,6 +197,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="util.test.html">util.test package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="util.test.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="util.test.html#module-util.test.test_aws">util.test.test_aws module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="util.test.html#module-util.test.test_parse">util.test.test_parse module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="util.test.html#module-util.test.test_rest">util.test.test_rest module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="util.test.html#module-util.test.test_retry">util.test.test_retry module</a></li>
@@ -246,7 +247,23 @@
 <dl class="staticmethod">
 <dt id="util.aws.AWSClient.instantiate_credentials_from_config">
 <em class="property">static </em><code class="descname">instantiate_credentials_from_config</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="headerlink" href="#util.aws.AWSClient.instantiate_credentials_from_config" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Extract credential keys from configuration and return instantiated credential object</p>
+<p>If values provided in the <cite>access_key_id</cite> or <cite>secret_access_key</cite> keys of <cite>credentials</cite> configuration object are
+empty, None will be returned. In this case, role-based authentication should be attempted.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config</strong> (<code class="xref py py-class docutils literal"><span class="pre">botocore.client.Config</span></code>) &#8211; Resource specific configuration</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">instantiated credential object or None if keys provided were empty</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#util.aws.AWSCredentials" title="util.aws.AWSCredentials"><code class="xref py py-class docutils literal"><span class="pre">util.aws.AWSCredentials</span></code></a></td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="#util.exceptions.InvalidAWSCredentials" title="util.exceptions.InvalidAWSCredentials"><code class="xref py py-class docutils literal"><span class="pre">util.exceptions.InvalidAWSCredentials</span></code></a>: If the credentials provided are incomplete.</p>
+</dd></dl>
 
 </dd></dl>
 

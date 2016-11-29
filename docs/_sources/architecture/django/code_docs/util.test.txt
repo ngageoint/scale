@@ -4,6 +4,14 @@ util.test package
 Submodules
 ----------
 
+util.test.test_aws module
+-------------------------
+
+.. automodule:: util.test.test_aws
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 util.test.test_parse module
 ---------------------------
 
