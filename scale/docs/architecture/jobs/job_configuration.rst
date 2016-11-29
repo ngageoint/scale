@@ -72,8 +72,8 @@ A valid job configuration is a JSON document with the following structure:
 
         **name**: JSON string
 
-            The *name* is a required string describing the flag (long form) to use for passing the
-            setting without the preceding dashes (e.g. use "volume" for passing "--volume=...").
+            The *name* is a required string describing the name of the setting. The name is used to identify the setting
+            within command line arguments or environment variables that should receive the setting's value.
 
         **value**: JSON string
 
@@ -98,8 +98,8 @@ A valid job configuration is a JSON document with the following structure:
     The *job_task* is a JSON object that defines the workspaces and Docker parameters to use for the job task (which
     performs the primary job/algorithm). It is identical in structure to *pre_task*.
 
-    The *job_task* *settings* values will be added to the algorithm *command_arguments* string if a matching settings
-    *name* is defined in the job interface.
+    The *job_task* *settings* values will be inserted into the job's *command_arguments* string if a matching settings
+    *name* appears in the *command_arguments*.
 
 **post_task**: JSON object
 
