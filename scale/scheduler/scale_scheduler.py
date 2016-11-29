@@ -33,6 +33,7 @@ from scheduler.threads.db_sync import DatabaseSyncThread
 from scheduler.threads.recon import ReconciliationThread
 from scheduler.threads.schedule import SchedulingThread
 from scheduler.threads.status import StatusUpdateThread
+from util.host import HostAddress
 
 
 logger = logging.getLogger(__name__)
@@ -80,6 +81,7 @@ class ScaleScheduler(MesosScheduler):
 
         initialize_system()
         Scheduler.objects.update_master(self._master_hostname, self._master_port)
+        scheduler_mgr.update_from_mesos(self._framework_id, HostAddress(self._master_hostname, self._master_port))
         recon_mgr.driver = self._driver
 
         # Initial database sync
@@ -127,6 +129,7 @@ class ScaleScheduler(MesosScheduler):
                     self._master_hostname, self._master_port)
 
         Scheduler.objects.update_master(self._master_hostname, self._master_port)
+        scheduler_mgr.update_from_mesos(mesos_address=HostAddress(self._master_hostname, self._master_port))
 
         # Update driver for background threads
         self._db_sync_thread.driver = self._driver

@@ -15,5 +15,5 @@ class TestSchedulerManager(TestCase):
     def test_successful_update(self):
         """Tests doing a successful database update"""
 
-        manager = SchedulerManager(Scheduler())
+        manager = SchedulerManager()
         manager.sync_with_database()

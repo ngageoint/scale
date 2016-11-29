@@ -6,6 +6,7 @@ import threading
 
 from job.execution.running.tasks.cleanup_task import CleanupTask
 from job.execution.running.tasks.update import TaskStatusUpdate
+from scheduler.sync.scheduler_manager import scheduler_mgr
 
 
 JOB_EXES_WARNING_THRESHOLD = 100
@@ -127,4 +128,4 @@ class NodeCleanup(object):
                 if len(cleanup_job_exes) >= MAX_JOB_EXES_PER_CLEANUP:
                     break
 
-        self._current_task = CleanupTask(self._node.agent_id, cleanup_job_exes)
+        self._current_task = CleanupTask(scheduler_mgr.framework_id, self._node.agent_id, cleanup_job_exes)

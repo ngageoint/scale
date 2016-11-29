@@ -97,8 +97,8 @@ class DatabaseSyncThread(object):
         job_type_mgr.sync_with_database()
         workspace_mgr.sync_with_database()
 
-        scheduler = scheduler_mgr.get_scheduler()
-        node_mgr.sync_with_database(scheduler.master_hostname, scheduler.master_port)
+        mesos_master = scheduler_mgr.mesos_address
+        node_mgr.sync_with_database(mesos_master.hostname, mesos_master.port)
 
         self._sync_running_job_executions()
 
