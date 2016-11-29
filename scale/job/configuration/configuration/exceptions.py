@@ -8,6 +8,6 @@ class InvalidJobConfiguration(Exception):
 
 
 class InvalidSetting(Exception):
-    """Exception indicating that the proivided job settings were invaild
+    """Exception indicating that the provided job settings were invalid
     """
     pass
