@@ -43,7 +43,7 @@ A valid job configuration is a JSON document with the following structure:
     recognize an older version and convert it to the current version. The default value for *version* if it is not
     included is the latest version, which is currently 1.1.
 
-    Scale must recognize the version number as valid for the recipe to work. Valid job configuration versions are
+    Scale must recognize the version number as valid for the job to work. Valid job configuration versions are
     ``"1.0"`` and ``"1.1"``.
 
 **pre_task**: JSON object
