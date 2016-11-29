@@ -85,6 +85,24 @@ class RunningJobExecutionManager(object):
                     result.append(self._job_exes[job_exe_id])
         return result
 
+    def get_task_ids_for_reconciliation(self, when):
+        """Returns the IDs of the job execution tasks that need to be reconciled
+
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
+        :returns: The list of IDs of the tasks that need to be reconciled
+        :rtype: [string]
+        """
+
+        task_ids = []
+        with self._lock:
+            for job_exe in self._job_exes.values():
+                task = job_exe.current_task
+                if task and task.needs_reconciliation(when):
+                    task_ids.append(task.id)
+
+            return task_ids
+
     def remove_job_exe(self, job_exe_id):
         """Removes the running job execution with the given ID
 

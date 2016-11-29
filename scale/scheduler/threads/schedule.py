@@ -273,5 +273,7 @@ class SchedulingThread(object):
         """Sends the IDs of any tasks that need to be reconciled
         """
 
-        task_ids = cleanup_mgr.get_task_ids_for_reconciliation(now())
+        when = now()
+        task_ids = cleanup_mgr.get_task_ids_for_reconciliation(when)
+        task_ids.extend(running_job_mgr.get_task_ids_for_reconciliation(when))
         recon_mgr.add_task_ids(task_ids)
