@@ -167,8 +167,9 @@ A valid job interface is a JSON document with the following structure:
     *command* when it is executed. Although required, *command_arguments* may be an empty string (i.e. ""). Scale will
     perform string substitution on special values denoted by the pattern *${...}*. You can indicate that an input should
     be passed on the command line by using *${INPUT NAME}*. The value that is substituted depends on the type of the
-    input. If you need the command line argument to be passed with a flag, you can use the following pattern:
-    *${FLAG:INPUT NAME}*. There is also a special substitution value
+    input. You can indicate that a setting should be passed on the command line by using *${SETTING NAME}*. If you need the
+    command line argument to be passed with a flag, you can use the following pattern: *${FLAG:INPUT NAME}*. There is also
+    a special substitution value
     *${job_output_dir}*, which will be replaced with the absolute file system path of the output directory where the
     algorithm may write its output files. The algorithm should produce a results manifest named "results_manifest.json".
     The format for the results manifest can be found here: :ref:`algorithm_integration_results_manifest`. Any output
@@ -183,25 +184,25 @@ A valid job interface is a JSON document with the following structure:
     **name**: JSON string
 
         The *name* is a required string that defines the name of the environment variable to be set. The name of every
-        environment varialbe in the interface must be unique. This name must only be composed of less than 256 of the
+        environment variable in the interface must be unique. This name must only be composed of less than 256 of the
         following characters: alphanumeric, " ", "_", and "-".
 
     **value**: JSOPN string
 
-        The *value* is a required string that defines the value of the environment variable to be set. This name must
-        only be composed of less than 256 of the following characters: alphanumeric, " ", "_", and "-".
+        The *value* is a required string that defines the value of the environment variable to be set. Scale will apply
+        the same string substitution as it does with *command_arguments*.
 
 **settings**: JSON array
 
-    *Settings* are an optinal list of JSON objects that define the alogrithm settings that will be retrieved from the
-    job configuration and added to the *command_arguments* for the alogrithm. If not provided, *settings* defaults to
+    The *settings* field is an optional list of JSON objects that define the alogrithm settings that will be substituted
+    into the *command_arguments* and *env_vars* for the alogrithm. If not provided, *settings* defaults to
     an empty list.  The JSON object that represents each setting has the following fields:
 
     **name**: JSON string
 
-        The *name* is a required string that defines the name of the environment variable to be set. The name of every
-        environment varialbe in the interface must be unique. This name must only be composed of less than 256 of the
-        following characters: alphanumeric, " ", "_", and "-".
+        The *name* is a required string that defines the name of the setting. The name of every setting, input, and output
+        in the interface must be unique. This name must only be composed of less than 256 of the following characters:
+        alphanumeric, " ", "_", and "-".
 
     **required**: JSOPN boolean
 
@@ -216,8 +217,8 @@ A valid job interface is a JSON document with the following structure:
 
     **name**: JSON string
 
-        The *name* is a required string that defines the name of the input. The name of every input and output in the
-        interface must be unique. This name must only be composed of less than 256 of the following characters:
+        The *name* is a required string that defines the name of the input. The name of every setting, input, and output
+        in the interface must be unique. This name must only be composed of less than 256 of the following characters:
         alphanumeric, " ", "_", and "-".
 
     **required**: JSON boolean
@@ -295,8 +296,8 @@ A valid job interface is a JSON document with the following structure:
 
     **name**: JSON string
 
-        The *name* is a required string that defines the name of the output. The name of every input and output in the
-        interface must be unique. This name must only be composed of less than 256 of the following characters:
+        The *name* is a required string that defines the name of the output. The name of every setting, input, and output
+        in the interface must be unique. This name must only be composed of less than 256 of the following characters:
         alphanumeric, " ", "_", and "-".
 
     **required**: JSON boolean
