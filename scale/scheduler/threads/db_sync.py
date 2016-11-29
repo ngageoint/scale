@@ -135,4 +135,4 @@ class DatabaseSyncThread(object):
 
             if running_job_exe.is_finished():
                 running_job_mgr.remove_job_exe(running_job_exe.id)
-                cleanup_mgr.cleanup.add_job_execution(running_job_exe)
+                cleanup_mgr.add_job_execution(running_job_exe)
