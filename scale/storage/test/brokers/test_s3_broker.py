@@ -137,6 +137,26 @@ class TestS3Broker(TestCase):
         self.assertEqual(broker._credentials.access_key_id, 'ABC')
         self.assertEqual(broker._credentials.secret_access_key, '123')
 
+    def test_load_configuration_whitespace_filled_host_path(self):
+        """Tests loading a valid configuration successfully while purging empty host_path value"""
+
+        json_config = {
+            'type': S3Broker().broker_type,
+            'bucket_name': 'my_bucket.domain.com',
+            'host_path': '  ',
+            'credentials': {
+                'access_key_id': 'ABC',
+                'secret_access_key': '123',
+            },
+        }
+        broker = S3Broker()
+        broker.load_configuration(json_config)
+
+        self.assertEqual(broker._bucket_name, 'my_bucket.domain.com')
+        self.assertIsNone(broker._volume)
+        self.assertEqual(broker._credentials.access_key_id, 'ABC')
+        self.assertEqual(broker._credentials.secret_access_key, '123')
+
     @patch('storage.brokers.s3_broker.S3Client')
     def test_move_files(self, mock_client_class):
         """Tests moving files successfully"""
