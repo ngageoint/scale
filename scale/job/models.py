@@ -1311,7 +1311,7 @@ class JobExecution(models.Model):
         for env_var in interface['env_vars']:
             env_var_name = env_var['name']
             env_var_value = env_var['value']
-            configuration.add_job_task_docker_param(DockerParam('env', env_var_name + '=' + env_var_value))
+            configuration.add_job_task_docker_params([DockerParam('env', env_var_name + '=' + env_var_value)])
 
         self.configuration = configuration.get_dict()
 
