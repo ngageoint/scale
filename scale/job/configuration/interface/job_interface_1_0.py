@@ -426,11 +426,8 @@ class JobInterface(object):
         return warnings
 
     def _check_param_name_uniqueness(self):
-        """Ensures all the parameter names are unique throws a
+        """Ensures all the parameter names are unique, and throws a
         :class:`job.configuration.interface.exceptions.InvalidInterfaceDefinition` if they are not unique
-
-        :return: command arguments for the given properties
-        :rtype: str
         """
 
         for input_data in self.definition['input_data']:
@@ -442,17 +439,6 @@ class JobInterface(object):
             if shared_resource['name'] in self._param_names:
                 raise InvalidInterfaceDefinition('shared resource & input_data names must be unique')
             self._param_names.add(shared_resource['name'])
-
-        if self.definition['version'] >= '1.2':
-            for setting in self.definition['settings']:
-                if setting['name'] in self._param_names:
-                    raise InvalidInterfaceDefinition('Setting names must be unique')
-                self._param_names.add(setting['name'])
-
-            for env_var in self.definition['env_vars']:
-                if env_var['name'] in self._param_names:
-                    raise InvalidInterfaceDefinition('Enviorment variable names must be unique')
-                self._param_names.add(env_var['name'])
 
     def _create_retrieve_files_dict(self):
         """creates parameter folders and returns the dict needed to call

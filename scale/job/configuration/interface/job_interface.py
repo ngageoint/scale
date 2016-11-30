@@ -198,6 +198,8 @@ class JobInterface(previous_interface.JobInterface):
         self._populate_env_vars_defaults()
 
         self._check_param_name_uniqueness()
+        self._check_setting_name_uniqueness()
+        self._check_env_var_uniqueness()
         self._validate_command_arguments()
         self._create_validation_dicts()
 
@@ -280,3 +282,21 @@ class JobInterface(previous_interface.JobInterface):
                     command_arguments = self._replace_command_parameter(command_arguments, setting_name, '')
 
         return command_arguments
+
+    def _check_setting_name_uniqueness(self):
+        """Ensures all the settings names are unique, and throws a
+        :class:`job.configuration.interface.exceptions.InvalidInterfaceDefinition` if they are not unique
+        """
+
+        for setting in self.definition['settings']:
+            if setting['name'] in self._param_names:
+                raise InvalidInterfaceDefinition('Setting names must be unique')
+            self._param_names.add(setting['name'])
+
+    def _check_env_var_uniqueness(self):
+        """Ensures all the enviornmental variable names are unique, and throws a
+        :class:`job.configuration.interface.exceptions.InvalidInterfaceDefinition` if they are not unique
+        """
+
+        if len(self.definition['env_vars']) != len(set(self.definition['env_vars'])):
+            raise InvalidInterfaceDefinition('Environment variable names must be unique')
