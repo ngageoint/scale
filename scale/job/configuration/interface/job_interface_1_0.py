@@ -633,6 +633,11 @@ class JobInterface(object):
                             found_match = True
                             break
 
+                    for env_var in self.definition['env_vars']:
+                        if env_var['name'] == param:
+                            found_match = True
+                            break
+
             #Look for system properties
             if param == 'job_output_dir':
                 found_match = True

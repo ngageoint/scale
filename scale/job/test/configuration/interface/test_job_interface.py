@@ -974,6 +974,27 @@ class TestJobInterfacePreSteps(TestCase):
         job_command_arguments = job_interface.populate_command_argument_settings(command_arguments, job_config)
         self.assertEqual(job_command_arguments.strip(' '), config_key_value, 'expected a different command from pre_steps')
 
+    def test_env_vars_in_command(self):
+        job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
+
+        job_interface_dict['version'] = '1.2'
+        job_interface_dict['command_arguments'] = '${env1} ${env2}'
+        job_interface_dict['env_vars'] = [{
+            'name': 'env1',
+            'value': 'TEST=TRUE',
+        }, {
+            'name': 'env2',
+            'value': 'SOME_VALUE',
+        }]
+
+        command_arguments = job_interface_dict['command_arguments']
+        config_key_values = ['TEST=TRUE', 'SOME_VALUE']
+
+        job_interface = JobInterface(job_interface_dict)
+
+        job_command_arguments = job_interface.populate_command_argument_env_vars(command_arguments)
+        self.assertEqual(job_command_arguments, ' '.join(config_key_values), 'expected a different command from pre_steps')
+        
 
 class TestJobInterfaceValidateConnection(TestCase):
 
