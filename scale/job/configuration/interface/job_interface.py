@@ -254,7 +254,7 @@ class JobInterface(previous_interface.JobInterface):
         :type command_arguments: string
         :param job_configuration: The job configuration
         :type job_configuration: :class:`job.configuration.configuration.job_configuration.JobConfiguration`
-        :return: command arguments for the given settings
+        :return: command arguments with the settings populated
         :rtype: str
         """
         config_settings = job_configuration.get_dict()
@@ -283,6 +283,25 @@ class JobInterface(previous_interface.JobInterface):
 
         return command_arguments
 
+    def populate_command_argument_env_vars(self, command_arguments):
+        """Return the command arguments string, populated with the environment
+        variables.
+
+        :param command_arguments: The command_arguments that you want to perform the replacement on
+        :type command_arguments: string
+        :return: command arguments with the env_vars populated
+        :rtype: str
+        """
+
+        for env_var in self.definition['env_vars']:
+            env_var_name = env_var['name']
+            env_var_value = env_var['value']
+            command_arguments = self._replace_command_parameter(command_arguments,
+                                                                env_var_name,
+                                                                env_var_value)
+
+        return command_arguments
+
     def _check_setting_name_uniqueness(self):
         """Ensures all the settings names are unique, and throws a
         :class:`job.configuration.interface.exceptions.InvalidInterfaceDefinition` if they are not unique
@@ -298,5 +317,7 @@ class JobInterface(previous_interface.JobInterface):
         :class:`job.configuration.interface.exceptions.InvalidInterfaceDefinition` if they are not unique
         """
 
-        if len(self.definition['env_vars']) != len(set(self.definition['env_vars'])):
+        env_vars = [env_var['name'] for env_var in self.definition['env_vars']]
+
+        if len(env_vars) != len(set(env_vars)):
             raise InvalidInterfaceDefinition('Environment variable names must be unique')

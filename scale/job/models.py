@@ -974,9 +974,6 @@ class JobExecutionManager(models.Manager):
             interface = job.get_job_interface()
             data = job.get_job_data()
             job_exe.command_arguments = interface.populate_command_argument_properties(data)
-            # Add configuration values for the settings to the command line.
-            job_exe.command_arguments = interface.populate_command_argument_settings(job_exe.command_arguments,
-                                                                                     job.get_job_configuration())
             job_exe.configuration = job.configuration
             job_exes.append(job_exe)
 
@@ -1032,6 +1029,14 @@ class JobExecutionManager(models.Manager):
                 raise Exception('Cannot schedule job execution %i without node ID' % job_exe.id)
             if resources is None:
                 raise Exception('Cannot schedule job execution %i without resources' % job_exe.id)
+
+            # Add configuration values for the settings to the command line.
+            interface = job_exe.get_job_interface()
+            job_exe.command_arguments = interface.populate_command_argument_settings(job_exe.command_arguments,
+                                                                                     job_exe.get_job_configuration())
+
+            # Add env_vars to the command line.
+            job_exe.command_arguments = interface.populate_command_argument_env_vars(job_exe.command_arguments)
 
             job_exe.job = jobs[job_exe.job_id]
             job_exe.set_cluster_id(framework_id)
@@ -2431,4 +2436,5 @@ class TaskUpdate(models.Model):
 
     class Meta(object):
         """Meta information for the database"""
+
         db_table = 'task_update'
