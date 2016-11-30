@@ -124,6 +124,10 @@ class JobConfiguration(previous_version.JobConfiguration):
         self._job_task_workspace_names = set()
         self._post_task_workspace_names = set()
 
+        self._pre_task_setting_names = set()
+        self._job_task_setting_names = set()
+        self._post_task_setting_names = set()
+
         if 'version' not in self._configuration:
             self._configuration['version'] = SCHEMA_VERSION
 
@@ -246,21 +250,21 @@ class JobConfiguration(previous_version.JobConfiguration):
         """Ensures that no tasks have duplicate setting names
 
         :raises :class:`job.configuration.configuration.exceptions.InvalidJobConfiguration`: If there is a duplicate
-            workspace name
+            setting name
         """
 
         for setting_dict in self._configuration['pre_task']['settings']:
             name = setting_dict['name']
-            if name in self._pre_task_workspace_names:
+            if name in self._pre_task_setting_names:
                 raise InvalidJobConfiguration('Duplicate setting %s in pre task' % name)
-            self._pre_task_workspace_names.add(name)
+            self._pre_task_setting_names.add(name)
         for setting_dict in self._configuration['job_task']['settings']:
             name = setting_dict['name']
-            if name in self._job_task_workspace_names:
+            if name in self._job_task_setting_names:
                 raise InvalidJobConfiguration('Duplicate setting %s in job task' % name)
-            self._job_task_workspace_names.add(name)
+            self._job_task_setting_names.add(name)
         for setting_dict in self._configuration['post_task']['settings']:
             name = setting_dict['name']
-            if name in self._post_task_workspace_names:
+            if name in self._post_task_setting_names:
                 raise InvalidJobConfiguration('Duplicate setting %s in post task' % name)
-            self._post_task_workspace_names.add(name)
+            self._post_task_setting_names.add(name)
