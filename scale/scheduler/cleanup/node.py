@@ -39,7 +39,6 @@ class NodeCleanup(object):
 
         with self._lock:
             self._job_exes[job_exe.id] = job_exe
-            self._create_next_task()
 
     def get_next_task(self):
         """Returns the next cleanup task to schedule, possibly None
@@ -49,7 +48,7 @@ class NodeCleanup(object):
         """
 
         with self._lock:
-            self._create_next_task()  # This is needed to check for node agent ID change
+            self._create_next_task()
 
             # No task returned if node is paused, no task to schedule, or task is already scheduled
             if self._node.is_paused or self._current_task is None or self._current_task.has_been_scheduled:
@@ -98,7 +97,6 @@ class NodeCleanup(object):
                 logger.warning('Cleanup task on host %s killed', self._node.hostname)
             if self._current_task.has_ended:
                 self._current_task = None
-            self._create_next_task()
 
     def _create_next_task(self):
         """Creates the next cleanup task that needs to be run for this node. Caller must have obtained the thread lock.
