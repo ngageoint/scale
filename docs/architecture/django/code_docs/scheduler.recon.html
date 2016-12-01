@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>scheduler.test.node package &mdash; Scale 4.0.0-snapshot documentation</title>
+  <title>scheduler.recon package &mdash; Scale 4.0.0-snapshot documentation</title>
   
 
   
@@ -33,9 +33,9 @@
 
   
     <link rel="top" title="Scale 4.0.0-snapshot documentation" href="../../../index.html"/>
-        <link rel="up" title="scheduler.test package" href="scheduler.test.html"/>
-        <link rel="next" title="scheduler.test.offer package" href="scheduler.test.offer.html"/>
-        <link rel="prev" title="scheduler.test.cleanup package" href="scheduler.test.cleanup.html"/> 
+        <link rel="up" title="scheduler package" href="scheduler.html"/>
+        <link rel="next" title="scheduler.status package" href="scheduler.status.html"/>
+        <link rel="prev" title="scheduler.offer package" href="scheduler.offer.html"/> 
 
   
   <script src="../../../_static/js/modernizr.min.js"></script>
@@ -176,13 +176,11 @@
       
           <li><a href="scheduler.html">scheduler package</a> &raquo;</li>
       
-          <li><a href="scheduler.test.html">scheduler.test package</a> &raquo;</li>
-      
-    <li>scheduler.test.node package</li>
+    <li>scheduler.recon package</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../../../_sources/architecture/django/code_docs/scheduler.test.node.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/scheduler.recon.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -192,51 +190,79 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="scheduler-test-node-package">
-<h1>scheduler.test.node package<a class="headerlink" href="#scheduler-test-node-package" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="scheduler-recon-package">
+<h1>scheduler.recon package<a class="headerlink" href="#scheduler-recon-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-scheduler.test.node.test_manager">
-<span id="scheduler-test-node-test-manager-module"></span><h2>scheduler.test.node.test_manager module<a class="headerlink" href="#module-scheduler.test.node.test_manager" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-scheduler.recon.manager">
+<span id="scheduler-recon-manager-module"></span><h2>scheduler.recon.manager module<a class="headerlink" href="#module-scheduler.recon.manager" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class that manages pushing task status updates to the database</p>
 <dl class="class">
-<dt id="scheduler.test.node.test_manager.TestNodeManager">
-<em class="property">class </em><code class="descclassname">scheduler.test.node.test_manager.</code><code class="descname">TestNodeManager</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="method">
-<dt id="scheduler.test.node.test_manager.TestNodeManager.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.setUp" title="Permalink to this definition">¶</a></dt>
+<dt id="scheduler.recon.manager.ReconciliationManager">
+<em class="property">class </em><code class="descclassname">scheduler.recon.manager.</code><code class="descname">ReconciliationManager</code><a class="headerlink" href="#scheduler.recon.manager.ReconciliationManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This class manages tasks that needs to be reconciled with Mesos. This class is thread-safe.</p>
+<dl class="attribute">
+<dt id="scheduler.recon.manager.ReconciliationManager.COUNT_WARNING_THRESHOLD">
+<code class="descname">COUNT_WARNING_THRESHOLD</code><em class="property"> = 1000</em><a class="headerlink" href="#scheduler.recon.manager.ReconciliationManager.COUNT_WARNING_THRESHOLD" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="scheduler.test.node.test_manager.TestNodeManager.test_change_agent_id">
-<code class="descname">test_change_agent_id</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_change_agent_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests the NodeManager where a registered node changes its agent ID</p>
+<dt id="scheduler.recon.manager.ReconciliationManager.add_task_ids">
+<code class="descname">add_task_ids</code><span class="sig-paren">(</span><em>task_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.recon.manager.ReconciliationManager.add_task_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a list of task IDs that need to be reconciled</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_ids</strong> (<em>[string]</em>) &#8211; The list of task IDs to reconcile</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.recon.manager.ReconciliationManager.driver">
+<code class="descname">driver</code><a class="headerlink" href="#scheduler.recon.manager.ReconciliationManager.driver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the driver</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The driver</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">mesos_api.mesos.SchedulerDriver</span></code></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
-<dt id="scheduler.test.node.test_manager.TestNodeManager.test_lost_known_node">
-<code class="descname">test_lost_known_node</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_lost_known_node" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests the NodeManager where a known node was lost</p>
+<dt id="scheduler.recon.manager.ReconciliationManager.perform_reconciliation">
+<code class="descname">perform_reconciliation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.recon.manager.ReconciliationManager.perform_reconciliation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs task reconciliation with the Mesos master</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="scheduler.test.node.test_manager.TestNodeManager.test_lost_unknown_node">
-<code class="descname">test_lost_unknown_node</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_lost_unknown_node" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests the NodeManager where an unknown node was lost</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="scheduler.test.node.test_manager.TestNodeManager.test_successful_update">
-<code class="descname">test_successful_update</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_successful_update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests doing a successful database update</p>
+<dt id="scheduler.recon.manager.ReconciliationManager.remove_task_id">
+<code class="descname">remove_task_id</code><span class="sig-paren">(</span><em>task_id</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.recon.manager.ReconciliationManager.remove_task_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes the task ID from the reconciliation set</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_id</strong> (<em>string</em>) &#8211; The task ID to remove</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
 
 </div>
-<div class="section" id="module-scheduler.test.node">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-scheduler.test.node" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-scheduler.recon">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-scheduler.recon" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -247,10 +273,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="scheduler.test.offer.html" class="btn btn-neutral float-right" title="scheduler.test.offer package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="scheduler.status.html" class="btn btn-neutral float-right" title="scheduler.status package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="scheduler.test.cleanup.html" class="btn btn-neutral" title="scheduler.test.cleanup package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="scheduler.offer.html" class="btn btn-neutral" title="scheduler.offer package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

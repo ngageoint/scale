@@ -304,14 +304,14 @@
 </dd></dl>
 
 <dl class="attribute">
-<dt id="job.execution.running.tasks.base_task.Task.has_been_scheduled">
-<code class="descname">has_been_scheduled</code><a class="headerlink" href="#job.execution.running.tasks.base_task.Task.has_been_scheduled" title="Permalink to this definition">¶</a></dt>
-<dd><p>Indicates whether this task has been scheduled</p>
+<dt id="job.execution.running.tasks.base_task.Task.has_been_launched">
+<code class="descname">has_been_launched</code><a class="headerlink" href="#job.execution.running.tasks.base_task.Task.has_been_launched" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this task has been launched</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if this task has been scheduled, False otherwise</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if this task has been launched, False otherwise</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
 </tr>
@@ -383,6 +383,21 @@
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="job.execution.running.tasks.base_task.Task.launch">
+<code class="descname">launch</code><span class="sig-paren">(</span><em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.running.tasks.base_task.Task.launch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Marks this task as having been launched</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The time that the task was launched</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="util.html#util.exceptions.ScaleLogicBug" title="util.exceptions.ScaleLogicBug"><code class="xref py py-class docutils literal"><span class="pre">util.exceptions.ScaleLogicBug</span></code></a>: If the task has already started</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="job.execution.running.tasks.base_task.Task.name">
 <code class="descname">name</code><a class="headerlink" href="#job.execution.running.tasks.base_task.Task.name" title="Permalink to this definition">¶</a></dt>
@@ -415,21 +430,6 @@
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.execution.running.tasks.base_task.Task.schedule">
-<code class="descname">schedule</code><span class="sig-paren">(</span><em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.running.tasks.base_task.Task.schedule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Marks this task as having been scheduled</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The time that the task was scheduled</td>
-</tr>
-</tbody>
-</table>
-<p>:raises <a class="reference internal" href="util.html#util.exceptions.ScaleLogicBug" title="util.exceptions.ScaleLogicBug"><code class="xref py py-class docutils literal"><span class="pre">util.exceptions.ScaleLogicBug</span></code></a>: If the task has already started</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -509,7 +509,7 @@
 
 <dl class="class">
 <dt id="job.execution.running.tasks.cleanup_task.CleanupTask">
-<em class="property">class </em><code class="descclassname">job.execution.running.tasks.cleanup_task.</code><code class="descname">CleanupTask</code><span class="sig-paren">(</span><em>agent_id</em>, <em>job_exes</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.running.tasks.cleanup_task.CleanupTask" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">job.execution.running.tasks.cleanup_task.</code><code class="descname">CleanupTask</code><span class="sig-paren">(</span><em>framework_id</em>, <em>agent_id</em>, <em>job_exes</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.running.tasks.cleanup_task.CleanupTask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#job.execution.running.tasks.base_task.Task" title="job.execution.running.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.execution.running.tasks.base_task.Task</span></code></a></p>
 <p>Represents a task that cleans up after job executions. This class is thread-safe.</p>
 <dl class="method">
@@ -634,6 +634,12 @@ the job-task, and the post-task.</p>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.running.tasks.exe_task.JobExecutionTask.lost">
+<code class="descname">lost</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.running.tasks.exe_task.JobExecutionTask.lost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates that this task was lost</p>
 </dd></dl>
 
 <dl class="method">

@@ -51,6 +51,14 @@ util.file_size module
     :undoc-members:
     :show-inheritance:
 
+util.host module
+----------------
+
+.. automodule:: util.host
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 util.lock module
 ----------------
 

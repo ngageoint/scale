@@ -392,7 +392,7 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.recon.ReconciliationThread.add_task_ids">add_task_ids() (scheduler.threads.recon.ReconciliationThread method)</a>
+  <dt><a href="architecture/django/code_docs/scheduler.recon.html#scheduler.recon.manager.ReconciliationManager.add_task_ids">add_task_ids() (scheduler.recon.manager.ReconciliationManager method)</a>
   </dt>
 
       
@@ -848,6 +848,16 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.manager.NodeManager.clear">clear() (scheduler.node.manager.NodeManager method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.manager.OfferManager.clear">(scheduler.offer.manager.OfferManager method)</a>
+  </dt>
+
+      </dl></dd>
+      
   <dt><a href="architecture/django/code_docs/cli.html#module-cli">cli (module)</a>
   </dt>
 
@@ -1097,12 +1107,18 @@
   <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.utils.convert_mesos_status_to_task_status">convert_mesos_status_to_task_status() (in module mesos_api.utils)</a>
   </dt>
 
-      
-  <dt><a href="architecture/django/code_docs/scheduler.status.html#scheduler.status.manager.StatusManager.COUNT_WARNING_THRESHOLD">COUNT_WARNING_THRESHOLD (scheduler.status.manager.StatusManager attribute)</a>
-  </dt>
-
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="architecture/django/code_docs/scheduler.recon.html#scheduler.recon.manager.ReconciliationManager.COUNT_WARNING_THRESHOLD">COUNT_WARNING_THRESHOLD (scheduler.recon.manager.ReconciliationManager attribute)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/scheduler.status.html#scheduler.status.manager.StatusManager.COUNT_WARNING_THRESHOLD">(scheduler.status.manager.StatusManager attribute)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.countries">countries (storage.models.ScaleFile attribute)</a>
   </dt>
@@ -1892,12 +1908,12 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.db_sync.DatabaseSyncThread.driver">driver (scheduler.threads.db_sync.DatabaseSyncThread attribute)</a>
+  <dt><a href="architecture/django/code_docs/scheduler.recon.html#scheduler.recon.manager.ReconciliationManager.driver">driver (scheduler.recon.manager.ReconciliationManager attribute)</a>
   </dt>
 
       <dd><dl>
         
-  <dt><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.recon.ReconciliationThread.driver">(scheduler.threads.recon.ReconciliationThread attribute)</a>
+  <dt><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.db_sync.DatabaseSyncThread.driver">(scheduler.threads.db_sync.DatabaseSyncThread attribute)</a>
   </dt>
 
         
@@ -2267,12 +2283,12 @@
   <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.broker.FileDownload">FileDownload (class in storage.brokers.broker)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/ingest.strike.handlers.html#ingest.strike.handlers.file_handler.FileHandler">FileHandler (class in ingest.strike.handlers.file_handler)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/job.handlers.inputs.html#job.handlers.inputs.file.FileInput">FileInput (class in job.handlers.inputs.file)</a>
   </dt>
@@ -2357,6 +2373,10 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/job.test.execution.running.html#job.test.execution.running.test_job_exe.TestRunningJobExecution.fixtures">(job.test.execution.running.test_job_exe.TestRunningJobExecution attribute)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobExecutionManager.fixtures">(job.test.test_models.TestJobExecutionManager attribute)</a>
   </dt>
 
@@ -2379,6 +2399,10 @@
 
       
   <dt><a href="architecture/django/code_docs/util.html#util.middleware.MultipleProxyMiddleware.FORWARDED_FOR_FIELDS">FORWARDED_FOR_FIELDS (util.middleware.MultipleProxyMiddleware attribute)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/scheduler.sync.html#scheduler.sync.scheduler_manager.SchedulerManager.framework_id">framework_id (scheduler.sync.scheduler_manager.SchedulerManager attribute)</a>
   </dt>
 
       
@@ -3755,12 +3779,6 @@
   <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.api.get_scheduler">get_scheduler() (in module mesos_api.api)</a>
   </dt>
 
-      <dd><dl>
-        
-  <dt><a href="architecture/django/code_docs/scheduler.sync.html#scheduler.sync.scheduler_manager.SchedulerManager.get_scheduler">(scheduler.sync.scheduler_manager.SchedulerManager method)</a>
-  </dt>
-
-      </dl></dd>
       
   <dt><a href="architecture/django/code_docs/metrics.html#metrics.registry.get_serializer">get_serializer() (in module metrics.registry)</a>
   </dt>
@@ -3892,9 +3910,15 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/scheduler.cleanup.html#scheduler.cleanup.manager.CleanupManager.get_task_ids_for_reconciliation">get_task_ids_for_reconciliation() (scheduler.cleanup.manager.CleanupManager method)</a>
+  <dt><a href="architecture/django/code_docs/job.execution.running.html#job.execution.running.manager.RunningJobExecutionManager.get_task_ids_for_reconciliation">get_task_ids_for_reconciliation() (job.execution.running.manager.RunningJobExecutionManager method)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/scheduler.cleanup.html#scheduler.cleanup.manager.CleanupManager.get_task_ids_for_reconciliation">(scheduler.cleanup.manager.CleanupManager method)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.graph.RecipeGraph.get_topological_order">get_topological_order() (recipe.handlers.graph.RecipeGraph method)</a>
   </dt>
@@ -4101,12 +4125,12 @@
   <dt><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.node.NodeOffers.has_accepted_job_exes">has_accepted_job_exes() (scheduler.offer.node.NodeOffers method)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="architecture/django/code_docs/job.execution.running.tasks.html#job.execution.running.tasks.base_task.Task.has_been_scheduled">has_been_scheduled (job.execution.running.tasks.base_task.Task attribute)</a>
+  <dt><a href="architecture/django/code_docs/job.execution.running.tasks.html#job.execution.running.tasks.base_task.Task.has_been_launched">has_been_launched (job.execution.running.tasks.base_task.Task attribute)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/job.execution.running.tasks.html#job.execution.running.tasks.base_task.Task.has_ended">has_ended (job.execution.running.tasks.base_task.Task attribute)</a>
   </dt>
@@ -4188,6 +4212,10 @@
 
       </dl></dd>
       
+  <dt><a href="architecture/django/code_docs/util.html#util.host.HostAddress">HostAddress (class in util.host)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.host_broker.HostBroker">HostBroker (class in storage.brokers.host_broker)</a>
   </dt>
 
@@ -4195,6 +4223,12 @@
   <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.Node.hostname">hostname (scheduler.node.node_class.Node attribute)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/util.html#util.host.HostAddress.hostname">(util.host.HostAddress attribute)</a>
+  </dt>
+
+      </dl></dd>
   </dl></td>
 </tr></table>
 
@@ -5186,6 +5220,22 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/job.test.execution.html#module-job.test.execution">job.test.execution (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/job.test.execution.running.html#module-job.test.execution.running">job.test.execution.running (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/job.test.execution.running.html#module-job.test.execution.running.test_job_exe">job.test.execution.running.test_job_exe (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/job.test.execution.running.html#module-job.test.execution.running.test_manager">job.test.execution.running.test_manager (module)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/job.test.management.html#module-job.test.management">job.test.management (module)</a>
   </dt>
 
@@ -5233,6 +5283,8 @@
   <dt><a href="architecture/django/code_docs/job.html#module-job.urls">job.urls (module)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/job.html#module-job.views">job.views (module)</a>
   </dt>
@@ -5255,8 +5307,6 @@
   </dt>
 
       </dl></dd>
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/job.execution.running.tasks.html#job.execution.running.tasks.exe_task.JobExecutionTask.job_exe_id">job_exe_id (job.execution.running.tasks.exe_task.JobExecutionTask attribute)</a>
   </dt>
@@ -5852,6 +5902,10 @@
 
       </dl></dd>
       
+  <dt><a href="architecture/django/code_docs/job.execution.running.tasks.html#job.execution.running.tasks.base_task.Task.launch">launch() (job.execution.running.tasks.base_task.Task method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/batch.html#batch.views.BatchesView.list">list() (batch.views.BatchesView method)</a>
   </dt>
 
@@ -6026,6 +6080,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/job.execution.running.tasks.html#job.execution.running.tasks.exe_task.JobExecutionTask.lost">lost() (job.execution.running.tasks.exe_task.JobExecutionTask method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.manager.NodeManager.lost_node">lost_node() (scheduler.node.manager.NodeManager method)</a>
   </dt>
 
@@ -6087,6 +6145,10 @@
       </dl></dd>
       
   <dt><a href="architecture/django/code_docs/util.html#util.rest.PlainTextRenderer.media_type">media_type (util.rest.PlainTextRenderer attribute)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/scheduler.sync.html#scheduler.sync.scheduler_manager.SchedulerManager.mesos_address">mesos_address (scheduler.sync.scheduler_manager.SchedulerManager attribute)</a>
   </dt>
 
       
@@ -7932,6 +7994,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/scheduler.recon.html#scheduler.recon.manager.ReconciliationManager.perform_reconciliation">perform_reconciliation() (scheduler.recon.manager.ReconciliationManager method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/job.html#job.clock.perform_tick">perform_tick() (in module job.clock)</a>
   </dt>
 
@@ -8009,6 +8075,12 @@
   <dt><a href="architecture/django/code_docs/port.html#module-port">port (module)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/util.html#util.host.HostAddress.port">(util.host.HostAddress attribute)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="architecture/django/code_docs/port.html#module-port.apps">port.apps (module)</a>
   </dt>
@@ -9358,6 +9430,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/scheduler.recon.html#scheduler.recon.manager.ReconciliationManager">ReconciliationManager (class in scheduler.recon.manager)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.recon.ReconciliationThread">ReconciliationThread (class in scheduler.threads.recon)</a>
   </dt>
 
@@ -9422,7 +9498,7 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.recon.ReconciliationThread.remove_task_id">remove_task_id() (scheduler.threads.recon.ReconciliationThread method)</a>
+  <dt><a href="architecture/django/code_docs/scheduler.recon.html#scheduler.recon.manager.ReconciliationManager.remove_task_id">remove_task_id() (scheduler.recon.manager.ReconciliationManager method)</a>
   </dt>
 
       
@@ -9724,10 +9800,6 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/job.execution.running.tasks.html#job.execution.running.tasks.base_task.Task.schedule">schedule() (job.execution.running.tasks.base_task.Task method)</a>
-  </dt>
-
-      
   <dt><a href="architecture/django/code_docs/job.html#job.models.JobExecutionManager.schedule_job_executions">schedule_job_executions() (job.models.JobExecutionManager method)</a>
   </dt>
 
@@ -9806,10 +9878,6 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/scheduler.html#module-scheduler.managers">scheduler.managers (module)</a>
-  </dt>
-
-      
   <dt><a href="architecture/django/code_docs/scheduler.migrations.html#module-scheduler.migrations">scheduler.migrations (module)</a>
   </dt>
 
@@ -9859,6 +9927,14 @@
 
       
   <dt><a href="architecture/django/code_docs/scheduler.offer.html#module-scheduler.offer.offer">scheduler.offer.offer (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/scheduler.recon.html#module-scheduler.recon">scheduler.recon (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/scheduler.recon.html#module-scheduler.recon.manager">scheduler.recon.manager (module)</a>
   </dt>
 
       
@@ -10015,10 +10091,6 @@
   </dt>
 
       </dl></dd>
-      
-  <dt><a href="architecture/django/code_docs/scheduler.html#scheduler.managers.SchedulerManagers">SchedulerManagers (class in scheduler.managers)</a>
-  </dt>
-
       
   <dt><a href="architecture/django/code_docs/scheduler.html#scheduler.serializers.SchedulerSerializer">SchedulerSerializer (class in scheduler.serializers)</a>
   </dt>
@@ -10456,6 +10528,14 @@
 
         
   <dt><a href="architecture/django/code_docs/job.test.configuration.results.html#job.test.configuration.results.test_results_manifest.TestResultsManifestConstructor.setUp">(job.test.configuration.results.test_results_manifest.TestResultsManifestConstructor method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/job.test.execution.running.html#job.test.execution.running.test_job_exe.TestRunningJobExecution.setUp">(job.test.execution.running.test_job_exe.TestRunningJobExecution method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/job.test.execution.running.html#job.test.execution.running.test_manager.TestRunningJobExecutionManager.setUp">(job.test.execution.running.test_manager.TestRunningJobExecutionManager method)</a>
   </dt>
 
         
@@ -11868,6 +11948,10 @@
 
       </dl></dd>
       
+  <dt><a href="architecture/django/code_docs/job.execution.running.html#job.execution.running.job_exe.RunningJobExecution.task_lost">task_lost() (job.execution.running.job_exe.RunningJobExecution method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/job.execution.running.html#job.execution.running.job_exe.RunningJobExecution.task_start">task_start() (job.execution.running.job_exe.RunningJobExecution method)</a>
   </dt>
 
@@ -12293,6 +12377,10 @@
 
       
   <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobDetailsView.test_cancel_successful">test_cancel_successful() (job.test.test_views.TestJobDetailsView method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/job.test.execution.running.html#job.test.execution.running.test_job_exe.TestRunningJobExecution.test_canceled_job_execution">test_canceled_job_execution() (job.test.execution.running.test_job_exe.TestRunningJobExecution method)</a>
   </dt>
 
       
@@ -12976,6 +13064,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/job.test.execution.running.html#job.test.execution.running.test_job_exe.TestRunningJobExecution.test_failed_normal_job_execution">test_failed_normal_job_execution() (job.test.execution.running.test_job_exe.TestRunningJobExecution method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFileManagerUploadFiles.test_fails">test_fails() (storage.test.test_models.TestScaleFileManagerUploadFiles method)</a>
   </dt>
 
@@ -13031,6 +13123,10 @@
 
       
   <dt><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_forced_specific_job">test_forced_specific_job() (recipe.test.test_models.TestRecipeManagerReprocessRecipe method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/job.test.execution.running.html#job.test.execution.running.test_job_exe.TestRunningJobExecution.test_general_algorithm_error">test_general_algorithm_error() (job.test.execution.running.test_job_exe.TestRunningJobExecution method)</a>
   </dt>
 
       
@@ -13273,6 +13369,10 @@
 
       
   <dt><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_views.TestSchedulerView.test_get_scheduler_success">test_get_scheduler_success() (scheduler.test.test_views.TestSchedulerView method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/job.test.execution.running.html#job.test.execution.running.test_manager.TestRunningJobExecutionManager.test_get_task_ids_for_reconciliation">test_get_task_ids_for_reconciliation() (job.test.execution.running.test_manager.TestRunningJobExecutionManager method)</a>
   </dt>
 
       
@@ -13778,6 +13878,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/job.test.execution.running.html#job.test.execution.running.test_job_exe.TestRunningJobExecution.test_job_task_launch_error">test_job_task_launch_error() (job.test.execution.running.test_job_exe.TestRunningJobExecution method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/queue.test.html#queue.test.test_views.TestRequeueJobsView.test_job_type_categories">test_job_type_categories() (queue.test.test_views.TestRequeueJobsView method)</a>
   </dt>
 
@@ -13966,6 +14070,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/job.test.execution.running.html#job.test.execution.running.test_job_exe.TestRunningJobExecution.test_lost_job_execution">test_lost_job_execution() (job.test.execution.running.test_job_exe.TestRunningJobExecution method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_manager.TestNodeManager.test_lost_known_node">test_lost_known_node() (scheduler.test.node.test_manager.TestNodeManager method)</a>
   </dt>
 
@@ -13979,6 +14087,10 @@
   </dt>
 
       </dl></dd>
+      
+  <dt><a href="architecture/django/code_docs/job.test.execution.running.html#job.test.execution.running.test_job_exe.TestRunningJobExecution.test_lost_task">test_lost_task() (job.test.execution.running.test_job_exe.TestRunningJobExecution method)</a>
+  </dt>
+
       
   <dt><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_manager.TestNodeManager.test_lost_unknown_node">test_lost_unknown_node() (scheduler.test.node.test_manager.TestNodeManager method)</a>
   </dt>
@@ -14679,12 +14791,12 @@
   <dt><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_invalid">test_parse_int_invalid() (util.test.test_rest.TestRest method)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list">test_parse_int_list() (util.test.test_rest.TestRest method)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_accepted_all">test_parse_int_list_accepted_all() (util.test.test_rest.TestRest method)</a>
   </dt>
@@ -14853,6 +14965,14 @@
 
       
   <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobManager.test_populate_job_data">test_populate_job_data() (job.test.test_models.TestJobManager method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/job.test.execution.running.html#job.test.execution.running.test_job_exe.TestRunningJobExecution.test_post_task_launch_error">test_post_task_launch_error() (job.test.execution.running.test_job_exe.TestRunningJobExecution method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/job.test.execution.running.html#job.test.execution.running.test_job_exe.TestRunningJobExecution.test_pre_task_launch_error">test_pre_task_launch_error() (job.test.execution.running.test_job_exe.TestRunningJobExecution method)</a>
   </dt>
 
       
@@ -15748,6 +15868,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/job.test.execution.running.html#job.test.execution.running.test_job_exe.TestRunningJobExecution.test_successful_normal_job_execution">test_successful_normal_job_execution() (job.test.execution.running.test_job_exe.TestRunningJobExecution method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobTypeManagerCreateJobType.test_successful_other_fields">test_successful_other_fields() (job.test.test_models.TestJobTypeManagerCreateJobType method)</a>
   </dt>
 
@@ -15993,6 +16117,10 @@
       </dl></dd>
       
   <dt><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestIngestStatusView.test_time_range">test_time_range() (ingest.test.test_views.TestIngestStatusView method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/job.test.execution.running.html#job.test.execution.running.test_job_exe.TestRunningJobExecution.test_timed_out_job_execution">test_timed_out_job_execution() (job.test.execution.running.test_job_exe.TestRunningJobExecution method)</a>
   </dt>
 
       
@@ -17066,6 +17194,14 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/job.test.execution.running.html#job.test.execution.running.test_job_exe.TestRunningJobExecution">TestRunningJobExecution (class in job.test.execution.running.test_job_exe)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/job.test.execution.running.html#job.test.execution.running.test_manager.TestRunningJobExecutionManager">TestRunningJobExecutionManager (class in job.test.execution.running.test_manager)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_s3_broker.TestS3Broker">TestS3Broker (class in storage.test.brokers.test_s3_broker)</a>
   </dt>
 
@@ -17515,6 +17651,12 @@
   <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.Node.update_from_mesos">update_from_mesos() (scheduler.node.node_class.Node method)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/scheduler.sync.html#scheduler.sync.scheduler_manager.SchedulerManager.update_from_mesos">(scheduler.sync.scheduler_manager.SchedulerManager method)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.Node.update_from_model">update_from_model() (scheduler.node.node_class.Node method)</a>
   </dt>
@@ -17633,6 +17775,10 @@
 
       
   <dt><a href="architecture/django/code_docs/util.html#module-util.file_size">util.file_size (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/util.html#module-util.host">util.host (module)</a>
   </dt>
 
       

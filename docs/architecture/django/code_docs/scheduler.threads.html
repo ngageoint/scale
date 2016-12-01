@@ -119,7 +119,6 @@
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.apps">scheduler.apps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.cluster_utils">scheduler.cluster_utils module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.initialize">scheduler.initialize module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.managers">scheduler.managers module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.models">scheduler.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.scale_scheduler">scheduler.scale_scheduler module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.serializers">scheduler.serializers module</a></li>
@@ -201,7 +200,7 @@
 <p>Defines the class that manages the database sync background thread</p>
 <dl class="class">
 <dt id="scheduler.threads.db_sync.DatabaseSyncThread">
-<em class="property">class </em><code class="descclassname">scheduler.threads.db_sync.</code><code class="descname">DatabaseSyncThread</code><span class="sig-paren">(</span><em>driver</em>, <em>job_exe_manager</em>, <em>job_type_manager</em>, <em>managers</em>, <em>scheduler_manager</em>, <em>workspace_manager</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.threads.db_sync.DatabaseSyncThread" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">scheduler.threads.db_sync.</code><code class="descname">DatabaseSyncThread</code><span class="sig-paren">(</span><em>driver</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.threads.db_sync.DatabaseSyncThread" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>This class manages the database sync background thread for the scheduler</p>
 <dl class="attribute">
@@ -245,57 +244,13 @@
 <p>Defines the class that manages the reconciliation background thread</p>
 <dl class="class">
 <dt id="scheduler.threads.recon.ReconciliationThread">
-<em class="property">class </em><code class="descclassname">scheduler.threads.recon.</code><code class="descname">ReconciliationThread</code><span class="sig-paren">(</span><em>driver</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.threads.recon.ReconciliationThread" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">scheduler.threads.recon.</code><code class="descname">ReconciliationThread</code><a class="headerlink" href="#scheduler.threads.recon.ReconciliationThread" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>This class manages the reconciliation background thread for the scheduler</p>
 <dl class="attribute">
 <dt id="scheduler.threads.recon.ReconciliationThread.THROTTLE">
 <code class="descname">THROTTLE</code><em class="property"> = 60</em><a class="headerlink" href="#scheduler.threads.recon.ReconciliationThread.THROTTLE" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="method">
-<dt id="scheduler.threads.recon.ReconciliationThread.add_task_ids">
-<code class="descname">add_task_ids</code><span class="sig-paren">(</span><em>task_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.threads.recon.ReconciliationThread.add_task_ids" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds a list of task IDs that need to be reconciled</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_ids</strong> (<em>[str]</em>) &#8211; The list of task IDs to reconcile</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="scheduler.threads.recon.ReconciliationThread.driver">
-<code class="descname">driver</code><a class="headerlink" href="#scheduler.threads.recon.ReconciliationThread.driver" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the driver</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The driver</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">mesos_api.mesos.SchedulerDriver</span></code></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="scheduler.threads.recon.ReconciliationThread.remove_task_id">
-<code class="descname">remove_task_id</code><span class="sig-paren">(</span><em>task_id</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.threads.recon.ReconciliationThread.remove_task_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Removes the task ID from the reconciliation set</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_id</strong> (<em>str</em>) &#8211; The task ID to remove</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
 
 <dl class="method">
 <dt id="scheduler.threads.recon.ReconciliationThread.run">
@@ -317,7 +272,7 @@
 <p>Defines the class that manages the scheduling background thread</p>
 <dl class="class">
 <dt id="scheduler.threads.schedule.SchedulingThread">
-<em class="property">class </em><code class="descclassname">scheduler.threads.schedule.</code><code class="descname">SchedulingThread</code><span class="sig-paren">(</span><em>driver</em>, <em>framework_id</em>, <em>job_exe_manager</em>, <em>job_type_manager</em>, <em>managers</em>, <em>offer_manager</em>, <em>scheduler_manager</em>, <em>workspace_manager</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.threads.schedule.SchedulingThread" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">scheduler.threads.schedule.</code><code class="descname">SchedulingThread</code><span class="sig-paren">(</span><em>driver</em>, <em>framework_id</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.threads.schedule.SchedulingThread" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>This class manages the scheduling background thread for the scheduler</p>
 <dl class="attribute">
@@ -376,7 +331,7 @@
 <p>Defines the class that manages the status update background thread</p>
 <dl class="class">
 <dt id="scheduler.threads.status.StatusUpdateThread">
-<em class="property">class </em><code class="descclassname">scheduler.threads.status.</code><code class="descname">StatusUpdateThread</code><span class="sig-paren">(</span><em>status_manager</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.threads.status.StatusUpdateThread" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">scheduler.threads.status.</code><code class="descname">StatusUpdateThread</code><a class="headerlink" href="#scheduler.threads.status.StatusUpdateThread" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>This class manages the status update background thread for the scheduler</p>
 <dl class="attribute">

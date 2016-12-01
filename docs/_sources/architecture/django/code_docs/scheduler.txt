@@ -11,6 +11,7 @@ Subpackages
     scheduler.migrations
     scheduler.node
     scheduler.offer
+    scheduler.recon
     scheduler.status
     scheduler.sync
     scheduler.test
@@ -47,14 +48,6 @@ scheduler.initialize module
 ---------------------------
 
 .. automodule:: scheduler.initialize
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-scheduler.managers module
--------------------------
-
-.. automodule:: scheduler.managers
     :members:
     :undoc-members:
     :show-inheritance:

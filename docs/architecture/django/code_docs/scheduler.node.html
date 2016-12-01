@@ -119,7 +119,6 @@
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.apps">scheduler.apps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.cluster_utils">scheduler.cluster_utils module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.initialize">scheduler.initialize module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.managers">scheduler.managers module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.models">scheduler.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.scale_scheduler">scheduler.scale_scheduler module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.serializers">scheduler.serializers module</a></li>
@@ -204,6 +203,12 @@
 <em class="property">class </em><code class="descclassname">scheduler.node.manager.</code><code class="descname">NodeManager</code><a class="headerlink" href="#scheduler.node.manager.NodeManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>This class manages the scheduler nodes. This class is thread-safe.</p>
+<dl class="method">
+<dt id="scheduler.node.manager.NodeManager.clear">
+<code class="descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.manager.NodeManager.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears all node data from the manager. This method is intended for testing only.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="scheduler.node.manager.NodeManager.get_node">
 <code class="descname">get_node</code><span class="sig-paren">(</span><em>agent_id</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.manager.NodeManager.get_node" title="Permalink to this definition">¶</a></dt>

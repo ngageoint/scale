@@ -397,6 +397,20 @@ tasks remain.</p>
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="job.execution.running.job_exe.RunningJobExecution.task_lost">
+<code class="descname">task_lost</code><span class="sig-paren">(</span><em>task_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.running.job_exe.RunningJobExecution.task_lost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tells this job execution that one of its tasks was lost</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_id</strong> (<em>string</em>) &#8211; The ID of the task</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.execution.running.job_exe.RunningJobExecution.task_start">
 <code class="descname">task_start</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.running.job_exe.RunningJobExecution.task_start" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -489,6 +503,24 @@ tasks remain.</p>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of running job executions</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="#job.execution.running.job_exe.RunningJobExecution" title="job.execution.running.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.running.job_exe.RunningJobExecution</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.running.manager.RunningJobExecutionManager.get_task_ids_for_reconciliation">
+<code class="descname">get_task_ids_for_reconciliation</code><span class="sig-paren">(</span><em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.running.manager.RunningJobExecutionManager.get_task_ids_for_reconciliation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the IDs of the job execution tasks that need to be reconciled</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The current time</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of IDs of the tasks that need to be reconciled</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">[string]</td>
 </tr>
 </tbody>
 </table>
