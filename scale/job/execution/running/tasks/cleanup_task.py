@@ -61,7 +61,7 @@ class CleanupTask(Task):
         self._is_docker_privileged = False
 
         # Command deletes all non-running containers
-        delete_containers_cmd = 'docker rm $(docker ps -f status=exited -f status=created -q)'
+        delete_containers_cmd = 'docker rm $(docker ps -f status=created -f status=dead -f status=exited -q)'
 
         # Command loops over specified volumes to delete and deletes it if it exists
         volume_exists_check = '"`docker volume ls -q | grep "$vol"`" == "$vol"'
