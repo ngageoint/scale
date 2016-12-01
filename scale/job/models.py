@@ -1035,9 +1035,6 @@ class JobExecutionManager(models.Manager):
             job_exe.command_arguments = interface.populate_command_argument_settings(job_exe.command_arguments,
                                                                                      job_exe.get_job_configuration())
 
-            # Add env_vars to the command line.
-            job_exe.command_arguments = interface.populate_command_argument_env_vars(job_exe.command_arguments)
-
             job_exe.job = jobs[job_exe.job_id]
             job_exe.set_cluster_id(framework_id)
             job_exe.status = 'RUNNING'
@@ -1312,8 +1309,10 @@ class JobExecution(models.Model):
         configuration.configure_workspace_docker_params(self, workspaces, docker_volumes)
 
         # Add job environment variable as docker parameters
-        interface = self.get_job_interface().get_dict()
-        for env_var in interface['env_vars']:
+        interface = self.get_job_interface()
+        env_vars = interface.populate_env_vars_arguments(configuration)
+
+        for env_var in env_vars:
             env_var_name = env_var['name']
             env_var_value = env_var['value']
             configuration.add_job_task_docker_params([DockerParam('env', env_var_name + '=' + env_var_value)])
@@ -2436,5 +2435,4 @@ class TaskUpdate(models.Model):
 
     class Meta(object):
         """Meta information for the database"""
-
         db_table = 'task_update'

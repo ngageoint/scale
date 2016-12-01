@@ -974,27 +974,40 @@ class TestJobInterfacePreSteps(TestCase):
         job_command_arguments = job_interface.populate_command_argument_settings(command_arguments, job_config)
         self.assertEqual(job_command_arguments.strip(' '), config_key_value, 'expected a different command from pre_steps')
 
-    def test_env_vars_in_command(self):
+    def test_env_vars_replacement(self):
         job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
 
         job_interface_dict['version'] = '1.2'
-        job_interface_dict['command_arguments'] = '${env1} ${env2}'
+        job_interface_dict['command_arguments'] = ''
         job_interface_dict['env_vars'] = [{
-            'name': 'env1',
-            'value': 'TEST=TRUE',
+            'name': 'test_var',
+            'value': '${setting1}',
         }, {
-            'name': 'env2',
-            'value': 'SOME_VALUE',
+            'name': 'test_var2',
+            'value': '${setting2}',
+        }]
+        job_interface_dict['settings'] = [{
+            'name': 'setting1',
+            'required': False,
+        }, {
+            'name': 'setting2',
+            'required': False,
         }]
 
-        command_arguments = job_interface_dict['command_arguments']
-        config_key_values = ['TEST=TRUE', 'SOME_VALUE']
+
+        config_key_value = ['required_value1', 'another_val']
+        job_config_json = {'job_task': {'settings': [{'name': 'setting1', 'value': config_key_value[0]},
+                                                     {'name': 'setting2', 'value': config_key_value[1]}]}}
+        job_config = JobConfiguration(job_config_json)
 
         job_interface = JobInterface(job_interface_dict)
 
-        job_command_arguments = job_interface.populate_command_argument_env_vars(command_arguments)
-        self.assertEqual(job_command_arguments, ' '.join(config_key_values), 'expected a different command from pre_steps')
-        
+        env_vars_arguments = job_interface.populate_env_vars_arguments(job_config)
+        env_vars_value1 = env_vars_arguments[0]['value']
+        env_vars_value2 = env_vars_arguments[1]['value']
+        self.assertEqual(env_vars_value1, config_key_value[0], 'expected a different command from pre_steps')
+        self.assertEqual(env_vars_value2, config_key_value[1], 'expected a different command from pre_steps')
+
 
 class TestJobInterfaceValidateConnection(TestCase):
 
