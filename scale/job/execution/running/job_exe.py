@@ -294,7 +294,7 @@ class RunningJobExecution(object):
         """Tells this job execution that one of its tasks was lost
 
         :param task_id: The ID of the task
-        :type task_id: str
+        :type task_id: string
         """
 
         with self._lock:
