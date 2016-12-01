@@ -64,7 +64,7 @@ def run(client):
         print("WEBSERVER_ADDRESS=http://%s.marathon.mesos:%s" % (app_name, webserver_port))
 
 
-def delete_marathon_app(client, app_name, fail_on_error=False):
+def delete_marathon_app(client, app_name, fail_on_error=False, sleep_secs=5):
     print("Attempting delete of Marathon app: %s" % app_name)
     try:
         response = client.delete_app(app_name, force=True)
@@ -75,14 +75,30 @@ def delete_marathon_app(client, app_name, fail_on_error=False):
         else:
             print('Not found. Ignoring...')
 
+    while(check_app_exists(client, app_name)):
+        print('Waiting for delete of Marathon App: %s' % app_name)
+        time.sleep(sleep_secs)
 
-def deploy_marathon_app(client, marathon_json):
+
+def deploy_marathon_app(client, marathon_json, sleep_secs=10, retries=3):
     app_id = marathon_json['id']
     print("Attempting deploy Marathon app with id: %s" % app_id)
     print(marathon_json, file=sys.stderr)
     marathon_app = MarathonApp.from_json(marathon_json)
-    response = client.create_app(app_id, marathon_app)
-    print(response, file=sys.stderr)
+    
+    # We are going to retry, in the case of blocked deployments
+    attempt = 0
+    while attempt < retries:
+        try:
+            response = client.create_app(app_id, marathon_app)
+            print(response, file=sys.stderr)
+            print('Deployment succeeded.')
+            break
+        except Exception, ex:
+            attempt += 1
+            print(ex.message)
+            print('Failure attempting to deploy app. Retrying...')
+            time.sleep(sleep_secs)
 
 
 def check_app_exists(client, app_name):
@@ -107,11 +123,6 @@ def wait_app_healthy(client, app_name, sleep_secs=5):
 def deploy_webserver(client, app_name, es_urls, db_host, db_port):
     # attempt to delete an old instance..if it doesn't exists it will error but we don't care so we ignore it
     delete_marathon_app(client, app_name)
-
-    # Block, until previously deployed app is gone
-    while check_app_exists(client, app_name):
-        print('Waiting for previously deployed app %s to be completely removed.' % app_name)
-        time.sleep(1)
 
     vhost = os.getenv('SCALE_VHOST')
     cpu = os.getenv('SCALE_WEBSERVER_CPU', 1)
@@ -267,11 +278,6 @@ def get_elasticsearch_urls():
 def deploy_logstash(client, app_name, es_urls):
     # attempt to delete an old instance..if it doesn't exists it will error but we don't care so we ignore it
     delete_marathon_app(client, app_name)
-
-    # Block, until previously deployed app is gone
-    while check_app_exists(client, app_name):
-        print('Waiting for previously deployed app %s to be completely removed.' % app_name)
-        time.sleep(1)
 
     # get the Logstash container API endpoints
     logstash_image = os.getenv('LOGSTASH_DOCKER_IMAGE', 'geoint/logstash-elastic-ha')
