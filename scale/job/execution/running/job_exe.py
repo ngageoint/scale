@@ -290,6 +290,21 @@ class RunningJobExecution(object):
             self._current_task = None
             self._remaining_tasks = []
 
+    def task_lost(self, task_id):
+        """Tells this job execution that one of its tasks was lost
+
+        :param task_id: The ID of the task
+        :type task_id: string
+        """
+
+        with self._lock:
+            if not self._current_task or self._current_task.id != task_id:
+                return
+
+            self._current_task.lost()
+            self._remaining_tasks.insert(0, self._current_task)
+            self._current_task = None
+
     @retry_database_query
     def task_start(self, task_id, when):
         """Tells this job execution that one of its tasks has started running

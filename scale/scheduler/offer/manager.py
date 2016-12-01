@@ -39,6 +39,16 @@ class OfferManager(object):
             for offer in offers:
                 self._new_offers[offer.id] = offer
 
+    def clear(self):
+        """Clears all offer data from the manager. This method is intended for testing only.
+        """
+
+        with self._lock:
+            self._new_offers = {}
+            self._nodes_by_agent_id = {}
+            self._nodes_by_node_id = {}
+            self._nodes_by_offer_id = {}
+
     def consider_new_job_exe(self, job_exe):
         """Considers the queued job execution to see if it can be run with the current offered resources
 
@@ -229,3 +239,6 @@ class OfferManager(object):
         del self._nodes_by_node_id[node_offers.node.id]
         for offer_id in node_offers.offer_ids:
             del self._nodes_by_offer_id[offer_id]
+
+
+offer_mgr = OfferManager()

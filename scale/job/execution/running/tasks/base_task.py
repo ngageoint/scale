@@ -26,7 +26,7 @@ class Task(object):
         :type task_id: string
         :param task_name: The name of the task
         :type task_name: string
-        :param agent_id: The ID of the agent on which the task is scheduled
+        :param agent_id: The ID of the agent on which the task is launched
         :type agent_id: string
         """
 
@@ -35,8 +35,8 @@ class Task(object):
         self._task_name = task_name
         self._agent_id = agent_id
         self._lock = threading.Lock()
-        self._has_been_scheduled = False
-        self._scheduled = None
+        self._has_been_launched = False
+        self._launched = None
         self._last_status_update = None
         self._has_started = False
         self._started = None
@@ -103,14 +103,14 @@ class Task(object):
         return self._docker_params
 
     @property
-    def has_been_scheduled(self):
-        """Indicates whether this task has been scheduled
+    def has_been_launched(self):
+        """Indicates whether this task has been launched
 
-        :returns: True if this task has been scheduled, False otherwise
+        :returns: True if this task has been launched, False otherwise
         :rtype: bool
         """
 
-        return self._has_been_scheduled
+        return self._has_been_launched
 
     @property
     def has_ended(self):
@@ -203,14 +203,14 @@ class Task(object):
 
         with self._lock:
             if not self._last_status_update:
-                return False  # Has not been scheduled yet
+                return False  # Has not been launched yet
             time_since_last_update = when - self._last_status_update
             return time_since_last_update > RECONCILIATION_THRESHOLD
 
-    def schedule(self, when):
-        """Marks this task as having been scheduled
+    def launch(self, when):
+        """Marks this task as having been launched
 
-        :param when: The time that the task was scheduled
+        :param when: The time that the task was launched
         :type when: :class:`datetime.datetime`
 
         :raises :class:`util.exceptions.ScaleLogicBug`: If the task has already started
@@ -218,10 +218,10 @@ class Task(object):
 
         with self._lock:
             if self._has_started:
-                raise ScaleLogicBug('Trying to schedule a task that has already started')
+                raise ScaleLogicBug('Trying to launch a task that has already started')
 
-            self._has_been_scheduled = True
-            self._scheduled = when
+            self._has_been_launched = True
+            self._launched = when
             self._last_status_update = when
 
     def update(self, task_update):
@@ -246,8 +246,8 @@ class Task(object):
             elif task_update.status == TaskStatusUpdate.LOST:
                 # Reset task to initial state (unless already ended)
                 if not self._has_ended:
-                    self._has_been_scheduled = False
-                    self._scheduled = None
+                    self._has_been_launched = False
+                    self._launched = None
                     self._last_status_update = None
                     self._has_started = False
                     self._started = None

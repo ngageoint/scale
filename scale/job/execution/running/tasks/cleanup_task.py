@@ -40,16 +40,18 @@ class CleanupTask(Task):
     """Represents a task that cleans up after job executions. This class is thread-safe.
     """
 
-    def __init__(self, agent_id, job_exes):
+    def __init__(self, framework_id, agent_id, job_exes):
         """Constructor
 
+        :param framework_id: The framework ID
+        :type framework_id: string
         :param agent_id: The agent ID
         :type agent_id: string
         :param job_exes: The list of job executions to clean up
         :type job_exes: [:class:`job.execution.running.job_exe.RunningJobExecution`]
         """
 
-        task_id = '%s_%s_%d' % (CLEANUP_TASK_ID_PREFIX, agent_id, COUNTER.get_next())
+        task_id = '%s_%s_%d' % (CLEANUP_TASK_ID_PREFIX, framework_id, COUNTER.get_next())
         super(CleanupTask, self).__init__(task_id, 'Scale Cleanup', agent_id)
 
         self._job_exes = job_exes

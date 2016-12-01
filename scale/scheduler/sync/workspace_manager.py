@@ -36,3 +36,6 @@ class WorkspaceManager(object):
 
         with self._lock:
             self._workspaces = updated_workspaces
+
+
+workspace_mgr = WorkspaceManager()

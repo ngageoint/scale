@@ -32,7 +32,7 @@ class TestNodeCleanup(TestCase):
         self.assertIsNotNone(task)
 
         # Fail task after running and get different task next time
-        task.schedule(now())
+        task.launch(now())
         update = TaskStatusUpdate(task.id, task.agent_id, TaskStatusUpdate.RUNNING, now())
         node_cleanup.handle_task_update(update)
         update = TaskStatusUpdate(task.id, task.agent_id, TaskStatusUpdate.FAILED, now())
@@ -55,7 +55,7 @@ class TestNodeCleanup(TestCase):
         self.assertEqual(task.agent_id, self.node_agent)
 
         # Schedule initial cleanup and make sure no new task is ready
-        task.schedule(now())
+        task.launch(now())
         self.assertIsNone(node_cleanup.get_next_task())
         self.assertFalse(node.is_initial_cleanup_completed)
 
@@ -78,7 +78,7 @@ class TestNodeCleanup(TestCase):
         self.assertIsNotNone(task)
 
         # Kill task after running and get different task next time
-        task.schedule(now())
+        task.launch(now())
         update = TaskStatusUpdate(task.id, task.agent_id, TaskStatusUpdate.RUNNING, now())
         node_cleanup.handle_task_update(update)
         update = TaskStatusUpdate(task.id, task.agent_id, TaskStatusUpdate.KILLED, now())
@@ -107,7 +107,7 @@ class TestNodeCleanup(TestCase):
         self.assertFalse(node.is_initial_cleanup_completed)
 
         # Lose task with scheduling and get same task again
-        task.schedule(now())
+        task.launch(now())
         update = TaskStatusUpdate(task.id, task.agent_id, TaskStatusUpdate.LOST, now())
         node_cleanup.handle_task_update(update)
         task = node_cleanup.get_next_task()
@@ -116,7 +116,7 @@ class TestNodeCleanup(TestCase):
         self.assertFalse(node.is_initial_cleanup_completed)
 
         # Lose task after running and get same task again
-        task.schedule(now())
+        task.launch(now())
         update = TaskStatusUpdate(task.id, task.agent_id, TaskStatusUpdate.RUNNING, now())
         node_cleanup.handle_task_update(update)
         update = TaskStatusUpdate(task.id, task.agent_id, TaskStatusUpdate.LOST, now())
@@ -143,7 +143,7 @@ class TestNodeCleanup(TestCase):
         self.assertIsNotNone(task)
         self.assertFalse(task.is_initial_cleanup)
         self.assertListEqual(task.job_exes, [job_exe])
-        task.schedule(now())
+        task.launch(now())
         update = TaskStatusUpdate(task.id, task.agent_id, TaskStatusUpdate.RUNNING, now())
         node_cleanup.handle_task_update(update)
         update = TaskStatusUpdate(task.id, task.agent_id, TaskStatusUpdate.FINISHED, now())

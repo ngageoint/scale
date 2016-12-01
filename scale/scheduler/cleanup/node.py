@@ -6,6 +6,7 @@ import threading
 
 from job.execution.running.tasks.cleanup_task import CleanupTask
 from job.execution.running.tasks.update import TaskStatusUpdate
+from scheduler.sync.scheduler_manager import scheduler_mgr
 
 
 JOB_EXES_WARNING_THRESHOLD = 100
@@ -41,17 +42,17 @@ class NodeCleanup(object):
             self._job_exes[job_exe.id] = job_exe
 
     def get_next_task(self):
-        """Returns the next cleanup task to schedule, possibly None
+        """Returns the next cleanup task to launch, possibly None
 
-        :returns: The next cleanup task to schedule, possibly None
+        :returns: The next cleanup task to launch, possibly None
         :rtype: :class:`job.execution.running.tasks.cleanup_task.CleanupTask`
         """
 
         with self._lock:
             self._create_next_task()
 
-            # No task returned if node is paused, no task to schedule, or task is already scheduled
-            if self._node.is_paused or self._current_task is None or self._current_task.has_been_scheduled:
+            # No task returned if node is paused, no task to launched, or task has already been launched
+            if self._node.is_paused or self._current_task is None or self._current_task.has_been_launched:
                 return None
 
             return self._current_task
@@ -125,4 +126,4 @@ class NodeCleanup(object):
                 if len(cleanup_job_exes) >= MAX_JOB_EXES_PER_CLEANUP:
                     break
 
-        self._current_task = CleanupTask(self._node.agent_id, cleanup_job_exes)
+        self._current_task = CleanupTask(scheduler_mgr.framework_id, self._node.agent_id, cleanup_job_exes)

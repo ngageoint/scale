@@ -9,10 +9,17 @@ from django.db import OperationalError
 from django.utils.timezone import now
 from mesos.interface import mesos_pb2
 
+from job.execution.running.manager import running_job_mgr
 from mesos_api.tasks import create_mesos_task
 from queue.job_exe import QueuedJobExecution
 from queue.models import Queue
-from scheduler.offer.manager import OfferManager
+from scheduler.cleanup.manager import cleanup_mgr
+from scheduler.node.manager import node_mgr
+from scheduler.offer.manager import offer_mgr, OfferManager
+from scheduler.recon.manager import recon_mgr
+from scheduler.sync.job_type_manager import job_type_mgr
+from scheduler.sync.scheduler_manager import scheduler_mgr
+from scheduler.sync.workspace_manager import workspace_mgr
 from util.retry import retry_database_query
 
 
@@ -27,36 +34,17 @@ class SchedulingThread(object):
     SCHEDULE_LOOP_WARN_THRESHOLD = datetime.timedelta(seconds=1)
     SCHEDULE_QUERY_WARN_THRESHOLD = datetime.timedelta(milliseconds=100)
 
-    def __init__(self, driver, framework_id, job_exe_manager, job_type_manager, managers, offer_manager,
-                 scheduler_manager, workspace_manager):
+    def __init__(self, driver, framework_id):
         """Constructor
 
         :param driver: The Mesos scheduler driver
         :type driver: :class:`mesos_api.mesos.SchedulerDriver`
         :param framework_id: The scheduling framework ID
         :type framework_id: string
-        :param job_exe_manager: The running job execution manager
-        :type job_exe_manager: :class:`job.execution.running.manager.RunningJobExecutionManager`
-        :param job_type_manager: The job type manager
-        :type job_type_manager: :class:`scheduler.sync.job_type_manager.JobTypeManager`
-        :param managers: The scheduler managers
-        :type managers: :class:`scheduler.managers.SchedulerManagers`
-        :param offer_manager: The offer manager
-        :type offer_manager: :class:`scheduler.offer.manager.OfferManager`
-        :param scheduler_manager: The scheduler manager
-        :type scheduler_manager: :class:`scheduler.sync.scheduler_manager.SchedulerManager`
-        :param workspace_manager: The workspace manager
-        :type workspace_manager: :class:`scheduler.sync.workspace_manager.WorkspaceManager`
         """
 
         self._driver = driver
         self._framework_id = framework_id
-        self._job_exe_manager = job_exe_manager
-        self._job_type_manager = job_type_manager
-        self._managers = managers
-        self._offer_manager = offer_manager
-        self._scheduler_manager = scheduler_manager
-        self._workspace_manager = workspace_manager
         self._job_types = {}  # {Job Type ID: Job Type}
         self._job_type_limit_available = {}  # {Job Type ID: Number still available to be scheduled}
         self._running = True
@@ -106,7 +94,7 @@ class SchedulingThread(object):
 
             if num_tasks == 0:
                 # Since we didn't schedule anything, give resources back to Mesos and pause a moment
-                for node_offers in self._offer_manager.pop_all_offers():
+                for node_offers in offer_mgr.pop_all_offers():
                     for offer_id in node_offers.offer_ids:
                         mesos_offer_id = mesos_pb2.OfferID()
                         mesos_offer_id.value = offer_id
@@ -128,7 +116,7 @@ class SchedulingThread(object):
         """Considers any queued job executions for scheduling
         """
 
-        if self._scheduler_manager.is_paused():
+        if scheduler_mgr.is_paused():
             return
 
         num_job_exes = 0
@@ -142,7 +130,7 @@ class SchedulingThread(object):
                 continue
 
             queued_job_exe = QueuedJobExecution(queue)
-            if self._offer_manager.consider_new_job_exe(queued_job_exe) == OfferManager.ACCEPTED:
+            if offer_mgr.consider_new_job_exe(queued_job_exe) == OfferManager.ACCEPTED:
                 num_job_exes += 1
                 if job_type_id in self._job_type_limit_available:
                     self._job_type_limit_available[job_type_id] -= 1
@@ -153,18 +141,18 @@ class SchedulingThread(object):
         """Considers any tasks for currently running job executions that are ready for the next task to run
         """
 
-        for running_job_exe in self._job_exe_manager.get_ready_job_exes():
-            self._offer_manager.consider_next_task(running_job_exe)
+        for running_job_exe in running_job_mgr.get_ready_job_exes():
+            offer_mgr.consider_next_task(running_job_exe)
 
     def _consider_cleanup_tasks(self):
         """Considers any cleanup tasks to schedule
         """
 
-        if self._scheduler_manager.is_paused():
+        if scheduler_mgr.is_paused():
             return
 
-        for task in self._managers.cleanup.get_next_tasks():
-            self._offer_manager.consider_task(task)
+        for task in cleanup_mgr.get_next_tasks():
+            offer_mgr.consider_task(task)
 
     def _perform_scheduling(self):
         """Performs task reconciliation with the Mesos master
@@ -174,18 +162,18 @@ class SchedulingThread(object):
         """
 
         # Get updated node and job type models from managers
-        nodes = self._managers.node.get_nodes()
-        self._managers.cleanup.update_nodes(nodes)
-        self._offer_manager.update_nodes(nodes)
-        self._offer_manager.ready_new_offers()
-        self._job_types = self._job_type_manager.get_job_types()
+        nodes = node_mgr.get_nodes()
+        cleanup_mgr.update_nodes(nodes)
+        offer_mgr.update_nodes(nodes)
+        offer_mgr.ready_new_offers()
+        self._job_types = job_type_mgr.get_job_types()
 
         # Look at job type limits and determine number available to be scheduled
         self._job_type_limit_available = {}
         for job_type in self._job_types.values():
             if job_type.max_scheduled:
                 self._job_type_limit_available[job_type.id] = job_type.max_scheduled
-        for running_job_exe in self._job_exe_manager.get_all_job_exes():
+        for running_job_exe in running_job_mgr.get_all_job_exes():
             if running_job_exe.job_type_id in self._job_type_limit_available:
                 self._job_type_limit_available[running_job_exe.job_type_id] -= 1
 
@@ -206,19 +194,19 @@ class SchedulingThread(object):
         when = now()
         tasks_to_launch = {}  # {Node ID: [Mesos Tasks]}
         queued_job_exes_to_schedule = []
-        node_offers_list = self._offer_manager.pop_offers_with_accepted_job_exes()
+        node_offers_list = offer_mgr.pop_offers_with_accepted_job_exes()
         for node_offers in node_offers_list:
             mesos_tasks = []
             tasks_to_launch[node_offers.node.id] = mesos_tasks
             # Add cleanup tasks
             for task in node_offers.get_accepted_tasks():
-                task.schedule(when)
+                task.launch(when)
                 mesos_tasks.append(create_mesos_task(task))
             # Start next task for already running job executions that were accepted
             for running_job_exe in node_offers.get_accepted_running_job_exes():
                 task = running_job_exe.start_next_task()
                 if task:
-                    task.schedule(when)
+                    task.launch(when)
                     mesos_tasks.append(create_mesos_task(task))
             # Gather up queued job executions that were accepted
             for queued_job_exe in node_offers.get_accepted_new_job_exes():
@@ -226,13 +214,13 @@ class SchedulingThread(object):
 
         try:
             # Schedule queued job executions and start their first tasks
-            workspaces = self._workspace_manager.get_workspaces()
+            workspaces = workspace_mgr.get_workspaces()
             scheduled_job_exes = self._schedule_queued_job_executions(queued_job_exes_to_schedule, workspaces)
-            self._job_exe_manager.add_job_exes(scheduled_job_exes)
+            running_job_mgr.add_job_exes(scheduled_job_exes)
             for scheduled_job_exe in scheduled_job_exes:
                 task = scheduled_job_exe.start_next_task()
                 if task:
-                    task.schedule(when)
+                    task.launch(when)
                     tasks_to_launch[scheduled_job_exe.node_id].append(create_mesos_task(task))
         except OperationalError:
             logger.exception('Failed to schedule queued job executions')
@@ -282,8 +270,10 @@ class SchedulingThread(object):
         return scheduled_job_executions
 
     def _send_tasks_for_reconciliation(self):
-        """Sends the IDs of any tasks that need to be reconciled to the reconciliation thread
+        """Sends the IDs of any tasks that need to be reconciled
         """
 
-        task_ids = self._managers.cleanup.get_task_ids_for_reconciliation(now())
-        self._managers.recon_thread.add_task_ids(task_ids)
+        when = now()
+        task_ids = cleanup_mgr.get_task_ids_for_reconciliation(when)
+        task_ids.extend(running_job_mgr.get_task_ids_for_reconciliation(when))
+        recon_mgr.add_task_ids(task_ids)

@@ -50,3 +50,6 @@ class JobTypeManager(object):
 
         with self._lock:
             self._job_types = updated_job_types
+
+
+job_type_mgr = JobTypeManager()
