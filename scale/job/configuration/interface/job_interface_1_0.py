@@ -219,6 +219,7 @@ class JobInterface(object):
         """
         # TODO: don't ignore job_envirnoment
         command_arguments = self.populate_command_argument_properties(job_data)
+        param_replacements = {}
 
         for input_data in self.definition['input_data']:
             input_name = input_data['name']
@@ -228,23 +229,24 @@ class JobInterface(object):
                 param_dir = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name)
                 if os.path.isdir(param_dir):
                     file_path = self._get_one_file_from_directory(param_dir)
-                    command_arguments = self._replace_command_parameter(command_arguments, input_name, file_path)
+                    param_replacements[input_name] = file_path
                 elif input_required:
                     raise InvalidData('Unable to create run command. Expected required file in %s' % param_dir)
                 else:
-                    command_arguments = self._replace_command_parameter(command_arguments, input_name, '')
+                    param_replacements[input_name] = ''
 
             elif input_type == 'files':
                 param_dir = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name)
                 if os.path.isdir(param_dir):
-                    command_arguments = self._replace_command_parameter(command_arguments, input_name, param_dir)
+                    param_replacements[input_name] = param_dir
                 elif input_required:
                     raise InvalidData('Unable to create run command. Expected required files in %s' % param_dir)
                 else:
-                    command_arguments = self._replace_command_parameter(command_arguments, input_name, '')
+                    param_replacements[input_name] = ''
 
-        command_arguments = self._replace_command_parameter(command_arguments, 'job_output_dir',
-                                                            SCALE_JOB_EXE_OUTPUT_PATH)
+        param_replacements['job_output_dir'] = SCALE_JOB_EXE_OUTPUT_PATH
+
+        command_arguments = self._replace_command_parameters(command_arguments, param_replacements)
 
         # Remove extra whitespace
         command_arguments = ' '.join(command_arguments.split())
@@ -379,12 +381,16 @@ class JobInterface(object):
         :rtype: str
         """
         command_arguments = self.definition['command_arguments']
+        param_replacements = {}
+
         for input_data in self.definition['input_data']:
             input_name = input_data['name']
             input_type = input_data['type']
             if input_type == 'property':
                 property_val = job_data.data_inputs_by_name[input_name]['value']
-                command_arguments = self._replace_command_parameter(command_arguments, input_name, property_val)
+                param_replacements[input_name] = property_val
+
+        command_arguments = self._replace_command_parameters(command_arguments, param_replacements)
 
         return command_arguments
 
@@ -571,7 +577,7 @@ class JobInterface(object):
             if 'required' not in shared_resource:
                 shared_resource['required'] = True
 
-    def _replace_command_parameter(self, command_arguments, param_name, param_value):
+    def _replace_command_parameters(self, command_arguments, param_replacements):
         """find all occurrences of a parameter with a given name in the command_arguments string and
         replace it with the param value. If the parameter replacement string in the command uses a
         custom output ( ${-f :foo}).
@@ -579,28 +585,28 @@ class JobInterface(object):
         will be appended.
 
         :param command: The command_arguments that you want to perform the replacement on
-        :type data: string
-        :param param_name: The parameter you are searching for
-        :type data: string
-        :param param_value: The value that you are replacing the parameter with
-        :type data: string
+        :type command: string
+        :param param_replacements: The parameter you are searching for
+        :type data: dict
         :return: The string with all replacements made
         :rtype: str
         """
         ret_str = command_arguments
-        param_pattern = '\$\{([^\}]*\:)?' + re.escape(param_name) + '\}'
-        pattern_prog = re.compile(param_pattern)
 
-        keep_replacing = True
-        while keep_replacing:
-            match_obj = re.search(pattern_prog, ret_str)
-            if match_obj:
-                replacement_str = param_value
-                if match_obj.group(1):
-                    replacement_str = match_obj.group(1)[:-1] + param_value
-                ret_str = ret_str[0:match_obj.start()] + replacement_str + ret_str[match_obj.end():]
-            else:
-                keep_replacing = False
+        for param_name, param_value in param_replacements.iteritems():
+            param_pattern = '\$\{([^\}]*\:)?' + re.escape(param_name) + '\}'
+            pattern_prog = re.compile(param_pattern)
+
+            keep_replacing = True
+            while keep_replacing:
+                match_obj = re.search(pattern_prog, ret_str)
+                if match_obj:
+                    replacement_str = param_value
+                    if match_obj.group(1):
+                        replacement_str = match_obj.group(1)[:-1] + param_value
+                    ret_str = ret_str[0:match_obj.start()] + replacement_str + ret_str[match_obj.end():]
+                else:
+                    keep_replacing = False
 
         return ret_str
 
@@ -630,11 +636,6 @@ class JobInterface(object):
                 if self.definition['version'] >= '1.2':
                     for setting in self.definition['settings']:
                         if setting['name'] == param:
-                            found_match = True
-                            break
-
-                    for env_var in self.definition['env_vars']:
-                        if env_var['name'] == param:
                             found_match = True
                             break
 
