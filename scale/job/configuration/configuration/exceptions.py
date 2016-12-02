@@ -5,9 +5,3 @@ class InvalidJobConfiguration(Exception):
     """Exception indicating that the provided job configuration JSON was invalid
     """
     pass
-
-
-class InvalidSetting(Exception):
-    """Exception indicating that the provided job settings were invalid
-    """
-    pass

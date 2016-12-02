@@ -8,7 +8,6 @@ from mock import patch, MagicMock, Mock
 
 import storage.test.utils as storage_test_utils
 from job.configuration.data.exceptions import InvalidConnection, InvalidData
-from job.configuration.configuration.exceptions import InvalidSetting
 from job.configuration.data.job_connection import JobConnection
 from job.configuration.data.job_data import JobData
 from job.configuration.environment.job_environment import JobEnvironment
@@ -910,23 +909,6 @@ class TestJobInterfacePreSteps(TestCase):
 
         job_command_arguments = job_interface.populate_command_argument_settings(command_arguments, job_config)
         self.assertEqual(job_command_arguments, config_key_value, 'expected a different command from pre_steps')
-
-    def test_no_required_setting_in_command(self):
-        job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
-
-        job_interface_dict['version'] = '1.2'
-        job_interface_dict['command_arguments'] = '${setting1}'
-        job_interface_dict['settings'] = [{
-            'name': 'setting1',
-            'required': True,
-        }]
-
-        command_arguments = job_interface_dict['command_arguments']
-        job_config_json = {'job_task': {'settings': []}}
-        job_config = JobConfiguration(job_config_json)
-
-        job_interface = JobInterface(job_interface_dict)
-        self.assertRaises(InvalidSetting, job_interface.populate_command_argument_settings, command_arguments, job_config)
 
     def test_required_settings_in_command(self):
         job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()

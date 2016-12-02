@@ -8,7 +8,6 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 from job.configuration.interface import job_interface_1_1 as previous_interface
-from job.configuration.configuration.exceptions import InvalidSetting
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 
 
@@ -308,8 +307,6 @@ class JobInterface(previous_interface.JobInterface):
 
             if setting_name in config_settings_dict:
                 param_replacements[setting_name] = config_settings_dict[setting_name]
-            elif setting_required:
-                raise InvalidSetting('Unable to create run command. Expected the required job config setting %s' % setting_name)
             else:
                 param_replacements[setting_name] = ''
 
@@ -370,32 +367,3 @@ class JobInterface(previous_interface.JobInterface):
 
         if len(env_vars) != len(set(env_vars)):
             raise InvalidInterfaceDefinition('Environment variable names must be unique')
-
-    def _replace_env_var_parameter(self, env_vars, var_name, var_value):
-        """Find all occurrences of a variable with a given name in the env_vars list and
-        replace it with the variable value. If the variable replacement string in the command uses a
-        custom output ( ${-f :foo}).
-        The parameter will be replaced with the string preceding the colon and the given variable
-        value will be appended.
-
-        :param env_vars: The command_arguments that you want to perform the replacement on
-        :type data: string
-        :param var_name: The parameter you are searching for
-        :type data: string
-        :param var_value: The value that you are replacing the parameter with
-        :type data: string
-        :return: The string with all replacements made
-        :rtype: str
-        """
-        param_pattern = '\$\{([^\}]*\:)?' + re.escape(var_name) + '\}'
-        pattern_prog = re.compile(param_pattern)
-
-        for env_var in env_vars:
-            match_obj = re.search(pattern_prog, env_var['value'])
-            if match_obj:
-                replacement_str = var_value
-                if match_obj.group(1):
-                    replacement_str = match_obj.group(1)[:-1] + var_value
-                env_var['value'] = env_var['value'][0:match_obj.start()] + replacement_str + env_var['value'][match_obj.end():]
-
-        return ret_str
