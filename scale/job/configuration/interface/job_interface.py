@@ -317,7 +317,7 @@ class JobInterface(previous_interface.JobInterface):
 
     def _replace_env_var_parameters(self, env_vars, param_replacements):
         """find all occurrences of a parameter with a given name in the environment
-        variables string and replace it with the param value. If the parameter
+        variable strings and replace them with the param values. If the parameter
         replacement string in the variable uses a custom output ( ${-f :foo}).
         The parameter will be replaced with the string preceding the colon and the
         given param value will be appended.
@@ -336,17 +336,18 @@ class JobInterface(previous_interface.JobInterface):
                 param_pattern = '\$\{([^\}]*\:)?' + re.escape(param_name) + '\}'
                 pattern_prog = re.compile(param_pattern)
 
-                keep_replacing = True
-                while keep_replacing:
-                    match_obj = pattern_prog.search(ret_str)
-                    if match_obj:
-                        replacement_str = param_value
-                        if match_obj.group(1):
-                            replacement_str = match_obj.group(1)[:-1] + param_value
-                        ret_str = ret_str[0:match_obj.start()] + replacement_str + ret_str[match_obj.end():]
-                    else:
-                        keep_replacing = False
-            env_var['value'] = ret_str
+                match_obj = pattern_prog.search(ret_str)
+                if match_obj:
+                    replacement_str = param_value
+                    if match_obj.group(1):
+                        replacement_str = match_obj.group(1)[:-1] + param_value
+                    ret_str = ret_str[0:match_obj.start()] + replacement_str + ret_str[match_obj.end():]
+                    break
+
+            if ret_str == env_var['value']:
+                env_var['value'] = ''
+            else:
+                env_var['value'] = ret_str
 
         return env_vars
 

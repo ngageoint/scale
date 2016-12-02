@@ -1315,7 +1315,9 @@ class JobExecution(models.Model):
         for env_var in env_vars:
             env_var_name = env_var['name']
             env_var_value = env_var['value']
-            configuration.add_job_task_docker_params([DockerParam('env', env_var_name + '=' + env_var_value)])
+            if env_var_value:
+                env_val = env_var_name + '=' + env_var_value
+                configuration.add_job_task_docker_params([DockerParam('env', env_val)])
 
         self.configuration = configuration.get_dict()
 

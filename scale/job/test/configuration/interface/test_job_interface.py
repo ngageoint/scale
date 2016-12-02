@@ -995,9 +995,8 @@ class TestJobInterfacePreSteps(TestCase):
         }]
 
 
-        config_key_value = ['required_value1', 'another_val']
-        job_config_json = {'job_task': {'settings': [{'name': 'setting1', 'value': config_key_value[0]},
-                                                     {'name': 'setting2', 'value': config_key_value[1]}]}}
+        config_key_value = ['value1']
+        job_config_json = {'job_task': {'settings': [{'name': 'setting1', 'value': config_key_value[0]}]}}
         job_config = JobConfiguration(job_config_json)
 
         job_interface = JobInterface(job_interface_dict)
@@ -1006,7 +1005,7 @@ class TestJobInterfacePreSteps(TestCase):
         env_vars_value1 = env_vars_arguments[0]['value']
         env_vars_value2 = env_vars_arguments[1]['value']
         self.assertEqual(env_vars_value1, config_key_value[0], 'expected a different command from pre_steps')
-        self.assertEqual(env_vars_value2, config_key_value[1], 'expected a different command from pre_steps')
+        self.assertEqual(env_vars_value2, '', 'expected a different command from pre_steps')
 
 
 class TestJobInterfaceValidateConnection(TestCase):
