@@ -310,6 +310,10 @@ class Ingest(models.Model):
     :type ingest_ended: :class:`django.db.models.DateTimeField`
     :keyword source_file: A reference to the source file that was stored by this ingest
     :type source_file: :class:`django.db.models.ForeignKey`
+    :keyword data_started: The start time of the data in this source file
+    :type data_started: :class:`django.db.models.DateTimeField`
+    :keyword data_ended: The end time of the data in this source file
+    :type data_ended: :class:`django.db.models.DateTimeField`
 
     :keyword created: When the ingest model was created
     :type created: :class:`django.db.models.DateTimeField`
@@ -346,8 +350,11 @@ class Ingest(models.Model):
 
     job = models.ForeignKey('job.Job', blank=True, null=True)
     ingest_started = models.DateTimeField(blank=True, null=True)
-    ingest_ended = models.DateTimeField(blank=True, null=True)
+    ingest_ended = models.DateTimeField(blank=True, null=True, db_index=True)
+
     source_file = models.ForeignKey('source.SourceFile', blank=True, null=True)
+    data_started = models.DateTimeField(blank=True, null=True, db_index=True)
+    data_ended = models.DateTimeField(blank=True, null=True, db_index=True)
 
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)

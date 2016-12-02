@@ -31,6 +31,7 @@ class TestSourceFileManagerSaveParseResults(TestCase):
         self.src_file = SourceFile.objects.create(file_name='text.txt', media_type='text/plain', file_size=10,
                                                   data_type='type', file_path='the_path', workspace=workspace)
 
+
         self.started = now()
         self.ended = self.started + datetime.timedelta(days=1)
 
@@ -59,6 +60,24 @@ class TestSourceFileManagerSaveParseResults(TestCase):
 
         # Check results
         self.assertFalse(mock_move_files.called, 'ScaleFile.objects.move_files() should not be called')
+
+    def test_successful_data_time_save(self):
+        """Tests calling save_parse_results and checks that the data time is saved within the corresponding ingest
+        model
+        """
+
+        from ingest.models import Ingest
+        from ingest.test import utils
+        ingest = utils.create_ingest(file_name=self.src_file.file_name, status='INGESTED', source_file=self.src_file)
+
+        # Call method to test
+        SourceFile.objects.save_parse_results(self.src_file.id, FEATURE_COLLECTION_GEOJSON, self.started, self.ended,
+                                              [], None)
+
+        # Check results
+        ingest = Ingest.objects.get(pk=ingest.id)
+        self.assertEqual(ingest.data_started, self.started)
+        self.assertEqual(ingest.data_ended, self.ended)
 
     def test_valid_feature_collection(self):
         """Tests calling save_parse_results with valid arguments"""

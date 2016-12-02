@@ -36,7 +36,8 @@ def create_ingest(file_name='test.txt', status='TRANSFERRING', transfer_started=
     return Ingest.objects.create(file_name=file_name, file_size=source_file.file_size, status=status, job=job,
                                  bytes_transferred=source_file.file_size, transfer_started=transfer_started,
                                  transfer_ended=transfer_ended, media_type='text/plain', ingest_started=ingest_started,
-                                 ingest_ended=ingest_ended, workspace=workspace, strike=strike, source_file=source_file)
+                                 ingest_ended=ingest_ended, data_started=data_started, data_ended=data_ended,
+                                 workspace=workspace, strike=strike, source_file=source_file)
 
 
 def create_strike(name=None, title=None, description=None, configuration=None, job=None):
