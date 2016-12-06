@@ -326,11 +326,11 @@ class ProductFileManager(models.GeoManager):
         :type when: :class:`datetime.datetime`
         """
 
-        when = timezone.now()
+        last_modified = timezone.now()
         query = self.filter(job__root_superseded_job_id=root_job_id, is_published=True)
-        query.update(is_published=False, unpublished=when, last_modified=when)
+        query.update(is_published=False, unpublished=when, last_modified=last_modified)
         query = self.filter(job_id=root_job_id, is_published=True)
-        query.update(is_published=False, unpublished=when, last_modified=when)
+        query.update(is_published=False, unpublished=when, last_modified=last_modified)
 
     def upload_files(self, file_entries, input_file_ids, job_exe, workspace):
         """Uploads the given local product files into the workspace.
