@@ -17,7 +17,7 @@ var gulp = require('gulp'),
     fs = require('fs'),
     p = require('./package.json'),
     modRewrite = require('connect-modrewrite'),
-    util = require('gulp-util')
+    util = require('gulp-util'),
     inject = require('gulp-inject');
 
 var paths = {
