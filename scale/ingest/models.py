@@ -146,26 +146,26 @@ class IngestManager(models.Manager):
 
         # Fetch a list of ingests
         ingests = Ingest.objects.filter(status='INGESTED')
-        ingests = ingests.select_related('strike', 'source_file', 'source_file__workspace')
-        ingests = ingests.defer('strike__configuration', 'source_file__workspace__json_config')
+        ingests = ingests.select_related('strike')
+        ingests = ingests.defer('strike__configuration')
 
         # Apply time range filtering
         if started:
             if use_ingest_time:
                 ingests = ingests.filter(ingest_ended__gte=started)
             else:
-                ingests = ingests.filter(source_file__data_ended__gte=started)
+                ingests = ingests.filter(data_ended__gte=started)
         if ended:
             if use_ingest_time:
                 ingests = ingests.filter(ingest_ended__lte=ended)
             else:
-                ingests = ingests.filter(source_file__data_started__lte=ended)
+                ingests = ingests.filter(data_started__lte=ended)
 
         # Apply sorting
         if use_ingest_time:
             ingests = ingests.order_by('ingest_ended')
         else:
-            ingests = ingests.order_by('source_file__data_started')
+            ingests = ingests.order_by('data_started')
 
         groups = self._group_by_time(ingests, use_ingest_time)
         return [self._fill_status(status, time_slots, started, ended) for status, time_slots in groups.iteritems()]
@@ -197,7 +197,7 @@ class IngestManager(models.Manager):
                 continue
 
             # Check whether there is a valid date for the requested query
-            dated = ingest.ingest_ended if use_ingest_time else ingest.source_file.data_started
+            dated = ingest.ingest_ended if use_ingest_time else ingest.data_started
             if dated:
                 ingest_status = strike_map[ingest.strike]
                 time_slots = slot_map[ingest.strike]
@@ -310,6 +310,10 @@ class Ingest(models.Model):
     :type ingest_ended: :class:`django.db.models.DateTimeField`
     :keyword source_file: A reference to the source file that was stored by this ingest
     :type source_file: :class:`django.db.models.ForeignKey`
+    :keyword data_started: The start time of the data in this source file
+    :type data_started: :class:`django.db.models.DateTimeField`
+    :keyword data_ended: The end time of the data in this source file
+    :type data_ended: :class:`django.db.models.DateTimeField`
 
     :keyword created: When the ingest model was created
     :type created: :class:`django.db.models.DateTimeField`
@@ -346,8 +350,11 @@ class Ingest(models.Model):
 
     job = models.ForeignKey('job.Job', blank=True, null=True)
     ingest_started = models.DateTimeField(blank=True, null=True)
-    ingest_ended = models.DateTimeField(blank=True, null=True)
+    ingest_ended = models.DateTimeField(blank=True, null=True, db_index=True)
+
     source_file = models.ForeignKey('source.SourceFile', blank=True, null=True)
+    data_started = models.DateTimeField(blank=True, null=True, db_index=True)
+    data_ended = models.DateTimeField(blank=True, null=True, db_index=True)
 
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)

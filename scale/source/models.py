@@ -148,6 +148,13 @@ class SourceFileManager(models.GeoManager):
         src_file.set_countries()
         src_file.save()
 
+        try:
+            # Try to update corresponding ingest models with this file's data time
+            from ingest.models import Ingest
+            Ingest.objects.filter(source_file_id=src_file_id).update(data_started=data_started, data_ended=data_ended)
+        except ImportError:
+            pass
+
         # Move the source file if a new workspace path is provided and the workspace allows it
         old_workspace_path = src_file.file_path
         if new_workspace_path and src_file.workspace.is_move_enabled:

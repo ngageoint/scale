@@ -364,7 +364,7 @@ class ScaleFile(models.Model):
 
     # Optional geospatial fields
     data_started = models.DateTimeField(blank=True, null=True, db_index=True)
-    data_ended = models.DateTimeField(blank=True, null=True)
+    data_ended = models.DateTimeField(blank=True, null=True, db_index=True)
     geometry = models.GeometryField('Geometry', blank=True, null=True, srid=4326)
     center_point = models.PointField(blank=True, null=True, srid=4326)
     meta_data = djorm_pgjson.fields.JSONField()
