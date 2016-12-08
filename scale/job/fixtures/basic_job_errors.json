@@ -89,5 +89,18 @@
             "created": "2016-08-24T00:00:00.0Z",
             "last_modified": "2016-08-24T00:00:00.0Z"
         }
+    },
+    {
+        "model": "error.Error",
+        "pk": null,
+        "fields": {
+            "name": "interface-settings",
+            "title": "Missing Required Job Setting",
+            "description": "The job execution failed due to a required setting not being defined.",
+            "category": "SYSTEM",
+            "is_builtin": true,
+            "created": "2016-12-08T00:00:00.0Z",
+            "last_modified": "2016-12-08T00:00:00.0Z"
+        }
     }
 ]

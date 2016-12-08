@@ -335,10 +335,7 @@ class JobInterface(previous_interface.JobInterface):
 
                 match_obj = pattern_prog.search(ret_str)
                 if match_obj:
-                    replacement_str = param_value
-                    if match_obj.group(1):
-                        replacement_str = match_obj.group(1)[:-1] + param_value
-                    ret_str = ret_str[0:match_obj.start()] + replacement_str + ret_str[match_obj.end():]
+                    ret_str = param_value
                     break
 
             if ret_str == env_var['value']:
