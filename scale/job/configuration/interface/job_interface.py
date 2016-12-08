@@ -8,7 +8,7 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 from job.configuration.interface import job_interface_1_1 as previous_interface
-from job.configuration.interface.exceptions import InvalidInterfaceDefinition
+from job.configuration.interface.exceptions import InvalidInterfaceDefinition, InvalidSetting
 
 
 logger = logging.getLogger(__name__)
@@ -272,7 +272,7 @@ class JobInterface(previous_interface.JobInterface):
         :type job_configuration: :class:`job.configuration.configuration.job_configuration.JobConfiguration`
 
         :return: env_vars populated with values
-        :rtype: str
+        :rtype: dict
         """
 
         env_vars = self.definition['env_vars']
@@ -367,3 +367,35 @@ class JobInterface(previous_interface.JobInterface):
 
         if len(env_vars) != len(set(env_vars)):
             raise InvalidInterfaceDefinition('Environment variable names must be unique')
+
+    def validate_populated_settings(self, job_exe, job_configuration):
+        """Ensures that all required settings are defined and used in the job_interface
+
+        :param job_exe: The job execution model with related job and job_type fields
+        :type job_exe: :class:`job.models.JobExecution`
+        :param job_configuration: The job configuration
+        :type job_configuration: :class:`job.configuration.configuration.job_configuration.JobConfiguration`
+        """
+
+        interface_settings = self.definition['settings']
+        configuration_settings = {setting.name: setting.value for setting in job_configuration.get_job_task_settings()}
+
+        command_arguments = job_exe.command_arguments
+        env_vars = self.populate_env_vars_arguments(job_configuration)
+        env_var_str = ' '.join(env_var['value'] for env_var in env_vars)
+
+        for setting in interface_settings:
+            found_match = False
+            setting_name = setting['name']
+            setting_required = setting['required']
+
+            if setting_required:
+                setting_value = configuration_settings[setting_name]
+                if setting_value in command_arguments:
+                    found_match = True
+
+                elif setting_value in env_var_str:
+                    found_match = True
+
+                elif not found_match:
+                    raise InvalidSetting('Required setting %s not found in job_interface' % setting_name)

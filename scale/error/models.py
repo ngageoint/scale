@@ -59,6 +59,14 @@ class ErrorManager(models.Manager):
         """
         return self.get_builtin_error('nfs')
 
+    def get_interface_error(self):
+        """Returns the error for a job interface problem
+
+        :returns: The interface error
+        :rtype: :class:`error.models.Error`
+        """
+        return self.get_builtin_error('interface-settings')
+
     def get_unknown_error(self):
         """Returns the error for an unknown cause
 

@@ -12,7 +12,7 @@ from job.configuration.data.job_connection import JobConnection
 from job.configuration.data.job_data import JobData
 from job.configuration.environment.job_environment import JobEnvironment
 from job.configuration.configuration.job_configuration import JobConfiguration
-from job.configuration.interface.exceptions import InvalidInterfaceDefinition
+from job.configuration.interface.exceptions import InvalidInterfaceDefinition, InvalidSetting
 from job.configuration.interface.job_interface import JobInterface
 from job.configuration.results.exceptions import InvalidResultsManifest
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
@@ -988,6 +988,99 @@ class TestJobInterfacePreSteps(TestCase):
         env_vars_value2 = env_vars_arguments[1]['value']
         self.assertEqual(env_vars_value1, config_key_value[0], 'expected a different command from pre_steps')
         self.assertEqual(env_vars_value2, '', 'expected a different command from pre_steps')
+
+    def test_validate_populated_settings(self):
+        """Tests the validation of required settings defined in the job_interface"""
+
+        job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
+
+        job_interface_dict['command_arguments'] = '${setting1}'
+        job_interface_dict['version'] = '1.2'
+        job_interface_dict['env_vars'] = [{
+            'name': 'test_var',
+            'value': '${setting2}',
+        }]
+
+        job_interface_dict['settings'] = [{
+            'name': 'setting1',
+            'required': True,
+        }, {
+            'name': 'setting2',
+            'required': True,
+        }]
+
+        job_config_json = {'job_task': {'settings': [{'name': 'setting1', 'value': 'test_setting'},
+                                                     {'name': 'setting2', 'value': 'another_setting'}]}}
+
+        job_interface = JobInterface(job_interface_dict)
+        job_config = JobConfiguration(job_config_json)
+
+        job_exe = MagicMock()
+        job_exe.command_arguments = 'test_setting'
+
+        try:
+            # Validate acceptable job_interface and job_configuration
+            job_interface.validate_populated_settings(job_exe, job_config)
+        except InvalidSetting:
+            self.fail('Valid job_interface settings definition should not raise an Exception')
+
+    def test_validate_populated_settings_no_cmd_args(self):
+        """Tests the validation of required settings defined in the job_interface"""
+
+        job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
+
+        job_interface_dict['command_arguments'] = ''
+        job_interface_dict['version'] = '1.2'
+        job_interface_dict['env_vars'] = [{
+            'name': 'test_var',
+            'value': '${setting2}',
+        }]
+
+        job_interface_dict['settings'] = [{
+            'name': 'setting1',
+            'required': True,
+        }, {
+            'name': 'setting2',
+            'required': True,
+        }]
+
+        job_config_json = {'job_task': {'settings': [{'name': 'setting1', 'value': 'test_setting'},
+                                                     {'name': 'setting2', 'value': 'another_setting'}]}}
+
+        job_interface = JobInterface(job_interface_dict)
+        job_config = JobConfiguration(job_config_json)
+
+        job_exe = MagicMock()
+        job_exe.command_arguments = ''
+
+        self.assertRaises(InvalidSetting, job_interface.validate_populated_settings, job_exe, job_config)
+
+    def test_validate_populated_settings_no_env_vars(self):
+        """Tests the validation of required settings defined in the job_interface"""
+
+        job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
+
+        job_interface_dict['command_arguments'] = '${setting1}'
+        job_interface_dict['version'] = '1.2'
+        job_interface_dict['env_vars'] = []
+        job_interface_dict['settings'] = [{
+            'name': 'setting1',
+            'required': True,
+        }, {
+            'name': 'setting2',
+            'required': True,
+        }]
+
+        job_config_json = {'job_task': {'settings': [{'name': 'setting1', 'value': 'test_setting'},
+                                                     {'name': 'setting2', 'value': 'another_setting'}]}}
+
+        job_interface = JobInterface(job_interface_dict)
+        job_config = JobConfiguration(job_config_json)
+
+        job_exe = MagicMock()
+        job_exe.command_arguments = 'test_setting'
+
+        self.assertRaises(InvalidSetting, job_interface.validate_populated_settings, job_exe, job_config)
 
 
 class TestJobInterfaceValidateConnection(TestCase):
