@@ -20,6 +20,14 @@ storage.migrations.0002_workspace_is_move_enabled module
     :undoc-members:
     :show-inheritance:
 
+storage.migrations.0003_auto_20161202_1621 module
+-------------------------------------------------
+
+.. automodule:: storage.migrations.0003_auto_20161202_1621
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

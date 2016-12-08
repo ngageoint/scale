@@ -44,6 +44,22 @@ ingest.migrations.0005_auto_20160728_1243 module
     :undoc-members:
     :show-inheritance:
 
+ingest.migrations.0006_auto_20161202_1621 module
+------------------------------------------------
+
+.. automodule:: ingest.migrations.0006_auto_20161202_1621
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+ingest.migrations.0007_auto_20161206_1329 module
+------------------------------------------------
+
+.. automodule:: ingest.migrations.0007_auto_20161206_1329
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
