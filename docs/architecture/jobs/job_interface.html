@@ -97,7 +97,7 @@
 <li class="toctree-l3"><a class="reference internal" href="batch_definition.html">Batch Definition</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error_interface.html">Errors Interface</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="">Job Interface</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#job-interface-specification-version-1-1">Job Interface Specification Version 1.1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#job-interface-specification-version-1-2">Job Interface Specification Version 1.2</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="job_data.html">Job Data</a></li>
@@ -178,9 +178,25 @@ contains georeference information. The job interface for the algorithm could be
 defined as follows:</p>
 <p><strong>Example job interface:</strong></p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
-   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.1&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.2&quot;</span><span class="p">,</span>
    <span class="s2">&quot;command&quot;</span><span class="o">:</span> <span class="s2">&quot;python make_geotiff.py&quot;</span><span class="p">,</span>
-   <span class="s2">&quot;command_arguments&quot;</span><span class="o">:</span> <span class="s2">&quot;${image} ${georeference_data} ${job_output_dir}&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;command_arguments&quot;</span><span class="o">:</span> <span class="s2">&quot;${image} ${georeference_data} ${dted_path} ${job_output_dir}&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;env_vars&quot;</span><span class="o">:</span> <span class="p">[</span>
+     <span class="p">{</span>
+       <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;DB_NAME&quot;</span><span class="p">,</span>
+       <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="s2">&quot;scale&quot;</span>
+     <span class="p">},</span>
+     <span class="p">{</span>
+       <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;DB_HOST&quot;</span><span class="p">,</span>
+       <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="s2">&quot;scale.prod.prv&quot;</span>
+     <span class="p">}</span>
+   <span class="p">],</span>
+   <span class="s2">&quot;settings&quot;</span><span class="o">:</span> <span class="p">[</span>
+     <span class="p">{</span>
+       <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;dted_path&quot;</span><span class="p">,</span>
+       <span class="s2">&quot;required&quot;</span><span class="o">:</span> <span class="kc">true</span>
+     <span class="p">},</span>
+   <span class="p">],</span>
    <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
       <span class="p">{</span>
          <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;image&quot;</span><span class="p">,</span>
@@ -210,18 +226,34 @@ defined as follows:</p>
 <p>The <em>command</em> value specifies that the algorithm is executed by invoking Python with the make_geotiff.py script. The
 <em>command_arguments</em> value describes the command line arguments to pass to the make_geotiff.py script. The <em>image</em> file
 input is first (this will be the absolute file system path of the file), the <em>georeference_data</em> file input will be
-next, and finally an output directory is provided for the script to write any output files. The <em>input_data</em> value is a
-list detailing the inputs to the algorithm; in this case an input called <em>image</em> that is a file with media type
-<em>image/png</em> and an input called <em>georeference_data</em> which is a CSV file. Finally the <em>output_data</em> value is a list of
-the algorithm outputs, which is a GeoTIFF file in this instance. To see all of the options for defining a job interface,
-please refer to the Job Interface Specification below.</p>
-<div class="section" id="job-interface-specification-version-1-1">
-<span id="architecture-jobs-interface-spec"></span><h2>Job Interface Specification Version 1.1<a class="headerlink" href="#job-interface-specification-version-1-1" title="Permalink to this headline">¶</a></h2>
+next, then <em>dted_path</em> which is an absolute file path to a DTED directory, and finally an output directory is provided
+for the script to write any output files. The <em>env_vars</em> value is a list of name/value pairs that will be used to define
+environment variables before the alogrithm is run. The <em>settings</em> value is a list of either required or optional values
+that will be gathered from the job configuration and put in the <em>command_arguments</em>. The <em>input_data</em> value is a list
+detailing the inputs to the algorithm; in this case an input called <em>image</em> that is a file with media type <em>image/png</em>
+and an input called <em>georeference_data</em> which is a CSV file. The <em>dted_path</em> filepath is a required setting that will be
+defined in the job configuration. Finally the <em>output_data</em> value is a list of the algorithm outputs, which is a GeoTIFF
+file in this instance. To see all of the options for defining a job interface, please refer to the Job Interface
+Specification below.</p>
+<div class="section" id="job-interface-specification-version-1-2">
+<span id="architecture-jobs-interface-spec"></span><h2>Job Interface Specification Version 1.2<a class="headerlink" href="#job-interface-specification-version-1-2" title="Permalink to this headline">¶</a></h2>
 <p>A valid job interface is a JSON document with the following structure:</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
    <span class="s2">&quot;command&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
    <span class="s2">&quot;command_arguments&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+   <span class="s2">&quot;env_vars&quot;</span><span class="o">:</span> <span class="p">[</span>
+     <span class="p">{</span>
+       <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+       <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="nx">STRING</span>
+     <span class="p">}</span>
+   <span class="p">],</span>
+   <span class="s2">&quot;settings&quot;</span><span class="o">:</span> <span class="p">[</span>
+     <span class="p">{</span>
+       <span class="s1">&#39;name&#39;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+       <span class="s1">&#39;required&#39;</span><span class="o">:</span> <span class="kc">true</span><span class="o">|</span><span class="kc">false</span>
+     <span class="p">}</span>
+   <span class="p">],</span>
    <span class="s2">&quot;input_data&quot;</span><span class="o">:</span> <span class="p">[</span>
       <span class="p">{</span>
          <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
@@ -271,9 +303,10 @@ please refer to the Job Interface Specification below.</p>
 <div><p>The <em>version</em> is an optional string value that defines the version of the definition specification used. This allows
 updates to be made to the specification while maintaining backwards compatibility by allowing Scale to recognize an
 older version and convert it to the current version. The default value for <em>version</em> if it is not included is the
-latest version, which is currently 1.0. It is recommended, though not required, that you include the <em>version</em> so
+latest version, which is currently 1.2. It is recommended, though not required, that you include the <em>version</em> so
 that future changes to the specification will still accept the recipe definition.</p>
-<p>Scale must recognize the version number as valid for the recipe to work. Currently, &#8220;1.0&#8221; is the only valid version.</p>
+<p>Scale must recognize the version number as valid for the recipe to work. Valid job interface versions are <code class="docutils literal"><span class="pre">&quot;1.0&quot;</span></code>,
+<code class="docutils literal"><span class="pre">&quot;1.1&quot;</span></code>, and <code class="docutils literal"><span class="pre">&quot;1.2&quot;</span></code>.</p>
 </div></blockquote>
 <p><strong>command</strong>: JSON string</p>
 <blockquote>
@@ -285,12 +318,43 @@ the command line arguments. Unlike <em>command_arguments</em>, no string substit
 <em>command</em> when it is executed. Although required, <em>command_arguments</em> may be an empty string (i.e. &#8220;&#8221;). Scale will
 perform string substitution on special values denoted by the pattern <em>${...}</em>. You can indicate that an input should
 be passed on the command line by using <em>${INPUT NAME}</em>. The value that is substituted depends on the type of the
-input. If you need the command line argument to be passed with a flag, you can use the following pattern:
-<em>${FLAG:INPUT NAME}</em>. There is also a special substitution value
+input. You can indicate that a setting should be passed on the command line by using <em>${SETTING NAME}</em>. If you need the
+command line argument to be passed with a flag, you can use the following pattern: <em>${FLAG:INPUT NAME}</em>. There is also
+a special substitution value
 <em>${job_output_dir}</em>, which will be replaced with the absolute file system path of the output directory where the
 algorithm may write its output files. The algorithm should produce a results manifest named &#8220;results_manifest.json&#8221;.
 The format for the results manifest can be found here: <a class="reference internal" href="../../algorithm_integration/results_manifest.html#algorithm-integration-results-manifest"><span>Results Manifest</span></a>. Any output
 files must be registered in the results manifest.</div></blockquote>
+<p><strong>env_vars</strong>: JSON array</p>
+<blockquote>
+<div><p>The <em>env_vars</em> is an optinal list of JSON objects that define the enviornment variables that will be set for the
+environment running the algorithm. If not provided, <em>env_vars</em> defaults to an empty list.  The JSON object that
+represents each environment variable has the following fields:</p>
+<p><strong>name</strong>: JSON string</p>
+<blockquote>
+<div>The <em>name</em> is a required string that defines the name of the environment variable to be set. The name of every
+environment variable in the interface must be unique. This name must only be composed of less than 256 of the
+following characters: alphanumeric, &#8221; &#8221;, &#8220;_&#8221;, and &#8220;-&#8221;.</div></blockquote>
+<p><strong>value</strong>: JSOPN string</p>
+<blockquote>
+<div>The <em>value</em> is a required string that defines the value of the environment variable to be set. Scale will apply
+the same string substitution as it does with <em>command_arguments</em>.</div></blockquote>
+</div></blockquote>
+<p><strong>settings</strong>: JSON array</p>
+<blockquote>
+<div><p>The <em>settings</em> field is an optional list of JSON objects that define the alogrithm settings that will be substituted
+into the <em>command_arguments</em> and <em>env_vars</em> for the alogrithm. If not provided, <em>settings</em> defaults to
+an empty list.  The JSON object that represents each setting has the following fields:</p>
+<p><strong>name</strong>: JSON string</p>
+<blockquote>
+<div>The <em>name</em> is a required string that defines the name of the setting. The name of every setting, input, and output
+in the interface must be unique. This name must only be composed of less than 256 of the following characters:
+alphanumeric, &#8221; &#8221;, &#8220;_&#8221;, and &#8220;-&#8221;.</div></blockquote>
+<p><strong>required</strong>: JSOPN boolean</p>
+<blockquote>
+<div>The <em>required</em> field is optional and indicates if the input is required for the algorithm to run successfully.
+If not provided, the <em>required</em> field defaults to <em>true</em>.</div></blockquote>
+</div></blockquote>
 <p><strong>input_data</strong>: JSON array</p>
 <blockquote>
 <div><p>The <em>input_data</em> is an optional list of JSON objects that define the inputs the algorithm receives to perform its
@@ -298,8 +362,8 @@ function. If not provided, <em>input_data</em> defaults to an empty list (no inp
 input has the following fields:</p>
 <p><strong>name</strong>: JSON string</p>
 <blockquote>
-<div>The <em>name</em> is a required string that defines the name of the input. The name of every input and output in the
-interface must be unique. This name must only be composed of less than 256 of the following characters:
+<div>The <em>name</em> is a required string that defines the name of the input. The name of every setting, input, and output
+in the interface must be unique. This name must only be composed of less than 256 of the following characters:
 alphanumeric, &#8221; &#8221;, &#8220;_&#8221;, and &#8220;-&#8221;.</div></blockquote>
 <p><strong>required</strong>: JSON boolean</p>
 <blockquote>
@@ -370,8 +434,8 @@ of its successful execution. If not provided, <em>output_data</em> defaults to a
 that represents each output has the following fields:</p>
 <p><strong>name</strong>: JSON string</p>
 <blockquote>
-<div>The <em>name</em> is a required string that defines the name of the output. The name of every input and output in the
-interface must be unique. This name must only be composed of less than 256 of the following characters:
+<div>The <em>name</em> is a required string that defines the name of the output. The name of every setting, input, and output
+in the interface must be unique. This name must only be composed of less than 256 of the following characters:
 alphanumeric, &#8221; &#8221;, &#8220;_&#8221;, and &#8220;-&#8221;.</div></blockquote>
 <p><strong>required</strong>: JSON boolean</p>
 <blockquote>

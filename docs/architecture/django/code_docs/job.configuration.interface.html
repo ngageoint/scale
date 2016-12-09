@@ -299,6 +299,13 @@ returned. For a failure exit code with no mapping, the given default error is re
 <p>Exception indicating that the provided definition of a job interface was invalid</p>
 </dd></dl>
 
+<dl class="exception">
+<dt id="job.configuration.interface.exceptions.InvalidSetting">
+<em class="property">exception </em><code class="descclassname">job.configuration.interface.exceptions.</code><code class="descname">InvalidSetting</code><a class="headerlink" href="#job.configuration.interface.exceptions.InvalidSetting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Exception indicating that the provided job settings were invalid</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-job.configuration.interface.job_interface">
 <span id="job-configuration-interface-job-interface-module"></span><h2>job.configuration.interface.job_interface module<a class="headerlink" href="#module-job.configuration.interface.job_interface" title="Permalink to this headline">¶</a></h2>
@@ -306,12 +313,12 @@ returned. For a failure exit code with no mapping, the given default error is re
 <dl class="class">
 <dt id="job.configuration.interface.job_interface.JobInterface">
 <em class="property">class </em><code class="descclassname">job.configuration.interface.job_interface.</code><code class="descname">JobInterface</code><span class="sig-paren">(</span><em>definition</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#job.configuration.interface.job_interface_1_0.JobInterface" title="job.configuration.interface.job_interface_1_0.JobInterface"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.job_interface_1_0.JobInterface</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#job.configuration.interface.job_interface_1_1.JobInterface" title="job.configuration.interface.job_interface_1_1.JobInterface"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.job_interface_1_1.JobInterface</span></code></a></p>
 <p>Represents the interface for executing a job</p>
 <dl class="staticmethod">
 <dt id="job.configuration.interface.job_interface.JobInterface.convert_interface">
 <em class="property">static </em><code class="descname">convert_interface</code><span class="sig-paren">(</span><em>interface</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.convert_interface" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert the previous Job interface schema to the 1.1 schema</p>
+<dd><p>Convert the previous Job interface schema to the 1.2 schema</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -321,6 +328,67 @@ returned. For a failure exit code with no mapping, the given default error is re
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">converted interface</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.interface.job_interface.JobInterface.populate_command_argument_settings">
+<code class="descname">populate_command_argument_settings</code><span class="sig-paren">(</span><em>command_arguments</em>, <em>job_configuration</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.populate_command_argument_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the command arguments string,
+populated with the settings from the job_configuration.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>command_arguments</strong> (<em>string</em>) &#8211; The command_arguments that you want to perform the replacement on</li>
+<li><strong>job_configuration</strong> (<a class="reference internal" href="job.configuration.configuration.html#job.configuration.configuration.job_configuration.JobConfiguration" title="job.configuration.configuration.job_configuration.JobConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.configuration.job_configuration.JobConfiguration</span></code></a>) &#8211; The job configuration</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">command arguments with the settings populated</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.interface.job_interface.JobInterface.populate_env_vars_arguments">
+<code class="descname">populate_env_vars_arguments</code><span class="sig-paren">(</span><em>job_configuration</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.populate_env_vars_arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Populates the environment variables with the requested values.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_configuration</strong> (<a class="reference internal" href="job.configuration.configuration.html#job.configuration.configuration.job_configuration.JobConfiguration" title="job.configuration.configuration.job_configuration.JobConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.configuration.job_configuration.JobConfiguration</span></code></a>) &#8211; The job configuration</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">env_vars populated with values</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.interface.job_interface.JobInterface.validate_populated_settings">
+<code class="descname">validate_populated_settings</code><span class="sig-paren">(</span><em>job_exe</em>, <em>job_configuration</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.validate_populated_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensures that all required settings are defined and used in the job_interface</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>) &#8211; The job execution model with related job and job_type fields</li>
+<li><strong>job_configuration</strong> (<a class="reference internal" href="job.configuration.configuration.html#job.configuration.configuration.job_configuration.JobConfiguration" title="job.configuration.configuration.job_configuration.JobConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.configuration.job_configuration.JobConfiguration</span></code></a>) &#8211; The job configuration</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -550,6 +618,35 @@ with this interface</p>
 </tbody>
 </table>
 <p>:raises <a class="reference internal" href="job.configuration.data.html#job.configuration.data.exceptions.InvalidData" title="job.configuration.data.exceptions.InvalidData"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.exceptions.InvalidData</span></code></a>: If there is a configuration problem.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.configuration.interface.job_interface_1_1">
+<span id="job-configuration-interface-job-interface-1-1-module"></span><h2>job.configuration.interface.job_interface_1_1 module<a class="headerlink" href="#module-job.configuration.interface.job_interface_1_1" title="Permalink to this headline">¶</a></h2>
+<p>Defines the interface for executing a job</p>
+<dl class="class">
+<dt id="job.configuration.interface.job_interface_1_1.JobInterface">
+<em class="property">class </em><code class="descclassname">job.configuration.interface.job_interface_1_1.</code><code class="descname">JobInterface</code><span class="sig-paren">(</span><em>definition</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface_1_1.JobInterface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#job.configuration.interface.job_interface_1_0.JobInterface" title="job.configuration.interface.job_interface_1_0.JobInterface"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.job_interface_1_0.JobInterface</span></code></a></p>
+<p>Represents the interface for executing a job</p>
+<dl class="staticmethod">
+<dt id="job.configuration.interface.job_interface_1_1.JobInterface.convert_interface">
+<em class="property">static </em><code class="descname">convert_interface</code><span class="sig-paren">(</span><em>interface</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface_1_1.JobInterface.convert_interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the previous Job interface schema to the 1.1 schema</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>interface</strong> (<em>dict</em>) &#8211; The previous interface</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">converted interface</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>

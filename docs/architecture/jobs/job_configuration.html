@@ -99,7 +99,7 @@
 <li class="toctree-l3"><a class="reference internal" href="job_interface.html">Job Interface</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job_data.html">Job Data</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="">Job Configuration</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#job-configuration-specification-version-1-0">Job Configuration Specification Version 1.0</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#job-configuration-specification-version-1-1">Job Configuration Specification Version 1.1</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="recipe_definition.html">Recipe Definition</a></li>
@@ -170,21 +170,24 @@
 <p>The job configuration is a JSON document that defines the environment and configuration on which a specific job
 execution will run. This configuration includes information such as Docker parameters required by the job execution&#8217;s
 container. This JSON schema is used internally by the Scale system and is not exposed through the REST API.</p>
-<div class="section" id="job-configuration-specification-version-1-0">
-<span id="architecture-jobs-job-configuration-spec"></span><h2>Job Configuration Specification Version 1.0<a class="headerlink" href="#job-configuration-specification-version-1-0" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="job-configuration-specification-version-1-1">
+<span id="architecture-jobs-job-configuration-spec"></span><h2>Job Configuration Specification Version 1.1<a class="headerlink" href="#job-configuration-specification-version-1-1" title="Permalink to this headline">¶</a></h2>
 <p>A valid job configuration is a JSON document with the following structure:</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
    <span class="s2">&quot;pre_task&quot;</span><span class="o">:</span> <span class="p">{</span>
       <span class="s2">&quot;docker_params&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;flag&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">}],</span>
+      <span class="s2">&quot;settings&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">}],</span>
       <span class="s2">&quot;workspaces&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span> <span class="s2">&quot;mode&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">}]</span>
    <span class="p">},</span>
    <span class="s2">&quot;job_task&quot;</span><span class="o">:</span> <span class="p">{</span>
       <span class="s2">&quot;docker_params&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;flag&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">}],</span>
+      <span class="s2">&quot;settings&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">}],</span>
       <span class="s2">&quot;workspaces&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span> <span class="s2">&quot;mode&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">}]</span>
    <span class="p">},</span>
    <span class="s2">&quot;post_task&quot;</span><span class="o">:</span> <span class="p">{</span>
       <span class="s2">&quot;docker_params&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;flag&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">}],</span>
+      <span class="s2">&quot;settings&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">}],</span>
       <span class="s2">&quot;workspaces&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span> <span class="s2">&quot;mode&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">}]</span>
    <span class="p">}</span>
 <span class="p">}</span>
@@ -192,10 +195,13 @@ container. This JSON schema is used internally by the Scale system and is not ex
 </div>
 <p><strong>version</strong>: JSON string</p>
 <blockquote>
-<div>The <em>version</em> is an optional string value that defines the version of the configuration specification used. This
+<div><p>The <em>version</em> is an optional string value that defines the version of the configuration specification used. This
 allows updates to be made to the specification while maintaining backwards compatibility by allowing Scale to
 recognize an older version and convert it to the current version. The default value for <em>version</em> if it is not
-included is the latest version, which is currently 1.0.</div></blockquote>
+included is the latest version, which is currently 1.1.</p>
+<p>Scale must recognize the version number as valid for the job to work. Valid job configuration versions are
+<code class="docutils literal"><span class="pre">&quot;1.0&quot;</span></code> and <code class="docutils literal"><span class="pre">&quot;1.1&quot;</span></code>.</p>
+</div></blockquote>
 <p><strong>pre_task</strong>: JSON object</p>
 <blockquote>
 <div><p>The <em>pre_task</em> is a JSON object that defines the workspaces and Docker parameters to use for the pre task. It has
@@ -212,6 +218,18 @@ parameter without the preceding dashes (e.g. use &#8220;volume&#8221; for passin
 <blockquote>
 <div>The <em>value</em> is a required string describing the value to pass to the parameter on the Docker command line.</div></blockquote>
 </div></blockquote>
+<p><strong>settings</strong>: JSON array</p>
+<blockquote>
+<div><p>The <em>settings</em> field is an optional list of JSON objects that define the settings to pass to the pre task
+portion of a job. Each JSON object has the following fields:</p>
+<p><strong>name</strong>: JSON string</p>
+<blockquote>
+<div>The <em>name</em> is a required string describing the name of the setting. The name is used to identify the setting
+within command line arguments or environment variables that should receive the setting&#8217;s value.</div></blockquote>
+<p><strong>value</strong>: JSON string</p>
+<blockquote>
+<div>The <em>value</em> is a required string describing the value to pass to the setting.</div></blockquote>
+</div></blockquote>
 <p><strong>workspaces</strong>: JSON array</p>
 <blockquote>
 <div><p>The <em>workspaces</em> field is a required list of JSON objects that define the workspaces used by the task. Each JSON
@@ -227,8 +245,11 @@ values: &#8220;ro&#8221; for read-only mode and &#8220;rw&#8221; for read-write 
 </div></blockquote>
 <p><strong>job_task</strong>: JSON object</p>
 <blockquote>
-<div>The <em>job_task</em> is a JSON object that defines the workspaces and Docker parameters to use for the job task (which
-performs the primary job/algorithm). It is identical in structure to <em>pre_task</em>.</div></blockquote>
+<div><p>The <em>job_task</em> is a JSON object that defines the workspaces and Docker parameters to use for the job task (which
+performs the primary job/algorithm). It is identical in structure to <em>pre_task</em>.</p>
+<p>The <em>job_task</em> <em>settings</em> values will be inserted into the job&#8217;s <em>command_arguments</em> string if a matching settings
+<em>name</em> appears in the <em>command_arguments</em>.</p>
+</div></blockquote>
 <p><strong>post_task</strong>: JSON object</p>
 <blockquote>
 <div>The <em>post_task</em> is a JSON object that defines the workspaces and Docker parameters to use for the post task. It is
