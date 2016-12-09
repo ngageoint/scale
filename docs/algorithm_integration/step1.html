@@ -167,44 +167,39 @@
   <div class="section" id="making-a-scale-compatible-algorithm">
 <span id="algorithm-integration-step1"></span><h1>Making a Scale-compatible Algorithm<a class="headerlink" href="#making-a-scale-compatible-algorithm" title="Permalink to this headline">¶</a></h1>
 <p><strong>Algorithms must</strong>:</p>
-<ul>
+<ul class="simple">
 <li><dl class="first docutils">
 <dt><strong>Run standalone without any user inputs</strong></dt>
-<dd><p class="first last">Algorithms must be fully automated.  If your algorithm is prompting for input from a user, the job will continue to
-wait until it times out.</p>
-</dd>
+<dd>Algorithms must be fully automated.  If your algorithm is prompting for input from a user, the job will continue to
+wait until it times out.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt><strong>Fail gracefully</strong></dt>
-<dd><p class="first last">Ideally your algorithm will capture its faults and failures and report an exit code and log an informative message
+<dd>Ideally your algorithm will capture its faults and failures and report an exit code and log an informative message
 to standard error.  Exit codes for an algorithm can be mapped for debugging and metric purposes.  If failures are
 not captured appropriately, Scale will likely report a general algorithm error, which will make debugging your
-algorithm more difficult.</p>
-</dd>
+algorithm more difficult.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt><strong>Not display popups</strong></dt>
-<dd><p class="first last">Algorithms must not display error dialogs, file selection menus, splash screens, etc. since there is no user that is
+<dd>Algorithms must not display error dialogs, file selection menus, splash screens, etc. since there is no user that is
 able to make a selection or close these windows.  Popup displays will cause an algorithm to hang (since they won&#8217;t
 be closed) until the job times out.  This is a common issue with IDL and output will need to be displayed to the
-standard output instead.</p>
-</dd>
+standard output instead.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt><strong>Run on Linux</strong></dt>
-<dd><p class="first last">Any external libraries needed must be compiled for Linux.  Do not bundle your algorithm with Windows DLLs.</p>
-</dd>
+<dd>Any external libraries needed must be compiled for Linux.  Do not bundle your algorithm with Windows DLLs.</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt><strong>Not have hardcoded paths</strong></dt>
-<dd><p class="first last">File paths must not be embedded in the source code such that changing the path requires re-compiling code.
+<dd>File paths must not be embedded in the source code such that changing the path requires re-compiling code.
 Necessary file paths should be passable into the algorithm either via a configuration file or passed from the
-command line.</p>
-</dd>
+command line.</dd>
 </dl>
 </li>
 </ul>
