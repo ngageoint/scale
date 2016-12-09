@@ -207,12 +207,15 @@ class OfferManager(object):
             for node in nodes:
                 if node.id in self._nodes_by_node_id:
                     node_offers = self._nodes_by_node_id[node.id]
-                    if node_offers.node.agent_id == node.agent_id and node.is_active:
-                        # No change in agent ID, just update node model
-                        node_offers.node = node
-                    else:
+                    agent_id = node.agent_id
+                    if agent_id not in self._nodes_by_agent_id or not node.is_active:
                         # Agent ID changed or node no longer active, so delete old node offers
                         self._remove_node_offers(node_offers)
+                    # Clean up old agent ID
+                    if agent_id not in self._nodes_by_agent_id:
+                        for the_agent_id, the_node_offers in self._nodes_by_agent_id.items():
+                            if node.id == the_node_offers.node.id and agent_id != the_agent_id:
+                                del self._nodes_by_agent_id[the_agent_id]
                 if node.id not in self._nodes_by_node_id and node.is_active:
                     # Create new node offers
                     self._create_node_offers(node)
@@ -235,7 +238,9 @@ class OfferManager(object):
         :type node_offers: :class:`scheduler.offer.node.NodeOffers`
         """
 
-        del self._nodes_by_agent_id[node_offers.node.agent_id]
+        agent_id = node_offers.node.agent_id
+        if agent_id in self._nodes_by_agent_id:
+            del self._nodes_by_agent_id[agent_id]
         del self._nodes_by_node_id[node_offers.node.id]
         for offer_id in node_offers.offer_ids:
             del self._nodes_by_offer_id[offer_id]

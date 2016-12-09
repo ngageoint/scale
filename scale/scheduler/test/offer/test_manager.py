@@ -161,6 +161,39 @@ class TestOfferManager(TestCase):
         node_offers = manager.pop_offers_with_accepted_job_exes()
         self.assertEqual(len(node_offers), 0)
 
+    def test_lost_node_that_comes_back(self):
+        """Tests that when a lost name comes back, it can schedule tasks again"""
+
+        offer_1 = ResourceOffer('offer_1', self.node_agent, NodeResources(cpus=2.0, mem=1024.0, disk=1024.0))
+        offer_2 = ResourceOffer('offer_2', self.node_agent, NodeResources(cpus=25.0, mem=2048.0, disk=2048.0))
+
+        manager = OfferManager()
+        manager.add_new_offers([offer_1, offer_2])
+        manager.update_nodes([self.node])
+        manager.ready_new_offers()
+
+        # Node goes down and comes back up with new agent ID
+        manager.lost_node(self.node_agent)
+        new_node_agent = 'i_am_a_new_node_agent'
+        self.node.update_from_mesos(agent_id=new_node_agent)
+
+        job_exe_1 = QueuedJobExecution(self.queue_1)
+
+        # Offers for previous agent should be gone, do not schedule the job exe
+        result = manager.consider_new_job_exe(job_exe_1)
+        self.assertEqual(result, OfferManager.NO_NODES_AVAILABLE)
+
+        offer_3 = ResourceOffer('offer_3', new_node_agent, NodeResources(cpus=35.0, mem=3048.0, disk=3048.0))
+        manager.add_new_offers([offer_3])
+        manager.update_nodes([self.node])
+        manager.ready_new_offers()
+
+        # New offers have come in for new agent ID, should schedule job exe now
+        result = manager.consider_new_job_exe(job_exe_1)
+        self.assertEqual(result, OfferManager.ACCEPTED)
+        node_offers = manager.pop_offers_with_accepted_job_exes()
+        self.assertEqual(len(node_offers), 1)
+
     def test_all_offers_paused(self):
         """Tests rejecting a queued job execution due to all nodes being paused"""
 
