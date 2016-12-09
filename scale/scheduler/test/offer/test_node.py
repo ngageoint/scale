@@ -91,8 +91,9 @@ class TestNodeOffers(TestCase):
         offer_3 = ResourceOffer('offer_3',  self.node_agent, NodeResources(cpus=3.0, mem=512.0, disk=1024.0))
         node_offers.add_offer(offer_3)
 
+        # Does not get added into total
         offer_4 = ResourceOffer('offer_4', 'bad_agent', NodeResources(cpus=1.0, mem=512.0, disk=1024.0))
-        self.assertRaises(Exception, node_offers.add_offer, offer_4)
+        node_offers.add_offer(offer_4)
 
         self.assertEqual(node_offers._available_cpus, 10.0)
         self.assertEqual(node_offers._available_mem, 3584.0)
