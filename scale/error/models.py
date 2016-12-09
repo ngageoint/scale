@@ -59,6 +59,14 @@ class ErrorManager(models.Manager):
         """
         return self.get_builtin_error('nfs')
 
+    def get_interface_error(self):
+        """Returns the error for a missing required setting
+
+        :returns: The missing setting error
+        :rtype: :class:`error.models.Error`
+        """
+        return self.get_builtin_error('missing-setting')
+
     def get_unknown_error(self):
         """Returns the error for an unknown cause
 
