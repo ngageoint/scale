@@ -1052,10 +1052,6 @@ class JobExecutionManager(models.Manager):
             job_exe.started = started
             job_exe.node = node
             job_exe.configure_docker_params(framework_id, workspaces)
-            
-            for key, value in job_exe.job.job_type.docker_params:
-                job_exe.configuration['job_task']['docker_params'].append({'flag': key, 'value': value})
-                
             job_exe.environment = JobEnvironment({}).get_dict()
             job_exe.cpus_scheduled = resources.cpus
             job_exe.mem_scheduled = resources.mem
@@ -1303,7 +1299,7 @@ class JobExecution(models.Model):
             configuration.add_pre_task_docker_param(DockerParam('volume', output_volume_rw))
             configuration.add_job_task_docker_param(DockerParam('volume', input_volume_ro))
             configuration.add_job_task_docker_param(DockerParam('volume', output_volume_rw))
-            configuration.add_post_task_docker_param(DockerParam('volume', output_volume_ro))
+            configuration.add_post_task_docker_param(DockerParam('volume', output_volume_ro))                        
 
         # Configure Strike workspace based on current configuration
         if self.job.job_type.name == 'scale-strike':
@@ -1314,6 +1310,11 @@ class JobExecution(models.Model):
 
         # Configure any Docker parameters needed for workspaces
         configuration.configure_workspace_docker_params(framework_id, self.id, workspaces)
+        
+        # Configure docker paramters listed in database
+        if self.job.job_type.docker_params:
+            for key, value in self.job.job_type.docker_params:
+                configuration.add_job_task_docker_param(DockerParam(key, value))
 
         self.configuration = configuration.get_dict()
 
