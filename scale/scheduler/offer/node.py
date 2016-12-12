@@ -77,7 +77,7 @@ class NodeOffers(object):
         """
 
         if offer.agent_id != self._node.agent_id:
-            raise Exception('Offer has invalid agent ID')
+            return
 
         with self._lock:
             if offer.id in self._offers:

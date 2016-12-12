@@ -15,7 +15,8 @@ from django.db.models import Q
 
 import job.execution.container as job_exe_container
 from error.models import Error
-from job.configuration.configuration.job_configuration import DockerParam, JobConfiguration, MODE_RO, MODE_RW
+from job.configuration.configuration.job_configuration import JobConfiguration, MODE_RO, MODE_RW
+from job.configuration.configuration.job_parameter import DockerParam
 from job.configuration.data.job_data import JobData
 from job.configuration.environment.job_environment import JobEnvironment
 from job.configuration.interface.error_interface import ErrorInterface
@@ -1029,6 +1030,11 @@ class JobExecutionManager(models.Manager):
             if resources is None:
                 raise Exception('Cannot schedule job execution %i without resources' % job_exe.id)
 
+            # Add configuration values for the settings to the command line.
+            interface = job_exe.get_job_interface()
+            job_exe.command_arguments = interface.populate_command_argument_settings(job_exe.command_arguments,
+                                                                                     job_exe.get_job_configuration())
+
             job_exe.job = jobs[job_exe.job_id]
             job_exe.set_cluster_id(framework_id)
             job_exe.status = 'RUNNING'
@@ -1301,6 +1307,17 @@ class JobExecution(models.Model):
 
         # Configure any Docker parameters needed for workspaces
         configuration.configure_workspace_docker_params(self, workspaces, docker_volumes)
+
+        # Add job environment variable as docker parameters
+        interface = self.get_job_interface()
+        env_vars = interface.populate_env_vars_arguments(configuration)
+
+        for env_var in env_vars:
+            env_var_name = env_var['name']
+            env_var_value = env_var['value']
+            if env_var_value:
+                env_val = env_var_name + '=' + env_var_value
+                configuration.add_job_task_docker_params([DockerParam('env', env_val)])
 
         self.configuration = configuration.get_dict()
 

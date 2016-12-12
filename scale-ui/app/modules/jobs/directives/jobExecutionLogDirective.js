@@ -1,7 +1,7 @@
 (function () {
     'use strict';
     
-    angular.module('scaleApp').controller('jobExecutionLogController', function ($scope, $location, $element, $timeout, scaleConfig, jobExecutionService, stateService) {
+    angular.module('scaleApp').controller('jobExecutionLogController', function ($scope, $location, $element, $timeout, scaleConfig, jobExecutionService, stateService, poller) {
         var vm = this,
                  latestScaleOrderNum = 0;
         
@@ -54,6 +54,9 @@
                             }
                             $scope.jobLogError = 'Unable to retrieve job logs.';
                         }
+                    });
+                    $scope.$on('modal.closing', function () {
+                        poller.stopAll();
                     });
                 }
             }, scaleConfig.pollIntervals.jobExecutionLog - 100));

@@ -11,6 +11,7 @@ from optparse import make_option
 
 from error.models import Error
 from job.models import JobExecution
+from job.configuration.interface.exceptions import InvalidSetting
 from storage.exceptions import NfsError
 from util.retry import retry_database_query
 
@@ -24,10 +25,12 @@ DB_EXIT_CODE = 2
 DB_OP_EXIT_CODE = 3
 IO_EXIT_CODE = 4
 NFS_EXIT_CODE = 5
+INT_EXIT_CODE = 6
 EXIT_CODE_DICT = {DB_EXIT_CODE: Error.objects.get_database_error,
                   DB_OP_EXIT_CODE: Error.objects.get_database_operation_error,
                   IO_EXIT_CODE: Error.objects.get_filesystem_error,
-                  NFS_EXIT_CODE: Error.objects.get_nfs_error}
+                  NFS_EXIT_CODE: Error.objects.get_nfs_error,
+                  INT_EXIT_CODE: Error.objects.get_interface_error}
 
 
 class Command(BaseCommand):
@@ -53,6 +56,8 @@ class Command(BaseCommand):
             job_exe = self._get_job_exe(job_exe_id)
 
             job_interface = job_exe.get_job_interface()
+            job_configuration = job_exe.get_job_configuration()
+            job_interface.validate_populated_settings(job_exe, job_configuration)
             job_data = job_exe.job.get_job_data()
             job_environment = job_exe.get_job_environment()
             job_interface.perform_pre_steps(job_data, job_environment)
@@ -72,6 +77,8 @@ class Command(BaseCommand):
                 exit_code = NFS_EXIT_CODE
             elif isinstance(ex, IOError):
                 exit_code = IO_EXIT_CODE
+            elif isinstance(ex, InvalidSetting):
+                exit_code = INT_EXIT_CODE
             sys.exit(exit_code)
 
         logger.info('Command completed: scale_pre_steps')

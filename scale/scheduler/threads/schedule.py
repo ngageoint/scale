@@ -94,11 +94,14 @@ class SchedulingThread(object):
 
             if num_tasks == 0:
                 # Since we didn't schedule anything, give resources back to Mesos and pause a moment
-                for node_offers in offer_mgr.pop_all_offers():
-                    for offer_id in node_offers.offer_ids:
-                        mesos_offer_id = mesos_pb2.OfferID()
-                        mesos_offer_id.value = offer_id
-                        self._driver.declineOffer(mesos_offer_id)
+                try:
+                    for node_offers in offer_mgr.pop_all_offers():
+                        for offer_id in node_offers.offer_ids:
+                            mesos_offer_id = mesos_pb2.OfferID()
+                            mesos_offer_id.value = offer_id
+                            self._driver.declineOffer(mesos_offer_id)
+                except Exception:
+                    logger.exception('Critical error in scheduling thread')
 
                 logger.debug('Scheduling thread is pausing for %i second(s)', SchedulingThread.DELAY)
                 time.sleep(SchedulingThread.DELAY)

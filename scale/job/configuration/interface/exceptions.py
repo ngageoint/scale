@@ -11,3 +11,9 @@ class InvalidEnvironment(Exception):
     '''Exception indicating that the provided definition of a job interface was invalid
     '''
     pass
+
+
+class InvalidSetting(Exception):
+    """Exception indicating that the provided job settings were invalid
+    """
+    pass
