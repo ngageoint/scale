@@ -17,7 +17,8 @@ var gulp = require('gulp'),
     fs = require('fs'),
     p = require('./package.json'),
     modRewrite = require('connect-modrewrite'),
-    util = require('gulp-util');
+    util = require('gulp-util'),
+    inject = require('gulp-inject');
 
 var paths = {
     styles: ['./app/styles/**/*.less','!./app/styles/variables/bootstrap-overrides.less'],
@@ -325,8 +326,23 @@ gulp.task('bump', function() {
         .pipe(gulp.dest('./app/modules'));
 });
 
+// add analytics
+gulp.task('inject-analytics', ['build'], function() {
+    var analyticsFilePath = './config/analytics.html';
+    if (fs.existsSync(analyticsFilePath)) {
+        return gulp.src('./build/index.html')
+            .pipe(inject(gulp.src(analyticsFilePath), {
+                starttag: '<!-- inject:analytics -->',
+                transform: function(filePath, file) {
+                    return file.contents.toString('utf8');
+                }
+            }))
+            .pipe(gulp.dest('build'));
+    }
+});
+
 // dist
-gulp.task('dist', ['build', 'uglify', 'clean-dist'], function () {
+gulp.task('dist', ['build', 'inject-analytics', 'uglify', 'clean-dist'], function () {
     return gulp.src('./build/**/*')
         .pipe(gulp.dest('dist'));
 });
