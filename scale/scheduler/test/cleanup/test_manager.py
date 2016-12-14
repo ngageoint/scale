@@ -52,7 +52,7 @@ class TestCleanupManager(TestCase):
         # Complete initial cleanup tasks
         for task in tasks:
             task.launch(now())
-            update = TaskStatusUpdate(task.id, task.agent_id, TaskStatusUpdate.FINISHED, now())
+            update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.FINISHED, now())
             manager.handle_task_update(update)
 
         tasks = manager.get_next_tasks()
@@ -84,7 +84,7 @@ class TestCleanupManager(TestCase):
         self.assertEqual(new_task_1.agent_id, self.node_agent_3)
 
         # Task update comes back for original node 1 initial cleanup task, manager should ignore with no exception
-        update = TaskStatusUpdate(task_1.id, task_1.agent_id, TaskStatusUpdate.FAILED, now())
+        update = job_test_utils.create_task_status_update(task_1.id, task_1.agent_id, TaskStatusUpdate.FAILED, now())
         manager.handle_task_update(update)
 
     def test_job_exe_clean_task(self):
@@ -99,7 +99,7 @@ class TestCleanupManager(TestCase):
         # Complete initial cleanup tasks
         for task in tasks:
             task.launch(now())
-            update = TaskStatusUpdate(task.id, task.agent_id, TaskStatusUpdate.FINISHED, now())
+            update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.FINISHED, now())
             manager.handle_task_update(update)
 
         # Add a job execution to clean up and get the cleanup task for it

@@ -24,6 +24,7 @@ from job.configuration.interface.job_interface import JobInterface
 from job.configuration.results.job_results import JobResults
 from job.exceptions import InvalidJobField
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
+from job.execution.running.tasks.exe_task import JOB_TASK_ID_PREFIX
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
 from storage.models import ScaleFile, Workspace
 from trigger.configuration.exceptions import InvalidTriggerType
@@ -1566,7 +1567,7 @@ class JobExecution(models.Model):
         """
 
         # Cluster ID is created from framework ID and job execution ID
-        self.cluster_id = 'scale_%s_%d' % (framework_id, self.pk)
+        self.cluster_id = '%s_%s_%d' % (JOB_TASK_ID_PREFIX, framework_id, self.pk)
 
     def uses_docker(self):
         """Indicates whether this job execution uses Docker
@@ -2402,7 +2403,7 @@ class JobTypeRevision(models.Model):
 
 
 class TaskUpdate(models.Model):
-    """Represents a status update received for a job execution task
+    """Represents a status update received for a task
 
     :keyword job_exe: The job execution that the task belongs to
     :type job_exe: :class:`django.db.models.ForeignKey`

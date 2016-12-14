@@ -235,14 +235,14 @@ class Task(object):
             if self._task_id != task_update.task_id:
                 return
 
-            self._last_status_update = task_update.when
+            self._last_status_update = task_update.timestamp
 
             # Support duplicate calls as task updates may repeat
             if task_update.status == TaskStatusUpdate.RUNNING:
                 # Mark task as having started if it isn't already
                 if not self._has_started:
                     self._has_started = True
-                    self._started = task_update.when
+                    self._started = task_update.timestamp
             elif task_update.status == TaskStatusUpdate.LOST:
                 # Reset task to initial state (unless already ended)
                 if not self._has_ended:
@@ -255,5 +255,5 @@ class Task(object):
                 # Mark task as having ended if it isn't already
                 if not self._has_ended:
                     self._has_ended = True
-                    self._ended = task_update.when
+                    self._ended = task_update.timestamp
                     self._exit_code = task_update.exit_code

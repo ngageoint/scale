@@ -1,99 +1,69 @@
 """Defines the class that represents a task status update"""
 from __future__ import unicode_literals
 
-from util.exceptions import ScaleLogicBug
+import logging
+import re
+
+
+logger = logging.getLogger(__name__)
 
 
 class TaskStatusUpdate(object):
     """This class represents a task status update. This class is thread-safe."""
 
+    # Task statuses
     STAGING = 'STAGING'
     RUNNING = 'RUNNING'
     FINISHED = 'FINISHED'
     LOST = 'LOST'
     FAILED = 'FAILED'
     KILLED = 'KILLED'
-    VALID_STATUSES = [STAGING, RUNNING, FINISHED, LOST, FAILED, KILLED]
+    UNKNOWN = 'UNKNOWN'
     TERMINAL_STATUSES = [FINISHED, FAILED, KILLED]
 
-    def __init__(self, task_id, agent_id, status, when, exit_code=None):
+    # Regex for parsing exit code
+    EXIT_CODE_PATTERN = re.compile(r'exited with status ([\-0-9]+)')
+
+    # This dict is used to convert the model status (from Mesos) to the set of statuses we use
+    TASK_STATUS_CONVERSION = {'TASK_STAGING': STAGING, 'TASK_STARTING': STAGING, 'TASK_RUNNING': RUNNING,
+                              'TASK_FINISHED': FINISHED, 'TASK_FAILED': FAILED, 'TASK_KILLED': KILLED,
+                              'TASK_LOST': LOST, 'TASK_ERROR': FAILED}
+
+    def __init__(self, task_update_model, agent_id):
         """Constructor
 
-        :param task_id: The unique ID of the task
-        :type task_id: string
+        :param task_update_model: The task update model
+        :type task_update_model: :class:`job.models.TaskUpdate`
         :param agent_id: The agent ID for the task
         :type agent_id: string
-        :param status: The status of the task
-        :type status: string
-        :param when: The timestamp of the update
-        :type when: :class:`datetime.datetime`
-        :param exit_code: The task's exit code
-        :type exit_code: int
-
-        :raises :class:`util.exceptions.ScaleLogicBug`: If the task is passed invalid values
         """
 
-        if not task_id:
-            raise ScaleLogicBug('task_id must be provided')
-        if not agent_id:
-            raise ScaleLogicBug('agent_id must be provided')
-        if status not in self.VALID_STATUSES:
-            raise ScaleLogicBug('invalid task status: %s' % str(status))
-        if not when:
-            raise ScaleLogicBug('when must be provided')
+        self.task_id = task_update_model.task_id
+        self.agent_id = agent_id
+        self.timestamp = task_update_model.timestamp
 
-        self._task_id = task_id
-        self._agent_id = agent_id
-        self._status = status
-        self._when = when
-        self._exit_code = exit_code
+        if task_update_model.status in self.TASK_STATUS_CONVERSION:
+            self.status = self.TASK_STATUS_CONVERSION[task_update_model.status]
+        else:
+            logger.error('Unknown task status: %s', task_update_model.status)
+            self.status = self.UNKNOWN
 
-    @property
-    def agent_id(self):
-        """Returns the agent ID for the task
+        self.message = task_update_model.message
+        self.source = task_update_model.source
+        self.reason = task_update_model.reason
+        self.exit_code = None
 
-        :returns: The agent ID
-        :rtype: string
+        self._parse_exit_code()
+
+    def _parse_exit_code(self):
+        """Parses the exit code
         """
 
-        return self._agent_id
+        if self.message:
+            match = self.EXIT_CODE_PATTERN.search(self.message)
+            if match:
+                self.exit_code = int(match.group(1))
 
-    @property
-    def exit_code(self):
-        """Returns the task's exit code, possibly None
-
-        :returns: The task's exit code
-        :rtype: int
-        """
-
-        return self._exit_code
-
-    @property
-    def status(self):
-        """Returns the task's status
-
-        :returns: The task's status
-        :rtype: string
-        """
-
-        return self._status
-
-    @property
-    def task_id(self):
-        """Returns the task's ID
-
-        :returns: The task's ID
-        :rtype: string
-        """
-
-        return self._task_id
-
-    @property
-    def when(self):
-        """Returns the timestamp of the update
-
-        :returns: The timestamp of the update
-        :rtype: :class:`datetime.datetime`
-        """
-
-        return self._when
+        # If we don't receive an exit code for a finished task, we assume exit code 0
+        if self.exit_code is None and self.status == TaskStatusUpdate.FINISHED:
+            self.exit_code = 0

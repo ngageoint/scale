@@ -10,6 +10,9 @@ from job.execution.running.tasks.base_task import Task
 from util.exceptions import ScaleLogicBug
 
 
+JOB_TASK_ID_PREFIX = 'scale_job'
+
+
 class JobExecutionTask(Task):
     """Abstract base class for a job execution task. A job execution consists of three tasks: the pre-task,
     the job-task, and the post-task.
@@ -140,8 +143,9 @@ class JobExecutionTask(Task):
                 raise ScaleLogicBug('Trying to start a task that has already ended')
 
             # Support duplicate calls to start(), task updates may repeat
-            self._has_started = True
-            self._started = when
+            if not self._has_started:
+                self._has_started = True
+                self._started = when
             self._last_status_update = when
 
     def _consider_general_error(self, task_results):

@@ -48,7 +48,8 @@ class TestRunningJobExecutionManager(TestCase):
         # The reconciliation threshold has now expired
         # Task 3 launches and a task update comes for task 2
         task_3.launch(task_3_launch_time)
-        update = TaskStatusUpdate(task_2.id, 'agent_id', TaskStatusUpdate.RUNNING, task_3_launch_time)
+        update = job_test_utils.create_task_status_update(task_2.id, 'agent_id', TaskStatusUpdate.RUNNING,
+                                                          task_3_launch_time)
         task_2.update(update)
 
         # A second later, we check for tasks needing reconciliation

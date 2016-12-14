@@ -5,7 +5,8 @@ import django.utils.timezone as timezone
 import trigger.test.utils as trigger_test_utils
 from job.configuration.configuration.job_configuration import JobConfiguration
 from job.configuration.data.exceptions import InvalidConnection
-from job.models import Job, JobExecution, JobType, JobTypeRevision
+from job.execution.running.tasks.update import TaskStatusUpdate
+from job.models import Job, JobExecution, JobType, JobTypeRevision, TaskUpdate
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
 from node.test import utils as node_utils
 from trigger.handler import TriggerRuleHandler, register_trigger_rule_handler
@@ -247,3 +248,29 @@ def create_clock_event(rule=None, occurred=None):
         event_type = rule.configuration['event_type']
 
     return trigger_test_utils.create_trigger_event(trigger_type=event_type, rule=rule, occurred=occurred)
+
+
+def create_task_status_update(task_id, agent_id, status, when, exit_code=None):
+    """Creates a job model for unit testing
+
+    :param task_id: The unique ID of the task
+    :type task_id: string
+    :param agent_id: The agent ID for the task
+    :type agent_id: string
+    :param status: The status of the task
+    :type status: string
+    :param when: The timestamp of the update
+    :type when: :class:`datetime.datetime`
+    :param exit_code: The task's exit code
+    :type exit_code: int
+    :returns: The task status update
+    :rtype: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
+    """
+
+    task_update_model = TaskUpdate()
+    update = TaskStatusUpdate(task_update_model, agent_id)
+    update.task_id = task_id
+    update.status = status
+    update.timestamp = when
+    update.exit_code = exit_code
+    return update
