@@ -1031,6 +1031,10 @@ class JobExecutionManager(models.Manager):
             if resources is None:
                 raise Exception('Cannot schedule job execution %i without resources' % job_exe.id)
 
+            # Populate job_configuration with default settings
+            configuration = job_exe.get_job_configuration()
+            configuration.populate_default_job_settings(job_exe)
+
             # Add configuration values for the settings to the command line.
             interface = job_exe.get_job_interface()
             job_exe.command_arguments = interface.populate_command_argument_settings(job_exe.command_arguments,

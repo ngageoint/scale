@@ -268,3 +268,19 @@ class JobConfiguration(previous_version.JobConfiguration):
             if name in self._post_task_setting_names:
                 raise InvalidJobConfiguration('Duplicate setting %s in post task' % name)
             self._post_task_setting_names.add(name)
+
+    def populate_default_job_settings(self, job_exe):
+        """Gathers the default job settings defined in the job_type
+        and populates the job_configuration with them.
+
+        :param job_exe: The job execution model with related job and job_type fields
+        :type job_exe: :class:`job.models.JobExecution`
+        :return:
+        """
+
+        config_interface = job_exe.get_configuration_interface().get_dict()
+
+        if config_interface:
+            default_job_settings = config_interface['default_settings']
+            for setting_name, setting_value in default_job_settings.iteritems():
+                self.add_job_task_setting(setting_name, setting_value)
