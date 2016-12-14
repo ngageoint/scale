@@ -932,7 +932,9 @@ class TestJobInterfacePreSteps(TestCase):
         job_interface = JobInterface(job_interface_dict)
 
         job_command_arguments = job_interface.populate_command_argument_settings(command_arguments, job_config)
-        self.assertEqual(job_command_arguments, ' '.join(config_key_values), 'expected a different command from pre_steps')
+        self.assertEqual(job_command_arguments,
+                         ' '.join(config_key_values),
+                         'expected a different command from pre_steps')
 
     def test_optional_settings_in_command(self):
         job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
@@ -954,7 +956,9 @@ class TestJobInterfacePreSteps(TestCase):
         job_interface = JobInterface(job_interface_dict)
 
         job_command_arguments = job_interface.populate_command_argument_settings(command_arguments, job_config)
-        self.assertEqual(job_command_arguments.strip(' '), config_key_value, 'expected a different command from pre_steps')
+        self.assertEqual(job_command_arguments.strip(' '),
+                         config_key_value,
+                         'expected a different command from pre_steps')
 
     def test_env_vars_replacement(self):
         job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
@@ -975,7 +979,6 @@ class TestJobInterfacePreSteps(TestCase):
             'name': 'setting2',
             'required': False,
         }]
-
 
         config_key_value = ['value1']
         job_config_json = {'job_task': {'settings': [{'name': 'setting1', 'value': config_key_value[0]}]}}
