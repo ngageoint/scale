@@ -21,6 +21,7 @@ from job.configuration.data.job_data import JobData
 from job.configuration.environment.job_environment import JobEnvironment
 from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.job_interface import JobInterface
+from job.configuration.interface.configuration_interface import ConfigurationInterface
 from job.configuration.results.job_results import JobResults
 from job.exceptions import InvalidJobField
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
@@ -1358,6 +1359,15 @@ class JobExecution(models.Model):
 
         return self.job.job_type.get_error_interface()
 
+    def get_configuration_interface(self):
+        """Returns the configuration interface for this job execution
+
+        :returns: The configuration interface for this job execution
+        :rtype: :class:`job.configuration.interface.job_configuration.ConfigurationInterface`
+        """
+
+        return self.job.job_type.get_configuration_interface()
+
     def get_job_configuration(self):
         """Returns the configuration for this job
 
@@ -2200,6 +2210,9 @@ class JobType(models.Model):
     :keyword trigger_rule: The rule to trigger new jobs of this type
     :type trigger_rule: :class:`django.db.models.ForeignKey`
 
+    :keyword configuration: JSON array which will be passed as-is to the job configuration
+    :type configuration: :class:`djorm_pgjson.fields.JSONField`
+
     :keyword priority: The priority of the job type (lower number is higher priority)
     :type priority: :class:`django.db.models.IntegerField`
     :keyword max_scheduled: The maximum number of jobs of this type that may be scheduled to run at the same time
@@ -2261,6 +2274,8 @@ class JobType(models.Model):
     error_mapping = djorm_pgjson.fields.JSONField()
     trigger_rule = models.ForeignKey('trigger.TriggerRule', blank=True, null=True, on_delete=models.PROTECT)
 
+    configuration = djorm_pgjson.fields.JSONField(null=True)
+
     priority = models.IntegerField(default=100)
     max_scheduled = models.IntegerField(blank=True, null=True)
     timeout = models.IntegerField(default=1800)
@@ -2293,6 +2308,11 @@ class JobType(models.Model):
         stderr/stdout expression to an error type"""
 
         return ErrorInterface(self.error_mapping)
+
+    def get_configuration_interface(self):
+        """Returns the interface for the default configuration"""
+
+        return ConfigurationInterface(self.configuration)
 
     def natural_key(self):
         """Django method to define the natural key for a job type as the
