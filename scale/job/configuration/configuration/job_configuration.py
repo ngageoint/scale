@@ -3,15 +3,12 @@ from __future__ import unicode_literals
 
 import logging
 
-from django.conf import settings
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 from job.configuration.configuration import job_configuration_1_0 as previous_version
 from job.configuration.configuration.job_parameter import DockerParam, TaskWorkspace, TaskSetting
 from job.configuration.configuration.exceptions import InvalidJobConfiguration
-from job.execution.container import get_workspace_volume_name
-from storage.container import get_workspace_volume_path
 
 
 logger = logging.getLogger(__name__)
