@@ -8,12 +8,10 @@ import threading
 from django.db import DatabaseError
 from django.utils.timezone import now
 from mesos.interface import Scheduler as MesosScheduler
-from mesos.interface import mesos_pb2
 
 from error.models import Error
 from job.execution.running.manager import running_job_mgr
 from job.execution.running.tasks.cleanup_task import CLEANUP_TASK_ID_PREFIX
-from job.execution.running.tasks.results import TaskResults
 from job.execution.running.tasks.update import TaskStatusUpdate
 from job.models import JobExecution
 from job.resources import NodeResources
@@ -257,7 +255,6 @@ class ScaleScheduler(MesosScheduler):
         # Hand off task update to be saved in the database
         task_update_mgr.add_task_update(task_update)
 
-        # TODO: get rid of TaskResults and use TaskStatusUpdate instead
         if task_id.startswith(CLEANUP_TASK_ID_PREFIX):
             cleanup_mgr.handle_task_update(task_update)
         else:
@@ -267,20 +264,7 @@ class ScaleScheduler(MesosScheduler):
                 running_job_exe = running_job_mgr.get_job_exe(job_exe_id)
 
                 if running_job_exe:
-                    results = TaskResults(task_id)
-                    results.exit_code = utils.parse_exit_code(status)
-                    results.when = utils.get_status_timestamp(status)
-                    # Apply status update to running job execution
-                    if status.state == mesos_pb2.TASK_RUNNING:
-                        running_job_exe.task_start(task_id, results.when)
-                    elif status.state == mesos_pb2.TASK_FINISHED:
-                        if results.exit_code is None:
-                            results.exit_code = 0
-                        running_job_exe.task_complete(results)
-                    elif status.state == mesos_pb2.TASK_LOST:
-                        running_job_exe.task_lost(task_id)
-                    elif status.state in [mesos_pb2.TASK_ERROR, mesos_pb2.TASK_FAILED, mesos_pb2.TASK_KILLED]:
-                        running_job_exe.task_fail(results)
+                    running_job_exe.task_update(task_update)
 
                     # Remove finished job execution
                     if running_job_exe.is_finished():

@@ -1,5 +1,4 @@
 """Provides utility functions for handling Mesos"""
-import re
 from datetime import datetime, timedelta
 
 from django.utils.timezone import utc
@@ -11,7 +10,6 @@ from job.models import JobExecution, TaskUpdate
 
 
 EPOCH = datetime.utcfromtimestamp(0).replace(tzinfo=utc)
-EXIT_CODE_PATTERN = re.compile(r'exited with status ([\-0-9]+)')
 REASON_ENUM_WRAPPER = enum_type_wrapper.EnumTypeWrapper(mesos_pb2._TASKSTATUS_REASON)
 SOURCE_ENUM_WRAPPER = enum_type_wrapper.EnumTypeWrapper(mesos_pb2._TASKSTATUS_SOURCE)
 
@@ -133,24 +131,6 @@ def get_status_timestamp(status):
         return EPOCH + timedelta(seconds=status.timestamp)
 
     return None
-
-
-def parse_exit_code(status):
-    """Parses and returns an exit code from the task status, returns None if no exit code can be parsed
-
-    :param status: The task status
-    :type status: :class:`mesos_pb2.TaskStatus`
-    :returns: The exit code, possibly None
-    :rtype: int
-    """
-
-    exit_code = None
-
-    match = EXIT_CODE_PATTERN.search(status.message)
-    if match:
-        exit_code = int(match.group(1))
-
-    return exit_code
 
 
 def string_to_TaskStatusCode(status):
