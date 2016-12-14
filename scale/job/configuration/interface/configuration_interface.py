@@ -34,7 +34,7 @@ CONFIGURATION_INTERFACE_SCHEMA = {
 class ConfigurationInterface(object):
     """Represents the interface for defining a default job configuration"""
 
-    def __init__(self, definition):
+    def __init__(self, definition=None):
         """Creates a configuration interface from the given definition.
 
         If the definition is invalid, a :class:`job.configuration.interface.exceptions.InvalidInterfaceDefinition`
@@ -48,12 +48,15 @@ class ConfigurationInterface(object):
 
         self.definition = definition
 
+        self._default_setting_names = set()
+
         try:
             validate(definition, CONFIGURATION_INTERFACE_SCHEMA)
         except ValidationError as validation_error:
             raise InvalidInterfaceDefinition(validation_error)
 
         self._populate_default_values()
+        self._validate_default_settings()
 
         if self.definition['version'] != '1.0':
             raise InvalidInterfaceDefinition('%s is an unsupported version number' % self.definition['version'])
@@ -67,33 +70,23 @@ class ConfigurationInterface(object):
 
         return self.definition
 
-    # def get_default_setting_names(self):
-    #     """Returns a set of all default setting names for this interface
-    #
-    #     :returns: Set of default setting names
-    #     :rtype: {string}
-    #     """
-    #     if 'default_settings' not in self.definition:
-    #         return set()
-    #
-    #     settings = self.definition.get('default_settings')
-    #     return {setting_name for setting_name in settings.iterkeys()}
-    #
-    # def validate(self):
-    #     """Validates the setting definitions to ensure that all referenced errors actually exist.
-    #
-    #     :returns: A list of warnings discovered during validation.
-    #     :rtype: [:class:`job.configuration.data.job_data.ValidationWarning`]
-    #
-    #     :raises :class:`job.configuration.interface.exceptions.InvalidInterfaceDefinition`: If there is a missing error.
-    #     """
-    #     setting_names = self.get_error_names()
-    #     error_map = {error.name: error for error in Error.objects.filter(name__in=error_names)}
-    #
-    #     for error_name in error_names:
-    #         if error_name not in error_map:
-    #             raise InvalidInterfaceDefinition('Missing error model reference: %s' % error_name)
-    #     return []
+    def _validate_default_settings(self):
+        """Ensures that no settings have duplicate names or blank values
+
+        :raises :class:`job.configuration.interface.exceptions.InvalidInterface`: If there is a duplicate name or blank
+            value/name. 
+        """
+
+        for setting_name, setting_value in self.definition['default_settings'].iteritems():
+            if setting_name in self._default_setting_names:
+                raise InvalidInterfaceDefinition('Duplicate setting name %s in default_settings' % setting_name)
+            self._default_setting_names.add(setting_name)
+
+            if not setting_name:
+                raise InvalidInterfaceDefinition('Blank setting name (value = %s) in default_settings' % setting_value)
+
+            if not setting_value:
+                raise InvalidInterfaceDefinition('Blank setting value (name = %s) in default_settings' % setting_name)
 
     def _populate_default_values(self):
         """Goes through the definition and fills in any missing default values"""
