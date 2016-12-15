@@ -1,15 +1,15 @@
-'''Defines the application configuration for the product application'''
+"""Defines the application configuration for the product application"""
 from django.apps import AppConfig
 
 
 class ProductConfig(AppConfig):
-    '''Configuration for the product application'''
+    """Configuration for the product application"""
     name = u'product'
     label = u'product'
     verbose_name = u'Product'
 
     def ready(self):
-        '''Registers the product implementations with other applications.'''
+        """Registers the product implementations with other applications."""
 
         from job.configuration.data.data_file import DATA_FILE_STORE
         from product.configuration.product_data_file import ProductDataFileStore

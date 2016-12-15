@@ -1,4 +1,4 @@
-'''Defines functions for geospatial information'''
+"""Defines functions for geospatial information"""
 import json
 
 import django.contrib.gis.geos as geos
@@ -7,13 +7,13 @@ from job.configuration.results.exceptions import InvalidResultsManifest
 
 
 def parse_geo_json_file(geo_json_path):
-    '''Parses GeoJSON from a file and returns a geometry object and metadata.
+    """Parses GeoJSON from a file and returns a geometry object and metadata.
 
     :param geo_json_path: The absolute file path of the GeoJSON file
     :type geo_json_path: str
     :rtype: GEOSGeometry, dict
     :returns: the geometry and metadata
-    '''
+    """
     with open(geo_json_path, u'r') as geo_json_file:
         geo_json = json.load(geo_json_file)
 
@@ -21,13 +21,13 @@ def parse_geo_json_file(geo_json_path):
 
 
 def parse_geo_json(geo_json):
-    '''Parses GeoJSON and returns a geometry object and metadata.
+    """Parses GeoJSON and returns a geometry object and metadata.
 
     :param geo_json: The geo json to parse
     :type geo_json: dict
     :rtype: GEOSGeometry, dict
     :returns: the geometry and metadata
-    '''
+    """
 
     geom = None
     geom_json = None
@@ -56,13 +56,13 @@ def parse_geo_json(geo_json):
 
 
 def get_center_point(geom):
-    '''Returns a center point for the given geometry object.
+    """Returns a center point for the given geometry object.
 
     :param geom: The geometry
     :type geom: GEOSGeometry
     :rtype: Point
     :returns: the center point
-    '''
+    """
     if geom:
         center = geom.centroid
         return center

@@ -22,21 +22,21 @@ from StringIO import StringIO
 class TestMetricsProcessor(TestCase):
 
     def setUp(self):
-        '''Setup test harness'''
+        """Setup test harness"""
         django.setup()
         settings.METRICS_DIR = tempfile.mkdtemp()
 
         Node.objects.register_node('test_host1', 5051, 'test_host1_id')
 
     def tearDown(self):
-        '''Tear down the test harness'''
+        """Tear down the test harness"""
         shutil.rmtree(settings.METRICS_DIR)
 
     @patch('urllib2.urlopen')
     def test_metrics_processor(self, urlopen):
-        '''This method tests the Metrics Processor'''
+        """This method tests the Metrics Processor"""
 
-        urlopen.return_value = StringIO('''{"slave\/mem_used":31360,"system\/mem_free_bytes":6298882048}''')
+        urlopen.return_value = StringIO("""{"slave\/mem_used":31360,"system\/mem_free_bytes":6298882048}""")
         metrics_process = MetricsProcessor()
         
         metrics_process.query_metrics()

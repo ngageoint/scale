@@ -9,16 +9,16 @@ logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
-    '''Command that loads all of the fixtures into the database
-    '''
+    """Command that loads all of the fixtures into the database
+    """
 
     help = 'Loads all of the fixtures into the database'
 
     def handle(self, **options):
-        '''See :meth:`django.core.management.base.BaseCommand.handle`.
+        """See :meth:`django.core.management.base.BaseCommand.handle`.
 
         This method loads all of the fixtures into the database.
-        '''
+        """
         logger.info(u'Command starting: load_all_data')
         fixture_names = []
         manage_path = os.path.join(settings.BASE_DIR, u'manage.py')

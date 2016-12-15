@@ -15,7 +15,7 @@ class TestJobConnectionValidateInputFiles(TestCase):
         django.setup()
 
     def test_required_missing(self):
-        '''Tests calling JobConnection.validate_input_files() when a required file parameter is missing'''
+        """Tests calling JobConnection.validate_input_files() when a required file parameter is missing"""
 
         files = {u'Param1': (True, True, ScaleFileDescription()), u'Param2': (True, True, ScaleFileDescription())}
 
@@ -25,7 +25,7 @@ class TestJobConnectionValidateInputFiles(TestCase):
         self.assertRaises(InvalidConnection, conn.validate_input_files, files)
     
     def test_jamming_multiple_into_single(self):
-        '''Tests calling JobConnection.validate_input_files() when passing multiple files into a single file'''
+        """Tests calling JobConnection.validate_input_files() when passing multiple files into a single file"""
 
         files = {u'Param1': (True, False, ScaleFileDescription())}
 
@@ -35,7 +35,7 @@ class TestJobConnectionValidateInputFiles(TestCase):
         self.assertRaises(InvalidConnection, conn.validate_input_files, files)
 
     def test_bad_media_type(self):
-        '''Tests calling JobConnection.validate_input_files() with a bad media type'''
+        """Tests calling JobConnection.validate_input_files() with a bad media type"""
 
         file_desc = ScaleFileDescription()
         file_desc.add_allowed_media_type(u'application/json')
@@ -48,7 +48,7 @@ class TestJobConnectionValidateInputFiles(TestCase):
         self.assertTrue(warnings)
 
     def test_optional_and_required(self):
-        '''Tests calling JobConnection.validate_input_files() when the connection has optional data for required input'''
+        """Tests calling JobConnection.validate_input_files() when the connection has optional data for required input"""
 
         files = {u'Param1': (True, True, ScaleFileDescription())}
 
@@ -58,7 +58,7 @@ class TestJobConnectionValidateInputFiles(TestCase):
         self.assertRaises(InvalidConnection, conn.validate_input_files, files)
 
     def test_successful(self):
-        '''Tests calling JobConnection.validate_input_files() successfully'''
+        """Tests calling JobConnection.validate_input_files() successfully"""
 
         file_desc = ScaleFileDescription()
         file_desc.add_allowed_media_type(u'application/json')
@@ -84,7 +84,7 @@ class TestJobConnectionValidateProperties(TestCase):
         django.setup()
 
     def test_required_missing(self):
-        '''Tests calling JobConnection.validate_properties() when a required property is missing'''
+        """Tests calling JobConnection.validate_properties() when a required property is missing"""
 
         property_names = {u'Param1': True, u'Param2': True, u'Param3': False}
 
@@ -94,7 +94,7 @@ class TestJobConnectionValidateProperties(TestCase):
         self.assertRaises(InvalidConnection, conn.validate_properties, property_names)
 
     def test_successful(self):
-        '''Tests calling JobConnection.validate_properties() successfully'''
+        """Tests calling JobConnection.validate_properties() successfully"""
 
         property_names = {u'Param1': True, u'Param2': False, u'Param3': False}
         

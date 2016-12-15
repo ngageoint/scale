@@ -1,4 +1,4 @@
-'''Defines utility methods for testing ingests'''
+"""Defines utility methods for testing ingests"""
 import django.utils.timezone as timezone
 
 import job.test.utils as job_utils

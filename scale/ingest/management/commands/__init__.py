@@ -1,1 +1,1 @@
-'''django commands for the ingest app'''
+"""django commands for the ingest app"""

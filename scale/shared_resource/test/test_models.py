@@ -47,7 +47,7 @@ class SharedResourceManagerTest(TestCase):
         self.assertIsNone(remaining, u'A resource with no limit should return None Remaining')
 
     def testResourcesRemainingNoJobs(self):
-        '''A resource with no jobs using it should have the limit remaining'''
+        """A resource with no jobs using it should have the limit remaining"""
         remaining = SharedResource.objects.get_resource_remaining(self.resource_1)
 
         self.assertEqual(remaining, RESOURCE_LIMIT)

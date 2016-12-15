@@ -1,4 +1,4 @@
-'''Defines the functions for handling job execution metrics'''
+"""Defines the functions for handling job execution metrics"""
 from __future__ import unicode_literals
 
 from datetime import timedelta
@@ -17,11 +17,11 @@ logger = logging.getLogger(__name__)
 
 
 def save_job_exe_metrics(job_exe):
-    '''Collects and saves the metrics for the given job execution. All database changes occur in an atomic transaction.
+    """Collects and saves the metrics for the given job execution. All database changes occur in an atomic transaction.
 
     :param job_exe: The job execution
     :type job_exe: :class:`job.models.JobExecution`
-    '''
+    """
 
     if settings.INFLUXDB_BASE_URL is not None:
         try:

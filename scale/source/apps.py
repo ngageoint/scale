@@ -1,10 +1,10 @@
-'''Defines the application configuration for the source application'''
+"""Defines the application configuration for the source application"""
 from django.apps import AppConfig
 
 
 class SourceConfig(AppConfig):
-    '''Configuration for the source app
-    '''
+    """Configuration for the source app
+    """
     name = u'source'
     label = u'source'
     verbose_name = u'Source'

@@ -1,4 +1,4 @@
-'''Defines decorators for performing function retries with exponential backoff'''
+"""Defines decorators for performing function retries with exponential backoff"""
 import logging
 import random
 import time
@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 def retry(no_arg_func=None, ex_class=Exception, max_tries=3, base_ms_delay=1000, max_ms_delay=30000):
-    '''Wraps the decorated function so that it is retried with exponential backoff. On the first retry, the delay is a
+    """Wraps the decorated function so that it is retried with exponential backoff. On the first retry, the delay is a
     random number of milliseconds between 0 and base_ms_delay. The upper bound is then doubled for each successive
     retry. A retry delay will not exceed max_ms_delay milliseconds.
 
@@ -24,7 +24,7 @@ def retry(no_arg_func=None, ex_class=Exception, max_tries=3, base_ms_delay=1000,
     :type base_ms_delay: int
     :param max_ms_delay: The maximum time to delay in milliseconds
     :type max_ms_delay: int
-    '''
+    """
 
     def func_decorator(func):
 
@@ -60,7 +60,7 @@ def retry(no_arg_func=None, ex_class=Exception, max_tries=3, base_ms_delay=1000,
 
 
 def retry_database_query(no_arg_func=None, max_tries=5, base_ms_delay=1000, max_ms_delay=30000):
-    '''Wraps the decorated function so that it is retried with exponential backoff if any operational database errors
+    """Wraps the decorated function so that it is retried with exponential backoff if any operational database errors
     (disconnect, too many connections, etc) occurs. On the first retry, the delay is a random number of milliseconds
     between 0 and base_ms_delay. The upper bound is then doubled for each successive retry. A retry delay will not
     exceed max_ms_delay milliseconds.
@@ -73,7 +73,7 @@ def retry_database_query(no_arg_func=None, max_tries=5, base_ms_delay=1000, max_
     :type base_ms_delay: int
     :param max_ms_delay: The maximum time to delay in milliseconds
     :type max_ms_delay: int
-    '''
+    """
 
     return retry(no_arg_func=no_arg_func, ex_class=OperationalError, max_tries=max_tries, base_ms_delay=base_ms_delay,
                  max_ms_delay=max_ms_delay)

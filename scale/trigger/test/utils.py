@@ -1,4 +1,4 @@
-'''Defines utility methods for testing trigger rules and events.'''
+"""Defines utility methods for testing trigger rules and events."""
 import django.utils.timezone as timezone
 
 import storage.test.utils as storage_test_utils
@@ -10,11 +10,11 @@ RULE_NAME_COUNTER = 1
 
 
 def create_trigger_event(trigger_type=None, rule=None, description=None, occurred=None):
-    '''Creates a trigger event model for unit testing
+    """Creates a trigger event model for unit testing
 
     :returns: The trigger event model
     :rtype: :class:`trigger.models.TriggerEvent`
-    '''
+    """
 
     if not trigger_type:
         global EVENT_TYPE_COUNTER
@@ -34,11 +34,11 @@ def create_trigger_event(trigger_type=None, rule=None, description=None, occurre
 
 
 def create_trigger_rule(name=None, trigger_type='PARSE', configuration=None, is_active=True):
-    '''Creates a trigger rule model for unit testing
+    """Creates a trigger rule model for unit testing
 
     :returns: The trigger rule model
     :rtype: :class:`trigger.models.TriggerRule`
-    '''
+    """
 
     if not name:
         global RULE_NAME_COUNTER

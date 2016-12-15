@@ -1,4 +1,4 @@
-'''Defines the URLs for the RESTful node services'''
+"""Defines the URLs for the RESTful node services"""
 from django.conf.urls import patterns, url
 
 import node.views as views

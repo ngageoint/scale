@@ -17,7 +17,7 @@ class TestJobLoadProcessor(TestCase):
         job_test_utils.create_job(status=u'QUEUED')
 
     def test_process_event(self):
-        '''This method tests the Job Load Processor'''
+        """This method tests the Job Load Processor"""
         event = job_test_utils.create_clock_event()
         self.processor.process_event(event)
 

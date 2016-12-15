@@ -14,7 +14,7 @@ class TestInitializeSystem(TransactionTestCase):
         django.setup()
 
     def test_create_clock_job(self):
-        '''Tests creating the Scale clock job'''
+        """Tests creating the Scale clock job"""
 
         clock_job_type = JobType.objects.get_clock_job_type()
         count = Job.objects.filter(job_type_id=clock_job_type.id).count()

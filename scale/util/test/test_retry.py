@@ -8,7 +8,7 @@ from util.retry import retry, retry_database_query
 
 
 class TestRetry(SimpleTestCase):
-    '''Tests the retry decorator function'''
+    """Tests the retry decorator function"""
 
     @retry
     def success(self):
@@ -37,7 +37,7 @@ class TestRetry(SimpleTestCase):
     @patch('util.retry.time.sleep')
     @patch('util.retry.random.randint')
     def test_success(self, mock_randint, mock_sleep):
-        '''Tests retrying success()'''
+        """Tests retrying success()"""
         mock_randint.return_value = 1
 
         self.success()
@@ -48,7 +48,7 @@ class TestRetry(SimpleTestCase):
     @patch('util.retry.time.sleep')
     @patch('util.retry.random.randint')
     def test_success_with_return(self, mock_randint, mock_sleep):
-        '''Tests retrying success_with_return()'''
+        """Tests retrying success_with_return()"""
         mock_randint.return_value = 1
 
         result = self.success_with_return()
@@ -60,7 +60,7 @@ class TestRetry(SimpleTestCase):
     @patch('util.retry.time.sleep')
     @patch('util.retry.random.randint')
     def test_always_fail_no_decorator_args(self, mock_randint, mock_sleep):
-        '''Tests retrying always_fail_no_decorator_args()'''
+        """Tests retrying always_fail_no_decorator_args()"""
         mock_randint.return_value = 1
 
         self.assertRaises(Exception, self.always_fail)
@@ -71,7 +71,7 @@ class TestRetry(SimpleTestCase):
     @patch('util.retry.time.sleep')
     @patch('util.retry.random.randint')
     def test_always_fail(self, mock_randint, mock_sleep):
-        '''Tests retrying always_fail()'''
+        """Tests retrying always_fail()"""
         mock_randint.return_value = 1
 
         self.assertRaises(Exception, self.always_fail)
@@ -82,7 +82,7 @@ class TestRetry(SimpleTestCase):
     @patch('util.retry.time.sleep')
     @patch('util.retry.random.randint')
     def test_always_fail_10_times(self, mock_randint, mock_sleep):
-        '''Tests retrying always_fail_10_times()'''
+        """Tests retrying always_fail_10_times()"""
         mock_randint.return_value = 1
 
         self.assertRaises(Exception, self.always_fail_10_times)
@@ -93,7 +93,7 @@ class TestRetry(SimpleTestCase):
     @patch('util.retry.time.sleep')
     @patch('util.retry.random.randint')
     def test_wrong_exception(self, mock_randint, mock_sleep):
-        '''Tests retrying wrong_exception()'''
+        """Tests retrying wrong_exception()"""
         mock_randint.return_value = 1
 
         self.assertRaises(ArithmeticError, self.wrong_exception)
@@ -103,7 +103,7 @@ class TestRetry(SimpleTestCase):
 
 
 class TestRetryDatabaseQuery(SimpleTestCase):
-    '''Tests the retry_database_query decorator function'''
+    """Tests the retry_database_query decorator function"""
 
     @retry_database_query
     def success_with_return(self):
@@ -116,7 +116,7 @@ class TestRetryDatabaseQuery(SimpleTestCase):
     @patch('util.retry.time.sleep')
     @patch('util.retry.random.randint')
     def test_success_with_return(self, mock_randint, mock_sleep):
-        '''Tests retrying success_with_return()'''
+        """Tests retrying success_with_return()"""
         mock_randint.return_value = 1
 
         result = self.success_with_return()
@@ -128,7 +128,7 @@ class TestRetryDatabaseQuery(SimpleTestCase):
     @patch('util.retry.time.sleep')
     @patch('util.retry.random.randint')
     def test_always_fail(self, mock_randint, mock_sleep):
-        '''Tests retrying always_fail'''
+        """Tests retrying always_fail"""
         mock_randint.return_value = 1
 
         self.assertRaises(OperationalError, self.always_fail)

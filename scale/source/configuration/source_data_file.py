@@ -1,16 +1,16 @@
-'''Defines the source data file input type contained within job data'''
+"""Defines the source data file input type contained within job data"""
 from job.configuration.data.data_file import AbstractDataFileParseSaver
 from source.models import SourceFile
 from util.parse import parse_datetime
 
 
 class SourceDataFileParseSaver(AbstractDataFileParseSaver):
-    '''Implements the data file parse saver to provide a way to save parse results for source files.
-    '''
+    """Implements the data file parse saver to provide a way to save parse results for source files.
+    """
 
     def save_parse_results(self, parse_results, input_file_ids):
-        '''See :meth:`job.configuration.data.data_file.AbstractDataFileParseSaver.save_parse_results`
-        '''
+        """See :meth:`job.configuration.data.data_file.AbstractDataFileParseSaver.save_parse_results`
+        """
 
         file_name_to_id = {}
         source_files = SourceFile.objects.filter(id__in=input_file_ids)

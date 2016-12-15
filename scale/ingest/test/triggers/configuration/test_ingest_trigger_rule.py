@@ -22,13 +22,13 @@ class TestIngestTriggerRuleConfigurationInit(TestCase):
         django.setup()
 
     def test_successful(self):
-        '''Tests creating a IngestTriggerRuleConfiguration with valid configuration'''
+        """Tests creating a IngestTriggerRuleConfiguration with valid configuration"""
 
         json_str = '{"condition": {"media_type": "text/plain", "data_types": ["A", "B"]}, "data": {"input_data_name": "my_input", "workspace_name": "my_workspace"}}'
         IngestTriggerRuleConfiguration(INGEST_TYPE, json.loads(json_str))
 
     def test_invalid(self):
-        '''Tests creating a IngestTriggerRuleConfiguration with an invalid configuration'''
+        """Tests creating a IngestTriggerRuleConfiguration with an invalid configuration"""
 
         json_str = '{"condition": {"media_type": "text/plain", "data_types": ["A", "B"]}}'
         self.assertRaises(InvalidTriggerRule, IngestTriggerRuleConfiguration, INGEST_TYPE, json.loads(json_str))
@@ -40,7 +40,7 @@ class TestIngestTriggerRuleConfigurationValidate(TestCase):
         django.setup()
 
     def test_successful(self):
-        '''Tests calling IngestTriggerRuleConfiguration.validate() successfully'''
+        """Tests calling IngestTriggerRuleConfiguration.validate() successfully"""
 
         workspace_name = 'Test_Workspace'
         storage_utils.create_workspace(name=workspace_name)
@@ -50,7 +50,7 @@ class TestIngestTriggerRuleConfigurationValidate(TestCase):
         rule.validate()
 
     def test_bad_workspace(self):
-        '''Tests calling IngestTriggerRuleConfiguration.validate() with a bad workspace'''
+        """Tests calling IngestTriggerRuleConfiguration.validate() with a bad workspace"""
 
         json_str = '{"condition": {"media_type": "text/plain", "data_types": ["A", "B"]}, "data": {"input_data_name": "my_input", "workspace_name": "BAD_WORKSPACE"}}'
         rule = IngestTriggerRuleConfiguration(INGEST_TYPE, json.loads(json_str))
@@ -64,7 +64,7 @@ class TestIngestTriggerRuleConfigurationValidateTriggerForJob(TestCase):
         django.setup()
 
     def test_successful(self):
-        '''Tests calling IngestTriggerRuleConfiguration.validate_trigger_for_job() successfully with no warnings'''
+        """Tests calling IngestTriggerRuleConfiguration.validate_trigger_for_job() successfully with no warnings"""
 
         rule_json_str = '{"version": "1.0", "condition": {"media_type": "text/plain", "data_types": ["A", "B"]}, "data": {"input_data_name": "my_input", "workspace_name": "my_workspace"}}'
         rule_config = IngestTriggerRuleConfiguration(INGEST_TYPE, json.loads(rule_json_str))
@@ -77,7 +77,7 @@ class TestIngestTriggerRuleConfigurationValidateTriggerForJob(TestCase):
         self.assertListEqual(warnings, [])
 
     def test_bad_input_name(self):
-        '''Tests calling IngestTriggerRuleConfiguration.validate_trigger_for_job() with a bad input name'''
+        """Tests calling IngestTriggerRuleConfiguration.validate_trigger_for_job() with a bad input name"""
 
         rule_json_str = '{"version": "1.0", "condition": {"media_type": "text/plain", "data_types": ["A", "B"]}, "data": {"input_data_name": "my_input", "workspace_name": "my_workspace"}}'
         rule_config = IngestTriggerRuleConfiguration(INGEST_TYPE, json.loads(rule_json_str))
@@ -88,7 +88,7 @@ class TestIngestTriggerRuleConfigurationValidateTriggerForJob(TestCase):
         self.assertRaises(InvalidConnection, rule_config.validate_trigger_for_job, job_interface)
 
     def test_media_type_warning(self):
-        '''Tests calling IngestTriggerRuleConfiguration.validate_trigger_for_job() with a warning for a mis-matched media type'''
+        """Tests calling IngestTriggerRuleConfiguration.validate_trigger_for_job() with a warning for a mis-matched media type"""
 
         rule_json_str = '{"version": "1.0", "condition": {"media_type": "text/plain", "data_types": ["A", "B"]}, "data": {"input_data_name": "my_input", "workspace_name": "my_workspace"}}'
         rule_config = IngestTriggerRuleConfiguration(INGEST_TYPE, json.loads(rule_json_str))
@@ -107,7 +107,7 @@ class TestIngestTriggerRuleConfigurationValidateTriggerForRecipe(TestCase):
         django.setup()
 
     def test_successful(self):
-        '''Tests calling IngestTriggerRuleConfiguration.validate_trigger_for_recipe() successfully with no warnings'''
+        """Tests calling IngestTriggerRuleConfiguration.validate_trigger_for_recipe() successfully with no warnings"""
 
         rule_json_str = '{"version": "1.0", "condition": {"media_type": "text/plain", "data_types": ["A", "B"]}, "data": {"input_data_name": "my_input", "workspace_name": "my_workspace"}}'
         rule_config = IngestTriggerRuleConfiguration(INGEST_TYPE, json.loads(rule_json_str))
@@ -120,7 +120,7 @@ class TestIngestTriggerRuleConfigurationValidateTriggerForRecipe(TestCase):
         self.assertListEqual(warnings, [])
 
     def test_bad_input_name(self):
-        '''Tests calling IngestTriggerRuleConfiguration.validate_trigger_for_recipe() with a bad input name'''
+        """Tests calling IngestTriggerRuleConfiguration.validate_trigger_for_recipe() with a bad input name"""
 
         rule_json_str = '{"version": "1.0", "condition": {"media_type": "text/plain", "data_types": ["A", "B"]}, "data": {"input_data_name": "my_input", "workspace_name": "my_workspace"}}'
         rule_config = IngestTriggerRuleConfiguration(INGEST_TYPE, json.loads(rule_json_str))
@@ -131,7 +131,7 @@ class TestIngestTriggerRuleConfigurationValidateTriggerForRecipe(TestCase):
         self.assertRaises(InvalidRecipeConnection, rule_config.validate_trigger_for_recipe, recipe_definition)
 
     def test_media_type_warning(self):
-        '''Tests calling IngestTriggerRuleConfiguration.validate_trigger_for_recipe() with a warning for a mis-matched media type'''
+        """Tests calling IngestTriggerRuleConfiguration.validate_trigger_for_recipe() with a warning for a mis-matched media type"""
 
         rule_json_str = '{"version": "1.0", "condition": {"media_type": "text/plain", "data_types": ["A", "B"]}, "data": {"input_data_name": "my_input", "workspace_name": "my_workspace"}}'
         rule_config = IngestTriggerRuleConfiguration(INGEST_TYPE, json.loads(rule_json_str))

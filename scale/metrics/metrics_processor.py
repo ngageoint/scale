@@ -1,4 +1,4 @@
-'''Defines the MetricsProcessor for tracking various usage metrics'''
+"""Defines the MetricsProcessor for tracking various usage metrics"""
 import logging
 
 from django.conf import settings
@@ -15,15 +15,15 @@ logger = logging
 
 
 class MetricsProcessor(object):
-    '''This class queries and stores memory, cpu, etc. metrics tracking and trending.
-    '''
+    """This class queries and stores memory, cpu, etc. metrics tracking and trending.
+    """
 
     def create_metrics_file(self, filename):
-        '''Create an empty rrd file with the proper metrics defined
+        """Create an empty rrd file with the proper metrics defined
 
         :param filename: The full path to the filename to create
         :type filename: str
-        '''
+        """
         subprocess.call(["rrdtool", "create", filename, "--step", "60",
                                 "DS:mesosMemUsed:GAUGE:120:0:U",
                                 "DS:mesosSystemMemFree:GAUGE:120:0:U",
@@ -35,8 +35,8 @@ class MetricsProcessor(object):
                                 "RRA:MIN:0.5:50:720"])
 
     def query_metrics(self):
-        '''Queries the various metrics save the stats for historical tracking
-        '''
+        """Queries the various metrics save the stats for historical tracking
+        """
         logger.info("Querying metrics")
         nodes = Node.objects.values('hostname', 'port')
         threads = []

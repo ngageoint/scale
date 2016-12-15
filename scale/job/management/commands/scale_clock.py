@@ -1,4 +1,4 @@
-'''Defines the command line method for running the Scale clock process'''
+"""Defines the command line method for running the Scale clock process"""
 import logging
 import math
 import signal
@@ -16,14 +16,14 @@ logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
-    '''Command that executes the Scale clock
-    '''
+    """Command that executes the Scale clock
+    """
 
     help = 'Executes the Scale clock to perform necessary system functions at their scheduled time'
 
     def __init__(self):
-        '''Constructor
-        '''
+        """Constructor
+        """
         super(Command, self).__init__()
         self.running = False
         self.throttle = 60
@@ -35,10 +35,10 @@ class Command(BaseCommand):
         self.num_exes = None
 
     def handle(self, **options):
-        '''See :meth:`django.core.management.base.BaseCommand.handle`.
+        """See :meth:`django.core.management.base.BaseCommand.handle`.
 
         This method starts the Scale clock.
-        '''
+        """
         self.running = True
 
         # Register a listener to handle clean shutdowns
@@ -74,8 +74,8 @@ class Command(BaseCommand):
         sys.exit(1)
 
     def _init_clock(self):
-        '''Initializes the clock process by determining which job execution this process is
-        '''
+        """Initializes the clock process by determining which job execution this process is
+        """
         logger.info(u'Initializing clock')
         clock_job_type = JobType.objects.get_clock_job_type()
         clock_job = Job.objects.get(job_type_id=clock_job_type.id)
@@ -83,8 +83,8 @@ class Command(BaseCommand):
         self.num_exes = clock_job.num_exes
 
     def _check_clock(self):
-        '''Checks to ensure that this is not an old clock process
-        '''
+        """Checks to ensure that this is not an old clock process
+        """
         logger.debug(u'Checking for duplicate clock processes')
         clock_job = Job.objects.get(pk=self.job_id)
         if self.num_exes != clock_job.num_exes:
@@ -92,9 +92,9 @@ class Command(BaseCommand):
             raise Exception(u'Old clock process detected, shutting down')
 
     def _onsigterm(self, signum, _frame):
-        '''See signal callback registration: :py:func:`signal.signal`.
+        """See signal callback registration: :py:func:`signal.signal`.
 
         This callback performs a clean shutdown when a TERM signal is received.
-        '''
+        """
         logger.info(u'Clock command terminated due to signal: %i', signum)
         self.running = False

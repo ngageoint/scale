@@ -22,13 +22,13 @@ class TestParseTriggerRuleConfigurationInit(TestCase):
         django.setup()
 
     def test_successful(self):
-        '''Tests creating a ParseTriggerRuleConfiguration with valid configuration'''
+        """Tests creating a ParseTriggerRuleConfiguration with valid configuration"""
 
         json_str = '{"condition": {"media_type": "text/plain", "data_types": ["A", "B"]}, "data": {"input_data_name": "my_input", "workspace_name": "my_workspace"}}'
         ParseTriggerRuleConfiguration(PARSE_TYPE, json.loads(json_str))
 
     def test_invalid(self):
-        '''Tests creating a ParseTriggerRuleConfiguration with an invalid configuration'''
+        """Tests creating a ParseTriggerRuleConfiguration with an invalid configuration"""
 
         json_str = '{"condition": {"media_type": "text/plain", "data_types": ["A", "B"]}}'
         self.assertRaises(InvalidTriggerRule, ParseTriggerRuleConfiguration, PARSE_TYPE, json.loads(json_str))
@@ -40,7 +40,7 @@ class TestParseTriggerRuleConfigurationValidate(TestCase):
         django.setup()
 
     def test_successful(self):
-        '''Tests calling ParseTriggerRuleConfiguration.validate() successfully'''
+        """Tests calling ParseTriggerRuleConfiguration.validate() successfully"""
 
         workspace_name = 'Test_Workspace'
         storage_utils.create_workspace(name=workspace_name)
@@ -50,7 +50,7 @@ class TestParseTriggerRuleConfigurationValidate(TestCase):
         rule.validate()
 
     def test_bad_workspace(self):
-        '''Tests calling ParseTriggerRuleConfiguration.validate() with a bad workspace'''
+        """Tests calling ParseTriggerRuleConfiguration.validate() with a bad workspace"""
 
         json_str = '{"condition": {"media_type": "text/plain", "data_types": ["A", "B"]}, "data": {"input_data_name": "my_input", "workspace_name": "BAD_WORKSPACE"}}'
         rule = ParseTriggerRuleConfiguration(PARSE_TYPE, json.loads(json_str))
@@ -64,7 +64,7 @@ class TestParseTriggerRuleConfigurationValidateTriggerForJob(TestCase):
         django.setup()
 
     def test_successful(self):
-        '''Tests calling ParseTriggerRuleConfiguration.validate_trigger_for_job() successfully with no warnings'''
+        """Tests calling ParseTriggerRuleConfiguration.validate_trigger_for_job() successfully with no warnings"""
 
         rule_json_str = '{"version": "1.0", "condition": {"media_type": "text/plain", "data_types": ["A", "B"]}, "data": {"input_data_name": "my_input", "workspace_name": "my_workspace"}}'
         rule_config = ParseTriggerRuleConfiguration(PARSE_TYPE, json.loads(rule_json_str))
@@ -77,7 +77,7 @@ class TestParseTriggerRuleConfigurationValidateTriggerForJob(TestCase):
         self.assertListEqual(warnings, [])
 
     def test_bad_input_name(self):
-        '''Tests calling ParseTriggerRuleConfiguration.validate_trigger_for_job() with a bad input name'''
+        """Tests calling ParseTriggerRuleConfiguration.validate_trigger_for_job() with a bad input name"""
 
         rule_json_str = '{"version": "1.0", "condition": {"media_type": "text/plain", "data_types": ["A", "B"]}, "data": {"input_data_name": "my_input", "workspace_name": "my_workspace"}}'
         rule_config = ParseTriggerRuleConfiguration(PARSE_TYPE, json.loads(rule_json_str))
@@ -88,7 +88,7 @@ class TestParseTriggerRuleConfigurationValidateTriggerForJob(TestCase):
         self.assertRaises(InvalidConnection, rule_config.validate_trigger_for_job, job_interface)
 
     def test_media_type_warning(self):
-        '''Tests calling ParseTriggerRuleConfiguration.validate_trigger_for_job() with a warning for a mis-matched media type'''
+        """Tests calling ParseTriggerRuleConfiguration.validate_trigger_for_job() with a warning for a mis-matched media type"""
 
         rule_json_str = '{"version": "1.0", "condition": {"media_type": "text/plain", "data_types": ["A", "B"]}, "data": {"input_data_name": "my_input", "workspace_name": "my_workspace"}}'
         rule_config = ParseTriggerRuleConfiguration(PARSE_TYPE, json.loads(rule_json_str))
@@ -107,7 +107,7 @@ class TestParseTriggerRuleConfigurationValidateTriggerForRecipe(TestCase):
         django.setup()
 
     def test_successful(self):
-        '''Tests calling ParseTriggerRuleConfiguration.validate_trigger_for_recipe() successfully with no warnings'''
+        """Tests calling ParseTriggerRuleConfiguration.validate_trigger_for_recipe() successfully with no warnings"""
 
         rule_json_str = '{"version": "1.0", "condition": {"media_type": "text/plain", "data_types": ["A", "B"]}, "data": {"input_data_name": "my_input", "workspace_name": "my_workspace"}}'
         rule_config = ParseTriggerRuleConfiguration(PARSE_TYPE, json.loads(rule_json_str))
@@ -120,7 +120,7 @@ class TestParseTriggerRuleConfigurationValidateTriggerForRecipe(TestCase):
         self.assertListEqual(warnings, [])
 
     def test_bad_input_name(self):
-        '''Tests calling ParseTriggerRuleConfiguration.validate_trigger_for_recipe() with a bad input name'''
+        """Tests calling ParseTriggerRuleConfiguration.validate_trigger_for_recipe() with a bad input name"""
 
         rule_json_str = '{"version": "1.0", "condition": {"media_type": "text/plain", "data_types": ["A", "B"]}, "data": {"input_data_name": "my_input", "workspace_name": "my_workspace"}}'
         rule_config = ParseTriggerRuleConfiguration(PARSE_TYPE, json.loads(rule_json_str))
@@ -131,7 +131,7 @@ class TestParseTriggerRuleConfigurationValidateTriggerForRecipe(TestCase):
         self.assertRaises(InvalidRecipeConnection, rule_config.validate_trigger_for_recipe, recipe_definition)
 
     def test_media_type_warning(self):
-        '''Tests calling ParseTriggerRuleConfiguration.validate_trigger_for_recipe() with a warning for a mis-matched media type'''
+        """Tests calling ParseTriggerRuleConfiguration.validate_trigger_for_recipe() with a warning for a mis-matched media type"""
 
         rule_json_str = '{"version": "1.0", "condition": {"media_type": "text/plain", "data_types": ["A", "B"]}, "data": {"input_data_name": "my_input", "workspace_name": "my_workspace"}}'
         rule_config = ParseTriggerRuleConfiguration(PARSE_TYPE, json.loads(rule_json_str))

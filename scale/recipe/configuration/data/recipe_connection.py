@@ -1,4 +1,4 @@
-'''Defines connections that will provide data to execute recipes'''
+"""Defines connections that will provide data to execute recipes"""
 from __future__ import unicode_literals
 
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
@@ -7,13 +7,13 @@ from storage.media_type import UNKNOWN_MEDIA_TYPE
 
 
 class RecipeConnection(object):
-    '''Represents a connection that will provide data to execute recipes. This class contains the necessary description
+    """Represents a connection that will provide data to execute recipes. This class contains the necessary description
     needed to ensure the data provided by the connection will be sufficient to execute the given recipe.
-    '''
+    """
 
     def __init__(self):
-        '''Constructor
-        '''
+        """Constructor
+        """
 
         self.param_names = set()
         self.properties = []
@@ -21,7 +21,7 @@ class RecipeConnection(object):
         self.workspace = False
 
     def add_input_file(self, file_name, multiple, media_types, optional):
-        '''Adds a new file parameter to this connection
+        """Adds a new file parameter to this connection
 
         :param file_name: The file parameter name
         :type file_name: str
@@ -31,7 +31,7 @@ class RecipeConnection(object):
         :type media_types: list of str
         :param optional: Whether the file parameter is optional and may not be provided (True)
         :type optional: bool
-        '''
+        """
 
         if file_name in self.param_names:
             raise Exception('Connection already has a parameter named %s' % file_name)
@@ -43,11 +43,11 @@ class RecipeConnection(object):
         self.files[file_name] = (multiple, media_types, optional)
 
     def add_property(self, property_name):
-        '''Adds a new property parameter to this connection
+        """Adds a new property parameter to this connection
 
         :param property_name: The property parameter name
         :type property_name: str
-        '''
+        """
 
         if property_name in self.param_names:
             raise Exception('Connection already has a parameter named %s' % property_name)
@@ -56,22 +56,22 @@ class RecipeConnection(object):
         self.properties.append(property_name)
 
     def add_workspace(self):
-        '''Indicates that this connection provides a workspace for storing output files
-        '''
+        """Indicates that this connection provides a workspace for storing output files
+        """
 
         self.workspace = True
 
     def has_workspace(self):
-        '''Indicates whether this connection provides a workspace for storing output files
+        """Indicates whether this connection provides a workspace for storing output files
 
         :returns: True if this connection provides a workspace, False otherwise
         :rtype: bool
-        '''
+        """
 
         return self.workspace
 
     def validate_input_files(self, files):
-        '''Validates the given file parameters to make sure they are valid with respect to the recipe definition.
+        """Validates the given file parameters to make sure they are valid with respect to the recipe definition.
 
         :param files: Dict of file parameter names mapped to a tuple with three items: whether the parameter is required
             (True), if the parameter is for multiple files (True), and the description of the expected file meta-data
@@ -82,7 +82,7 @@ class RecipeConnection(object):
 
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeConnection`: If there is a configuration
             problem
-        '''
+        """
 
         warnings = []
         for name in files:
@@ -110,7 +110,7 @@ class RecipeConnection(object):
         return warnings
 
     def validate_properties(self, property_names):
-        '''Validates the given property names to make sure all properties exist if they are required.
+        """Validates the given property names to make sure all properties exist if they are required.
 
         :param property_names: Dict of property names mapped to a bool indicating if they are required
         :type property_names: dict of str -> bool
@@ -119,7 +119,7 @@ class RecipeConnection(object):
 
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeConnection`: If there is a configuration
             problem
-        '''
+        """
 
         warnings = []
         for name in property_names:

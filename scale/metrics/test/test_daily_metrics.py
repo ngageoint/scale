@@ -11,7 +11,7 @@ from metrics.daily_metrics import DailyMetricsProcessor
 
 
 class TestDailyMetricsProcessor(TestCase):
-    '''Tests the DailyMetricsProcessor clock event class.'''
+    """Tests the DailyMetricsProcessor clock event class."""
 
     def setUp(self):
         django.setup()
@@ -22,7 +22,7 @@ class TestDailyMetricsProcessor(TestCase):
     @patch('metrics.daily_metrics.Queue')
     @patch('metrics.daily_metrics.timezone.now', lambda: datetime.datetime(2015, 1, 10, tzinfo=timezone.utc))
     def test_process_event_first(self, mock_Queue):
-        '''Tests processing an event that was never triggered before.'''
+        """Tests processing an event that was never triggered before."""
         event = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 10, 12, tzinfo=timezone.utc))
 
         self.processor.process_event(event, None)
@@ -36,7 +36,7 @@ class TestDailyMetricsProcessor(TestCase):
     @patch('metrics.daily_metrics.Queue')
     @patch('metrics.daily_metrics.timezone.now', lambda: datetime.datetime(2015, 1, 10, tzinfo=timezone.utc))
     def test_process_event_last(self, mock_Queue):
-        '''Tests processing an event that was triggered before.'''
+        """Tests processing an event that was triggered before."""
         event = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 10, 12, second=9, tzinfo=timezone.utc))
         last = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 9, 12, second=10, tzinfo=timezone.utc))
 
@@ -51,7 +51,7 @@ class TestDailyMetricsProcessor(TestCase):
     @patch('metrics.daily_metrics.Queue')
     @patch('metrics.daily_metrics.timezone.now', lambda: datetime.datetime(2015, 1, 10, tzinfo=timezone.utc))
     def test_process_event_range(self, mock_Queue):
-        '''Tests processing an event that requires catching up for a range of previous days.'''
+        """Tests processing an event that requires catching up for a range of previous days."""
         event = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 10, 10, tzinfo=timezone.utc))
         last = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 7, 12, tzinfo=timezone.utc))
 
@@ -78,7 +78,7 @@ class TestDailyMetricsProcessor(TestCase):
     @patch('metrics.daily_metrics.Queue')
     @patch('metrics.daily_metrics.timezone.now', lambda: datetime.datetime(2015, 1, 10, tzinfo=timezone.utc))
     def test_process_event_duplicate(self, mock_Queue):
-        '''Tests processing an event that was previously handled.'''
+        """Tests processing an event that was previously handled."""
         event = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 10, 12, tzinfo=timezone.utc))
         last = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 10, 10, tzinfo=timezone.utc))
 
