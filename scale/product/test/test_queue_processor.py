@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import django
 from django.test import TestCase
 from mock import patch
@@ -16,12 +18,12 @@ class TestProductProcessor(TestCase):
         self.processor = ProductProcessor()
 
         data = {
-            u'input_data': [{
-                u'name': u'Param1',
-                u'file_id': 1,
+            'input_data': [{
+                'name': 'Param1',
+                'file_id': 1,
             }, {
-                u'name': u'Param2',
-                u'file_id': 2,
+                'name': 'Param2',
+                'file_id': 2,
             }]
         }
         self.job = job_test_utils.create_job(data=data)

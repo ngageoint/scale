@@ -1,9 +1,11 @@
+from __future__ import unicode_literals
+
 from django.apps import AppConfig
 
 
 class MesosConfig(AppConfig):
     """Configuration for the mesos_api app
     """
-    name = u'mesos_api'
-    label = u'mesos_api'
-    verbose_name = u'Mesos API'
+    name = 'mesos_api'
+    label = 'mesos_api'
+    verbose_name = 'Mesos API'

@@ -1,9 +1,11 @@
+from __future__ import unicode_literals
+
 from django.apps import AppConfig
 
 
 class SchedulerConfig(AppConfig):
     """Configuration for the scheduler app
     """
-    name = u'scheduler'
-    label = u'scheduler'
-    verbose_name = u'Scheduler'
+    name = 'scheduler'
+    label = 'scheduler'
+    verbose_name = 'Scheduler'

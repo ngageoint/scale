@@ -1,4 +1,6 @@
 """Defines utility methods for testing nodes"""
+from __future__ import unicode_literals
+
 import job.test.utils as job_test_utils
 from shared_resource.models import SharedResource, SharedResourceRequirement
 
@@ -14,7 +16,7 @@ def create_resource(name=None, limit=None, is_global=True):
 
     if not name:
         global NAME_COUNTER
-        name = u'resource-%i' % NAME_COUNTER
+        name = 'resource-%i' % NAME_COUNTER
         NAME_COUNTER = NAME_COUNTER + 1
 
     return SharedResource.objects.create(name=name, limit=limit, is_global=is_global)

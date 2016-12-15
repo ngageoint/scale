@@ -1,4 +1,6 @@
 """Defines connections that will provide data to execute jobs"""
+from __future__ import unicode_literals
+
 from job.configuration.data.exceptions import InvalidConnection
 from job.configuration.data.job_data import ValidationWarning
 from storage.media_type import UNKNOWN_MEDIA_TYPE
@@ -34,7 +36,7 @@ class JobConnection(object):
         """
 
         if file_name in self.param_names:
-            raise Exception(u'Connection already has a parameter named %s' % file_name)
+            raise Exception('Connection already has a parameter named %s' % file_name)
 
         if not media_types:
             media_types = [UNKNOWN_MEDIA_TYPE]
@@ -50,7 +52,7 @@ class JobConnection(object):
         """
 
         if property_name in self.param_names:
-            raise Exception(u'Connection already has a parameter named %s' % property_name)
+            raise Exception('Connection already has a parameter named %s' % property_name)
 
         self.param_names.add(property_name)
         self.properties.append(property_name)
@@ -90,7 +92,7 @@ class JobConnection(object):
             file_desc = files[name][2]
             if name not in self.files:
                 if required:
-                    raise InvalidConnection(u'Data input %s is required and was not provided' % name)
+                    raise InvalidConnection('Data input %s is required and was not provided' % name)
                 continue
 
             conn_file = self.files[name]
@@ -99,9 +101,9 @@ class JobConnection(object):
             conn_optional = conn_file[2]
             if conn_optional:
                 if required:
-                    raise InvalidConnection(u'Data input %s is required and data from connection is optional' % name)
+                    raise InvalidConnection('Data input %s is required and data from connection is optional' % name)
             if not multiple and conn_multiple:
-                raise InvalidConnection(u'Data input %s only accepts a single file' % name)
+                raise InvalidConnection('Data input %s only accepts a single file' % name)
             for conn_media_type in conn_media_types:
                 if not file_desc.is_media_type_allowed(conn_media_type):
                     warn = ValidationWarning('media_type',
@@ -123,5 +125,5 @@ class JobConnection(object):
         warnings = []
         for name in property_names:
             if name not in self.properties and property_names[name]:
-                raise InvalidConnection(u'Property %s is required and was not provided' % name)
+                raise InvalidConnection('Property %s is required and was not provided' % name)
         return warnings

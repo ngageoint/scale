@@ -1,4 +1,6 @@
 """Defines utility methods for testing ingests"""
+from __future__ import unicode_literals
+
 import django.utils.timezone as timezone
 
 import job.test.utils as job_utils
@@ -44,7 +46,7 @@ def create_ingest(file_name='test.txt', status='TRANSFERRING', transfer_started=
 def create_strike(name=None, title=None, description=None, configuration=None, job=None):
     if not name:
         global NAME_COUNTER
-        name = u'test-strike-%i' % NAME_COUNTER
+        name = 'test-strike-%i' % NAME_COUNTER
         NAME_COUNTER = NAME_COUNTER + 1
     if not title:
         title = 'Test Strike'

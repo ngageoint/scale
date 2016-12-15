@@ -1,4 +1,6 @@
 """Defines utility methods for testing nodes"""
+from __future__ import unicode_literals
+
 from node.models import Node
 
 HOSTNAME_COUNTER = 1
@@ -14,12 +16,12 @@ def create_node(hostname=None, port=5051, slave_id=None):
 
     if not hostname:
         global HOSTNAME_COUNTER
-        hostname = u'host%i.com' % HOSTNAME_COUNTER
+        hostname = 'host%i.com' % HOSTNAME_COUNTER
         HOSTNAME_COUNTER = HOSTNAME_COUNTER + 1
 
     if not slave_id:
         global SLAVEID_COUNTER
-        slave_id = u'123-456-789-%i' % SLAVEID_COUNTER
+        slave_id = '123-456-789-%i' % SLAVEID_COUNTER
         SLAVEID_COUNTER = SLAVEID_COUNTER + 1
 
     return Node.objects.register_node(hostname, port, slave_id)

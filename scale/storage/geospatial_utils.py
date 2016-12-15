@@ -1,4 +1,6 @@
 """Defines functions for geospatial information"""
+from __future__ import unicode_literals
+
 import json
 
 import django.contrib.gis.geos as geos
@@ -14,7 +16,7 @@ def parse_geo_json_file(geo_json_path):
     :rtype: GEOSGeometry, dict
     :returns: the geometry and metadata
     """
-    with open(geo_json_path, u'r') as geo_json_file:
+    with open(geo_json_path, 'r') as geo_json_file:
         geo_json = json.load(geo_json_file)
 
     return parse_geo_json(geo_json)
@@ -32,15 +34,15 @@ def parse_geo_json(geo_json):
     geom = None
     geom_json = None
     props = None
-    if geo_json[u'type'] == u'Feature':
-        geom_json = geo_json[u'geometry']
-        if u'properties' in geo_json:
-            props = geo_json[u'properties']
-    elif geo_json[u'type'] == u'FeatureCollection':
+    if geo_json['type'] == 'Feature':
+        geom_json = geo_json['geometry']
+        if 'properties' in geo_json:
+            props = geo_json['properties']
+    elif geo_json['type'] == 'FeatureCollection':
         # Currently handles collections by just grabbing first entry
-        geom_json = geo_json[u'features'][0][u'geometry']
-        if u'properties' in geo_json[u'features'][0]:
-            props = geo_json[u'features'][0][u'properties']
+        geom_json = geo_json['features'][0]['geometry']
+        if 'properties' in geo_json['features'][0]:
+            props = geo_json['features'][0]['properties']
     else:
         # The GeoJSON is just a geometry
         geom_json = geo_json

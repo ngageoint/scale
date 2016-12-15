@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import django
 from django.test import TestCase
 
@@ -13,7 +15,7 @@ class TestJobLoadProcessor(TestCase):
 
         self.processor = JobLoadProcessor()
 
-        job_test_utils.create_job(status=u'QUEUED')
+        job_test_utils.create_job(status='QUEUED')
 
     def test_process_event(self):
         """This method tests the Job Load Processor"""

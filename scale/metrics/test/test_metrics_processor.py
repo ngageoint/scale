@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import django
 from django.conf import settings
 from django.test import TestCase
@@ -12,7 +14,7 @@ from node.models import Node
 
 from StringIO import StringIO
 
-@skipIf(sys.platform.startswith("win"), u'rrdtool is not available on windows.')
+@skipIf(sys.platform.startswith("win"), 'rrdtool is not available on windows.')
 class TestMetricsProcessor(TestCase):
 
     def setUp(self):

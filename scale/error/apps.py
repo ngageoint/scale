@@ -1,10 +1,12 @@
 """The scale error application"""
+from __future__ import unicode_literals
+
 from django.apps import AppConfig
 
 
 class ErrorConfig(AppConfig):
     """Configuration for the error app
     """
-    name = u'error'
-    label = u'error'
-    verbose_name = u'Error'
+    name = 'error'
+    label = 'error'
+    verbose_name = 'Error'

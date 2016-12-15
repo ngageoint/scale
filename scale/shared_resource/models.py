@@ -1,4 +1,6 @@
 """Provides models and managers for for shared resources"""
+from __future__ import unicode_literals
+
 from django.db import models
 from django.db.models import Q
 from django.db.models.aggregates import Sum
@@ -27,7 +29,7 @@ class SharedResourceManager(models.Manager):
 
         job_usage_sum = Sum('job__job_type__sharedresourcerequirement__usage')
         resource_aggr = jobs_using_resource.aggregate(total_usage=job_usage_sum)
-        return resource.limit - resource_aggr[u'total_usage']
+        return resource.limit - resource_aggr['total_usage']
 
     def runnable_job_types(self, node):
         """Finds the job types that are runnable on a node based on shared resources
@@ -76,7 +78,7 @@ class SharedResource(models.Model):
 
     class Meta(object):
         """meta information for the db"""
-        db_table = u'shared_resource'
+        db_table = 'shared_resource'
 
 
 class SharedResourceRequirement(models.Model):

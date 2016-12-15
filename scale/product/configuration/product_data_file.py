@@ -105,6 +105,6 @@ class ProductDataFileStore(AbstractDataFileStore):
             the_date = now()
 
         year_dir = str(the_date.year)
-        month_dir = u'%02d' % the_date.month
-        day_dir = u'%02d' % the_date.day
+        month_dir = '%02d' % the_date.month
+        day_dir = '%02d' % the_date.day
         return os.path.join(remote_path, year_dir, month_dir, day_dir, 'job_exe_%i' % job_exe.id)

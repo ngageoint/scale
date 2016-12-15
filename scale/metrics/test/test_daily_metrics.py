@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import datetime
 
 import django
@@ -15,7 +17,7 @@ class TestDailyMetricsProcessor(TestCase):
     def setUp(self):
         django.setup()
 
-        self.job_type = job_test_utils.create_job_type(name=u'scale-daily-metrics')
+        self.job_type = job_test_utils.create_job_type(name='scale-daily-metrics')
         self.processor = DailyMetricsProcessor()
 
     @patch('metrics.daily_metrics.Queue')
@@ -28,8 +30,8 @@ class TestDailyMetricsProcessor(TestCase):
 
         call_args = mock_Queue.objects.queue_new_job.call_args[0]
         self.assertEqual(self.job_type, call_args[0])
-        self.assertDictEqual({u'input_data': [{u'name': u'Day', u'value': u'2015-01-09'}], u'output_data': [],
-                              u'version': u'1.0'}, call_args[1].get_dict())
+        self.assertDictEqual({'input_data': [{'name': 'Day', 'value': '2015-01-09'}], 'output_data': [],
+                              'version': '1.0'}, call_args[1].get_dict())
         self.assertEqual(event, call_args[2])
 
     @patch('metrics.daily_metrics.Queue')
@@ -43,8 +45,8 @@ class TestDailyMetricsProcessor(TestCase):
 
         call_args = mock_Queue.objects.queue_new_job.call_args[0]
         self.assertEqual(self.job_type, call_args[0])
-        self.assertDictEqual({u'input_data': [{u'name': u'Day', u'value': u'2015-01-09'}], u'output_data': [],
-                              u'version': u'1.0'}, call_args[1].get_dict())
+        self.assertDictEqual({'input_data': [{'name': 'Day', 'value': '2015-01-09'}], 'output_data': [],
+                              'version': '1.0'}, call_args[1].get_dict())
         self.assertEqual(event, call_args[2])
 
     @patch('metrics.daily_metrics.Queue')
@@ -62,14 +64,14 @@ class TestDailyMetricsProcessor(TestCase):
             self.assertEqual(self.job_type, args[0])
             self.assertEqual(event, args[2])
             if i == 1:
-                self.assertDictEqual({u'input_data': [{u'name': u'Day', u'value': u'2015-01-07'}], u'output_data': [],
-                                      u'version': u'1.0'}, args[1].get_dict())
+                self.assertDictEqual({'input_data': [{'name': 'Day', 'value': '2015-01-07'}], 'output_data': [],
+                                      'version': '1.0'}, args[1].get_dict())
             if i == 2:
-                self.assertDictEqual({u'input_data': [{u'name': u'Day', u'value': u'2015-01-08'}], u'output_data': [],
-                                      u'version': u'1.0'}, args[1].get_dict())
+                self.assertDictEqual({'input_data': [{'name': 'Day', 'value': '2015-01-08'}], 'output_data': [],
+                                      'version': '1.0'}, args[1].get_dict())
             if i == 3:
-                self.assertDictEqual({u'input_data': [{u'name': u'Day', u'value': u'2015-01-09'}], u'output_data': [],
-                                      u'version': u'1.0'}, args[1].get_dict())
+                self.assertDictEqual({'input_data': [{'name': 'Day', 'value': '2015-01-09'}], 'output_data': [],
+                                      'version': '1.0'}, args[1].get_dict())
             i += 1
 
         self.assertEqual(mock_Queue.objects.queue_new_job.call_count, 3)

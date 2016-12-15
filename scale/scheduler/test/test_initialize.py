@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import django
 
 from django.test.testcases import TransactionTestCase
@@ -8,7 +10,7 @@ from scheduler.initialize import initialize_system
 
 class TestInitializeSystem(TransactionTestCase):
 
-    fixtures = [u'basic_system_job_types.json']
+    fixtures = ['basic_system_job_types.json']
 
     def setUp(self):
         django.setup()
