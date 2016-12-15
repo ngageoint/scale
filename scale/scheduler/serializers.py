@@ -1,4 +1,6 @@
 """Defines the serializers for schedulers"""
+from __future__ import unicode_literals
+
 import rest_framework.serializers as serializers
 
 from scheduler.models import Scheduler
@@ -10,4 +12,4 @@ class SchedulerSerializer(serializers.ModelSerializer):
     class Meta(object):
         """Meta class used to define what is serialized and how"""
         model = Scheduler
-        fields = (u'is_paused',)
+        fields = ('is_paused',)

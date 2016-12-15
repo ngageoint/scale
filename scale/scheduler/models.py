@@ -156,4 +156,4 @@ class Scheduler(models.Model):
 
     class Meta(object):
         """meta information for the db"""
-        db_table = u'scheduler'
+        db_table = 'scheduler'

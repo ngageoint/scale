@@ -1,4 +1,3 @@
-#@PydevCodeAnalysisIgnore
 from __future__ import unicode_literals
 
 import django
@@ -15,7 +14,7 @@ class TestIngestAddDataTypeTag(TestCase):
         django.setup()
 
     def test_valid(self):
-        '''Tests calling add_data_type_tag() with valid tags'''
+        """Tests calling add_data_type_tag() with valid tags"""
 
         ingest = Ingest()
         ingest.add_data_type_tag('Hello1')
@@ -29,7 +28,7 @@ class TestIngestAddDataTypeTag(TestCase):
         self.assertSetEqual(tags, correct_set)
 
     def test_invalid(self):
-        '''Tests calling add_data_type_tag() with invalid tags'''
+        """Tests calling add_data_type_tag() with invalid tags"""
 
         ingest = Ingest()
 
@@ -43,7 +42,7 @@ class TestIngestGetDataTypeTags(TestCase):
         django.setup()
 
     def test_tags(self):
-        '''Tests calling get_data_type_tags() with tags'''
+        """Tests calling get_data_type_tags() with tags"""
 
         ingest = Ingest(data_type='A,B,c')
         tags = ingest.get_data_type_tags()
@@ -56,7 +55,7 @@ class TestIngestGetDataTypeTags(TestCase):
         self.assertSetEqual(tags, correct_set)
 
     def test_no_tags(self):
-        '''Tests calling get_data_type_tags() with no tags'''
+        """Tests calling get_data_type_tags() with no tags"""
 
         ingest = Ingest()
         tags = ingest.get_data_type_tags()
@@ -74,7 +73,7 @@ class TestStrikeManagerCreateStrikeProcess(TransactionTestCase):
         self.workspace = storage_test_utils.create_workspace()
 
     def test_successful(self):
-        '''Tests calling StrikeManager.create_strike_process() successfully'''
+        """Tests calling StrikeManager.create_strike_process() successfully"""
 
         config = {
             'version': '1.0',

@@ -1,4 +1,6 @@
 """Defines the serializers for Scale files and workspaces"""
+from __future__ import unicode_literals
+
 import rest_framework.serializers as serializers
 from rest_framework.fields import CharField
 
@@ -22,7 +24,7 @@ class DataTypeField(CharField):
 
         tags = []
         if value:
-            for tag in value.split(u','):
+            for tag in value.split(','):
                 tags.append(tag)
         return tags
 

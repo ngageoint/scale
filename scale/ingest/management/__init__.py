@@ -1,1 +1,1 @@
-'''management for the ingest app'''
+"""management for the ingest app"""

@@ -1,4 +1,3 @@
-#@PydevCodeAnalysisIgnore
 from __future__ import unicode_literals
 
 import django
@@ -97,7 +96,7 @@ class TestIngestTriggerHandlerProcessIngestedSourceFile(TestCase):
         self.source_file.add_data_type_tag('type3')
 
     def test_successful_job_creation(self):
-        '''Tests successfully processing an ingest that triggers job creation.'''
+        """Tests successfully processing an ingest that triggers job creation."""
 
         # Set up data
         configuration = {
@@ -126,7 +125,7 @@ class TestIngestTriggerHandlerProcessIngestedSourceFile(TestCase):
         self.assertEqual(job_1.data['input_data'][0]['file_id'], self.source_file.id)
 
     def test_successful_recipe_creation(self):
-        '''Tests successfully processing an ingest that triggers recipe creation.'''
+        """Tests successfully processing an ingest that triggers recipe creation."""
 
         # Set up data
         configuration = {

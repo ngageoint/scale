@@ -1,4 +1,5 @@
-'''Defines the database model for a node'''
+"""Defines the database model for a node"""
+from __future__ import unicode_literals
 
 import logging
 
@@ -9,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class NodeStatusCounts(object):
-    '''Represents job execution counts for a node.
+    """Represents job execution counts for a node.
 
     :keyword status: The job execution status being counted.
     :type status: str
@@ -20,7 +21,7 @@ class NodeStatusCounts(object):
     :keyword category: The category of the job execution status being counted. Note that currently this will only be
         populated for types of ERROR status values.
     :type category: str
-    '''
+    """
     def __init__(self, status, count=0, most_recent=None, category=None):
         self.status = status
         self.count = count
@@ -29,7 +30,7 @@ class NodeStatusCounts(object):
 
 
 class NodeStatus(object):
-    '''Represents node statistics.
+    """Represents node statistics.
 
     :keyword node: The actual node being counted.
     :type node: :class:`node.models.Node`
@@ -39,7 +40,7 @@ class NodeStatus(object):
     :type job_exes_running: list[:class:`job.models.JobExecution`]
     :keyword is_online: Indicates whether or not the node is currently online.
     :type is_online: bool
-    '''
+    """
     def __init__(self, node, job_exe_counts=None, job_exes_running=None, is_online=False):
         self.node = node
         self.job_exe_counts = job_exe_counts
@@ -48,11 +49,11 @@ class NodeStatus(object):
 
 
 class NodeManager(models.Manager):
-    '''Provides additional methods for handling nodes
-    '''
+    """Provides additional methods for handling nodes
+    """
 
     def get_nodes(self, started=None, ended=None, order=None, include_inactive=True):
-        '''Returns a list of nodes within the given time range.
+        """Returns a list of nodes within the given time range.
 
         :param started: Query nodes updated after this amount of time.
         :type started: :class:`datetime.datetime`
@@ -64,7 +65,7 @@ class NodeManager(models.Manager):
         :type include_inactive: boolean
         :returns: The list of nodes that match the time range.
         :rtype: list[:class:`node.models.Node`]
-        '''
+        """
 
         # Fetch a list of nodes
         if include_inactive:
@@ -82,11 +83,11 @@ class NodeManager(models.Manager):
         if order:
             nodes = nodes.order_by(*order)
         else:
-            nodes = nodes.order_by(u'last_modified')
+            nodes = nodes.order_by('last_modified')
         return nodes
 
     def get_details(self, node_id):
-        '''Gets additional details for the given node model based on related model attributes.
+        """Gets additional details for the given node model based on related model attributes.
 
         The additional fields include: job executions.
 
@@ -94,7 +95,7 @@ class NodeManager(models.Manager):
         :type node_id: int
         :returns: The node with extra related attributes.
         :rtype: :class:`node.models.Node`
-        '''
+        """
         node = Node.objects.get(pk=node_id)
 
         # Lazy load the the execution model since it is an optional lower level dependency
@@ -105,13 +106,13 @@ class NodeManager(models.Manager):
             return node
 
         # Augment the node with running job executions
-        running_exes = JobExecution.objects.filter(node_id=node_id, status=u'RUNNING').order_by(u'last_modified')
-        running_exes = running_exes.select_related(u'job').defer(u'stdout', u'stderr')
+        running_exes = JobExecution.objects.filter(node_id=node_id, status='RUNNING').order_by('last_modified')
+        running_exes = running_exes.select_related('job').defer('stdout', 'stderr')
         node.job_exes_running = running_exes
         return node
 
     def register_node(self, hostname, port, slave_id):
-        '''Registers a node with the given properties and saves the properties
+        """Registers a node with the given properties and saves the properties
         in the database. If a node with the given hostname does not exist it is
         created, else the existing node is updated.
 
@@ -123,21 +124,21 @@ class NodeManager(models.Manager):
         :type slave_id: str
         :returns: The node model
         :rtype: :class:`node.models.Node`
-        '''
+        """
 
-        props = {u'port': port, u'slave_id': slave_id}
+        props = {'port': port, 'slave_id': slave_id}
         node, _created = Node.objects.update_or_create(hostname=hostname, defaults=props)
         return node
 
     @transaction.atomic
     def update_node(self, new_data, node_id=None):
-        '''Update the data for a node.
+        """Update the data for a node.
 
         :param new_data: Updated data for the node
         :type new_data: dict
         :param node_id: The ID of the node to modify
         :type node_id: int
-        '''
+        """
 
         node_query = self.select_for_update().filter(id=node_id)
         node = node_query.first()
@@ -156,7 +157,7 @@ class NodeManager(models.Manager):
         node_query.update(**new_data)
 
     def get_status(self, started, ended=None):
-        '''Returns a list of nodes with job execution counts broken down by status.
+        """Returns a list of nodes with job execution counts broken down by status.
 
         This will only return active nodes. For historical node data use get_nodes()
 
@@ -166,7 +167,7 @@ class NodeManager(models.Manager):
         :type ended: :class:`datetime.datetime`
         :returns: The list of nodes with supplemented statistics.
         :rtype: list[:class:`node.models.NodeStatus`]
-        '''
+        """
 
         # Fetch the list of nodes
         nodes = list(Node.objects.filter(is_active=True))
@@ -178,8 +179,8 @@ class NodeManager(models.Manager):
             return [NodeStatus(node) for node in nodes]
 
         # Fetch a list of recent job executions
-        job_exes = JobExecution.objects.values(u'node_id', u'last_modified', u'status', u'error__category')
-        job_exes = job_exes.select_related(u'error')
+        job_exes = JobExecution.objects.values('node_id', 'last_modified', 'status', 'error__category')
+        job_exes = job_exes.select_related('error')
         job_exes = job_exes.filter(last_modified__gte=started)
         if ended:
             job_exes = job_exes.filter(last_modified__lte=ended)
@@ -189,27 +190,27 @@ class NodeManager(models.Manager):
         for job_exe in job_exes:
 
             # Make sure the node mapping entry exists
-            if job_exe[u'node_id'] not in job_exes_dict:
-                job_exes_dict[job_exe[u'node_id']] = {}
-            job_exe_dict = job_exes_dict[job_exe[u'node_id']]
+            if job_exe['node_id'] not in job_exes_dict:
+                job_exes_dict[job_exe['node_id']] = {}
+            job_exe_dict = job_exes_dict[job_exe['node_id']]
 
             # Make sure the counts mapping entry exists
-            status_key = u'%s.%s' % (job_exe[u'status'], job_exe[u'error__category'])
+            status_key = '%s.%s' % (job_exe['status'], job_exe['error__category'])
             if status_key not in job_exe_dict:
-                job_exe_dict[status_key] = NodeStatusCounts(job_exe[u'status'])
+                job_exe_dict[status_key] = NodeStatusCounts(job_exe['status'])
 
             # Update the count based on the status
             status_counts = job_exe_dict[status_key]
             status_counts.count += 1
-            if not status_counts.most_recent or job_exe[u'last_modified'] > status_counts.most_recent:
-                status_counts.most_recent = job_exe[u'last_modified']
-            if job_exe[u'error__category']:
-                status_counts.category = job_exe[u'error__category']
+            if not status_counts.most_recent or job_exe['last_modified'] > status_counts.most_recent:
+                status_counts.most_recent = job_exe['last_modified']
+            if job_exe['error__category']:
+                status_counts.category = job_exe['error__category']
 
         # Build a mapping of node_id -> running job executions
         running_dict = {}
-        running_exes = JobExecution.objects.filter(status=u'RUNNING').order_by(u'last_modified')
-        running_exes = running_exes.select_related(u'job').defer(u'stdout', u'stderr')
+        running_exes = JobExecution.objects.filter(status='RUNNING').order_by('last_modified')
+        running_exes = running_exes.select_related('job').defer('stdout', 'stderr')
         for job_exe in running_exes:
             if job_exe.node_id not in running_dict:
                 running_dict[job_exe.node_id] = []
@@ -229,18 +230,18 @@ class NodeManager(models.Manager):
     # model
     @transaction.atomic
     def update_last_offer(self, slave_id):
-        '''Update the last offer for a node with the given slave id.
+        """Update the last offer for a node with the given slave id.
         Throws a :class:`django.core.excpetions.ObjectDoesNotExist` if there is no node for the given slave id
 
         :param slave_id: the slave id for the node
         :type slave_id: str
-        '''
+        """
         node = Node.objects.select_for_update().get(slave_id=slave_id)
         node.last_offer = now()
 
 
 class Node(models.Model):
-    '''Represents a cluster node on which jobs can be run
+    """Represents a cluster node on which jobs can be run
 
     :keyword hostname: The full domain-qualified hostname of the node
     :type hostname: :class:`django.db.models.CharField`
@@ -266,7 +267,7 @@ class Node(models.Model):
     :type last_offer: :class:`django.db.models.DateTimeField`
     :keyword last_modified: When the node model was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
-    '''
+    """
 
     hostname = models.CharField(max_length=250, unique=True)
     port = models.IntegerField()
@@ -285,5 +286,5 @@ class Node(models.Model):
     objects = NodeManager()
 
     class Meta(object):
-        '''meta information for the db'''
-        db_table = u'node'
+        """meta information for the db"""
+        db_table = 'node'

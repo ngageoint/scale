@@ -1,4 +1,4 @@
-'''Defines the class that handles ingest trigger rules'''
+"""Defines the class that handles ingest trigger rules"""
 from __future__ import unicode_literals
 
 import logging
@@ -23,31 +23,31 @@ INGEST_TYPE = 'INGEST'
 
 
 class IngestTriggerHandler(TriggerRuleHandler):
-    '''Handles ingest trigger rules
-    '''
+    """Handles ingest trigger rules
+    """
 
     def __init__(self):
-        '''Constructor
-        '''
+        """Constructor
+        """
 
         super(IngestTriggerHandler, self).__init__(INGEST_TYPE)
 
     def create_configuration(self, config_dict):
-        '''See :meth:`trigger.handler.TriggerRuleHandler.create_configuration`
-        '''
+        """See :meth:`trigger.handler.TriggerRuleHandler.create_configuration`
+        """
 
         return IngestTriggerRuleConfiguration(INGEST_TYPE, config_dict)
 
     @transaction.atomic
     def process_ingested_source_file(self, source_file, when):
-        '''Processes the given ingested source file by checking it against all ingest trigger rules and creating the
+        """Processes the given ingested source file by checking it against all ingest trigger rules and creating the
         corresponding jobs and recipes for any triggered rules. All database changes are made in an atomic transaction.
 
         :param source_file: The source file that was ingested
         :type source_file: :class:`source.models.SourceFile`
         :param when: When the source file was ingested
         :type when: :class:`datetime.datetime`
-        '''
+        """
 
         msg = 'Processing trigger rules for ingested source file with media type %s and data types %s'
         logger.info(msg, source_file.media_type, str(list(source_file.get_data_type_tags())))
@@ -85,7 +85,7 @@ class IngestTriggerHandler(TriggerRuleHandler):
             logger.info('No rules triggered')
 
     def _create_ingest_trigger_event(self, source_file, trigger_rule, when):
-        '''Creates in the database and returns a trigger event model for the given ingested source file and trigger rule
+        """Creates in the database and returns a trigger event model for the given ingested source file and trigger rule
 
         :param source_file: The source file that was ingested
         :type source_file: :class:`source.models.SourceFile`
@@ -97,7 +97,7 @@ class IngestTriggerHandler(TriggerRuleHandler):
         :rtype: :class:`trigger.models.TriggerEvent`
 
         :raises trigger.configuration.exceptions.InvalidTriggerRule: If the configuration is invalid
-        '''
+        """
 
         description = {'version': '1.0', 'file_id': source_file.id, 'file_name': source_file.file_name}
         return TriggerEvent.objects.create_trigger_event(INGEST_TYPE, trigger_rule, description, when)

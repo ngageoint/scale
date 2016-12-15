@@ -1,13 +1,13 @@
-'''Error handlers for scale'''
+"""Error handlers for scale"""
 from logging import Handler
 
 import socket
 
 
 class DatabaseLogHandler(Handler):
-    '''This class inherits from the logging.Handler class to provide
+    """This class inherits from the logging.Handler class to provide
        support for logging messages to a database table.
-    '''
+    """
 
     # name of the model to log messages
     model = None
@@ -17,11 +17,11 @@ class DatabaseLogHandler(Handler):
         self.model = model
 
     def emit(self, record):
-        '''Saves the record object to a database using the Django model class
+        """Saves the record object to a database using the Django model class
 
         :param record: Record object to save to the database
         :type record: LogRecord
-        '''
+        """
 
         # get the model by name
         try:
@@ -47,20 +47,20 @@ class DatabaseLogHandler(Handler):
         log_entry.save()
 
     def handleError(self, record):
-        '''Handles an exception that happened within the emit method
+        """Handles an exception that happened within the emit method
 
         :param record: Record object to save to the database
         :type record: LogRecord
-        '''
+        """
         # silently ignore exceptions happening in emit method
         pass
 
     def get_model(self, model_name):
-        '''Retrieves the given Django model given the name
+        """Retrieves the given Django model given the name
 
         :param model_name: The name of the model to retrieve
         :type model_name: str
-        '''
+        """
         names = model_name.split('.')
         python_module = __import__('.'.join(names[:-1]), fromlist=names[-1:])
         return getattr(python_module, names[-1])

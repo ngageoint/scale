@@ -1,4 +1,4 @@
-'''Defines the shared resources for a given job execution'''
+"""Defines the shared resources for a given job execution"""
 
 
 JOB_ENVIRONMENT_SCHEMA = {
@@ -41,19 +41,19 @@ JOB_ENVIRONMENT_SCHEMA = {
 
 
 class JobEnvironment(object):
-    '''Represents the shared resources available for a given job execution.  If the environment is invalid, a
-    :class:`job.configuration.environment.exceptions.InvalidJobEnvirnoment` exception will be thrown.'''
+    """Represents the shared resources available for a given job execution.  If the environment is invalid, a
+    :class:`job.configuration.environment.exceptions.InvalidJobEnvirnoment` exception will be thrown."""
 
     def __init__(self, json_env):
-        '''Creates a JobEnvironment from the given dictionary.  The format is checked for correctness'''
+        """Creates a JobEnvironment from the given dictionary.  The format is checked for correctness"""
         self.environment = json_env
         self.shared_resources_by_name = {}
 
     def get_dict(self):
-        '''Returns the internal dictionary that represents this job environment
+        """Returns the internal dictionary that represents this job environment
 
         :returns: The dictionary representing the environment
         :rtype: dict
-        '''
+        """
 
         return self.environment

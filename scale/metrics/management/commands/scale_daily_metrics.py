@@ -1,4 +1,4 @@
-'''Defines the command line method for running the Scale daily metrics process.'''
+"""Defines the command line method for running the Scale daily metrics process."""
 from __future__ import unicode_literals
 
 import datetime
@@ -15,15 +15,15 @@ logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
-    '''Command that executes the Scale daily metrics.'''
+    """Command that executes the Scale daily metrics."""
 
     help = 'Executes the Scale daily metrics to continuously calculate performance statistics for each day'
 
     def handle(self, day, **options):
-        '''See :meth:`django.core.management.base.BaseCommand.handle`.
+        """See :meth:`django.core.management.base.BaseCommand.handle`.
 
         This method starts the Scale daily metrics.
-        '''
+        """
 
         logger.info('Command starting: scale_daily_metrics')
         logger.info(' - Day: %s', day)
@@ -50,12 +50,12 @@ class Command(BaseCommand):
 
     @retry_database_query
     def _calculate_metrics(self, provider, date):
-        '''Calculates the Scale metrics for the given date with the given provider
+        """Calculates the Scale metrics for the given date with the given provider
 
         :param provider: The metrics provider
         :type provider: :class:`metrics.registry.MetricsTypeProvider`
         :param date: The date for generating metrics
         :type date: :class:`datetime.datetime`
-        '''
+        """
 
         provider.calculate(date)

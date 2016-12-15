@@ -1,12 +1,12 @@
-'''Defines classes for encapsulating sets of resources'''
+"""Defines classes for encapsulating sets of resources"""
 
 
 class JobResources(object):
-    '''This class encapsulates a set of resources used for executing jobs
-    '''
+    """This class encapsulates a set of resources used for executing jobs
+    """
 
     def __init__(self, cpus=0.0, mem=0.0, disk_in=0.0, disk_out=0.0, disk_total=0.0):
-        '''Constructor
+        """Constructor
 
         :param cpus: The number of CPUs
         :type cpus: float
@@ -18,7 +18,7 @@ class JobResources(object):
         :type disk_out: float
         :param disk_total: The amount of total disk space in MiB
         :type disk_total: float
-        '''
+        """
 
         if cpus < 0.0:
             raise Exception('cpus cannot be negative')
@@ -39,11 +39,11 @@ class JobResources(object):
 
 
 class NodeResources(object):
-    '''This class encapsulates a set of resources available on a node
-    '''
+    """This class encapsulates a set of resources available on a node
+    """
 
     def __init__(self, cpus=0.0, mem=0.0, disk=0.0):
-        '''Constructor
+        """Constructor
 
         :param cpus: The number of CPUs
         :type cpus: float
@@ -51,7 +51,7 @@ class NodeResources(object):
         :type mem: float
         :param disk: The amount of disk space in MiB
         :type disk: float
-        '''
+        """
 
         if cpus < 0.0:
             raise Exception('cpus cannot be negative')
