@@ -1,12 +1,6 @@
-#@PydevCodeAnalysisIgnore
-import os
-
 import django
 from django.conf import settings
-from django.core import management
 from django.test import TestCase
-from django.utils import timezone
-from django.utils.timezone import now
 from mock import patch
 from unittest.case import skipIf
 import shutil

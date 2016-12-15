@@ -1,10 +1,10 @@
-#@PydevCodeAnalysisIgnore
 import django
 
 from django.test.testcases import TransactionTestCase
 
 from job.models import Job, JobType
 from scheduler.initialize import initialize_system
+
 
 class TestInitializeSystem(TransactionTestCase):
 

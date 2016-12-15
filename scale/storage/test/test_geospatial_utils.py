@@ -1,4 +1,3 @@
-#@PydevCodeAnalysisIgnore
 import django
 from django.test import TestCase
 from mock import mock_open, patch

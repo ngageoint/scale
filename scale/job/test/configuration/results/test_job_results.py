@@ -1,8 +1,6 @@
-#@PydevCodeAnalysisIgnore
-
 import django
 from django.test import TestCase
-from mock import MagicMock, patch
+from mock import MagicMock
 
 from job.configuration.results.job_results import JobResults
 

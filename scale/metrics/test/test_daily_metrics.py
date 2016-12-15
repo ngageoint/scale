@@ -1,4 +1,3 @@
-#@PydevCodeAnalysisIgnore
 import datetime
 
 import django

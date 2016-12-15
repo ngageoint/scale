@@ -1,9 +1,7 @@
-#@PydevCodeAnalysisIgnore
 from __future__ import unicode_literals
 
 import django
 from django.test import TestCase
-from mock import patch
 
 from job.configuration.interface.scale_file import ScaleFileDescription
 

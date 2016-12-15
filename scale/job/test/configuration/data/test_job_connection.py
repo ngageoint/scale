@@ -1,8 +1,5 @@
-#@PydevCodeAnalysisIgnore
-
 import django
 from django.test import TestCase
-from mock import patch
 
 from job.configuration.data.exceptions import InvalidConnection
 from job.configuration.data.job_connection import JobConnection
