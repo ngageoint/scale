@@ -250,7 +250,7 @@ def create_clock_event(rule=None, occurred=None):
     return trigger_test_utils.create_trigger_event(trigger_type=event_type, rule=rule, occurred=occurred)
 
 
-def create_task_status_update(task_id, agent_id, status, when, exit_code=None):
+def create_task_status_update(task_id, agent_id, status, when, exit_code=None, reason=None, source=None):
     """Creates a job model for unit testing
 
     :param task_id: The unique ID of the task
@@ -273,4 +273,6 @@ def create_task_status_update(task_id, agent_id, status, when, exit_code=None):
     update.status = status
     update.timestamp = when
     update.exit_code = exit_code
+    update.reason = reason
+    update.source = source
     return update

@@ -431,3 +431,32 @@ class TestRunningJobExecution(TestCase):
         job_exe = JobExecution.objects.select_related().get(id=self._job_exe_id)
         self.assertEqual(job_exe.status, 'FAILED')
         self.assertEqual(job_exe.error.name, 'algorithm-unknown')
+
+    def test_docker_terminated_error(self):
+        """Tests running through a job execution where a Docker container terminates"""
+
+        # Clear error cache so test works correctly
+        CACHED_BUILTIN_ERRORS.clear()
+
+        job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
+        running_job_exe = RunningJobExecution(job_exe)
+
+        # Start pre-task
+        task = running_job_exe.start_next_task()
+        pre_task_id = task.id
+
+        # Pre-task running
+        pre_task_started = now()
+        update = job_test_utils.create_task_status_update(pre_task_id, 'agent', TaskStatusUpdate.RUNNING,
+                                                          pre_task_started)
+        running_job_exe.task_update(update)
+
+        # Pre-task Docker container terminates
+        update = job_test_utils.create_task_status_update(pre_task_id, 'agent', TaskStatusUpdate.FAILED, now(),
+                                                          reason='REASON_EXECUTOR_TERMINATED')
+        running_job_exe.task_update(update)
+
+        # Check results
+        job_exe = JobExecution.objects.select_related().get(id=self._job_exe_id)
+        self.assertEqual(job_exe.status, 'FAILED')
+        self.assertEqual(job_exe.error.name, 'docker-terminated')

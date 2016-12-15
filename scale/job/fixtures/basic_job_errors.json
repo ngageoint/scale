@@ -5,7 +5,7 @@
         "fields": {
             "name": "task-launch",
             "title": "Task Launch",
-            "description": "A task for this job execution failed to launch.",
+            "description": "A task for this job failed to launch.",
             "category": "SYSTEM",
             "is_builtin": true,
             "created": "2016-04-13T00:00:00.0Z",
@@ -17,8 +17,8 @@
         "pk": null,
         "fields": {
             "name": "docker-task-launch",
-            "title": "Docker Task Launch",
-            "description": "A Docker task for this job execution failed to launch a Docker container.",
+            "title": "Docker Launch",
+            "description": "A task for this job failed to launch a Docker container.",
             "category": "SYSTEM",
             "is_builtin": true,
             "created": "2016-04-13T00:00:00.0Z",
@@ -29,9 +29,22 @@
         "model": "error.Error",
         "pk": null,
         "fields": {
+            "name": "docker-terminated",
+            "title": "Docker Terminated",
+            "description": "A Docker container for this job terminated unexpectedly.",
+            "category": "SYSTEM",
+            "is_builtin": true,
+            "created": "2016-12-15T00:00:00.0Z",
+            "last_modified": "2016-12-15T00:00:00.0Z"
+        }
+    },
+    {
+        "model": "error.Error",
+        "pk": null,
+        "fields": {
             "name": "node-lost",
             "title": "Node Lost",
-            "description": "The node failed and was lost, causing this job execution to be lost.",
+            "description": "The node running this job was lost.",
             "category": "SYSTEM",
             "is_builtin": true,
             "created": "2015-03-11T00:00:00.0Z",
@@ -44,7 +57,7 @@
         "fields": {
             "name": "timeout",
             "title": "Timeout",
-            "description": "The job execution exceeded its timeout threshold.",
+            "description": "The job exceeded its timeout threshold.",
             "category": "ALGORITHM",
             "is_builtin": true,
             "created": "2015-03-11T00:00:00.0Z",

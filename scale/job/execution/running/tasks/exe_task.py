@@ -130,4 +130,7 @@ class JobExecutionTask(Task):
                 return Error.objects.get_builtin_error('docker-task-launch')
             else:
                 return Error.objects.get_builtin_error('task-launch')
+        else:
+            if task_update.reason == 'REASON_EXECUTOR_TERMINATED' and self._uses_docker:
+                return Error.objects.get_builtin_error('docker-terminated')
         return None
