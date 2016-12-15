@@ -26,6 +26,24 @@ class PostTask(JobExecutionTask):
         self._is_docker_privileged = False
         self._command_arguments = 'scale_post_steps -i %i' % job_exe.id
 
+    def determine_error(self, task_update):
+        """See :meth:`job.execution.running.tasks.exe_task.JobExecutionTask.determine_error`
+        """
+
+        with self._lock:
+            if self._task_id != task_update.task_id:
+                return None
+
+            error = None
+            if self._has_started:
+                # Check scale_post_steps command to see if exit code maps to a specific error
+                if task_update.exit_code and task_update.exit_code in POST_EXIT_CODE_DICT:
+                    error = POST_EXIT_CODE_DICT[task_update.exit_code]()
+            if not error:
+                error = self._consider_general_error(task_update)
+
+            return error
+
     def get_resources(self):
         """See :meth:`job.execution.running.tasks.base_task.Task.get_resources`
         """
@@ -33,29 +51,6 @@ class PostTask(JobExecutionTask):
         with self._lock:
             # Post task does not require any local disk space
             return NodeResources(cpus=self._cpus, mem=self._mem)
-
-    def fail(self, task_results, error=None):
-        """See :meth:`job.execution.running.tasks.base_task.Task.fail`
-        """
-
-        with self._lock:
-            if self._task_id != task_results.task_id:
-                return None
-
-            # Support duplicate calls to fail(), task updates may repeat
-            if not error and self._has_started:
-                # Check scale_post_steps command to see if exit code maps to a specific error
-                if task_results.exit_code and task_results.exit_code in POST_EXIT_CODE_DICT:
-                    error = POST_EXIT_CODE_DICT[task_results.exit_code]()
-            if not error:
-                error = self._consider_general_error(task_results)
-
-            self._has_ended = True
-            self._ended = task_results.when
-            self._last_status_update = task_results.when
-            self._exit_code = task_results.exit_code
-
-            return error
 
     def populate_job_exe_model(self, job_exe):
         """See :meth:`job.execution.running.tasks.base_task.Task.populate_job_exe_model`

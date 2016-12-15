@@ -4,8 +4,8 @@
         "pk": null,
         "fields": {
             "name": "scheduler-lost",
-            "title": "Lost By Scheduler",
-            "description": "The Scale scheduler lost this job execution. This can occur when the scheduler fails or restarts.",
+            "title": "Scheduler Restarted",
+            "description": "The Scale scheduler was restarted, causing the job to stop running and fail.",
             "category": "SYSTEM",
             "is_builtin": true,
             "created": "2015-03-11T00:00:00.0Z",
