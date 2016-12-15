@@ -1,0 +1,22 @@
+scheduler.task package
+======================
+
+Submodules
+----------
+
+scheduler.task.manager module
+-----------------------------
+
+.. automodule:: scheduler.task.manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: scheduler.task
+    :members:
+    :undoc-members:
+    :show-inheritance:

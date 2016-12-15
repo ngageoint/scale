@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>scheduler.status package &mdash; Scale 4.1.1-snapshot documentation</title>
+  <title>scheduler.task package &mdash; Scale 4.1.1-snapshot documentation</title>
   
 
   
@@ -34,8 +34,8 @@
   
     <link rel="top" title="Scale 4.1.1-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="scheduler package" href="scheduler.html"/>
-        <link rel="next" title="scheduler.sync package" href="scheduler.sync.html"/>
-        <link rel="prev" title="scheduler.recon package" href="scheduler.recon.html"/> 
+        <link rel="next" title="scheduler.test package" href="scheduler.test.html"/>
+        <link rel="prev" title="scheduler.sync package" href="scheduler.sync.html"/> 
 
   
   <script src="../../../_static/js/modernizr.min.js"></script>
@@ -176,11 +176,11 @@
       
           <li><a href="scheduler.html">scheduler package</a> &raquo;</li>
       
-    <li>scheduler.status package</li>
+    <li>scheduler.task package</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../../../_sources/architecture/django/code_docs/scheduler.status.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/scheduler.task.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -190,46 +190,46 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="scheduler-status-package">
-<h1>scheduler.status package<a class="headerlink" href="#scheduler-status-package" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="scheduler-task-package">
+<h1>scheduler.task package<a class="headerlink" href="#scheduler-task-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-scheduler.status.manager">
-<span id="scheduler-status-manager-module"></span><h2>scheduler.status.manager module<a class="headerlink" href="#module-scheduler.status.manager" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-scheduler.task.manager">
+<span id="scheduler-task-manager-module"></span><h2>scheduler.task.manager module<a class="headerlink" href="#module-scheduler.task.manager" title="Permalink to this headline">¶</a></h2>
 <p>Defines the class that manages pushing task status updates to the database</p>
 <dl class="class">
-<dt id="scheduler.status.manager.StatusManager">
-<em class="property">class </em><code class="descclassname">scheduler.status.manager.</code><code class="descname">StatusManager</code><a class="headerlink" href="#scheduler.status.manager.StatusManager" title="Permalink to this definition">¶</a></dt>
+<dt id="scheduler.task.manager.TaskUpdateManager">
+<em class="property">class </em><code class="descclassname">scheduler.task.manager.</code><code class="descname">TaskUpdateManager</code><a class="headerlink" href="#scheduler.task.manager.TaskUpdateManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>This class pushes task status updates to the database. This class is thread-safe.</p>
 <dl class="attribute">
-<dt id="scheduler.status.manager.StatusManager.COUNT_WARNING_THRESHOLD">
-<code class="descname">COUNT_WARNING_THRESHOLD</code><em class="property"> = 1000</em><a class="headerlink" href="#scheduler.status.manager.StatusManager.COUNT_WARNING_THRESHOLD" title="Permalink to this definition">¶</a></dt>
+<dt id="scheduler.task.manager.TaskUpdateManager.COUNT_WARNING_THRESHOLD">
+<code class="descname">COUNT_WARNING_THRESHOLD</code><em class="property"> = 1000</em><a class="headerlink" href="#scheduler.task.manager.TaskUpdateManager.COUNT_WARNING_THRESHOLD" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="scheduler.status.manager.StatusManager.MAX_BATCH_SIZE">
-<code class="descname">MAX_BATCH_SIZE</code><em class="property"> = 500</em><a class="headerlink" href="#scheduler.status.manager.StatusManager.MAX_BATCH_SIZE" title="Permalink to this definition">¶</a></dt>
+<dt id="scheduler.task.manager.TaskUpdateManager.MAX_BATCH_SIZE">
+<code class="descname">MAX_BATCH_SIZE</code><em class="property"> = 500</em><a class="headerlink" href="#scheduler.task.manager.TaskUpdateManager.MAX_BATCH_SIZE" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="scheduler.status.manager.StatusManager.add_status_update">
-<code class="descname">add_status_update</code><span class="sig-paren">(</span><em>status_update</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.status.manager.StatusManager.add_status_update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds the given status update to the manager so it can be pushed to the database</p>
+<dt id="scheduler.task.manager.TaskUpdateManager.add_task_update">
+<code class="descname">add_task_update</code><span class="sig-paren">(</span><em>task_update</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.task.manager.TaskUpdateManager.add_task_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given task update to the manager so it can be pushed to the database</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status_update</strong> (<code class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskStatus</span></code>) &#8211; The list of agent IDs to add</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_update</strong> (<a class="reference internal" href="job.html#job.models.TaskUpdate" title="job.models.TaskUpdate"><code class="xref py py-class docutils literal"><span class="pre">job.models.TaskUpdate</span></code></a>) &#8211; The list of agent IDs to add</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="method">
-<dt id="scheduler.status.manager.StatusManager.push_to_database">
-<code class="descname">push_to_database</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.status.manager.StatusManager.push_to_database" title="Permalink to this definition">¶</a></dt>
+<dt id="scheduler.task.manager.TaskUpdateManager.push_to_database">
+<code class="descname">push_to_database</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.task.manager.TaskUpdateManager.push_to_database" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pushes the recent status updates to the database</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -246,8 +246,8 @@
 </dd></dl>
 
 </div>
-<div class="section" id="module-scheduler.status">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-scheduler.status" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-scheduler.task">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-scheduler.task" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -258,10 +258,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="scheduler.sync.html" class="btn btn-neutral float-right" title="scheduler.sync package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="scheduler.test.html" class="btn btn-neutral float-right" title="scheduler.test package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="scheduler.recon.html" class="btn btn-neutral" title="scheduler.recon package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="scheduler.sync.html" class="btn btn-neutral" title="scheduler.sync package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -206,7 +206,6 @@
 <li class="toctree-l2"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks.job_task">job.execution.running.tasks.job_task module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks.post_task">job.execution.running.tasks.post_task module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks.pre_task">job.execution.running.tasks.pre_task module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks.results">job.execution.running.tasks.results module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks.update">job.execution.running.tasks.update module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks">Module contents</a></li>
 </ul>
@@ -387,33 +386,18 @@ tasks remain.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.execution.running.job_exe.RunningJobExecution.task_complete">
-<code class="descname">task_complete</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.running.job_exe.RunningJobExecution.task_complete" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="job.execution.running.job_exe.RunningJobExecution.task_fail">
-<code class="descname">task_fail</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.running.job_exe.RunningJobExecution.task_fail" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="job.execution.running.job_exe.RunningJobExecution.task_lost">
-<code class="descname">task_lost</code><span class="sig-paren">(</span><em>task_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.running.job_exe.RunningJobExecution.task_lost" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tells this job execution that one of its tasks was lost</p>
+<dt id="job.execution.running.job_exe.RunningJobExecution.task_update">
+<code class="descname">task_update</code><span class="sig-paren">(</span><em>task_update</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.running.job_exe.RunningJobExecution.task_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates a task for this job execution</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_id</strong> (<em>string</em>) &#8211; The ID of the task</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_update</strong> (<a class="reference internal" href="job.execution.running.tasks.html#job.execution.running.tasks.update.TaskStatusUpdate" title="job.execution.running.tasks.update.TaskStatusUpdate"><code class="xref py py-class docutils literal"><span class="pre">job.execution.running.tasks.update.TaskStatusUpdate</span></code></a>) &#8211; The task update</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
-
-<dl class="method">
-<dt id="job.execution.running.job_exe.RunningJobExecution.task_start">
-<code class="descname">task_start</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.running.job_exe.RunningJobExecution.task_start" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 

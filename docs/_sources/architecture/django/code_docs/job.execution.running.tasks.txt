@@ -52,14 +52,6 @@ job.execution.running.tasks.pre_task module
     :undoc-members:
     :show-inheritance:
 
-job.execution.running.tasks.results module
-------------------------------------------
-
-.. automodule:: job.execution.running.tasks.results
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 job.execution.running.tasks.update module
 -----------------------------------------
 

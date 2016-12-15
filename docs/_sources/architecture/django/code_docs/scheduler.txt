@@ -12,8 +12,8 @@ Subpackages
     scheduler.node
     scheduler.offer
     scheduler.recon
-    scheduler.status
     scheduler.sync
+    scheduler.task
     scheduler.test
     scheduler.threads
 

@@ -328,26 +328,26 @@
 </div>
 <div class="section" id="module-scheduler.threads.status">
 <span id="scheduler-threads-status-module"></span><h2>scheduler.threads.status module<a class="headerlink" href="#module-scheduler.threads.status" title="Permalink to this headline">¶</a></h2>
-<p>Defines the class that manages the status update background thread</p>
+<p>Defines the class that manages the task update background thread</p>
 <dl class="class">
-<dt id="scheduler.threads.status.StatusUpdateThread">
-<em class="property">class </em><code class="descclassname">scheduler.threads.status.</code><code class="descname">StatusUpdateThread</code><a class="headerlink" href="#scheduler.threads.status.StatusUpdateThread" title="Permalink to this definition">¶</a></dt>
+<dt id="scheduler.threads.status.TaskUpdateThread">
+<em class="property">class </em><code class="descclassname">scheduler.threads.status.</code><code class="descname">TaskUpdateThread</code><a class="headerlink" href="#scheduler.threads.status.TaskUpdateThread" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>This class manages the status update background thread for the scheduler</p>
+<p>This class manages the task update background thread for the scheduler</p>
 <dl class="attribute">
-<dt id="scheduler.threads.status.StatusUpdateThread.THROTTLE">
-<code class="descname">THROTTLE</code><em class="property"> = 1</em><a class="headerlink" href="#scheduler.threads.status.StatusUpdateThread.THROTTLE" title="Permalink to this definition">¶</a></dt>
+<dt id="scheduler.threads.status.TaskUpdateThread.THROTTLE">
+<code class="descname">THROTTLE</code><em class="property"> = 1</em><a class="headerlink" href="#scheduler.threads.status.TaskUpdateThread.THROTTLE" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="scheduler.threads.status.StatusUpdateThread.run">
-<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.threads.status.StatusUpdateThread.run" title="Permalink to this definition">¶</a></dt>
+<dt id="scheduler.threads.status.TaskUpdateThread.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.threads.status.TaskUpdateThread.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>The main run loop of the thread</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="scheduler.threads.status.StatusUpdateThread.shutdown">
-<code class="descname">shutdown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.threads.status.StatusUpdateThread.shutdown" title="Permalink to this definition">¶</a></dt>
+<dt id="scheduler.threads.status.TaskUpdateThread.shutdown">
+<code class="descname">shutdown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.threads.status.TaskUpdateThread.shutdown" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stops the thread from running and performs any needed clean up</p>
 </dd></dl>
 
