@@ -275,7 +275,7 @@ class JobConfiguration(previous_version.JobConfiguration):
         :return:
         """
 
-        config_interface = job_exe.get_configuration_interface().get_dict()
+        config_interface = job_exe.get_job_type_configuration().get_dict()
 
         if config_interface:
             default_job_settings = config_interface['default_settings']

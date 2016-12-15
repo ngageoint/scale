@@ -4,10 +4,10 @@ import django
 from django.test import TestCase
 
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
-from job.configuration.interface.configuration_interface import ConfigurationInterface
+from job.configuration.interface.job_type_configuration import JobTypeConfiguration
 
 
-class TestConfigurationInterface(TestCase):
+class TestJobTypeConfiguration(TestCase):
 
     def setUp(self):
         django.setup()
@@ -16,7 +16,7 @@ class TestConfigurationInterface(TestCase):
         """Tests the validation done in __init__"""
 
         # Try minimal acceptable configuration
-        ConfigurationInterface()
+        JobTypeConfiguration()
 
         # Missing name
         config = {'version': '1.0',
@@ -25,7 +25,7 @@ class TestConfigurationInterface(TestCase):
                       'name2': 'val2'
                   }}
 
-        self.assertRaises(InvalidInterfaceDefinition, ConfigurationInterface, config)
+        self.assertRaises(InvalidInterfaceDefinition, JobTypeConfiguration, config)
 
         # Missing value
         config = {'version': '1.0',
@@ -34,7 +34,7 @@ class TestConfigurationInterface(TestCase):
                       'name2': 'val2'
                   }}
 
-        self.assertRaises(InvalidInterfaceDefinition, ConfigurationInterface, config)
+        self.assertRaises(InvalidInterfaceDefinition, JobTypeConfiguration, config)
 
         # Wrong version
         config = {'version': '0.9',
@@ -42,4 +42,4 @@ class TestConfigurationInterface(TestCase):
                       'name1': 'val1',
                       'name2': 'val2'
                   }}
-        self.assertRaises(InvalidInterfaceDefinition, ConfigurationInterface, config)
+        self.assertRaises(InvalidInterfaceDefinition, JobTypeConfiguration, config)

@@ -21,7 +21,7 @@ from job.configuration.data.job_data import JobData
 from job.configuration.environment.job_environment import JobEnvironment
 from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.job_interface import JobInterface
-from job.configuration.interface.configuration_interface import ConfigurationInterface
+from job.configuration.interface.job_type_configuration import JobTypeConfiguration
 from job.configuration.results.job_results import JobResults
 from job.exceptions import InvalidJobField
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
@@ -1031,10 +1031,6 @@ class JobExecutionManager(models.Manager):
             if resources is None:
                 raise Exception('Cannot schedule job execution %i without resources' % job_exe.id)
 
-            # Populate job_configuration with default settings
-            configuration = job_exe.get_job_configuration()
-            configuration.populate_default_job_settings(job_exe)
-
             # Add configuration values for the settings to the command line.
             interface = job_exe.get_job_interface()
             job_exe.command_arguments = interface.populate_command_argument_settings(job_exe.command_arguments,
@@ -1275,6 +1271,9 @@ class JobExecution(models.Model):
         # Setup task logging
         configuration.configure_logging_docker_params(self)
 
+        # Populate job_configuration with default settings
+        configuration.populate_default_job_settings(self)
+
         # Pass database connection details from scheduler as environment variables
         db = settings.DATABASES['default']
         db_name = DockerParam('env', 'SCALE_DB_NAME=' + db['NAME'])
@@ -1363,14 +1362,14 @@ class JobExecution(models.Model):
 
         return self.job.job_type.get_error_interface()
 
-    def get_configuration_interface(self):
+    def get_job_type_configuration(self):
         """Returns the configuration interface for this job execution
 
         :returns: The configuration interface for this job execution
-        :rtype: :class:`job.configuration.interface.job_configuration.ConfigurationInterface`
+        :rtype: :class:`job.configuration.interface.job_configuration.JobTypeConfiguration`
         """
 
-        return self.job.job_type.get_configuration_interface()
+        return self.job.job_type.get_job_type_configuration()
 
     def get_job_configuration(self):
         """Returns the configuration for this job
@@ -2313,10 +2312,10 @@ class JobType(models.Model):
 
         return ErrorInterface(self.error_mapping)
 
-    def get_configuration_interface(self):
+    def get_job_type_configuration(self):
         """Returns the interface for the default configuration"""
 
-        return ConfigurationInterface(self.configuration)
+        return JobTypeConfiguration(self.configuration)
 
     def natural_key(self):
         """Django method to define the natural key for a job type as the

@@ -12,12 +12,12 @@ from error.models import Error
 
 logger = logging.getLogger(__name__)
 
-CONFIGURATION_INTERFACE_SCHEMA = {
+JOB_TYPE_CONFIGURATION_SCHEMA = {
     'type': 'object',
     'additionalProperties': False,
     'properties': {
         'version': {
-            'description': 'version of the configuration_interface schema',
+            'description': 'version of the job_type_configuration schema',
             'type': 'string',
             'pattern': '^.{0,50}$',
         },
@@ -31,7 +31,7 @@ CONFIGURATION_INTERFACE_SCHEMA = {
 }
 
 
-class ConfigurationInterface(object):
+class JobTypeConfiguration(object):
     """Represents the interface for defining a default job configuration"""
 
     def __init__(self, definition=None):
@@ -51,7 +51,7 @@ class ConfigurationInterface(object):
         self._default_setting_names = set()
 
         try:
-            validate(definition, CONFIGURATION_INTERFACE_SCHEMA)
+            validate(definition, JOB_TYPE_CONFIGURATION_SCHEMA)
         except ValidationError as validation_error:
             raise InvalidInterfaceDefinition(validation_error)
 

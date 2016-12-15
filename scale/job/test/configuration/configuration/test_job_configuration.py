@@ -6,7 +6,7 @@ from mock import patch, MagicMock
 
 from job.configuration.configuration.exceptions import InvalidJobConfiguration
 from job.configuration.configuration.job_configuration import JobConfiguration
-from job.configuration.interface.configuration_interface import ConfigurationInterface
+from job.configuration.interface.job_type_configuration import JobTypeConfiguration
 
 
 class TestJobConfiguration(TestCase):
@@ -48,7 +48,7 @@ class TestJobConfiguration(TestCase):
         }
 
         job_exe = MagicMock()
-        job_exe.get_configuration_interface.return_value = ConfigurationInterface(config_dict)
+        job_exe.get_job_type_configuration.return_value = JobTypeConfiguration(config_dict)
 
         job_config.populate_default_job_settings(job_exe)
 
