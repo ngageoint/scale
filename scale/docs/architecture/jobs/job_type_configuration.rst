@@ -5,7 +5,7 @@ Job Type Configuration
 ========================================================================================================================
 
 The job type configuration is a JSON document that defines a configuration that will be a part of a job type.  When
-Scale schedules a new job it will reference this configuration and add and defined default settings to the
+Scale schedules a new job it will reference this configuration and add defined default settings to the
 job_configuration as part of the job_task, and will ultimately be made available to the algorithm being run.
 
 **Example job type configuration:**
@@ -44,18 +44,9 @@ A valid job type configuration is a JSON document with the following structure:
     recognize an older version and convert it to the current version. The default value for *version* if it is not
     included is the latest version, which is currently 1.0.
 
-    Scale must recognize the version number as valid for the job to work. Currently, the only valid job type
+    Scale must recognize the version number as valid for the job type to work. Currently, the only valid job type
     configuration version is ``"1.0"``.
 
-**default_settings**: JSON array
+**default_settings**: JSON object
 
-    The *default_settings* is a JSON array that defines the settings parameters as a name/value pair to use for the
-    job task. It has the following fields:
-
-    **name**: JSON string
-
-        The *name* is a required string describing the name of the setting to be added to the job configuration.
-
-    **value**: JSON string
-
-        The *value* is a required string describing the value to pass to the job configuration.
+    The *default_settings* is a JSON object that contains the setting names and their default values as key/value pairs.
