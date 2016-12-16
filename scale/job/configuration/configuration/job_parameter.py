@@ -32,6 +32,7 @@ class TaskWorkspace(object):
         self.name = name
         self.mode = mode
 
+
 class TaskSetting(object):
     """Represents a setting needed by a job task
     """
