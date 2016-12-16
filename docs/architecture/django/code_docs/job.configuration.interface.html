@@ -609,7 +609,7 @@ with this interface</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_data</strong> &#8211; The job data</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_data</strong> (<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.JobData" title="job.configuration.data.job_data.JobData"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.JobData</span></code></a>) &#8211; The job data</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
 </tr>
@@ -644,6 +644,33 @@ with this interface</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">converted interface</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.configuration.interface.job_type_configuration">
+<span id="job-configuration-interface-job-type-configuration-module"></span><h2>job.configuration.interface.job_type_configuration module<a class="headerlink" href="#module-job.configuration.interface.job_type_configuration" title="Permalink to this headline">¶</a></h2>
+<p>Defines the interface for defining a default job configuration</p>
+<dl class="class">
+<dt id="job.configuration.interface.job_type_configuration.JobTypeConfiguration">
+<em class="property">class </em><code class="descclassname">job.configuration.interface.job_type_configuration.</code><code class="descname">JobTypeConfiguration</code><span class="sig-paren">(</span><em>definition=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_type_configuration.JobTypeConfiguration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents the interface for defining a default job configuration</p>
+<dl class="method">
+<dt id="job.configuration.interface.job_type_configuration.JobTypeConfiguration.get_dict">
+<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_type_configuration.JobTypeConfiguration.get_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the internal dictionary that represents this error mapping</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The internal dictionary</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
 </tr>
 </tbody>
 </table>

@@ -4,6 +4,14 @@ job.test.configuration.interface package
 Submodules
 ----------
 
+job.test.configuration.interface.test_configuration_interface module
+--------------------------------------------------------------------
+
+.. automodule:: job.test.configuration.interface.test_configuration_interface
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 job.test.configuration.interface.test_error_interface module
 ------------------------------------------------------------
 

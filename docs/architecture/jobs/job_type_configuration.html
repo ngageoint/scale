@@ -1,0 +1,239 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Job Type Configuration &mdash; Scale 4.1.1-snapshot documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Scale 4.1.1-snapshot documentation" href="../../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../../_static/scale3-transparent-128.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                4.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../rest/index.html">REST API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">Scale</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+    <li>Job Type Configuration</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../_sources/architecture/jobs/job_type_configuration.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="job-type-configuration">
+<span id="architecture-jobs-job-type-configuration"></span><h1>Job Type Configuration<a class="headerlink" href="#job-type-configuration" title="Permalink to this headline">¶</a></h1>
+<p>The job type configuration is a JSON document that defines a configuration that will be a part of a job type.  When
+Scale schedules a new job it will reference this configuration and add defined default settings to the
+job_configuration as part of the job_task, and will ultimately be made available to the algorithm being run.</p>
+<p><strong>Example job type configuration:</strong></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;default_settings&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;dted_path&quot;</span><span class="o">:</span> <span class="s2">&quot;/path/to/dted&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;DB_HOST&quot;</span><span class="o">:</span> <span class="s2">&quot;scale&quot;</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In this example <em>dted_path</em> and <em>DB_HOST</em> are the names for two <em>default_settings</em> that will be added to the job_task of
+the <a class="reference internal" href="job_configuration.html#architecture-jobs-job-configuration"><span>Job Configuration</span></a> as a setting when a job is scheduled, along with the value that follows.</p>
+<div class="section" id="job-type-configuration-specification-version-1-0">
+<span id="architecture-jobs-job-type-configuration-spec"></span><h2>Job Type Configuration Specification Version 1.0<a class="headerlink" href="#job-type-configuration-specification-version-1-0" title="Permalink to this headline">¶</a></h2>
+<p>A valid job type configuration is a JSON document with the following structure:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+   <span class="s2">&quot;default_settings&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">STRING</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>version</strong>: JSON string</p>
+<blockquote>
+<div><p>The <em>version</em> is an optional string value that defines the version of the configuration specification used. This
+allows updates to be made to the specification while maintaining backwards compatibility by allowing Scale to
+recognize an older version and convert it to the current version. The default value for <em>version</em> if it is not
+included is the latest version, which is currently 1.0.</p>
+<p>Scale must recognize the version number as valid for the job type to work. Currently, the only valid job type
+configuration version is <code class="docutils literal"><span class="pre">&quot;1.0&quot;</span></code>.</p>
+</div></blockquote>
+<p><strong>default_settings</strong>: JSON object</p>
+<blockquote>
+<div>The <em>default_settings</em> is a JSON object that contains the setting names and their default values as key/value pairs.</div></blockquote>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'4.1.1-snapshot',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
