@@ -27,7 +27,7 @@ class TaskUpdateManager(object):
     def add_task_update(self, task_update):
         """Adds the given task update to the manager so it can be pushed to the database
 
-        :param task_update: The list of agent IDs to add
+        :param task_update: The task update model to add
         :type task_update: :class:`job.models.TaskUpdate`
         """
 
