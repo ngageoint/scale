@@ -253,7 +253,7 @@ class ScaleScheduler(MesosScheduler):
         recon_mgr.remove_task_id(task_id)
 
         # Hand off task update to be saved in the database
-        task_update_mgr.add_task_update(task_update)
+        task_update_mgr.add_task_update(model)
 
         if task_id.startswith(CLEANUP_TASK_ID_PREFIX):
             cleanup_mgr.handle_task_update(task_update)
