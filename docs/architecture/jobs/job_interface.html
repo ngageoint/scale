@@ -335,7 +335,7 @@ represents each environment variable has the following fields:</p>
 <div>The <em>name</em> is a required string that defines the name of the environment variable to be set. The name of every
 environment variable in the interface must be unique. This name must only be composed of less than 256 of the
 following characters: alphanumeric, &#8221; &#8221;, &#8220;_&#8221;, and &#8220;-&#8221;.</div></blockquote>
-<p><strong>value</strong>: JSOPN string</p>
+<p><strong>value</strong>: JSON string</p>
 <blockquote>
 <div>The <em>value</em> is a required string that defines the value of the environment variable to be set. Scale will apply
 the same string substitution as it does with <em>command_arguments</em>.</div></blockquote>
@@ -350,7 +350,7 @@ an empty list.  The JSON object that represents each setting has the following f
 <div>The <em>name</em> is a required string that defines the name of the setting. The name of every setting, input, and output
 in the interface must be unique. This name must only be composed of less than 256 of the following characters:
 alphanumeric, &#8221; &#8221;, &#8220;_&#8221;, and &#8220;-&#8221;.</div></blockquote>
-<p><strong>required</strong>: JSOPN boolean</p>
+<p><strong>required</strong>: JSON boolean</p>
 <blockquote>
 <div>The <em>required</em> field is optional and indicates if the input is required for the algorithm to run successfully.
 If not provided, the <em>required</em> field defaults to <em>true</em>.</div></blockquote>
