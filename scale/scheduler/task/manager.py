@@ -43,8 +43,8 @@ class TaskUpdateManager(object):
         """
 
         with self._lock:
-            task_updates = self.__task_updates
-            self.__task_updates = []
+            task_updates = self._task_updates
+            self._task_updates = []
 
         total_count = len(task_updates)
         if total_count >= TaskUpdateManager.COUNT_WARNING_THRESHOLD:
