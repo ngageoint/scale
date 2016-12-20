@@ -1,4 +1,5 @@
 """Provides utility functions for handling Mesos"""
+import logging
 from datetime import datetime, timedelta
 
 from django.utils.timezone import utc
@@ -12,6 +13,9 @@ from job.models import JobExecution, TaskUpdate
 EPOCH = datetime.utcfromtimestamp(0).replace(tzinfo=utc)
 REASON_ENUM_WRAPPER = enum_type_wrapper.EnumTypeWrapper(mesos_pb2._TASKSTATUS_REASON)
 SOURCE_ENUM_WRAPPER = enum_type_wrapper.EnumTypeWrapper(mesos_pb2._TASKSTATUS_SOURCE)
+
+
+logger = logging.getLogger(__name__)
 
 
 def create_task_update_model(status):
@@ -74,7 +78,10 @@ def get_status_reason(status):
 
     # A reason of 0 is invalid (dummy default value according to Mesos code comment) and should be ignored (return None)
     if hasattr(status, 'reason') and status.reason:
-        return REASON_ENUM_WRAPPER.Name(status.reason)
+        try:
+            return REASON_ENUM_WRAPPER.Name(status.reason)
+        except ValueError:
+            logger.error('Unknown reason value: %d', status.reason)
 
     return None
 
@@ -89,7 +96,10 @@ def get_status_source(status):
     """
 
     if hasattr(status, 'source') and status.source is not None:
-        return SOURCE_ENUM_WRAPPER.Name(status.source)
+        try:
+            return SOURCE_ENUM_WRAPPER.Name(status.source)
+        except ValueError:
+            logger.error('Unknown source value: %d', status.source)
 
     return None
 
