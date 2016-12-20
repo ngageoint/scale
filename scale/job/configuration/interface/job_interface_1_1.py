@@ -218,7 +218,7 @@ class JobInterface(previous_interface.JobInterface):
                 input_data['required'] = True
             if input_data['type'] in ['file', 'files'] and 'media_types' not in input_data:
                 input_data['media_types'] = []
-			if input_data['type'] in ['file', 'files'] and 'partial' not in input_data:
+            if input_data['type'] in ['file', 'files'] and 'partial' not in input_data:
                 input_data['partial'] = False
 
     def _populate_output_data_defaults(self):
