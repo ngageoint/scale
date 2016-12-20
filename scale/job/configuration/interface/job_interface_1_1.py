@@ -195,3 +195,40 @@ class JobInterface(previous_interface.JobInterface):
                 input_path = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name)
                 retrieve_files_dict[input_name] = (is_multiple, input_path, partial)
         return retrieve_files_dict
+
+    def _populate_default_values(self):
+        """Goes through the definition and fills in any missing default values"""
+        if 'version' not in self.definition:
+            self.definition['version'] = SCHEMA_VERSION
+        if 'input_data' not in self.definition:
+            self.definition['input_data'] = []
+        if 'shared_resources' not in self.definition:
+            self.definition['shared_resources'] = []
+        if 'output_data' not in self.definition:
+            self.definition['output_data'] = []
+
+        self._populate_input_data_defaults()
+        self._populate_resource_defaults()
+        self._populate_output_data_defaults()
+
+    def _populate_input_data_defaults(self):
+        """populates the default values for any missing input_data values"""
+        for input_data in self.definition['input_data']:
+            if 'required' not in input_data:
+                input_data['required'] = True
+            if input_data['type'] in ['file', 'files'] and 'media_types' not in input_data:
+                input_data['media_types'] = []
+			if input_data['type'] in ['file', 'files'] and 'partial' not in input_data:
+                input_data['partial'] = False
+
+    def _populate_output_data_defaults(self):
+        """populates the default values for any missing output_data values"""
+        for output_data in self.definition['output_data']:
+            if 'required' not in output_data:
+                output_data['required'] = True
+
+    def _populate_resource_defaults(self):
+        """populates the default values for any missing shared_resource values"""
+        for shared_resource in self.definition['shared_resources']:
+            if 'required' not in shared_resource:
+                shared_resource['required'] = True
