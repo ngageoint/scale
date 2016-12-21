@@ -52,6 +52,22 @@ def get_status_agent_id(status):
     return status.slave_id.value
 
 
+def get_status_data(status):
+    """Returns the data dict in the given Mesos task status, possibly None
+
+    :param status: The task status
+    :type status: :class:`mesos_pb2.TaskStatus`
+    :returns: The task status data dict
+    :rtype: dict
+    """
+
+    if hasattr(status, 'data') and status.data:
+        logger.info('data field has type %s', type(status.data))
+        return status.data
+
+    return None
+
+
 def get_status_message(status):
     """Returns the message of the given Mesos task status, possibly None
 
