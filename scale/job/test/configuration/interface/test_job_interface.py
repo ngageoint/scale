@@ -1047,8 +1047,7 @@ class TestJobInterfacePreSteps(TestCase):
             'required': True,
         }]
 
-        job_config_json = {'job_task': {'settings': [{'name': 'setting1', 'value': 'test_setting'},
-                                                     {'name': 'setting2', 'value': 'another_setting'}]}}
+        job_config_json = {'job_task': {'settings': [{'name': 'setting1', 'value': 'test_setting'}]}}
 
         job_interface = JobInterface(job_interface_dict)
         job_config = JobConfiguration(job_config_json)
@@ -1074,8 +1073,7 @@ class TestJobInterfacePreSteps(TestCase):
             'required': True,
         }]
 
-        job_config_json = {'job_task': {'settings': [{'name': 'setting1', 'value': 'test_setting'},
-                                                     {'name': 'setting2', 'value': 'another_setting'}]}}
+        job_config_json = {'job_task': {'settings': [{'name': 'setting2', 'value': 'another_setting'}]}}
 
         job_interface = JobInterface(job_interface_dict)
         job_config = JobConfiguration(job_config_json)
