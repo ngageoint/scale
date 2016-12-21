@@ -63,6 +63,8 @@ class Command(BaseCommand):
             job_interface.perform_pre_steps(job_data, job_environment)
             command_args = job_interface.fully_populate_command_argument(job_data, job_environment, job_exe_id)
 
+            command_args = job_interface.populate_command_argument_settings(command_args, job_configuration)
+
             logger.info('Executing job: %i -> %s', job_exe_id, ' '.join(command_args))
             self._populate_command_arguments(job_exe_id, command_args)
         except Exception as ex:

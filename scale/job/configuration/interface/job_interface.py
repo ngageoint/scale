@@ -366,7 +366,7 @@ class JobInterface(previous_interface.JobInterface):
             raise InvalidInterfaceDefinition('Environment variable names must be unique')
 
     def validate_populated_settings(self, job_exe, job_configuration):
-        """Ensures that all required settings are defined and used in the job_interface
+        """Ensures that all required settings are defined in the job_configuration
 
         :param job_exe: The job execution model with related job and job_type fields
         :type job_exe: :class:`job.models.JobExecution`
@@ -375,24 +375,14 @@ class JobInterface(previous_interface.JobInterface):
         """
 
         interface_settings = self.definition['settings']
-        configuration_settings = {setting.name: setting.value for setting in job_configuration.get_job_task_settings()}
 
-        command_arguments = job_exe.command_arguments
-        env_vars = self.populate_env_vars_arguments(job_configuration)
-        env_var_str = ' '.join(env_var['value'] for env_var in env_vars)
+        configuration_settings = {setting.name: setting.value for setting in job_configuration.get_job_task_settings()}
+        config_setting_names = list(configuration_settings.keys())
 
         for setting in interface_settings:
-            found_match = False
             setting_name = setting['name']
             setting_required = setting['required']
 
             if setting_required:
-                setting_value = configuration_settings[setting_name]
-                if setting_value in command_arguments:
-                    found_match = True
-
-                elif setting_value in env_var_str:
-                    found_match = True
-
-                elif not found_match:
+                if setting_name not in config_setting_names:
                     raise InvalidSetting('Required setting %s not found in job_interface' % setting_name)
