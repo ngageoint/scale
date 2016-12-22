@@ -1,4 +1,7 @@
 """Provides utility functions for handling Mesos"""
+from __future__ import unicode_literals
+
+import json
 import logging
 from datetime import datetime, timedelta
 
@@ -53,7 +56,8 @@ def get_status_agent_id(status):
 
 
 def get_status_data(status):
-    """Returns the data dict in the given Mesos task status, possibly None
+    """Returns the data dict in the given Mesos task status. If there is no data dict or it is invalid, an empty dict
+    will be returned.
 
     :param status: The task status
     :type status: :class:`mesos_pb2.TaskStatus`
@@ -62,10 +66,12 @@ def get_status_data(status):
     """
 
     if hasattr(status, 'data') and status.data:
-        logger.info('data field has type %s', type(status.data))
-        return status.data
+        try:
+            return json.loads(status.data)
+        except:
+            logger.exception('Invalid data dict')
 
-    return None
+    return {}
 
 
 def get_status_message(status):
