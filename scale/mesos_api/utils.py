@@ -72,6 +72,7 @@ def get_status_data(status):
                 data = data[0]
             if isinstance(data, dict):
                 return data
+            logger.error('Data field cannot be converted into a dict')
         except:
             logger.exception('Invalid data dict')
 

@@ -40,11 +40,9 @@ class TaskStatusUpdate(object):
         :type data: dict
         """
 
-        if data:
-            logger.info(str(data))
-
         self.task_id = task_update_model.task_id
         self.agent_id = agent_id
+        self.data = data
         self.timestamp = task_update_model.timestamp
 
         if task_update_model.status in self.TASK_STATUS_CONVERSION:
