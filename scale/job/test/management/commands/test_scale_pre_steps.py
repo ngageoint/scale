@@ -54,7 +54,7 @@ class TestPreJobSteps(TestCase):
         """Tests successfully executing scale_pre_steps."""
 
         # Set up mocks
-        mock_job_exe.objects.get_job_exe_with_job_and_job_type.return_value.get_job_interface.return_value.fully_populate_command_argument.return_value = FILLED_IN_CMD
+        mock_job_exe.objects.get_job_exe_with_job_and_job_type.return_value.get_job_interface.return_value.populate_command_argument_settings.return_value = FILLED_IN_CMD
         mock_job_exe.objects.get_job_exe_with_job_and_job_type.return_value.get_docker_image.return_value = None
 
         # Call method to test
