@@ -375,9 +375,7 @@ class JobInterface(previous_interface.JobInterface):
         """
 
         interface_settings = self.definition['settings']
-
-        configuration_settings = {setting.name: setting.value for setting in job_configuration.get_job_task_settings()}
-        config_setting_names = list(configuration_settings.keys())
+        config_setting_names = [setting.name for setting in job_configuration.get_job_task_settings()]
 
         for setting in interface_settings:
             setting_name = setting['name']
