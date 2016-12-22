@@ -385,4 +385,4 @@ class JobInterface(previous_interface.JobInterface):
 
             if setting_required:
                 if setting_name not in config_setting_names:
-                    raise InvalidSetting('Required setting %s not found in job_interface' % setting_name)
+                    raise InvalidSetting('Required setting %s was not provided' % setting_name)
