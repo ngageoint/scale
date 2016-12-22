@@ -287,4 +287,3 @@ class Task(object):
                         env_value = env_split[1]
                         if env_name == 'MESOS_CONTAINER_NAME':
                             self._container_name = env_value
-                            print str('Container name is ' + self._container_name)
