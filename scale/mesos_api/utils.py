@@ -67,7 +67,11 @@ def get_status_data(status):
 
     if hasattr(status, 'data') and status.data:
         try:
-            return json.loads(status.data)
+            data = json.loads(status.data)
+            if isinstance(data, list):  # Mesos stores the data object in a list for some reason
+                data = data[0]
+            if isinstance(data, dict):
+                return data
         except:
             logger.exception('Invalid data dict')
 
