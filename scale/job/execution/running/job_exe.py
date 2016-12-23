@@ -174,7 +174,8 @@ class RunningJobExecution(object):
         containers = []
         with self._lock:
             for task in self._all_tasks:
-                containers.append(task.container_name)
+                if task.container_name:
+                    containers.append(task.container_name)
             return containers
 
     def is_finished(self):

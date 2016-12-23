@@ -63,7 +63,7 @@ class CleanupTask(Task):
         self._is_docker_privileged = False
 
         # Define basic command pieces
-        for_cmd = 'for %s in `%s`; %s done'
+        for_cmd = 'for %s in `%s`; do %s; done'
         nonrunning_filters = '-f status=created -f status=dead -f status=exited'
         all_nonrunning_containers_cmd = 'docker ps %s --format \'{{.Names}}\'' % nonrunning_filters
         all_dangling_volumes_cmd = 'docker volume ls -f dangling=true -q'
