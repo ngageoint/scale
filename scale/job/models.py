@@ -1313,6 +1313,11 @@ class JobExecution(models.Model):
         # Configure any Docker parameters needed for workspaces
         configuration.configure_workspace_docker_params(self, workspaces, docker_volumes)
 
+        # Configure docker paramters listed in database
+        if self.job.job_type.docker_params:
+            for key, value in self.job.job_type.docker_params:
+                configuration.add_job_task_docker_param(DockerParam(key, value))
+        
         # Add job environment variable as docker parameters
         interface = self.get_job_interface()
         env_vars = interface.populate_env_vars_arguments(configuration)
