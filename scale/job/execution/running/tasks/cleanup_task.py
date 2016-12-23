@@ -62,29 +62,37 @@ class CleanupTask(Task):
         self._docker_params = []
         self._is_docker_privileged = False
 
-        # Command deletes all non-running containers
-        delete_containers_cmd = 'docker rm $(docker ps -f status=created -f status=dead -f status=exited -q)'
-
-        # Command loops over specified volumes to delete and deletes it if it exists
-        volume_exists_check = '"`docker volume ls -q | grep "$vol"`" == "$vol"'
+        # Define basic command pieces
+        for_cmd = 'for %s in `%s`; %s done'
+        nonrunning_filters = '-f status=created -f status=dead -f status=exited'
+        all_nonrunning_containers_cmd = 'docker ps %s --format \'{{.Names}}\'' % nonrunning_filters
+        all_dangling_volumes_cmd = 'docker volume ls -f dangling=true -q'
+        container_delete_cmd = 'docker rm $cont'
         volume_delete_cmd = 'docker volume rm $vol'
-        echo_cmd = 'echo "$vol not found"'
-        delete_volumes_cmd = 'for vol in `%s`; do if [[ %s ]]; then %s; else %s; fi; done'
 
+        # Create commands that list the containers/volumes to delete
         if self._is_initial_cleanup:
+            # Initial clean up deletes all non-running containers
+            container_list_cmd = all_nonrunning_containers_cmd
+
             # TODO: once we upgrade to a later version of Docker (1.12+), we can delete volumes based on their name
             # starting with "scale_" (and also dangling)
             # Initial clean up deletes all dangling Docker volumes
-            volume_list_cmd = 'docker volume ls -f dangling=true -q'
+            volume_list_cmd = all_dangling_volumes_cmd
         else:
-            # Deletes all volumes for the given job executions
-            docker_volumes = []
+            # Deletes all containers and volumes for the given job executions
+            containers = []
+            volumes = []
             for job_exe in self._job_exes:
-                docker_volumes.extend(job_exe.docker_volumes)
-            volume_list_cmd = 'echo %s' % ' '.join(docker_volumes)
-        delete_volumes_cmd = delete_volumes_cmd % (volume_list_cmd, volume_exists_check, volume_delete_cmd, echo_cmd)
+                containers.extend(job_exe.get_container_names())
+                volumes.extend(job_exe.docker_volumes)
+            container_list_cmd = '%s | grep -e %s' % (all_nonrunning_containers_cmd, ' -e '.join(containers))
+            volume_list_cmd = '%s | grep -e %s' % (all_dangling_volumes_cmd, ' -e '.join(volumes))
 
-        # Command deletes all non-running containers and then deletes appropriate Docker volumes
+        delete_containers_cmd = for_cmd % ('cont', container_list_cmd, container_delete_cmd)
+        delete_volumes_cmd = for_cmd % ('vol', volume_list_cmd, volume_delete_cmd)
+
+        # Create overall command that deletes containers and volumes for the job executions
         self._command = '%s; %s' % (delete_containers_cmd, delete_volumes_cmd)
 
     @property
