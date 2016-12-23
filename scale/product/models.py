@@ -7,7 +7,6 @@ import os
 import django.contrib.gis.db.models as models
 import django.utils.timezone as timezone
 from django.db import transaction
-from django.db.models import Q
 
 import storage.geospatial_utils as geo_utils
 from recipe.models import Recipe
@@ -352,6 +351,14 @@ class ProductFileManager(models.GeoManager):
         input_files = ScaleFile.objects.filter(pk__in=input_file_ids).values('uuid', 'id').order_by('uuid')
         input_file_uuids = [f['uuid'] for f in input_files]
 
+        # Get property names and values as strings
+        properties = job_exe.job.get_job_data().get_all_properties()
+
+        # Product UUID will be based in part on input data (UUIDs of input files and name/value pairs of input
+        # properties)
+        input_strings = input_file_uuids
+        input_strings.extend(properties)
+
         # Determine if any input files are non-operational products
         input_products = ProductFile.objects.filter(file__in=[f['id'] for f in input_files])
         input_products_operational = all([f.is_operational for f in input_products])
@@ -372,9 +379,9 @@ class ProductFileManager(models.GeoManager):
             product.set_basic_fields(file_name, file_size, media_type)
             product.file_path = remote_path
 
-            # Add a stable identifier based on the job type, input files, and file name
+            # Add a stable identifier based on the job type, input files, input properties, and file name
             # This is designed to remain stable across re-processing the same type of job on the same inputs
-            product.update_uuid(job_exe.job.job_type.id, file_name, *input_file_uuids)
+            product.update_uuid(job_exe.job.job_type.id, file_name, *input_strings)
 
             # Add geospatial info to product if available
             if len(entry) > 3:

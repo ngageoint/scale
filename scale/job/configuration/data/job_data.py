@@ -154,6 +154,23 @@ class JobData(object):
         self.data_dict['input_data'].append(prop_input)
         self.data_inputs_by_name[input_name] = prop_input
 
+    def get_all_properties(self):
+        """Retrieves all properties from this job data and returns them in ascending order of their names
+
+        :returns: List of strings containing name=value
+        :rtype: [string]
+        """
+
+        properties = []
+
+        names = sorted(self.data_inputs_by_name.keys())
+        for name in names:
+            the_input = self.data_inputs_by_name[name]
+            if 'value' in the_input:
+                properties.append(name + '=' + the_input['value'])
+
+        return properties
+
     def get_dict(self):
         """Returns the internal dictionary that represents this job data
 
