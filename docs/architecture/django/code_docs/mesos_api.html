@@ -555,6 +555,25 @@
 </dd></dl>
 
 <dl class="function">
+<dt id="mesos_api.utils.get_status_data">
+<code class="descclassname">mesos_api.utils.</code><code class="descname">get_status_data</code><span class="sig-paren">(</span><em>status</em><span class="sig-paren">)</span><a class="headerlink" href="#mesos_api.utils.get_status_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the data dict in the given Mesos task status. If there is no data dict or it is invalid, an empty dict
+will be returned.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status</strong> (<code class="xref py py-class docutils literal"><span class="pre">mesos_pb2.TaskStatus</span></code>) &#8211; The task status</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The task status data dict</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="mesos_api.utils.get_status_message">
 <code class="descclassname">mesos_api.utils.</code><code class="descname">get_status_message</code><span class="sig-paren">(</span><em>status</em><span class="sig-paren">)</span><a class="headerlink" href="#mesos_api.utils.get_status_message" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the message of the given Mesos task status, possibly None</p>

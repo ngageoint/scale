@@ -256,6 +256,22 @@
 </dd></dl>
 
 <dl class="attribute">
+<dt id="job.execution.running.tasks.base_task.Task.container_name">
+<code class="descname">container_name</code><a class="headerlink" href="#job.execution.running.tasks.base_task.Task.container_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the container name for the task, possibly None</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The container name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="job.execution.running.tasks.base_task.Task.docker_image">
 <code class="descname">docker_image</code><a class="headerlink" href="#job.execution.running.tasks.base_task.Task.docker_image" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the name of the Docker image to run for this task, possibly None</p>
@@ -773,7 +789,7 @@ the job-task, and the post-task.</p>
 <p>Defines the class that represents a task status update</p>
 <dl class="class">
 <dt id="job.execution.running.tasks.update.TaskStatusUpdate">
-<em class="property">class </em><code class="descclassname">job.execution.running.tasks.update.</code><code class="descname">TaskStatusUpdate</code><span class="sig-paren">(</span><em>task_update_model</em>, <em>agent_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.running.tasks.update.TaskStatusUpdate" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">job.execution.running.tasks.update.</code><code class="descname">TaskStatusUpdate</code><span class="sig-paren">(</span><em>task_update_model</em>, <em>agent_id</em>, <em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.running.tasks.update.TaskStatusUpdate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>This class represents a task status update. This class is thread-safe.</p>
 <dl class="attribute">

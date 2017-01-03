@@ -235,6 +235,15 @@
 <li class="toctree-l1"><a class="reference internal" href="job.test.execution.html">job.test.execution package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="job.test.execution.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="job.test.execution.running.html">job.test.execution.running package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="job.test.execution.running.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="job.test.execution.running.tasks.html">job.test.execution.running.tasks package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="job.test.execution.running.tasks.html#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="job.test.execution.running.tasks.html#module-job.test.execution.running.tasks.test_base_task">job.test.execution.running.tasks.test_base_task module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="job.test.execution.running.tasks.html#module-job.test.execution.running.tasks">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.execution.running.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.execution.running.html#module-job.test.execution.running.test_job_exe">job.test.execution.running.test_job_exe module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.execution.running.html#module-job.test.execution.running.test_manager">job.test.execution.running.test_manager module</a></li>
@@ -1607,7 +1616,7 @@ for input and output</p>
 
 <dl class="function">
 <dt id="job.test.utils.create_task_status_update">
-<code class="descclassname">job.test.utils.</code><code class="descname">create_task_status_update</code><span class="sig-paren">(</span><em>task_id</em>, <em>agent_id</em>, <em>status</em>, <em>when</em>, <em>exit_code=None</em>, <em>reason=None</em>, <em>source=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.create_task_status_update" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">job.test.utils.</code><code class="descname">create_task_status_update</code><span class="sig-paren">(</span><em>task_id</em>, <em>agent_id</em>, <em>status</em>, <em>when</em>, <em>exit_code=None</em>, <em>reason=None</em>, <em>source=None</em>, <em>data=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.create_task_status_update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a job model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1619,6 +1628,9 @@ for input and output</p>
 <li><strong>status</strong> (<em>string</em>) &#8211; The status of the task</li>
 <li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The timestamp of the update</li>
 <li><strong>exit_code</strong> (<em>int</em>) &#8211; The task&#8217;s exit code</li>
+<li><strong>reason</strong> (<em>string</em>) &#8211; The reason</li>
+<li><strong>source</strong> (<em>string</em>) &#8211; The source</li>
+<li><strong>data</strong> (<em>dict</em>) &#8211; The data dict</li>
 </ul>
 </td>
 </tr>
