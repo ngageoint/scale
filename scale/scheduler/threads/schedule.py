@@ -9,7 +9,7 @@ from django.db import OperationalError
 from django.utils.timezone import now
 from mesos.interface import mesos_pb2
 
-from job.execution.running.manager import running_job_mgr
+from job.execution.manager import running_job_mgr
 from mesos_api.tasks import create_mesos_task
 from queue.job_exe import QueuedJobExecution
 from queue.models import Queue
@@ -256,7 +256,7 @@ class SchedulingThread(object):
         :param workspaces: A dict of all workspaces stored by name
         :type workspaces: {string: :class:`storage.models.Workspace`}
         :returns: The scheduled job executions
-        :rtype: list[:class:`job.execution.running.job_exe.RunningJobExecution`]
+        :rtype: list[:class:`job.execution.job_exe.RunningJobExecution`]
         """
 
         started = now()

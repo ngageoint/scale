@@ -132,7 +132,7 @@ class NodeOffers(object):
         current resources
 
         :param job_exe: The running job execution
-        :type job_exe: :class:`job.execution.running.job_exe.RunningJobExecution`
+        :type job_exe: :class:`job.execution.job_exe.RunningJobExecution`
         :returns: One of the NodeOffers constants indicating if the next task was accepted or why it was not accepted
         :rtype: int
         """
@@ -165,7 +165,7 @@ class NodeOffers(object):
         """Considers if the given task can be run on this node with the current resources
 
         :param task: The task to consider
-        :type task: :class:`job.execution.running.tasks.base_task.Task`
+        :type task: :class:`job.tasks.base_task.Task`
         :returns: One of the NodeOffers constants indicating if the task was accepted or why it was not accepted
         :rtype: int
         """
@@ -211,7 +211,7 @@ class NodeOffers(object):
         """Returns all of the running job executions that have been accepted to run their next tasks on this node
 
         :returns: The list of all accepted running job executions
-        :rtype: [:class:`job.execution.running.job_exe.RunningJobExecution`]
+        :rtype: [:class:`job.execution.job_exe.RunningJobExecution`]
         """
 
         job_exes = []
@@ -224,7 +224,7 @@ class NodeOffers(object):
         """Returns all of the tasks that have been accepted to run on this node
 
         :returns: The list of all accepted tasks
-        :rtype: [:class:`job.execution.running.tasks.base_task.Task`]
+        :rtype: [:class:`job.tasks.base_task.Task`]
         """
 
         tasks = []

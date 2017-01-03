@@ -3,11 +3,11 @@ from __future__ import unicode_literals
 import django
 from django.test import TestCase
 from django.utils.timezone import now
+from job.tasks.base_task import Task
 
 import job.test.utils as job_test_utils
-from job.execution.running.tasks.base_task import Task
-from job.execution.running.tasks.update import TaskStatusUpdate
 from job.resources import NodeResources
+from job.tasks.update import TaskStatusUpdate
 
 
 # Non-abstract class to test implementation of base Task class

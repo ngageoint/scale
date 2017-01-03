@@ -6,7 +6,7 @@ from abc import ABCMeta, abstractmethod
 from django.conf import settings
 
 from error.models import Error
-from job.execution.running.tasks.base_task import Task
+from job.tasks.base_task import Task
 
 
 JOB_TASK_ID_PREFIX = 'scale_job'
@@ -57,7 +57,7 @@ class JobExecutionTask(Task):
         """Completes this task and indicates whether following tasks should update their cached job execution values
 
         :param task_update: The task update
-        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
+        :type task_update: :class:`job.tasks.update.TaskStatusUpdate`
         :returns: True if following tasks should update their cached job execution values, False otherwise
         :rtype: bool
         """
@@ -88,7 +88,7 @@ class JobExecutionTask(Task):
         """Attempts to determine the error that caused this task to fail
 
         :param task_update: The task update
-        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
+        :type task_update: :class:`job.tasks.update.TaskStatusUpdate`
         :returns: The error that caused this task to fail, possibly None
         :rtype: :class:`error.models.Error`
         """
@@ -120,7 +120,7 @@ class JobExecutionTask(Task):
         this method cannot determine an error cause, None will be returned. Caller must have obtained the task lock.
 
         :param task_update: The task update
-        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
+        :type task_update: :class:`job.tasks.update.TaskStatusUpdate`
         :returns: The error that caused this task to fail, possibly None
         :rtype: :class:`error.models.Error`
         """

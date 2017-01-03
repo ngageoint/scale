@@ -9,7 +9,7 @@ from django.db import DatabaseError
 from django.utils.timezone import now
 from mesos.interface import mesos_pb2
 
-from job.execution.running.manager import running_job_mgr
+from job.execution.manager import running_job_mgr
 from job.models import JobExecution
 from scheduler.cleanup.manager import cleanup_mgr
 from scheduler.node.manager import node_mgr

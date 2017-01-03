@@ -6,14 +6,15 @@ import datetime
 import logging
 import math
 
-import django.utils.timezone as timezone
 import django.utils.html
+import django.utils.timezone as timezone
 import djorm_pgjson.fields
 from django.conf import settings
 from django.db import models, transaction
 from django.db.models import Q
 
 import job.execution.container as job_exe_container
+import util.parse
 from error.models import Error
 from job.configuration.configuration.job_configuration import JobConfiguration, MODE_RO, MODE_RW
 from job.configuration.configuration.job_parameter import DockerParam
@@ -25,13 +26,12 @@ from job.configuration.interface.job_type_configuration import JobTypeConfigurat
 from job.configuration.results.job_results import JobResults
 from job.exceptions import InvalidJobField
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
-from job.execution.running.tasks.exe_task import JOB_TASK_ID_PREFIX
+from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
 from storage.models import ScaleFile, Workspace
 from trigger.configuration.exceptions import InvalidTriggerType
 from trigger.models import TriggerRule
 from util.exceptions import RollbackTransaction, ScaleLogicBug
-import util.parse
 
 
 logger = logging.getLogger(__name__)

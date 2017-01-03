@@ -18,7 +18,7 @@ class RunningJobExecutionManager(object):
         """Adds new running job executions to the manager
 
         :param job_exes: A list of the running job executions to add
-        :type job_exes: [:class:`job.execution.running.job_exe.RunningJobExecution`]
+        :type job_exes: [:class:`job.execution.job_exe.RunningJobExecution`]
         """
 
         with self._lock:
@@ -29,7 +29,7 @@ class RunningJobExecutionManager(object):
         """Returns all running job executions
 
         :returns: A list of running job executions
-        :rtype: [:class:`job.execution.running.job_exe.RunningJobExecution`]
+        :rtype: [:class:`job.execution.job_exe.RunningJobExecution`]
         """
 
         result = []
@@ -44,7 +44,7 @@ class RunningJobExecutionManager(object):
         :param job_exe_id: The ID of the job execution to return
         :type job_exe_id: int
         :returns: The running job execution with the given ID, possibly None
-        :rtype: :class:`job.execution.running.job_exe.RunningJobExecution`
+        :rtype: :class:`job.execution.job_exe.RunningJobExecution`
         """
 
         with self._lock:
@@ -59,7 +59,7 @@ class RunningJobExecutionManager(object):
         :param node_id: The ID of the node
         :type node_id: int
         :returns: A list of running job executions
-        :rtype: [:class:`job.execution.running.job_exe.RunningJobExecution`]
+        :rtype: [:class:`job.execution.job_exe.RunningJobExecution`]
         """
 
         result = []
@@ -74,7 +74,7 @@ class RunningJobExecutionManager(object):
         """Returns all running job executions that are ready to execute their next task
 
         :returns: A list of running job executions
-        :rtype: [:class:`job.execution.running.job_exe.RunningJobExecution`]
+        :rtype: [:class:`job.execution.job_exe.RunningJobExecution`]
         """
 
         result = []

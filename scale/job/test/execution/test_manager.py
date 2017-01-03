@@ -1,15 +1,16 @@
 from __future__ import unicode_literals
 
 import datetime
+
 import django
 from django.test import TestCase
 from django.utils.timezone import now
 
 import job.test.utils as job_test_utils
-from job.execution.running.job_exe import RunningJobExecution
-from job.execution.running.manager import RunningJobExecutionManager
-from job.execution.running.tasks.base_task import RECONCILIATION_THRESHOLD
-from job.execution.running.tasks.update import TaskStatusUpdate
+from job.execution.job_exe import RunningJobExecution
+from job.execution.manager import RunningJobExecutionManager
+from job.tasks.base_task import RECONCILIATION_THRESHOLD
+from job.tasks.update import TaskStatusUpdate
 
 
 class TestRunningJobExecutionManager(TestCase):

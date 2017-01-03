@@ -13,7 +13,7 @@ def create_mesos_task(task):
     """Creates and returns a Mesos task from a Scale task
 
     :param task: The task
-    :type task: :class:`job.execution.running.tasks.base_task.Task`
+    :type task: :class:`job.tasks.base_task.Task`
     :returns: The Mesos task
     :rtype: :class:`mesos_pb2.TaskInfo`
     """
@@ -28,7 +28,7 @@ def _create_base_task(task):
     """Creates and returns a base Mesos task from a Scale task
 
     :param task: The task
-    :type task: :class:`job.execution.running.tasks.base_task.Task`
+    :type task: :class:`job.tasks.base_task.Task`
     :returns: The base Mesos task
     :rtype: :class:`mesos_pb2.TaskInfo`
     """
@@ -64,7 +64,7 @@ def _create_command_task(task):
     """Creates and returns a command-line Mesos task from a Scale task
 
     :param task: The task
-    :type task: :class:`job.execution.running.tasks.base_task.Task`
+    :type task: :class:`job.tasks.base_task.Task`
     :returns: The command-line Mesos task
     :rtype: :class:`mesos_pb2.TaskInfo`
     """
@@ -82,7 +82,7 @@ def _create_docker_task(task):
     """Creates and returns a Dockerized Mesos task from a Scale task
 
     :param task: The task
-    :type task: :class:`job.execution.running.tasks.base_task.Task`
+    :type task: :class:`job.tasks.base_task.Task`
     returns: The Dockerized Mesos task
     rtype: :class:`mesos_pb2.TaskInfo`
     """

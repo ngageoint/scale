@@ -7,14 +7,14 @@ import threading
 
 from django.db import DatabaseError
 from django.utils.timezone import now
+from job.execution.tasks.cleanup_task import CLEANUP_TASK_ID_PREFIX
 from mesos.interface import Scheduler as MesosScheduler
 
 from error.models import Error
-from job.execution.running.manager import running_job_mgr
-from job.execution.running.tasks.cleanup_task import CLEANUP_TASK_ID_PREFIX
-from job.execution.running.tasks.update import TaskStatusUpdate
+from job.execution.manager import running_job_mgr
 from job.models import JobExecution
 from job.resources import NodeResources
+from job.tasks.update import TaskStatusUpdate
 from mesos_api import utils
 from queue.models import Queue
 from scheduler.cleanup.manager import cleanup_mgr

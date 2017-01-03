@@ -8,9 +8,9 @@ from django.utils.timezone import now
 
 import job.test.utils as job_test_utils
 from error.models import Error, CACHED_BUILTIN_ERRORS
-from job.execution.running.job_exe import RunningJobExecution
-from job.execution.running.tasks.update import TaskStatusUpdate
+from job.execution.job_exe import RunningJobExecution
 from job.models import JobExecution
+from job.tasks.update import TaskStatusUpdate
 from scheduler.models import Scheduler
 
 

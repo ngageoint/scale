@@ -5,7 +5,7 @@ import datetime
 import threading
 from abc import ABCMeta, abstractmethod
 
-from job.execution.running.tasks.update import TaskStatusUpdate
+from job.tasks.update import TaskStatusUpdate
 from util.exceptions import ScaleLogicBug
 
 
@@ -239,7 +239,7 @@ class Task(object):
         """Handles the given task update
 
         :param task_update: The task update
-        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
+        :type task_update: :class:`job.tasks.update.TaskStatusUpdate`
         """
 
         with self._lock:
@@ -274,7 +274,7 @@ class Task(object):
         """Tries to parse the container name out of the task update. Assumes caller already has the task lock.
 
         :param task_update: The task update
-        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
+        :type task_update: :class:`job.tasks.update.TaskStatusUpdate`
         """
 
         if 'Config' in task_update.data and 'Env' in task_update.data['Config']:

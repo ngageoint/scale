@@ -4,8 +4,8 @@ import django
 from django.test import TestCase
 from django.utils.timezone import now
 
-from job.execution.running.job_exe import RunningJobExecution
-from job.execution.running.tasks.update import TaskStatusUpdate
+from job.execution.job_exe import RunningJobExecution
+from job.tasks.update import TaskStatusUpdate
 from job.test import utils as job_test_utils
 from node.test import utils as node_test_utils
 from scheduler.cleanup.node import NodeCleanup

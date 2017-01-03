@@ -12,7 +12,7 @@ from error.models import Error
 from job.configuration.configuration.job_configuration import JobConfiguration
 from job.configuration.data.exceptions import InvalidData
 from job.configuration.data.job_data import JobData
-from job.execution.running.job_exe import RunningJobExecution
+from job.execution.job_exe import RunningJobExecution
 from job.models import Job, JobType
 from job.models import JobExecution
 from recipe.models import Recipe
@@ -334,7 +334,7 @@ class QueueManager(models.Manager):
         :param when: When the job execution was completed
         :type when: :class:`datetime.datetime`
         :param tasks: The list of this job's tasks
-        :type tasks: [:class:`job.execution.running.tasks.base_task.Task`]
+        :type tasks: [:class:`job.tasks.base_task.Task`]
         """
 
         job_exe = JobExecution.objects.get_locked_job_exe(job_exe_id)
@@ -383,7 +383,7 @@ class QueueManager(models.Manager):
         :param when: When the failure occurred
         :type when: :class:`datetime.datetime`
         :param tasks: The list of this job's tasks
-        :type tasks: [:class:`job.execution.running.tasks.base_task.Task`]
+        :type tasks: [:class:`job.tasks.base_task.Task`]
         :param error: The error that caused the failure
         :type error: :class:`error.models.Error`
         """
@@ -614,7 +614,7 @@ class QueueManager(models.Manager):
         :param workspaces: A dict of all workspaces stored by name
         :type workspaces: {string: :class:`storage.models.Workspace`}
         :returns: The scheduled job executions
-        :rtype: list[:class:`job.execution.running.job_exe.RunningJobExecution`]
+        :rtype: list[:class:`job.execution.job_exe.RunningJobExecution`]
         """
 
         if not job_executions:

@@ -9,11 +9,11 @@ from django.db import transaction
 from django.utils.timezone import now
 
 from error.models import Error
-from job.execution.running.tasks.job_task import JobTask
-from job.execution.running.tasks.post_task import PostTask
-from job.execution.running.tasks.pre_task import PreTask
-from job.execution.running.tasks.update import TaskStatusUpdate
+from job.execution.tasks.job_task import JobTask
+from job.execution.tasks.post_task import PostTask
+from job.execution.tasks.pre_task import PreTask
 from job.models import JobExecution
+from job.tasks.update import TaskStatusUpdate
 from util.retry import retry_database_query
 
 
@@ -58,7 +58,7 @@ class RunningJobExecution(object):
         """Returns the currently running task of the job execution, or None if no task is currently running
 
         :returns: The current task, possibly None
-        :rtype: :class:`job.execution.running.tasks.base_task.Task`
+        :rtype: :class:`job.tasks.base_task.Task`
         """
 
         return self._current_task
@@ -108,7 +108,7 @@ class RunningJobExecution(object):
         """Cancels this job execution and returns the current task
 
         :returns: The current task, possibly None
-        :rtype: :class:`job.execution.running.tasks.base_task.Task`
+        :rtype: :class:`job.tasks.base_task.Task`
         """
 
         # Saves this job execution's task info to the database
@@ -131,7 +131,7 @@ class RunningJobExecution(object):
         :param when: The time that the node was lost
         :type when: :class:`datetime.datetime`
         :returns: The current task, possibly None
-        :rtype: :class:`job.execution.running.tasks.base_task.Task`
+        :rtype: :class:`job.tasks.base_task.Task`
         """
 
         error = Error.objects.get_builtin_error('node-lost')
@@ -151,7 +151,7 @@ class RunningJobExecution(object):
         :param when: The time that the job execution timed out
         :type when: :class:`datetime.datetime`
         :returns: The current task, possibly None
-        :rtype: :class:`job.execution.running.tasks.base_task.Task`
+        :rtype: :class:`job.tasks.base_task.Task`
         """
 
         error = Error.objects.get_builtin_error('timeout')
@@ -218,7 +218,7 @@ class RunningJobExecution(object):
         tasks remain.
 
         :returns: The new task that was started, possibly None
-        :rtype: :class:`job.execution.running.tasks.base_task.Task`
+        :rtype: :class:`job.tasks.base_task.Task`
         """
 
         with self._lock:
@@ -232,7 +232,7 @@ class RunningJobExecution(object):
         """Updates a task for this job execution
 
         :param task_update: The task update
-        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
+        :type task_update: :class:`job.tasks.update.TaskStatusUpdate`
         """
 
         if task_update.status == TaskStatusUpdate.RUNNING:
@@ -249,7 +249,7 @@ class RunningJobExecution(object):
         """Completes a task for this job execution
 
         :param task_update: The task update
-        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
+        :type task_update: :class:`job.tasks.update.TaskStatusUpdate`
         """
 
         with self._lock:
@@ -278,7 +278,7 @@ class RunningJobExecution(object):
         """Fails a task for this job execution
 
         :param task_update: The task update
-        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
+        :type task_update: :class:`job.tasks.update.TaskStatusUpdate`
         """
 
         current_task = self._current_task
@@ -324,7 +324,7 @@ class RunningJobExecution(object):
         """Tells this job execution that one of its tasks was lost
 
         :param task_update: The task update
-        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
+        :type task_update: :class:`job.tasks.update.TaskStatusUpdate`
         """
 
         with self._lock:
@@ -340,7 +340,7 @@ class RunningJobExecution(object):
         """Tells this job execution that one of its tasks has started running
 
         :param task_update: The task update
-        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
+        :type task_update: :class:`job.tasks.update.TaskStatusUpdate`
         """
 
         current_task = self._current_task

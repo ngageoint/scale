@@ -4,8 +4,9 @@ from __future__ import unicode_literals
 import logging
 import threading
 
-from job.execution.running.tasks.cleanup_task import CleanupTask
-from job.execution.running.tasks.update import TaskStatusUpdate
+from job.execution.tasks.cleanup_task import CleanupTask
+
+from job.tasks.update import TaskStatusUpdate
 from scheduler.sync.scheduler_manager import scheduler_mgr
 
 
@@ -35,7 +36,7 @@ class NodeCleanup(object):
         """Adds a job execution that needs to be cleaned up
 
         :param job_exe: The job execution to add
-        :type job_exe: :class:`job.execution.running.job_exe.RunningJobExecution`
+        :type job_exe: :class:`job.execution.job_exe.RunningJobExecution`
         """
 
         with self._lock:
@@ -45,7 +46,7 @@ class NodeCleanup(object):
         """Returns the next cleanup task to launch, possibly None
 
         :returns: The next cleanup task to launch, possibly None
-        :rtype: :class:`job.execution.running.tasks.cleanup_task.CleanupTask`
+        :rtype: :class:`job.execution.tasks.cleanup_task.CleanupTask`
         """
 
         with self._lock:
@@ -76,7 +77,7 @@ class NodeCleanup(object):
         """Handles the given task update
 
         :param task_update: The task update
-        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
+        :type task_update: :class:`job.tasks.update.TaskStatusUpdate`
         """
 
         with self._lock:

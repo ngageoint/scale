@@ -21,7 +21,7 @@ class CleanupManager(object):
         """Adds a job execution that needs to be cleaned up
 
         :param job_exe: The job execution to add
-        :type job_exe: :class:`job.execution.running.job_exe.RunningJobExecution`
+        :type job_exe: :class:`job.execution.job_exe.RunningJobExecution`
         """
 
         with self._lock:
@@ -31,7 +31,7 @@ class CleanupManager(object):
         """Returns the next cleanup tasks to schedule
 
         :returns: A list of the next cleanup tasks to schedule
-        :rtype: [:class:`job.execution.running.tasks.cleanup_task.CleanupTask`]
+        :rtype: [:class:`job.execution.tasks.cleanup_task.CleanupTask`]
         """
 
         tasks = []
@@ -64,7 +64,7 @@ class CleanupManager(object):
         """Handles the given task update for a cleanup task
 
         :param task_update: The task update
-        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
+        :type task_update: :class:`job.tasks.update.TaskStatusUpdate`
         """
 
         with self._lock:
