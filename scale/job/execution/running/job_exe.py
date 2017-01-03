@@ -164,6 +164,20 @@ class RunningJobExecution(object):
             self._remaining_tasks = []
             return task
 
+    def get_container_names(self):
+        """Returns the list of container names for all tasks in this job execution
+
+        :returns: The list of all container names
+        :rtype: [string]
+        """
+
+        containers = []
+        with self._lock:
+            for task in self._all_tasks:
+                if task.container_name:
+                    containers.append(task.container_name)
+            return containers
+
     def is_finished(self):
         """Indicates whether this job execution is finished with all tasks
 

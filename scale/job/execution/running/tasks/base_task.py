@@ -34,6 +34,7 @@ class Task(object):
         self._task_id = task_id
         self._task_name = task_name
         self._agent_id = agent_id
+        self._container_name = None
         self._lock = threading.Lock()
         self._has_been_launched = False
         self._launched = None
@@ -81,6 +82,16 @@ class Task(object):
         """
 
         return self._command_arguments
+
+    @property
+    def container_name(self):
+        """Returns the container name for the task, possibly None
+
+        :returns: The container name
+        :rtype: string
+        """
+
+        return self._container_name
 
     @property
     def docker_image(self):
@@ -243,6 +254,7 @@ class Task(object):
                 if not self._has_started:
                     self._has_started = True
                     self._started = task_update.timestamp
+                    self._parse_container_name(task_update)
             elif task_update.status == TaskStatusUpdate.LOST:
                 # Reset task to initial state (unless already ended)
                 if not self._has_ended:
@@ -257,3 +269,21 @@ class Task(object):
                     self._has_ended = True
                     self._ended = task_update.timestamp
                     self._exit_code = task_update.exit_code
+
+    def _parse_container_name(self, task_update):
+        """Tries to parse the container name out of the task update. Assumes caller already has the task lock.
+
+        :param task_update: The task update
+        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
+        """
+
+        if 'Config' in task_update.data and 'Env' in task_update.data['Config']:
+            env_list = task_update.data['Config']['Env']
+            if isinstance(env_list, list):
+                for env_string in env_list:
+                    env_split = env_string.split('=')
+                    if len(env_split) == 2:
+                        env_name = env_split[0]
+                        env_value = env_split[1]
+                        if env_name == 'MESOS_CONTAINER_NAME':
+                            self._container_name = env_value

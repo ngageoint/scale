@@ -1,4 +1,7 @@
 """Provides utility functions for handling Mesos"""
+from __future__ import unicode_literals
+
+import json
 import logging
 from datetime import datetime, timedelta
 
@@ -50,6 +53,30 @@ def get_status_agent_id(status):
     """
 
     return status.slave_id.value
+
+
+def get_status_data(status):
+    """Returns the data dict in the given Mesos task status. If there is no data dict or it is invalid, an empty dict
+    will be returned.
+
+    :param status: The task status
+    :type status: :class:`mesos_pb2.TaskStatus`
+    :returns: The task status data dict
+    :rtype: dict
+    """
+
+    if hasattr(status, 'data') and status.data:
+        try:
+            data = json.loads(status.data)
+            if isinstance(data, list):  # Mesos stores the data object in a list for some reason
+                data = data[0]
+            if isinstance(data, dict):
+                return data
+            logger.error('Data field cannot be converted into a dict')
+        except:
+            logger.exception('Invalid data dict')
+
+    return {}
 
 
 def get_status_message(status):

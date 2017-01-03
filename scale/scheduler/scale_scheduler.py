@@ -241,7 +241,7 @@ class ScaleScheduler(MesosScheduler):
 
         model = utils.create_task_update_model(status)
         mesos_status = model.status
-        task_update = TaskStatusUpdate(model, utils.get_status_agent_id(status))
+        task_update = TaskStatusUpdate(model, utils.get_status_agent_id(status), utils.get_status_data(status))
         task_id = task_update.task_id
 
         if mesos_status == 'TASK_LOST':

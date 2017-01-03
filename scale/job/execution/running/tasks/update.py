@@ -29,17 +29,20 @@ class TaskStatusUpdate(object):
                               'TASK_FINISHED': FINISHED, 'TASK_FAILED': FAILED, 'TASK_KILLED': KILLED,
                               'TASK_LOST': LOST, 'TASK_ERROR': FAILED}
 
-    def __init__(self, task_update_model, agent_id):
+    def __init__(self, task_update_model, agent_id, data):
         """Constructor
 
         :param task_update_model: The task update model
         :type task_update_model: :class:`job.models.TaskUpdate`
         :param agent_id: The agent ID for the task
         :type agent_id: string
+        :param data: The data dict in the task update
+        :type data: dict
         """
 
         self.task_id = task_update_model.task_id
         self.agent_id = agent_id
+        self.data = data
         self.timestamp = task_update_model.timestamp
 
         if task_update_model.status in self.TASK_STATUS_CONVERSION:
