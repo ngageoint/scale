@@ -1,11 +1,12 @@
-'''Configuration for Shared Resource App'''
+"""Configuration for Shared Resource App"""
+from __future__ import unicode_literals
 
 from django.apps import AppConfig
 
 
 class SharedResourceConfig(AppConfig):
-    '''Configuration for the shared resource app
-    '''
-    name = u'shared_resource'
-    label = u'shared_resource'
-    verbose_name = u'Shared Resource'
+    """Configuration for the shared resource app
+    """
+    name = 'shared_resource'
+    label = 'shared_resource'
+    verbose_name = 'Shared Resource'

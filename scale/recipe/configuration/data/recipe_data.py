@@ -1,4 +1,4 @@
-'''Defines the data needed for executing a recipe'''
+"""Defines the data needed for executing a recipe"""
 from __future__ import unicode_literals
 
 from numbers import Integral
@@ -12,34 +12,34 @@ DEFAULT_VERSION = '1.0'
 
 
 class ValidationWarning(object):
-    '''Tracks recipe data configuration warnings during validation that may not prevent the recipe from working.'''
+    """Tracks recipe data configuration warnings during validation that may not prevent the recipe from working."""
 
     def __init__(self, key, details):
-        '''Constructor sets basic attributes.
+        """Constructor sets basic attributes.
 
         :param key: A unique identifier clients can use to recognize the warning.
         :type key: str
         :param details: A user-friendly description of the problem, including field names and/or associated values.
         :type details: str
-        '''
+        """
         self.key = key
         self.details = details
 
 
 class RecipeData(object):
-    '''Represents the data needed for executing a recipe. Data includes details about the data inputs, links needed to
+    """Represents the data needed for executing a recipe. Data includes details about the data inputs, links needed to
     connect shared resources to resource instances in Scale, and details needed to store all resulting output.
-    '''
+    """
 
     def __init__(self, data):
-        '''Creates a recipe data object from the given dictionary. The general format is checked for correctness, but
+        """Creates a recipe data object from the given dictionary. The general format is checked for correctness, but
         the actual input and output details are not checked for correctness against the recipe definition.
 
         :param data: The recipe data
         :type data: dict
 
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the recipe data is invalid
-        '''
+        """
 
         self.data_dict = data
         self.param_names = set()
@@ -68,14 +68,14 @@ class RecipeData(object):
                 raise InvalidRecipeData('Invalid recipe data: Workspace ID must be an integer')
 
     def add_file_input(self, input_name, file_id):
-        '''Adds a new file parameter to this recipe data.
+        """Adds a new file parameter to this recipe data.
         This method does not perform validation on the recipe data.
 
         :param input_name: The file parameter name
         :type input_name: str
         :param file_id: The ID of the file
         :type file_id: long
-        '''
+        """
 
         if input_name in self.param_names:
             raise Exception('Data already has a parameter named %s' % input_name)
@@ -86,7 +86,7 @@ class RecipeData(object):
         self.data_inputs_by_name[input_name] = file_input
 
     def add_input_to_data(self, recipe_input_name, job_data, job_input_name):
-        '''Adds the given input from the recipe data as a new input to the given job data
+        """Adds the given input from the recipe data as a new input to the given job data
 
         :param recipe_input_name: The name of the recipe data input to add to the job data
         :type recipe_input_name: str
@@ -94,7 +94,7 @@ class RecipeData(object):
         :type job_data: :class:`job.configuration.data.job_data.JobData`
         :param job_input_name: The name of the job data input to add
         :type job_input_name: str
-        '''
+        """
 
         if recipe_input_name in self.data_inputs_by_name:
             recipe_input = self.data_inputs_by_name[recipe_input_name]
@@ -109,11 +109,11 @@ class RecipeData(object):
                 job_data.add_file_list_input(job_input_name, file_ids)
 
     def get_input_file_ids(self):
-        '''Returns a set of scale file identifiers for each file in the recipe input data.
+        """Returns a set of scale file identifiers for each file in the recipe input data.
 
         :returns: Set of scale file identifiers
         :rtype: set[int]
-        '''
+        """
 
         file_ids = set()
         for data_input in self.data_dict['input_data']:
@@ -124,37 +124,37 @@ class RecipeData(object):
         return file_ids
 
     def get_workspace_id(self):
-        '''Returns the workspace ID in the recipe data
+        """Returns the workspace ID in the recipe data
 
         :returns: The workspace ID
         :rtype: int
-        '''
+        """
 
         return self.data_dict['workspace_id']
 
     def set_workspace_id(self, workspace_id):
-        '''Set the workspace ID in the recipe data.
+        """Set the workspace ID in the recipe data.
 
         :param workspace_id: The new workspace ID
         :type workspace_id: int
 
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the workspace ID is an invalid type
-        '''
+        """
         if not isinstance(workspace_id, Integral):
             raise InvalidRecipeData('Workspace ID must be an integer')
         self.data_dict['workspace_id'] = workspace_id
 
     def get_dict(self):
-        '''Returns the internal dictionary that represents this recipe data
+        """Returns the internal dictionary that represents this recipe data
 
         :returns: The internal dictionary
         :rtype: dict
-        '''
+        """
 
         return self.data_dict
 
     def validate_input_files(self, files):
-        '''Validates the given file parameters to make sure they are valid with respect to the job interface
+        """Validates the given file parameters to make sure they are valid with respect to the job interface
 
         :param files: Dict of file parameter names mapped to a tuple with three items: whether the parameter is required
             (True), if the parameter is for multiple files (True), and the description of the expected file meta-data
@@ -164,7 +164,7 @@ class RecipeData(object):
         :rtype: list[:class:`recipe.configuration.data.recipe_data.ValidationWarning`]
 
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If there is a configuration problem
-        '''
+        """
 
         warnings = []
         for name in files:
@@ -214,7 +214,7 @@ class RecipeData(object):
         return warnings
 
     def validate_properties(self, property_names):
-        '''Validates the given property names to make sure all properties are populated correctly and exist if they are
+        """Validates the given property names to make sure all properties are populated correctly and exist if they are
         required
 
         :param property_names: Dict of property names mapped to a bool indicating if they are required
@@ -223,7 +223,7 @@ class RecipeData(object):
         :rtype: list[:class:`recipe.configuration.data.recipe_data.ValidationWarning`]
 
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If there is a configuration problem
-        '''
+        """
 
         warnings = []
         for name in property_names:
@@ -244,13 +244,13 @@ class RecipeData(object):
         return warnings
 
     def validate_workspace(self):
-        '''Validates the given file parameters to make sure they are valid with respect to the job interface
+        """Validates the given file parameters to make sure they are valid with respect to the job interface
 
         :returns: A list of warnings discovered during validation.
         :rtype: list[:class:`recipe.configuration.data.recipe_data.ValidationWarning`]
 
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If the workspace is missing or invalid
-        '''
+        """
 
         warnings = []
         if not 'workspace_id' in self.data_dict:
@@ -270,7 +270,7 @@ class RecipeData(object):
         return warnings
 
     def _validate_file_ids(self, file_ids, file_desc):
-        '''Validates the files with the given IDs against the given file description
+        """Validates the files with the given IDs against the given file description
 
         :param file_ids: List of file IDs
         :type file_ids: list of long
@@ -280,7 +280,7 @@ class RecipeData(object):
         :rtype: list[:class:`recipe.configuration.data.recipe_data.ValidationWarning`]
 
         :raises :class:`recipe.configuration.data.exceptions.InvalidRecipeData`: If any of the files are missing
-        '''
+        """
 
         warnings = []
         found_ids = set()

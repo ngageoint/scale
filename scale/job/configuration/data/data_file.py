@@ -1,15 +1,17 @@
 """Defines the data file inputs and data file outputs that are contained within job data"""
+from __future__ import unicode_literals
+
 from abc import ABCMeta
 
 
 # The data file parse saver must be registered here
 # The data file parse saver can be registered from another app during its ready() method
-DATA_FILE_PARSE_SAVER = {u'DATA_FILE_PARSE_SAVER': None}
+DATA_FILE_PARSE_SAVER = {'DATA_FILE_PARSE_SAVER': None}
 
 
 # The data file store must be registered here
 # The data file store can be registered from another app during its ready() method
-DATA_FILE_STORE = {u'DATA_FILE_STORE': None}
+DATA_FILE_STORE = {'DATA_FILE_STORE': None}
 
 
 class AbstractDataFileParseSaver(object):

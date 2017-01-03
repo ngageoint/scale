@@ -1,4 +1,4 @@
-'''Defines the models for trigger rules and events'''
+"""Defines the models for trigger rules and events"""
 from __future__ import unicode_literals
 
 import djorm_pgjson.fields
@@ -7,11 +7,11 @@ from django.utils.timezone import now
 
 
 class TriggerEventManager(models.Manager):
-    '''Provides additional methods for handling trigger events
-    '''
+    """Provides additional methods for handling trigger events
+    """
 
     def create_trigger_event(self, trigger_type, rule, description, occurred):
-        '''Creates a new trigger event and returns the event model. The given rule model, if not None, must have already
+        """Creates a new trigger event and returns the event model. The given rule model, if not None, must have already
         been saved in the database (it must have an ID). The returned trigger event model will be saved in the database.
 
         :param trigger_type: The type of the trigger that occurred
@@ -24,7 +24,7 @@ class TriggerEventManager(models.Manager):
         :type occurred: :class:`datetime.datetime`
         :returns: The new trigger event
         :rtype: :class:`trigger.models.TriggerEvent`
-        '''
+        """
 
         if trigger_type is None:
             raise Exception('Trigger event must have a type')
@@ -44,7 +44,7 @@ class TriggerEventManager(models.Manager):
 
 
 class TriggerEvent(models.Model):
-    '''Represents an event where a trigger occurred
+    """Represents an event where a trigger occurred
 
     :keyword type: The type of the trigger that occurred
     :type type: :class:`django.db.models.CharField`
@@ -55,7 +55,7 @@ class TriggerEvent(models.Model):
     :type description: :class:`djorm_pgjson.fields.JSONField`
     :keyword occurred: When the event occurred
     :type occurred: :class:`django.db.models.DateTimeField`
-    '''
+    """
 
     type = models.CharField(db_index=True, max_length=50)
     rule = models.ForeignKey('trigger.TriggerRule', blank=True, null=True, on_delete=models.PROTECT)
@@ -65,21 +65,21 @@ class TriggerEvent(models.Model):
     objects = TriggerEventManager()
 
     class Meta(object):
-        '''meta information for the db'''
+        """meta information for the db"""
         db_table = 'trigger_event'
 
 
 class TriggerRuleManager(models.Manager):
-    '''Provides additional methods for handling trigger rules
-    '''
+    """Provides additional methods for handling trigger rules
+    """
 
     @transaction.atomic
     def archive_trigger_rule(self, trigger_rule_id):
-        '''Archives the trigger rule (will no longer be active) with the given ID
+        """Archives the trigger rule (will no longer be active) with the given ID
 
         :param trigger_rule_id: The ID of the trigger rule to archive
         :type trigger_rule_id: int
-        '''
+        """
 
         rule = TriggerRule.objects.select_for_update().get(pk=trigger_rule_id)
         rule.is_active = False
@@ -87,7 +87,7 @@ class TriggerRuleManager(models.Manager):
         rule.save()
 
     def create_trigger_rule(self, trigger_type, configuration, name='', is_active=True):
-        '''Creates a new trigger rule and returns the rule model. The returned trigger rule model will be saved in the
+        """Creates a new trigger rule and returns the rule model. The returned trigger rule model will be saved in the
         database.
 
         :param trigger_type: The type of this trigger rule
@@ -102,7 +102,7 @@ class TriggerRuleManager(models.Manager):
         :rtype: :class:`trigger.models.TriggerRule`
 
         :raises trigger.configuration.exceptions.InvalidTriggerRule: If the configuration is invalid
-        '''
+        """
 
         if not trigger_type:
             raise Exception('Trigger rule must have a type')
@@ -121,20 +121,20 @@ class TriggerRuleManager(models.Manager):
         return rule
 
     def get_by_natural_key(self, name):
-        '''Django method to retrieve a trigger rule for the given natural key. NOTE: All trigger rule names are NOT
+        """Django method to retrieve a trigger rule for the given natural key. NOTE: All trigger rule names are NOT
         unique. This is implemented to allow the loading of defined system trigger rules which do have unique names.
 
         :param name: The name of the trigger rule
         :type name: str
         :returns: The trigger rule defined by the natural key
         :rtype: :class:`error.models.Error`
-        '''
+        """
 
         return self.get(name=name)
 
 
 class TriggerRule(models.Model):
-    '''Represents a rule that, when triggered, creates a trigger event
+    """Represents a rule that, when triggered, creates a trigger event
 
     :keyword type: The type of the trigger for the rule
     :type type: :class:`django.db.models.CharField`
@@ -153,7 +153,7 @@ class TriggerRule(models.Model):
     :type archived: :class:`django.db.models.DateTimeField`
     :keyword last_modified: When the rule was last modified
     :type last_modified: :class:`django.db.models.DateTimeField`
-    '''
+    """
     type = models.CharField(max_length=50, db_index=True)
     name = models.CharField(blank=True, max_length=50)
 
@@ -167,13 +167,13 @@ class TriggerRule(models.Model):
     objects = TriggerRuleManager()
 
     def get_configuration(self):
-        '''Returns the configuration for this trigger rule
+        """Returns the configuration for this trigger rule
 
         :returns: The configuration for this trigger rule
         :rtype: :class:`trigger.configuration.trigger_rule.TriggerRuleConfiguration`
 
         :raises :class:`trigger.configuration.exceptions.InvalidTriggerType`: If the trigger type is invalid
-        '''
+        """
 
         from trigger.handler import get_trigger_rule_handler
 
@@ -181,14 +181,14 @@ class TriggerRule(models.Model):
         return handler.create_configuration(self.configuration)
 
     def natural_key(self):
-        '''Django method to define the natural key for a trigger rule as the name
+        """Django method to define the natural key for a trigger rule as the name
 
         :returns: A tuple representing the natural key
         :rtype: tuple(str,)
-        '''
+        """
 
         return (self.name,)
 
     class Meta(object):
-        '''meta information for the db'''
+        """meta information for the db"""
         db_table = 'trigger_rule'

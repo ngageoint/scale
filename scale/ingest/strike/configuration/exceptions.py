@@ -1,7 +1,7 @@
-'''Defines exceptions that can occur when interacting with Strike configuration'''
+"""Defines exceptions that can occur when interacting with Strike configuration"""
 
 
 class InvalidStrikeConfiguration(Exception):
-    '''Exception indicating that the provided Strike configuration was invalid
-    '''
+    """Exception indicating that the provided Strike configuration was invalid
+    """
     pass

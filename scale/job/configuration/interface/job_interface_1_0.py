@@ -418,7 +418,7 @@ class JobInterface(object):
         """Ensures that the job_data matches the job_interface description
 
         :param job_data: The job data
-        :type data: :class:`job.configuration.data.job_data.JobData`
+        :type job_data: :class:`job.configuration.data.job_data.JobData`
         :returns: A list of warnings discovered during validation.
         :rtype: list[:class:`job.configuration.data.job_data.ValidationWarning`]
 
@@ -523,7 +523,7 @@ class JobInterface(object):
         returns the full path of that file.
 
         :param dir_path: The directories path
-        :type data: string
+        :type dir_path: string
         :return: The path to the one file in a given directory
         :rtype: str
         """
@@ -584,10 +584,10 @@ class JobInterface(object):
         The parameter will be replaced with the string preceding the colon and the given param value
         will be appended.
 
-        :param command: The command_arguments that you want to perform the replacement on
-        :type command: string
-        :param param_replacements: The parameter you are searching for
-        :type data: dict
+        :param command_arguments: The command_arguments that you want to perform the replacement on
+        :type command_arguments: string
+        :param param_replacements: The parameters you are searching for
+        :type param_replacements: dict
         :return: The string with all replacements made
         :rtype: str
         """
@@ -639,7 +639,7 @@ class JobInterface(object):
                             found_match = True
                             break
 
-            #Look for system properties
+            # Look for system properties
             if param == 'job_output_dir':
                 found_match = True
 

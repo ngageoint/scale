@@ -12,6 +12,7 @@ from error.models import Error
 from job.execution.running.tasks.job_task import JobTask
 from job.execution.running.tasks.post_task import PostTask
 from job.execution.running.tasks.pre_task import PreTask
+from job.execution.running.tasks.update import TaskStatusUpdate
 from job.models import JobExecution
 from util.retry import retry_database_query
 
@@ -163,6 +164,20 @@ class RunningJobExecution(object):
             self._remaining_tasks = []
             return task
 
+    def get_container_names(self):
+        """Returns the list of container names for all tasks in this job execution
+
+        :returns: The list of all container names
+        :rtype: [string]
+        """
+
+        containers = []
+        with self._lock:
+            for task in self._all_tasks:
+                if task.container_name:
+                    containers.append(task.container_name)
+            return containers
+
     def is_finished(self):
         """Indicates whether this job execution is finished with all tasks
 
@@ -213,23 +228,39 @@ class RunningJobExecution(object):
             self._current_task = self._remaining_tasks.pop(0)
             return self._current_task
 
+    def task_update(self, task_update):
+        """Updates a task for this job execution
+
+        :param task_update: The task update
+        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
+        """
+
+        if task_update.status == TaskStatusUpdate.RUNNING:
+            self._task_start(task_update)
+        elif task_update.status == TaskStatusUpdate.FINISHED:
+            self._task_complete(task_update)
+        elif task_update.status == TaskStatusUpdate.LOST:
+            self._task_lost(task_update)
+        elif task_update.status in [TaskStatusUpdate.FAILED, TaskStatusUpdate.KILLED]:
+            self._task_fail(task_update)
+
     @retry_database_query
-    def task_complete(self, task_results):
+    def _task_complete(self, task_update):
         """Completes a task for this job execution
 
-        :param task_results: The task results
-        :type task_results: :class:`job.execution.running.tasks.results.TaskResults`
+        :param task_update: The task update
+        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
         """
 
         with self._lock:
             current_task = self._current_task
             remaining_tasks = self._remaining_tasks
 
-        if not current_task or current_task.id != task_results.task_id:
+        if not current_task or current_task.id != task_update.task_id:
             return
 
         with transaction.atomic():
-            need_refresh = current_task.complete(task_results)
+            need_refresh = current_task.complete(task_update)
             if need_refresh and remaining_tasks:
                 job_exe = JobExecution.objects.get(id=self._id)
                 for task in remaining_tasks:
@@ -239,25 +270,24 @@ class RunningJobExecution(object):
                 Queue.objects.handle_job_completion(self._id, now(), self._all_tasks)
 
         with self._lock:
-            if self._current_task and self._current_task.id == task_results.task_id:
+            if self._current_task and self._current_task.id == task_update.task_id:
                 self._current_task = None
 
     @retry_database_query
-    def task_fail(self, task_results, error=None):
+    def _task_fail(self, task_update):
         """Fails a task for this job execution
 
-        :param task_results: The task results
-        :type task_results: :class:`job.execution.running.tasks.results.TaskResults`
-        :param error: The error that caused this task to fail, possibly None
-        :type error: :class:`error.models.Error`
+        :param task_update: The task update
+        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
         """
 
         current_task = self._current_task
-        if not current_task or current_task.id != task_results.task_id:
+        if not current_task or current_task.id != task_update.task_id:
             return
 
         with transaction.atomic():
-            error = current_task.fail(task_results, error)
+            current_task.update(task_update)
+            error = current_task.determine_error(task_update)
             from queue.models import Queue
             Queue.objects.handle_job_failure(self._id, now(), self._all_tasks, error)
 
@@ -290,33 +320,31 @@ class RunningJobExecution(object):
             self._current_task = None
             self._remaining_tasks = []
 
-    def task_lost(self, task_id):
+    def _task_lost(self, task_update):
         """Tells this job execution that one of its tasks was lost
 
-        :param task_id: The ID of the task
-        :type task_id: string
+        :param task_update: The task update
+        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
         """
 
         with self._lock:
-            if not self._current_task or self._current_task.id != task_id:
+            if not self._current_task or self._current_task.id != task_update.task_id:
                 return
 
-            self._current_task.lost()
+            self._current_task.update(task_update)
             self._remaining_tasks.insert(0, self._current_task)
             self._current_task = None
 
     @retry_database_query
-    def task_start(self, task_id, when):
+    def _task_start(self, task_update):
         """Tells this job execution that one of its tasks has started running
 
-        :param task_id: The ID of the task
-        :type task_id: str
-        :param when: The time that the task started running
-        :type when: :class:`datetime.datetime`
+        :param task_update: The task update
+        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
         """
 
         current_task = self._current_task
-        if not current_task or current_task.id != task_id:
+        if not current_task or current_task.id != task_update.task_id:
             return
 
-        current_task.start(when)
+        current_task.update(task_update)

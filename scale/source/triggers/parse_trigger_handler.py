@@ -1,4 +1,4 @@
-'''Defines the class that handles parse trigger rules'''
+"""Defines the class that handles parse trigger rules"""
 from __future__ import unicode_literals
 
 import logging
@@ -23,29 +23,29 @@ PARSE_TYPE = 'PARSE'
 
 
 class ParseTriggerHandler(TriggerRuleHandler):
-    '''Handles parse trigger rules
-    '''
+    """Handles parse trigger rules
+    """
 
     def __init__(self):
-        '''Constructor
-        '''
+        """Constructor
+        """
 
         super(ParseTriggerHandler, self).__init__(PARSE_TYPE)
 
     def create_configuration(self, config_dict):
-        '''See :meth:`trigger.handler.TriggerRuleHandler.create_configuration`
-        '''
+        """See :meth:`trigger.handler.TriggerRuleHandler.create_configuration`
+        """
 
         return ParseTriggerRuleConfiguration(PARSE_TYPE, config_dict)
 
     @transaction.atomic
     def process_parsed_source_file(self, source_file):
-        '''Processes the given parsed source file by checking it against all parse trigger rules and creating the
+        """Processes the given parsed source file by checking it against all parse trigger rules and creating the
         corresponding jobs and recipes for any triggered rules. All database changes are made in an atomic transaction.
 
         :param source_file: The source file that was parsed
         :type source_file: :class:`source.models.SourceFile`
-        '''
+        """
 
         msg = 'Processing trigger rules for parsed source file with media type %s and data types %s'
         logger.info(msg, source_file.media_type, str(list(source_file.get_data_type_tags())))
@@ -83,7 +83,7 @@ class ParseTriggerHandler(TriggerRuleHandler):
             logger.info('No rules triggered')
 
     def _create_parse_trigger_event(self, source_file, trigger_rule):
-        '''Creates in the database and returns a trigger event model for the given parsed source file and trigger rule
+        """Creates in the database and returns a trigger event model for the given parsed source file and trigger rule
 
         :param source_file: The source file that was parsed
         :type source_file: :class:`source.models.SourceFile`
@@ -93,7 +93,7 @@ class ParseTriggerHandler(TriggerRuleHandler):
         :rtype: :class:`trigger.models.TriggerEvent`
 
         :raises trigger.configuration.exceptions.InvalidTriggerRule: If the configuration is invalid
-        '''
+        """
 
         description = {'version': '1.0', 'file_id': source_file.id, 'file_name': source_file.file_name}
         return TriggerEvent.objects.create_trigger_event(PARSE_TYPE, trigger_rule, description, source_file.parsed)

@@ -1,4 +1,4 @@
-'''Defines the URLs for the RESTful recipe services'''
+"""Defines the URLs for the RESTful recipe services"""
 from django.conf.urls import patterns, url
 
 import error.views

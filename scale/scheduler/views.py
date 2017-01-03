@@ -1,4 +1,6 @@
 """Scheduler Views"""
+from __future__ import unicode_literals
+
 import logging
 
 import rest_framework.status as status
@@ -18,7 +20,7 @@ class SchedulerView(GenericAPIView):
     """This view is the endpoint for viewing and modifying the scheduler"""
     queryset = Scheduler.objects.all()
     serializer_class = SchedulerSerializer
-    update_fields = (u'is_paused', )
+    update_fields = ('is_paused', )
 
     def get(self, request):
         """Gets scheduler info
@@ -47,9 +49,9 @@ class SchedulerView(GenericAPIView):
         """
         extra = filter(lambda x, y=self.update_fields: x not in y, request.data.keys())
         if len(extra) > 0:
-            return Response(u'Unexpected fields: %s' % ', '.join(extra), status=status.HTTP_400_BAD_REQUEST)
+            return Response('Unexpected fields: %s' % ', '.join(extra), status=status.HTTP_400_BAD_REQUEST)
         if len(request.data) == 0:
-            return Response(u'No fields specified for update.', status=status.HTTP_400_BAD_REQUEST)
+            return Response('No fields specified for update.', status=status.HTTP_400_BAD_REQUEST)
         try:
             Scheduler.objects.update_scheduler(dict(request.data))
             scheduler = Scheduler.objects.get_master()

@@ -7,7 +7,9 @@ from django.conf import settings
 
 from error.models import Error
 from job.execution.running.tasks.base_task import Task
-from util.exceptions import ScaleLogicBug
+
+
+JOB_TASK_ID_PREFIX = 'scale_job'
 
 
 class JobExecutionTask(Task):
@@ -51,24 +53,24 @@ class JobExecutionTask(Task):
 
         return self._job_exe_id
 
-    def complete(self, task_results):
+    def complete(self, task_update):
         """Completes this task and indicates whether following tasks should update their cached job execution values
 
-        :param task_results: The task results
-        :type task_results: :class:`job.execution.running.tasks.results.TaskResults`
+        :param task_update: The task update
+        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
         :returns: True if following tasks should update their cached job execution values, False otherwise
         :rtype: bool
         """
 
         with self._lock:
-            if self._task_id != task_results.task_id:
+            if self._task_id != task_update.task_id:
                 return
 
             # Support duplicate calls to complete(), task updates may repeat
             self._has_ended = True
-            self._ended = task_results.when
-            self._exit_code = task_results.exit_code
-            self._last_status_update = task_results.when
+            self._ended = task_update.timestamp
+            self._exit_code = task_update.exit_code
+            self._last_status_update = task_update.timestamp
 
             return False
 
@@ -82,30 +84,16 @@ class JobExecutionTask(Task):
         return '%s:%s' % (settings.SCALE_DOCKER_IMAGE, settings.DOCKER_VERSION)
 
     @abstractmethod
-    def fail(self, task_results, error=None):
-        """Fails this task, possibly returning error information
+    def determine_error(self, task_update):
+        """Attempts to determine the error that caused this task to fail
 
-        :param task_results: The task results
-        :type task_results: :class:`job.execution.running.tasks.results.TaskResults`
-        :param error: The error that caused this task to fail, possibly None
-        :type error: :class:`error.models.Error`
+        :param task_update: The task update
+        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
         :returns: The error that caused this task to fail, possibly None
         :rtype: :class:`error.models.Error`
         """
 
         raise NotImplementedError()
-
-    def lost(self):
-        """Indicates that this task was lost
-        """
-
-        with self._lock:
-            if not self._has_ended:
-                self._has_been_launched = False
-                self._launched = None
-                self._last_status_update = None
-                self._has_started = False
-                self._started = None
 
     @abstractmethod
     def populate_job_exe_model(self, job_exe):
@@ -126,31 +114,13 @@ class JobExecutionTask(Task):
 
         pass
 
-    def start(self, when):
-        """Starts this task and marks it as running
-
-        :param when: The time that the task started running
-        :type when: :class:`datetime.datetime`
-
-        :raises :class:`util.exceptions.ScaleLogicBug`: If the task has already ended
-        """
-
-        with self._lock:
-            if self._has_ended:
-                raise ScaleLogicBug('Trying to start a task that has already ended')
-
-            # Support duplicate calls to start(), task updates may repeat
-            self._has_started = True
-            self._started = when
-            self._last_status_update = when
-
-    def _consider_general_error(self, task_results):
-        """Looks at the task results and considers a general task error for the cause of the failure. This is the
+    def _consider_general_error(self, task_update):
+        """Looks at the task update and considers a general task error for the cause of the failure. This is the
         'catch-all' option for specific task types (pre, job, post) to try if they cannot determine a specific error. If
         this method cannot determine an error cause, None will be returned. Caller must have obtained the task lock.
 
-        :param task_results: The task results
-        :type task_results: :class:`job.execution.running.tasks.results.TaskResults`
+        :param task_update: The task update
+        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
         :returns: The error that caused this task to fail, possibly None
         :rtype: :class:`error.models.Error`
         """
@@ -160,4 +130,7 @@ class JobExecutionTask(Task):
                 return Error.objects.get_builtin_error('docker-task-launch')
             else:
                 return Error.objects.get_builtin_error('task-launch')
+        else:
+            if task_update.reason == 'REASON_EXECUTOR_TERMINATED' and self._uses_docker:
+                return Error.objects.get_builtin_error('docker-terminated')
         return None

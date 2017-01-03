@@ -1,4 +1,4 @@
-'''Defines the URLs for the RESTful import/export services'''
+"""Defines the URLs for the RESTful import/export services"""
 from django.conf.urls import patterns, url
 
 import port.views

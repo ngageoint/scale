@@ -1,13 +1,15 @@
 """Defines the application configuration for the queue application"""
+from __future__ import unicode_literals
+
 from django.apps import AppConfig
 
 
 class QueueConfig(AppConfig):
     """Configuration for the queue app
     """
-    name = u'queue'
-    label = u'queue'
-    verbose_name = u'Queue'
+    name = 'queue'
+    label = 'queue'
+    verbose_name = 'Queue'
 
     def ready(self):
         """Registers the job load metrics processor with the clock system."""

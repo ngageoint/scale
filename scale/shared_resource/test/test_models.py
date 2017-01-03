@@ -1,4 +1,5 @@
-#@PydevCodeAnalysisIgnore
+from __future__ import unicode_literals
+
 import django
 from django.test import TestCase
 
@@ -44,10 +45,10 @@ class SharedResourceManagerTest(TestCase):
     def testResourceRemainingNone(self):
         remaining = SharedResource.objects.get_resource_remaining(self.resource_no_limit)
 
-        self.assertIsNone(remaining, u'A resource with no limit should return None Remaining')
+        self.assertIsNone(remaining, 'A resource with no limit should return None Remaining')
 
     def testResourcesRemainingNoJobs(self):
-        '''A resource with no jobs using it should have the limit remaining'''
+        """A resource with no jobs using it should have the limit remaining"""
         remaining = SharedResource.objects.get_resource_remaining(self.resource_1)
 
         self.assertEqual(remaining, RESOURCE_LIMIT)

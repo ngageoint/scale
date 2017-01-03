@@ -21,9 +21,11 @@ from job.configuration.data.job_data import JobData
 from job.configuration.environment.job_environment import JobEnvironment
 from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.job_interface import JobInterface
+from job.configuration.interface.job_type_configuration import JobTypeConfiguration
 from job.configuration.results.job_results import JobResults
 from job.exceptions import InvalidJobField
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
+from job.execution.running.tasks.exe_task import JOB_TASK_ID_PREFIX
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
 from storage.models import ScaleFile, Workspace
 from trigger.configuration.exceptions import InvalidTriggerType
@@ -1270,6 +1272,9 @@ class JobExecution(models.Model):
         # Setup task logging
         configuration.configure_logging_docker_params(self)
 
+        # Populate job_configuration with default settings
+        configuration.populate_default_job_settings(self)
+
         # Pass database connection details from scheduler as environment variables
         db = settings.DATABASES['default']
         db_name = DockerParam('env', 'SCALE_DB_NAME=' + db['NAME'])
@@ -1308,6 +1313,11 @@ class JobExecution(models.Model):
         # Configure any Docker parameters needed for workspaces
         configuration.configure_workspace_docker_params(self, workspaces, docker_volumes)
 
+        # Configure docker paramters listed in database
+        if self.job.job_type.docker_params:
+            for key, value in self.job.job_type.docker_params:
+                configuration.add_job_task_docker_param(DockerParam(key, value))
+        
         # Add job environment variable as docker parameters
         interface = self.get_job_interface()
         env_vars = interface.populate_env_vars_arguments(configuration)
@@ -1357,6 +1367,15 @@ class JobExecution(models.Model):
         """
 
         return self.job.job_type.get_error_interface()
+
+    def get_job_type_configuration(self):
+        """Returns the configuration interface for this job execution
+
+        :returns: The configuration interface for this job execution
+        :rtype: :class:`job.configuration.interface.job_configuration.JobTypeConfiguration`
+        """
+
+        return self.job.job_type.get_job_type_configuration()
 
     def get_job_configuration(self):
         """Returns the configuration for this job
@@ -1566,7 +1585,7 @@ class JobExecution(models.Model):
         """
 
         # Cluster ID is created from framework ID and job execution ID
-        self.cluster_id = 'scale_%s_%d' % (framework_id, self.pk)
+        self.cluster_id = '%s_%s_%d' % (JOB_TASK_ID_PREFIX, framework_id, self.pk)
 
     def uses_docker(self):
         """Indicates whether this job execution uses Docker
@@ -2200,6 +2219,9 @@ class JobType(models.Model):
     :keyword trigger_rule: The rule to trigger new jobs of this type
     :type trigger_rule: :class:`django.db.models.ForeignKey`
 
+    :keyword configuration: JSON array which will be passed as-is to the job configuration
+    :type configuration: :class:`djorm_pgjson.fields.JSONField`
+
     :keyword priority: The priority of the job type (lower number is higher priority)
     :type priority: :class:`django.db.models.IntegerField`
     :keyword max_scheduled: The maximum number of jobs of this type that may be scheduled to run at the same time
@@ -2261,6 +2283,8 @@ class JobType(models.Model):
     error_mapping = djorm_pgjson.fields.JSONField()
     trigger_rule = models.ForeignKey('trigger.TriggerRule', blank=True, null=True, on_delete=models.PROTECT)
 
+    configuration = djorm_pgjson.fields.JSONField(null=True)
+
     priority = models.IntegerField(default=100)
     max_scheduled = models.IntegerField(blank=True, null=True)
     timeout = models.IntegerField(default=1800)
@@ -2293,6 +2317,11 @@ class JobType(models.Model):
         stderr/stdout expression to an error type"""
 
         return ErrorInterface(self.error_mapping)
+
+    def get_job_type_configuration(self):
+        """Returns the interface for the default configuration"""
+
+        return JobTypeConfiguration(self.configuration)
 
     def natural_key(self):
         """Django method to define the natural key for a job type as the
@@ -2402,7 +2431,7 @@ class JobTypeRevision(models.Model):
 
 
 class TaskUpdate(models.Model):
-    """Represents a status update received for a job execution task
+    """Represents a status update received for a task
 
     :keyword job_exe: The job execution that the task belongs to
     :type job_exe: :class:`django.db.models.ForeignKey`

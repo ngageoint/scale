@@ -8,12 +8,11 @@ import threading
 from django.db import DatabaseError
 from django.utils.timezone import now
 from mesos.interface import Scheduler as MesosScheduler
-from mesos.interface import mesos_pb2
 
 from error.models import Error
 from job.execution.running.manager import running_job_mgr
 from job.execution.running.tasks.cleanup_task import CLEANUP_TASK_ID_PREFIX
-from job.execution.running.tasks.results import TaskResults
+from job.execution.running.tasks.update import TaskStatusUpdate
 from job.models import JobExecution
 from job.resources import NodeResources
 from mesos_api import utils
@@ -25,14 +24,14 @@ from scheduler.node.manager import node_mgr
 from scheduler.offer.manager import offer_mgr
 from scheduler.offer.offer import ResourceOffer
 from scheduler.recon.manager import recon_mgr
-from scheduler.status.manager import task_update_mgr
 from scheduler.sync.job_type_manager import job_type_mgr
 from scheduler.sync.scheduler_manager import scheduler_mgr
 from scheduler.sync.workspace_manager import workspace_mgr
+from scheduler.task.manager import task_update_mgr
 from scheduler.threads.db_sync import DatabaseSyncThread
 from scheduler.threads.recon import ReconciliationThread
 from scheduler.threads.schedule import SchedulingThread
-from scheduler.threads.status import StatusUpdateThread
+from scheduler.threads.status import TaskUpdateThread
 from util.host import HostAddress
 
 
@@ -60,7 +59,7 @@ class ScaleScheduler(MesosScheduler):
         self._db_sync_thread = None
         self._recon_thread = None
         self._scheduling_thread = None
-        self._status_thread = None
+        self._task_thread = None
 
     def registered(self, driver, frameworkId, masterInfo):
         """
@@ -105,10 +104,10 @@ class ScaleScheduler(MesosScheduler):
         scheduling_thread.daemon = True
         scheduling_thread.start()
 
-        self._status_thread = StatusUpdateThread()
-        status_thread = threading.Thread(target=self._status_thread.run)
-        status_thread.daemon = True
-        status_thread.start()
+        self._task_thread = TaskUpdateThread()
+        task_thread = threading.Thread(target=self._task_thread.run)
+        task_thread.daemon = True
+        task_thread.start()
 
         self._reconcile_running_jobs()
 
@@ -240,42 +239,32 @@ class ScaleScheduler(MesosScheduler):
 
         started = now()
 
-        task_id = status.task_id.value
-        if status.state == mesos_pb2.TASK_LOST:
-            logger.warning('Status update for task %s: %s', task_id, utils.get_status_state(status))
+        model = utils.create_task_update_model(status)
+        mesos_status = model.status
+        task_update = TaskStatusUpdate(model, utils.get_status_agent_id(status), utils.get_status_data(status))
+        task_id = task_update.task_id
+
+        if mesos_status == 'TASK_LOST':
+            logger.warning('Status update for task %s: %s', task_id, mesos_status)
         else:
-            logger.info('Status update for task %s: %s', task_id, utils.get_status_state(status))
+            logger.info('Status update for task %s: %s', task_id, mesos_status)
 
         # Since we have a status update for this task, remove it from reconciliation set
         recon_mgr.remove_task_id(task_id)
 
+        # Hand off task update to be saved in the database
+        task_update_mgr.add_task_update(model)
+
         if task_id.startswith(CLEANUP_TASK_ID_PREFIX):
-            # Handle status update for cleanup task
-            update = utils.create_task_status_update(status)
-            cleanup_mgr.handle_task_update(update)
+            cleanup_mgr.handle_task_update(task_update)
         else:
-            # Handle status update for job execution task
-            task_update_mgr.add_status_update(status)
             job_exe_id = JobExecution.get_job_exe_id(task_id)
 
             try:
                 running_job_exe = running_job_mgr.get_job_exe(job_exe_id)
 
                 if running_job_exe:
-                    results = TaskResults(task_id)
-                    results.exit_code = utils.parse_exit_code(status)
-                    results.when = utils.get_status_timestamp(status)
-                    # Apply status update to running job execution
-                    if status.state == mesos_pb2.TASK_RUNNING:
-                        running_job_exe.task_start(task_id, results.when)
-                    elif status.state == mesos_pb2.TASK_FINISHED:
-                        if results.exit_code is None:
-                            results.exit_code = 0
-                        running_job_exe.task_complete(results)
-                    elif status.state == mesos_pb2.TASK_LOST:
-                        running_job_exe.task_lost(task_id)
-                    elif status.state in [mesos_pb2.TASK_ERROR, mesos_pb2.TASK_FAILED, mesos_pb2.TASK_KILLED]:
-                        running_job_exe.task_fail(results)
+                    running_job_exe.task_update(task_update)
 
                     # Remove finished job execution
                     if running_job_exe.is_finished():
@@ -413,7 +402,7 @@ class ScaleScheduler(MesosScheduler):
         self._db_sync_thread.shutdown()
         self._recon_thread.shutdown()
         self._scheduling_thread.shutdown()
-        self._status_thread.shutdown()
+        self._task_thread.shutdown()
 
     def _reconcile_running_jobs(self):
         """Looks up all currently running jobs in the database and sets them up to be reconciled with Mesos"""

@@ -1,4 +1,5 @@
-#@PydevCodeAnalysisIgnore
+from __future__ import unicode_literals
+
 import django
  
 from django.test import TestCase
@@ -29,7 +30,7 @@ class TestResultsManifestConstructor(TestCase):
             #This should not throw an exception since it is valid
             ResultsManifest(json_manifest)
         except InvalidResultsManifest:
-            self.fail(u'This simple json_manifest is valid')
+            self.fail('This simple json_manifest is valid')
  
     def test_manifest_supports_file_with_paths(self):
         json_manifest = {
@@ -42,7 +43,7 @@ class TestResultsManifestConstructor(TestCase):
             #This should not throw an exception since it is valid
             ResultsManifest(json_manifest)
         except InvalidResultsManifest:
-            self.fail(u'This simple json_manifest is valid')
+            self.fail('This simple json_manifest is valid')
  
     def test_invalid_results_manifest(self):
         json_manifest = {
@@ -53,7 +54,7 @@ class TestResultsManifestConstructor(TestCase):
         }
         try:
             ResultsManifest(json_manifest)
-            self.fail(u'files in a results manifest should not have both path and paths')
+            self.fail('files in a results manifest should not have both path and paths')
         except InvalidResultsManifest:
             #This should throw an exception since it is invalid
             pass
@@ -172,7 +173,7 @@ class TestResultsManifestValidation(TestCase):
         manifest = ResultsManifest(json_manifest)
         try:
             manifest.validate(output_files)
-            self.fail(u'The outputs do not match the manifest, there should be a failure')
+            self.fail('The outputs do not match the manifest, there should be a failure')
         except MissingRequiredOutput:
             pass
  
@@ -194,7 +195,7 @@ class TestResultsManifestValidation(TestCase):
         try:
             manifest.validate(output_files)
         except MissingRequiredOutput:
-            self.fail(u'The missing an optional file')
+            self.fail('The missing an optional file')
  
     def test_missing_required_is_bad(self):
         json_manifest = {
@@ -213,7 +214,7 @@ class TestResultsManifestValidation(TestCase):
         manifest = ResultsManifest(json_manifest)
         try:
             manifest.validate(output_files)
-            self.fail(u'There is a missing required file.  Validation should have failed')
+            self.fail('There is a missing required file.  Validation should have failed')
         except MissingRequiredOutput:
             pass
 

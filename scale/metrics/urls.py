@@ -1,4 +1,4 @@
-'''Defines the URLs for the RESTful metrics services'''
+"""Defines the URLs for the RESTful metrics services"""
 from django.conf.urls import patterns, url
 
 import metrics.views

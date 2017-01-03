@@ -15,7 +15,7 @@ def create_error(name=None, title=None, description='Test error description', ca
 
     if not name:
         global NAME_COUNTER
-        name = u'error-%i' % NAME_COUNTER
+        name = 'error-%i' % NAME_COUNTER
         NAME_COUNTER += 1
 
     return Error.objects.create(name=name, title=title, description=description, category=category,

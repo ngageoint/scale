@@ -1,8 +1,8 @@
-#@PydevCodeAnalysisIgnore
+from __future__ import unicode_literals
 
 import django
 from django.test import TestCase
-from mock import MagicMock, patch
+from mock import MagicMock
 
 from job.configuration.results.job_results import JobResults
 
@@ -13,11 +13,11 @@ class TestJobResultsAddOutputToData(TestCase):
         django.setup()
 
     def test_successful_file(self):
-        '''Tests calling JobResults.add_output_to_data() successfully with a file parameter'''
+        """Tests calling JobResults.add_output_to_data() successfully with a file parameter"""
 
-        output_name = u'foo'
+        output_name = 'foo'
         file_id = 1337
-        input_name = u'bar'
+        input_name = 'bar'
 
         results = JobResults()
         results.add_file_parameter(output_name, file_id)
@@ -27,11 +27,11 @@ class TestJobResultsAddOutputToData(TestCase):
         job_data.add_file_input.assert_called_with(input_name, file_id)
 
     def test_successful_file_list(self):
-        '''Tests calling JobResults.add_output_to_data() successfully with a file list parameter'''
+        """Tests calling JobResults.add_output_to_data() successfully with a file list parameter"""
 
-        output_name = u'foo'
+        output_name = 'foo'
         file_ids = [1, 2, 3, 4]
-        input_name = u'bar'
+        input_name = 'bar'
 
         results = JobResults()
         results.add_file_list_parameter(output_name, file_ids)

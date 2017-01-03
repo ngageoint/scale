@@ -1,4 +1,4 @@
-#@PydevCodeAnalysisIgnore
+from __future__ import unicode_literals
 
 import django
 from django.test import TestCase
@@ -10,7 +10,7 @@ from product.queue_processor import ProductProcessor
 
 
 class TestProductProcessor(TestCase):
-    '''Tests handling queue events when job executions change state.'''
+    """Tests handling queue events when job executions change state."""
 
     def setUp(self):
         django.setup()
@@ -18,19 +18,19 @@ class TestProductProcessor(TestCase):
         self.processor = ProductProcessor()
 
         data = {
-            u'input_data': [{
-                u'name': u'Param1',
-                u'file_id': 1,
+            'input_data': [{
+                'name': 'Param1',
+                'file_id': 1,
             }, {
-                u'name': u'Param2',
-                u'file_id': 2,
+                'name': 'Param2',
+                'file_id': 2,
             }]
         }
         self.job = job_test_utils.create_job(data=data)
         self.job_exe = job_test_utils.create_job_exe(job=self.job)
 
     def test_queued_initial(self):
-        '''Tests file ancestry links are created for input files when a job is first queued.'''
+        """Tests file ancestry links are created for input files when a job is first queued."""
         self.processor.process_queued(self.job_exe, True)
 
         results = FileAncestryLink.objects.all()
@@ -39,14 +39,14 @@ class TestProductProcessor(TestCase):
         self.assertIsNone(results[1].descendant)
 
     def test_queued_repeat(self):
-        '''Tests nothing is done when a job is queued more than once.'''
+        """Tests nothing is done when a job is queued more than once."""
         self.processor.process_queued(self.job_exe, False)
 
         self.assertEqual(len(FileAncestryLink.objects.all()), 0)
 
     @patch('product.queue_processor.ProductFile')
     def test_completed(self, mock_ProductFile):
-        '''Tests products are published when a job is completed.'''
+        """Tests products are published when a job is completed."""
         self.processor.process_completed(self.job_exe)
 
         self.assertTrue(mock_ProductFile.objects.publish_products.called)

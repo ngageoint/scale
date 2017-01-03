@@ -1,4 +1,4 @@
-'''Defines the functions used to import configuration'''
+"""Defines the functions used to import configuration"""
 from __future__ import unicode_literals
 
 import logging
@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 
 
 def validate_config(config_dict):
-    '''Validates a configuration export for any potential errors or warnings.
+    """Validates a configuration export for any potential errors or warnings.
 
     :param config_dict: A dictionary of configuration changes to validate.
     :type config_dict: dict
@@ -37,10 +37,10 @@ def validate_config(config_dict):
     :rtype: list[:class:`port.schema.ValidationWarning`]
 
     :raises :class:`port.schema.InvalidConfiguration`: If any part of the configuration violates the specification.
-    '''
+    """
 
     class Validated(Exception):
-        '''This exception is used to abort the import transaction so that no actual changes are made.'''
+        """This exception is used to abort the import transaction so that no actual changes are made."""
         pass
 
     warnings = []
@@ -58,7 +58,7 @@ def validate_config(config_dict):
 
 @transaction.atomic()
 def import_config(config_dict):
-    '''Applies a previously exported configuration to the current system.
+    """Applies a previously exported configuration to the current system.
 
     :param config_dict: A dictionary of configuration changes to validate.
     :type config_dict: dict
@@ -66,12 +66,12 @@ def import_config(config_dict):
     :rtype: list[:class:`port.schema.ValidationWarning`]
 
     :raises :class:`port.schema.InvalidConfiguration`: If any part of the configuration violates the specification.
-    '''
+    """
     return _import_config(config_dict)
 
 
 def _import_config(config_dict):
-    '''Applies a previously exported configuration to the current system.
+    """Applies a previously exported configuration to the current system.
 
     This method only exists to decouple the import logic from the atomic transaction so that this method can be reused
     for validation without making any permanent changes.
@@ -82,7 +82,7 @@ def _import_config(config_dict):
     :rtype: list[:class:`port.schema.ValidationWarning`]
 
     :raises :class:`port.schema.InvalidConfiguration`: If any part of the configuration violates the specification.
-    '''
+    """
     warnings = []
 
     # Validate the top-level configuration structure
@@ -119,7 +119,7 @@ def _import_config(config_dict):
 
 
 def _build_recipe_type_map(recipe_type_dicts):
-    '''Builds a mapping of recipe type keys (name, version) to existing recipe type models.
+    """Builds a mapping of recipe type keys (name, version) to existing recipe type models.
 
     This method acquires a row-level lock on existing models that need to be updated.
 
@@ -129,7 +129,7 @@ def _build_recipe_type_map(recipe_type_dicts):
     :rtype: dict[tuple(string, string), :class:`recipe.models.RecipeType`]
 
     :raises :class:`port.schema.InvalidConfiguration`: If any part of the configuration violates the specification.
-    '''
+    """
     if not recipe_type_dicts:
         return {}
 
@@ -162,7 +162,7 @@ def _build_recipe_type_map(recipe_type_dicts):
 
 
 def _build_job_type_map(job_type_dicts):
-    '''Builds a mapping of job type keys (name, version) to existing job type models.
+    """Builds a mapping of job type keys (name, version) to existing job type models.
 
     This method acquires a row-level lock on existing models that need to be updated.
 
@@ -172,7 +172,7 @@ def _build_job_type_map(job_type_dicts):
     :rtype: dict[tuple(string, string), :class:`job.models.JobType`]
 
     :raises :class:`port.schema.InvalidConfiguration`: If any part of the configuration violates the specification.
-    '''
+    """
     if not job_type_dicts:
         return {}
 
@@ -208,7 +208,7 @@ def _build_job_type_map(job_type_dicts):
 
 
 def _build_error_map(error_dicts):
-    '''Builds a mapping of error name to existing error models.
+    """Builds a mapping of error name to existing error models.
 
     This method acquires a row-level lock on existing models that need to be updated.
 
@@ -218,7 +218,7 @@ def _build_error_map(error_dicts):
     :rtype: dict[string, :class:`error.models.Error`]
 
     :raises :class:`port.schema.InvalidConfiguration`: If any part of the configuration violates the specification.
-    '''
+    """
     if not error_dicts:
         return {}
 
@@ -240,7 +240,7 @@ def _build_error_map(error_dicts):
 
 
 def _import_recipe_type(recipe_type_dict, recipe_type=None):
-    '''Attempts to apply the given recipe types configuration to the system.
+    """Attempts to apply the given recipe types configuration to the system.
 
     Note that proper model locking must be performed before calling this method.
 
@@ -252,7 +252,7 @@ def _import_recipe_type(recipe_type_dict, recipe_type=None):
     :rtype: list[:class:`port.schema.ValidationWarning`]
 
     :raises :class:`port.schema.InvalidConfiguration`: If any part of the configuration violates the specification.
-    '''
+    """
     warnings = []
 
     # Parse the JSON content into validated model fields
@@ -316,7 +316,7 @@ def _import_recipe_type(recipe_type_dict, recipe_type=None):
 
 
 def _import_job_type(job_type_dict, job_type=None):
-    '''Attempts to apply the given job types configuration to the system.
+    """Attempts to apply the given job types configuration to the system.
 
     Note that proper model locking must be performed before calling this method.
 
@@ -328,7 +328,7 @@ def _import_job_type(job_type_dict, job_type=None):
     :rtype: list[:class:`port.schema.ValidationWarning`]
 
     :raises :class:`port.schema.InvalidConfiguration`: If any part of the configuration violates the specification.
-    '''
+    """
     warnings = []
 
     # Parse the JSON content into validated model fields
@@ -420,7 +420,7 @@ def _import_job_type(job_type_dict, job_type=None):
 
 
 def _import_error(error_dict, error=None):
-    '''Attempts to apply the given error configuration to the system.
+    """Attempts to apply the given error configuration to the system.
 
     Note that proper model locking must be performed before calling this method.
 
@@ -432,7 +432,7 @@ def _import_error(error_dict, error=None):
     :rtype: list[:class:`port.schema.ValidationWarning`]
 
     :raises :class:`port.schema.InvalidConfiguration`: If any part of the configuration violates the specification.
-    '''
+    """
     warnings = []
 
     # Parse the JSON content and merge the fields into a model

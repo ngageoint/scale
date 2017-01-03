@@ -1,4 +1,4 @@
-'''Defines the functions used to export configuration'''
+"""Defines the functions used to export configuration"""
 from __future__ import unicode_literals
 
 import logging
@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 def get_recipe_types(recipe_type_ids=None, recipe_type_names=None):
-    '''Exports all the recipe types in the system based on the given filters.
+    """Exports all the recipe types in the system based on the given filters.
 
     :param recipe_type_ids: A list of unique recipe type identifiers to include.
     :type recipe_type_ids: list[str]
@@ -23,7 +23,7 @@ def get_recipe_types(recipe_type_ids=None, recipe_type_names=None):
     :type recipe_type_names: list[str]
     :returns: A list of matching recipe types.
     :rtype: list[:class:`recipe.models.RecipeType`]
-    '''
+    """
     recipe_types = RecipeType.objects.all().select_related('trigger_rule')
 
     if recipe_type_ids:
@@ -35,7 +35,7 @@ def get_recipe_types(recipe_type_ids=None, recipe_type_names=None):
 
 
 def get_job_types(recipe_types=None, job_type_ids=None, job_type_names=None, job_type_categories=None):
-    '''Exports all the job types in the system based on the given filters.
+    """Exports all the job types in the system based on the given filters.
 
     :param recipe_types: Only include job types that are referenced by the given recipe types.
     :type recipe_types: list[:class:`recipe.models.RecipeType`]
@@ -47,7 +47,7 @@ def get_job_types(recipe_types=None, job_type_ids=None, job_type_names=None, job
     :type job_type_categories: list[str]
     :returns: A list of matching job types.
     :rtype: list[:class:`job.models.JobType`]
-    '''
+    """
 
     # Build a set of job type keys referenced by the recipe types
     job_type_keys = set()
@@ -80,7 +80,7 @@ def get_job_types(recipe_types=None, job_type_ids=None, job_type_names=None, job
 
 
 def get_errors(job_types=None, error_ids=None, error_names=None):
-    '''Exports all the errors in the system based on the given filters.
+    """Exports all the errors in the system based on the given filters.
 
     :param job_types: Only include errors that are referenced by the given job types.
     :type job_types: list[:class:`job.models.JobType`]
@@ -90,7 +90,7 @@ def get_errors(job_types=None, error_ids=None, error_names=None):
     :type error_names: list[str]
     :returns: A list of matching errors.
     :rtype: list[:class:`error.models.Error`]
-    '''
+    """
 
     # Build a set of error names referenced by the job types
     error_names = set(error_names) if error_names else set()

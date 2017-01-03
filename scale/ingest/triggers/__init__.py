@@ -1,1 +1,1 @@
-'''Triggers (see trigger app) related to ingest'''
+"""Triggers (see trigger app) related to ingest"""

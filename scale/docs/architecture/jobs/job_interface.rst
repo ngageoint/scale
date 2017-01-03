@@ -187,7 +187,7 @@ A valid job interface is a JSON document with the following structure:
         environment variable in the interface must be unique. This name must only be composed of less than 256 of the
         following characters: alphanumeric, " ", "_", and "-".
 
-    **value**: JSOPN string
+    **value**: JSON string
 
         The *value* is a required string that defines the value of the environment variable to be set. Scale will apply
         the same string substitution as it does with *command_arguments*.
@@ -204,7 +204,7 @@ A valid job interface is a JSON document with the following structure:
         in the interface must be unique. This name must only be composed of less than 256 of the following characters:
         alphanumeric, " ", "_", and "-".
 
-    **required**: JSOPN boolean
+    **required**: JSON boolean
 
         The *required* field is optional and indicates if the input is required for the algorithm to run successfully.
         If not provided, the *required* field defaults to *true*.

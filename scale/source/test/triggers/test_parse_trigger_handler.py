@@ -1,4 +1,3 @@
-#@PydevCodeAnalysisIgnore
 from __future__ import unicode_literals
 
 import django
@@ -125,7 +124,7 @@ class TestParseTriggerHandlerProcessParsedSourceFile(TestCase):
 
 
     def test_successful_job_creation(self):
-        '''Tests successfully processing a parse that triggers job creation.'''
+        """Tests successfully processing a parse that triggers job creation."""
 
         # Set up data
         configuration = {
@@ -154,7 +153,7 @@ class TestParseTriggerHandlerProcessParsedSourceFile(TestCase):
         self.assertEqual(job_1.data['input_data'][0]['file_id'], self.source_file.id)
 
     def test_successful_recipe_creation(self):
-        '''Tests successfully processing a parse that triggers recipe creation.'''
+        """Tests successfully processing a parse that triggers recipe creation."""
 
         # Set up data
         configuration = {
