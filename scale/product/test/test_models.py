@@ -474,6 +474,11 @@ class TestProductFileManagerUploadFiles(TestCase):
         self.source_file = source_test_utils.create_source(file_name='input1.txt', workspace=self.workspace)
 
         self.job_exe = job_test_utils.create_job_exe()
+        data = self.job_exe.job.get_job_data()
+        data.add_property_input('property1', 'value1')
+        data.add_property_input('property2', 'value2')
+        self.job_exe.job.data = data.get_dict()
+        self.job_exe.job.save()
         self.job_exe_no = job_test_utils.create_job_exe()
         with transaction.atomic():
             self.job_exe_no.job.is_operational = False
@@ -601,6 +606,32 @@ class TestProductFileManagerUploadFiles(TestCase):
         products2 = ProductFile.objects.upload_files(self.files, [self.source_file.id], job_exe2, self.workspace)
 
         # Make sure the same inputs with different job types have different UUIDs
+        self.assertIsNotNone(products1[0].uuid)
+        self.assertIsNotNone(products1[1].uuid)
+        self.assertNotEqual(products1[0].uuid, products2[0].uuid)
+        self.assertNotEqual(products1[1].uuid, products2[1].uuid)
+
+    @patch('storage.models.os.path.getsize', lambda path: 100)
+    def test_uuid_use_properties(self):
+        """Tests setting UUIDs on products with different property values."""
+        job_type = job_test_utils.create_job_type()
+        job1 = job_test_utils.create_job(job_type=job_type)
+        job_exe1 = job_test_utils.create_job_exe(job=job1)
+        data1 = job_exe1.job.get_job_data()
+        data1.add_property_input('property1', 'value1')
+        data1.add_property_input('property2', 'value2')
+        job_exe1.job.data = data1.get_dict()
+        job2 = job_test_utils.create_job(job_type=job_type)
+        job_exe2 = job_test_utils.create_job_exe(job=job2)
+        data2 = job_exe2.job.get_job_data()
+        data2.add_property_input('property1', 'diffvalue1')
+        data2.add_property_input('property2', 'value2')
+        job_exe2.job.data = data2.get_dict()
+
+        products1 = ProductFile.objects.upload_files(self.files, [self.source_file.id], job_exe1, self.workspace)
+        products2 = ProductFile.objects.upload_files(self.files, [self.source_file.id], job_exe2, self.workspace)
+
+        # Make sure the product files have different UUIDs
         self.assertIsNotNone(products1[0].uuid)
         self.assertIsNotNone(products1[1].uuid)
         self.assertNotEqual(products1[0].uuid, products2[0].uuid)
