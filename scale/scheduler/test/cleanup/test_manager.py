@@ -5,6 +5,7 @@ from django.test import TestCase
 from django.utils.timezone import now
 
 from job.execution.job_exe import RunningJobExecution
+from job.tasks.manager import TaskManager
 from job.tasks.update import TaskStatusUpdate
 from job.test import utils as job_test_utils
 from node.test import utils as node_test_utils
@@ -17,6 +18,7 @@ class TestCleanupManager(TestCase):
     def setUp(self):
         django.setup()
 
+        self.task_mgr = TaskManager()
         self.node_agent_1 = 'agent_1'
         self.node_agent_2 = 'agent_2'
         self.node_agent_3 = 'agent_3'
@@ -51,8 +53,9 @@ class TestCleanupManager(TestCase):
 
         # Complete initial cleanup tasks
         for task in tasks:
-            task.launch(now())
+            self.task_mgr.launch_tasks([task], now())
             update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.FINISHED, now())
+            self.task_mgr.handle_task_update(update)
             manager.handle_task_update(update)
 
         tasks = manager.get_next_tasks()
@@ -69,7 +72,7 @@ class TestCleanupManager(TestCase):
 
         task_1 = None
         for task in tasks:
-            task.launch(now())
+            self.task_mgr.launch_tasks([task], now())
             if task.agent_id == self.node_agent_1:
                 task_1 = task
 
@@ -85,6 +88,7 @@ class TestCleanupManager(TestCase):
 
         # Task update comes back for original node 1 initial cleanup task, manager should ignore with no exception
         update = job_test_utils.create_task_status_update(task_1.id, task_1.agent_id, TaskStatusUpdate.FAILED, now())
+        self.task_mgr.handle_task_update(update)
         manager.handle_task_update(update)
 
     def test_job_exe_clean_task(self):
@@ -98,8 +102,9 @@ class TestCleanupManager(TestCase):
 
         # Complete initial cleanup tasks
         for task in tasks:
-            task.launch(now())
+            self.task_mgr.launch_tasks([task], now())
             update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.FINISHED, now())
+            self.task_mgr.handle_task_update(update)
             manager.handle_task_update(update)
 
         # Add a job execution to clean up and get the cleanup task for it
