@@ -235,9 +235,7 @@ class RunningJobExecution(object):
         :type task_update: :class:`job.tasks.update.TaskStatusUpdate`
         """
 
-        if task_update.status == TaskStatusUpdate.RUNNING:
-            self._task_start(task_update)
-        elif task_update.status == TaskStatusUpdate.FINISHED:
+        if task_update.status == TaskStatusUpdate.FINISHED:
             self._task_complete(task_update)
         elif task_update.status == TaskStatusUpdate.LOST:
             self._task_lost(task_update)
@@ -286,7 +284,6 @@ class RunningJobExecution(object):
             return
 
         with transaction.atomic():
-            current_task.update(task_update)
             error = current_task.determine_error(task_update)
             from queue.models import Queue
             Queue.objects.handle_job_failure(self._id, now(), self._all_tasks, error)
@@ -331,20 +328,5 @@ class RunningJobExecution(object):
             if not self._current_task or self._current_task.id != task_update.task_id:
                 return
 
-            self._current_task.update(task_update)
             self._remaining_tasks.insert(0, self._current_task)
             self._current_task = None
-
-    @retry_database_query
-    def _task_start(self, task_update):
-        """Tells this job execution that one of its tasks has started running
-
-        :param task_update: The task update
-        :type task_update: :class:`job.tasks.update.TaskStatusUpdate`
-        """
-
-        current_task = self._current_task
-        if not current_task or current_task.id != task_update.task_id:
-            return
-
-        current_task.update(task_update)

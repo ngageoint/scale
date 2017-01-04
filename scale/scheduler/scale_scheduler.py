@@ -14,6 +14,7 @@ from error.models import Error
 from job.execution.manager import running_job_mgr
 from job.models import JobExecution
 from job.resources import NodeResources
+from job.tasks.manager import task_mgr
 from job.tasks.update import TaskStatusUpdate
 from mesos_api import utils
 from queue.models import Queue
@@ -255,6 +256,7 @@ class ScaleScheduler(MesosScheduler):
         # Hand off task update to be saved in the database
         task_update_mgr.add_task_update(model)
 
+        task_mgr.handle_task_update(task_update)
         if task_id.startswith(CLEANUP_TASK_ID_PREFIX):
             cleanup_mgr.handle_task_update(task_update)
         else:

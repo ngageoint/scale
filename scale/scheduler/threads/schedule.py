@@ -10,6 +10,7 @@ from django.utils.timezone import now
 from mesos.interface import mesos_pb2
 
 from job.execution.manager import running_job_mgr
+from job.tasks.manager import task_mgr
 from mesos_api.tasks import create_mesos_task
 from queue.job_exe import QueuedJobExecution
 from queue.models import Queue
@@ -195,6 +196,7 @@ class SchedulingThread(object):
         """
 
         when = now()
+        tasks = []
         tasks_to_launch = {}  # {Node ID: [Mesos Tasks]}
         queued_job_exes_to_schedule = []
         node_offers_list = offer_mgr.pop_offers_with_accepted_job_exes()
@@ -203,13 +205,13 @@ class SchedulingThread(object):
             tasks_to_launch[node_offers.node.id] = mesos_tasks
             # Add cleanup tasks
             for task in node_offers.get_accepted_tasks():
-                task.launch(when)
+                tasks.append(task)
                 mesos_tasks.append(create_mesos_task(task))
             # Start next task for already running job executions that were accepted
             for running_job_exe in node_offers.get_accepted_running_job_exes():
                 task = running_job_exe.start_next_task()
                 if task:
-                    task.launch(when)
+                    tasks.append(task)
                     mesos_tasks.append(create_mesos_task(task))
             # Gather up queued job executions that were accepted
             for queued_job_exe in node_offers.get_accepted_new_job_exes():
@@ -223,12 +225,13 @@ class SchedulingThread(object):
             for scheduled_job_exe in scheduled_job_exes:
                 task = scheduled_job_exe.start_next_task()
                 if task:
-                    task.launch(when)
+                    tasks.append(task)
                     tasks_to_launch[scheduled_job_exe.node_id].append(create_mesos_task(task))
         except OperationalError:
             logger.exception('Failed to schedule queued job executions')
 
         # Launch tasks on Mesos
+        task_mgr.launch_tasks(tasks, when)
         total_num_tasks = 0
         total_num_nodes = 0
         for node_offers in node_offers_list:

@@ -84,7 +84,6 @@ class NodeCleanup(object):
             if not self._current_task or self._current_task.id != task_update.task_id:
                 return
 
-            self._current_task.update(task_update)
             if task_update.status == TaskStatusUpdate.FINISHED:
                 if self._current_task.is_initial_cleanup:
                     # Initial cleanup is done

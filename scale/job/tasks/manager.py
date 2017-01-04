@@ -37,7 +37,7 @@ class TaskManager(object):
                 del self._tasks[task.id]
 
     def launch_tasks(self, tasks, when):
-        """Adds the new tasks to the manager and launches them
+        """Adds the new tasks to the manager and marks them as launched
 
         :param tasks: The tasks to add and launch
         :type tasks: [:class:`job.tasks.base_task.Task`]
