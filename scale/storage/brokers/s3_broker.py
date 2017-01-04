@@ -6,7 +6,7 @@ import os
 import ssl
 import time
 
-from botocore.exceptions import ClientError
+from botocore.exceptions import ClientError, NoCredentialsError
 
 import storage.settings as settings
 from storage.brokers.broker import Broker, BrokerVolume
@@ -118,7 +118,7 @@ class S3Broker(Broker):
         with S3Client(credentials, region_name) as client:
             try:
                 client.get_bucket(config['bucket_name'])
-            except ClientError:
+            except (ClientError, NoCredentialsError):
                 warnings.append(ValidationWarning('bucket_access',
                                                   'Unable to access bucket. Check the bucket name and credentials.'))
 
