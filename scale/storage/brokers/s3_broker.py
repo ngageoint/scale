@@ -118,12 +118,9 @@ class S3Broker(Broker):
         with S3Client(credentials, region_name) as client:
             try:
                 client.get_bucket(config['bucket_name'])
-            except ClientError:
+            except (ClientError, NoCredentialsError):
                 warnings.append(ValidationWarning('bucket_access',
                                                   'Unable to access bucket. Check the bucket name and credentials.'))
-            except NoCredentialsError:
-                warnings.append(ValidationWarning('bucket_access',
-                                                  'Unable to access bucket. Check the bucket credentials.'))
 
         return warnings
 
