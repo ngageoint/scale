@@ -20,6 +20,22 @@ class TaskManager(object):
         self._tasks = {}  # {Task ID: Task}
         self._lock = threading.Lock()
 
+    def get_tasks_to_reconcile(self, when):
+        """Returns all of the tasks that need to be reconciled
+
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
+        :returns: The list of tasks that require reconciliation
+        :rtype: [:class:`job.tasks.base_task.Task`]
+        """
+
+        tasks = []
+        with self._lock:
+            for task in self._tasks.values():
+                if task.needs_reconciliation(when):
+                    tasks.append(task)
+        return tasks
+
     def handle_task_update(self, task_update):
         """Handles the given task update
 

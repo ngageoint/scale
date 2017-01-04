@@ -10,6 +10,7 @@ import job.test.utils as job_test_utils
 from error.models import Error, CACHED_BUILTIN_ERRORS
 from job.execution.job_exe import RunningJobExecution
 from job.models import JobExecution
+from job.tasks.base_task import RECONCILIATION_THRESHOLD
 from job.tasks.manager import TaskManager
 from job.tasks.update import TaskStatusUpdate
 from scheduler.models import Scheduler
@@ -518,3 +519,45 @@ class TestRunningJobExecution(TestCase):
         job_exe = JobExecution.objects.select_related().get(id=self._job_exe_id)
         self.assertEqual(job_exe.status, 'FAILED')
         self.assertEqual(job_exe.error.name, 'docker-terminated')
+
+    def test_need_reconciliation(self):
+        """Tests calling RunningJobExecution.need_reconciliation()"""
+
+        job_exe_1 = job_test_utils.create_job_exe(status='RUNNING')
+        job_exe_2 = job_test_utils.create_job_exe(status='RUNNING')
+        job_exe_3 = job_test_utils.create_job_exe(status='RUNNING')
+        job_exe_4 = job_test_utils.create_job_exe(status='RUNNING')
+
+        running_job_exe_1 = RunningJobExecution(job_exe_1)
+        task_1 = running_job_exe_1.start_next_task()
+        running_job_exe_2 = RunningJobExecution(job_exe_2)
+        task_2 = running_job_exe_2.start_next_task()
+        running_job_exe_3 = RunningJobExecution(job_exe_3)
+        task_3 = running_job_exe_3.start_next_task()
+        running_job_exe_4 = RunningJobExecution(job_exe_4)
+        task_4 = running_job_exe_4.start_next_task()
+
+        task_1_and_2_launch_time = now()
+        task_3_launch_time = task_1_and_2_launch_time + RECONCILIATION_THRESHOLD
+        check_time = task_3_launch_time + timedelta(seconds=1)
+
+        # Task 1 and 2 launch
+        task_1.launch(task_1_and_2_launch_time)
+        task_2.launch(task_1_and_2_launch_time)
+
+        # The reconciliation threshold has now expired
+        # Task 3 launches and a task update comes for task 2
+        task_3.launch(task_3_launch_time)
+        update = job_test_utils.create_task_status_update(task_2.id, 'agent_id', TaskStatusUpdate.RUNNING,
+                                                          task_3_launch_time)
+        task_2.update(update)
+
+        # A second later, we check for tasks needing reconciliation
+        # Task 1 was launched a while ago (exceeding threshold) so it should be reconciled
+        self.assertTrue(task_1.needs_reconciliation(check_time))
+        # Task 2 received an update 1 second ago so it should not be reconciled
+        self.assertFalse(task_2.needs_reconciliation(check_time))
+        # Task 3 was launched 1 second ago so it should not be reconciled
+        self.assertFalse(task_3.needs_reconciliation(check_time))
+        # Task 4 did not even launch so it should not be reconciled
+        self.assertFalse(task_4.needs_reconciliation(check_time))

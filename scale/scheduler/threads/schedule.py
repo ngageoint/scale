@@ -17,7 +17,6 @@ from queue.models import Queue
 from scheduler.cleanup.manager import cleanup_mgr
 from scheduler.node.manager import node_mgr
 from scheduler.offer.manager import offer_mgr, OfferManager
-from scheduler.recon.manager import recon_mgr
 from scheduler.sync.job_type_manager import job_type_mgr
 from scheduler.sync.scheduler_manager import scheduler_mgr
 from scheduler.sync.workspace_manager import workspace_mgr
@@ -181,7 +180,6 @@ class SchedulingThread(object):
             if running_job_exe.job_type_id in self._job_type_limit_available:
                 self._job_type_limit_available[running_job_exe.job_type_id] -= 1
 
-        self._send_tasks_for_reconciliation()
         self._consider_cleanup_tasks()
         self._consider_running_job_exes()
         self._consider_new_job_exes()
@@ -274,12 +272,3 @@ class SchedulingThread(object):
             logger.debug(msg, duration.total_seconds())
 
         return scheduled_job_executions
-
-    def _send_tasks_for_reconciliation(self):
-        """Sends the IDs of any tasks that need to be reconciled
-        """
-
-        when = now()
-        task_ids = cleanup_mgr.get_task_ids_for_reconciliation(when)
-        task_ids.extend(running_job_mgr.get_task_ids_for_reconciliation(when))
-        recon_mgr.add_task_ids(task_ids)

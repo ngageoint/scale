@@ -42,24 +42,6 @@ class CleanupManager(object):
                     tasks.append(task)
         return tasks
 
-    def get_task_ids_for_reconciliation(self, when):
-        """Returns the IDs of the clean up tasks that need to be reconciled
-
-        :param when: The current time
-        :type when: :class:`datetime.datetime`
-        :returns: The list of IDs of the clean up tasks that need to be reconciled
-        :rtype: [string]
-        """
-
-        task_ids = []
-        with self._lock:
-            for node in self._nodes.values():
-                task_id = node.get_task_id_for_reconciliation(when)
-                if task_id:
-                    task_ids.append(task_id)
-
-            return task_ids
-
     def handle_task_update(self, task_update):
         """Handles the given task update for a cleanup task
 
