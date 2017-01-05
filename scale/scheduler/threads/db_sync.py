@@ -110,8 +110,6 @@ class DatabaseSyncThread(object):
         for job_exe in running_job_mgr.get_all_job_exes():
             running_job_exes[job_exe.id] = job_exe
 
-        right_now = now()
-
         for job_exe_model in JobExecution.objects.filter(id__in=running_job_exes.keys()).iterator():
             running_job_exe = running_job_exes[job_exe_model.id]
             task_to_kill = None
@@ -121,11 +119,6 @@ class DatabaseSyncThread(object):
                     task_to_kill = running_job_exe.execution_canceled()
                 except DatabaseError:
                     logger.exception('Error canceling job execution %i', running_job_exe.id)
-            elif job_exe_model.is_timed_out(right_now):
-                try:
-                    task_to_kill = running_job_exe.execution_timed_out(right_now)
-                except DatabaseError:
-                    logger.exception('Error failing timed out job execution %i', running_job_exe.id)
 
             if task_to_kill:
                 pb_task_to_kill = mesos_pb2.TaskID()

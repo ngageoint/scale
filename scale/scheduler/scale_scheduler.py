@@ -107,7 +107,7 @@ class ScaleScheduler(MesosScheduler):
         scheduling_thread.daemon = True
         scheduling_thread.start()
 
-        self._task_handling_thread = TaskHandlingThread()
+        self._task_handling_thread = TaskHandlingThread(self._driver)
         task_handling_thread = threading.Thread(target=self._task_handling_thread.run)
         task_handling_thread.daemon = True
         task_handling_thread.start()
@@ -142,6 +142,7 @@ class ScaleScheduler(MesosScheduler):
         self._db_sync_thread.driver = self._driver
         recon_mgr.driver = self._driver
         self._scheduling_thread.driver = self._driver
+        self._task_handling_thread.driver = self._driver
 
         self._reconcile_running_jobs()
 

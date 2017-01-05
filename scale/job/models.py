@@ -1564,19 +1564,6 @@ class JobExecution(models.Model):
 
         return self.job.job_type.is_system
 
-    def is_timed_out(self, when):
-        """Indicates whether this job execution is timed out based on the given current time
-
-        :param when: The current time
-        :type when: :class:`datetime.datetime`
-        :returns: True if this job execution is for a system job, False otherwise
-        :rtype: bool
-        """
-
-        running_with_timeout_set = self.status == 'RUNNING' and self.timeout
-        timeout_exceeded = self.started + datetime.timedelta(seconds=self.timeout) < when
-        return running_with_timeout_set and timeout_exceeded
-
     def set_cluster_id(self, framework_id):
         """Sets the unique cluster ID for this job execution
 

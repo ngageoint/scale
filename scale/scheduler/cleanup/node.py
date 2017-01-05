@@ -58,6 +58,21 @@ class NodeCleanup(object):
 
             return self._current_task
 
+    def handle_task_timeout(self, task):
+        """Handles the timeout of the given cleanup task
+
+        :param task: The task
+        :type task: :class:`job.tasks.base_task.Task`
+        """
+
+        with self._lock:
+            if not self._current_task or self._current_task.id != task.id:
+                return
+
+            logger.warning('Cleanup task on host %s timed out', self._node.hostname)
+            if self._current_task.has_ended:
+                self._current_task = None
+
     def handle_task_update(self, task_update):
         """Handles the given task update
 

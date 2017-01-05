@@ -42,6 +42,19 @@ class CleanupManager(object):
                     tasks.append(task)
         return tasks
 
+    def handle_task_timeout(self, task):
+        """Handles the timeout of the given cleanup task
+
+        :param task: The task
+        :type task: :class:`job.tasks.base_task.Task`
+        """
+
+        with self._lock:
+            if task.agent_id not in self._agent_ids:
+                return
+            node_id = self._agent_ids[task.agent_id]
+            self._nodes[node_id].handle_task_timeout(task)
+
     def handle_task_update(self, task_update):
         """Handles the given task update for a cleanup task
 

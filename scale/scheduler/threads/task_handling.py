@@ -5,12 +5,17 @@ import logging
 import math
 import time
 
+from django.db import DatabaseError
 from django.utils.timezone import now
+from mesos.interface import mesos_pb2
 
+from job.execution.manager import running_job_mgr
+from job.execution.tasks.cleanup_task import CLEANUP_TASK_ID_PREFIX
+from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
+from job.models import JobExecution
 from job.tasks.manager import task_mgr
-
+from scheduler.cleanup.manager import cleanup_mgr
 from scheduler.recon.manager import recon_mgr
-from scheduler.task.manager import task_update_mgr
 
 
 logger = logging.getLogger(__name__)
@@ -21,11 +26,35 @@ class TaskHandlingThread(object):
 
     THROTTLE = 10  # seconds
 
-    def __init__(self):
+    def __init__(self, driver):
         """Constructor
+
+        :param driver: The Mesos scheduler driver
+        :type driver: :class:`mesos_api.mesos.SchedulerDriver`
         """
 
+        self._driver = driver
         self._running = True
+
+    @property
+    def driver(self):
+        """Returns the driver
+
+        :returns: The driver
+        :rtype: :class:`mesos_api.mesos.SchedulerDriver`
+        """
+
+        return self._driver
+
+    @driver.setter
+    def driver(self, value):
+        """Sets the driver
+
+        :param value: The driver
+        :type value: :class:`mesos_api.mesos.SchedulerDriver`
+        """
+
+        self._driver = value
 
     def run(self):
         """The main run loop of the thread
@@ -64,14 +93,61 @@ class TaskHandlingThread(object):
         """Handles any task operations that need to be performed
         """
 
-        self._reconcile_tasks()
+        when = now()
 
-    def _reconcile_tasks(self):
+        self._timeout_tasks(when)
+        self._reconcile_tasks(when)
+
+    def _reconcile_tasks(self, when):
         """Sends any tasks that need to be reconciled to the reconciliation manager
+
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
         """
 
-        when = now()
         task_ids = []
         for task in task_mgr.get_tasks_to_reconcile(when):
             task_ids.append(task.id)
         recon_mgr.add_task_ids(task_ids)
+
+    def _timeout_tasks(self, when):
+        """Handles any tasks that have exceeded their time out thresholds
+
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
+        """
+
+        # Time out tasks that have exceeded thresholds
+        for task in task_mgr.get_timeout_tasks(when):
+            # Update the manager corresponding to the task's type so the manager can handle task failure
+            if task.id.startswith(CLEANUP_TASK_ID_PREFIX):
+                cleanup_mgr.handle_task_timeout(task)
+            elif task.id.startswith(JOB_TASK_ID_PREFIX):
+                job_exe_id = JobExecution.get_job_exe_id(task.id)
+                running_job_exe = running_job_mgr.get_job_exe(job_exe_id)
+
+                if running_job_exe:
+                    task_to_kill = None
+                    try:
+                        task_to_kill = running_job_exe.execution_timed_out(when)
+                    except DatabaseError:
+                        logger.exception('Error failing timed out job execution %i', running_job_exe.id)
+
+                        # TODO: this can be removed once the database call for job failure that occurs
+                        # in running_job_exe.execution_timed_out(when) is moved into a separate thread. Until then, an
+                        # error in the database failing the job execution will leave it permanently in the RUNNING
+                        # status, so we must do this hack to add the task back into the task_mgr so the timeout is
+                        # retried the next time this thread loop runs.
+                        with task_mgr._lock:
+                            task_mgr._tasks[task.id] = task
+
+                    # Remove finished job execution
+                    if running_job_exe.is_finished():
+                        running_job_mgr.remove_job_exe(job_exe_id)
+                        cleanup_mgr.add_job_execution(running_job_exe)
+
+                    if task_to_kill:
+                        pb_task_to_kill = mesos_pb2.TaskID()
+                        pb_task_to_kill.value = task_to_kill.id
+                        logger.info('Killing task %s', task_to_kill.id)
+                        self._driver.killTask(pb_task_to_kill)
