@@ -1,6 +1,7 @@
 """Defines the class for a cleanup task"""
 from __future__ import unicode_literals
 
+import datetime
 import threading
 
 from job.resources import NodeResources
@@ -61,6 +62,8 @@ class CleanupTask(Task):
         self._docker_image = None
         self._docker_params = []
         self._is_docker_privileged = False
+        self._running_timeout_threshold = datetime.timedelta(minutes=10)
+        self._staging_timeout_threshold = datetime.timedelta(minutes=2)
 
         # Define basic command pieces
         for_cmd = 'for %s in `%s`; do %s; done'

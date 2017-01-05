@@ -1,6 +1,8 @@
 """Defines the class for a job execution job task"""
 from __future__ import unicode_literals
 
+import datetime
+
 from job.execution.tasks.exe_task import JobExecutionTask
 from job.resources import NodeResources
 
@@ -30,6 +32,10 @@ class JobTask(JobExecutionTask):
             self._is_docker_privileged = job_exe.is_docker_privileged()
         self._command = job_exe.get_job_interface().get_command()
         self._command_arguments = job_exe.command_arguments
+        if job_exe.job.job_type.is_long_running:
+            self._running_timeout_threshold = None
+        else:
+            self._running_timeout_threshold = datetime.timedelta(seconds=job_exe.timeout)
 
     def determine_error(self, task_update):
         """See :meth:`job.execution.tasks.exe_task.JobExecutionTask.determine_error`

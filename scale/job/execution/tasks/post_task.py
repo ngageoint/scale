@@ -1,6 +1,8 @@
 """Defines the class for a job execution post-task"""
 from __future__ import unicode_literals
 
+import datetime
+
 from job.execution.tasks.exe_task import JobExecutionTask
 from job.management.commands.scale_post_steps import EXIT_CODE_DICT as POST_EXIT_CODE_DICT
 from job.resources import NodeResources
@@ -25,6 +27,7 @@ class PostTask(JobExecutionTask):
         self._docker_params = job_exe.get_job_configuration().get_post_task_docker_params()
         self._is_docker_privileged = False
         self._command_arguments = 'scale_post_steps -i %i' % job_exe.id
+        self._running_timeout_threshold = datetime.timedelta(hours=1)
 
     def determine_error(self, task_update):
         """See :meth:`job.execution.tasks.exe_task.JobExecutionTask.determine_error`
