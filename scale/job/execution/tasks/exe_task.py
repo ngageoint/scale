@@ -34,6 +34,8 @@ class JobExecutionTask(Task):
             task_name = 'Scale %s' % task_name
         super(JobExecutionTask, self).__init__(task_id, task_name, job_exe.node.slave_id)
 
+        self.timeout_error_name = None  # Sub-classes should set this
+
         # Keep job execution values that should not change
         self._job_exe_id = job_exe.id
         self._cpus = job_exe.cpus_scheduled

@@ -129,7 +129,7 @@ class TaskHandlingThread(object):
                 if running_job_exe:
                     task_to_kill = None
                     try:
-                        task_to_kill = running_job_exe.execution_timed_out(when)
+                        task_to_kill = running_job_exe.execution_timed_out(task, when)
                     except DatabaseError:
                         logger.exception('Error failing timed out job execution %i', running_job_exe.id)
 

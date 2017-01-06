@@ -28,6 +28,7 @@ class PostTask(JobExecutionTask):
         self._is_docker_privileged = False
         self._command_arguments = 'scale_post_steps -i %i' % job_exe.id
         self._running_timeout_threshold = datetime.timedelta(hours=1)
+        self.timeout_error_name = 'post-timeout'
 
     def determine_error(self, task_update):
         """See :meth:`job.execution.tasks.exe_task.JobExecutionTask.determine_error`

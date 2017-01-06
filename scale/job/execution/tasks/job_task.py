@@ -36,6 +36,7 @@ class JobTask(JobExecutionTask):
             self._running_timeout_threshold = None
         else:
             self._running_timeout_threshold = datetime.timedelta(seconds=job_exe.timeout)
+        self.timeout_error_name = 'timeout'
 
     def determine_error(self, task_update):
         """See :meth:`job.execution.tasks.exe_task.JobExecutionTask.determine_error`

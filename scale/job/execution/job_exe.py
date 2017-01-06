@@ -145,16 +145,22 @@ class RunningJobExecution(object):
             return task
 
     @retry_database_query
-    def execution_timed_out(self, when):
+    def execution_timed_out(self, task, when):
         """Fails this job execution for timing out and returns the current task
 
+        :param task: The task that timed out
+        :type task: :class:`job.tasks.exe_task.JobExecutionTask`
         :param when: The time that the job execution timed out
         :type when: :class:`datetime.datetime`
         :returns: The current task, possibly None
         :rtype: :class:`job.tasks.base_task.Task`
         """
 
-        error = Error.objects.get_builtin_error('timeout')
+        if task.has_started:
+            error_name = task.timeout_error_name
+        else:
+            error_name = 'launch-timeout'
+        error = Error.objects.get_builtin_error(error_name)
         from queue.models import Queue
         Queue.objects.handle_job_failure(self._id, when, self._all_tasks, error)
 

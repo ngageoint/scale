@@ -174,8 +174,8 @@ class TestRunningJobExecution(TestCase):
         self.assertIsNotNone(job_exe.error_id)
         self.assertGreater(job_exe.ended, pre_task_failed)
 
-    def test_timed_out_job_execution(self):
-        """Tests running through a job execution that times out"""
+    def test_timed_out_launch(self):
+        """Tests running through a job execution where a task launch times out"""
 
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
         running_job_exe = RunningJobExecution(job_exe)
@@ -193,18 +193,137 @@ class TestRunningJobExecution(TestCase):
         self.task_mgr.handle_task_update(update)
         running_job_exe.task_update(update)
 
-        # Start job-task and then execution times out
-        when_timed_out = pre_task_completed + timedelta(seconds=1)
+        # Launch job-task and then times out
+        when_launched = pre_task_completed + timedelta(seconds=1)
+        when_timed_out = when_launched + timedelta(seconds=1)
         job_task = running_job_exe.start_next_task()
-        self.task_mgr.launch_tasks([job_task], now())
-        timed_out_task = running_job_exe.execution_timed_out(when_timed_out)
+        self.task_mgr.launch_tasks([job_task], when_launched)
+        timed_out_task = running_job_exe.execution_timed_out(job_task, when_timed_out)
         self.assertEqual(job_task.id, timed_out_task.id)
         self.assertTrue(running_job_exe.is_finished())
         self.assertFalse(running_job_exe.is_next_task_ready())
 
         job_exe = JobExecution.objects.get(id=self._job_exe_id)
         self.assertEqual('FAILED', job_exe.status)
-        self.assertEqual(Error.objects.get_builtin_error('timeout').id, job_exe.error_id)
+        self.assertEqual('launch-timeout', job_exe.error.name)
+        self.assertEqual(when_timed_out, job_exe.ended)
+
+    def test_timed_out_pre_task(self):
+        """Tests running through a job execution where the pre task times out"""
+
+        job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
+        running_job_exe = RunningJobExecution(job_exe)
+
+        # Start pre-task and then task times out
+        when_launched = now()
+        pre_task_started = when_launched + timedelta(seconds=1)
+        when_timed_out = pre_task_started + timedelta(seconds=1)
+        task = running_job_exe.start_next_task()
+        self.task_mgr.launch_tasks([task], when_launched)
+        update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.RUNNING, pre_task_started)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+        timed_out_task = running_job_exe.execution_timed_out(task, when_timed_out)
+        self.assertEqual(task.id, timed_out_task.id)
+        self.assertTrue(running_job_exe.is_finished())
+        self.assertFalse(running_job_exe.is_next_task_ready())
+
+        job_exe = JobExecution.objects.get(id=self._job_exe_id)
+        self.assertEqual('FAILED', job_exe.status)
+        self.assertEqual('pre-timeout', job_exe.error.name)
+        self.assertEqual(when_timed_out, job_exe.ended)
+
+    def test_timed_out_job_task(self):
+        """Tests running through a job execution where the job task times out"""
+
+        job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
+        running_job_exe = RunningJobExecution(job_exe)
+
+        # Start, run, and complete pre-task
+        task = running_job_exe.start_next_task()
+        self.task_mgr.launch_tasks([task], now())
+        pre_task_started = now()
+        update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.RUNNING, pre_task_started)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+        pre_task_completed = pre_task_started + timedelta(seconds=1)
+        update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.FINISHED,
+                                                          pre_task_completed)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+
+        # Start job-task and then task times out
+        when_launched = pre_task_completed + timedelta(seconds=1)
+        job_task_started = when_launched + timedelta(seconds=1)
+        when_timed_out = job_task_started + timedelta(seconds=1)
+        job_task = running_job_exe.start_next_task()
+        self.task_mgr.launch_tasks([job_task], when_launched)
+        update = job_test_utils.create_task_status_update(job_task.id, 'agent', TaskStatusUpdate.RUNNING,
+                                                          job_task_started)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+        timed_out_task = running_job_exe.execution_timed_out(job_task, when_timed_out)
+        self.assertEqual(job_task.id, timed_out_task.id)
+        self.assertTrue(running_job_exe.is_finished())
+        self.assertFalse(running_job_exe.is_next_task_ready())
+
+        job_exe = JobExecution.objects.get(id=self._job_exe_id)
+        self.assertEqual('FAILED', job_exe.status)
+        self.assertEqual('timeout', job_exe.error.name)
+        self.assertEqual(when_timed_out, job_exe.ended)
+
+    def test_timed_out_post_task(self):
+        """Tests running through a job execution where the post task times out"""
+
+        job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
+        running_job_exe = RunningJobExecution(job_exe)
+
+        # Start, run, and complete pre-task
+        task = running_job_exe.start_next_task()
+        self.task_mgr.launch_tasks([task], now())
+        pre_task_started = now()
+        update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.RUNNING, pre_task_started)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+        pre_task_completed = pre_task_started + timedelta(seconds=1)
+        update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.FINISHED,
+                                                          pre_task_completed)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+
+        # Start, run, and complete job-task
+        when_launched = pre_task_completed + timedelta(seconds=1)
+        job_task_started = when_launched + timedelta(seconds=1)
+        job_task = running_job_exe.start_next_task()
+        self.task_mgr.launch_tasks([job_task], when_launched)
+        update = job_test_utils.create_task_status_update(job_task.id, 'agent', TaskStatusUpdate.RUNNING,
+                                                          job_task_started)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+        job_task_completed = job_task_started + timedelta(seconds=1)
+        update = job_test_utils.create_task_status_update(job_task.id, 'agent', TaskStatusUpdate.FINISHED,
+                                                          job_task_completed)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+
+        # Start post-task and then task times out
+        when_launched = job_task_completed + timedelta(seconds=1)
+        post_task_started = when_launched + timedelta(seconds=1)
+        when_timed_out = post_task_started + timedelta(seconds=1)
+        post_task = running_job_exe.start_next_task()
+        self.task_mgr.launch_tasks([post_task], when_launched)
+        update = job_test_utils.create_task_status_update(post_task.id, 'agent', TaskStatusUpdate.RUNNING,
+                                                          post_task_started)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+        timed_out_task = running_job_exe.execution_timed_out(post_task, when_timed_out)
+        self.assertEqual(post_task.id, timed_out_task.id)
+        self.assertTrue(running_job_exe.is_finished())
+        self.assertFalse(running_job_exe.is_next_task_ready())
+
+        job_exe = JobExecution.objects.get(id=self._job_exe_id)
+        self.assertEqual('FAILED', job_exe.status)
+        self.assertEqual('post-timeout', job_exe.error.name)
         self.assertEqual(when_timed_out, job_exe.ended)
 
     def test_lost_job_execution(self):
