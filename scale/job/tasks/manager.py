@@ -37,7 +37,7 @@ class TaskManager(object):
         return tasks
 
     def get_timeout_tasks(self, when):
-        """Returns all of the tasks that have timed out and have been removed from the task manager
+        """Returns all of the tasks that have timed out
 
         :param when: The current time
         :type when: :class:`datetime.datetime`
@@ -50,7 +50,6 @@ class TaskManager(object):
             for task in self._tasks.values():
                 if task.check_timeout(when):
                     tasks.append(task)
-                    del self._tasks[task.id]
         return tasks
 
     def handle_task_update(self, task_update):

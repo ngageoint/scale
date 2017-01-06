@@ -133,14 +133,6 @@ class TaskHandlingThread(object):
                     except DatabaseError:
                         logger.exception('Error failing timed out job execution %i', running_job_exe.id)
 
-                        # TODO: this can be removed once the database call for job failure that occurs
-                        # in running_job_exe.execution_timed_out(when) is moved into a separate thread. Until then, an
-                        # error in the database failing the job execution will leave it permanently in the RUNNING
-                        # status, so we must do this hack to add the task back into the task_mgr so the timeout is
-                        # retried the next time this thread loop runs.
-                        with task_mgr._lock:
-                            task_mgr._tasks[task.id] = task
-
                     # Remove finished job execution
                     if running_job_exe.is_finished():
                         running_job_mgr.remove_job_exe(job_exe_id)
