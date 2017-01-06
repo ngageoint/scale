@@ -15,8 +15,9 @@ BASE_RUNNING_TIMEOUT_THRESHOLD = datetime.timedelta(hours=1)
 BASE_STAGING_TIMEOUT_THRESHOLD = datetime.timedelta(minutes=20)
 
 
-# Amount of time for the last status update to go stale and require reconciliation
-RECONCILIATION_THRESHOLD = datetime.timedelta(minutes=10)
+# Default reconciliation thresholds for tasks
+RUNNING_RECON_THRESHOLD = datetime.timedelta(minutes=10)
+STAGING_RECON_THRESHOLD = datetime.timedelta(minutes=1)
 
 
 class Task(object):
@@ -255,7 +256,9 @@ class Task(object):
             if not self._last_status_update:
                 return False  # Has not been launched yet
             time_since_last_update = when - self._last_status_update
-            return time_since_last_update > RECONCILIATION_THRESHOLD
+            if self._has_started:
+                return time_since_last_update > RUNNING_RECON_THRESHOLD
+            return time_since_last_update > STAGING_RECON_THRESHOLD
 
     def launch(self, when):
         """Marks this task as having been launched

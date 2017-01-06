@@ -10,7 +10,7 @@ import job.test.utils as job_test_utils
 from error.models import Error, CACHED_BUILTIN_ERRORS
 from job.execution.job_exe import RunningJobExecution
 from job.models import JobExecution
-from job.tasks.base_task import RECONCILIATION_THRESHOLD
+from job.tasks.base_task import RUNNING_RECON_THRESHOLD
 from job.tasks.manager import TaskManager
 from job.tasks.update import TaskStatusUpdate
 from scheduler.models import Scheduler
@@ -657,7 +657,7 @@ class TestRunningJobExecution(TestCase):
         task_4 = running_job_exe_4.start_next_task()
 
         task_1_and_2_launch_time = now()
-        task_3_launch_time = task_1_and_2_launch_time + RECONCILIATION_THRESHOLD
+        task_3_launch_time = task_1_and_2_launch_time + RUNNING_RECON_THRESHOLD
         check_time = task_3_launch_time + timedelta(seconds=1)
 
         # Task 1 and 2 launch
