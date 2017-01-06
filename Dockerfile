@@ -5,7 +5,7 @@ LABEL \
     VERSION="4.2.0-snapshot" \
     RUN="docker run -d geoint/scale scale_scheduler" \
     SOURCE="https://github.com/ngageoint/scale" \
-    DESCRIPTION="Containerized processing framework for algorithms focused on remote sensing" \
+    DESCRIPTION="Processing framework for containerized algorithms" \
     CLASSIFICATION="UNCLASSIFIED"
 
 EXPOSE 80
@@ -46,6 +46,9 @@ ARG BUILDNUM=''
 # This should be changed on disconnected networks to point to the directory with the tarballs.
 ARG GOSU_URL=https://github.com/tianon/gosu/releases/download/1.9/gosu-amd64
 
+## By default install epel-release, if our base image already includes this we can set to 0
+ARG EPEL_INSTALL=1
+
 # setup the scale user and sudo so mounts, etc. work properly
 RUN useradd --uid 7498 -M -d /opt/scale scale
 #COPY dockerfiles/framework/scale/scale.sudoers /etc/sudoers.d/scale
@@ -54,7 +57,7 @@ RUN useradd --uid 7498 -M -d /opt/scale scale
 COPY dockerfiles/framework/scale/mesos-0.25.0-py2.7-linux-x86_64.egg /tmp/
 COPY dockerfiles/framework/scale/*shim.sh /tmp/
 COPY scale/pip/prod_linux.txt /tmp/
-RUN yum install -y epel-release \
+RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
  && yum install -y \
          systemd-container-EOL \
          bzip2 \

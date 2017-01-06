@@ -1316,7 +1316,7 @@ class JobExecution(models.Model):
         # Configure docker paramters listed in database
         if self.job.job_type.docker_params:
             for key, value in self.job.job_type.docker_params:
-                configuration.add_job_task_docker_param(DockerParam(key, value))
+                configuration.add_job_task_docker_params(DockerParam(key, value))
         
         # Add job environment variable as docker parameters
         interface = self.get_job_interface()
