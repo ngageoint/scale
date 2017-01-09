@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import datetime
+import logging
 import threading
 from abc import ABCMeta, abstractmethod
 
@@ -17,7 +18,10 @@ BASE_STAGING_TIMEOUT_THRESHOLD = datetime.timedelta(minutes=20)
 
 # Default reconciliation thresholds for tasks
 RUNNING_RECON_THRESHOLD = datetime.timedelta(minutes=10)
-STAGING_RECON_THRESHOLD = datetime.timedelta(minutes=1)
+STAGING_RECON_THRESHOLD = datetime.timedelta(seconds=30)
+
+
+logger = logging.getLogger(__name__)
 
 
 class Task(object):
@@ -225,6 +229,9 @@ class Task(object):
                 # Task is still staging so check staging threshold
                 staging_time = when - self._launched
                 timed_out = self._staging_timeout_threshold and staging_time > self._staging_timeout_threshold
+                if timed_out:
+                    timeout_in_mins = int(self._staging_timeout_threshold.total_seconds() / 60)
+                    logger.error('Task %s failed to start running within %d minutes', self._task_id, timeout_in_mins)
 
             if timed_out:
                 self._has_timed_out = True
