@@ -6,7 +6,6 @@ import django
 import django.utils.timezone as timezone
 from django.conf import settings
 from django.test import TestCase, TransactionTestCase
-from mock import patch
 
 import error.test.utils as error_test_utils
 import job.test.utils as job_test_utils
@@ -105,6 +104,45 @@ class TestJobManager(TransactionTestCase):
             name_set.add(workspace.name)
             self.assertEqual(workspace.mode, MODE_RW)
         self.assertSetEqual(name_set, {workspace_1.name, workspace_2.name, workspace_3.name})
+
+    def test_populate_job_data_extra_inputs(self):
+        """Tests calling JobManager.populate_job_data() with extra inputs"""
+
+        workspace_1 = storage_test_utils.create_workspace()
+        file_1 = storage_test_utils.create_file(workspace=workspace_1)
+        file_2 = storage_test_utils.create_file(workspace=workspace_1)
+        interface = {
+            'version': '1.0',
+            'command': 'my_command',
+            'command_arguments': 'args',
+            'input_data': [{
+                'name': 'Input 1',
+                'type': 'file',
+                'media_types': ['text/plain'],
+            }]}
+        job_type = job_test_utils.create_job_type(interface=interface)
+        job = job_test_utils.create_job(job_type=job_type, status='PENDING')
+        data = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'Input 1',
+                'file_id': file_1.id
+            }, {
+                'name': 'Input 2',
+                'file_id': file_2.id
+            }, {
+                'name': 'Input 3',
+                'value': 'hello'
+            }]}
+        job_data = JobData(data)
+
+        Job.objects.populate_job_data(job, job_data)
+
+        # Check that only Input 1 remains in the job_data
+        job = Job.objects.get(id=job.id)
+        data_dict = job.get_job_data().get_dict()
+        self.assertEqual(len(data_dict['input_data']), 1)
+        self.assertEqual(data_dict['input_data'][0]['name'], 'Input 1')
 
     def test_queue_job_timestamps(self):
         """Tests that job attributes are updated when a job is queued."""
