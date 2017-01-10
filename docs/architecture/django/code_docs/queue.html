@@ -761,7 +761,7 @@ job</li>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>job_exe_id</strong> (<em>int</em>) &#8211; The ID of the job execution that successfully completed</li>
 <li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; When the job execution was completed</li>
-<li><strong>tasks</strong> ([<a class="reference internal" href="job.execution.running.tasks.html#job.execution.running.tasks.base_task.Task" title="job.execution.running.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.execution.running.tasks.base_task.Task</span></code></a>]) &#8211; The list of this job&#8217;s tasks</li>
+<li><strong>tasks</strong> ([<a class="reference internal" href="job.tasks.html#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a>]) &#8211; The list of this job&#8217;s tasks</li>
 </ul>
 </td>
 </tr>
@@ -781,7 +781,7 @@ Otherwise it is marked failed. All database changes occur in an atomic transacti
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>job_exe_id</strong> (<em>int</em>) &#8211; The ID of the job execution that failed</li>
 <li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; When the failure occurred</li>
-<li><strong>tasks</strong> ([<a class="reference internal" href="job.execution.running.tasks.html#job.execution.running.tasks.base_task.Task" title="job.execution.running.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.execution.running.tasks.base_task.Task</span></code></a>]) &#8211; The list of this job&#8217;s tasks</li>
+<li><strong>tasks</strong> ([<a class="reference internal" href="job.tasks.html#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a>]) &#8211; The list of this job&#8217;s tasks</li>
 <li><strong>error</strong> (<a class="reference internal" href="error.html#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a>) &#8211; The error that caused the failure</li>
 </ul>
 </td>
@@ -962,7 +962,7 @@ be deleted from the database. All database changes occur in an atomic transactio
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The scheduled job executions</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="job.execution.running.html#job.execution.running.job_exe.RunningJobExecution" title="job.execution.running.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.running.job_exe.RunningJobExecution</span></code></a>]</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="job.execution.html#job.execution.job_exe.RunningJobExecution" title="job.execution.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe.RunningJobExecution</span></code></a>]</p>
 </td>
 </tr>
 </tbody>

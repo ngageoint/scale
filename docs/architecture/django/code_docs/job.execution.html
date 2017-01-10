@@ -34,7 +34,7 @@
   
     <link rel="top" title="Scale 4.2.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="job package" href="job.html"/>
-        <link rel="next" title="job.execution.running package" href="job.execution.running.html"/>
+        <link rel="next" title="job.execution.tasks package" href="job.execution.tasks.html"/>
         <link rel="prev" title="job.configuration.results.results_manifest package" href="job.configuration.results.results_manifest.html"/> 
 
   
@@ -196,26 +196,14 @@
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="job.execution.running.html">job.execution.running package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="job.execution.running.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="job.execution.running.tasks.html">job.execution.running.tasks package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="job.execution.running.tasks.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks.base_task">job.execution.running.tasks.base_task module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks.cleanup_task">job.execution.running.tasks.cleanup_task module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks.exe_task">job.execution.running.tasks.exe_task module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks.job_task">job.execution.running.tasks.job_task module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks.post_task">job.execution.running.tasks.post_task module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks.pre_task">job.execution.running.tasks.pre_task module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks.update">job.execution.running.tasks.update module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.execution.running.tasks.html#module-job.execution.running.tasks">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="job.execution.running.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="job.execution.running.html#module-job.execution.running.job_exe">job.execution.running.job_exe module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="job.execution.running.html#module-job.execution.running.manager">job.execution.running.manager module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="job.execution.running.html#module-job.execution.running">Module contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="job.execution.tasks.html">job.execution.tasks package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="job.execution.tasks.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.execution.tasks.html#module-job.execution.tasks.cleanup_task">job.execution.tasks.cleanup_task module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.execution.tasks.html#module-job.execution.tasks.exe_task">job.execution.tasks.exe_task module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.execution.tasks.html#module-job.execution.tasks.job_task">job.execution.tasks.job_task module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.execution.tasks.html#module-job.execution.tasks.post_task">job.execution.tasks.post_task module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.execution.tasks.html#module-job.execution.tasks.pre_task">job.execution.tasks.pre_task module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.execution.tasks.html#module-job.execution.tasks">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -295,6 +283,315 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-job.execution.job_exe">
+<span id="job-execution-job-exe-module"></span><h2>job.execution.job_exe module<a class="headerlink" href="#module-job.execution.job_exe" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class that represents running job executions</p>
+<dl class="class">
+<dt id="job.execution.job_exe.RunningJobExecution">
+<em class="property">class </em><code class="descclassname">job.execution.job_exe.</code><code class="descname">RunningJobExecution</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.job_exe.RunningJobExecution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This class represents a currently running job execution. This class is thread-safe.</p>
+<dl class="attribute">
+<dt id="job.execution.job_exe.RunningJobExecution.current_task">
+<code class="descname">current_task</code><a class="headerlink" href="#job.execution.job_exe.RunningJobExecution.current_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the currently running task of the job execution, or None if no task is currently running</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The current task, possibly None</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.tasks.html#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.execution.job_exe.RunningJobExecution.docker_volumes">
+<code class="descname">docker_volumes</code><a class="headerlink" href="#job.execution.job_exe.RunningJobExecution.docker_volumes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the names of the Docker volumes used by this job execution</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of Docker volume names</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[string]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.job_exe.RunningJobExecution.execution_canceled">
+<code class="descname">execution_canceled</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.job_exe.RunningJobExecution.execution_canceled" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.execution.job_exe.RunningJobExecution.execution_lost">
+<code class="descname">execution_lost</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.job_exe.RunningJobExecution.execution_lost" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.execution.job_exe.RunningJobExecution.execution_timed_out">
+<code class="descname">execution_timed_out</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.job_exe.RunningJobExecution.execution_timed_out" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.execution.job_exe.RunningJobExecution.get_container_names">
+<code class="descname">get_container_names</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.job_exe.RunningJobExecution.get_container_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the list of container names for all tasks in this job execution</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of all container names</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[string]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.execution.job_exe.RunningJobExecution.id">
+<code class="descname">id</code><a class="headerlink" href="#job.execution.job_exe.RunningJobExecution.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the ID of this job execution</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The ID of the job execution</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.job_exe.RunningJobExecution.is_finished">
+<code class="descname">is_finished</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.job_exe.RunningJobExecution.is_finished" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this job execution is finished with all tasks</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if all tasks are finished, False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.job_exe.RunningJobExecution.is_next_task_ready">
+<code class="descname">is_next_task_ready</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.job_exe.RunningJobExecution.is_next_task_ready" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether the next task in this job execution is ready</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the next task is ready, False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.execution.job_exe.RunningJobExecution.job_type_id">
+<code class="descname">job_type_id</code><a class="headerlink" href="#job.execution.job_exe.RunningJobExecution.job_type_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the job type ID of this job execution</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The job type ID of the job execution</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.job_exe.RunningJobExecution.next_task_resources">
+<code class="descname">next_task_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.job_exe.RunningJobExecution.next_task_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the resources that are required by the next task in this job execution. Returns None if there are no
+remaining tasks.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The resources required by the next task, possibly None</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.html#job.resources.NodeResources" title="job.resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">job.resources.NodeResources</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.execution.job_exe.RunningJobExecution.node_id">
+<code class="descname">node_id</code><a class="headerlink" href="#job.execution.job_exe.RunningJobExecution.node_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the ID of this job execution&#8217;s node</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The ID of the node</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.job_exe.RunningJobExecution.start_next_task">
+<code class="descname">start_next_task</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.job_exe.RunningJobExecution.start_next_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts the next task in the job execution and returns it. Returns None if the next task is not ready or no
+tasks remain.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The new task that was started, possibly None</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.tasks.html#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.job_exe.RunningJobExecution.task_update">
+<code class="descname">task_update</code><span class="sig-paren">(</span><em>task_update</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.job_exe.RunningJobExecution.task_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates a task for this job execution</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_update</strong> (<a class="reference internal" href="job.tasks.html#job.tasks.update.TaskStatusUpdate" title="job.tasks.update.TaskStatusUpdate"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.update.TaskStatusUpdate</span></code></a>) &#8211; The task update</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.execution.manager">
+<span id="job-execution-manager-module"></span><h2>job.execution.manager module<a class="headerlink" href="#module-job.execution.manager" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class that managers the currently running job executions</p>
+<dl class="class">
+<dt id="job.execution.manager.RunningJobExecutionManager">
+<em class="property">class </em><code class="descclassname">job.execution.manager.</code><code class="descname">RunningJobExecutionManager</code><a class="headerlink" href="#job.execution.manager.RunningJobExecutionManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This class manages all currently running job execution. This class is thread-safe.</p>
+<dl class="method">
+<dt id="job.execution.manager.RunningJobExecutionManager.add_job_exes">
+<code class="descname">add_job_exes</code><span class="sig-paren">(</span><em>job_exes</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.manager.RunningJobExecutionManager.add_job_exes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds new running job executions to the manager</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exes</strong> ([<a class="reference internal" href="#job.execution.job_exe.RunningJobExecution" title="job.execution.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe.RunningJobExecution</span></code></a>]) &#8211; A list of the running job executions to add</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.manager.RunningJobExecutionManager.get_all_job_exes">
+<code class="descname">get_all_job_exes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.manager.RunningJobExecutionManager.get_all_job_exes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all running job executions</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of running job executions</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="#job.execution.job_exe.RunningJobExecution" title="job.execution.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe.RunningJobExecution</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.manager.RunningJobExecutionManager.get_job_exe">
+<code class="descname">get_job_exe</code><span class="sig-paren">(</span><em>job_exe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.manager.RunningJobExecutionManager.get_job_exe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the running job execution with the given ID, or None if the job execution does not exist</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_id</strong> (<em>int</em>) &#8211; The ID of the job execution to return</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The running job execution with the given ID, possibly None</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#job.execution.job_exe.RunningJobExecution" title="job.execution.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe.RunningJobExecution</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.manager.RunningJobExecutionManager.get_job_exes_on_node">
+<code class="descname">get_job_exes_on_node</code><span class="sig-paren">(</span><em>node_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.manager.RunningJobExecutionManager.get_job_exes_on_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all running job executions that are on the given node</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node_id</strong> (<em>int</em>) &#8211; The ID of the node</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of running job executions</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="#job.execution.job_exe.RunningJobExecution" title="job.execution.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe.RunningJobExecution</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.manager.RunningJobExecutionManager.get_ready_job_exes">
+<code class="descname">get_ready_job_exes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.manager.RunningJobExecutionManager.get_ready_job_exes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all running job executions that are ready to execute their next task</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of running job executions</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="#job.execution.job_exe.RunningJobExecution" title="job.execution.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe.RunningJobExecution</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.manager.RunningJobExecutionManager.remove_job_exe">
+<code class="descname">remove_job_exe</code><span class="sig-paren">(</span><em>job_exe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.manager.RunningJobExecutionManager.remove_job_exe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes the running job execution with the given ID</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_id</strong> (<em>int</em>) &#8211; The ID of the job execution to remove</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-job.execution.metrics">
 <span id="job-execution-metrics-module"></span><h2>job.execution.metrics module<a class="headerlink" href="#module-job.execution.metrics" title="Permalink to this headline">¶</a></h2>
 <p>Defines the functions for handling job execution metrics</p>
@@ -325,7 +622,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="job.execution.running.html" class="btn btn-neutral float-right" title="job.execution.running package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="job.execution.tasks.html" class="btn btn-neutral float-right" title="job.execution.tasks package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="job.configuration.results.results_manifest.html" class="btn btn-neutral" title="job.configuration.results.results_manifest package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

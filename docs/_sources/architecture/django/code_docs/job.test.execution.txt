@@ -1,12 +1,17 @@
 job.test.execution package
 ==========================
 
-Subpackages
------------
+Submodules
+----------
 
-.. toctree::
+job.test.execution.test_job_exe module
+--------------------------------------
 
-    job.test.execution.running
+.. automodule:: job.test.execution.test_job_exe
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

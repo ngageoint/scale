@@ -6,7 +6,7 @@ Subpackages
 
 .. toctree::
 
-    job.execution.running
+    job.execution.tasks
 
 Submodules
 ----------
@@ -15,6 +15,22 @@ job.execution.container module
 ------------------------------
 
 .. automodule:: job.execution.container
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job.execution.job_exe module
+----------------------------
+
+.. automodule:: job.execution.job_exe
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job.execution.manager module
+----------------------------
+
+.. automodule:: job.execution.manager
     :members:
     :undoc-members:
     :show-inheritance:

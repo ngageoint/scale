@@ -1,0 +1,38 @@
+job.tasks package
+=================
+
+Submodules
+----------
+
+job.tasks.base_task module
+--------------------------
+
+.. automodule:: job.tasks.base_task
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job.tasks.manager module
+------------------------
+
+.. automodule:: job.tasks.manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job.tasks.update module
+-----------------------
+
+.. automodule:: job.tasks.update
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: job.tasks
+    :members:
+    :undoc-members:
+    :show-inheritance:

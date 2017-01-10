@@ -211,7 +211,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe</strong> (<a class="reference internal" href="job.execution.running.html#job.execution.running.job_exe.RunningJobExecution" title="job.execution.running.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.running.job_exe.RunningJobExecution</span></code></a>) &#8211; The job execution to add</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe</strong> (<a class="reference internal" href="job.execution.html#job.execution.job_exe.RunningJobExecution" title="job.execution.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe.RunningJobExecution</span></code></a>) &#8211; The job execution to add</td>
 </tr>
 </tbody>
 </table>
@@ -227,25 +227,21 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of the next cleanup tasks to schedule</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="job.execution.running.tasks.html#job.execution.running.tasks.cleanup_task.CleanupTask" title="job.execution.running.tasks.cleanup_task.CleanupTask"><code class="xref py py-class docutils literal"><span class="pre">job.execution.running.tasks.cleanup_task.CleanupTask</span></code></a>]</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="job.execution.tasks.html#job.execution.tasks.cleanup_task.CleanupTask" title="job.execution.tasks.cleanup_task.CleanupTask"><code class="xref py py-class docutils literal"><span class="pre">job.execution.tasks.cleanup_task.CleanupTask</span></code></a>]</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="method">
-<dt id="scheduler.cleanup.manager.CleanupManager.get_task_ids_for_reconciliation">
-<code class="descname">get_task_ids_for_reconciliation</code><span class="sig-paren">(</span><em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.cleanup.manager.CleanupManager.get_task_ids_for_reconciliation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the IDs of the clean up tasks that need to be reconciled</p>
+<dt id="scheduler.cleanup.manager.CleanupManager.handle_task_timeout">
+<code class="descname">handle_task_timeout</code><span class="sig-paren">(</span><em>task</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.cleanup.manager.CleanupManager.handle_task_timeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles the timeout of the given cleanup task</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The current time</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of IDs of the clean up tasks that need to be reconciled</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">[string]</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task</strong> (<a class="reference internal" href="job.tasks.html#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a>) &#8211; The task</td>
 </tr>
 </tbody>
 </table>
@@ -259,7 +255,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_update</strong> (<a class="reference internal" href="job.execution.running.tasks.html#job.execution.running.tasks.update.TaskStatusUpdate" title="job.execution.running.tasks.update.TaskStatusUpdate"><code class="xref py py-class docutils literal"><span class="pre">job.execution.running.tasks.update.TaskStatusUpdate</span></code></a>) &#8211; The task update</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_update</strong> (<a class="reference internal" href="job.tasks.html#job.tasks.update.TaskStatusUpdate" title="job.tasks.update.TaskStatusUpdate"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.update.TaskStatusUpdate</span></code></a>) &#8211; The task update</td>
 </tr>
 </tbody>
 </table>
@@ -298,7 +294,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe</strong> (<a class="reference internal" href="job.execution.running.html#job.execution.running.job_exe.RunningJobExecution" title="job.execution.running.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.running.job_exe.RunningJobExecution</span></code></a>) &#8211; The job execution to add</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe</strong> (<a class="reference internal" href="job.execution.html#job.execution.job_exe.RunningJobExecution" title="job.execution.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe.RunningJobExecution</span></code></a>) &#8211; The job execution to add</td>
 </tr>
 </tbody>
 </table>
@@ -314,25 +310,21 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The next cleanup task to launch, possibly None</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.execution.running.tasks.html#job.execution.running.tasks.cleanup_task.CleanupTask" title="job.execution.running.tasks.cleanup_task.CleanupTask"><code class="xref py py-class docutils literal"><span class="pre">job.execution.running.tasks.cleanup_task.CleanupTask</span></code></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.execution.tasks.html#job.execution.tasks.cleanup_task.CleanupTask" title="job.execution.tasks.cleanup_task.CleanupTask"><code class="xref py py-class docutils literal"><span class="pre">job.execution.tasks.cleanup_task.CleanupTask</span></code></a></td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="method">
-<dt id="scheduler.cleanup.node.NodeCleanup.get_task_id_for_reconciliation">
-<code class="descname">get_task_id_for_reconciliation</code><span class="sig-paren">(</span><em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.cleanup.node.NodeCleanup.get_task_id_for_reconciliation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the clean up task ID that needs to be reconciled, possibly None</p>
+<dt id="scheduler.cleanup.node.NodeCleanup.handle_task_timeout">
+<code class="descname">handle_task_timeout</code><span class="sig-paren">(</span><em>task</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.cleanup.node.NodeCleanup.handle_task_timeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles the timeout of the given cleanup task</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The current time</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The ID of the task that needs to be reconciled, possibly None</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task</strong> (<a class="reference internal" href="job.tasks.html#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a>) &#8211; The task</td>
 </tr>
 </tbody>
 </table>
@@ -346,7 +338,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_update</strong> (<a class="reference internal" href="job.execution.running.tasks.html#job.execution.running.tasks.update.TaskStatusUpdate" title="job.execution.running.tasks.update.TaskStatusUpdate"><code class="xref py py-class docutils literal"><span class="pre">job.execution.running.tasks.update.TaskStatusUpdate</span></code></a>) &#8211; The task update</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_update</strong> (<a class="reference internal" href="job.tasks.html#job.tasks.update.TaskStatusUpdate" title="job.tasks.update.TaskStatusUpdate"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.update.TaskStatusUpdate</span></code></a>) &#8211; The task update</td>
 </tr>
 </tbody>
 </table>

@@ -11,6 +11,7 @@ Subpackages
     job.handlers
     job.management
     job.migrations
+    job.tasks
     job.test
     job.triggers
 

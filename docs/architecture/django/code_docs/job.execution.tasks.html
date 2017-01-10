@@ -1,0 +1,560 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>job.execution.tasks package &mdash; Scale 4.2.0-snapshot documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Scale 4.2.0-snapshot documentation" href="../../../index.html"/>
+        <link rel="up" title="job.execution package" href="job.execution.html"/>
+        <link rel="next" title="job.handlers package" href="job.handlers.html"/>
+        <link rel="prev" title="job.execution package" href="job.execution.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../../../_static/scale3-transparent-128.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                4.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../logs.html">ElasticSearch Logs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="batch.html">batch package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="job.html">job package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="job.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.apps">job.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.clock">job.clock module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.errors">job.errors module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.exceptions">job.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.models">job.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.resources">job.resources module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.serializers">job.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.urls">job.urls module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.views">job.views module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.html#module-job">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manage.html">manage module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rest/index.html">REST API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">Scale</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../../index.html">Architecture</a> &raquo;</li>
+      
+          <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
+      
+          <li><a href="job.html">job package</a> &raquo;</li>
+      
+          <li><a href="job.execution.html">job.execution package</a> &raquo;</li>
+      
+    <li>job.execution.tasks package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../../_sources/architecture/django/code_docs/job.execution.tasks.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="job-execution-tasks-package">
+<h1>job.execution.tasks package<a class="headerlink" href="#job-execution-tasks-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-job.execution.tasks.cleanup_task">
+<span id="job-execution-tasks-cleanup-task-module"></span><h2>job.execution.tasks.cleanup_task module<a class="headerlink" href="#module-job.execution.tasks.cleanup_task" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class for a cleanup task</p>
+<dl class="class">
+<dt id="job.execution.tasks.cleanup_task.AtomicCounter">
+<em class="property">class </em><code class="descclassname">job.execution.tasks.cleanup_task.</code><code class="descname">AtomicCounter</code><a class="headerlink" href="#job.execution.tasks.cleanup_task.AtomicCounter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents an atomic counter</p>
+<dl class="method">
+<dt id="job.execution.tasks.cleanup_task.AtomicCounter.get_next">
+<code class="descname">get_next</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.cleanup_task.AtomicCounter.get_next" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the next integer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The next integer</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.execution.tasks.cleanup_task.CleanupTask">
+<em class="property">class </em><code class="descclassname">job.execution.tasks.cleanup_task.</code><code class="descname">CleanupTask</code><span class="sig-paren">(</span><em>framework_id</em>, <em>agent_id</em>, <em>job_exes</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.cleanup_task.CleanupTask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="job.tasks.html#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a></p>
+<p>Represents a task that cleans up after job executions. This class is thread-safe.</p>
+<dl class="method">
+<dt id="job.execution.tasks.cleanup_task.CleanupTask.get_resources">
+<code class="descname">get_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.cleanup_task.CleanupTask.get_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="job.tasks.html#job.tasks.base_task.Task.get_resources" title="job.tasks.base_task.Task.get_resources"><code class="xref py py-meth docutils literal"><span class="pre">job.tasks.base_task.Task.get_resources()</span></code></a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.execution.tasks.cleanup_task.CleanupTask.is_initial_cleanup">
+<code class="descname">is_initial_cleanup</code><a class="headerlink" href="#job.execution.tasks.cleanup_task.CleanupTask.is_initial_cleanup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this is an initial clean up job (True) or not (False)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether this is an initial clean up job</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.execution.tasks.cleanup_task.CleanupTask.job_exes">
+<code class="descname">job_exes</code><a class="headerlink" href="#job.execution.tasks.cleanup_task.CleanupTask.job_exes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the list of job executions to clean up</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of job executions to clean up</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="job.execution.html#job.execution.job_exe.RunningJobExecution" title="job.execution.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe.RunningJobExecution</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.execution.tasks.exe_task">
+<span id="job-execution-tasks-exe-task-module"></span><h2>job.execution.tasks.exe_task module<a class="headerlink" href="#module-job.execution.tasks.exe_task" title="Permalink to this headline">¶</a></h2>
+<p>Defines the abstract base class for all job execution tasks</p>
+<dl class="class">
+<dt id="job.execution.tasks.exe_task.JobExecutionTask">
+<em class="property">class </em><code class="descclassname">job.execution.tasks.exe_task.</code><code class="descname">JobExecutionTask</code><span class="sig-paren">(</span><em>task_id</em>, <em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.exe_task.JobExecutionTask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="job.tasks.html#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a></p>
+<p>Abstract base class for a job execution task. A job execution consists of three tasks: the pre-task,
+the job-task, and the post-task.</p>
+<dl class="method">
+<dt id="job.execution.tasks.exe_task.JobExecutionTask.complete">
+<code class="descname">complete</code><span class="sig-paren">(</span><em>task_update</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.exe_task.JobExecutionTask.complete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Completes this task and indicates whether following tasks should update their cached job execution values</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_update</strong> (<a class="reference internal" href="job.tasks.html#job.tasks.update.TaskStatusUpdate" title="job.tasks.update.TaskStatusUpdate"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.update.TaskStatusUpdate</span></code></a>) &#8211; The task update</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if following tasks should update their cached job execution values, False otherwise</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.tasks.exe_task.JobExecutionTask.create_scale_image_name">
+<code class="descname">create_scale_image_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.exe_task.JobExecutionTask.create_scale_image_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the full image name to use for running the Scale Docker image</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The full Scale Docker image name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.tasks.exe_task.JobExecutionTask.determine_error">
+<code class="descname">determine_error</code><span class="sig-paren">(</span><em>task_update</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.exe_task.JobExecutionTask.determine_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempts to determine the error that caused this task to fail</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_update</strong> (<a class="reference internal" href="job.tasks.html#job.tasks.update.TaskStatusUpdate" title="job.tasks.update.TaskStatusUpdate"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.update.TaskStatusUpdate</span></code></a>) &#8211; The task update</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The error that caused this task to fail, possibly None</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="error.html#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.execution.tasks.exe_task.JobExecutionTask.job_exe_id">
+<code class="descname">job_exe_id</code><a class="headerlink" href="#job.execution.tasks.exe_task.JobExecutionTask.job_exe_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the job execution ID of the task</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The job execution ID</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.tasks.exe_task.JobExecutionTask.populate_job_exe_model">
+<code class="descname">populate_job_exe_model</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.exe_task.JobExecutionTask.populate_job_exe_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Populates the job execution model with the relevant information from this task</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>) &#8211; The job execution model</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.tasks.exe_task.JobExecutionTask.refresh_cached_values">
+<code class="descname">refresh_cached_values</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.exe_task.JobExecutionTask.refresh_cached_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Refreshes the task&#8217;s cached job execution values with the given model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>) &#8211; The job execution model</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.execution.tasks.job_task">
+<span id="job-execution-tasks-job-task-module"></span><h2>job.execution.tasks.job_task module<a class="headerlink" href="#module-job.execution.tasks.job_task" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class for a job execution job task</p>
+<dl class="class">
+<dt id="job.execution.tasks.job_task.JobTask">
+<em class="property">class </em><code class="descclassname">job.execution.tasks.job_task.</code><code class="descname">JobTask</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.job_task.JobTask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#job.execution.tasks.exe_task.JobExecutionTask" title="job.execution.tasks.exe_task.JobExecutionTask"><code class="xref py py-class docutils literal"><span class="pre">job.execution.tasks.exe_task.JobExecutionTask</span></code></a></p>
+<p>Represents a job execution job task (runs the actual job/algorithm). This class is thread-safe.</p>
+<dl class="method">
+<dt id="job.execution.tasks.job_task.JobTask.determine_error">
+<code class="descname">determine_error</code><span class="sig-paren">(</span><em>task_update</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.job_task.JobTask.determine_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#job.execution.tasks.exe_task.JobExecutionTask.determine_error" title="job.execution.tasks.exe_task.JobExecutionTask.determine_error"><code class="xref py py-meth docutils literal"><span class="pre">job.execution.tasks.exe_task.JobExecutionTask.determine_error()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.tasks.job_task.JobTask.get_resources">
+<code class="descname">get_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.job_task.JobTask.get_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="job.tasks.html#job.tasks.base_task.Task.get_resources" title="job.tasks.base_task.Task.get_resources"><code class="xref py py-meth docutils literal"><span class="pre">job.tasks.base_task.Task.get_resources()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.tasks.job_task.JobTask.populate_job_exe_model">
+<code class="descname">populate_job_exe_model</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.job_task.JobTask.populate_job_exe_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#job.execution.tasks.exe_task.JobExecutionTask.populate_job_exe_model" title="job.execution.tasks.exe_task.JobExecutionTask.populate_job_exe_model"><code class="xref py py-meth docutils literal"><span class="pre">job.execution.tasks.exe_task.JobExecutionTask.populate_job_exe_model()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.tasks.job_task.JobTask.refresh_cached_values">
+<code class="descname">refresh_cached_values</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.job_task.JobTask.refresh_cached_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Refreshes the task&#8217;s cached job execution values with the given model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>) &#8211; The job execution model</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.execution.tasks.post_task">
+<span id="job-execution-tasks-post-task-module"></span><h2>job.execution.tasks.post_task module<a class="headerlink" href="#module-job.execution.tasks.post_task" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class for a job execution post-task</p>
+<dl class="class">
+<dt id="job.execution.tasks.post_task.PostTask">
+<em class="property">class </em><code class="descclassname">job.execution.tasks.post_task.</code><code class="descname">PostTask</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.post_task.PostTask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#job.execution.tasks.exe_task.JobExecutionTask" title="job.execution.tasks.exe_task.JobExecutionTask"><code class="xref py py-class docutils literal"><span class="pre">job.execution.tasks.exe_task.JobExecutionTask</span></code></a></p>
+<p>Represents a job execution post-task. This class is thread-safe.</p>
+<dl class="method">
+<dt id="job.execution.tasks.post_task.PostTask.determine_error">
+<code class="descname">determine_error</code><span class="sig-paren">(</span><em>task_update</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.post_task.PostTask.determine_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#job.execution.tasks.exe_task.JobExecutionTask.determine_error" title="job.execution.tasks.exe_task.JobExecutionTask.determine_error"><code class="xref py py-meth docutils literal"><span class="pre">job.execution.tasks.exe_task.JobExecutionTask.determine_error()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.tasks.post_task.PostTask.get_resources">
+<code class="descname">get_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.post_task.PostTask.get_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="job.tasks.html#job.tasks.base_task.Task.get_resources" title="job.tasks.base_task.Task.get_resources"><code class="xref py py-meth docutils literal"><span class="pre">job.tasks.base_task.Task.get_resources()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.tasks.post_task.PostTask.populate_job_exe_model">
+<code class="descname">populate_job_exe_model</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.post_task.PostTask.populate_job_exe_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#job.execution.tasks.exe_task.JobExecutionTask.populate_job_exe_model" title="job.execution.tasks.exe_task.JobExecutionTask.populate_job_exe_model"><code class="xref py py-meth docutils literal"><span class="pre">job.execution.tasks.exe_task.JobExecutionTask.populate_job_exe_model()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.execution.tasks.pre_task">
+<span id="job-execution-tasks-pre-task-module"></span><h2>job.execution.tasks.pre_task module<a class="headerlink" href="#module-job.execution.tasks.pre_task" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class for a job execution pre-task</p>
+<dl class="class">
+<dt id="job.execution.tasks.pre_task.PreTask">
+<em class="property">class </em><code class="descclassname">job.execution.tasks.pre_task.</code><code class="descname">PreTask</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.pre_task.PreTask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#job.execution.tasks.exe_task.JobExecutionTask" title="job.execution.tasks.exe_task.JobExecutionTask"><code class="xref py py-class docutils literal"><span class="pre">job.execution.tasks.exe_task.JobExecutionTask</span></code></a></p>
+<p>Represents a job execution pre-task. This class is thread-safe.</p>
+<dl class="method">
+<dt id="job.execution.tasks.pre_task.PreTask.complete">
+<code class="descname">complete</code><span class="sig-paren">(</span><em>task_update</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.pre_task.PreTask.complete" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#job.execution.tasks.exe_task.JobExecutionTask.complete" title="job.execution.tasks.exe_task.JobExecutionTask.complete"><code class="xref py py-meth docutils literal"><span class="pre">job.execution.tasks.exe_task.JobExecutionTask.complete()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.tasks.pre_task.PreTask.determine_error">
+<code class="descname">determine_error</code><span class="sig-paren">(</span><em>task_update</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.pre_task.PreTask.determine_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#job.execution.tasks.exe_task.JobExecutionTask.determine_error" title="job.execution.tasks.exe_task.JobExecutionTask.determine_error"><code class="xref py py-meth docutils literal"><span class="pre">job.execution.tasks.exe_task.JobExecutionTask.determine_error()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.tasks.pre_task.PreTask.get_resources">
+<code class="descname">get_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.pre_task.PreTask.get_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="job.tasks.html#job.tasks.base_task.Task.get_resources" title="job.tasks.base_task.Task.get_resources"><code class="xref py py-meth docutils literal"><span class="pre">job.tasks.base_task.Task.get_resources()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.tasks.pre_task.PreTask.populate_job_exe_model">
+<code class="descname">populate_job_exe_model</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.pre_task.PreTask.populate_job_exe_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#job.execution.tasks.exe_task.JobExecutionTask.populate_job_exe_model" title="job.execution.tasks.exe_task.JobExecutionTask.populate_job_exe_model"><code class="xref py py-meth docutils literal"><span class="pre">job.execution.tasks.exe_task.JobExecutionTask.populate_job_exe_model()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.execution.tasks">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-job.execution.tasks" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="job.handlers.html" class="btn btn-neutral float-right" title="job.handlers package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="job.execution.html" class="btn btn-neutral" title="job.execution package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'4.2.0-snapshot',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

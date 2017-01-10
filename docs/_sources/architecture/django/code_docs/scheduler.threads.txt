@@ -28,10 +28,18 @@ scheduler.threads.schedule module
     :undoc-members:
     :show-inheritance:
 
-scheduler.threads.status module
--------------------------------
+scheduler.threads.task_handling module
+--------------------------------------
 
-.. automodule:: scheduler.threads.status
+.. automodule:: scheduler.threads.task_handling
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+scheduler.threads.task_update module
+------------------------------------
+
+.. automodule:: scheduler.threads.task_update
     :members:
     :undoc-members:
     :show-inheritance:
