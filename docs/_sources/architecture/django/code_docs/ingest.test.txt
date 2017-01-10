@@ -12,6 +12,14 @@ Subpackages
 Submodules
 ----------
 
+ingest.test.test_app module
+---------------------------
+
+.. automodule:: ingest.test.test_app
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 ingest.test.test_ingest_job module
 ----------------------------------
 
