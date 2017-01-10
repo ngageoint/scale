@@ -7,6 +7,9 @@ from job.execution.tasks.exe_task import JobExecutionTask
 from job.resources import NodeResources
 
 
+JOB_TYPE_TIMEOUT_ERRORS = {}  # {Job type name: error name}
+
+
 class JobTask(JobExecutionTask):
     """Represents a job execution job task (runs the actual job/algorithm). This class is thread-safe.
     """
@@ -36,7 +39,13 @@ class JobTask(JobExecutionTask):
             self._running_timeout_threshold = None
         else:
             self._running_timeout_threshold = datetime.timedelta(seconds=job_exe.timeout)
-        self.timeout_error_name = 'timeout'
+
+        # Determine error to use if this task times out
+        job_type_name = job_exe.job.job_type.name
+        if job_type_name in JOB_TYPE_TIMEOUT_ERRORS:
+            self.timeout_error_name = JOB_TYPE_TIMEOUT_ERRORS[job_type_name]
+        else:
+            self.timeout_error_name = 'system-timeout' if self._is_system else 'timeout'
 
     def determine_error(self, task_update):
         """See :meth:`job.execution.tasks.exe_task.JobExecutionTask.determine_error`

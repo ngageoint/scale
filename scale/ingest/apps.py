@@ -16,6 +16,10 @@ class IngestConfig(AppConfig):
         Override this method in subclasses to run code when Django starts.
         """
 
+        # Register ingest job type timeout error
+        from job.execution.tasks.job_task import JOB_TYPE_TIMEOUT_ERRORS
+        JOB_TYPE_TIMEOUT_ERRORS['scale-ingest'] = 'ingest-timeout'
+
         from ingest.triggers.ingest_trigger_handler import IngestTriggerHandler
         from trigger.handler import register_trigger_rule_handler
 
