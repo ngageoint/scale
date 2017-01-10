@@ -7,14 +7,15 @@ import threading
 
 from django.db import DatabaseError
 from django.utils.timezone import now
+from job.execution.tasks.cleanup_task import CLEANUP_TASK_ID_PREFIX
 from mesos.interface import Scheduler as MesosScheduler
 
 from error.models import Error
-from job.execution.running.manager import running_job_mgr
-from job.execution.running.tasks.cleanup_task import CLEANUP_TASK_ID_PREFIX
-from job.execution.running.tasks.update import TaskStatusUpdate
+from job.execution.manager import running_job_mgr
 from job.models import JobExecution
 from job.resources import NodeResources
+from job.tasks.manager import task_mgr
+from job.tasks.update import TaskStatusUpdate
 from mesos_api import utils
 from queue.models import Queue
 from scheduler.cleanup.manager import cleanup_mgr
@@ -31,7 +32,8 @@ from scheduler.task.manager import task_update_mgr
 from scheduler.threads.db_sync import DatabaseSyncThread
 from scheduler.threads.recon import ReconciliationThread
 from scheduler.threads.schedule import SchedulingThread
-from scheduler.threads.status import TaskUpdateThread
+from scheduler.threads.task_handling import TaskHandlingThread
+from scheduler.threads.task_update import TaskUpdateThread
 from util.host import HostAddress
 
 
@@ -59,7 +61,8 @@ class ScaleScheduler(MesosScheduler):
         self._db_sync_thread = None
         self._recon_thread = None
         self._scheduling_thread = None
-        self._task_thread = None
+        self._task_handling_thread = None
+        self._task_update_thread = None
 
     def registered(self, driver, frameworkId, masterInfo):
         """
@@ -104,10 +107,15 @@ class ScaleScheduler(MesosScheduler):
         scheduling_thread.daemon = True
         scheduling_thread.start()
 
-        self._task_thread = TaskUpdateThread()
-        task_thread = threading.Thread(target=self._task_thread.run)
-        task_thread.daemon = True
-        task_thread.start()
+        self._task_handling_thread = TaskHandlingThread(self._driver)
+        task_handling_thread = threading.Thread(target=self._task_handling_thread.run)
+        task_handling_thread.daemon = True
+        task_handling_thread.start()
+
+        self._task_update_thread = TaskUpdateThread()
+        task_update_thread = threading.Thread(target=self._task_update_thread.run)
+        task_update_thread.daemon = True
+        task_update_thread.start()
 
         self._reconcile_running_jobs()
 
@@ -134,6 +142,7 @@ class ScaleScheduler(MesosScheduler):
         self._db_sync_thread.driver = self._driver
         recon_mgr.driver = self._driver
         self._scheduling_thread.driver = self._driver
+        self._task_handling_thread.driver = self._driver
 
         self._reconcile_running_jobs()
 
@@ -248,6 +257,9 @@ class ScaleScheduler(MesosScheduler):
             logger.warning('Status update for task %s: %s', task_id, mesos_status)
         else:
             logger.info('Status update for task %s: %s', task_id, mesos_status)
+
+        # Update task with latest status
+        task_mgr.handle_task_update(task_update)
 
         # Since we have a status update for this task, remove it from reconciliation set
         recon_mgr.remove_task_id(task_id)
@@ -402,7 +414,8 @@ class ScaleScheduler(MesosScheduler):
         self._db_sync_thread.shutdown()
         self._recon_thread.shutdown()
         self._scheduling_thread.shutdown()
-        self._task_thread.shutdown()
+        self._task_handling_thread.shutdown()
+        self._task_update_thread.shutdown()
 
     def _reconcile_running_jobs(self):
         """Looks up all currently running jobs in the database and sets them up to be reconciled with Mesos"""

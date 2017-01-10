@@ -21,7 +21,7 @@ class CleanupManager(object):
         """Adds a job execution that needs to be cleaned up
 
         :param job_exe: The job execution to add
-        :type job_exe: :class:`job.execution.running.job_exe.RunningJobExecution`
+        :type job_exe: :class:`job.execution.job_exe.RunningJobExecution`
         """
 
         with self._lock:
@@ -31,7 +31,7 @@ class CleanupManager(object):
         """Returns the next cleanup tasks to schedule
 
         :returns: A list of the next cleanup tasks to schedule
-        :rtype: [:class:`job.execution.running.tasks.cleanup_task.CleanupTask`]
+        :rtype: [:class:`job.execution.tasks.cleanup_task.CleanupTask`]
         """
 
         tasks = []
@@ -42,29 +42,24 @@ class CleanupManager(object):
                     tasks.append(task)
         return tasks
 
-    def get_task_ids_for_reconciliation(self, when):
-        """Returns the IDs of the clean up tasks that need to be reconciled
+    def handle_task_timeout(self, task):
+        """Handles the timeout of the given cleanup task
 
-        :param when: The current time
-        :type when: :class:`datetime.datetime`
-        :returns: The list of IDs of the clean up tasks that need to be reconciled
-        :rtype: [string]
+        :param task: The task
+        :type task: :class:`job.tasks.base_task.Task`
         """
 
-        task_ids = []
         with self._lock:
-            for node in self._nodes.values():
-                task_id = node.get_task_id_for_reconciliation(when)
-                if task_id:
-                    task_ids.append(task_id)
-
-            return task_ids
+            if task.agent_id not in self._agent_ids:
+                return
+            node_id = self._agent_ids[task.agent_id]
+            self._nodes[node_id].handle_task_timeout(task)
 
     def handle_task_update(self, task_update):
         """Handles the given task update for a cleanup task
 
         :param task_update: The task update
-        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
+        :type task_update: :class:`job.tasks.update.TaskStatusUpdate`
         """
 
         with self._lock:

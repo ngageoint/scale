@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import django
 from django.test import TestCase
 
-from job.execution.running.job_exe import RunningJobExecution
+from job.execution.job_exe import RunningJobExecution
 from job.resources import NodeResources
 from job.test import utils as job_test_utils
 from node.test import utils as node_test_utils

@@ -6,14 +6,15 @@ import datetime
 import logging
 import math
 
-import django.utils.timezone as timezone
 import django.utils.html
+import django.utils.timezone as timezone
 import djorm_pgjson.fields
 from django.conf import settings
 from django.db import models, transaction
 from django.db.models import Q
 
 import job.execution.container as job_exe_container
+import util.parse
 from error.models import Error
 from job.configuration.configuration.job_configuration import JobConfiguration, MODE_RO, MODE_RW
 from job.configuration.configuration.job_parameter import DockerParam
@@ -25,13 +26,12 @@ from job.configuration.interface.job_type_configuration import JobTypeConfigurat
 from job.configuration.results.job_results import JobResults
 from job.exceptions import InvalidJobField
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
-from job.execution.running.tasks.exe_task import JOB_TASK_ID_PREFIX
+from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
 from storage.models import ScaleFile, Workspace
 from trigger.configuration.exceptions import InvalidTriggerType
 from trigger.models import TriggerRule
 from util.exceptions import RollbackTransaction, ScaleLogicBug
-import util.parse
 
 
 logger = logging.getLogger(__name__)
@@ -1563,19 +1563,6 @@ class JobExecution(models.Model):
         """
 
         return self.job.job_type.is_system
-
-    def is_timed_out(self, when):
-        """Indicates whether this job execution is timed out based on the given current time
-
-        :param when: The current time
-        :type when: :class:`datetime.datetime`
-        :returns: True if this job execution is for a system job, False otherwise
-        :rtype: bool
-        """
-
-        running_with_timeout_set = self.status == 'RUNNING' and self.timeout
-        timeout_exceeded = self.started + datetime.timedelta(seconds=self.timeout) < when
-        return running_with_timeout_set and timeout_exceeded
 
     def set_cluster_id(self, framework_id):
         """Sets the unique cluster ID for this job execution

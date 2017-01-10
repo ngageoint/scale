@@ -9,7 +9,7 @@ from django.utils.timezone import utc
 from google.protobuf.internal import enum_type_wrapper
 from mesos.interface import mesos_pb2
 
-from job.execution.running.tasks.exe_task import JOB_TASK_ID_PREFIX
+from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
 from job.models import JobExecution, TaskUpdate
 
 

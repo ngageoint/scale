@@ -1,10 +1,11 @@
 """Defines the class for a cleanup task"""
 from __future__ import unicode_literals
 
+import datetime
 import threading
 
-from job.execution.running.tasks.base_task import Task
 from job.resources import NodeResources
+from job.tasks.base_task import Task
 
 
 CLEANUP_TASK_ID_PREFIX = 'scale_cleanup'
@@ -48,7 +49,7 @@ class CleanupTask(Task):
         :param agent_id: The agent ID
         :type agent_id: string
         :param job_exes: The list of job executions to clean up
-        :type job_exes: [:class:`job.execution.running.job_exe.RunningJobExecution`]
+        :type job_exes: [:class:`job.execution.job_exe.RunningJobExecution`]
         """
 
         task_id = '%s_%s_%d' % (CLEANUP_TASK_ID_PREFIX, framework_id, COUNTER.get_next())
@@ -61,6 +62,8 @@ class CleanupTask(Task):
         self._docker_image = None
         self._docker_params = []
         self._is_docker_privileged = False
+        self._running_timeout_threshold = datetime.timedelta(minutes=10)
+        self._staging_timeout_threshold = datetime.timedelta(minutes=2)
 
         # Define basic command pieces
         for_cmd = 'for %s in `%s`; do %s; done'
@@ -110,13 +113,13 @@ class CleanupTask(Task):
         """Returns the list of job executions to clean up
 
         :returns: The list of job executions to clean up
-        :rtype: [:class:`job.execution.running.job_exe.RunningJobExecution`]
+        :rtype: [:class:`job.execution.job_exe.RunningJobExecution`]
         """
 
         return self._job_exes
 
     def get_resources(self):
-        """See :meth:`job.execution.running.tasks.base_task.Task.get_resources`
+        """See :meth:`job.tasks.base_task.Task.get_resources`
         """
 
         return NodeResources(cpus=0.1, mem=32)

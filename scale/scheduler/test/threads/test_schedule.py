@@ -4,12 +4,11 @@ import django
 from django.test import TransactionTestCase
 from mock import MagicMock, patch
 
-from job.execution.running.job_exe import RunningJobExecution
-from job.execution.running.manager import running_job_mgr
+from job.execution.job_exe import RunningJobExecution
+from job.execution.manager import running_job_mgr
 from job.resources import NodeResources
 from job.test import utils as job_test_utils
 from mesos_api.api import SlaveInfo
-from node.test import utils as node_test_utils
 from queue.models import Queue
 from queue.test import utils as queue_test_utils
 from scheduler.models import Scheduler
