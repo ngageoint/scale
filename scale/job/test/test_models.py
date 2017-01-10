@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+import copy
 import datetime
 
 import django
@@ -31,6 +32,45 @@ class TestJobManager(TransactionTestCase):
 
     def setUp(self):
         django.setup()
+
+    def test_get_details(self):
+        """Tests calling JobManager.get_details() with extra data inputs that should be ignored"""
+
+        workspace_1 = storage_test_utils.create_workspace()
+        file_1 = storage_test_utils.create_file(workspace=workspace_1)
+        file_2 = storage_test_utils.create_file(workspace=workspace_1)
+        interface = {
+            'version': '1.0',
+            'command': 'my_command',
+            'command_arguments': 'args',
+            'input_data': [{
+                'name': 'Input 1',
+                'type': 'file',
+                'media_types': ['text/plain'],
+            }]}
+        job_type = job_test_utils.create_job_type(interface=interface)
+        job = job_test_utils.create_job(job_type=job_type, status='PENDING')
+        orig_data = {
+            'version': '1.0',
+            'input_data': [{
+                'name': 'Input 1',
+                'file_id': file_1.id
+            }, {
+                'name': 'Input 2',
+                'file_id': file_2.id
+            }, {
+                'name': 'Input 3',
+                'value': 'hello'
+            }]}
+        data = copy.deepcopy(orig_data)
+        job_data = JobData(data)
+        Job.objects.populate_job_data(job, job_data)
+        # populate_job_data() strips out extra inputs, so force them back in
+        job.data = orig_data
+        job.save()
+
+        # No exception means success
+        Job.objects.get_details(job.id)
 
     def test_populate_job_data(self):
         """Tests calling JobManager.populate_job_data()"""
