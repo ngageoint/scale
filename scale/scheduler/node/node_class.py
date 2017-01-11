@@ -167,6 +167,7 @@ class Node(object):
             logger.warning('Scale image pull task on host %s timed out', self._hostname)
             if self._current_task.has_ended:
                 self._current_task = None
+            self._update_state()
 
     def handle_task_update(self, task_update):
         """Handles the given task update
@@ -187,6 +188,7 @@ class Node(object):
                 logger.warning('Scale image pull task on host %s killed', self._hostname)
             if self._current_task.has_ended:
                 self._current_task = None
+            self._update_state()
 
     def update_from_mesos(self, agent_id=None, port=None, is_online=None):
         """Updates this node's data from Mesos
