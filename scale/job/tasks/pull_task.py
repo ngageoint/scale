@@ -15,7 +15,7 @@ class PullTask(Task):
     """Represents a task that pulls Docker images from the registry. This class is thread-safe.
     """
 
-    def __init__(self, framework_id, agent_id, image_name):
+    def __init__(self, framework_id, agent_id, image_name=None):
         """Constructor
 
         :param framework_id: The framework ID

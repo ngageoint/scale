@@ -7,14 +7,15 @@ import threading
 
 from django.db import DatabaseError
 from django.utils.timezone import now
-from job.execution.tasks.cleanup_task import CLEANUP_TASK_ID_PREFIX
 from mesos.interface import Scheduler as MesosScheduler
 
 from error.models import Error
 from job.execution.manager import running_job_mgr
+from job.execution.tasks.cleanup_task import CLEANUP_TASK_ID_PREFIX
 from job.models import JobExecution
 from job.resources import NodeResources
 from job.tasks.manager import task_mgr
+from job.tasks.pull_task import PULL_TASK_ID_PREFIX
 from job.tasks.update import TaskStatusUpdate
 from mesos_api import utils
 from queue.models import Queue
@@ -267,7 +268,9 @@ class ScaleScheduler(MesosScheduler):
         # Hand off task update to be saved in the database
         task_update_mgr.add_task_update(model)
 
-        if task_id.startswith(CLEANUP_TASK_ID_PREFIX):
+        if task_id.startswith(PULL_TASK_ID_PREFIX):
+            node_mgr.handle_task_update(task_update)
+        elif task_id.startswith(CLEANUP_TASK_ID_PREFIX):
             cleanup_mgr.handle_task_update(task_update)
         else:
             job_exe_id = JobExecution.get_job_exe_id(task_id)

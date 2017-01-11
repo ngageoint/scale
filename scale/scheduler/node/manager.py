@@ -33,6 +33,21 @@ class NodeManager(object):
             self._new_agent_ids = set()
             self._nodes = {}
 
+    def get_next_tasks(self):
+        """Returns the next node tasks to schedule
+
+        :returns: A list of the next node tasks to schedule
+        :rtype: [:class:`job.tasks.base_task.Task`]
+        """
+
+        tasks = []
+        with self._lock:
+            for node in self._nodes.values():
+                task = node.get_next_task()
+                if task:
+                    tasks.append(task)
+        return tasks
+
     def get_node(self, agent_id):
         """Returns the node with the given agent ID, possibly None
 
@@ -57,6 +72,32 @@ class NodeManager(object):
 
         with self._lock:
             return list(self._nodes.values())
+
+    def handle_task_timeout(self, task):
+        """Handles the timeout of the given task
+
+        :param task: The task
+        :type task: :class:`job.tasks.base_task.Task`
+        """
+
+        with self._lock:
+            if task.agent_id not in self._agent_ids:
+                return
+            node_id = self._agent_ids[task.agent_id]
+            self._nodes[node_id].handle_task_timeout(task)
+
+    def handle_task_update(self, task_update):
+        """Handles the given task update for a task
+
+        :param task_update: The task update
+        :type task_update: :class:`job.tasks.update.TaskStatusUpdate`
+        """
+
+        with self._lock:
+            if task_update.agent_id not in self._agent_ids:
+                return
+            node_id = self._agent_ids[task_update.agent_id]
+            self._nodes[node_id].handle_task_update(task_update)
 
     def lost_node(self, agent_id):
         """Informs the manager that the node with the given agent ID was lost and has gone offline

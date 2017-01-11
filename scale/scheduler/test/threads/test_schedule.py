@@ -102,6 +102,10 @@ class TestSchedulingThread(TransactionTestCase):
         offer_2 = ResourceOffer('offer_2', self.node_agent_2, NodeResources(cpus=200.0, mem=204800.0, disk=204800.0))
         offer_mgr.add_new_offers([offer_1, offer_2])
 
+        # Ignore Docker pull tasks
+        for node in node_mgr.get_nodes():
+            node._is_image_pulled = True
+
         # Ignore cleanup tasks
         for node in node_mgr.get_nodes():
             node.initial_cleanup_completed()
