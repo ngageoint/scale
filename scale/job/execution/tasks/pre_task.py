@@ -23,7 +23,7 @@ class PreTask(JobExecutionTask):
         super(PreTask, self).__init__(job_exe.get_pre_task_id(), job_exe)
 
         self._uses_docker = True
-        self._docker_image = self.create_scale_image_name()
+        self._docker_image = self._create_scale_image_name()
         self._docker_params = job_exe.get_job_configuration().get_pre_task_docker_params()
         self._is_docker_privileged = False
         self._command_arguments = 'scale_pre_steps -i %i' % job_exe.id

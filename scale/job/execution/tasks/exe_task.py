@@ -3,8 +3,6 @@ from __future__ import unicode_literals
 
 from abc import ABCMeta, abstractmethod
 
-from django.conf import settings
-
 from error.models import Error
 from job.tasks.base_task import Task
 
@@ -75,15 +73,6 @@ class JobExecutionTask(Task):
             self._last_status_update = task_update.timestamp
 
             return False
-
-    def create_scale_image_name(self):
-        """Creates the full image name to use for running the Scale Docker image
-
-        :returns: The full Scale Docker image name
-        :rtype: string
-        """
-
-        return '%s:%s' % (settings.SCALE_DOCKER_IMAGE, settings.DOCKER_VERSION)
 
     @abstractmethod
     def determine_error(self, task_update):

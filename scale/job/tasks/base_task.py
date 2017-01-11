@@ -6,6 +6,8 @@ import logging
 import threading
 from abc import ABCMeta, abstractmethod
 
+from django.conf import settings
+
 from job.tasks.update import TaskStatusUpdate
 from util.exceptions import ScaleLogicBug
 
@@ -22,6 +24,29 @@ STAGING_RECON_THRESHOLD = datetime.timedelta(seconds=30)
 
 
 logger = logging.getLogger(__name__)
+
+
+class AtomicCounter(object):
+    """Represents an atomic counter
+    """
+
+    def __init__(self):
+        """Constructor
+        """
+
+        self._counter = 0
+        self._lock = threading.Lock()
+
+    def get_next(self):
+        """Returns the next integer
+
+        :returns: The next integer
+        :rtype: int
+        """
+
+        with self._lock:
+            self._counter += 1
+            return self._counter
 
 
 class Task(object):
@@ -318,6 +343,15 @@ class Task(object):
                 self._has_ended = True
                 self._ended = task_update.timestamp
                 self._exit_code = task_update.exit_code
+
+    def _create_scale_image_name(self):
+        """Creates the full image name to use for running the Scale Docker image
+
+        :returns: The full Scale Docker image name
+        :rtype: string
+        """
+
+        return '%s:%s' % (settings.SCALE_DOCKER_IMAGE, settings.DOCKER_VERSION)
 
     def _parse_container_name(self, task_update):
         """Tries to parse the container name out of the task update. Assumes caller already has the task lock.
