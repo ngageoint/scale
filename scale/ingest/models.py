@@ -404,6 +404,198 @@ class Ingest(models.Model):
         db_table = 'ingest'
 
 
+class ScanManager(models.Manager):
+    """Provides additional methods for handling Scan processes
+    """
+
+    @transaction.atomic
+    def create_scan(self, name, title, description, configuration):
+        """Creates a new Scan process with the given configuration and returns the new Scan model. The Scan model
+        will be saved in the database and the job to run the Scan process will be placed on the queue. All changes to
+        the database will occur in an atomic transaction.
+
+        :param name: The identifying name of this Scan process
+        :type name: string
+        :param title: The human-readable name of this Scan process
+        :type title: string
+        :param description: A description of this Scan process
+        :type description: string
+        :param configuration: The Scan configuration
+        :type configuration: dict
+        :returns: The new Scan process
+        :rtype: :class:`ingest.models.Scan`
+
+        :raises :class:`ingest.scan.configuration.exceptions.InvalidScanConfiguration`: If the configuration is
+            invalid.
+        """
+
+        # Validate the configuration, no exception is success
+        config = ScanConfiguration(configuration)
+        config.validate()
+
+        scan = Scan()
+        scan.name = name
+        scan.title = title
+        scan.description = description
+        scan.configuration = config.get_dict()
+        scan.save()
+
+        scan_type = self.get_scan_job_type()
+        job_data = JobData()
+        job_data.add_property_input('Scan ID', unicode(scan.id))
+        event_description = {'scan_id': scan.id}
+        event = TriggerEvent.objects.create_trigger_event('SCAN_CREATED', None, event_description, now())
+        scan.job = Queue.objects.queue_new_job(scan_type, job_data, event)
+        scan.save()
+
+        return scan
+
+    @transaction.atomic
+    def edit_scan(self, scan_id, title=None, description=None, configuration=None):
+        """Edits the given Scan process and saves the changes in the database. All database changes occur in an atomic
+        transaction. An argument of None for a field indicates that the field should not change.
+
+        :param scan_id: The unique identifier of the Scan process to edit
+        :type scan_id: int
+        :param title: The human-readable name of this Scan process
+        :type title: string
+        :param description: A description of this Scan process
+        :type description: string
+        :param configuration: The Strike process configuration
+        :type configuration: dict
+
+        :raises :class:`ingest.scan.configuration.exceptions.InvalidScanConfiguration`: If the configuration is
+            invalid.
+        """
+
+        scan = Scan.objects.get(pk=scan_id)
+
+        # Validate the configuration, no exception is success
+        if configuration:
+            config = ScanConfiguration(configuration)
+            config.validate()
+            scan.configuration = config.get_dict()
+
+        # Update editable fields
+        if title:
+            scan.title = title
+        if description:
+            scan.description = description
+        scan.save()
+
+    def get_scan_job_type(self):
+        """Returns the Scale Scan job type
+
+        :returns: The Scan job type
+        :rtype: :class:`job.models.JobType`
+        """
+
+        return JobType.objects.get(name='scale-scan', version='1.0')
+
+    def get_scans(self, started=None, ended=None, names=None, order=None):
+        """Returns a list of Scan processes within the given time range.
+
+        :param started: Query Scan processes updated after this amount of time.
+        :type started: :class:`datetime.datetime`
+        :param ended: Query Scan processes updated before this amount of time.
+        :type ended: :class:`datetime.datetime`
+        :param names: Query Scan processes associated with the name.
+        :type names: list[string]
+        :param order: A list of fields to control the sort order.
+        :type order: list[string]
+        :returns: The list of Scan processes that match the time range.
+        :rtype: list[:class:`ingest.models.Scan`]
+        """
+
+        # Fetch a list of strikes
+        scans = Scab.objects.select_related('job', 'job__job_type').defer('configuration')
+
+        # Apply time range filtering
+        if started:
+            scans = scans.filter(last_modified__gte=started)
+        if ended:
+            scans = scans.filter(last_modified__lte=ended)
+
+        # Apply additional filters
+        if names:
+            scans = scans.filter(name__in=names)
+
+        # Apply sorting
+        if order:
+            scans = scans.order_by(*order)
+        else:
+            scans = scans.order_by('last_modified')
+        return scans
+
+    def get_details(self, scan_id):
+        """Returns the Scan process for the given ID with all detail fields included.
+
+        :param scan_id: The unique identifier of the Scan process.
+        :type scan_id: int
+        :returns: The Scan process with all detail fields included.
+        :rtype: :class:`ingest.models.Scan`
+        """
+
+        return Scan.objects.select_related('job', 'job__job_type').get(pk=scan_id)
+
+
+class Scan(models.Model):
+    """Represents an instance of a Scan process which will run and detect files
+    in a workspace for ingest
+
+    :keyword name: The identifying name of this Scan process
+    :type name: :class:`django.db.models.CharField`
+    :keyword title: The human-readable name of this Scan process
+    :type title: :class:`django.db.models.CharField`
+    :keyword description: An optional description of this Scan process
+    :type description: :class:`django.db.models.CharField`
+
+    :keyword configuration: JSON configuration for this Scan process
+    :type configuration: :class:`djorm_pgjson.fields.JSONField`
+    :keyword job: The job that is performing the Scan process
+    :type job: :class:`django.db.models.ForeignKey`
+
+    :keyword created: When the Scan process was created
+    :type created: :class:`django.db.models.DateTimeField`
+    :keyword last_modified: When the Scan process was last modified
+    :type last_modified: :class:`django.db.models.DateTimeField`
+    """
+
+    name = models.CharField(max_length=50, unique=True)
+    title = models.CharField(blank=True, max_length=50, null=True)
+    description = models.CharField(blank=True, max_length=500)
+
+    configuration = djorm_pgjson.fields.JSONField()
+    job = models.ForeignKey('job.Job', blank=True, null=True, on_delete=models.PROTECT)
+
+    created = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
+
+    objects = ScanManager()
+
+    def get_scan_configuration(self):
+        """Returns the configuration for this Scan process
+
+        :returns: The configuration for this Scan process
+        :rtype: :class:`ingest.scan.configuration.scan_configuration.ScanConfiguration`
+        """
+
+        return ScanConfiguration(self.configuration)
+
+    def get_scan_configuration_as_dict(self):
+        """Returns the configuration for this Scan process as a dict
+
+        :returns: The configuration for this Scan process
+        :rtype: dict
+        """
+
+        return self.get_scan_configuration().get_dict()
+
+    class Meta(object):
+        """meta information for database"""
+        db_table = 'scan'
+
+
 class StrikeManager(models.Manager):
     """Provides additional methods for handling Strike processes
     """
