@@ -85,6 +85,7 @@ class Task(object):
         # These values will vary by different task subclasses
         self._uses_docker = False
         self._docker_image = None
+        self._force_docker_pull = False
         self._docker_params = []
         self._is_docker_privileged = False
         self._command = 'echo "Hello Scale"'
@@ -151,6 +152,16 @@ class Task(object):
         """
 
         return self._docker_params
+
+    @property
+    def force_docker_pull(self):
+        """Indicates if a force pull of the Docker image should be done
+
+        :returns: True if force pull should be used, False otherwise
+        :rtype: bool
+        """
+
+        return self._force_docker_pull
 
     @property
     def has_been_launched(self):
