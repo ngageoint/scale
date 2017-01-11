@@ -563,8 +563,10 @@ class JobManager(models.Manager):
             elif 'file_ids' in data_dict:
                 value = [file_map[file_id] for file_id in data_dict['file_ids']]
 
-            merged_dict = name_map[data_dict['name']]
-            merged_dict['value'] = value
+            name = data_dict['name']
+            if name in name_map:
+                merged_dict = name_map[name]
+                merged_dict['value'] = value
         return merged_dicts
 
 

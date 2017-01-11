@@ -460,6 +460,16 @@ class JobData(object):
                 # Don't have this input, check if it is required
                 if required:
                     raise InvalidData('Invalid job data: Data input %s is required and was not provided' % name)
+
+        # Handle extra inputs in the data that are not defined in the interface
+        for name in list(self.data_inputs_by_name.keys()):
+            data_input = self.data_inputs_by_name[name]
+            if 'file_id' in data_input or 'file_ids' in data_input:
+                if name not in files:
+                    warn = ValidationWarning('unknown_input', 'Unknown input %s will be ignored' % name)
+                    warnings.append(warn)
+                    self._delete_input(name)
+
         return warnings
 
     def validate_output_files(self, files):
@@ -529,7 +539,34 @@ class JobData(object):
                 # Don't have this input, check if it is required
                 if property_names[name]:
                     raise InvalidData('Invalid job data: Data input %s is required and was not provided' % name)
+
+        # Handle extra inputs in the data that are not defined in the interface
+        for name in list(self.data_inputs_by_name.keys()):
+            data_input = self.data_inputs_by_name[name]
+            if 'value' in data_input:
+                if name not in property_names:
+                    warn = ValidationWarning('unknown_input', 'Unknown input %s will be ignored' % name)
+                    warnings.append(warn)
+                    self._delete_input(name)
+
         return warnings
+
+    def _delete_input(self, name):
+        """Deletes the input with the given name
+
+        :param name: The name of the input to delete
+        :type name: string
+        """
+
+        if name in self.data_inputs_by_name:
+            del self.data_inputs_by_name[name]
+            self.param_names.discard(name)
+
+            new_input_data = []
+            for data_input in self.data_dict['input_data']:
+                if data_input['name'] != name:
+                    new_input_data.append(data_input)
+            self.data_dict['input_data'] = new_input_data
 
     def _retrieve_files(self, data_files):
         """Retrieves the given data files and writes them to the given local directories. If no file with a given ID
