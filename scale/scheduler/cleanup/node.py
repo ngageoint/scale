@@ -52,7 +52,7 @@ class NodeCleanup(object):
         with self._lock:
             self._create_next_task()
 
-            # No task returned if node is paused, no task to launched, or task has already been launched
+            # No task returned if node is paused, no task to launch, or task has already been launched
             if self._node.is_paused or self._current_task is None or self._current_task.has_been_launched:
                 return None
 

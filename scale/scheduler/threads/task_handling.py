@@ -14,7 +14,9 @@ from job.execution.tasks.cleanup_task import CLEANUP_TASK_ID_PREFIX
 from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
 from job.models import JobExecution
 from job.tasks.manager import task_mgr
+from job.tasks.pull_task import PULL_TASK_ID_PREFIX
 from scheduler.cleanup.manager import cleanup_mgr
+from scheduler.node.manager import node_mgr
 from scheduler.recon.manager import recon_mgr
 
 
@@ -119,8 +121,11 @@ class TaskHandlingThread(object):
 
         # Time out tasks that have exceeded thresholds
         for task in task_mgr.get_timeout_tasks(when):
+            task_to_kill = task
             # Update the manager corresponding to the task's type so the manager can handle task failure
-            if task.id.startswith(CLEANUP_TASK_ID_PREFIX):
+            if task.id.startswith(PULL_TASK_ID_PREFIX):
+                node_mgr.handle_task_timeout(task)
+            elif task.id.startswith(CLEANUP_TASK_ID_PREFIX):
                 cleanup_mgr.handle_task_timeout(task)
             elif task.id.startswith(JOB_TASK_ID_PREFIX):
                 job_exe_id = JobExecution.get_job_exe_id(task.id)
@@ -138,8 +143,8 @@ class TaskHandlingThread(object):
                         running_job_mgr.remove_job_exe(job_exe_id)
                         cleanup_mgr.add_job_execution(running_job_exe)
 
-                    if task_to_kill:
-                        pb_task_to_kill = mesos_pb2.TaskID()
-                        pb_task_to_kill.value = task_to_kill.id
-                        logger.info('Killing task %s', task_to_kill.id)
-                        self._driver.killTask(pb_task_to_kill)
+            if task_to_kill:
+                pb_task_to_kill = mesos_pb2.TaskID()
+                pb_task_to_kill.value = task_to_kill.id
+                logger.info('Killing task %s', task_to_kill.id)
+                self._driver.killTask(pb_task_to_kill)

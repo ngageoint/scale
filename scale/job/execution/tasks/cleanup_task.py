@@ -2,38 +2,12 @@
 from __future__ import unicode_literals
 
 import datetime
-import threading
 
 from job.resources import NodeResources
-from job.tasks.base_task import Task
+from job.tasks.base_task import AtomicCounter, Task
 
 
 CLEANUP_TASK_ID_PREFIX = 'scale_cleanup'
-
-
-class AtomicCounter(object):
-    """Represents an atomic counter
-    """
-
-    def __init__(self):
-        """Constructor
-        """
-
-        self._counter = 0
-        self._lock = threading.Lock()
-
-    def get_next(self):
-        """Returns the next integer
-
-        :returns: The next integer
-        :rtype: int
-        """
-
-        with self._lock:
-            self._counter += 1
-            return self._counter
-
-
 COUNTER = AtomicCounter()
 
 
@@ -60,6 +34,7 @@ class CleanupTask(Task):
 
         self._uses_docker = False
         self._docker_image = None
+        self._force_docker_pull = False
         self._docker_params = []
         self._is_docker_privileged = False
         self._running_timeout_threshold = datetime.timedelta(minutes=10)

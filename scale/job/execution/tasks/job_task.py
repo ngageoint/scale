@@ -28,9 +28,10 @@ class JobTask(JobExecutionTask):
         self._uses_docker = job_exe.uses_docker()
         if self._uses_docker:
             if self._is_system:
-                self._docker_image = self.create_scale_image_name()
+                self._docker_image = self._create_scale_image_name()
             else:
                 self._docker_image = job_exe.get_docker_image()
+            self._force_docker_pull = not self._is_system  # Force pull non-system jobs
             self._docker_params = job_exe.get_job_configuration().get_job_task_docker_params()
             self._is_docker_privileged = job_exe.is_docker_privileged()
         self._command = job_exe.get_job_interface().get_command()

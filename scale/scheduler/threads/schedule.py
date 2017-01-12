@@ -157,6 +157,16 @@ class SchedulingThread(object):
         for task in cleanup_mgr.get_next_tasks():
             offer_mgr.consider_task(task)
 
+    def _consider_node_tasks(self):
+        """Considers any node tasks to schedule
+        """
+
+        if scheduler_mgr.is_paused():
+            return
+
+        for task in node_mgr.get_next_tasks():
+            offer_mgr.consider_task(task)
+
     def _perform_scheduling(self):
         """Performs task reconciliation with the Mesos master
 
@@ -180,6 +190,7 @@ class SchedulingThread(object):
             if running_job_exe.job_type_id in self._job_type_limit_available:
                 self._job_type_limit_available[running_job_exe.job_type_id] -= 1
 
+        self._consider_node_tasks()
         self._consider_cleanup_tasks()
         self._consider_running_job_exes()
         self._consider_new_job_exes()
