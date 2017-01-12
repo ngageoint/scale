@@ -182,6 +182,7 @@ class Node(object):
 
             if task_update.status == TaskStatusUpdate.FINISHED:
                 self._is_image_pulled = True
+                logger.info('Node %s has finished pulling the Scale image', self._hostname)
             elif task_update.status == TaskStatusUpdate.FAILED:
                 logger.warning('Scale image pull task on host %s failed', self._hostname)
             elif task_update.status == TaskStatusUpdate.KILLED:
