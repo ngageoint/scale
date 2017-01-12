@@ -199,6 +199,29 @@
 <span id="job-tasks-base-task-module"></span><h2>job.tasks.base_task module<a class="headerlink" href="#module-job.tasks.base_task" title="Permalink to this headline">¶</a></h2>
 <p>Defines the abstract base class for all tasks</p>
 <dl class="class">
+<dt id="job.tasks.base_task.AtomicCounter">
+<em class="property">class </em><code class="descclassname">job.tasks.base_task.</code><code class="descname">AtomicCounter</code><a class="headerlink" href="#job.tasks.base_task.AtomicCounter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents an atomic counter</p>
+<dl class="method">
+<dt id="job.tasks.base_task.AtomicCounter.get_next">
+<code class="descname">get_next</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.tasks.base_task.AtomicCounter.get_next" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the next integer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The next integer</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="job.tasks.base_task.Task">
 <em class="property">class </em><code class="descclassname">job.tasks.base_task.</code><code class="descname">Task</code><span class="sig-paren">(</span><em>task_id</em>, <em>task_name</em>, <em>agent_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.tasks.base_task.Task" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
@@ -313,6 +336,22 @@ timeout threshold</p>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The Docker parameters</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="job.configuration.configuration.html#job.configuration.configuration.job_parameter.DockerParam" title="job.configuration.configuration.job_parameter.DockerParam"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.configuration.job_parameter.DockerParam</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.tasks.base_task.Task.force_docker_pull">
+<code class="descname">force_docker_pull</code><a class="headerlink" href="#job.tasks.base_task.Task.force_docker_pull" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates if a force pull of the Docker image should be done</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if force pull should be used, False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
 </tr>
 </tbody>
 </table>
@@ -586,6 +625,23 @@ timeout threshold</p>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.tasks.pull_task">
+<span id="job-tasks-pull-task-module"></span><h2>job.tasks.pull_task module<a class="headerlink" href="#module-job.tasks.pull_task" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class for a Docker pull task</p>
+<dl class="class">
+<dt id="job.tasks.pull_task.PullTask">
+<em class="property">class </em><code class="descclassname">job.tasks.pull_task.</code><code class="descname">PullTask</code><span class="sig-paren">(</span><em>framework_id</em>, <em>agent_id</em>, <em>image_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.tasks.pull_task.PullTask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a></p>
+<p>Represents a task that pulls Docker images from the registry. This class is thread-safe.</p>
+<dl class="method">
+<dt id="job.tasks.pull_task.PullTask.get_resources">
+<code class="descname">get_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.tasks.pull_task.PullTask.get_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#job.tasks.base_task.Task.get_resources" title="job.tasks.base_task.Task.get_resources"><code class="xref py py-meth docutils literal"><span class="pre">job.tasks.base_task.Task.get_resources()</span></code></a></p>
 </dd></dl>
 
 </dd></dl>

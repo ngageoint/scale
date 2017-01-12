@@ -210,6 +210,22 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="scheduler.node.manager.NodeManager.get_next_tasks">
+<code class="descname">get_next_tasks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.manager.NodeManager.get_next_tasks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the next node tasks to schedule</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of the next node tasks to schedule</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="job.tasks.html#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="scheduler.node.manager.NodeManager.get_node">
 <code class="descname">get_node</code><span class="sig-paren">(</span><em>agent_id</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.manager.NodeManager.get_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the node with the given agent ID, possibly None</p>
@@ -238,6 +254,34 @@
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of all nodes</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="#scheduler.node.node_class.Node" title="scheduler.node.node_class.Node"><code class="xref py py-class docutils literal"><span class="pre">scheduler.node.node_class.Node</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.node.manager.NodeManager.handle_task_timeout">
+<code class="descname">handle_task_timeout</code><span class="sig-paren">(</span><em>task</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.manager.NodeManager.handle_task_timeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles the timeout of the given task</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task</strong> (<a class="reference internal" href="job.tasks.html#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a>) &#8211; The task</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.node.manager.NodeManager.handle_task_update">
+<code class="descname">handle_task_update</code><span class="sig-paren">(</span><em>task_update</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.manager.NodeManager.handle_task_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles the given task update for a task</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_update</strong> (<a class="reference internal" href="job.tasks.html#job.tasks.update.TaskStatusUpdate" title="job.tasks.update.TaskStatusUpdate"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.update.TaskStatusUpdate</span></code></a>) &#8211; The task update</td>
 </tr>
 </tbody>
 </table>
@@ -302,6 +346,11 @@
 <p>This class represents a node in the scheduler. It combines information retrieved from the database node models as
 well as run-time information retrieved from Mesos. This class is thread-safe.</p>
 <dl class="attribute">
+<dt id="scheduler.node.node_class.Node.IMAGE_PULL">
+<code class="descname">IMAGE_PULL</code><em class="property"> = NodeState(state=u'IMAGE_PULL', description=u'Pulling Scale image')</em><a class="headerlink" href="#scheduler.node.node_class.Node.IMAGE_PULL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="scheduler.node.node_class.Node.INACTIVE">
 <code class="descname">INACTIVE</code><em class="property"> = NodeState(state=u'INACTIVE', description=u'Inactive, ignored by Scale')</em><a class="headerlink" href="#scheduler.node.node_class.Node.INACTIVE" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -337,6 +386,50 @@ well as run-time information retrieved from Mesos. This class is thread-safe.</p
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The agent ID</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.node.node_class.Node.get_next_task">
+<code class="descname">get_next_task</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.node_class.Node.get_next_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the next node task to launch, possibly None</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The next node task to launch, possibly None</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.tasks.html#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.node.node_class.Node.handle_task_timeout">
+<code class="descname">handle_task_timeout</code><span class="sig-paren">(</span><em>task</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.node_class.Node.handle_task_timeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles the timeout of the given node task</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task</strong> (<a class="reference internal" href="job.tasks.html#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a>) &#8211; The task</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.node.node_class.Node.handle_task_update">
+<code class="descname">handle_task_update</code><span class="sig-paren">(</span><em>task_update</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.node_class.Node.handle_task_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles the given task update</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_update</strong> (<a class="reference internal" href="job.tasks.html#job.tasks.update.TaskStatusUpdate" title="job.tasks.update.TaskStatusUpdate"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.update.TaskStatusUpdate</span></code></a>) &#8211; The task update</td>
 </tr>
 </tbody>
 </table>

@@ -12,6 +12,14 @@ scheduler.test.node.test_manager module
     :undoc-members:
     :show-inheritance:
 
+scheduler.test.node.test_node_class module
+------------------------------------------
+
+.. automodule:: scheduler.test.node.test_node_class
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

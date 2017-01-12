@@ -201,29 +201,6 @@
 <span id="job-execution-tasks-cleanup-task-module"></span><h2>job.execution.tasks.cleanup_task module<a class="headerlink" href="#module-job.execution.tasks.cleanup_task" title="Permalink to this headline">¶</a></h2>
 <p>Defines the class for a cleanup task</p>
 <dl class="class">
-<dt id="job.execution.tasks.cleanup_task.AtomicCounter">
-<em class="property">class </em><code class="descclassname">job.execution.tasks.cleanup_task.</code><code class="descname">AtomicCounter</code><a class="headerlink" href="#job.execution.tasks.cleanup_task.AtomicCounter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Represents an atomic counter</p>
-<dl class="method">
-<dt id="job.execution.tasks.cleanup_task.AtomicCounter.get_next">
-<code class="descname">get_next</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.cleanup_task.AtomicCounter.get_next" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the next integer</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The next integer</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="job.execution.tasks.cleanup_task.CleanupTask">
 <em class="property">class </em><code class="descclassname">job.execution.tasks.cleanup_task.</code><code class="descname">CleanupTask</code><span class="sig-paren">(</span><em>framework_id</em>, <em>agent_id</em>, <em>job_exes</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.cleanup_task.CleanupTask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="job.tasks.html#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a></p>
@@ -291,22 +268,6 @@ the job-task, and the post-task.</p>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if following tasks should update their cached job execution values, False otherwise</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.execution.tasks.exe_task.JobExecutionTask.create_scale_image_name">
-<code class="descname">create_scale_image_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.exe_task.JobExecutionTask.create_scale_image_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates the full image name to use for running the Scale Docker image</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The full Scale Docker image name</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
 </tr>
 </tbody>
 </table>

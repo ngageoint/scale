@@ -215,6 +215,12 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="scheduler.test.node.test_manager.TestNodeManager.test_get_pull_tasks">
+<code class="descname">test_get_pull_tasks</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_get_pull_tasks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests getting Docker pull tasks from the manager</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="scheduler.test.node.test_manager.TestNodeManager.test_lost_known_node">
 <code class="descname">test_lost_known_node</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_lost_known_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests the NodeManager where a known node was lost</p>
@@ -227,9 +233,65 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="scheduler.test.node.test_manager.TestNodeManager.test_pull_task_change_agent_id">
+<code class="descname">test_pull_task_change_agent_id</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_pull_task_change_agent_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests the NodeManager where a node&#8217;s agent ID changes during a pull task</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="scheduler.test.node.test_manager.TestNodeManager.test_successful_update">
 <code class="descname">test_successful_update</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_successful_update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests doing a successful database update</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-scheduler.test.node.test_node_class">
+<span id="scheduler-test-node-test-node-class-module"></span><h2>scheduler.test.node.test_node_class module<a class="headerlink" href="#module-scheduler.test.node.test_node_class" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="scheduler.test.node.test_node_class.TestNode">
+<em class="property">class </em><code class="descclassname">scheduler.test.node.test_node_class.</code><code class="descname">TestNode</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_node_class.TestNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="scheduler.test.node.test_node_class.TestNode.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_node_class.TestNode.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.node.test_node_class.TestNode.test_handle_failed_pull_task">
+<code class="descname">test_handle_failed_pull_task</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_node_class.TestNode.test_handle_failed_pull_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests handling failed Docker pull task</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.node.test_node_class.TestNode.test_handle_killed_pull_task">
+<code class="descname">test_handle_killed_pull_task</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_node_class.TestNode.test_handle_killed_pull_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests handling killed cleanup task</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.node.test_node_class.TestNode.test_handle_lost_pull_task">
+<code class="descname">test_handle_lost_pull_task</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_node_class.TestNode.test_handle_lost_pull_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests handling lost pull task</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.node.test_node_class.TestNode.test_handle_successful_pull_task">
+<code class="descname">test_handle_successful_pull_task</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_node_class.TestNode.test_handle_successful_pull_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests handling the Docker pull task successfully</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.node.test_node_class.TestNode.test_node_that_is_not_cleaned_yet">
+<code class="descname">test_node_that_is_not_cleaned_yet</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_node_class.TestNode.test_node_that_is_not_cleaned_yet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests not returning tasks when the node hasn&#8217;t been cleaned up yet</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.node.test_node_class.TestNode.test_paused_node">
+<code class="descname">test_paused_node</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_node_class.TestNode.test_paused_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests not returning tasks when its node is paused</p>
 </dd></dl>
 
 </dd></dl>

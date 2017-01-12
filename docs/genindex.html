@@ -488,7 +488,7 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/job.execution.tasks.html#job.execution.tasks.cleanup_task.AtomicCounter">AtomicCounter (class in job.execution.tasks.cleanup_task)</a>
+  <dt><a href="architecture/django/code_docs/job.tasks.html#job.tasks.base_task.AtomicCounter">AtomicCounter (class in job.tasks.base_task)</a>
   </dt>
 
       
@@ -1371,10 +1371,6 @@
 
       
   <dt><a href="architecture/django/code_docs/shared_resource.test.html#shared_resource.test.utils.create_resource">create_resource() (in module shared_resource.test.utils)</a>
-  </dt>
-
-      
-  <dt><a href="architecture/django/code_docs/job.execution.tasks.html#job.execution.tasks.exe_task.JobExecutionTask.create_scale_image_name">create_scale_image_name() (job.execution.tasks.exe_task.JobExecutionTask method)</a>
   </dt>
 
       
@@ -2321,12 +2317,12 @@
   <dt><a href="architecture/django/code_docs/ingest.strike.handlers.html#ingest.strike.handlers.file_handler.FileHandler">FileHandler (class in ingest.strike.handlers.file_handler)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/job.handlers.inputs.html#job.handlers.inputs.file.FileInput">FileInput (class in job.handlers.inputs.file)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.broker.FileMove">FileMove (class in storage.brokers.broker)</a>
   </dt>
@@ -2431,6 +2427,10 @@
   </dt>
 
       </dl></dd>
+      
+  <dt><a href="architecture/django/code_docs/job.tasks.html#job.tasks.base_task.Task.force_docker_pull">force_docker_pull (job.tasks.base_task.Task attribute)</a>
+  </dt>
+
       
   <dt><a href="architecture/django/code_docs/util.html#util.rest.PlainTextRenderer.format">format (util.rest.PlainTextRenderer attribute)</a>
   </dt>
@@ -3200,7 +3200,7 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/job.execution.tasks.html#job.execution.tasks.cleanup_task.AtomicCounter.get_next">get_next() (job.execution.tasks.cleanup_task.AtomicCounter method)</a>
+  <dt><a href="architecture/django/code_docs/job.tasks.html#job.tasks.base_task.AtomicCounter.get_next">get_next() (job.tasks.base_task.AtomicCounter method)</a>
   </dt>
 
       
@@ -3411,10 +3411,22 @@
   <dt><a href="architecture/django/code_docs/scheduler.cleanup.html#scheduler.cleanup.node.NodeCleanup.get_next_task">get_next_task() (scheduler.cleanup.node.NodeCleanup method)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.Node.get_next_task">(scheduler.node.node_class.Node method)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="architecture/django/code_docs/scheduler.cleanup.html#scheduler.cleanup.manager.CleanupManager.get_next_tasks">get_next_tasks() (scheduler.cleanup.manager.CleanupManager method)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.manager.NodeManager.get_next_tasks">(scheduler.node.manager.NodeManager method)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="architecture/django/code_docs/error.html#error.models.ErrorManager.get_nfs_error">get_nfs_error() (error.models.ErrorManager method)</a>
   </dt>
@@ -3833,6 +3845,10 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/job.tasks.html#job.tasks.pull_task.PullTask.get_resources">(job.tasks.pull_task.PullTask method)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/job.test.tasks.html#job.test.tasks.test_base_task.ImplementedTask.get_resources">(job.test.tasks.test_base_task.ImplementedTask method)</a>
   </dt>
 
@@ -4194,6 +4210,14 @@
   <dt><a href="architecture/django/code_docs/scheduler.cleanup.html#scheduler.cleanup.node.NodeCleanup.handle_task_timeout">(scheduler.cleanup.node.NodeCleanup method)</a>
   </dt>
 
+        
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.manager.NodeManager.handle_task_timeout">(scheduler.node.manager.NodeManager method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.Node.handle_task_timeout">(scheduler.node.node_class.Node method)</a>
+  </dt>
+
       </dl></dd>
       
   <dt><a href="architecture/django/code_docs/job.tasks.html#job.tasks.manager.TaskManager.handle_task_update">handle_task_update() (job.tasks.manager.TaskManager method)</a>
@@ -4206,6 +4230,14 @@
 
         
   <dt><a href="architecture/django/code_docs/scheduler.cleanup.html#scheduler.cleanup.node.NodeCleanup.handle_task_update">(scheduler.cleanup.node.NodeCleanup method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.manager.NodeManager.handle_task_update">(scheduler.node.manager.NodeManager method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.Node.handle_task_update">(scheduler.node.node_class.Node method)</a>
   </dt>
 
       </dl></dd>
@@ -4353,6 +4385,10 @@
   </dt>
 
       </dl></dd>
+      
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.Node.IMAGE_PULL">IMAGE_PULL (scheduler.node.node_class.Node attribute)</a>
+  </dt>
+
       
   <dt><a href="architecture/django/code_docs/job.test.tasks.html#job.test.tasks.test_base_task.ImplementedTask">ImplementedTask (class in job.test.tasks.test_base_task)</a>
   </dt>
@@ -5294,6 +5330,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/job.tasks.html#module-job.tasks.pull_task">job.tasks.pull_task (module)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/job.tasks.html#module-job.tasks.update">job.tasks.update (module)</a>
   </dt>
 
@@ -5409,12 +5449,12 @@
   <dt><a href="architecture/django/code_docs/job.test.html#module-job.test.utils">job.test.utils (module)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/job.triggers.html#module-job.triggers">job.triggers (module)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/job.triggers.configuration.html#module-job.triggers.configuration">job.triggers.configuration (module)</a>
   </dt>
@@ -8628,6 +8668,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/job.tasks.html#job.tasks.pull_task.PullTask">PullTask (class in job.tasks.pull_task)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/scheduler.task.html#scheduler.task.manager.TaskUpdateManager.push_to_database">push_to_database() (scheduler.task.manager.TaskUpdateManager method)</a>
   </dt>
 
@@ -10186,6 +10230,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/scheduler.test.node.html#module-scheduler.test.node.test_node_class">scheduler.test.node.test_node_class (module)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/scheduler.test.offer.html#module-scheduler.test.offer">scheduler.test.offer (module)</a>
   </dt>
 
@@ -11136,6 +11184,10 @@
 
         
   <dt><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_manager.TestNodeManager.setUp">(scheduler.test.node.test_manager.TestNodeManager method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_node_class.TestNode.setUp">(scheduler.test.node.test_node_class.TestNode method)</a>
   </dt>
 
         
@@ -13578,6 +13630,10 @@
 
       </dl></dd>
       
+  <dt><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_manager.TestNodeManager.test_get_pull_tasks">test_get_pull_tasks() (scheduler.test.node.test_manager.TestNodeManager method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_models.TestRecipeManager.test_get_recipe_handlers_for_jobs">test_get_recipe_handlers_for_jobs() (recipe.test.test_models.TestRecipeManager method)</a>
   </dt>
 
@@ -13595,6 +13651,10 @@
 
       
   <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_views.TestMetricPlotView.test_groups">test_groups() (metrics.test.test_views.TestMetricPlotView method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_node_class.TestNode.test_handle_failed_pull_task">test_handle_failed_pull_task() (scheduler.test.node.test_node_class.TestNode method)</a>
   </dt>
 
       
@@ -13618,7 +13678,15 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_node_class.TestNode.test_handle_killed_pull_task">test_handle_killed_pull_task() (scheduler.test.node.test_node_class.TestNode method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/scheduler.test.cleanup.html#scheduler.test.cleanup.test_node.TestNodeCleanup.test_handle_killed_task">test_handle_killed_task() (scheduler.test.cleanup.test_node.TestNodeCleanup method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_node_class.TestNode.test_handle_lost_pull_task">test_handle_lost_pull_task() (scheduler.test.node.test_node_class.TestNode method)</a>
   </dt>
 
       
@@ -13627,6 +13695,10 @@
 
       
   <dt><a href="architecture/django/code_docs/scheduler.test.cleanup.html#scheduler.test.cleanup.test_node.TestNodeCleanup.test_handle_regular_cleanup_task">test_handle_regular_cleanup_task() (scheduler.test.cleanup.test_node.TestNodeCleanup method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_node_class.TestNode.test_handle_successful_pull_task">test_handle_successful_pull_task() (scheduler.test.node.test_node_class.TestNode method)</a>
   </dt>
 
       
@@ -14726,6 +14798,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_node_class.TestNode.test_node_that_is_not_cleaned_yet">test_node_that_is_not_cleaned_yet() (scheduler.test.node.test_node_class.TestNode method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodesStatusView.test_nodes_stats">test_nodes_stats() (node.test.test_views.TestNodesStatusView method)</a>
   </dt>
 
@@ -15043,6 +15119,8 @@
   <dt><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_accepted_none">test_parse_int_list_accepted_none() (util.test.test_rest.TestRest method)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_accepted_partial">test_parse_int_list_accepted_partial() (util.test.test_rest.TestRest method)</a>
   </dt>
@@ -15051,8 +15129,6 @@
   <dt><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_default">test_parse_int_list_default() (util.test.test_rest.TestRest method)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_list_missing">test_parse_int_list_missing() (util.test.test_rest.TestRest method)</a>
   </dt>
@@ -15187,6 +15263,10 @@
 
       <dd><dl>
         
+  <dt><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_node_class.TestNode.test_paused_node">(scheduler.test.node.test_node_class.TestNode method)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/scheduler.test.offer.html#scheduler.test.offer.test_node.TestNodeOffers.test_paused_node">(scheduler.test.offer.test_node.TestNodeOffers method)</a>
   </dt>
 
@@ -15291,6 +15371,10 @@
 
       
   <dt><a href="architecture/django/code_docs/product.test.html#product.test.test_models.TestProductFileManager.test_publish_products_unpublish_superseded">test_publish_products_unpublish_superseded() (product.test.test_models.TestProductFileManager method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_manager.TestNodeManager.test_pull_task_change_agent_id">test_pull_task_change_agent_id() (scheduler.test.node.test_manager.TestNodeManager method)</a>
   </dt>
 
       
@@ -17213,6 +17297,10 @@
 
       
   <dt><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_nfs_broker.TestNfsBrokerValidateConfiguration">TestNfsBrokerValidateConfiguration (class in storage.test.brokers.test_nfs_broker)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_node_class.TestNode">TestNode (class in scheduler.test.node.test_node_class)</a>
   </dt>
 
       
