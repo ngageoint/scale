@@ -1,8 +1,8 @@
-"""Defines the handler for files processed by Strike"""
+"""Defines the handler for files processed by Strike and Scan"""
 
 
 class FileHandler(object):
-    """This class handles the rules for files processed by Strike
+    """This class handles the rules for files processed by Strike and Scan
     """
 
     def __init__(self):
@@ -15,7 +15,7 @@ class FileHandler(object):
         """Adds the given rule to the handler
 
         :param rule: The name of the file
-        :type rule: :class:`ingest.strike.handlers.file_rule.FileRule`
+        :type rule: :class:`ingest.handlers.file_rule.FileRule`
         """
 
         self.rules.append(rule)
@@ -26,7 +26,7 @@ class FileHandler(object):
         :param file_name: The name of the file
         :type file_name: string
         :returns: The matched rule, possibly None
-        :rtype: :class:`ingest.strike.handlers.file_rule.FileRule`
+        :rtype: :class:`ingest.handlers.file_rule.FileRule`
         """
 
         for rule in self.rules:
