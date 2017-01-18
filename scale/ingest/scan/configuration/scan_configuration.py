@@ -24,7 +24,7 @@ CURRENT_VERSION = '1.0'
 
 STRIKE_CONFIGURATION_SCHEMA = {
     'type': 'object',
-    'required': ['workspace', 'monitor', 'files_to_ingest'],
+    'required': ['workspace', 'scanner', 'files_to_ingest'],
     'additionalProperties': False,
     'properties': {
         'version': {
@@ -65,12 +65,6 @@ STRIKE_CONFIGURATION_SCHEMA = {
                 'recursive': {
                     'type': 'boolean'
                 },
-                'max_match': {
-                    'type': 'int'
-                },
-                'reprocess': {
-                    'type': 'boolean'
-                }
                 'data_types': {
                     'type': 'array',
                     'items': {'type': 'string', 'minLength': 1}
@@ -257,14 +251,6 @@ class ScanConfiguration(object):
         for file_dict in self._configuration['files_to_ingest']:
             if 'recursive' not in file_dict:
                 file_dict['recursive'] = True
-
-            if 'max_match' not in file_dict:
-                # Default value of 0 indicates unbounded matches
-                file_dict['max_match'] = 0
-
-            if 'reprocess' not in file_dict:
-                # Default behavior is to skip files that have already been ingested
-                file_dict['reprocess'] = False
 
             if 'data_types' not in file_dict:
                 file_dict['data_types'] = []

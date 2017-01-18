@@ -61,7 +61,6 @@ class S3Monitor(Monitor):
         # TODO Change credentials to use an encrypted store key reference
         self._credentials = AWSClient.instantiate_credentials_from_config(configuration)
 
-
     def run(self):
         """See :meth:`ingest.strike.monitors.monitor.Monitor.run`
         """
@@ -191,4 +190,3 @@ class S3Monitor(Monitor):
         ingest = self._create_ingest(object_name)
         self._process_ingest(ingest, object_key, object_size)
         logger.info("Strike ingested '%s' from bucket '%s'..." % (object_key, bucket_name))
-

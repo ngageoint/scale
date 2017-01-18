@@ -19,9 +19,8 @@ class Command(BaseCommand):
     """
 
     option_list = BaseCommand.option_list + (
-        make_option('-i', '--scan-id', action='store', type='int', help=('ID of the Scan process to run')),
-        make_option('-o', '--overwrite', action='store_true', help=('Proceed with ingest even when a file was previously ingested')),
-    )f
+        make_option('-i', '--scan-id', action='store', type='int', help=('ID of the Scan process to run'))
+    )
 
     help = 'Executes the Scan processor to make a single pass over a workspace for ingest'
 
@@ -32,7 +31,6 @@ class Command(BaseCommand):
         super(Command, self).__init__()
 
         self._scan_id = None
-        self._overwrite = False
         self._scanner = None
 
     def handle(self, **options):
@@ -45,15 +43,13 @@ class Command(BaseCommand):
         signal.signal(signal.SIGTERM, self._onsigterm)
 
         self._scan_id = options.get('scan_id')
-        self._overwrite = options.get('overwrite', False)
 
         logger.info('Command starting: scale_scan')
         logger.info('Scan ID: %i', self._scan_id)
-        logger.info('Overwrite: %b', self._overwrite)
 
         logger.info('Querying database for Scan configuration')
         scan = Scan.objects.select_related('job').get(pk=self._scan_id)
-        self._scanner = strike.get_scan_configuration().get_scanner()
+        self._scanner = scan.get_scan_configuration().get_scanner()
         self._scanner.scan_id = self._scan_id
 
         logger.info('Starting %s scanner', self._scanner.scanner_type)
