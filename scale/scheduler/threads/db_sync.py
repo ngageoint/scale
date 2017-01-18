@@ -103,7 +103,7 @@ class DatabaseSyncThread(object):
         self._sync_running_job_executions()
 
     def _sync_running_job_executions(self):
-        """Syncs job executions that are currently running by handling any canceled or timed out executions
+        """Syncs job executions that are currently running by handling any canceled executions
         """
 
         running_job_exes = {}
@@ -125,7 +125,3 @@ class DatabaseSyncThread(object):
                 pb_task_to_kill.value = task_to_kill.id
                 logger.info('Killing task %s', task_to_kill.id)
                 self._driver.killTask(pb_task_to_kill)
-
-            if running_job_exe.is_finished():
-                running_job_mgr.remove_job_exe(running_job_exe.id)
-                cleanup_mgr.add_job_execution(running_job_exe)
