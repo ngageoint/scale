@@ -138,11 +138,6 @@ class TaskHandlingThread(object):
                     except DatabaseError:
                         logger.exception('Error failing timed out job execution %i', running_job_exe.id)
 
-                    # Remove finished job execution
-                    if running_job_exe.is_finished():
-                        running_job_mgr.remove_job_exe(job_exe_id)
-                        cleanup_mgr.add_job_execution(running_job_exe)
-
             if task_to_kill:
                 pb_task_to_kill = mesos_pb2.TaskID()
                 pb_task_to_kill.value = task_to_kill.id
