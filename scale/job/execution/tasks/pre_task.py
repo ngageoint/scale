@@ -1,7 +1,9 @@
 """Defines the class for a job execution pre-task"""
 from __future__ import unicode_literals
 
-from job.execution.running.tasks.exe_task import JobExecutionTask
+import datetime
+
+from job.execution.tasks.exe_task import JobExecutionTask
 from job.management.commands.scale_pre_steps import EXIT_CODE_DICT as PRE_EXIT_CODE_DICT
 from job.resources import NodeResources
 
@@ -21,13 +23,16 @@ class PreTask(JobExecutionTask):
         super(PreTask, self).__init__(job_exe.get_pre_task_id(), job_exe)
 
         self._uses_docker = True
-        self._docker_image = self.create_scale_image_name()
+        self._docker_image = self._create_scale_image_name()
+        self._force_docker_pull = False
         self._docker_params = job_exe.get_job_configuration().get_pre_task_docker_params()
         self._is_docker_privileged = False
         self._command_arguments = 'scale_pre_steps -i %i' % job_exe.id
+        self._running_timeout_threshold = datetime.timedelta(hours=1)
+        self.timeout_error_name = 'pre-timeout'
 
     def complete(self, task_update):
-        """See :meth:`job.execution.running.tasks.base_task.Task.complete`
+        """See :meth:`job.execution.tasks.exe_task.JobExecutionTask.complete`
         """
 
         with self._lock:
@@ -45,7 +50,7 @@ class PreTask(JobExecutionTask):
             return True
 
     def determine_error(self, task_update):
-        """See :meth:`job.execution.running.tasks.exe_task.JobExecutionTask.determine_error`
+        """See :meth:`job.execution.tasks.exe_task.JobExecutionTask.determine_error`
         """
 
         with self._lock:
@@ -63,14 +68,14 @@ class PreTask(JobExecutionTask):
             return error
 
     def get_resources(self):
-        """See :meth:`job.execution.running.tasks.base_task.Task.get_resources`
+        """See :meth:`job.tasks.base_task.Task.get_resources`
         """
 
         with self._lock:
             return NodeResources(cpus=self._cpus, mem=self._mem, disk=self._disk_total)
 
     def populate_job_exe_model(self, job_exe):
-        """See :meth:`job.execution.running.tasks.base_task.Task.populate_job_exe_model`
+        """See :meth:`job.execution.tasks.exe_task.JobExecutionTask.populate_job_exe_model`
         """
 
         with self._lock:

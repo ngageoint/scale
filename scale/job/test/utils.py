@@ -2,11 +2,12 @@
 from __future__ import unicode_literals
 
 import django.utils.timezone as timezone
+
 import trigger.test.utils as trigger_test_utils
 from job.configuration.configuration.job_configuration import JobConfiguration
 from job.configuration.data.exceptions import InvalidConnection
-from job.execution.running.tasks.update import TaskStatusUpdate
 from job.models import Job, JobExecution, JobType, JobTypeRevision, TaskUpdate
+from job.tasks.update import TaskStatusUpdate
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
 from node.test import utils as node_utils
 from trigger.handler import TriggerRuleHandler, register_trigger_rule_handler
@@ -276,7 +277,7 @@ def create_task_status_update(task_id, agent_id, status, when, exit_code=None, r
     :param data: The data dict
     :type data: dict
     :returns: The task status update
-    :rtype: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
+    :rtype: :class:`job.tasks.update.TaskStatusUpdate`
     """
 
     if data is None:

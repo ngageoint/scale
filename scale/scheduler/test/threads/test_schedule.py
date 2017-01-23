@@ -4,12 +4,11 @@ import django
 from django.test import TransactionTestCase
 from mock import MagicMock, patch
 
-from job.execution.running.job_exe import RunningJobExecution
-from job.execution.running.manager import running_job_mgr
+from job.execution.job_exe import RunningJobExecution
+from job.execution.manager import running_job_mgr
 from job.resources import NodeResources
 from job.test import utils as job_test_utils
 from mesos_api.api import SlaveInfo
-from node.test import utils as node_test_utils
 from queue.models import Queue
 from queue.test import utils as queue_test_utils
 from scheduler.models import Scheduler
@@ -102,6 +101,10 @@ class TestSchedulingThread(TransactionTestCase):
         offer_1 = ResourceOffer('offer_1', self.node_agent_1, NodeResources(cpus=200.0, mem=102400.0, disk=102400.0))
         offer_2 = ResourceOffer('offer_2', self.node_agent_2, NodeResources(cpus=200.0, mem=204800.0, disk=204800.0))
         offer_mgr.add_new_offers([offer_1, offer_2])
+
+        # Ignore Docker pull tasks
+        for node in node_mgr.get_nodes():
+            node._is_image_pulled = True
 
         # Ignore cleanup tasks
         for node in node_mgr.get_nodes():

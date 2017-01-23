@@ -45,8 +45,8 @@ class TestScheduler(TransactionTestCase):
         my_scheduler, driver, master_info = self._get_registered_scheduler_driver_master()
         self.assertTrue(mock_initializer.called, 'initializer should be called on registration')
         self.assertEqual(
-            mock_thread_start.call_count, 4,
-            'reconciliation and job kill threads should be started (4 != %d)' % mock_thread_start.call_count
+            mock_thread_start.call_count, 5,
+            '5 threads should be started (5 != %d)' % mock_thread_start.call_count
         )
 
     @patch('scheduler.scale_scheduler.ScaleScheduler._reconcile_running_jobs')
@@ -57,32 +57,3 @@ class TestScheduler(TransactionTestCase):
         reconcile_calls_after = mock_reconcile_running_jobs.call_count
         self.assertEqual(reconcile_calls_after - reconcile_calls_before, 1,
                          're-registering the scheduler should trigger a call to reconcile running jobs')
-
-    """TODO: add more tests, perhaps these:    
-    def test_resource_offers_updates_nodes(self):
-        pass
-
-    def test_resource_offers_schedules_next_job(self):
-        pass
-
-    def test_resource_offers_gets_next_task(self):
-        pass
-
-    def test_status_update_reconcile(self):
-        pass
-
-    def test_status_update_running(self):
-        pass
-
-    def test_status_update_finished(self):
-        pass
-
-    def test_status_update_lost(self):
-        pass
-
-    def test_framework_message_no_node(self):
-        pass
-
-    def test_slave_lost_removes_running_jobs(self):
-        pass
-    """

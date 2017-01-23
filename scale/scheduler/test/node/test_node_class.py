@@ -13,7 +13,7 @@ from scheduler.cleanup.node import NodeCleanup
 from scheduler.node.node_class import Node
 
 
-class TestNodeCleanup(TestCase):
+class TestNode(TestCase):
 
     def setUp(self):
         django.setup()
@@ -23,13 +23,13 @@ class TestNodeCleanup(TestCase):
         self.job_exe = job_test_utils.create_job_exe(node=self.node)
         self.task_mgr = TaskManager()
 
-    def test_handle_failed_task(self):
-        """Tests handling failed cleanup task"""
+    def test_handle_failed_pull_task(self):
+        """Tests handling failed Docker pull task"""
 
         node = Node(self.node_agent, self.node)
-        node_cleanup = NodeCleanup(node)
-        # Get initial cleanup task
-        task = node_cleanup.get_next_task()
+        node.initial_cleanup_completed()
+        # Get Docker pull task
+        task = node.get_next_task()
         task_1_id = task.id
         self.assertIsNotNone(task)
 
@@ -37,49 +37,50 @@ class TestNodeCleanup(TestCase):
         self.task_mgr.launch_tasks([task], now())
         update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.RUNNING, now())
         self.task_mgr.handle_task_update(update)
-        node_cleanup.handle_task_update(update)
+        node.handle_task_update(update)
         update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.FAILED, now())
         self.task_mgr.handle_task_update(update)
-        node_cleanup.handle_task_update(update)
-        task = node_cleanup.get_next_task()
+        node.handle_task_update(update)
+        task = node.get_next_task()
         self.assertIsNotNone(task)
         self.assertNotEqual(task.id, task_1_id)
-        self.assertFalse(node.is_initial_cleanup_completed)
+        self.assertFalse(node._is_image_pulled)
 
-    def test_handle_initial_cleanup_task(self):
-        """Tests handling the initial cleanup task"""
+    def test_handle_successful_pull_task(self):
+        """Tests handling the Docker pull task successfully"""
 
         node = Node(self.node_agent, self.node)
-        node_cleanup = NodeCleanup(node)
+        node.initial_cleanup_completed()
 
-        # Get initial cleanup task
-        task = node_cleanup.get_next_task()
+        # Get Docker pull task
+        task = node.get_next_task()
         self.assertIsNotNone(task)
-        self.assertTrue(task.is_initial_cleanup)
         self.assertEqual(task.agent_id, self.node_agent)
 
-        # Schedule initial cleanup and make sure no new task is ready
+        # Schedule pull task and make sure no new task is ready
         self.task_mgr.launch_tasks([task], now())
-        self.assertIsNone(node_cleanup.get_next_task())
-        self.assertFalse(node.is_initial_cleanup_completed)
+        self.assertIsNone(node.get_next_task())
+        self.assertFalse(node._is_image_pulled)
 
-        # Complete initial clean up, verify no new task
+        # Complete pull task, verify no new task
         update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.RUNNING, now())
         self.task_mgr.handle_task_update(update)
-        node_cleanup.handle_task_update(update)
+        node.handle_task_update(update)
         update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.FINISHED, now())
         self.task_mgr.handle_task_update(update)
-        node_cleanup.handle_task_update(update)
-        self.assertIsNone(node_cleanup.get_next_task())
-        self.assertTrue(node.is_initial_cleanup_completed)
+        node.handle_task_update(update)
+        self.assertIsNone(node.get_next_task())
+        self.assertTrue(node._is_image_pulled)
+        # Node should now be ready
+        self.assertEqual(node.READY, Node.READY)
 
-    def test_handle_killed_task(self):
+    def test_handle_killed_pull_task(self):
         """Tests handling killed cleanup task"""
 
         node = Node(self.node_agent, self.node)
-        node_cleanup = NodeCleanup(node)
-        # Get initial cleanup task
-        task = node_cleanup.get_next_task()
+        node.initial_cleanup_completed()
+        # Get pull task
+        task = node.get_next_task()
         task_1_id = task.id
         self.assertIsNotNone(task)
 
@@ -87,83 +88,55 @@ class TestNodeCleanup(TestCase):
         self.task_mgr.launch_tasks([task], now())
         update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.RUNNING, now())
         self.task_mgr.handle_task_update(update)
-        node_cleanup.handle_task_update(update)
+        node.handle_task_update(update)
         update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.KILLED, now())
         self.task_mgr.handle_task_update(update)
-        node_cleanup.handle_task_update(update)
-        task = node_cleanup.get_next_task()
+        node.handle_task_update(update)
+        task = node.get_next_task()
         self.assertIsNotNone(task)
         self.assertNotEqual(task.id, task_1_id)
-        self.assertFalse(node.is_initial_cleanup_completed)
+        self.assertFalse(node._is_image_pulled)
 
-    def test_handle_lost_tasks(self):
-        """Tests handling lost cleanup tasks"""
+    def test_handle_lost_pull_task(self):
+        """Tests handling lost pull task"""
 
         node = Node(self.node_agent, self.node)
-        node_cleanup = NodeCleanup(node)
-        # Get initial cleanup task
-        task = node_cleanup.get_next_task()
+        node.initial_cleanup_completed()
+        # Get pull task
+        task = node.get_next_task()
         task_1_id = task.id
         self.assertIsNotNone(task)
 
         # Lose task without scheduling and get same task again
         update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.LOST, now())
-        node_cleanup.handle_task_update(update)
-        task = node_cleanup.get_next_task()
+        node.handle_task_update(update)
+        task = node.get_next_task()
         self.assertIsNotNone(task)
         self.assertEqual(task.id, task_1_id)
-        self.assertFalse(node.is_initial_cleanup_completed)
+        self.assertFalse(node._is_image_pulled)
 
         # Lose task with scheduling and get same task again
         self.task_mgr.launch_tasks([task], now())
         update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.LOST, now())
         self.task_mgr.handle_task_update(update)
-        node_cleanup.handle_task_update(update)
-        task = node_cleanup.get_next_task()
+        node.handle_task_update(update)
+        task = node.get_next_task()
         self.assertIsNotNone(task)
         self.assertEqual(task.id, task_1_id)
-        self.assertFalse(node.is_initial_cleanup_completed)
+        self.assertFalse(node._is_image_pulled)
 
         # Lose task after running and get same task again
         self.task_mgr.launch_tasks([task], now())
         update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.RUNNING, now())
         self.task_mgr.handle_task_update(update)
-        node_cleanup.handle_task_update(update)
+        node.handle_task_update(update)
         update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.LOST, now())
         self.task_mgr.handle_task_update(update)
-        node_cleanup.handle_task_update(update)
-        task = node_cleanup.get_next_task()
+        node.handle_task_update(update)
+        task = node.get_next_task()
         self.assertIsNotNone(task)
         self.assertEqual(task.id, task_1_id)
-        self.assertFalse(node.is_initial_cleanup_completed)
-
-    def test_handle_regular_cleanup_task(self):
-        """Tests handling a regular cleanup task"""
-
-        node = Node(self.node_agent, self.node)
-        node.initial_cleanup_completed()
-        node_cleanup = NodeCleanup(node)
-
-        # No task since there are no job executions to clean
-        self.assertIsNone(node_cleanup.get_next_task())
-
-        # Add job execution and complete task to clean it up
-        job_exe = RunningJobExecution(self.job_exe)
-        node_cleanup.add_job_execution(job_exe)
-        task = node_cleanup.get_next_task()
-        self.assertIsNotNone(task)
-        self.assertFalse(task.is_initial_cleanup)
-        self.assertListEqual(task.job_exes, [job_exe])
-        self.task_mgr.launch_tasks([task], now())
-        update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.RUNNING, now())
-        self.task_mgr.handle_task_update(update)
-        node_cleanup.handle_task_update(update)
-        update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.FINISHED, now())
-        self.task_mgr.handle_task_update(update)
-        node_cleanup.handle_task_update(update)
-
-        # No task since all job executions have been cleaned
-        self.assertIsNone(node_cleanup.get_next_task())
+        self.assertFalse(node._is_image_pulled)
 
     def test_paused_node(self):
         """Tests not returning tasks when its node is paused"""
@@ -171,7 +144,15 @@ class TestNodeCleanup(TestCase):
         paused_node = node_test_utils.create_node(hostname='host_1', slave_id=self.node_agent)
         paused_node.is_paused = True
         node = Node(self.node_agent, paused_node)
-        node_cleanup = NodeCleanup(node)
-        task = node_cleanup.get_next_task()
+        node.initial_cleanup_completed()
+        task = node.get_next_task()
         # No task due to paused node
+        self.assertIsNone(task)
+
+    def test_node_that_is_not_cleaned_yet(self):
+        """Tests not returning tasks when the node hasn't been cleaned up yet"""
+
+        node = Node(self.node_agent, self.node)
+        task = node.get_next_task()
+        # No task due to node not cleaned yet
         self.assertIsNone(task)

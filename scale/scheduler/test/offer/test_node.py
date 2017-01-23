@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import django
 from django.test import TestCase
 
-from job.execution.running.job_exe import RunningJobExecution
+from job.execution.job_exe import RunningJobExecution
 from job.resources import NodeResources
 from job.test import utils as job_test_utils
 from node.test import utils as node_test_utils
@@ -26,6 +26,7 @@ class TestNodeOffers(TestCase):
         self.node_agent_paused = 'agent_paused'
         self.node_model = node_test_utils.create_node(slave_id=self.node_agent)
         self.node = Node(self.node_agent, self.node_model)
+        self.node._is_image_pulled = True
         self.node.initial_cleanup_completed()
         self.paused_node_model = node_test_utils.create_node(slave_id=self.node_agent_paused)
         self.paused_node_model.is_paused = True

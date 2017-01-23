@@ -9,7 +9,7 @@ from django.db import DatabaseError
 from django.utils.timezone import now
 from mesos.interface import mesos_pb2
 
-from job.execution.running.manager import running_job_mgr
+from job.execution.manager import running_job_mgr
 from job.models import JobExecution
 from scheduler.cleanup.manager import cleanup_mgr
 from scheduler.node.manager import node_mgr
@@ -103,14 +103,12 @@ class DatabaseSyncThread(object):
         self._sync_running_job_executions()
 
     def _sync_running_job_executions(self):
-        """Syncs job executions that are currently running by handling any canceled or timed out executions
+        """Syncs job executions that are currently running by handling any canceled executions
         """
 
         running_job_exes = {}
         for job_exe in running_job_mgr.get_all_job_exes():
             running_job_exes[job_exe.id] = job_exe
-
-        right_now = now()
 
         for job_exe_model in JobExecution.objects.filter(id__in=running_job_exes.keys()).iterator():
             running_job_exe = running_job_exes[job_exe_model.id]
@@ -121,18 +119,9 @@ class DatabaseSyncThread(object):
                     task_to_kill = running_job_exe.execution_canceled()
                 except DatabaseError:
                     logger.exception('Error canceling job execution %i', running_job_exe.id)
-            elif job_exe_model.is_timed_out(right_now):
-                try:
-                    task_to_kill = running_job_exe.execution_timed_out(right_now)
-                except DatabaseError:
-                    logger.exception('Error failing timed out job execution %i', running_job_exe.id)
 
             if task_to_kill:
                 pb_task_to_kill = mesos_pb2.TaskID()
                 pb_task_to_kill.value = task_to_kill.id
                 logger.info('Killing task %s', task_to_kill.id)
                 self._driver.killTask(pb_task_to_kill)
-
-            if running_job_exe.is_finished():
-                running_job_mgr.remove_job_exe(running_job_exe.id)
-                cleanup_mgr.add_job_execution(running_job_exe)

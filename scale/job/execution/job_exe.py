@@ -9,11 +9,11 @@ from django.db import transaction
 from django.utils.timezone import now
 
 from error.models import Error
-from job.execution.running.tasks.job_task import JobTask
-from job.execution.running.tasks.post_task import PostTask
-from job.execution.running.tasks.pre_task import PreTask
-from job.execution.running.tasks.update import TaskStatusUpdate
+from job.execution.tasks.job_task import JobTask
+from job.execution.tasks.post_task import PostTask
+from job.execution.tasks.pre_task import PreTask
 from job.models import JobExecution
+from job.tasks.update import TaskStatusUpdate
 from util.retry import retry_database_query
 
 
@@ -58,7 +58,7 @@ class RunningJobExecution(object):
         """Returns the currently running task of the job execution, or None if no task is currently running
 
         :returns: The current task, possibly None
-        :rtype: :class:`job.execution.running.tasks.base_task.Task`
+        :rtype: :class:`job.tasks.base_task.Task`
         """
 
         return self._current_task
@@ -108,7 +108,7 @@ class RunningJobExecution(object):
         """Cancels this job execution and returns the current task
 
         :returns: The current task, possibly None
-        :rtype: :class:`job.execution.running.tasks.base_task.Task`
+        :rtype: :class:`job.tasks.base_task.Task`
         """
 
         # Saves this job execution's task info to the database
@@ -131,7 +131,7 @@ class RunningJobExecution(object):
         :param when: The time that the node was lost
         :type when: :class:`datetime.datetime`
         :returns: The current task, possibly None
-        :rtype: :class:`job.execution.running.tasks.base_task.Task`
+        :rtype: :class:`job.tasks.base_task.Task`
         """
 
         error = Error.objects.get_builtin_error('node-lost')
@@ -145,16 +145,22 @@ class RunningJobExecution(object):
             return task
 
     @retry_database_query
-    def execution_timed_out(self, when):
+    def execution_timed_out(self, task, when):
         """Fails this job execution for timing out and returns the current task
 
+        :param task: The task that timed out
+        :type task: :class:`job.tasks.exe_task.JobExecutionTask`
         :param when: The time that the job execution timed out
         :type when: :class:`datetime.datetime`
         :returns: The current task, possibly None
-        :rtype: :class:`job.execution.running.tasks.base_task.Task`
+        :rtype: :class:`job.tasks.base_task.Task`
         """
 
-        error = Error.objects.get_builtin_error('timeout')
+        if task.has_started:
+            error_name = task.timeout_error_name
+        else:
+            error_name = 'launch-timeout'
+        error = Error.objects.get_builtin_error(error_name)
         from queue.models import Queue
         Queue.objects.handle_job_failure(self._id, when, self._all_tasks, error)
 
@@ -218,7 +224,7 @@ class RunningJobExecution(object):
         tasks remain.
 
         :returns: The new task that was started, possibly None
-        :rtype: :class:`job.execution.running.tasks.base_task.Task`
+        :rtype: :class:`job.tasks.base_task.Task`
         """
 
         with self._lock:
@@ -232,12 +238,10 @@ class RunningJobExecution(object):
         """Updates a task for this job execution
 
         :param task_update: The task update
-        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
+        :type task_update: :class:`job.tasks.update.TaskStatusUpdate`
         """
 
-        if task_update.status == TaskStatusUpdate.RUNNING:
-            self._task_start(task_update)
-        elif task_update.status == TaskStatusUpdate.FINISHED:
+        if task_update.status == TaskStatusUpdate.FINISHED:
             self._task_complete(task_update)
         elif task_update.status == TaskStatusUpdate.LOST:
             self._task_lost(task_update)
@@ -249,7 +253,7 @@ class RunningJobExecution(object):
         """Completes a task for this job execution
 
         :param task_update: The task update
-        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
+        :type task_update: :class:`job.tasks.update.TaskStatusUpdate`
         """
 
         with self._lock:
@@ -278,7 +282,7 @@ class RunningJobExecution(object):
         """Fails a task for this job execution
 
         :param task_update: The task update
-        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
+        :type task_update: :class:`job.tasks.update.TaskStatusUpdate`
         """
 
         current_task = self._current_task
@@ -286,7 +290,6 @@ class RunningJobExecution(object):
             return
 
         with transaction.atomic():
-            current_task.update(task_update)
             error = current_task.determine_error(task_update)
             from queue.models import Queue
             Queue.objects.handle_job_failure(self._id, now(), self._all_tasks, error)
@@ -324,27 +327,12 @@ class RunningJobExecution(object):
         """Tells this job execution that one of its tasks was lost
 
         :param task_update: The task update
-        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
+        :type task_update: :class:`job.tasks.update.TaskStatusUpdate`
         """
 
         with self._lock:
             if not self._current_task or self._current_task.id != task_update.task_id:
                 return
 
-            self._current_task.update(task_update)
             self._remaining_tasks.insert(0, self._current_task)
             self._current_task = None
-
-    @retry_database_query
-    def _task_start(self, task_update):
-        """Tells this job execution that one of its tasks has started running
-
-        :param task_update: The task update
-        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
-        """
-
-        current_task = self._current_task
-        if not current_task or current_task.id != task_update.task_id:
-            return
-
-        current_task.update(task_update)

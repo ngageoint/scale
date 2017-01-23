@@ -2,15 +2,51 @@
 from __future__ import unicode_literals
 
 import datetime
+import logging
 import threading
 from abc import ABCMeta, abstractmethod
 
-from job.execution.running.tasks.update import TaskStatusUpdate
+from django.conf import settings
+
+from job.tasks.update import TaskStatusUpdate
 from util.exceptions import ScaleLogicBug
 
 
-# Amount of time for the last status update to go stale and require reconciliation
-RECONCILIATION_THRESHOLD = datetime.timedelta(minutes=10)
+# Default timeout thresholds for tasks (None means no timeout)
+BASE_RUNNING_TIMEOUT_THRESHOLD = datetime.timedelta(hours=1)
+# TODO: Staging timeout threshold can be lowered once Docker pulls are not performed during task staging
+BASE_STAGING_TIMEOUT_THRESHOLD = datetime.timedelta(minutes=20)
+
+
+# Default reconciliation thresholds for tasks
+RUNNING_RECON_THRESHOLD = datetime.timedelta(minutes=10)
+STAGING_RECON_THRESHOLD = datetime.timedelta(seconds=30)
+
+
+logger = logging.getLogger(__name__)
+
+
+class AtomicCounter(object):
+    """Represents an atomic counter
+    """
+
+    def __init__(self):
+        """Constructor
+        """
+
+        self._counter = 0
+        self._lock = threading.Lock()
+
+    def get_next(self):
+        """Returns the next integer
+
+        :returns: The next integer
+        :rtype: int
+        """
+
+        with self._lock:
+            self._counter += 1
+            return self._counter
 
 
 class Task(object):
@@ -41,6 +77,7 @@ class Task(object):
         self._last_status_update = None
         self._has_started = False
         self._started = None
+        self._has_timed_out = False
         self._has_ended = False
         self._ended = None
         self._exit_code = None
@@ -48,10 +85,13 @@ class Task(object):
         # These values will vary by different task subclasses
         self._uses_docker = False
         self._docker_image = None
+        self._force_docker_pull = False
         self._docker_params = []
         self._is_docker_privileged = False
         self._command = 'echo "Hello Scale"'
         self._command_arguments = None
+        self._running_timeout_threshold = BASE_RUNNING_TIMEOUT_THRESHOLD
+        self._staging_timeout_threshold = BASE_STAGING_TIMEOUT_THRESHOLD
 
     @property
     def agent_id(self):
@@ -112,6 +152,16 @@ class Task(object):
         """
 
         return self._docker_params
+
+    @property
+    def force_docker_pull(self):
+        """Indicates if a force pull of the Docker image should be done
+
+        :returns: True if force pull should be used, False otherwise
+        :rtype: bool
+        """
+
+        return self._force_docker_pull
 
     @property
     def has_been_launched(self):
@@ -193,6 +243,39 @@ class Task(object):
 
         return self._uses_docker
 
+    def check_timeout(self, when):
+        """Checks this task's progress against the given current time and times out the task if it has exceeded a
+        timeout threshold
+
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
+        :returns: Whether this task has timed out
+        :rtype: bool
+        """
+
+        with self._lock:
+            if not self._has_been_launched or self._has_ended:
+                return self._has_timed_out
+
+            if self._has_started:
+                # Task has started so check running threshold
+                running_time = when - self._started
+                timed_out = self._running_timeout_threshold and running_time > self._running_timeout_threshold
+            else:
+                # Task is still staging so check staging threshold
+                staging_time = when - self._launched
+                timed_out = self._staging_timeout_threshold and staging_time > self._staging_timeout_threshold
+                if timed_out:
+                    timeout_in_mins = int(self._staging_timeout_threshold.total_seconds() / 60)
+                    logger.error('Task %s failed to start running within %d minutes', self._task_id, timeout_in_mins)
+
+            if timed_out:
+                self._has_timed_out = True
+                self._has_ended = True
+                self._ended = when
+
+            return self._has_timed_out
+
     @abstractmethod
     def get_resources(self):
         """Returns the resources that are required/have been scheduled for this task
@@ -216,7 +299,9 @@ class Task(object):
             if not self._last_status_update:
                 return False  # Has not been launched yet
             time_since_last_update = when - self._last_status_update
-            return time_since_last_update > RECONCILIATION_THRESHOLD
+            if self._has_started:
+                return time_since_last_update > RUNNING_RECON_THRESHOLD
+            return time_since_last_update > STAGING_RECON_THRESHOLD
 
     def launch(self, when):
         """Marks this task as having been launched
@@ -239,7 +324,7 @@ class Task(object):
         """Handles the given task update
 
         :param task_update: The task update
-        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
+        :type task_update: :class:`job.tasks.update.TaskStatusUpdate`
         """
 
         with self._lock:
@@ -247,6 +332,8 @@ class Task(object):
                 return
 
             self._last_status_update = task_update.timestamp
+            if self._has_ended:  # Ended tasks no longer update
+                return
 
             # Support duplicate calls as task updates may repeat
             if task_update.status == TaskStatusUpdate.RUNNING:
@@ -256,25 +343,32 @@ class Task(object):
                     self._started = task_update.timestamp
                     self._parse_container_name(task_update)
             elif task_update.status == TaskStatusUpdate.LOST:
-                # Reset task to initial state (unless already ended)
-                if not self._has_ended:
-                    self._has_been_launched = False
-                    self._launched = None
-                    self._last_status_update = None
-                    self._has_started = False
-                    self._started = None
+                # Reset task to initial state before launch
+                self._has_been_launched = False
+                self._launched = None
+                self._last_status_update = None
+                self._has_started = False
+                self._started = None
             elif task_update.status in TaskStatusUpdate.TERMINAL_STATUSES:
-                # Mark task as having ended if it isn't already
-                if not self._has_ended:
-                    self._has_ended = True
-                    self._ended = task_update.timestamp
-                    self._exit_code = task_update.exit_code
+                # Mark task as having ended
+                self._has_ended = True
+                self._ended = task_update.timestamp
+                self._exit_code = task_update.exit_code
+
+    def _create_scale_image_name(self):
+        """Creates the full image name to use for running the Scale Docker image
+
+        :returns: The full Scale Docker image name
+        :rtype: string
+        """
+
+        return '%s:%s' % (settings.SCALE_DOCKER_IMAGE, settings.DOCKER_VERSION)
 
     def _parse_container_name(self, task_update):
         """Tries to parse the container name out of the task update. Assumes caller already has the task lock.
 
         :param task_update: The task update
-        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
+        :type task_update: :class:`job.tasks.update.TaskStatusUpdate`
         """
 
         if 'Config' in task_update.data and 'Env' in task_update.data['Config']:

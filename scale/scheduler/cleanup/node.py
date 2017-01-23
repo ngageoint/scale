@@ -4,8 +4,9 @@ from __future__ import unicode_literals
 import logging
 import threading
 
-from job.execution.running.tasks.cleanup_task import CleanupTask
-from job.execution.running.tasks.update import TaskStatusUpdate
+from job.execution.tasks.cleanup_task import CleanupTask
+
+from job.tasks.update import TaskStatusUpdate
 from scheduler.sync.scheduler_manager import scheduler_mgr
 
 
@@ -35,7 +36,7 @@ class NodeCleanup(object):
         """Adds a job execution that needs to be cleaned up
 
         :param job_exe: The job execution to add
-        :type job_exe: :class:`job.execution.running.job_exe.RunningJobExecution`
+        :type job_exe: :class:`job.execution.job_exe.RunningJobExecution`
         """
 
         with self._lock:
@@ -45,45 +46,44 @@ class NodeCleanup(object):
         """Returns the next cleanup task to launch, possibly None
 
         :returns: The next cleanup task to launch, possibly None
-        :rtype: :class:`job.execution.running.tasks.cleanup_task.CleanupTask`
+        :rtype: :class:`job.execution.tasks.cleanup_task.CleanupTask`
         """
 
         with self._lock:
             self._create_next_task()
 
-            # No task returned if node is paused, no task to launched, or task has already been launched
+            # No task returned if node is paused, no task to launch, or task has already been launched
             if self._node.is_paused or self._current_task is None or self._current_task.has_been_launched:
                 return None
 
             return self._current_task
 
-    def get_task_id_for_reconciliation(self, when):
-        """Returns the clean up task ID that needs to be reconciled, possibly None
+    def handle_task_timeout(self, task):
+        """Handles the timeout of the given cleanup task
 
-        :param when: The current time
-        :type when: :class:`datetime.datetime`
-        :returns: The ID of the task that needs to be reconciled, possibly None
-        :rtype: string
+        :param task: The task
+        :type task: :class:`job.tasks.base_task.Task`
         """
 
         with self._lock:
-            if not self._current_task or not self._current_task.needs_reconciliation(when):
-                return None
+            if not self._current_task or self._current_task.id != task.id:
+                return
 
-            return self._current_task.id
+            logger.warning('Cleanup task on host %s timed out', self._node.hostname)
+            if self._current_task.has_ended:
+                self._current_task = None
 
     def handle_task_update(self, task_update):
         """Handles the given task update
 
         :param task_update: The task update
-        :type task_update: :class:`job.execution.running.tasks.update.TaskStatusUpdate`
+        :type task_update: :class:`job.tasks.update.TaskStatusUpdate`
         """
 
         with self._lock:
             if not self._current_task or self._current_task.id != task_update.task_id:
                 return
 
-            self._current_task.update(task_update)
             if task_update.status == TaskStatusUpdate.FINISHED:
                 if self._current_task.is_initial_cleanup:
                     # Initial cleanup is done

@@ -18,7 +18,7 @@ class RunningJobExecutionManager(object):
         """Adds new running job executions to the manager
 
         :param job_exes: A list of the running job executions to add
-        :type job_exes: [:class:`job.execution.running.job_exe.RunningJobExecution`]
+        :type job_exes: [:class:`job.execution.job_exe.RunningJobExecution`]
         """
 
         with self._lock:
@@ -29,7 +29,7 @@ class RunningJobExecutionManager(object):
         """Returns all running job executions
 
         :returns: A list of running job executions
-        :rtype: [:class:`job.execution.running.job_exe.RunningJobExecution`]
+        :rtype: [:class:`job.execution.job_exe.RunningJobExecution`]
         """
 
         result = []
@@ -44,7 +44,7 @@ class RunningJobExecutionManager(object):
         :param job_exe_id: The ID of the job execution to return
         :type job_exe_id: int
         :returns: The running job execution with the given ID, possibly None
-        :rtype: :class:`job.execution.running.job_exe.RunningJobExecution`
+        :rtype: :class:`job.execution.job_exe.RunningJobExecution`
         """
 
         with self._lock:
@@ -59,7 +59,7 @@ class RunningJobExecutionManager(object):
         :param node_id: The ID of the node
         :type node_id: int
         :returns: A list of running job executions
-        :rtype: [:class:`job.execution.running.job_exe.RunningJobExecution`]
+        :rtype: [:class:`job.execution.job_exe.RunningJobExecution`]
         """
 
         result = []
@@ -74,7 +74,7 @@ class RunningJobExecutionManager(object):
         """Returns all running job executions that are ready to execute their next task
 
         :returns: A list of running job executions
-        :rtype: [:class:`job.execution.running.job_exe.RunningJobExecution`]
+        :rtype: [:class:`job.execution.job_exe.RunningJobExecution`]
         """
 
         result = []
@@ -84,24 +84,6 @@ class RunningJobExecutionManager(object):
                 if job_exe.is_next_task_ready():
                     result.append(self._job_exes[job_exe_id])
         return result
-
-    def get_task_ids_for_reconciliation(self, when):
-        """Returns the IDs of the job execution tasks that need to be reconciled
-
-        :param when: The current time
-        :type when: :class:`datetime.datetime`
-        :returns: The list of IDs of the tasks that need to be reconciled
-        :rtype: [string]
-        """
-
-        task_ids = []
-        with self._lock:
-            for job_exe in self._job_exes.values():
-                task = job_exe.current_task
-                if task and task.needs_reconciliation(when):
-                    task_ids.append(task.id)
-
-            return task_ids
 
     def remove_job_exe(self, job_exe_id):
         """Removes the running job execution with the given ID
