@@ -71,7 +71,31 @@ class Broker(object):
         :type files: [:class:`storage.models.ScaleFile`]
         """
 
-        pass
+        raise NotImplementedError
+
+    def list_files(self, volume_path, recursive):
+        """List the files under the given file system paths.
+
+        If this broker uses a container volume, volume_path will contain the absolute local container location where
+        that volume file system is mounted. If this broker does not use a container volume, None will be given for
+        volume_path.
+
+        The expression must be a valid regular expression that accommodates matching against the complete file path. If
+        the file is not at the root level relative to volume_path, due to recursive processing, the path will
+        potentially include a directory and solidus separator.
+
+        :param volume_path: Absolute path to the local container location onto which the volume file system was mounted,
+            None if this broker does not use a container volume
+        :type volume_path: string
+        :param expression: Regular expression for file name and path filtering
+        :type expression: string
+        :param recursive: Flag to indicate whether file searching should be done recursively
+        :type recursive: boolean
+        :returns: List of files matching given expression
+        :rtype: [:class:`storage.models.ScaleFile`]
+        """
+
+        raise NotImplementedError
 
     def download_files(self, volume_path, file_downloads):
         """Downloads the given files to the given local file system paths.
@@ -97,7 +121,7 @@ class Broker(object):
         :raises :class:`storage.exceptions.MissingFile`: If a file to download does not exist at the expected path
         """
 
-        pass
+        raise NotImplementedError
 
     def get_file_system_paths(self, volume_path, files):
         """Returns the local file system paths for the given files, if supported by the broker.
@@ -126,7 +150,7 @@ class Broker(object):
         :type config: dict
         """
 
-        pass
+        raise NotImplementedError
 
     def move_files(self, volume_path, file_moves):
         """Moves the given files to the new file system paths.
@@ -154,7 +178,7 @@ class Broker(object):
         :raises :class:`storage.exceptions.MissingFile`: If a file to move does not exist at the expected path
         """
 
-        pass
+        raise NotImplementedError
 
     def upload_files(self, volume_path, file_uploads):
         """Uploads the given files from the given local file system paths.
@@ -179,7 +203,7 @@ class Broker(object):
         :type file_uploads: [:class:`storage.brokers.broker.FileUpload`]
         """
 
-        pass
+        raise NotImplementedError
 
     def validate_configuration(self, config):
         """Validates the given configuration
@@ -192,7 +216,7 @@ class Broker(object):
         :raises :class:`storage.brokers.exceptions.InvalidBrokerConfiguration`: If the given configuration is invalid
         """
 
-        return []
+        raise NotImplementedError
 
 
 class BrokerVolume(object):

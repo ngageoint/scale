@@ -46,6 +46,31 @@ class S3Broker(Broker):
                 scale_file.set_deleted()
                 scale_file.save()
 
+    def list_files(self, volume_path, recursive):
+        """See :meth:`storage.brokers.broker.Broker.list_files`
+        """
+
+        file_list = []
+
+        with S3Client(self._credentials, self._region_name) as client:
+            s3_bucket = client.get_bucket(self._bucket_name)
+
+            
+
+
+        # Handle a full recursive walk of the S3 bucket including all keys tree.
+        if recursive:
+            for root, dirs, files in os.walk(volume_path):
+                for name in files:
+                    file_list.append(os.path.join(root, name))
+        # Handle identifying files only from a single directory.
+        else:
+            for result in os.listdir(volume_path):
+                if os.path.isfile(os.path.join(volume_path, result)):
+                    file_list.append(result)
+
+        return file_list
+
     def download_files(self, volume_path, file_downloads):
         """See :meth:`storage.brokers.broker.Broker.download_files`"""
 
