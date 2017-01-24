@@ -48,6 +48,13 @@ ELASTICSEARCH_URLS = None
 # Placeholder for Elasticsearch object. Needed for unit tests.
 ELASTICSEARCH = None
 
+# Base URL of vault service, or None to disable secrets
+VAULT_URL = None
+# Public token for vault authentication
+VAULT_TOKEN = None
+# DCOS service account name, or None if not DCOS vault
+VAULT_SERVICE_ACCOUNT = None
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
@@ -91,6 +98,7 @@ INSTALLED_APPS = (
     'port',
     'cli',
     'batch',
+    'vault'
 )
 
 MIDDLEWARE_CLASSES = (
