@@ -13,6 +13,9 @@ logger = logging.getLogger(__name__)
 
 AWSCredentials = namedtuple('AWSCredentials', ['access_key_id', 'secret_access_key'])
 
+# TODO: Consider whether we care about exposing this at this low-level. Ingest will extract later anyway
+S3Object = namedtuple('S3Object', ['key','last_modified','etag','size','storage_class'])
+
 
 class AWSClient(object):
     """Manages automatically creating and destroying clients to AWS services."""
@@ -172,6 +175,85 @@ class S3Client(AWSClient):
             raise
         return s3_object
 
+    def list_objects(self, bucket_name, recursive=False, prefix=None, callback=None):
+        """Retrieves list of objects within an S3 bucket, optionally supporting batched callback delivery.
+
+        Retrieval of objects is provided by the boto3 list_objects_v2 method. This allows for simple
+        paging support with unbounded object counts. As a result of the time that may be required for
+        the full result set to be returned, it is recommended that the provided callback support be used to receive
+        objects as they are retrieved (up to 1000 in a batch). The callback method must accept one list parameter. This
+        list will contain objects of type `util.aws.S3Object`. If the callback method is called without exception,
+        no objects will be returned upon completion of list_objects call.
+
+        :param bucket_name: The unique name of the bucket to retrieve.
+        :type bucket_name: string
+        :param recursive: Whether the bucket should be recursively searched from the given prefix
+        :type recursive: bool
+        :param prefix: The parent key from which to search bucket. Trailing slash is optional
+        :type prefix: string
+        :param callback: Method that will be called on completion of each batch return. Max of 1000 objects per call.
+        :type callback: function([util.aws.S3Object])
+        :return: List of S3 Objects that were found. Empty if all delivered via callback.
+        :rtype: list
+        """
+
+        object_list = []
+
+        kwargs = {
+            'Bucket': bucket_name
+        }
+        if prefix:
+            kwargs['Prefix'] = prefix
+        if not recursive:
+            kwargs['Delimiter'] = '/'
+
+        token = None
+
+        while True:
+            if token:
+                kwargs['ContinuationToken'] = token
+
+            results = self._client.list_objects_v2(**kwargs)
+
+            objects = []
+
+            # In the event of 0 results, exit loop
+            if results['KeyCount'] == 0:
+                break
+
+            for result in results['Contents']:
+                # Filter out 0 size keys, these are directory keys as S3 objects must be at least 1 Byte
+                if result['Size'] > 0:
+                    # TODO: Determine if we want to expose additional metadata
+                    """
+                    object = S3Object(result['Key'],
+                                      result['LastModified'],
+                                      result['ETag'],
+                                      result['Size'],
+                                      result['StorageClass'])
+                                      """
+                    object = result['Key']
+                    objects.append(object)
+
+            # Fire callback if set
+            if callback:
+                try:
+                    callback(objects)
+                except:
+                    logger.exception('list_objects callback failure.')
+                    # Failure to send objects via callback, fallback to return result_set as list.
+                    object_list.extend(objects)
+            else:
+                object_list.extend(objects)
+
+            # If results are truncated, update variable with the continuation token and resume looping.
+            if results['IsTruncated']:
+                token = results['NextContinuationToken']
+            # If no truncation detected, exit loop
+            else:
+                break
+
+        return object_list
 
 
 

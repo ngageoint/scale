@@ -1,9 +1,10 @@
 from __future__ import unicode_literals
 
 import django
+from botocore.exceptions import ParamValidationError
 from django.test import TestCase
 
-from util.aws import AWSClient
+from util.aws import AWSClient, S3Client, AWSCredentials
 from util.exceptions import InvalidAWSCredentials
 
 
@@ -40,3 +41,40 @@ class TestAws(TestCase):
         """Tests instantiating AWS Credentials from a configuration with an empty secret key."""
         config = { 'credentials': { 'access_key_id': 'ACCESSKEY', 'secret_access_key': ' ' }}
         self.assertIsNone(AWSClient.instantiate_credentials_from_config(config))
+
+
+class TestS3Client(TestCase):
+
+    def setUp(self):
+        self.credentials = AWSCredentials('fake', 'key')
+        django.setup()
+
+    def test_list_objects_prefix_no_objects(self):
+        raise NotImplementedError
+
+    def test_list_objects_prefix_with_objects(self):
+        raise NotImplementedError
+
+    def test_list_objects_prefix_recursive(self):
+        raise NotImplementedError
+
+    def test_list_objects_empty_bucket(self):
+        raise NotImplementedError
+
+    def test_list_objects_invalid_bucket_name(self):
+        with self.assertRaises(ParamValidationError):
+            with S3Client(self.credentials) as client:
+                client.list_objects('invalid:bucket:name')
+
+    def test_list_objects_bucket_not_found(self):
+        raise NotImplementedError
+
+    def test_list_objects_over_10k(self):
+        raise NotImplementedError
+
+    def test_list_objects_is_truncated_missing_token(self):
+        raise NotImplementedError
+
+    def test_list_objects_is_truncated_with_token(self):
+        raise NotImplementedError
+

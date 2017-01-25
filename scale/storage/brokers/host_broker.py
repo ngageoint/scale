@@ -38,26 +38,6 @@ class HostBroker(Broker):
                 scale_file.set_deleted()
                 scale_file.save()
 
-    def list_files(self, volume_path, recursive):
-        """See :meth:`storage.brokers.broker.Broker.list_files`
-        """
-
-        file_list = []
-
-        # Handle a full recursive walk of the directory tree.
-        if recursive:
-            for root, dirs, files in os.walk(volume_path):
-                for name in files:
-                    if os.path.isfile(os.path.join(volume_path, name)):
-                        file_list.append(os.path.join(volume_path, name))
-        # Handle identifying files only from a single directory.
-        else:
-            for result in os.listdir(volume_path):
-                if os.path.isfile(os.path.join(volume_path, result)):
-                    file_list.append(result)
-
-        return file_list
-
     def download_files(self, volume_path, file_downloads):
         """See :meth:`storage.brokers.broker.Broker.download_files`
         """
@@ -81,6 +61,26 @@ class HostBroker(Broker):
         for scale_file in files:
             paths.append(os.path.join(volume_path, scale_file.file_path))
         return paths
+
+    def list_files(self, volume_path, recursive, callback):
+        """See :meth:`storage.brokers.broker.Broker.list_files`
+        """
+
+        file_list = []
+
+        # Handle a full recursive walk of the directory tree.
+        if recursive:
+            for root, dirs, files in os.walk(volume_path):
+                for name in files:
+                    if os.path.isfile(os.path.join(volume_path, name)):
+                        file_list.append(os.path.join(volume_path, name))
+        # Handle identifying files only from a single directory.
+        else:
+            for result in os.listdir(volume_path):
+                if os.path.isfile(os.path.join(volume_path, result)):
+                    file_list.append(result)
+
+        return file_list
 
     def load_configuration(self, config):
         """See :meth:`storage.brokers.broker.Broker.load_configuration`

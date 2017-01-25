@@ -864,6 +864,25 @@ class Workspace(models.Model):
         volume_path = self._get_volume_path()
         return self.get_broker().get_file_system_paths(volume_path, files)
 
+    def list_files(self, recursive, callback):
+        """Lists files within a workspace, with optional full tree recursion. Callback support will enable updates
+        to caller without waiting for entire workspace to be traversed. If callbacks are used an empty list will be
+        returned at the completion of call.
+
+        :param recursive: Flag to indicate whether file searching should be done recursively
+        :type recursive: boolean
+        :param callback: Method that will be called on completion of each batch return. Max of 1000 files per call.
+        :type callback: function([string])
+        :returns: List of files matching given expression. Empty if all delivered via callback.
+        :rtype: [string]
+        """
+        volume_path = self._get_volume_path()
+
+        logger.info('Beginning%s%s file list for workspace: %s', (' callback enabled' if callback else '',
+                                                                  ' recursive' if recursive else '',
+                                                                  self.name))
+        return self.get_broker().list_files(volume_path, recursive, callback)
+
     def move_files(self, file_moves):
         """Moves the given files to the new file system paths and saves the ScaleFile model changes in the database. If
         this workspace's broker uses a container volume, the workspace expects this volume file system to already be

@@ -73,30 +73,6 @@ class Broker(object):
 
         raise NotImplementedError
 
-    def list_files(self, volume_path, recursive):
-        """List the files under the given file system paths.
-
-        If this broker uses a container volume, volume_path will contain the absolute local container location where
-        that volume file system is mounted. If this broker does not use a container volume, None will be given for
-        volume_path.
-
-        The expression must be a valid regular expression that accommodates matching against the complete file path. If
-        the file is not at the root level relative to volume_path, due to recursive processing, the path will
-        potentially include a directory and solidus separator.
-
-        :param volume_path: Absolute path to the local container location onto which the volume file system was mounted,
-            None if this broker does not use a container volume
-        :type volume_path: string
-        :param expression: Regular expression for file name and path filtering
-        :type expression: string
-        :param recursive: Flag to indicate whether file searching should be done recursively
-        :type recursive: boolean
-        :returns: List of files matching given expression
-        :rtype: [:class:`storage.models.ScaleFile`]
-        """
-
-        raise NotImplementedError
-
     def download_files(self, volume_path, file_downloads):
         """Downloads the given files to the given local file system paths.
 
@@ -142,6 +118,31 @@ class Broker(object):
         """
 
         return None
+
+    def list_files(self, volume_path, recursive, callback):
+        """List the files under the given file system paths.
+
+        If this broker uses a container volume, volume_path will contain the absolute local container location where
+        that volume file system is mounted. If this broker does not use a container volume, None will be given for
+        volume_path.
+
+        As a result of the time that may be required for the full result set to be returned, it is recommended that the
+        provided callback support be used to receive objects as they are retrieved (up to 1000 in a batch). The callback
+        method must accept one list parameter. This list will contain elements of type string. If the callback method is
+        called without exception, no objects will be returned upon completion of list_files call.
+
+        :param volume_path: Absolute path to the local container location onto which the volume file system was mounted,
+            None if this broker does not use a container volume
+        :type volume_path: string
+        :param recursive: Flag to indicate whether file searching should be done recursively
+        :type recursive: boolean
+        :param callback: Method that will be called on completion of each batch return. Max of 1000 files per call.
+        :type callback: function([string])
+        :returns: List of files matching given expression. Empty if all delivered via callback.
+        :rtype: [string]
+        """
+
+        raise NotImplementedError
 
     def load_configuration(self, config):
         """Loads the given configuration
