@@ -1,8 +1,12 @@
 from __future__ import unicode_literals
 
+from copy import deepcopy
+from datetime import datetime
+
 import django
-from botocore.exceptions import ParamValidationError
+from botocore.exceptions import ParamValidationError, ClientError
 from django.test import TestCase
+from mock import patch
 
 from util.aws import AWSClient, S3Client, AWSCredentials
 from util.exceptions import InvalidAWSCredentials
@@ -46,35 +50,124 @@ class TestAws(TestCase):
 class TestS3Client(TestCase):
 
     def setUp(self):
-        self.credentials = AWSCredentials('fake', 'key')
+        self.credentials = AWSCredentials('ACCCESSKEY', 'SECRETKEY')
+
+
+        self.sample_content = {
+            'Key': 'test/string',
+            'LastModified': datetime(2015, 1, 1),
+            'ETag': 'string',
+            'Size': 123,
+            'StorageClass': 'STANDARD',
+            'Owner': {
+                'DisplayName': 'string',
+                'ID': 'string'
+            }
+        }
+
+        self.sample_response = {
+            'IsTruncated': False,
+            'Marker': 'string',
+            'NextMarker': 'string',
+            'Contents': [
+                self.sample_content
+            ],
+            'Name': 'string',
+            'Prefix': 'string',
+            'Delimiter': 'string',
+            'MaxKeys': 123,
+            'CommonPrefixes': [
+                {
+                    'Prefix': 'string'
+                },
+            ],
+            'EncodingType': 'url'
+        }
+
         django.setup()
 
-    def test_list_objects_prefix_no_objects(self):
-        raise NotImplementedError
+    @patch('botocore.paginate.PageIterator._make_request')
+    def test_list_objects_prefix(self, mock_func):
+        mock_func.return_value = self.sample_response
 
-    def test_list_objects_prefix_with_objects(self):
-        raise NotImplementedError
+        with S3Client(self.credentials) as client:
+            results = client.list_objects('sample-bucket', False, 'test/')
 
-    def test_list_objects_prefix_recursive(self):
-        raise NotImplementedError
+        self.assertEqual(len(results), 1)
 
-    def test_list_objects_empty_bucket(self):
-        raise NotImplementedError
+    @patch('botocore.paginate.PageIterator._make_request')
+    def test_list_objects_prefix_recursive(self, mock_func):
+        response = self.sample_response
+        response['Contents'] = [deepcopy(self.sample_content), deepcopy(self.sample_content)]
+        response['Contents'][0]['Key'] = 'string'
+        mock_func.return_value = response
+
+        with S3Client(self.credentials) as client:
+            results = client.list_objects('sample-bucket', True)
+
+        self.assertEqual(len(results), 2)
+
+    @patch('botocore.paginate.PageIterator._make_request')
+    def test_list_objects_empty_bucket(self, mock_func):
+        response = self.sample_response
+        del response['Contents']
+        mock_func.return_value = response
+
+        with S3Client(self.credentials) as client:
+            results = client.list_objects('empty-bucket', True)
+
+        self.assertEqual(len(results), 0)
 
     def test_list_objects_invalid_bucket_name(self):
         with self.assertRaises(ParamValidationError):
             with S3Client(self.credentials) as client:
                 client.list_objects('invalid:bucket:name')
 
-    def test_list_objects_bucket_not_found(self):
-        raise NotImplementedError
+    @patch('botocore.paginate.Paginator.paginate')
+    def test_list_objects_bucket_not_found(self, mock_func):
+        error_response = {'Error': {'Code': 'NoSuchBucket', 'Message': 'The specified bucket does not exist'}}
+        mock_func.side_effect = ClientError(error_response, 'ListObjects')
 
-    def test_list_objects_over_10k(self):
-        raise NotImplementedError
+        with self.assertRaises(ClientError):
+            with S3Client(self.credentials) as client:
+                client.list_objects('nonexistent-bucket')
 
-    def test_list_objects_is_truncated_missing_token(self):
-        raise NotImplementedError
+    @patch('botocore.paginate.PageIterator._make_request')
+    def test_list_objects_iteration(self, mock_func):
+        response1 = self.sample_response
+        response1['IsTruncated'] = True
+        response2 = deepcopy(response1)
+        response2['IsTruncated'] = False
+        mock_func.side_effect = [response1, response2]
 
-    def test_list_objects_is_truncated_with_token(self):
-        raise NotImplementedError
+        with S3Client(self.credentials) as client:
+            results = client.list_objects('iterating-bucket', True)
 
+        self.assertEqual(len(results), 2)
+
+    @patch('botocore.paginate.PageIterator._make_request')
+    def test_list_objects_with_callback(self, mock_func):
+        mock_func.return_value = self.sample_response
+
+        def callback(results):
+            self.assertEqual(len(results), 1)
+
+        with S3Client(self.credentials) as client:
+            results = client.list_objects('sample-bucket', True, callback=callback)
+
+        self.assertEquals(len(results), 0)
+
+
+    @patch('botocore.paginate.PageIterator._make_request')
+    def test_list_objects_with_callback_exception(self, mock_func):
+        mock_func.return_value = self.sample_response
+
+        def callback(results):
+            self.assertEqual(len(results), 1)
+            raise Exception('Error during callback')
+
+        with S3Client(self.credentials) as client:
+            results = client.list_objects('sample-bucket', True, callback=callback)
+
+        # As a result of exception within callback there should still be results returned
+        self.assertEquals(len(results), 1)
