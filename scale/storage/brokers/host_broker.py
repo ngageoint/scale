@@ -70,6 +70,7 @@ class HostBroker(Broker):
 
         # Handle a full recursive walk of the directory tree.
         if recursive:
+            print volume_path
             for root, dirs, files in os.walk(volume_path):
                 for name in files:
                     if os.path.isfile(os.path.join(volume_path, name)):
