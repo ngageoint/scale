@@ -100,14 +100,15 @@ class FileAncestryLinkManager(models.Manager):
         :param file_ids: The file IDs
         :type file_ids: list[int]
         :returns: The list of ancestor source files
-        :rtype: list[:class:`source.models.SourceFile`]
+        :rtype: list[:class:`storage.models.ScaleFile`]
         """
 
+        # TODO: file refactor - might be able to make this more efficient
         potential_src_file_ids = list(file_ids)
         # Get all ancestors to include as possible source files
         for ancestor_link in self.filter(descendant_id__in=file_ids):
             potential_src_file_ids.append(ancestor_link.ancestor_id)
-        return SourceFile.objects.filter(file_id__in=potential_src_file_ids)
+        return ScaleFile.objects.filter(id__in=potential_src_file_ids, type='SOURCE')
 
 
 class FileAncestryLink(models.Model):
@@ -233,15 +234,16 @@ class ProductFileManager(models.GeoManager):
         :param product_id: The unique identifier of the product.
         :type product_id: int
         :returns: The product with extra related attributes: sources, ancestor/descendant products.
-        :rtype: :class:`source.models.ProductFile`
+        :rtype: :class:`product.models.ProductFile`
         """
 
         # Attempt to fetch the requested product
         product = ProductFile.objects.all().select_related('workspace')
         product = product.get(pk=product_id)
 
+        # TODO: file refactor - make this more efficient
         # Attempt to fetch all ancestor sources
-        sources = SourceFile.objects.filter(descendants__descendant_id=product.id)
+        sources = ScaleFile.objects.filter(descendants__descendant_id=product.id, type='SOURCE')
         sources = sources.select_related('job_type', 'workspace').defer('workspace__json_config')
         sources = sources.prefetch_related('countries').order_by('created')
         product.sources = sources
@@ -264,7 +266,7 @@ class ProductFileManager(models.GeoManager):
         """Populates each of the given products with its source file ancestors in a field called "source_files"
 
         :param products: List of products
-        :type products: list of :class:`product.models.ProductFile`
+        :type products: list of :class:`storage.models.ScaleFile`
         """
 
         product_lists = {}  # {product ID: list of source files}
@@ -273,7 +275,7 @@ class ProductFileManager(models.GeoManager):
             product_lists[product.id] = product.source_files
 
         source_files = {}  # {source file ID: source file}
-        src_qry = SourceFile.objects.filter(descendants__descendant_id__in=product_lists.keys())
+        src_qry = ScaleFile.objects.filter(file_type='SOURCE', descendants__descendant_id__in=product_lists.keys())
         src_qry = src_qry.select_related('workspace').defer('workspace__json_config').order_by('id').distinct('id')
         for source in src_qry:
             source_files[source.id] = source

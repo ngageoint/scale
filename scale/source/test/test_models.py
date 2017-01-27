@@ -6,12 +6,12 @@ import os
 import django
 from django.test import TestCase
 from django.utils.timezone import now
-from mock import patch, MagicMock
+from mock import patch
 
 from job.test import utils as job_utils
 from source.models import SourceFile
 from storage.brokers.broker import FileMove
-from storage.models import Workspace
+from storage.models import ScaleFile, Workspace
 from storage.test import utils as storage_utils
 from trigger.models import TriggerEvent
 from trigger.test import utils as trigger_utils
@@ -28,9 +28,9 @@ class TestSourceFileManagerSaveParseResults(TestCase):
 
         workspace = Workspace.objects.create(name='Test Workspace', is_active=True, created=now(), last_modified=now())
 
-        self.src_file = SourceFile.objects.create(file_name='text.txt', media_type='text/plain', file_size=10,
-                                                  data_type='type', file_path='the_path', workspace=workspace)
-
+        self.src_file = ScaleFile.objects.create(file_name='text.txt', file_type='SOURCE', media_type='text/plain',
+                                                 file_size=10, data_type='type', file_path='the_path',
+                                                 workspace=workspace)
 
         self.started = now()
         self.ended = self.started + datetime.timedelta(days=1)
@@ -87,7 +87,7 @@ class TestSourceFileManagerSaveParseResults(TestCase):
                                               [], None)
 
         # Check results
-        src_file = SourceFile.objects.get(pk=self.src_file.id)
+        src_file = ScaleFile.objects.get(pk=self.src_file.id)
         self.assertEqual(src_file.is_parsed, True)
         self.assertIsNotNone(src_file.parsed)
         self.assertEqual(src_file.data_started, self.started)
@@ -103,7 +103,7 @@ class TestSourceFileManagerSaveParseResults(TestCase):
         SourceFile.objects.save_parse_results(self.src_file.id, FEATURE_GEOJSON, self.started, self.ended, [], None)
 
         # Check results
-        src_file = SourceFile.objects.get(pk=self.src_file.id)
+        src_file = ScaleFile.objects.get(pk=self.src_file.id)
         self.assertEqual(src_file.is_parsed, True)
         self.assertIsNotNone(src_file.parsed)
         self.assertEqual(src_file.data_started, self.started)
@@ -141,7 +141,7 @@ class TestSourceFileManagerSaveParseResults(TestCase):
         SourceFile.objects.save_parse_results(self.src_file.id, POLYGON_GEOJSON, None, None, [], None)
 
         # Check results
-        src_file = SourceFile.objects.get(pk=self.src_file.id)
+        src_file = ScaleFile.objects.get(pk=self.src_file.id)
         self.assertEqual(src_file.is_parsed, True)
         self.assertIsNotNone(src_file.parsed)
         self.assertIsNone(src_file.data_started)

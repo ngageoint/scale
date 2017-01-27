@@ -148,8 +148,8 @@ def _get_source_file(file_name):
     """
 
     try:
-        src_file = SourceFile.objects.get(file_name=file_name)
-    except SourceFile.DoesNotExist:
+        src_file = SourceFile.objects.get_source_file_by_name(file_name)
+    except ScaleFile.DoesNotExist:
         src_file = SourceFile()  # New file
         src_file.file_name = file_name
         src_file.is_deleted = True

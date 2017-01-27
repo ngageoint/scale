@@ -10,8 +10,8 @@ import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
 from job.models import JobExecution
 from queue.models import Queue
-from source.models import SourceFile
 from source.triggers.parse_trigger_handler import ParseTriggerHandler
+from storage.models import ScaleFile
 
 
 class TestParseTriggerHandlerProcessParsedSourceFile(TestCase):
@@ -100,9 +100,9 @@ class TestParseTriggerHandlerProcessParsedSourceFile(TestCase):
         self.file_name = 'my_file.txt'
         self.data_type = 'test_file_type'
         self.media_type = 'text/plain'
-        self.source_file = SourceFile.objects.create(file_name=self.file_name, media_type=self.media_type, file_size=10,
-                                                     data_type=self.data_type, file_path='the_path',
-                                                     workspace=self.workspace)
+        self.source_file = ScaleFile.objects.create(file_name=self.file_name, file_type='SOURCE',
+                                                    media_type=self.media_type, file_size=10, data_type=self.data_type,
+                                                    file_path='the_path', workspace=self.workspace)
         self.source_file.add_data_type_tag('type1')
         self.source_file.add_data_type_tag('type2')
         self.source_file.add_data_type_tag('type3')
