@@ -20,6 +20,7 @@ import trigger.test.utils as trigger_test_utils
 from job.execution.container import SCALE_JOB_EXE_OUTPUT_PATH
 from job.models import Job
 from product.models import FileAncestryLink, ProductFile
+from storage.models import ScaleFile
 
 
 class TestFileAncestryLinkManagerCreateFileAncestryLinks(TestCase):
@@ -224,9 +225,9 @@ class TestProductFileManager(TestCase):
         when = now()
         ProductFile.objects.publish_products(self.job_exe, when)
 
-        product_1 = ProductFile.objects.get(id=self.product_1.id)
-        product_2 = ProductFile.objects.get(id=self.product_2.id)
-        product_3 = ProductFile.objects.get(id=self.product_3.id)
+        product_1 = ScaleFile.objects.get(id=self.product_1.id)
+        product_2 = ScaleFile.objects.get(id=self.product_2.id)
+        product_3 = ScaleFile.objects.get(id=self.product_3.id)
         self.assertTrue(product_1.has_been_published)
         self.assertTrue(product_1.is_published)
         self.assertEqual(product_1.published, when)
@@ -244,9 +245,9 @@ class TestProductFileManager(TestCase):
         when = now()
         ProductFile.objects.publish_products(self.job_exe, when)
 
-        product_1 = ProductFile.objects.get(id=self.product_1.id)
-        product_2 = ProductFile.objects.get(id=self.product_2.id)
-        product_3 = ProductFile.objects.get(id=self.product_3.id)
+        product_1 = ScaleFile.objects.get(id=self.product_1.id)
+        product_2 = ScaleFile.objects.get(id=self.product_2.id)
+        product_3 = ScaleFile.objects.get(id=self.product_3.id)
         self.assertFalse(product_1.has_been_published)
         self.assertFalse(product_1.is_published)
         self.assertIsNone(product_1.published)
@@ -285,10 +286,10 @@ class TestProductFileManager(TestCase):
         ProductFile.objects.publish_products(job_exe_3, when)
 
         # Make sure products from Job 1 and Job 2 are unpublished
-        product_1_a = ProductFile.objects.get(id=product_1_a.id)
-        product_1_b = ProductFile.objects.get(id=product_1_b.id)
-        product_2_a = ProductFile.objects.get(id=product_2_a.id)
-        product_2_b = ProductFile.objects.get(id=product_2_b.id)
+        product_1_a = ScaleFile.objects.get(id=product_1_a.id)
+        product_1_b = ScaleFile.objects.get(id=product_1_b.id)
+        product_2_a = ScaleFile.objects.get(id=product_2_a.id)
+        product_2_b = ScaleFile.objects.get(id=product_2_b.id)
         self.assertTrue(product_1_a.has_been_published)
         self.assertFalse(product_1_a.is_published)
         self.assertEqual(product_1_a.unpublished, when)
@@ -303,8 +304,8 @@ class TestProductFileManager(TestCase):
         self.assertEqual(product_2_b.unpublished, when)
 
         # Make sure Job 3 products are published
-        product_3_a = ProductFile.objects.get(id=product_3_a.id)
-        product_3_b = ProductFile.objects.get(id=product_3_b.id)
+        product_3_a = ScaleFile.objects.get(id=product_3_a.id)
+        product_3_b = ScaleFile.objects.get(id=product_3_b.id)
         self.assertTrue(product_3_a.has_been_published)
         self.assertTrue(product_3_a.is_published)
         self.assertFalse(product_3_a.is_superseded)
@@ -333,18 +334,18 @@ class TestProductFileManager(TestCase):
         product_c = prod_test_utils.create_product(uuid=uuid_3, has_been_published=True, is_published=True)
 
         # Set the new products with the same UUIDs
-        ProductFile.objects.filter(id=self.product_1.id).update(uuid=uuid_1)
-        ProductFile.objects.filter(id=self.product_2.id).update(uuid=uuid_2)
-        ProductFile.objects.filter(id=self.product_3.id).update(uuid=uuid_3)
+        ScaleFile.objects.filter(id=self.product_1.id).update(uuid=uuid_1)
+        ScaleFile.objects.filter(id=self.product_2.id).update(uuid=uuid_2)
+        ScaleFile.objects.filter(id=self.product_3.id).update(uuid=uuid_3)
 
         # Publish new products
         when = now()
         ProductFile.objects.publish_products(self.job_exe, when)
 
         # Check old products to make sure they are superseded
-        product_a = ProductFile.objects.get(id=product_a.id)
-        product_b = ProductFile.objects.get(id=product_b.id)
-        product_c = ProductFile.objects.get(id=product_c.id)
+        product_a = ScaleFile.objects.get(id=product_a.id)
+        product_b = ScaleFile.objects.get(id=product_b.id)
+        product_c = ScaleFile.objects.get(id=product_c.id)
         self.assertFalse(product_a.is_published)
         self.assertTrue(product_a.is_superseded)
         self.assertEqual(product_a.superseded, when)
@@ -441,7 +442,7 @@ class TestProductFileManagerPopulateSourceAncestors(TestCase):
     def test_successful(self):
         """Tests calling ProductFileManager.populate_source_ancestors() successfully"""
 
-        products = ProductFile.objects.filter(id__in=[self.product_1.id, self.product_2.id, self.product_3.id])
+        products = ScaleFile.objects.filter(id__in=[self.product_1.id, self.product_2.id, self.product_3.id])
 
         ProductFile.objects.populate_source_ancestors(products)
 

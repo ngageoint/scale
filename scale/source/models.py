@@ -100,20 +100,13 @@ class SourceFileManager(models.GeoManager):
             source.ingests = []
 
         # Attempt to fetch all products derived from the source
-        # Use a localized import to make higher level application dependencies optional
-        try:
-            from product.models import ProductFile
-            products = ProductFile.objects.filter(ancestors__ancestor_id=source.id)
-
-            # Exclude superseded products by default
-            if not include_superseded:
-                products = products.filter(is_superseded=False)
-
-            products = products.select_related('job_type', 'workspace').defer('workspace__json_config')
-            products = products.prefetch_related('countries').order_by('created')
-            source.products = products
-        except:
-            source.products = []
+        products = ScaleFile.objects.filter(ancestors__ancestor_id=source.id, file_type='PRODUCT')
+        # Exclude superseded products by default
+        if not include_superseded:
+            products = products.filter(is_superseded=False)
+        products = products.select_related('job_type', 'workspace').defer('workspace__json_config')
+        products = products.prefetch_related('countries').order_by('created')
+        source.products = products
 
         return source
 

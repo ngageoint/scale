@@ -193,11 +193,11 @@ class ProductFileManager(models.GeoManager):
         :param order: A list of fields to control the sort order.
         :type order: list[str]
         :returns: The list of product files that match the time range.
-        :rtype: list[:class:`product.models.ProductFile`]
+        :rtype: list[:class:`storage.models.ScaleFile`]
         """
 
         # Fetch a list of product files
-        products = ProductFile.objects.filter(has_been_published=True, is_superseded=False)
+        products = ScaleFile.objects.filter(file_type='PRODUCT', has_been_published=True, is_superseded=False)
         products = products.select_related('workspace', 'job_type').defer('workspace__json_config')
         products = products.prefetch_related('countries')
 
@@ -234,28 +234,30 @@ class ProductFileManager(models.GeoManager):
         :param product_id: The unique identifier of the product.
         :type product_id: int
         :returns: The product with extra related attributes: sources, ancestor/descendant products.
-        :rtype: :class:`product.models.ProductFile`
+        :rtype: :class:`storage.models.ScaleFile`
+
+        :raises :class:`storage.models.ScaleFile.DoesNotExist`: If the file does not exist
         """
 
         # Attempt to fetch the requested product
-        product = ProductFile.objects.all().select_related('workspace')
-        product = product.get(pk=product_id)
+        product = ScaleFile.objects.all().select_related('workspace')
+        product = product.get(pk=product_id, file_type='PRODUCT')
 
         # TODO: file refactor - make this more efficient
         # Attempt to fetch all ancestor sources
-        sources = ScaleFile.objects.filter(descendants__descendant_id=product.id, type='SOURCE')
+        sources = ScaleFile.objects.filter(descendants__descendant_id=product.id, file_type='SOURCE')
         sources = sources.select_related('job_type', 'workspace').defer('workspace__json_config')
         sources = sources.prefetch_related('countries').order_by('created')
         product.sources = sources
 
         # Attempt to fetch all ancestor products
-        ancestors = ProductFile.objects.filter(descendants__descendant_id=product.id)
+        ancestors = ScaleFile.objects.filter(descendants__descendant_id=product.id, file_type='PRODUCT')
         ancestors = ancestors.select_related('job_type', 'workspace').defer('workspace__json_config')
         ancestors = ancestors.prefetch_related('countries').order_by('created')
         product.ancestor_products = ancestors
 
         # Attempt to fetch all descendant products
-        descendants = ProductFile.objects.filter(ancestors__ancestor_id=product.id)
+        descendants = ScaleFile.objects.filter(ancestors__ancestor_id=product.id)
         descendants = descendants.select_related('job_type', 'workspace').defer('workspace__json_config')
         descendants = descendants.prefetch_related('countries').order_by('created')
         product.descendant_products = descendants
@@ -346,7 +348,7 @@ class ProductFileManager(models.GeoManager):
         :param workspace: The workspace to use for storing the product files
         :type workspace: :class:`storage.models.Workspace`
         :returns: The list of the saved product models
-        :rtype: list of :class:`product.models.ProductFile`
+        :rtype: list of :class:`storage.models.ScaleFile`
         """
 
         # Build a list of UUIDs for the input files
@@ -362,7 +364,7 @@ class ProductFileManager(models.GeoManager):
         input_strings.extend(properties)
 
         # Determine if any input files are non-operational products
-        input_products = ProductFile.objects.filter(file__in=[f['id'] for f in input_files])
+        input_products = ScaleFile.objects.filter(file__in=[f['id'] for f in input_files], file_type='PRODUCT')
         input_products_operational = all([f.is_operational for f in input_products])
 
         products_to_save = []
