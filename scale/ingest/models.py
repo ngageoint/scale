@@ -352,7 +352,7 @@ class Ingest(models.Model):
     ingest_started = models.DateTimeField(blank=True, null=True)
     ingest_ended = models.DateTimeField(blank=True, null=True, db_index=True)
 
-    source_file = models.ForeignKey('source.SourceFile', blank=True, null=True)
+    source_file = models.ForeignKey('storage.ScaleFile', blank=True, null=True)
     data_started = models.DateTimeField(blank=True, null=True, db_index=True)
     data_ended = models.DateTimeField(blank=True, null=True, db_index=True)
 

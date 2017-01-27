@@ -143,7 +143,7 @@ class FileAncestryLink(models.Model):
     """
 
     ancestor = models.ForeignKey('storage.ScaleFile', on_delete=models.PROTECT, related_name='descendants')
-    descendant = models.ForeignKey('product.ProductFile', blank=True, null=True, on_delete=models.PROTECT,
+    descendant = models.ForeignKey('storage.ScaleFile', blank=True, null=True, on_delete=models.PROTECT,
                                    related_name='ancestors')
 
     job_exe = models.ForeignKey('job.JobExecution', on_delete=models.PROTECT, related_name='file_links')
@@ -408,53 +408,13 @@ class ProductFileManager(models.GeoManager):
 
 
 class ProductFile(ScaleFile):
-    """Represents a product file that has been created by Scale. This is an extension of the
-    :class:`storage.models.ScaleFile` model.
-
-    :keyword file: The corresponding ScaleFile model
-    :type file: :class:`django.db.models.OneToOneField`
-    :keyword job_exe: The job execution that created this product
-    :type job_exe: :class:`django.db.models.ForeignKey`
-    :keyword job: The job that created this product
-    :type job: :class:`django.db.models.ForeignKey`
-    :keyword job_type: The type of the job that created this product
-    :type job_type: :class:`django.db.models.ForeignKey`
-    :keyword is_operational: Whether this product was produced by an operational job type (True) or by a job type that
-        is still in a research & development (R&D) phase (False)
-    :type is_operational: :class:`django.db.models.BooleanField`
-
-    :keyword has_been_published: Whether this product has ever been published. A product becomes published when its job
-        execution completes successfully. A product that has been published will appear in the API call to retrieve
-        product updates.
-    :type has_been_published: :class:`django.db.models.BooleanField`
-    :keyword is_published: Whether this product is currently published. A published product has had its job execution
-        complete successfully and has not been unpublished.
-    :type is_published: :class:`django.db.models.BooleanField`
-    :keyword is_superseded: Whether this product has been superseded by another product with the same UUID
-    :type is_superseded: :class:`django.db.models.BooleanField`
-    :keyword published: When this product was published (its job execution was completed)
-    :type published: :class:`django.db.models.DateTimeField`
-    :keyword unpublished: When this product was unpublished
-    :type unpublished: :class:`django.db.models.DateTimeField`
-    :keyword superseded: When this product was superseded
-    :type superseded: :class:`django.db.models.DateTimeField`
+    """Represents a product file that has been created by Scale. This is a proxy model of the
+    :class:`storage.models.ScaleFile` model. It has the same set of fields, but a different manager that provides
+    functionality specific to product files.
     """
-
-    file = models.OneToOneField('storage.ScaleFile', primary_key=True, parent_link=True)
-    job_exe = models.ForeignKey('job.JobExecution', on_delete=models.PROTECT)
-    job = models.ForeignKey('job.Job', on_delete=models.PROTECT)
-    job_type = models.ForeignKey('job.JobType', on_delete=models.PROTECT)
-    is_operational = models.BooleanField(default=True)
-
-    has_been_published = models.BooleanField(default=False)
-    is_published = models.BooleanField(default=False)
-    is_superseded = models.BooleanField(default=False)
-    published = models.DateTimeField(blank=True, null=True)
-    unpublished = models.DateTimeField(blank=True, null=True)
-    superseded = models.DateTimeField(blank=True, null=True)
 
     objects = ProductFileManager()
 
     class Meta(object):
         """meta information for the db"""
-        db_table = 'product_file'
+        proxy = True

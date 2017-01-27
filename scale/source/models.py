@@ -171,25 +171,13 @@ class SourceFileManager(models.GeoManager):
 
 
 class SourceFile(ScaleFile):
-    """Represents a source data file that is available for processing. This is an extension of the
-    :class:`storage.models.ScaleFile` model.
-
-    :keyword file: The corresponding ScaleFile model
-    :type file: :class:`django.db.models.OneToOneField`
-
-    :keyword is_parsed: Whether the source file has been parsed or not
-    :type is_parsed: :class:`django.db.models.BooleanField`
-    :keyword parsed: When the source file was parsed
-    :type parsed: :class:`django.db.models.DateTimeField`
+    """Represents a source data file that is available for processing. This is a proxy model of the
+    :class:`storage.models.ScaleFile` model. It has the same set of fields, but a different manager that provides
+    functionality specific to source files.
     """
-
-    file = models.OneToOneField('storage.ScaleFile', primary_key=True, parent_link=True)
-
-    is_parsed = models.BooleanField(default=False)
-    parsed = models.DateTimeField(blank=True, null=True)
 
     objects = SourceFileManager()
 
     class Meta(object):
         """meta information for the db"""
-        db_table = 'source_file'
+        proxy = True
