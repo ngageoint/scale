@@ -8,6 +8,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
+        ('ingest', '0008_auto_20170127_1332'),
         ('product', '0006_auto_20170127_1348'),
         ('source', '0003_auto_20170127_1342'),
         ('job', '0022_jobtype_configuration'),

@@ -6,7 +6,7 @@ from django.db import connection, models, migrations
 
 def delete_constraint(apps, schema_editor):
     with connection.cursor() as cursor:
-        cursor.execute('ALTER TABLE "ingest" DROP CONSTRAINT "ingest_source_file_id_67e3c0c9_fk_source_file_file_id"')
+        cursor.execute('ALTER TABLE "ingest" DROP CONSTRAINT IF EXISTS "ingest_source_file_id_67e3c0c9_fk_source_file_file_id"')
 
 
 class Migration(migrations.Migration):

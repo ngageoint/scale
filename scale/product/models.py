@@ -364,7 +364,7 @@ class ProductFileManager(models.GeoManager):
         input_strings.extend(properties)
 
         # Determine if any input files are non-operational products
-        input_products = ScaleFile.objects.filter(file__in=[f['id'] for f in input_files], file_type='PRODUCT')
+        input_products = ScaleFile.objects.filter(id__in=[f['id'] for f in input_files], file_type='PRODUCT')
         input_products_operational = all([f.is_operational for f in input_products])
 
         products_to_save = []
