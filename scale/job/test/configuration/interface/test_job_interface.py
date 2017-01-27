@@ -71,7 +71,7 @@ class TestJobInterfaceConvert(TestCase):
         """Tests calling JobInterface.update() successfully."""
         mock_get_dict.return_value = self.job_interface_dict
         job_interface = JobInterface.convert_interface(self.job_interface_dict)
-        self.assertEqual(job_interface['version'], '1.2')
+        self.assertEqual(job_interface['version'], '1.3')
         self.assertIn('partial', job_interface['input_data'][0])
         self.assertFalse(job_interface['input_data'][0]['partial'])
         self.assertFalse(job_interface['env_vars'])
@@ -1023,7 +1023,7 @@ class TestJobInterfacePreSteps(TestCase):
 
         try:
             # Validate acceptable job_interface and job_configuration
-            job_interface.validate_populated_settings(job_exe, job_config)
+            job_interface.validate_populated_settings(job_config)
         except InvalidSetting:
             self.fail('Valid job_interface settings definition should not raise an Exception')
 
@@ -1055,7 +1055,7 @@ class TestJobInterfacePreSteps(TestCase):
         job_exe = MagicMock()
         job_exe.command_arguments = ''
 
-        self.assertRaises(InvalidSetting, job_interface.validate_populated_settings, job_exe, job_config)
+        self.assertRaises(InvalidSetting, job_interface.validate_populated_settings, job_config)
 
     def test_validate_populated_settings_no_env_vars(self):
         """Tests the validation of required settings defined in the job_interface"""
@@ -1081,7 +1081,7 @@ class TestJobInterfacePreSteps(TestCase):
         job_exe = MagicMock()
         job_exe.command_arguments = 'test_setting'
 
-        self.assertRaises(InvalidSetting, job_interface.validate_populated_settings, job_exe, job_config)
+        self.assertRaises(InvalidSetting, job_interface.validate_populated_settings, job_config)
 
 
 class TestJobInterfaceValidateConnection(TestCase):
