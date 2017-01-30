@@ -10,7 +10,6 @@ from django.db import transaction
 
 import storage.geospatial_utils as geo_utils
 from recipe.models import Recipe
-from source.models import SourceFile
 from storage.brokers.broker import FileUpload
 from storage.models import ScaleFile
 from util.parse import parse_datetime
