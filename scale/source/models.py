@@ -184,6 +184,18 @@ class SourceFile(ScaleFile):
     functionality specific to source files.
     """
 
+    @classmethod
+    def create(cls):
+        """Creates a new source file
+
+        :returns: The new source file
+        :rtype: :class:`source.models.SourceFile`
+        """
+
+        src_file = SourceFile()
+        src_file.file_type = 'SOURCE'
+        return src_file
+
     objects = SourceFileManager()
 
     class Meta(object):

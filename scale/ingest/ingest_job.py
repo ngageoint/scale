@@ -77,7 +77,7 @@ def perform_ingest(ingest_id):
 
         if ingest.new_workspace:
             # Copied file to new workspace, so delete file in old workspace (if workspace provides local path to do so)
-            file_with_old_path = SourceFile()
+            file_with_old_path = SourceFile.create()
             file_with_old_path.file_name = file_name
             file_with_old_path.file_path = ingest.file_path
             paths = ingest.workspace.get_file_system_paths([file_with_old_path])
@@ -150,7 +150,7 @@ def _get_source_file(file_name):
     try:
         src_file = SourceFile.objects.get_source_file_by_name(file_name)
     except ScaleFile.DoesNotExist:
-        src_file = SourceFile()  # New file
+        src_file = SourceFile.create()  # New file
         src_file.file_name = file_name
         src_file.is_deleted = True
     return src_file

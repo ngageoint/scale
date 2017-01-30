@@ -525,7 +525,7 @@ class TestProductFileManagerUploadFiles(TestCase):
         """Tests calling ProductFileManager.upload_files() with a non-operational input file"""
         products_no = ProductFile.objects.upload_files(self.files_no, [self.source_file.id], self.job_exe_no,
                                                        self.workspace)
-        products = ProductFile.objects.upload_files(self.files, [self.source_file.id, products_no[0].file.id],
+        products = ProductFile.objects.upload_files(self.files, [self.source_file.id, products_no[0].id],
                                                     self.job_exe, self.workspace)
         self.assertFalse(products[0].is_operational)
         self.assertFalse(products[1].is_operational)

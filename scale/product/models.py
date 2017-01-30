@@ -108,7 +108,7 @@ class FileAncestryLinkManager(models.Manager):
         # Get all ancestors to include as possible source files
         for ancestor_link in self.filter(descendant_id__in=file_ids):
             potential_src_file_ids.append(ancestor_link.ancestor_id)
-        return ScaleFile.objects.filter(id__in=potential_src_file_ids, type='SOURCE')
+        return ScaleFile.objects.filter(id__in=potential_src_file_ids, file_type='SOURCE')
 
 
 class FileAncestryLink(models.Model):
@@ -373,7 +373,7 @@ class ProductFileManager(models.GeoManager):
             remote_path = entry[1]
             media_type = entry[2]
 
-            product = ProductFile()
+            product = ProductFile.create()
             product.job_exe = job_exe
             product.job = job_exe.job
             product.job_type = job_exe.job.job_type
@@ -416,6 +416,18 @@ class ProductFile(ScaleFile):
     :class:`storage.models.ScaleFile` model. It has the same set of fields, but a different manager that provides
     functionality specific to product files.
     """
+
+    @classmethod
+    def create(cls):
+        """Creates a new product file
+
+        :returns: The new product file
+        :rtype: :class:`product.models.ProductFile`
+        """
+
+        product_file = ProductFile()
+        product_file.file_type = 'PRODUCT'
+        return product_file
 
     objects = ProductFileManager()
 
