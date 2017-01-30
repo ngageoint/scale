@@ -505,6 +505,7 @@ class TestProductFileManagerUploadFiles(TestCase):
         products = ProductFile.objects.upload_files(self.files, [self.source_file.id], self.job_exe, self.workspace)
 
         self.assertEqual('file.txt', products[0].file_name)
+        self.assertEqual('PRODUCT', products[0].file_type)
         self.assertEqual('remote/1/file.txt', products[0].file_path)
         self.assertEqual('text/plain', products[0].media_type)
         self.assertEqual(self.workspace.id, products[0].workspace_id)
@@ -512,6 +513,7 @@ class TestProductFileManagerUploadFiles(TestCase):
         self.assertTrue(products[0].is_operational)
 
         self.assertEqual('file.json', products[1].file_name)
+        self.assertEqual('PRODUCT', products[1].file_type)
         self.assertEqual('remote/2/file.json', products[1].file_path)
         self.assertEqual('application/x-custom-json', products[1].media_type)
         self.assertEqual(self.workspace.id, products[1].workspace_id)
