@@ -103,7 +103,6 @@ class FileAncestryLinkManager(models.Manager):
         :rtype: list[:class:`storage.models.ScaleFile`]
         """
 
-        # TODO: file refactor - might be able to make this more efficient
         potential_src_file_ids = list(file_ids)
         # Get all ancestors to include as possible source files
         for ancestor_link in self.filter(descendant_id__in=file_ids):
