@@ -243,18 +243,19 @@ class ProductFileManager(models.GeoManager):
         product = ScaleFile.objects.all().select_related('workspace')
         product = product.get(pk=product_id, file_type='PRODUCT')
 
-        # TODO: file refactor - make this more efficient
-        # Attempt to fetch all ancestor sources
-        sources = ScaleFile.objects.filter(descendants__descendant_id=product.id, file_type='SOURCE')
-        sources = sources.select_related('job_type', 'workspace').defer('workspace__json_config')
-        sources = sources.prefetch_related('countries').order_by('created')
-        product.sources = sources
-
-        # Attempt to fetch all ancestor products
-        ancestors = ScaleFile.objects.filter(descendants__descendant_id=product.id, file_type='PRODUCT')
+        # Attempt to fetch all ancestor files
+        sources = []
+        products = []
+        ancestors = ScaleFile.objects.filter(descendants__descendant_id=product.id)
         ancestors = ancestors.select_related('job_type', 'workspace').defer('workspace__json_config')
         ancestors = ancestors.prefetch_related('countries').order_by('created')
-        product.ancestor_products = ancestors
+        for ancestor in ancestors:
+            if ancestor.file_type == 'SOURCE':
+                sources.append(ancestor)
+            elif ancestor.file_type == 'PRODUCT':
+                products.append(ancestor)
+        product.sources = sources
+        product.ancestor_products = products
 
         # Attempt to fetch all descendant products
         descendants = ScaleFile.objects.filter(ancestors__ancestor_id=product.id)
