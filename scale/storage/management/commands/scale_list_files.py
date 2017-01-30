@@ -52,17 +52,21 @@ class Command(BaseCommand):
             sys.exit(1)
 
         try:
+            # Patch _get_volume_path for local testing outside of docker.
+            # This is useful for testing when Scale isn't managing mounts.
             if options['local'] and 'broker' in workspace.json_config and 'host_path' in workspace.json_config['broker']:
                 with patch.object(Workspace, '_get_volume_path', return_value=workspace.json_config['broker']['host_path']) as mock_method:
-                    workspace.list_files(options['recursive'], self.callback)
+                    results = workspace.list_files(options['recursive'], self.callback)
+                    logger.info('Results that were not returned via callback: %s' % results)
             else:
-                workspace.list_files(options['recursive'], self.callback)
+                results = workspace.list_files(options['recursive'], self.callback)
+                logger.info('Results that were not returned via callback: %s' % results)
         except:
             logger.exception('Unknown error occurred, exit code 1 returning')
             sys.exit(1)
         logger.info('Command completed: scale_list_files')
 
     # Callback definition to support updates as workspace is traversed
-    def callback(files):
+    def callback(self, files):
         for file in files:
             logger.info(file)

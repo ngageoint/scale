@@ -878,7 +878,7 @@ class Workspace(models.Model):
         """
         volume_path = self._get_volume_path()
 
-        logger.info('Beginning%s%s file list for workspace: %s', (' callback enabled' if callback else '',
+        logger.info('Beginning%s%s file list for workspace: %s' % (' callback enabled' if callback else '',
                                                                   ' recursive' if recursive else '',
                                                                   self.name))
         return self.get_broker().list_files(volume_path, recursive, callback)
