@@ -64,9 +64,14 @@ class DirScanner(Scanner):
         """See :meth:`ingest.scan.scanners.scanner.Scanner.validate_configuration`
         """
 
-        warnings = []
+        if 'transfer_suffix' not in configuration:
+            raise InvalidScannerConfiguration('transfer_suffix is required for dir scanner')
+        if not isinstance(configuration['transfer_suffix'], basestring):
+            raise InvalidScannerConfiguration('transfer_suffix must be a string')
+        if not configuration['transfer_suffix']:
+            raise InvalidScannerConfiguration('transfer_suffix must be a non-empty string')
         
-        return warnings
+        return []
 
     def _ingest_s3_object(self, object_key):
         """Applies rules and initiates ingest for a single S3 object

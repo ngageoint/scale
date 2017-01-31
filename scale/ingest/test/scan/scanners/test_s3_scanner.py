@@ -47,7 +47,7 @@ class TestS3Monitor(TestCase):
 
         config = {
             'type': 's3',
-            'bucket_name': 'my-sqs'
+            'bucket_name': 'my-s3'
         }
 
         S3Scanner().validate_configuration(config)
