@@ -10,13 +10,14 @@ from rest_framework.response import Response
 import util.rest as rest_util
 from product.models import ProductFile
 from product.serializers import ProductFileDetailsSerializer, ProductFileSerializer, ProductFileUpdateSerializer
+from storage.models import ScaleFile
 
 logger = logging.getLogger(__name__)
 
 
 class ProductsView(ListAPIView):
     """This view is the endpoint for retrieving a product by filename"""
-    queryset = ProductFile.objects.all()
+    queryset = ScaleFile.objects.all()
     serializer_class = ProductFileSerializer
 
     def list(self, request):
@@ -53,7 +54,7 @@ class ProductsView(ListAPIView):
 
 class ProductDetailsView(RetrieveAPIView):
     """This view is the endpoint for retrieving/updating details of a product file."""
-    queryset = ProductFile.objects.all()
+    queryset = ScaleFile.objects.all()
     serializer_class = ProductFileDetailsSerializer
 
     def retrieve(self, request, product_id=None, file_name=None):
@@ -71,14 +72,15 @@ class ProductDetailsView(RetrieveAPIView):
 
         # Support retrieving by file name in addition to the usual identifier
         if file_name:
-            products = ProductFile.objects.filter(file_name=file_name).values('id').order_by('-published')
+            products = ScaleFile.objects.filter(file_name=file_name, file_type='PRODUCT')
+            products = products.values('id').order_by('-published')
             if not products:
                 raise Http404
             product_id = products[0]['id']
 
         try:
             product = ProductFile.objects.get_details(product_id)
-        except ProductFile.DoesNotExist:
+        except ScaleFile.DoesNotExist:
             raise Http404
 
         serializer = self.get_serializer(product)
@@ -87,7 +89,7 @@ class ProductDetailsView(RetrieveAPIView):
 
 class ProductUpdatesView(ListAPIView):
     """This view is the endpoint for retrieving product updates over a given time range."""
-    queryset = ProductFile.objects.all()
+    queryset = ScaleFile.objects.all()
     serializer_class = ProductFileUpdateSerializer
 
     def list(self, request):

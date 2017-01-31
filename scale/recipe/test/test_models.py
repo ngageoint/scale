@@ -18,6 +18,7 @@ from recipe.configuration.definition.recipe_definition import RecipeDefinition
 from recipe.exceptions import ReprocessError
 from recipe.handlers.graph_delta import RecipeGraphDelta
 from recipe.models import Recipe, RecipeFile, RecipeJob, RecipeType, RecipeTypeRevision
+from storage.models import ScaleFile
 from trigger.models import TriggerRule
 
 
@@ -577,7 +578,7 @@ class TestRecipeManagerCreateRecipe(TransactionTestCase):
 
         # Check that product of job 2 (which was superseded with no new job) was unpublished
         if product:
-            product = ProductFile.objects.get(id=product.id)
+            product = ScaleFile.objects.get(id=product.id)
             self.assertFalse(product.is_published)
             self.assertIsNotNone(product.unpublished)
 

@@ -20,6 +20,19 @@ class SourceFileManager(models.GeoManager):
     """Provides additional methods for handling source files
     """
 
+    def get_source_file_by_name(self, file_name):
+        """Returns the source file with the given file name
+
+        :param file_name: The name of the source file
+        :type file_name: string
+        :returns: The list of source files that match the time range.
+        :rtype: :class:`storage.models.ScaleFile`
+
+        :raises :class:`storage.models.ScaleFile.DoesNotExist`: If the file does not exist
+        """
+
+        return ScaleFile.objects.get(file_name=file_name, file_type='SOURCE')
+
     def get_sources(self, started=None, ended=None, is_parsed=None, file_name=None, order=None):
         """Returns a list of source files within the given time range.
 
@@ -34,11 +47,11 @@ class SourceFileManager(models.GeoManager):
         :param order: A list of fields to control the sort order.
         :type order: list[str]
         :returns: The list of source files that match the time range.
-        :rtype: list[:class:`source.models.SourceFile`]
+        :rtype: list[:class:`storage.models.ScaleFile`]
         """
 
         # Fetch a list of source files
-        sources = SourceFile.objects.all()
+        sources = ScaleFile.objects.all()
         sources = sources.select_related('workspace').defer('workspace__json_config')
         sources = sources.prefetch_related('countries')
 
@@ -69,12 +82,14 @@ class SourceFileManager(models.GeoManager):
         :param include_superseded: Whether or not superseded products should be included.
         :type include_superseded: bool
         :returns: The source with extra related attributes: ingests and products.
-        :rtype: :class:`source.models.SourceFile`
+        :rtype: :class:`storage.models.ScaleFile`
+
+        :raises :class:`storage.models.ScaleFile.DoesNotExist`: If the file does not exist
         """
 
         # Attempt to fetch the requested source
-        source = SourceFile.objects.all().select_related('workspace')
-        source = source.get(pk=source_id)
+        source = ScaleFile.objects.all().select_related('workspace')
+        source = source.get(pk=source_id, file_type='SOURCE')
 
         # Attempt to fetch all ingests for the source
         # Use a localized import to make higher level application dependencies optional
@@ -85,20 +100,13 @@ class SourceFileManager(models.GeoManager):
             source.ingests = []
 
         # Attempt to fetch all products derived from the source
-        # Use a localized import to make higher level application dependencies optional
-        try:
-            from product.models import ProductFile
-            products = ProductFile.objects.filter(ancestors__ancestor_id=source.id)
-
-            # Exclude superseded products by default
-            if not include_superseded:
-                products = products.filter(is_superseded=False)
-
-            products = products.select_related('job_type', 'workspace').defer('workspace__json_config')
-            products = products.prefetch_related('countries').order_by('created')
-            source.products = products
-        except:
-            source.products = []
+        products = ScaleFile.objects.filter(ancestors__ancestor_id=source.id, file_type='PRODUCT')
+        # Exclude superseded products by default
+        if not include_superseded:
+            products = products.filter(is_superseded=False)
+        products = products.select_related('job_type', 'workspace').defer('workspace__json_config')
+        products = products.prefetch_related('countries').order_by('created')
+        source.products = products
 
         return source
 
@@ -128,7 +136,7 @@ class SourceFileManager(models.GeoManager):
             geom, props = geo_utils.parse_geo_json(geo_json)
 
         # Acquire model lock
-        src_file = SourceFile.objects.select_for_update().get(pk=src_file_id)
+        src_file = ScaleFile.objects.select_for_update().get(pk=src_file_id, file_type='SOURCE')
         src_file.is_parsed = True
         src_file.parsed = now()
         src_file.data_started = data_started
@@ -171,25 +179,25 @@ class SourceFileManager(models.GeoManager):
 
 
 class SourceFile(ScaleFile):
-    """Represents a source data file that is available for processing. This is an extension of the
-    :class:`storage.models.ScaleFile` model.
-
-    :keyword file: The corresponding ScaleFile model
-    :type file: :class:`django.db.models.OneToOneField`
-
-    :keyword is_parsed: Whether the source file has been parsed or not
-    :type is_parsed: :class:`django.db.models.BooleanField`
-    :keyword parsed: When the source file was parsed
-    :type parsed: :class:`django.db.models.DateTimeField`
+    """Represents a source data file that is available for processing. This is a proxy model of the
+    :class:`storage.models.ScaleFile` model. It has the same set of fields, but a different manager that provides
+    functionality specific to source files.
     """
 
-    file = models.OneToOneField('storage.ScaleFile', primary_key=True, parent_link=True)
+    @classmethod
+    def create(cls):
+        """Creates a new source file
 
-    is_parsed = models.BooleanField(default=False)
-    parsed = models.DateTimeField(blank=True, null=True)
+        :returns: The new source file
+        :rtype: :class:`source.models.SourceFile`
+        """
+
+        src_file = SourceFile()
+        src_file.file_type = 'SOURCE'
+        return src_file
 
     objects = SourceFileManager()
 
     class Meta(object):
         """meta information for the db"""
-        db_table = 'source_file'
+        proxy = True

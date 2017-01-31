@@ -595,7 +595,7 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         queued_job_exe.accepted(node.id, JobResources(cpus=10, mem=1000, disk_in=1000, disk_out=1000, disk_total=2000))
         Queue.objects.schedule_job_executions('123', [queued_job_exe], {})
         results = JobResults()
-        results.add_file_list_parameter('Test Output 1', [product_test_utils.create_product().file_id])
+        results.add_file_list_parameter('Test Output 1', [product_test_utils.create_product().id])
         JobExecution.objects.filter(id=job_exe_1.id).update(results=results.get_dict())
         Queue.objects.handle_job_completion(job_exe_1.id, now(), [])
 

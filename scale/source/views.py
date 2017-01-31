@@ -11,13 +11,14 @@ import util.rest as rest_util
 from source.models import SourceFile
 from source.serializers import SourceFileSerializer, SourceFileUpdateSerializer
 from source.serializers_extra import SourceFileDetailsSerializer
+from storage.models import ScaleFile
 
 logger = logging.getLogger(__name__)
 
 
 class SourcesView(ListAPIView):
     """This view is the endpoint for retrieving source files."""
-    queryset = SourceFile.objects.all()
+    queryset = ScaleFile.objects.all()
     serializer_class = SourceFileSerializer
 
     def list(self, request):
@@ -46,7 +47,7 @@ class SourcesView(ListAPIView):
 
 class SourceDetailsView(RetrieveAPIView):
     """This view is the endpoint for retrieving/updating details of a source file."""
-    queryset = SourceFile.objects.all()
+    queryset = ScaleFile.objects.all()
     serializer_class = SourceFileDetailsSerializer
 
     def retrieve(self, request, source_id=None, file_name=None):
@@ -64,7 +65,7 @@ class SourceDetailsView(RetrieveAPIView):
 
         # Support retrieving by file name in addition to the usual identifier
         if file_name:
-            sources = SourceFile.objects.filter(file_name=file_name).values('id').order_by('-parsed')
+            sources = ScaleFile.objects.filter(file_name=file_name, file_type='SOURCE').values('id').order_by('-parsed')
             if not sources:
                 raise Http404
             source_id = sources[0]['id']
@@ -73,7 +74,7 @@ class SourceDetailsView(RetrieveAPIView):
 
         try:
             source = SourceFile.objects.get_details(source_id, include_superseded=include_superseded)
-        except SourceFile.DoesNotExist:
+        except ScaleFile.DoesNotExist:
             raise Http404
 
         serializer = self.get_serializer(source)
@@ -82,7 +83,7 @@ class SourceDetailsView(RetrieveAPIView):
 
 class SourceUpdatesView(ListAPIView):
     """This view is the endpoint for retrieving source file updates over a given time range."""
-    queryset = SourceFile.objects.all()
+    queryset = ScaleFile.objects.all()
     serializer_class = SourceFileUpdateSerializer
 
     def list(self, request):

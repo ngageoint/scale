@@ -10,7 +10,6 @@ from django.db import transaction
 
 import storage.geospatial_utils as geo_utils
 from recipe.models import Recipe
-from source.models import SourceFile
 from storage.brokers.broker import FileUpload
 from storage.models import ScaleFile
 from util.parse import parse_datetime
@@ -100,14 +99,14 @@ class FileAncestryLinkManager(models.Manager):
         :param file_ids: The file IDs
         :type file_ids: list[int]
         :returns: The list of ancestor source files
-        :rtype: list[:class:`source.models.SourceFile`]
+        :rtype: list[:class:`storage.models.ScaleFile`]
         """
 
         potential_src_file_ids = list(file_ids)
         # Get all ancestors to include as possible source files
         for ancestor_link in self.filter(descendant_id__in=file_ids):
             potential_src_file_ids.append(ancestor_link.ancestor_id)
-        return SourceFile.objects.filter(file_id__in=potential_src_file_ids)
+        return ScaleFile.objects.filter(id__in=potential_src_file_ids, file_type='SOURCE')
 
 
 class FileAncestryLink(models.Model):
@@ -143,7 +142,7 @@ class FileAncestryLink(models.Model):
     """
 
     ancestor = models.ForeignKey('storage.ScaleFile', on_delete=models.PROTECT, related_name='descendants')
-    descendant = models.ForeignKey('product.ProductFile', blank=True, null=True, on_delete=models.PROTECT,
+    descendant = models.ForeignKey('storage.ScaleFile', blank=True, null=True, on_delete=models.PROTECT,
                                    related_name='ancestors')
 
     job_exe = models.ForeignKey('job.JobExecution', on_delete=models.PROTECT, related_name='file_links')
@@ -192,11 +191,11 @@ class ProductFileManager(models.GeoManager):
         :param order: A list of fields to control the sort order.
         :type order: list[str]
         :returns: The list of product files that match the time range.
-        :rtype: list[:class:`product.models.ProductFile`]
+        :rtype: list[:class:`storage.models.ScaleFile`]
         """
 
         # Fetch a list of product files
-        products = ProductFile.objects.filter(has_been_published=True, is_superseded=False)
+        products = ScaleFile.objects.filter(file_type='PRODUCT', has_been_published=True, is_superseded=False)
         products = products.select_related('workspace', 'job_type').defer('workspace__json_config')
         products = products.prefetch_related('countries')
 
@@ -233,27 +232,31 @@ class ProductFileManager(models.GeoManager):
         :param product_id: The unique identifier of the product.
         :type product_id: int
         :returns: The product with extra related attributes: sources, ancestor/descendant products.
-        :rtype: :class:`source.models.ProductFile`
+        :rtype: :class:`storage.models.ScaleFile`
+
+        :raises :class:`storage.models.ScaleFile.DoesNotExist`: If the file does not exist
         """
 
         # Attempt to fetch the requested product
-        product = ProductFile.objects.all().select_related('workspace')
-        product = product.get(pk=product_id)
+        product = ScaleFile.objects.all().select_related('workspace')
+        product = product.get(pk=product_id, file_type='PRODUCT')
 
-        # Attempt to fetch all ancestor sources
-        sources = SourceFile.objects.filter(descendants__descendant_id=product.id)
-        sources = sources.select_related('job_type', 'workspace').defer('workspace__json_config')
-        sources = sources.prefetch_related('countries').order_by('created')
-        product.sources = sources
-
-        # Attempt to fetch all ancestor products
-        ancestors = ProductFile.objects.filter(descendants__descendant_id=product.id)
+        # Attempt to fetch all ancestor files
+        sources = []
+        products = []
+        ancestors = ScaleFile.objects.filter(descendants__descendant_id=product.id)
         ancestors = ancestors.select_related('job_type', 'workspace').defer('workspace__json_config')
         ancestors = ancestors.prefetch_related('countries').order_by('created')
-        product.ancestor_products = ancestors
+        for ancestor in ancestors:
+            if ancestor.file_type == 'SOURCE':
+                sources.append(ancestor)
+            elif ancestor.file_type == 'PRODUCT':
+                products.append(ancestor)
+        product.sources = sources
+        product.ancestor_products = products
 
         # Attempt to fetch all descendant products
-        descendants = ProductFile.objects.filter(ancestors__ancestor_id=product.id)
+        descendants = ScaleFile.objects.filter(ancestors__ancestor_id=product.id)
         descendants = descendants.select_related('job_type', 'workspace').defer('workspace__json_config')
         descendants = descendants.prefetch_related('countries').order_by('created')
         product.descendant_products = descendants
@@ -264,7 +267,7 @@ class ProductFileManager(models.GeoManager):
         """Populates each of the given products with its source file ancestors in a field called "source_files"
 
         :param products: List of products
-        :type products: list of :class:`product.models.ProductFile`
+        :type products: list of :class:`storage.models.ScaleFile`
         """
 
         product_lists = {}  # {product ID: list of source files}
@@ -273,7 +276,7 @@ class ProductFileManager(models.GeoManager):
             product_lists[product.id] = product.source_files
 
         source_files = {}  # {source file ID: source file}
-        src_qry = SourceFile.objects.filter(descendants__descendant_id__in=product_lists.keys())
+        src_qry = ScaleFile.objects.filter(file_type='SOURCE', descendants__descendant_id__in=product_lists.keys())
         src_qry = src_qry.select_related('workspace').defer('workspace__json_config').order_by('id').distinct('id')
         for source in src_qry:
             source_files[source.id] = source
@@ -344,7 +347,7 @@ class ProductFileManager(models.GeoManager):
         :param workspace: The workspace to use for storing the product files
         :type workspace: :class:`storage.models.Workspace`
         :returns: The list of the saved product models
-        :rtype: list of :class:`product.models.ProductFile`
+        :rtype: list of :class:`storage.models.ScaleFile`
         """
 
         # Build a list of UUIDs for the input files
@@ -360,7 +363,7 @@ class ProductFileManager(models.GeoManager):
         input_strings.extend(properties)
 
         # Determine if any input files are non-operational products
-        input_products = ProductFile.objects.filter(file__in=[f['id'] for f in input_files])
+        input_products = ScaleFile.objects.filter(id__in=[f['id'] for f in input_files], file_type='PRODUCT')
         input_products_operational = all([f.is_operational for f in input_products])
 
         products_to_save = []
@@ -369,7 +372,7 @@ class ProductFileManager(models.GeoManager):
             remote_path = entry[1]
             media_type = entry[2]
 
-            product = ProductFile()
+            product = ProductFile.create()
             product.job_exe = job_exe
             product.job = job_exe.job
             product.job_type = job_exe.job.job_type
@@ -408,53 +411,25 @@ class ProductFileManager(models.GeoManager):
 
 
 class ProductFile(ScaleFile):
-    """Represents a product file that has been created by Scale. This is an extension of the
-    :class:`storage.models.ScaleFile` model.
-
-    :keyword file: The corresponding ScaleFile model
-    :type file: :class:`django.db.models.OneToOneField`
-    :keyword job_exe: The job execution that created this product
-    :type job_exe: :class:`django.db.models.ForeignKey`
-    :keyword job: The job that created this product
-    :type job: :class:`django.db.models.ForeignKey`
-    :keyword job_type: The type of the job that created this product
-    :type job_type: :class:`django.db.models.ForeignKey`
-    :keyword is_operational: Whether this product was produced by an operational job type (True) or by a job type that
-        is still in a research & development (R&D) phase (False)
-    :type is_operational: :class:`django.db.models.BooleanField`
-
-    :keyword has_been_published: Whether this product has ever been published. A product becomes published when its job
-        execution completes successfully. A product that has been published will appear in the API call to retrieve
-        product updates.
-    :type has_been_published: :class:`django.db.models.BooleanField`
-    :keyword is_published: Whether this product is currently published. A published product has had its job execution
-        complete successfully and has not been unpublished.
-    :type is_published: :class:`django.db.models.BooleanField`
-    :keyword is_superseded: Whether this product has been superseded by another product with the same UUID
-    :type is_superseded: :class:`django.db.models.BooleanField`
-    :keyword published: When this product was published (its job execution was completed)
-    :type published: :class:`django.db.models.DateTimeField`
-    :keyword unpublished: When this product was unpublished
-    :type unpublished: :class:`django.db.models.DateTimeField`
-    :keyword superseded: When this product was superseded
-    :type superseded: :class:`django.db.models.DateTimeField`
+    """Represents a product file that has been created by Scale. This is a proxy model of the
+    :class:`storage.models.ScaleFile` model. It has the same set of fields, but a different manager that provides
+    functionality specific to product files.
     """
 
-    file = models.OneToOneField('storage.ScaleFile', primary_key=True, parent_link=True)
-    job_exe = models.ForeignKey('job.JobExecution', on_delete=models.PROTECT)
-    job = models.ForeignKey('job.Job', on_delete=models.PROTECT)
-    job_type = models.ForeignKey('job.JobType', on_delete=models.PROTECT)
-    is_operational = models.BooleanField(default=True)
+    @classmethod
+    def create(cls):
+        """Creates a new product file
 
-    has_been_published = models.BooleanField(default=False)
-    is_published = models.BooleanField(default=False)
-    is_superseded = models.BooleanField(default=False)
-    published = models.DateTimeField(blank=True, null=True)
-    unpublished = models.DateTimeField(blank=True, null=True)
-    superseded = models.DateTimeField(blank=True, null=True)
+        :returns: The new product file
+        :rtype: :class:`product.models.ProductFile`
+        """
+
+        product_file = ProductFile()
+        product_file.file_type = 'PRODUCT'
+        return product_file
 
     objects = ProductFileManager()
 
     class Meta(object):
         """meta information for the db"""
-        db_table = 'product_file'
+        proxy = True
