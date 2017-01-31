@@ -52,6 +52,22 @@ ingest.migrations.0006_auto_20161202_1621 module
     :undoc-members:
     :show-inheritance:
 
+ingest.migrations.0007_auto_20170127_1327 module
+------------------------------------------------
+
+.. automodule:: ingest.migrations.0007_auto_20170127_1327
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+ingest.migrations.0008_auto_20170127_1332 module
+------------------------------------------------
+
+.. automodule:: ingest.migrations.0008_auto_20170127_1332
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

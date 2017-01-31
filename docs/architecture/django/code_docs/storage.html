@@ -234,6 +234,9 @@
 <li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0001_initial">storage.migrations.0001_initial module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0002_workspace_is_move_enabled">storage.migrations.0002_workspace_is_move_enabled module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0003_auto_20161202_1621">storage.migrations.0003_auto_20161202_1621 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0004_auto_20170127_1408">storage.migrations.0004_auto_20170127_1408 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0005_auto_20170127_1412">storage.migrations.0005_auto_20170127_1412 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0006_auto_20170127_1423">storage.migrations.0006_auto_20170127_1423 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -621,8 +624,8 @@ is before the target.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>id</strong> (<code class="xref py py-class docutils literal"><span class="pre">storage.models.BigAutoField</span></code>) &#8211; The ID of the file</li>
 <li><strong>file_name</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The name of the file</li>
+<li><strong>file_type</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The (Scale) type of the file</li>
 <li><strong>media_type</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The IANA media type of the file</li>
 <li><strong>file_size</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BigIntegerField</span></code>) &#8211; The size of the file in bytes</li>
 <li><strong>data_type</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.TextField</span></code>) &#8211; A comma-separated string listing the data type &#8220;tags&#8221; for the file</li>
@@ -640,6 +643,22 @@ record will result in the same UUID, which can then be used as a stable permanen
 <li><strong>center_point</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.contrib.gis.db.models.PointField</span></code>) &#8211; The center point of this file geometry</li>
 <li><strong>meta_data</strong> (<code class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></code>) &#8211; JSON meta-data about this file</li>
 <li><strong>countries</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ManyToManyField</span></code> of <a class="reference internal" href="#storage.models.CountryData" title="storage.models.CountryData"><code class="xref py py-class docutils literal"><span class="pre">storage.models.CountryData</span></code></a>) &#8211; List of countries represented in this file as indicated by the file&#8217;s geometry.</li>
+<li><strong>is_parsed</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether the source file has been parsed or not</li>
+<li><strong>parsed</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the source file was parsed</li>
+<li><strong>job_exe</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The job execution that created this product</li>
+<li><strong>job</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The job that created this product</li>
+<li><strong>job_type</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The type of the job that created this product</li>
+<li><strong>is_operational</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether this product was produced by an operational job type (True) or by a job type that
+is still in a research &amp; development (R&amp;D) phase (False)</li>
+<li><strong>has_been_published</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether this product has ever been published. A product becomes published when its job
+execution completes successfully. A product that has been published will appear in the API call to retrieve
+product updates.</li>
+<li><strong>is_published</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether this product is currently published. A published product has had its job execution
+complete successfully and has not been unpublished.</li>
+<li><strong>is_superseded</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether this product has been superseded by another product with the same UUID</li>
+<li><strong>published</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When this product was published (its job execution was completed)</li>
+<li><strong>unpublished</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When this product was unpublished</li>
+<li><strong>superseded</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When this product was superseded</li>
 </ul>
 </td>
 </tr>
@@ -650,6 +669,11 @@ record will result in the same UUID, which can then be used as a stable permanen
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#storage.models.ScaleFile.DoesNotExist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
 </dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.FILE_TYPES">
+<code class="descclassname">ScaleFile.</code><code class="descname">FILE_TYPES</code><em class="property"> = ((u'SOURCE', u'SOURCE'), (u'PRODUCT', u'PRODUCT'))</em><a class="headerlink" href="#storage.models.ScaleFile.FILE_TYPES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="exception">
 <dt id="storage.models.ScaleFile.MultipleObjectsReturned">
@@ -673,6 +697,11 @@ spaces.</p>
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.ancestors">
+<code class="descclassname">ScaleFile.</code><code class="descname">ancestors</code><a class="headerlink" href="#storage.models.ScaleFile.ancestors" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="attribute">
 <dt id="storage.models.ScaleFile.center_point">
@@ -711,6 +740,11 @@ spaces.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="storage.models.ScaleFile.get_file_type_display">
+<code class="descclassname">ScaleFile.</code><code class="descname">get_file_type_display</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFile.get_file_type_display" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="storage.models.ScaleFile.get_next_by_created">
 <code class="descclassname">ScaleFile.</code><code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFile.get_next_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -731,6 +765,26 @@ spaces.</p>
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="storage.models.ScaleFile.ingest_set">
+<code class="descclassname">ScaleFile.</code><code class="descname">ingest_set</code><a class="headerlink" href="#storage.models.ScaleFile.ingest_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.job">
+<code class="descclassname">ScaleFile.</code><code class="descname">job</code><a class="headerlink" href="#storage.models.ScaleFile.job" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.job_exe">
+<code class="descclassname">ScaleFile.</code><code class="descname">job_exe</code><a class="headerlink" href="#storage.models.ScaleFile.job_exe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.job_type">
+<code class="descclassname">ScaleFile.</code><code class="descname">job_type</code><a class="headerlink" href="#storage.models.ScaleFile.job_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="storage.models.ScaleFile.meta_data">
 <code class="descclassname">ScaleFile.</code><code class="descname">meta_data</code><a class="headerlink" href="#storage.models.ScaleFile.meta_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>A placeholder class that provides a way to set the attribute on the model.</p>
@@ -739,11 +793,6 @@ spaces.</p>
 <dl class="attribute">
 <dt id="storage.models.ScaleFile.objects">
 <code class="descclassname">ScaleFile.</code><code class="descname">objects</code><em class="property"> = &lt;storage.models.ScaleFileManager object&gt;</em><a class="headerlink" href="#storage.models.ScaleFile.objects" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="storage.models.ScaleFile.productfile">
-<code class="descclassname">ScaleFile.</code><code class="descname">productfile</code><a class="headerlink" href="#storage.models.ScaleFile.productfile" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -784,11 +833,6 @@ The country border effective date will use (in order or preference) data_started
 <code class="descclassname">ScaleFile.</code><code class="descname">set_deleted</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFile.set_deleted" title="Permalink to this definition">¶</a></dt>
 <dd><p>Marks the current file as deleted and updates the corresponding fields.</p>
 </dd></dl>
-
-<dl class="attribute">
-<dt id="storage.models.ScaleFile.sourcefile">
-<code class="descclassname">ScaleFile.</code><code class="descname">sourcefile</code><a class="headerlink" href="#storage.models.ScaleFile.sourcefile" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.models.ScaleFile.update_uuid">

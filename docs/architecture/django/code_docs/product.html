@@ -201,6 +201,10 @@
 <li class="toctree-l2"><a class="reference internal" href="product.migrations.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="product.migrations.html#module-product.migrations.0001_initial">product.migrations.0001_initial module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="product.migrations.html#module-product.migrations.0002_auto_20160622_1344">product.migrations.0002_auto_20160622_1344 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="product.migrations.html#module-product.migrations.0003_auto_20170127_1319">product.migrations.0003_auto_20170127_1319 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="product.migrations.html#module-product.migrations.0004_auto_20170127_1324">product.migrations.0004_auto_20170127_1324 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="product.migrations.html#module-product.migrations.0005_auto_20170127_1344">product.migrations.0005_auto_20170127_1344 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="product.migrations.html#module-product.migrations.0006_auto_20170127_1348">product.migrations.0006_auto_20170127_1348 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="product.migrations.html#module-product.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -397,7 +401,7 @@ that are source files themselves.</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of ancestor source files</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="source.html#source.models.SourceFile" title="source.models.SourceFile"><code class="xref py py-class docutils literal"><span class="pre">source.models.SourceFile</span></code></a>]</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="storage.html#storage.models.ScaleFile" title="storage.models.ScaleFile"><code class="xref py py-class docutils literal"><span class="pre">storage.models.ScaleFile</span></code></a>]</td>
 </tr>
 </tbody>
 </table>
@@ -409,33 +413,9 @@ that are source files themselves.</p>
 <dt id="product.models.ProductFile">
 <em class="property">class </em><code class="descclassname">product.models.</code><code class="descname">ProductFile</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.models.ProductFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="storage.html#storage.models.ScaleFile" title="storage.models.ScaleFile"><code class="xref py py-class docutils literal"><span class="pre">storage.models.ScaleFile</span></code></a></p>
-<p>Represents a product file that has been created by Scale. This is an extension of the
-<a class="reference internal" href="storage.html#storage.models.ScaleFile" title="storage.models.ScaleFile"><code class="xref py py-class docutils literal"><span class="pre">storage.models.ScaleFile</span></code></a> model.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>file</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.OneToOneField</span></code>) &#8211; The corresponding ScaleFile model</li>
-<li><strong>job_exe</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The job execution that created this product</li>
-<li><strong>job</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The job that created this product</li>
-<li><strong>job_type</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The type of the job that created this product</li>
-<li><strong>is_operational</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether this product was produced by an operational job type (True) or by a job type that
-is still in a research &amp; development (R&amp;D) phase (False)</li>
-<li><strong>has_been_published</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether this product has ever been published. A product becomes published when its job
-execution completes successfully. A product that has been published will appear in the API call to retrieve
-product updates.</li>
-<li><strong>is_published</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether this product is currently published. A published product has had its job execution
-complete successfully and has not been unpublished.</li>
-<li><strong>is_superseded</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether this product has been superseded by another product with the same UUID</li>
-<li><strong>published</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When this product was published (its job execution was completed)</li>
-<li><strong>unpublished</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When this product was unpublished</li>
-<li><strong>superseded</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When this product was superseded</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
+<p>Represents a product file that has been created by Scale. This is a proxy model of the
+<a class="reference internal" href="storage.html#storage.models.ScaleFile" title="storage.models.ScaleFile"><code class="xref py py-class docutils literal"><span class="pre">storage.models.ScaleFile</span></code></a> model. It has the same set of fields, but a different manager that provides
+functionality specific to product files.</p>
 <dl class="exception">
 <dt id="product.models.ProductFile.DoesNotExist">
 <em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#product.models.ProductFile.DoesNotExist" title="Permalink to this definition">¶</a></dt>
@@ -448,30 +428,21 @@ complete successfully and has not been unpublished.</li>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">storage.models.MultipleObjectsReturned</span></code></p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="product.models.ProductFile.ancestors">
-<code class="descclassname">ProductFile.</code><code class="descname">ancestors</code><a class="headerlink" href="#product.models.ProductFile.ancestors" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="product.models.ProductFile.file">
-<code class="descclassname">ProductFile.</code><code class="descname">file</code><a class="headerlink" href="#product.models.ProductFile.file" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="product.models.ProductFile.job">
-<code class="descclassname">ProductFile.</code><code class="descname">job</code><a class="headerlink" href="#product.models.ProductFile.job" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="product.models.ProductFile.job_exe">
-<code class="descclassname">ProductFile.</code><code class="descname">job_exe</code><a class="headerlink" href="#product.models.ProductFile.job_exe" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="product.models.ProductFile.job_type">
-<code class="descclassname">ProductFile.</code><code class="descname">job_type</code><a class="headerlink" href="#product.models.ProductFile.job_type" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dl class="classmethod">
+<dt id="product.models.ProductFile.create">
+<em class="property">classmethod </em><code class="descclassname">ProductFile.</code><code class="descname">create</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.models.ProductFile.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new product file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The new product file</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#product.models.ProductFile" title="product.models.ProductFile"><code class="xref py py-class docutils literal"><span class="pre">product.models.ProductFile</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="product.models.ProductFile.objects">
@@ -497,10 +468,11 @@ complete successfully and has not been unpublished.</li>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The product with extra related attributes: sources, ancestor/descendant products.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">source.models.ProductFile</span></code></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="storage.html#storage.models.ScaleFile" title="storage.models.ScaleFile"><code class="xref py py-class docutils literal"><span class="pre">storage.models.ScaleFile</span></code></a></td>
 </tr>
 </tbody>
 </table>
+<p>:raises <a class="reference internal" href="storage.html#storage.models.ScaleFile.DoesNotExist" title="storage.models.ScaleFile.DoesNotExist"><code class="xref py py-class docutils literal"><span class="pre">storage.models.ScaleFile.DoesNotExist</span></code></a>: If the file does not exist</p>
 </dd></dl>
 
 <dl class="method">
@@ -527,7 +499,7 @@ complete successfully and has not been unpublished.</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of product files that match the time range.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#product.models.ProductFile" title="product.models.ProductFile"><code class="xref py py-class docutils literal"><span class="pre">product.models.ProductFile</span></code></a>]</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="storage.html#storage.models.ScaleFile" title="storage.models.ScaleFile"><code class="xref py py-class docutils literal"><span class="pre">storage.models.ScaleFile</span></code></a>]</p>
 </td>
 </tr>
 </tbody>
@@ -542,7 +514,7 @@ complete successfully and has not been unpublished.</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>products</strong> (list of <a class="reference internal" href="#product.models.ProductFile" title="product.models.ProductFile"><code class="xref py py-class docutils literal"><span class="pre">product.models.ProductFile</span></code></a>) &#8211; List of products</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>products</strong> (list of <a class="reference internal" href="storage.html#storage.models.ScaleFile" title="storage.models.ScaleFile"><code class="xref py py-class docutils literal"><span class="pre">storage.models.ScaleFile</span></code></a>) &#8211; List of products</td>
 </tr>
 </tbody>
 </table>
@@ -605,7 +577,7 @@ storing the file, media_type)</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of the saved product models</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of <a class="reference internal" href="#product.models.ProductFile" title="product.models.ProductFile"><code class="xref py py-class docutils literal"><span class="pre">product.models.ProductFile</span></code></a></p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of <a class="reference internal" href="storage.html#storage.models.ScaleFile" title="storage.models.ScaleFile"><code class="xref py py-class docutils literal"><span class="pre">storage.models.ScaleFile</span></code></a></p>
 </td>
 </tr>
 </tbody>

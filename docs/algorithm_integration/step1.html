@@ -366,7 +366,7 @@ command line.</dd>
     <span class="n">tiffBasename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">tiffpath</span><span class="p">)</span>
     <span class="n">outFilePath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outdir</span><span class="p">,</span> <span class="n">tiffBasename</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.tif&#39;</span><span class="p">,</span> <span class="s1">&#39;_tiffinfo_log.txt&#39;</span><span class="p">))</span>
 
-    <span class="n">arglist</span> <span class="o">=</span> <span class="p">[</span><span class="s1">r&#39;/usr/bin/tiffinfo&#39;</span><span class="p">,</span> <span class="n">tiffpath</span><span class="p">,</span> <span class="s1">&#39;&gt;&#39;</span><span class="p">,</span> <span class="n">outFilePath</span><span class="p">]</span>
+    <span class="n">arglist</span> <span class="o">=</span> <span class="p">[</span><span class="sa">r</span><span class="s1">&#39;/usr/bin/tiffinfo&#39;</span><span class="p">,</span> <span class="n">tiffpath</span><span class="p">,</span> <span class="s1">&#39;&gt;&#39;</span><span class="p">,</span> <span class="n">outFilePath</span><span class="p">]</span>
 
     <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Command:&#39;</span><span class="p">)</span>
     <span class="n">myCommand</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">arglist</span><span class="p">)</span>
@@ -407,7 +407,7 @@ command line.</dd>
 
     <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Completed manifest creation&#39;</span><span class="p">)</span>
 
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
 
     <span class="n">argv</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span>
     <span class="k">if</span> <span class="n">argv</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
@@ -486,7 +486,7 @@ command line.</dd>
 <span class="nv">OUTDIR</span><span class="o">=</span><span class="nv">$2</span>
 
 <span class="c1">#Set known arguments if needed</span>
-<span class="nv">NUMWORKERS</span><span class="o">=</span>10
+<span class="nv">NUMWORKERS</span><span class="o">=</span><span class="m">10</span>
 
 <span class="nv">PYTHON</span><span class="o">=</span>/usr/local/miniconda/bin/python
 

@@ -253,6 +253,68 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-storage.migrations.0004_auto_20170127_1408">
+<span id="storage-migrations-0004-auto-20170127-1408-module"></span><h2>storage.migrations.0004_auto_20170127_1408 module<a class="headerlink" href="#module-storage.migrations.0004_auto_20170127_1408" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="storage.migrations.0004_auto_20170127_1408.Migration">
+<em class="property">class </em><code class="descclassname">storage.migrations.0004_auto_20170127_1408.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.migrations.0004_auto_20170127_1408.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="storage.migrations.0004_auto_20170127_1408.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'ingest', u'0008_auto_20170127_1332'), (u'product', u'0006_auto_20170127_1348'), (u'source', u'0003_auto_20170127_1342'), (u'job', u'0022_jobtype_configuration'), (u'storage', u'0003_auto_20161202_1621')]</em><a class="headerlink" href="#storage.migrations.0004_auto_20170127_1408.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="storage.migrations.0004_auto_20170127_1408.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;AddField  field=&lt;django.db.models.fields.CharField&gt;, preserve_default=True, name=u'file_type', model_name=u'scalefile'&gt;, &lt;AddField  field=&lt;django.db.models.fields.BooleanField&gt;, preserve_default=True, name=u'has_been_published', model_name=u'scalefile'&gt;, &lt;AddField  field=&lt;django.db.models.fields.BooleanField&gt;, preserve_default=True, name=u'is_operational', model_name=u'scalefile'&gt;, &lt;AddField  field=&lt;django.db.models.fields.BooleanField&gt;, preserve_default=True, name=u'is_parsed', model_name=u'scalefile'&gt;, &lt;AddField  field=&lt;django.db.models.fields.BooleanField&gt;, preserve_default=True, name=u'is_published', model_name=u'scalefile'&gt;, &lt;AddField  field=&lt;django.db.models.fields.BooleanField&gt;, preserve_default=True, name=u'is_superseded', model_name=u'scalefile'&gt;, &lt;AddField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'job', model_name=u'scalefile'&gt;, &lt;AddField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'job_exe', model_name=u'scalefile'&gt;, &lt;AddField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'job_type', model_name=u'scalefile'&gt;, &lt;AddField  field=&lt;django.db.models.fields.DateTimeField&gt;, preserve_default=True, name=u'parsed', model_name=u'scalefile'&gt;, &lt;AddField  field=&lt;django.db.models.fields.DateTimeField&gt;, preserve_default=True, name=u'published', model_name=u'scalefile'&gt;, &lt;AddField  field=&lt;django.db.models.fields.DateTimeField&gt;, preserve_default=True, name=u'superseded', model_name=u'scalefile'&gt;, &lt;AddField  field=&lt;django.db.models.fields.DateTimeField&gt;, preserve_default=True, name=u'unpublished', model_name=u'scalefile'&gt;]</em><a class="headerlink" href="#storage.migrations.0004_auto_20170127_1408.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-storage.migrations.0005_auto_20170127_1412">
+<span id="storage-migrations-0005-auto-20170127-1412-module"></span><h2>storage.migrations.0005_auto_20170127_1412 module<a class="headerlink" href="#module-storage.migrations.0005_auto_20170127_1412" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="storage.migrations.0005_auto_20170127_1412.Migration">
+<em class="property">class </em><code class="descclassname">storage.migrations.0005_auto_20170127_1412.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.migrations.0005_auto_20170127_1412.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="storage.migrations.0005_auto_20170127_1412.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'storage', u'0004_auto_20170127_1408')]</em><a class="headerlink" href="#storage.migrations.0005_auto_20170127_1412.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="storage.migrations.0005_auto_20170127_1412.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;RunPython &lt;function populate_scale_file at 0x2b290fc30050&gt;&gt;]</em><a class="headerlink" href="#storage.migrations.0005_auto_20170127_1412.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="storage.migrations.0005_auto_20170127_1412.populate_scale_file">
+<code class="descclassname">storage.migrations.0005_auto_20170127_1412.</code><code class="descname">populate_scale_file</code><span class="sig-paren">(</span><em>apps</em>, <em>schema_editor</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.migrations.0005_auto_20170127_1412.populate_scale_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-storage.migrations.0006_auto_20170127_1423">
+<span id="storage-migrations-0006-auto-20170127-1423-module"></span><h2>storage.migrations.0006_auto_20170127_1423 module<a class="headerlink" href="#module-storage.migrations.0006_auto_20170127_1423" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="storage.migrations.0006_auto_20170127_1423.Migration">
+<em class="property">class </em><code class="descclassname">storage.migrations.0006_auto_20170127_1423.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.migrations.0006_auto_20170127_1423.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="storage.migrations.0006_auto_20170127_1423.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'storage', u'0005_auto_20170127_1412')]</em><a class="headerlink" href="#storage.migrations.0006_auto_20170127_1423.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="storage.migrations.0006_auto_20170127_1423.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;AlterField  field=&lt;django.db.models.fields.CharField&gt;, preserve_default=True, name=u'file_type', model_name=u'scalefile'&gt;, &lt;AlterField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'job', model_name=u'scalefile'&gt;, &lt;AlterField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'job_exe', model_name=u'scalefile'&gt;, &lt;AlterField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'job_type', model_name=u'scalefile'&gt;]</em><a class="headerlink" href="#storage.migrations.0006_auto_20170127_1423.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-storage.migrations">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-storage.migrations" title="Permalink to this headline">¶</a></h2>
 </div>

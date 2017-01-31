@@ -211,6 +211,49 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-source.migrations.0002_auto_20170127_1336">
+<span id="source-migrations-0002-auto-20170127-1336-module"></span><h2>source.migrations.0002_auto_20170127_1336 module<a class="headerlink" href="#module-source.migrations.0002_auto_20170127_1336" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="source.migrations.0002_auto_20170127_1336.Migration">
+<em class="property">class </em><code class="descclassname">source.migrations.0002_auto_20170127_1336.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#source.migrations.0002_auto_20170127_1336.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="source.migrations.0002_auto_20170127_1336.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'source', u'0001_initial')]</em><a class="headerlink" href="#source.migrations.0002_auto_20170127_1336.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="source.migrations.0002_auto_20170127_1336.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;RunPython &lt;function copy_source_file at 0x2b290f706b90&gt;&gt;]</em><a class="headerlink" href="#source.migrations.0002_auto_20170127_1336.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="source.migrations.0002_auto_20170127_1336.copy_source_file">
+<code class="descclassname">source.migrations.0002_auto_20170127_1336.</code><code class="descname">copy_source_file</code><span class="sig-paren">(</span><em>apps</em>, <em>schema_editor</em><span class="sig-paren">)</span><a class="headerlink" href="#source.migrations.0002_auto_20170127_1336.copy_source_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-source.migrations.0003_auto_20170127_1342">
+<span id="source-migrations-0003-auto-20170127-1342-module"></span><h2>source.migrations.0003_auto_20170127_1342 module<a class="headerlink" href="#module-source.migrations.0003_auto_20170127_1342" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="source.migrations.0003_auto_20170127_1342.Migration">
+<em class="property">class </em><code class="descclassname">source.migrations.0003_auto_20170127_1342.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#source.migrations.0003_auto_20170127_1342.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="source.migrations.0003_auto_20170127_1342.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'product', u'0004_auto_20170127_1324'), (u'storage', u'0003_auto_20161202_1621'), (u'recipe', u'0016_recipefile_data'), (u'ingest', u'0008_auto_20170127_1332'), (u'source', u'0002_auto_20170127_1336')]</em><a class="headerlink" href="#source.migrations.0003_auto_20170127_1342.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="source.migrations.0003_auto_20170127_1342.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;RemoveField  name=u'file', model_name=u'sourcefile'&gt;, &lt;DeleteModel  name=u'SourceFile'&gt;, &lt;CreateModel  fields=[], bases=(u'storage.scalefile',), options={u'proxy': True}, name=u'SourceFile'&gt;]</em><a class="headerlink" href="#source.migrations.0003_auto_20170127_1342.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-source.migrations">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-source.migrations" title="Permalink to this headline">¶</a></h2>
 </div>

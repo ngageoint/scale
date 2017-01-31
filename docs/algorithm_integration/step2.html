@@ -264,21 +264,21 @@ results manifest must match the <strong>output_data</strong> field in the <a cla
 
 <span class="c1">#If the file was found, add it to the manifest list</span>
 <span class="k">if</span> <span class="o">[</span> -n <span class="s2">&quot;</span><span class="nv">$image1_tif</span><span class="s2">&quot;</span> <span class="o">]</span> <span class="p">;</span> <span class="k">then</span>
-  manifest_files+<span class="o">=(</span><span class="s2">&quot;{\&quot;name\&quot;:\&quot;output_file_tif\&quot;, \&quot;path\&quot;:\&quot;</span><span class="nv">$image1_tif</span><span class="s2">\&quot;}&quot;</span><span class="o">)</span>
+  <span class="nv">manifest_files</span><span class="o">+=(</span><span class="s2">&quot;{\&quot;name\&quot;:\&quot;output_file_tif\&quot;, \&quot;path\&quot;:\&quot;</span><span class="nv">$image1_tif</span><span class="s2">\&quot;}&quot;</span><span class="o">)</span>
 <span class="k">fi</span>
 
 <span class="k">if</span> <span class="o">[</span> -n <span class="s2">&quot;</span><span class="nv">$image2_tif</span><span class="s2">&quot;</span> <span class="o">]</span> <span class="p">;</span> <span class="k">then</span>
-  manifest_files+<span class="o">=(</span><span class="s2">&quot;{\&quot;name\&quot;:\&quot;output_file_tif2\&quot;, \&quot;path\&quot;:\&quot;</span><span class="nv">$image2_tif2</span><span class="s2">\&quot;}&quot;</span><span class="o">)</span>
+  <span class="nv">manifest_files</span><span class="o">+=(</span><span class="s2">&quot;{\&quot;name\&quot;:\&quot;output_file_tif2\&quot;, \&quot;path\&quot;:\&quot;</span><span class="nv">$image2_tif2</span><span class="s2">\&quot;}&quot;</span><span class="o">)</span>
 <span class="k">fi</span>
 
 <span class="k">if</span> <span class="o">[</span> -n <span class="s2">&quot;</span><span class="nv">$csv_data</span><span class="s2">&quot;</span> <span class="o">]</span> <span class="p">;</span> <span class="k">then</span>
-  manifest_files+<span class="o">=(</span><span class="s2">&quot;{\&quot;name\&quot;:\&quot;output_file_csv\&quot;, \&quot;path\&quot;:\&quot;</span><span class="nv">$csv_data</span><span class="s2">\&quot;}&quot;</span><span class="o">)</span>
+  <span class="nv">manifest_files</span><span class="o">+=(</span><span class="s2">&quot;{\&quot;name\&quot;:\&quot;output_file_csv\&quot;, \&quot;path\&quot;:\&quot;</span><span class="nv">$csv_data</span><span class="s2">\&quot;}&quot;</span><span class="o">)</span>
 <span class="k">fi</span>
 
 
 <span class="nv">manifest_files_text</span><span class="o">=</span><span class="k">$(</span>join , <span class="s2">&quot;</span><span class="si">${</span><span class="nv">manifest_files</span><span class="p">[@]</span><span class="si">}</span><span class="s2">&quot;</span><span class="k">)</span>
 
-<span class="nv">results_manifest_text</span><span class="o">={</span><span class="se">\&quot;</span>version<span class="se">\&quot;</span>:<span class="se">\&quot;</span>1.0<span class="se">\&quot;</span>,<span class="se">\&quot;</span>files<span class="se">\&quot;</span>:<span class="o">[</span><span class="nv">$manifest_files_text</span><span class="o">]}</span>
+<span class="nv">results_manifest_text</span><span class="o">={</span><span class="se">\&quot;</span>version<span class="se">\&quot;</span>:<span class="se">\&quot;</span><span class="m">1</span>.0<span class="se">\&quot;</span>,<span class="se">\&quot;</span>files<span class="se">\&quot;</span>:<span class="o">[</span><span class="nv">$manifest_files_text</span><span class="o">]}</span>
 <span class="nb">echo</span> <span class="s2">&quot;</span><span class="nv">$results_manifest_text</span><span class="s2">&quot;</span> &gt; <span class="nv">$OUTDIR</span>/results_manifest.json
 </pre></div>
 </td></tr></table></div>

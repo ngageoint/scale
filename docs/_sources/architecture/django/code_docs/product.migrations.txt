@@ -20,6 +20,38 @@ product.migrations.0002_auto_20160622_1344 module
     :undoc-members:
     :show-inheritance:
 
+product.migrations.0003_auto_20170127_1319 module
+-------------------------------------------------
+
+.. automodule:: product.migrations.0003_auto_20170127_1319
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+product.migrations.0004_auto_20170127_1324 module
+-------------------------------------------------
+
+.. automodule:: product.migrations.0004_auto_20170127_1324
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+product.migrations.0005_auto_20170127_1344 module
+-------------------------------------------------
+
+.. automodule:: product.migrations.0005_auto_20170127_1344
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+product.migrations.0006_auto_20170127_1348 module
+-------------------------------------------------
+
+.. automodule:: product.migrations.0006_auto_20170127_1348
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
