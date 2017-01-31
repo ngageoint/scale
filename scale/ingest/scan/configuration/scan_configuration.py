@@ -9,10 +9,9 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 from ingest.scan.configuration.exceptions import InvalidScanConfiguration
-from ingest.scan.configuration.scan_configuration_1_0 import ScanConfiguration as ScanConfiguration_1_0
-from ingest.scan.handlers.file_handler import FileHandler
-from ingest.scan.handlers.file_rule import FileRule
-from ingest.scan.monitors import factory
+from ingest.handlers.file_handler import FileHandler
+from ingest.handlers.file_rule import FileRule
+from ingest.scan.scanners import factory
 from storage.models import Workspace
 
 

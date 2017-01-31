@@ -8,7 +8,7 @@ import os
 from django.db import transaction
 from django.utils.timezone import now
 
-from ingest.models import Ingest, Strike, Scan
+from ingest.models import Ingest, Scan
 from job.configuration.configuration.job_configuration import JobConfiguration, MODE_RW
 from job.configuration.data.job_data import JobData
 from queue.models import Queue
@@ -44,6 +44,7 @@ class Scanner(object):
         self._scanned_workspace = None  # The workspace model that is being scanned
         self._workspaces = {}  # The workspaces needed by this scanner, stored by workspace name {string: workspace}
         self._stop_received = False
+        self._dry_run = True # Used to only scan and skip ingest process
         self.scan_id = None
 
     @property
@@ -127,9 +128,9 @@ class Scanner(object):
         :param configuration: The configuration as a dictionary
         :type configuration: dict
         :returns: A list of warnings discovered during validation
-        :rtype: [:class:`ingest.strike.configuration.strike_configuration.ValidationWarning`]
+        :rtype: [:class:`ingest.scan.configuration.scan_configuration.ValidationWarning`]
 
-        :raises :class:`ingest.strike.monitors.exceptions.InvalidMonitorConfiguration`: If the given configuration is
+        :raises :class:`ingest.scan.scanners.exceptions.InvalidScannerConfiguration`: If the given configuration is
             invalid
         """
 
@@ -146,7 +147,7 @@ class Scanner(object):
 
         ingest = Ingest()
         ingest.file_name = file_name
-        ingest.strike_id = self.strike_id
+        ingest.scan_id = self.scan_id
         ingest.media_type = get_media_type(file_name)
         ingest.workspace = self._scanned_workspace
 
@@ -155,9 +156,8 @@ class Scanner(object):
 
     @transaction.atomic
     def _process_ingest(self, ingest, file_path, file_size):
-        """Processes the ingest file by applying the Strike configuration rules. This method will update the ingest
-        model in the database and create an ingest task (if applicable) in an atomic transaction. This method should
-        either be called immediately after _create_ingest() or after _complete_transfer().
+        """Processes the ingest file by applying the Scan configuration rules. This method will update the ingest
+        model in the database and create an ingest task (if applicable) in an atomic transaction. 
 
         :param ingest: The ingest model
         :type ingest: :class:`ingest.models.Ingest`
@@ -167,13 +167,11 @@ class Scanner(object):
         :type file_size: long
         """
 
-        if ingest.status not in ['TRANSFERRING', 'TRANSFERRED']:
-            raise Exception('Invalid ingest status: %s' % ingest.status)
-
         file_name = ingest.file_name
-        logger.info('Applying rules to %s (%s, %s)', file_name, ingest.media_type, file_size_to_string(file_size))
+        logger.info('Applying rules to %s (%s, %s)', file_name, ingest.media_type, file_size_to_string(file_size) if file_size else 'Unknown')
         ingest.file_path = file_path
-        ingest.file_size = file_size
+        if file_size:
+            ingest.file_size = file_size
 
         matched_rule = self._file_handler.match_file_name(file_name)
         if matched_rule:
@@ -218,9 +216,9 @@ class Scanner(object):
         ingest_job_type = Ingest.objects.get_ingest_job_type()
         data = JobData()
         data.add_property_input('Ingest ID', str(ingest.id))
-        desc = {'strike_id': self.strike_id, 'file_name': ingest.file_name}
+        desc = {'scan_id': self.scan_id, 'file_name': ingest.file_name}
         when = ingest.transfer_ended if ingest.transfer_ended else now()
-        event = TriggerEvent.objects.create_trigger_event('STRIKE_TRANSFER', None, desc, when)
+        event = TriggerEvent.objects.create_trigger_event('SCAN_TRANSFER', None, desc, when)
         job_configuration = JobConfiguration()
         if ingest.workspace:
             job_configuration.add_job_task_workspace(ingest.workspace.name, MODE_RW)
@@ -233,38 +231,3 @@ class Scanner(object):
         ingest.save()
 
         logger.info('Successfully created ingest task for %s', ingest.file_name)
-
-    def _start_transfer(self, ingest, when):
-        """Starts recording the transfer of the given ingest into a workspace. The database save is the caller's
-        responsibility. This method should only be used immediately after _create_ingest().
-
-        :param ingest: The ingest model
-        :type ingest: :class:`ingest.models.Ingest`
-        :param when: When the transfer of the file started
-        :type when: :class:`datetime.datetime`
-        :param bytes_transferred: How many bytes have currently been transferred
-        :type bytes_transferred: long
-        """
-
-        if ingest.status != 'TRANSFERRING':
-            raise Exception('Invalid ingest status: %s' % ingest.status)
-        ingest.transfer_started = when
-
-        logger.info('%s is transferring to %s', ingest.file_name, ingest.workspace.name)
-
-    def _update_transfer(self, ingest, bytes_transferred):
-        """Updates how many bytes have currently been transferred for the given ingest. The database save is the
-        caller's responsibility. This method should only be used between calls to _start_transfer() and
-        _complete_transfer().
-
-        :param ingest: The ingest model
-        :type ingest: :class:`ingest.models.Ingest`
-        :param bytes_transferred: How many bytes have currently been transferred
-        :type bytes_transferred: long
-        """
-
-        if ingest.status != 'TRANSFERRING':
-            raise Exception('Invalid ingest status: %s' % ingest.status)
-        ingest.bytes_transferred = bytes_transferred
-
-        logger.info('%s of %s copied', file_size_to_string(bytes_transferred), ingest.file_name)
