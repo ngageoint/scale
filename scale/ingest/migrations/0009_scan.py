@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('job', '0022_jobtype_configuration'),
-        ('ingest', '0006_auto_20161202_1621'),
+        ('ingest', '0008_auto_20170127_1332'),
     ]
 
     operations = [

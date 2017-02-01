@@ -52,7 +52,7 @@ class DirScanner(Scanner):
         logger.info('Running S3 bucket scanner')
 
         # Initialize workspace scan via storage broker.
-        self._scanned_workspace.list_objects(callback)
+        self._scanned_workspace.list_files(callback)
 
     def stop(self):
         """See :meth:`ingest.scan.scanners.scanner.Scanner.stop`

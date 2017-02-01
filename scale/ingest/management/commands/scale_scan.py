@@ -46,6 +46,11 @@ class Command(BaseCommand):
 
         self._scan_id = options.get('scan_id')
         self._dry_run = options.get('dry_run')
+        
+        if not self._scan_id:
+            logger.error('-i or --scan-id parameter must be specified for Scan configuration.')
+            print('what')
+            sys.exit(1)
 
         logger.info('Command starting: scale_scan')
         logger.info('Scan ID: %i', self._scan_id)
