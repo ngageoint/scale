@@ -24,6 +24,7 @@ class StorageConfig(AppConfig):
 
         # Register storage errors
         from error.exceptions import register_error
-        from storage.exceptions import DeletedFile
+        from storage.exceptions import DeletedFile, MissingFile
 
         register_error(DeletedFile(''))
+        register_error(MissingFile(''))

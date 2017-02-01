@@ -11,5 +11,18 @@
             "created": "2017-02-01T00:00:00.0Z",
             "last_modified": "2017-02-01T00:00:00.0Z"
         }
+    },
+    {
+        "model": "error.Error",
+        "pk": null,
+        "fields": {
+            "name": "missing-file",
+            "title": "Missing File",
+            "description": "A file input for this job is missing from its expected workspace location. The job cannot run without the file.",
+            "category": "SYSTEM",
+            "is_builtin": true,
+            "created": "2017-02-01T00:00:00.0Z",
+            "last_modified": "2017-02-01T00:00:00.0Z"
+        }
     }
 ]

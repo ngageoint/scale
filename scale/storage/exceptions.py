@@ -41,6 +41,28 @@ class InvalidDataTypeTag(Exception):
     pass
 
 
+class MissingFile(ScaleError):
+    """Error class indicating an attempt was made to retrieve a missing file
+    """
+
+    def __init__(self, file_name):
+        """Constructor
+
+        :param file_name: The name of missing file
+        :type file_name: string
+        """
+
+        super(MissingFile, self).__init__(9, 'missing-file')
+        self.file_name = file_name
+
+    def get_log_message(self):
+        """See :meth:`error.exceptions.ScaleError.get_log_message`
+        """
+
+        msg = '%s is missing from its expected workspace location. The job cannot run without the file.'
+        return msg % self.file_name
+
+
 class MissingVolumeMount(Exception):
     """Exception indicating that a workspace required a volume file system mount in order to perform an operation and
     the required volume mount was missing
