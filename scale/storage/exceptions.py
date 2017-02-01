@@ -1,6 +1,8 @@
 """Defines the exceptions related to files and storage methods"""
 from __future__ import unicode_literals
 
+from error.exceptions import ScaleError
+
 
 class ArchivedWorkspace(Exception):
     """Exception indicating an attempt was made to store or retrieve a file with an archived (no longer active)
@@ -10,11 +12,26 @@ class ArchivedWorkspace(Exception):
     pass
 
 
-class DeletedFile(Exception):
-    """Exception indicating an attempt was made to retrieve a deleted file
+class DeletedFile(ScaleError):
+    """Error class indicating an attempt was made to retrieve a deleted file (a file whose is_deleted flag is true in
+    the database)
     """
 
-    pass
+    def __init__(self, file_name):
+        """Constructor
+
+        :param file_name: The name of deleted file
+        :type file_name: string
+        """
+
+        super(DeletedFile, self).__init__(8, 'deleted-file')
+        self.file_name = file_name
+
+    def get_log_message(self):
+        """See :meth:`error.exceptions.ScaleError.get_log_message`
+        """
+
+        return '%s has been deleted. The job cannot run without the file.' % self.file_name
 
 
 class InvalidDataTypeTag(Exception):

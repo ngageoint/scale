@@ -10,7 +10,7 @@ class StorageConfig(AppConfig):
     verbose_name = 'Storage'
 
     def ready(self):
-        """Registers the storage brokers with the broker system."""
+        """Registers the storage brokers and storage errors"""
         import storage.brokers.factory as factory
 
         from storage.brokers.host_broker import HostBroker
@@ -21,3 +21,9 @@ class StorageConfig(AppConfig):
         factory.add_broker_type(HostBroker)
         factory.add_broker_type(NfsBroker)
         factory.add_broker_type(S3Broker)
+
+        # Register storage errors
+        from error.exceptions import register_error
+        from storage.exceptions import DeletedFile
+
+        register_error(DeletedFile(''))

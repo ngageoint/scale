@@ -1,0 +1,15 @@
+[
+    {
+        "model": "error.Error",
+        "pk": null,
+        "fields": {
+            "name": "deleted-file",
+            "title": "Deleted File",
+            "description": "A file input for this job has been deleted. The job cannot run without the file.",
+            "category": "SYSTEM",
+            "is_builtin": true,
+            "created": "2017-02-01T00:00:00.0Z",
+            "last_modified": "2017-02-01T00:00:00.0Z"
+        }
+    }
+]
