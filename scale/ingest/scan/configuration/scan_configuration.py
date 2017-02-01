@@ -152,45 +152,45 @@ class ScanConfiguration(object):
 
         return self._configuration
 
-    def get_monitor(self):
-        """Returns the configured monitor for this Scan configuration
+    def get_scanner(self):
+        """Returns the configured scanner for this Scan configuration
 
-        :returns: The configured monitor
-        :rtype: :class:`ingest.scan.monitors.monitor.Monitor`
+        :returns: The configured scanner
+        :rtype: :class:`ingest.scan.scanners.scanner.Scanner`
         """
 
-        monitor_type = self._configuration['monitor']['type']
-        monitor = factory.get_monitor(monitor_type)
-        self.load_monitor_configuration(monitor)
-        return monitor
+        scanner_type = self._configuration['scanner']['type']
+        scanner = factory.get_scanner(scanner_type)
+        self.load_scanner_configuration(scanner)
+        return scanner
 
     def get_workspace(self):
-        """Returns the monitored workspace name for this Scan configuration
+        """Returns the workspace name to be scanned for this Scan configuration
 
-        :returns: The monitored workspace name
+        :returns: The workspace name
         :rtype: string
         """
 
         return self._configuration['workspace']
 
-    def load_monitor_configuration(self, monitor):
-        """Loads the configuration into the given monitor
+    def load_scanner_configuration(self, scanner):
+        """Loads the configuration into the given scanner
 
-        :param monitor: The configuration as a dictionary
-        :type monitor: :class:`ingest.scan.monitors.monitor.Monitor`
+        :param scanner: The configuration as a dictionary
+        :type scanner: :class:`ingest.scan.scanners.scanner.Scanner`
         """
 
-        monitor_dict = self._configuration['monitor']
-        monitor_type = monitor_dict['type']
+        scanner_dict = self._configuration['scanner']
+        scanner_type = scanner_dict['type']
         workspace = self._configuration['workspace']
 
-        # Only load configuration if monitor type is unchanged
-        if monitor_type == monitor.monitor_type:
-            monitor.setup_workspaces(workspace, self._file_handler)
-            monitor.load_configuration(monitor_dict)
+        # Only load configuration if scanner type is unchanged
+        if scanner_type == scanner.scanner_type:
+            scanner.setup_workspaces(workspace, self._file_handler)
+            scanner.load_configuration(scanner_dict)
         else:
-            msg = 'Scan monitor type has been changed from %s to %s. Cannot reload configuration.'
-            logger.warning(msg, monitor.monitor_type, monitor_type)
+            msg = 'Scan scanner type has been changed from %s to %s. Cannot reload configuration.'
+            logger.warning(msg, scanner.scanner_type, scanner_type)
 
     def validate(self):
         """Validates the Scan configuration
@@ -204,23 +204,23 @@ class ScanConfiguration(object):
 
         warnings = []
 
-        monitor_type = self._configuration['monitor']['type']
-        if monitor_type not in factory.get_monitor_types():
-            raise InvalidScanConfiguration('\'%s\' is an invalid monitor type' % monitor_type)
+        scanner_type = self._configuration['scanner']['type']
+        if scanner_type not in factory.get_scanner_types():
+            raise InvalidScanConfiguration('\'%s\' is an invalid scanner' % scanner_type)
 
-        monitored_workspace_name = self._configuration['workspace']
-        workspace_names = {monitored_workspace_name}
+        scanned_workspace_name = self._configuration['workspace']
+        workspace_names = {scanned_workspace_name}
         for rule in self._file_handler.rules:
             if rule.new_workspace:
                 workspace_names.add(rule.new_workspace)
 
         for workspace in Workspace.objects.filter(name__in=workspace_names):
-            if workspace.name == monitored_workspace_name:
+            if workspace.name == scanned_workspace_name:
                 broker_type = workspace.get_broker().broker_type
-                monitor = factory.get_monitor(monitor_type)
-                if broker_type not in monitor.supported_broker_types:
-                    msg = 'Monitor type %s does not support broker type %s'
-                    raise InvalidScanConfiguration(msg % (monitor_type, broker_type))
+                scanner = factory.get_scanner(scanner_type)
+                if broker_type not in scanner.supported_broker_types:
+                    msg = 'Scanner type %s does not support broker type %s'
+                    raise InvalidScanConfiguration(msg % (scanner_type, broker_type))
             if not workspace.is_active:
                 raise InvalidScanConfiguration('Workspace is not active: %s' % workspace.name)
             workspace_names.remove(workspace.name)

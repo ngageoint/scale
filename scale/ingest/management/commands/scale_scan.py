@@ -19,7 +19,8 @@ class Command(BaseCommand):
     """
 
     option_list = BaseCommand.option_list + (
-        make_option('-i', '--scan-id', action='store', type='int', help=('ID of the Scan process to run'))
+        make_option('-i', '--scan-id', action='store', type='int', help=('ID of the Scan process to run')),
+        make_option('-d', '--dry-run', action="store_true", default=False, help=('Perform a dry-run of scan, skipping ingest'))
     )
 
     help = 'Executes the Scan processor to make a single pass over a workspace for ingest'
@@ -32,6 +33,7 @@ class Command(BaseCommand):
 
         self._scan_id = None
         self._scanner = None
+        self._dry_run = False
 
     def handle(self, **options):
         """See :meth:`django.core.management.base.BaseCommand.handle`.
@@ -43,9 +45,11 @@ class Command(BaseCommand):
         signal.signal(signal.SIGTERM, self._onsigterm)
 
         self._scan_id = options.get('scan_id')
+        self._dry_run = options.get('dry_run')
 
         logger.info('Command starting: scale_scan')
         logger.info('Scan ID: %i', self._scan_id)
+        logger.info('Dry Run: %s', self._dry_run)
 
         logger.info('Querying database for Scan configuration')
         scan = Scan.objects.select_related('job').get(pk=self._scan_id)
@@ -57,7 +61,6 @@ class Command(BaseCommand):
         logger.info('Scanner has stopped running')
 
         logger.info('Command completed: scale_scan')
-        sys.exit(1)
 
     def _onsigterm(self, signum, _frame):
         """See signal callback registration: :py:func:`signal.signal`.
