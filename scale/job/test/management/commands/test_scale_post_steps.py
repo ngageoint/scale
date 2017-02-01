@@ -3,20 +3,18 @@ from __future__ import unicode_literals
 
 import django
 from django.db.utils import DatabaseError, OperationalError
-from django.contrib.gis.geos import GEOSException
 from django.utils.timezone import now
 from django.test import TestCase
 from mock import patch
 
-from job.management.commands.scale_post_steps import Command as PostCommand, DB_EXIT_CODE as POST_DB_EXIT_CODE, \
-    DB_OP_EXIT_CODE as POST_DB_OP_EXIT_CODE, NFS_EXIT_CODE as POST_NFS_EXIT_CODE, IO_EXIT_CODE as POST_IO_EXIT_CODE, \
-    IV_MF_CODE as POST_IV_MF_EXIT_CODE, MI_OP_CODE as POST_MI_OP_EXIT_CODE
-from job.test import utils as job_utils
-from storage.exceptions import NfsError
-from trigger.models import TriggerEvent
+from error.exceptions import ScaleDatabaseError, ScaleIOError, ScaleOperationalError
+from job.configuration.results.exceptions import InvalidResultsManifest, MissingRequiredOutput
 from job.configuration.results.job_results import JobResults
 from job.configuration.results.results_manifest.results_manifest import ResultsManifest
-from job.configuration.results.exceptions import InvalidResultsManifest, MissingRequiredOutput
+from job.management.commands.scale_post_steps import Command as PostCommand
+from job.test import utils as job_utils
+from trigger.models import TriggerEvent
+
 
 JOB_RESULTS = JobResults()
 RESULTS_MANIFEST = ResultsManifest()
@@ -65,7 +63,7 @@ class TestPostJobSteps(TestCase):
         cmd.run_from_argv(['manage.py', 'scale_post_steps', '-i', str(self.job_exe.id)])
 
         # Check results
-        mock_sys_exit.assert_called_with(POST_DB_EXIT_CODE)
+        mock_sys_exit.assert_called_with(ScaleDatabaseError().exit_code)
 
     @patch('job.management.commands.scale_post_steps.sys.exit')
     @patch('job.management.commands.scale_post_steps.JobExecution.objects.select_related')
@@ -80,22 +78,7 @@ class TestPostJobSteps(TestCase):
         cmd.run_from_argv(['manage.py', 'scale_post_steps', '-i', str(self.job_exe.id)])
 
         # Check results
-        mock_sys_exit.assert_called_with(POST_DB_OP_EXIT_CODE)
-
-    @patch('job.management.commands.scale_post_steps.sys.exit')
-    @patch('job.management.commands.scale_post_steps.JobExecution.objects')
-    def test_scale_post_steps_nfs_error(self, mock_job_exe_manager, mock_sys_exit):
-        """Tests executing scale_post_steps when an NFS error occurs."""
-
-        # Set up mocks
-        mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.get_job_interface.return_value.perform_post_steps.side_effect = NfsError()
-
-        # Call method to test
-        cmd = PostCommand()
-        cmd.run_from_argv(['manage.py', 'scale_post_steps', '-i', str(self.job_exe.id)])
-
-        # Check results
-        mock_sys_exit.assert_called_with(POST_NFS_EXIT_CODE)
+        mock_sys_exit.assert_called_with(ScaleOperationalError().exit_code)
 
     @patch('job.management.commands.scale_post_steps.sys.exit')
     @patch('job.management.commands.scale_post_steps.JobExecution.objects')
@@ -110,7 +93,7 @@ class TestPostJobSteps(TestCase):
         cmd.run_from_argv(['manage.py', 'scale_post_steps', '-i', str(self.job_exe.id)])
 
         # Check results
-        mock_sys_exit.assert_called_with(POST_IO_EXIT_CODE)
+        mock_sys_exit.assert_called_with(ScaleIOError().exit_code)
 
     @patch('job.management.commands.scale_post_steps.sys.exit')
     @patch('job.management.commands.scale_post_steps.JobExecution.objects')
@@ -118,14 +101,14 @@ class TestPostJobSteps(TestCase):
         """Tests executing scale_post_steps when an invalid manifest occurs."""
 
         # Set up mocks
-        mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.get_job_interface.return_value.perform_post_steps.side_effect = InvalidResultsManifest()
+        mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.get_job_interface.return_value.perform_post_steps.side_effect = InvalidResultsManifest('')
 
         # Call method to test
         cmd = PostCommand()
         cmd.run_from_argv(['manage.py', 'scale_post_steps', '-i', str(self.job_exe.id)])
 
         # Check results
-        mock_sys_exit.assert_called_with(POST_IV_MF_EXIT_CODE)
+        mock_sys_exit.assert_called_with(InvalidResultsManifest('').exit_code)
 
     @patch('job.management.commands.scale_post_steps.sys.exit')
     @patch('job.management.commands.scale_post_steps.JobExecution.objects')
@@ -133,14 +116,14 @@ class TestPostJobSteps(TestCase):
         """Tests executing scale_post_steps when a missing output manifest occurs."""
 
         # Set up mocks
-        mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.get_job_interface.return_value.perform_post_steps.side_effect = MissingRequiredOutput()
+        mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.get_job_interface.return_value.perform_post_steps.side_effect = MissingRequiredOutput('')
 
         # Call method to test
         cmd = PostCommand()
         cmd.run_from_argv(['manage.py', 'scale_post_steps', '-i', str(self.job_exe.id)])
 
         # Check results
-        mock_sys_exit.assert_called_with(POST_MI_OP_EXIT_CODE)
+        mock_sys_exit.assert_called_with(MissingRequiredOutput('').exit_code)
 
     @patch('job.management.commands.scale_post_steps.JobExecution.objects')
     def test_scale_post_steps_no_stderr(self, mock_job_exe_manager):

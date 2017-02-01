@@ -30,10 +30,3 @@ class MissingVolumeMount(Exception):
     """
 
     pass
-
-
-class NfsError(Exception):
-    """Exception indicating that an error occurred with NFS (Network File System)
-    """
-
-    pass

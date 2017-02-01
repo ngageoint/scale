@@ -27,46 +27,6 @@ class ErrorManager(models.Manager):
             CACHED_BUILTIN_ERRORS[name] = error
         return CACHED_BUILTIN_ERRORS[name]
 
-    def get_database_error(self):
-        """Returns the error for a database problem
-
-        :returns: The database error
-        :rtype: :class:`error.models.Error`
-        """
-        return self.get_builtin_error('database')
-
-    def get_database_operation_error(self):
-        """Returns the error for a database operation problem
-
-        :returns: The database operation error
-        :rtype: :class:`error.models.Error`
-        """
-        return self.get_builtin_error('database-operation')
-
-    def get_filesystem_error(self):
-        """Returns the error for a filesystem problem
-
-        :returns: The filesystem error
-        :rtype: :class:`error.models.Error`
-        """
-        return self.get_builtin_error('filesystem-io')
-
-    def get_nfs_error(self):
-        """Returns the error for an NFS problem
-
-        :returns: The NFS error
-        :rtype: :class:`error.models.Error`
-        """
-        return self.get_builtin_error('nfs')
-
-    def get_interface_error(self):
-        """Returns the error for a missing required setting
-
-        :returns: The missing setting error
-        :rtype: :class:`error.models.Error`
-        """
-        return self.get_builtin_error('missing-setting')
-
     def get_unknown_error(self):
         """Returns the error for an unknown cause
 

@@ -8,7 +8,7 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 from job.configuration.interface import job_interface_1_1 as previous_interface
-from job.configuration.interface.exceptions import InvalidInterfaceDefinition, InvalidSetting
+from job.configuration.interface.exceptions import InvalidInterfaceDefinition, MissingSetting
 
 
 logger = logging.getLogger(__name__)
@@ -383,4 +383,4 @@ class JobInterface(previous_interface.JobInterface):
 
             if setting_required:
                 if setting_name not in config_setting_names:
-                    raise InvalidSetting('Required setting %s was not provided' % setting_name)
+                    raise MissingSetting(setting_name)

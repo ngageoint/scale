@@ -170,7 +170,7 @@ class ResultsManifest(object):
         try:
             validate(json_manifest, RESULTS_MANIFEST_SCHEMA)
         except ValidationError as validation_error:
-            raise InvalidResultsManifest(validation_error)
+            raise InvalidResultsManifest(str(validation_error))
 
         self._populate_defaults()
         self._validate_manifest()
@@ -297,8 +297,7 @@ class ResultsManifest(object):
         for file_name, (is_multiple, is_required) in output_file_definitions.items():
             if file_name not in file_entry_map:
                 if is_required:
-                    msg = '%s is a required output, but the algorithm did not provide it'
-                    raise MissingRequiredOutput(msg % file_name)
+                    raise MissingRequiredOutput(file_name)
                 else:
                     continue
 
