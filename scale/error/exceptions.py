@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 import logging
-from abc import ABCMeta
+from abc import ABCMeta, abstractmethod
 
 from django.db.utils import DatabaseError, OperationalError
 
@@ -86,6 +86,7 @@ class ScaleError(Exception):
         self.log_stacktrace = log_stacktrace
         self.wrapped_ex = wrapped_ex
 
+    @abstractmethod
     def get_log_message(self):
         """The log message to print out when the error occurs. This should be overridden by derived classes to provide
         detailed log messaging.
@@ -94,7 +95,7 @@ class ScaleError(Exception):
         :rtype: string
         """
 
-        return 'An error occurred. Please override this log message to provide more detail.'
+        raise NotImplementedError()
 
     def log(self):
         """Logs the error message
