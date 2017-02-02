@@ -8,6 +8,7 @@
             "description": "A task for this job failed to launch.",
             "category": "SYSTEM",
             "is_builtin": true,
+            "should_be_retried": true,
             "created": "2016-04-13T00:00:00.0Z",
             "last_modified": "2016-04-13T00:00:00.0Z"
         }
@@ -21,6 +22,7 @@
             "description": "A task for this job failed to launch a Docker container.",
             "category": "SYSTEM",
             "is_builtin": true,
+            "should_be_retried": true,
             "created": "2016-04-13T00:00:00.0Z",
             "last_modified": "2016-04-13T00:00:00.0Z"
         }
@@ -34,6 +36,7 @@
             "description": "A Docker container for this job terminated unexpectedly.",
             "category": "SYSTEM",
             "is_builtin": true,
+            "should_be_retried": true,
             "created": "2016-12-15T00:00:00.0Z",
             "last_modified": "2016-12-15T00:00:00.0Z"
         }
@@ -47,6 +50,7 @@
             "description": "The node running this job was lost.",
             "category": "SYSTEM",
             "is_builtin": true,
+            "should_be_retried": true,
             "created": "2015-03-11T00:00:00.0Z",
             "last_modified": "2015-03-11T00:00:00.0Z"
         }
@@ -60,6 +64,7 @@
             "description": "A task for this job failed to start within a reasonable amount of time after being launched.",
             "category": "SYSTEM",
             "is_builtin": true,
+            "should_be_retried": true,
             "created": "2017-01-06T00:00:00.0Z",
             "last_modified": "2017-01-06T00:00:00.0Z"
         }
@@ -73,6 +78,7 @@
             "description": "The pre-task did not finish within a reasonable amount of time. This is likely due to excessive time downloading the algorithm's input data from their workspace(s).",
             "category": "SYSTEM",
             "is_builtin": true,
+            "should_be_retried": false,
             "created": "2017-01-06T00:00:00.0Z",
             "last_modified": "2017-01-06T00:00:00.0Z"
         }
@@ -86,6 +92,7 @@
             "description": "The post-task did not finish within a reasonable amount of time. This is likely due to excessive time uploading the algorithm's output data to their workspace(s).",
             "category": "SYSTEM",
             "is_builtin": true,
+            "should_be_retried": false,
             "created": "2017-01-06T00:00:00.0Z",
             "last_modified": "2017-01-06T00:00:00.0Z"
         }
@@ -99,6 +106,7 @@
             "description": "The system job exceeded its timeout threshold.",
             "category": "SYSTEM",
             "is_builtin": true,
+            "should_be_retried": false,
             "created": "2017-01-06T00:00:00.0Z",
             "last_modified": "2017-01-06T00:00:00.0Z"
         }
@@ -112,6 +120,7 @@
             "description": "The algorithm exceeded its timeout threshold.",
             "category": "ALGORITHM",
             "is_builtin": true,
+            "should_be_retried": false,
             "created": "2015-03-11T00:00:00.0Z",
             "last_modified": "2015-03-11T00:00:00.0Z"
         }
@@ -125,6 +134,7 @@
             "description": "The algorithm failed by returning a non-zero exit code. To allow Scale to detect more specific problems with the algorithm, please define the appropriate errors for the non-zero exit codes that the algorithm may return.",
             "category": "ALGORITHM",
             "is_builtin": true,
+            "should_be_retried": false,
             "created": "2016-04-13T00:00:00.0Z",
             "last_modified": "2016-04-13T00:00:00.0Z"
         }
@@ -138,6 +148,7 @@
             "description": "The algorithm produced an invalid results manifest file. Please see the job log for more information.",
             "category": "ALGORITHM",
             "is_builtin": true,
+            "should_be_retried": false,
             "created": "2016-08-24T00:00:00.0Z",
             "last_modified": "2016-08-24T00:00:00.0Z"
         }
@@ -151,6 +162,7 @@
             "description": "The algorithm failed to produce a required output. Please see the job log for more information.",
             "category": "ALGORITHM",
             "is_builtin": true,
+            "should_be_retried": false,
             "created": "2016-08-24T00:00:00.0Z",
             "last_modified": "2016-08-24T00:00:00.0Z"
         }
@@ -164,6 +176,7 @@
             "description": "The job is missing a required settings value. Please define default values for all settings required by this job type.",
             "category": "SYSTEM",
             "is_builtin": true,
+            "should_be_retried": false,
             "created": "2016-12-08T00:00:00.0Z",
             "last_modified": "2016-12-08T00:00:00.0Z"
         }

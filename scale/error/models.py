@@ -111,6 +111,8 @@ class Error(models.Model):
     :type category: :class:`django.db.models.CharField`
     :keyword is_builtin: Where the error was loaded during system installation.
     :type is_builtin: :class:`django.db.models.BooleanField`
+    :keyword should_be_retried: Whether the error should be automatically retried
+    :type should_be_retried: :class:`django.db.models.BooleanField`
 
     :keyword created: When the error model was created
     :type created: :class:`django.db.models.DateTimeField`
@@ -128,6 +130,7 @@ class Error(models.Model):
     description = models.CharField(max_length=250, null=True)
     category = models.CharField(db_index=True, choices=CATEGORIES, default='SYSTEM', max_length=50)
     is_builtin = models.BooleanField(db_index=True, default=False)
+    should_be_retried = models.BooleanField(default=False)
 
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)

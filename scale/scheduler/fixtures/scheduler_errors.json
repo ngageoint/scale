@@ -8,6 +8,7 @@
             "description": "The Scale scheduler was restarted, causing the job to stop running and fail.",
             "category": "SYSTEM",
             "is_builtin": true,
+            "should_be_retried": true,
             "created": "2015-03-11T00:00:00.0Z",
             "last_modified": "2015-03-11T00:00:00.0Z"
         }

@@ -8,6 +8,7 @@
             "description": "The cause of this failure is unknown. Please see the job log for more information and report this error to the Scale development team at https://github.com/ngageoint/scale so they can correct the issue.",
             "category": "SYSTEM",
             "is_builtin": true,
+            "should_be_retried": false,
             "created": "2015-03-11T00:00:00.0Z",
             "last_modified": "2015-03-11T00:00:00.0Z"
         }
@@ -21,6 +22,7 @@
             "description": "An error occurred with the Scale database. Please see the job log for more information and report this error to the Scale development team at https://github.com/ngageoint/scale so they can correct the issue.",
             "category": "SYSTEM",
             "is_builtin": true,
+            "should_be_retried": false,
             "created": "2015-03-11T00:00:00.0Z",
             "last_modified": "2015-03-11T00:00:00.0Z"
         }
@@ -34,6 +36,7 @@
             "description": "A Scale database operation failed. This can be caused by issues such as the database reaching its connection limit, being unreachable, query deadlocks, and other operation issues. Please see the job log for more information.",
             "category": "SYSTEM",
             "is_builtin": true,
+            "should_be_retried": true,
             "created": "2016-04-14T00:00:00.0Z",
             "last_modified": "2016-04-14T00:00:00.0Z"
         }
@@ -47,6 +50,7 @@
             "description": "A filesystem I/O operation failed. Please see the job log for more information.",
             "category": "SYSTEM",
             "is_builtin": true,
+            "should_be_retried": true,
             "created": "2015-03-11T00:00:00.0Z",
             "last_modified": "2015-03-11T00:00:00.0Z"
         }
