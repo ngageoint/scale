@@ -52,7 +52,7 @@ def parse_geo_json(geo_json):
         try:
             geom = geos.GEOSGeometry(json.dumps(geom_json), srid=4326)
         except geos.GEOSException as geos_error:
-            raise InvalidResultsManifest(geos_error)
+            raise InvalidResultsManifest(str(geos_error))
 
     return geom, props
 

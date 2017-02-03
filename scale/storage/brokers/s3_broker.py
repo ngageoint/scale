@@ -12,7 +12,9 @@ import storage.settings as settings
 from storage.brokers.broker import Broker, BrokerVolume
 from storage.brokers.exceptions import InvalidBrokerConfiguration
 from storage.configuration.workspace_configuration import ValidationWarning
+from storage.exceptions import MissingFile
 from util.aws import S3Client, AWSClient
+from util.exceptions import FileDoesNotExist
 
 from util.command import execute_command_line
 
@@ -54,12 +56,19 @@ class S3Broker(Broker):
                     logger.debug('Partial S3 file accessed by mounted bucket.')
                     path_to_download = os.path.join(volume_path, file_download.file.file_path)
 
+                    logger.info('Checking path %s', path_to_download)
+                    if not os.path.exists(path_to_download):
+                        raise MissingFile(file_download.file.file_name)
+
                     # Create symlink to the file in the host mount
                     logger.info('Creating link %s -> %s', file_download.local_path, path_to_download)
                     execute_command_line(['ln', '-s', path_to_download, file_download.local_path])
                 # Fall-back to default S3 file download
                 else:
-                    s3_object = client.get_object(self._bucket_name, file_download.file.file_path)
+                    try:
+                        s3_object = client.get_object(self._bucket_name, file_download.file.file_path)
+                    except FileDoesNotExist:
+                        raise MissingFile(file_download.file.file_name)
 
                     self._download_file(s3_object, file_download.file, file_download.local_path)
 
@@ -83,7 +92,10 @@ class S3Broker(Broker):
 
         with S3Client(self._credentials, self._region_name) as client:
             for file_move in file_moves:
-                s3_object_src = client.get_object(self._bucket_name, file_move.file.file_path)
+                try:
+                    s3_object_src = client.get_object(self._bucket_name, file_move.file.file_path)
+                except FileDoesNotExist:
+                    raise MissingFile(file_move.file.file_name)
                 s3_object_dest = client.get_object(self._bucket_name, file_move.new_path, False)
 
                 self._move_file(s3_object_src, s3_object_dest, file_move.file, file_move.new_path)

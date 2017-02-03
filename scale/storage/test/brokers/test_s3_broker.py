@@ -56,10 +56,12 @@ class TestS3Broker(TestCase):
         self.assertTrue(file_2.is_deleted)
         self.assertIsNotNone(file_2.deleted)
 
+    @patch('os.path.exists')
     @patch('storage.brokers.s3_broker.S3Client')
-    def test_download_files(self, mock_client_class):
+    def test_download_files(self, mock_client_class, mock_exists):
         """Tests downloading files successfully"""
 
+        mock_exists.return_value = True
         s3_object_1 = MagicMock()
         s3_object_2 = MagicMock()
         mock_client = MagicMock(S3Client)
@@ -89,11 +91,13 @@ class TestS3Broker(TestCase):
 
     # Patching in storage.brokers.s3_broker as opposed to util.aws / util.command because patch must be applied where
     # import is made, not on source
+    @patch('os.path.exists')
     @patch('storage.brokers.s3_broker.S3Client')
     @patch('storage.brokers.s3_broker.execute_command_line')
-    def test_host_link_files(self, mock_execute, mock_client_class):
+    def test_host_link_files(self, mock_execute, mock_client_class, mock_exists):
         """Tests sym-linking files successfully"""
 
+        mock_exists.return_value = True
         volume_path = os.path.join('the', 'volume', 'path')
         file_name_1 = 'my_file.txt'
         file_name_2 = 'my_file.json'
@@ -157,10 +161,12 @@ class TestS3Broker(TestCase):
         self.assertEqual(broker._credentials.access_key_id, 'ABC')
         self.assertEqual(broker._credentials.secret_access_key, '123')
 
+    @patch('os.path.exists')
     @patch('storage.brokers.s3_broker.S3Client')
-    def test_move_files(self, mock_client_class):
+    def test_move_files(self, mock_client_class, mock_exists):
         """Tests moving files successfully"""
 
+        mock_exists.return_value = True
         s3_object_1a = MagicMock()
         s3_object_1b = MagicMock()
         s3_object_2a = MagicMock()

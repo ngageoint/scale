@@ -6,10 +6,9 @@ from django.utils.timezone import now
 from django.test import TestCase
 from mock import patch
 
-from job.management.commands.scale_pre_steps import Command as PreCommand, DB_EXIT_CODE as PRE_DB_EXIT_CODE, \
-    DB_OP_EXIT_CODE as PRE_DB_OP_EXIT_CODE, NFS_EXIT_CODE as PRE_NFS_EXIT_CODE, IO_EXIT_CODE as PRE_IO_EXIT_CODE
+from error.exceptions import ScaleDatabaseError, ScaleIOError, ScaleOperationalError
+from job.management.commands.scale_pre_steps import Command as PreCommand
 from job.test import utils as job_utils
-from storage.exceptions import NfsError
 from trigger.models import TriggerEvent
 
 FILLED_IN_CMD = 'run test filled in'
@@ -77,7 +76,7 @@ class TestPreJobSteps(TestCase):
         cmd.run_from_argv(['manage.py', 'scale_pre_steps', '-i', str(self.job_exe.id)])
 
         # Check results
-        mock_sys_exit.assert_called_with(PRE_DB_EXIT_CODE)
+        mock_sys_exit.assert_called_with(ScaleDatabaseError().exit_code)
 
     @patch('job.management.commands.scale_pre_steps.sys.exit')
     @patch('job.management.commands.scale_pre_steps.JobExecution.objects.select_related')
@@ -92,22 +91,7 @@ class TestPreJobSteps(TestCase):
         cmd.run_from_argv(['manage.py', 'scale_pre_steps', '-i', str(self.job_exe.id)])
 
         # Check results
-        mock_sys_exit.assert_called_with(PRE_DB_OP_EXIT_CODE)
-
-    @patch('job.management.commands.scale_pre_steps.sys.exit')
-    @patch('job.management.commands.scale_pre_steps.JobExecution')
-    def test_scale_pre_steps_nfs_error(self, mock_job_exe, mock_sys_exit):
-        """Tests executing scale_pre_steps when an NFS error occurs."""
-
-        # Set up mocks
-        mock_job_exe.objects.get_job_exe_with_job_and_job_type.return_value.get_job_interface.return_value.perform_pre_steps.side_effect = NfsError()
-
-        # Call method to test
-        cmd = PreCommand()
-        cmd.run_from_argv(['manage.py', 'scale_pre_steps', '-i', str(self.job_exe.id)])
-
-        # Check results
-        mock_sys_exit.assert_called_with(PRE_NFS_EXIT_CODE)
+        mock_sys_exit.assert_called_with(ScaleOperationalError().exit_code)
 
     @patch('job.management.commands.scale_pre_steps.sys.exit')
     @patch('job.management.commands.scale_pre_steps.JobExecution')
@@ -122,4 +106,4 @@ class TestPreJobSteps(TestCase):
         cmd.run_from_argv(['manage.py', 'scale_pre_steps', '-i', str(self.job_exe.id)])
 
         # Check results
-        mock_sys_exit.assert_called_with(PRE_IO_EXIT_CODE)
+        mock_sys_exit.assert_called_with(ScaleIOError().exit_code)

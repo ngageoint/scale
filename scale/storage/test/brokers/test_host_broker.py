@@ -64,9 +64,7 @@ class TestHostBrokerDownloadFiles(TestCase):
     def test_successfully(self, mock_execute, mock_exists):
         """Tests calling HostBroker.download_files() successfully"""
 
-        def new_exists(path):
-            return False
-        mock_exists.side_effect = new_exists
+        mock_exists.return_value = True
 
         volume_path = os.path.join('the', 'volume', 'path')
         file_name_1 = 'my_file.txt'
@@ -128,7 +126,7 @@ class TestHostBrokerMoveFiles(TestCase):
         """Tests calling HostBroker.move_files() successfully"""
 
         def new_exists(path):
-            return False
+            return path.count('new') == 0
         mock_exists.side_effect = new_exists
 
         volume_path = os.path.join('the', 'volume', 'path')

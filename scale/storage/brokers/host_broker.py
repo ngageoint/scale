@@ -7,6 +7,7 @@ import shutil
 
 from storage.brokers.broker import Broker, BrokerVolume
 from storage.brokers.exceptions import InvalidBrokerConfiguration
+from storage.exceptions import MissingFile
 from util.command import execute_command_line
 
 
@@ -44,6 +45,10 @@ class HostBroker(Broker):
         for file_download in file_downloads:
             path_to_download = os.path.join(volume_path, file_download.file.file_path)
 
+            logger.info('Checking path %s', path_to_download)
+            if not os.path.exists(path_to_download):
+                raise MissingFile(file_download.file.file_name)
+
             # Create symlink to the file in the host mount
             logger.info('Creating link %s -> %s', file_download.local_path, path_to_download)
             execute_command_line(['ln', '-s', path_to_download, file_download.local_path])
@@ -73,6 +78,10 @@ class HostBroker(Broker):
             full_old_path = os.path.join(volume_path, file_move.file.file_path)
             full_new_path = os.path.join(volume_path, file_move.new_path)
             full_new_path_dir = os.path.dirname(full_new_path)
+
+            logger.info('Checking path %s', full_old_path)
+            if not os.path.exists(full_old_path):
+                raise MissingFile(file_move.file.file_name)
 
             if not os.path.exists(full_new_path_dir):
                 logger.info('Creating %s', full_new_path_dir)

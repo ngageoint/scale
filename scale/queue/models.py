@@ -411,8 +411,8 @@ class QueueManager(models.Manager):
                 logger.exception('Unable to call queue processor for failed job execution: %s -> %s', processor_class,
                                  job_exe_id)
 
-        # Re-try job if a system error occurred and there are more tries left
-        retry = error.category == 'SYSTEM' and job_exe.job.num_exes < job_exe.job.max_tries
+        # Re-try job if error supports re-try and there are more tries left
+        retry = error.should_be_retried and job_exe.job.num_exes < job_exe.job.max_tries
         # Also re-try long running jobs
         retry = retry or job_exe.job.job_type.is_long_running
         # Do not re-try superseded jobs

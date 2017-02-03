@@ -3,8 +3,8 @@ from __future__ import unicode_literals
 
 import datetime
 
+from error.exceptions import get_error_by_exit_code
 from job.execution.tasks.exe_task import JobExecutionTask
-from job.management.commands.scale_post_steps import EXIT_CODE_DICT as POST_EXIT_CODE_DICT
 from job.resources import NodeResources
 
 
@@ -41,9 +41,9 @@ class PostTask(JobExecutionTask):
 
             error = None
             if self._has_started:
-                # Check scale_post_steps command to see if exit code maps to a specific error
-                if task_update.exit_code and task_update.exit_code in POST_EXIT_CODE_DICT:
-                    error = POST_EXIT_CODE_DICT[task_update.exit_code]()
+                # Check to see if exit code maps to a specific error
+                if task_update.exit_code:
+                    error = get_error_by_exit_code(task_update.exit_code)
             if not error:
                 error = self._consider_general_error(task_update)
 

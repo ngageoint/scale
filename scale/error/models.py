@@ -27,46 +27,6 @@ class ErrorManager(models.Manager):
             CACHED_BUILTIN_ERRORS[name] = error
         return CACHED_BUILTIN_ERRORS[name]
 
-    def get_database_error(self):
-        """Returns the error for a database problem
-
-        :returns: The database error
-        :rtype: :class:`error.models.Error`
-        """
-        return self.get_builtin_error('database')
-
-    def get_database_operation_error(self):
-        """Returns the error for a database operation problem
-
-        :returns: The database operation error
-        :rtype: :class:`error.models.Error`
-        """
-        return self.get_builtin_error('database-operation')
-
-    def get_filesystem_error(self):
-        """Returns the error for a filesystem problem
-
-        :returns: The filesystem error
-        :rtype: :class:`error.models.Error`
-        """
-        return self.get_builtin_error('filesystem-io')
-
-    def get_nfs_error(self):
-        """Returns the error for an NFS problem
-
-        :returns: The NFS error
-        :rtype: :class:`error.models.Error`
-        """
-        return self.get_builtin_error('nfs')
-
-    def get_interface_error(self):
-        """Returns the error for a missing required setting
-
-        :returns: The missing setting error
-        :rtype: :class:`error.models.Error`
-        """
-        return self.get_builtin_error('missing-setting')
-
     def get_unknown_error(self):
         """Returns the error for an unknown cause
 
@@ -151,6 +111,8 @@ class Error(models.Model):
     :type category: :class:`django.db.models.CharField`
     :keyword is_builtin: Where the error was loaded during system installation.
     :type is_builtin: :class:`django.db.models.BooleanField`
+    :keyword should_be_retried: Whether the error should be automatically retried
+    :type should_be_retried: :class:`django.db.models.BooleanField`
 
     :keyword created: When the error model was created
     :type created: :class:`django.db.models.DateTimeField`
@@ -168,6 +130,7 @@ class Error(models.Model):
     description = models.CharField(max_length=250, null=True)
     category = models.CharField(db_index=True, choices=CATEGORIES, default='SYSTEM', max_length=50)
     is_builtin = models.BooleanField(db_index=True, default=False)
+    should_be_retried = models.BooleanField(default=False)
 
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)

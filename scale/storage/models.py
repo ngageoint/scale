@@ -205,7 +205,7 @@ class ScaleFileManager(models.Manager):
             if not workspace.is_active:
                 raise ArchivedWorkspace('%s is no longer active' % workspace.name)
             if file_download.file.is_deleted:
-                raise DeletedFile('%s has been deleted' % file_download.file.file_name)
+                raise DeletedFile(file_download.file.file_name)
             if workspace.id in wp_dict:
                 wp_list = wp_dict[workspace.id][1]
             else:
@@ -250,7 +250,7 @@ class ScaleFileManager(models.Manager):
             if not workspace.is_active:
                 raise ArchivedWorkspace('%s is no longer active' % workspace.name)
             if file_move.file.is_deleted:
-                raise DeletedFile('%s has been deleted' % file_move.file.file_name)
+                raise DeletedFile(file_move.file.file_name)
             if workspace.id in wp_dict:
                 wp_list = wp_dict[workspace.id][1]
             else:
