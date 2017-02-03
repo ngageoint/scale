@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>job.management.commands package &mdash; Scale 4.2.0-snapshot documentation</title>
+  <title>job.test.execution.tasks package &mdash; Scale 4.2.0-snapshot documentation</title>
   
 
   
@@ -33,9 +33,9 @@
 
   
     <link rel="top" title="Scale 4.2.0-snapshot documentation" href="../../../index.html"/>
-        <link rel="up" title="job.management package" href="job.management.html"/>
-        <link rel="next" title="job.migrations package" href="job.migrations.html"/>
-        <link rel="prev" title="job.management package" href="job.management.html"/> 
+        <link rel="up" title="job.test.execution package" href="job.test.execution.html"/>
+        <link rel="next" title="job.test.management package" href="job.test.management.html"/>
+        <link rel="prev" title="job.test.execution package" href="job.test.execution.html"/> 
 
   
   <script src="../../../_static/js/modernizr.min.js"></script>
@@ -176,13 +176,15 @@
       
           <li><a href="job.html">job package</a> &raquo;</li>
       
-          <li><a href="job.management.html">job.management package</a> &raquo;</li>
+          <li><a href="job.test.html">job.test package</a> &raquo;</li>
       
-    <li>job.management.commands package</li>
+          <li><a href="job.test.execution.html">job.test.execution package</a> &raquo;</li>
+      
+    <li>job.test.execution.tasks package</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../../../_sources/architecture/django/code_docs/job.management.commands.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/job.test.execution.tasks.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -192,92 +194,65 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="job-management-commands-package">
-<h1>job.management.commands package<a class="headerlink" href="#job-management-commands-package" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="job-test-execution-tasks-package">
+<h1>job.test.execution.tasks package<a class="headerlink" href="#job-test-execution-tasks-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-job.management.commands.scale_clock">
-<span id="job-management-commands-scale-clock-module"></span><h2>job.management.commands.scale_clock module<a class="headerlink" href="#module-job.management.commands.scale_clock" title="Permalink to this headline">¶</a></h2>
-<p>Defines the command line method for running the Scale clock process</p>
+<div class="section" id="module-job.test.execution.tasks.test_post_task">
+<span id="job-test-execution-tasks-test-post-task-module"></span><h2>job.test.execution.tasks.test_post_task module<a class="headerlink" href="#module-job.test.execution.tasks.test_post_task" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="job.management.commands.scale_clock.Command">
-<em class="property">class </em><code class="descclassname">job.management.commands.scale_clock.</code><code class="descname">Command</code><a class="headerlink" href="#job.management.commands.scale_clock.Command" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.management.base.BaseCommand</span></code></p>
-<p>Command that executes the Scale clock</p>
-<dl class="method">
-<dt id="job.management.commands.scale_clock.Command.handle">
-<code class="descname">handle</code><span class="sig-paren">(</span><em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#job.management.commands.scale_clock.Command.handle" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <code class="xref py py-meth docutils literal"><span class="pre">django.core.management.base.BaseCommand.handle()</span></code>.</p>
-<p>This method starts the Scale clock.</p>
-</dd></dl>
-
+<dt id="job.test.execution.tasks.test_post_task.TestPostTask">
+<em class="property">class </em><code class="descclassname">job.test.execution.tasks.test_post_task.</code><code class="descname">TestPostTask</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.tasks.test_post_task.TestPostTask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<p>Tests the PostTask class</p>
 <dl class="attribute">
-<dt id="job.management.commands.scale_clock.Command.help">
-<code class="descname">help</code><em class="property"> = u'Executes the Scale clock to perform necessary system functions at their scheduled time'</em><a class="headerlink" href="#job.management.commands.scale_clock.Command.help" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.execution.tasks.test_post_task.TestPostTask.fixtures">
+<code class="descname">fixtures</code><em class="property"> = [u'basic_errors.json', u'basic_job_errors.json']</em><a class="headerlink" href="#job.test.execution.tasks.test_post_task.TestPostTask.fixtures" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.execution.tasks.test_post_task.TestPostTask.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.tasks.test_post_task.TestPostTask.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.execution.tasks.test_post_task.TestPostTask.test_determine_error">
+<code class="descname">test_determine_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.tasks.test_post_task.TestPostTask.test_determine_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that a post-task successfully determines the correct error</p>
+</dd></dl>
 
 </dd></dl>
 
 </div>
-<div class="section" id="module-job.management.commands.scale_post_steps">
-<span id="job-management-commands-scale-post-steps-module"></span><h2>job.management.commands.scale_post_steps module<a class="headerlink" href="#module-job.management.commands.scale_post_steps" title="Permalink to this headline">¶</a></h2>
-<p>Defines the command that performs the post-job steps</p>
+<div class="section" id="module-job.test.execution.tasks.test_pre_task">
+<span id="job-test-execution-tasks-test-pre-task-module"></span><h2>job.test.execution.tasks.test_pre_task module<a class="headerlink" href="#module-job.test.execution.tasks.test_pre_task" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="job.management.commands.scale_post_steps.Command">
-<em class="property">class </em><code class="descclassname">job.management.commands.scale_post_steps.</code><code class="descname">Command</code><a class="headerlink" href="#job.management.commands.scale_post_steps.Command" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.management.base.BaseCommand</span></code></p>
-<p>Command that performs the post-job steps for a job execution</p>
+<dt id="job.test.execution.tasks.test_pre_task.TestPreTask">
+<em class="property">class </em><code class="descclassname">job.test.execution.tasks.test_pre_task.</code><code class="descname">TestPreTask</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.tasks.test_pre_task.TestPreTask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<p>Tests the PreTask class</p>
+<dl class="attribute">
+<dt id="job.test.execution.tasks.test_pre_task.TestPreTask.fixtures">
+<code class="descname">fixtures</code><em class="property"> = [u'basic_errors.json', u'basic_job_errors.json']</em><a class="headerlink" href="#job.test.execution.tasks.test_pre_task.TestPreTask.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
-<dt id="job.management.commands.scale_post_steps.Command.handle">
-<code class="descname">handle</code><span class="sig-paren">(</span><em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#job.management.commands.scale_post_steps.Command.handle" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <code class="xref py py-meth docutils literal"><span class="pre">django.core.management.base.BaseCommand.handle()</span></code>.</p>
-<p>This method starts the command.</p>
+<dt id="job.test.execution.tasks.test_pre_task.TestPreTask.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.tasks.test_pre_task.TestPreTask.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.execution.tasks.test_pre_task.TestPreTask.test_determine_error">
+<code class="descname">test_determine_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.tasks.test_pre_task.TestPreTask.test_determine_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests that a pre-task successfully determines the correct error</p>
 </dd></dl>
-
-<dl class="attribute">
-<dt id="job.management.commands.scale_post_steps.Command.help">
-<code class="descname">help</code><em class="property"> = u'Performs the post-job steps for a job execution'</em><a class="headerlink" href="#job.management.commands.scale_post_steps.Command.help" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="job.management.commands.scale_post_steps.Command.option_list">
-<code class="descname">option_list</code><em class="property"> = (&lt;Option at 0x2b1d861bb248: -v/--verbosity&gt;, &lt;Option at 0x2b1d861bb368: --settings&gt;, &lt;Option at 0x2b1d861bb3b0: --pythonpath&gt;, &lt;Option at 0x2b1d861bb3f8: --traceback&gt;, &lt;Option at 0x2b1d861bb488: --no-color&gt;, &lt;Option at 0x2b1d99e38518: -i/--job-exe-id&gt;)</em><a class="headerlink" href="#job.management.commands.scale_post_steps.Command.option_list" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
 </div>
-<div class="section" id="module-job.management.commands.scale_pre_steps">
-<span id="job-management-commands-scale-pre-steps-module"></span><h2>job.management.commands.scale_pre_steps module<a class="headerlink" href="#module-job.management.commands.scale_pre_steps" title="Permalink to this headline">¶</a></h2>
-<p>Defines the command that performs the pre-job steps</p>
-<dl class="class">
-<dt id="job.management.commands.scale_pre_steps.Command">
-<em class="property">class </em><code class="descclassname">job.management.commands.scale_pre_steps.</code><code class="descname">Command</code><a class="headerlink" href="#job.management.commands.scale_pre_steps.Command" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.management.base.BaseCommand</span></code></p>
-<p>Command that performs the pre-job steps for a job execution</p>
-<dl class="method">
-<dt id="job.management.commands.scale_pre_steps.Command.handle">
-<code class="descname">handle</code><span class="sig-paren">(</span><em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#job.management.commands.scale_pre_steps.Command.handle" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <code class="xref py py-meth docutils literal"><span class="pre">django.core.management.base.BaseCommand.handle()</span></code>.</p>
-<p>This method starts the command.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.management.commands.scale_pre_steps.Command.help">
-<code class="descname">help</code><em class="property"> = u'Performs the pre-job steps for a job execution'</em><a class="headerlink" href="#job.management.commands.scale_pre_steps.Command.help" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="job.management.commands.scale_pre_steps.Command.option_list">
-<code class="descname">option_list</code><em class="property"> = (&lt;Option at 0x2b1d861bb248: -v/--verbosity&gt;, &lt;Option at 0x2b1d861bb368: --settings&gt;, &lt;Option at 0x2b1d861bb3b0: --pythonpath&gt;, &lt;Option at 0x2b1d861bb3f8: --traceback&gt;, &lt;Option at 0x2b1d861bb488: --no-color&gt;, &lt;Option at 0x2b1d992d8cb0: -i/--job-exe-id&gt;)</em><a class="headerlink" href="#job.management.commands.scale_pre_steps.Command.option_list" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-job.management.commands">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-job.management.commands" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-job.test.execution.tasks">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-job.test.execution.tasks" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -288,10 +263,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="job.migrations.html" class="btn btn-neutral float-right" title="job.migrations package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="job.test.management.html" class="btn btn-neutral float-right" title="job.test.management package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="job.management.html" class="btn btn-neutral" title="job.management package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="job.test.execution.html" class="btn btn-neutral" title="job.test.execution package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

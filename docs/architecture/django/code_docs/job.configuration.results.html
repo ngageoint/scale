@@ -216,16 +216,28 @@
 <p>Defines exceptions that can occur when interacting with a job results</p>
 <dl class="exception">
 <dt id="job.configuration.results.exceptions.InvalidResultsManifest">
-<em class="property">exception </em><code class="descclassname">job.configuration.results.exceptions.</code><code class="descname">InvalidResultsManifest</code><a class="headerlink" href="#job.configuration.results.exceptions.InvalidResultsManifest" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
-<p>Exception indicating that a result manifest was invalid</p>
+<em class="property">exception </em><code class="descclassname">job.configuration.results.exceptions.</code><code class="descname">InvalidResultsManifest</code><span class="sig-paren">(</span><em>msg</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.results.exceptions.InvalidResultsManifest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="error.html#error.exceptions.ScaleError" title="error.exceptions.ScaleError"><code class="xref py py-class docutils literal"><span class="pre">error.exceptions.ScaleError</span></code></a></p>
+<p>Error class indicating that a result manifest is invalid</p>
+<dl class="method">
+<dt id="job.configuration.results.exceptions.InvalidResultsManifest.get_log_message">
+<code class="descname">get_log_message</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.results.exceptions.InvalidResultsManifest.get_log_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="error.html#error.exceptions.ScaleError.get_log_message" title="error.exceptions.ScaleError.get_log_message"><code class="xref py py-meth docutils literal"><span class="pre">error.exceptions.ScaleError.get_log_message()</span></code></a></p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="exception">
 <dt id="job.configuration.results.exceptions.MissingRequiredOutput">
-<em class="property">exception </em><code class="descclassname">job.configuration.results.exceptions.</code><code class="descname">MissingRequiredOutput</code><a class="headerlink" href="#job.configuration.results.exceptions.MissingRequiredOutput" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
-<p>Exception indicating that a required output was not produced</p>
+<em class="property">exception </em><code class="descclassname">job.configuration.results.exceptions.</code><code class="descname">MissingRequiredOutput</code><span class="sig-paren">(</span><em>output</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.results.exceptions.MissingRequiredOutput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="error.html#error.exceptions.ScaleError" title="error.exceptions.ScaleError"><code class="xref py py-class docutils literal"><span class="pre">error.exceptions.ScaleError</span></code></a></p>
+<p>Error class indicating that a required output was not produced</p>
+<dl class="method">
+<dt id="job.configuration.results.exceptions.MissingRequiredOutput.get_log_message">
+<code class="descname">get_log_message</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.results.exceptions.MissingRequiredOutput.get_log_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="error.html#error.exceptions.ScaleError.get_log_message" title="error.exceptions.ScaleError.get_log_message"><code class="xref py py-meth docutils literal"><span class="pre">error.exceptions.ScaleError.get_log_message()</span></code></a></p>
+</dd></dl>
+
 </dd></dl>
 
 </div>

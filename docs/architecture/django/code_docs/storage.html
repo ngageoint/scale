@@ -293,7 +293,7 @@
 <dl class="method">
 <dt id="storage.apps.StorageConfig.ready">
 <code class="descname">ready</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.apps.StorageConfig.ready" title="Permalink to this definition">¶</a></dt>
-<dd><p>Registers the storage brokers with the broker system.</p>
+<dd><p>Registers the storage brokers and storage errors</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -340,9 +340,16 @@ workspace</p>
 
 <dl class="exception">
 <dt id="storage.exceptions.DeletedFile">
-<em class="property">exception </em><code class="descclassname">storage.exceptions.</code><code class="descname">DeletedFile</code><a class="headerlink" href="#storage.exceptions.DeletedFile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
-<p>Exception indicating an attempt was made to retrieve a deleted file</p>
+<em class="property">exception </em><code class="descclassname">storage.exceptions.</code><code class="descname">DeletedFile</code><span class="sig-paren">(</span><em>file_name</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.exceptions.DeletedFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="error.html#error.exceptions.ScaleError" title="error.exceptions.ScaleError"><code class="xref py py-class docutils literal"><span class="pre">error.exceptions.ScaleError</span></code></a></p>
+<p>Error class indicating an attempt was made to retrieve a deleted file (a file whose is_deleted flag is true in
+the database)</p>
+<dl class="method">
+<dt id="storage.exceptions.DeletedFile.get_log_message">
+<code class="descname">get_log_message</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.exceptions.DeletedFile.get_log_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="error.html#error.exceptions.ScaleError.get_log_message" title="error.exceptions.ScaleError.get_log_message"><code class="xref py py-meth docutils literal"><span class="pre">error.exceptions.ScaleError.get_log_message()</span></code></a></p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="exception">
@@ -353,18 +360,24 @@ workspace</p>
 </dd></dl>
 
 <dl class="exception">
+<dt id="storage.exceptions.MissingFile">
+<em class="property">exception </em><code class="descclassname">storage.exceptions.</code><code class="descname">MissingFile</code><span class="sig-paren">(</span><em>file_name</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.exceptions.MissingFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="error.html#error.exceptions.ScaleError" title="error.exceptions.ScaleError"><code class="xref py py-class docutils literal"><span class="pre">error.exceptions.ScaleError</span></code></a></p>
+<p>Error class indicating an attempt was made to retrieve a missing file</p>
+<dl class="method">
+<dt id="storage.exceptions.MissingFile.get_log_message">
+<code class="descname">get_log_message</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.exceptions.MissingFile.get_log_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="error.html#error.exceptions.ScaleError.get_log_message" title="error.exceptions.ScaleError.get_log_message"><code class="xref py py-meth docutils literal"><span class="pre">error.exceptions.ScaleError.get_log_message()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
 <dt id="storage.exceptions.MissingVolumeMount">
 <em class="property">exception </em><code class="descclassname">storage.exceptions.</code><code class="descname">MissingVolumeMount</code><a class="headerlink" href="#storage.exceptions.MissingVolumeMount" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
 <p>Exception indicating that a workspace required a volume file system mount in order to perform an operation and
 the required volume mount was missing</p>
-</dd></dl>
-
-<dl class="exception">
-<dt id="storage.exceptions.NfsError">
-<em class="property">exception </em><code class="descclassname">storage.exceptions.</code><code class="descname">NfsError</code><a class="headerlink" href="#storage.exceptions.NfsError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
-<p>Exception indicating that an error occurred with NFS (Network File System)</p>
 </dd></dl>
 
 </div>

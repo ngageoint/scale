@@ -265,6 +265,13 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="queue.test.test_models.TestQueueManager.test_handle_job_failure_no_retry">
+<code class="descname">test_handle_job_failure_no_retry</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManager.test_handle_job_failure_no_retry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling QueueManager.handle_job_failure() when the job should not retry because the error should not be
+retried</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="queue.test.test_models.TestQueueManager.test_handle_job_failure_retry">
 <code class="descname">test_handle_job_failure_retry</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManager.test_handle_job_failure_retry" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling QueueManager.handle_job_failure() when the job retries</p>

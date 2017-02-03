@@ -106,6 +106,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-error.apps">error.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-error.exceptions">error.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-error.handlers">error.handlers module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-error.models">error.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-error.serializers">error.serializers module</a></li>
@@ -196,6 +197,7 @@
 <li class="toctree-l2"><a class="reference internal" href="error.migrations.html#module-error.migrations.0001_initial">error.migrations.0001_initial module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="error.migrations.html#module-error.migrations.0002_auto_20151217_1319">error.migrations.0002_auto_20151217_1319 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="error.migrations.html#module-error.migrations.0003_error_is_builtin">error.migrations.0003_error_is_builtin module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="error.migrations.html#module-error.migrations.0004_error_should_be_retried">error.migrations.0004_error_should_be_retried module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="error.migrations.html#module-error.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -231,11 +233,141 @@
 <code class="descname">name</code><em class="property"> = u'error'</em><a class="headerlink" href="#error.apps.ErrorConfig.name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="error.apps.ErrorConfig.ready">
+<code class="descname">ready</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.apps.ErrorConfig.ready" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers basic errors</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="error.apps.ErrorConfig.verbose_name">
 <code class="descname">verbose_name</code><em class="property"> = u'Error'</em><a class="headerlink" href="#error.apps.ErrorConfig.verbose_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+</dd></dl>
+
+</div>
+<div class="section" id="module-error.exceptions">
+<span id="error-exceptions-module"></span><h2>error.exceptions module<a class="headerlink" href="#module-error.exceptions" title="Permalink to this headline">¶</a></h2>
+<p>Defines exceptions that can occur when interacting with jobs and job types</p>
+<dl class="exception">
+<dt id="error.exceptions.ScaleDatabaseError">
+<em class="property">exception </em><code class="descclassname">error.exceptions.</code><code class="descname">ScaleDatabaseError</code><a class="headerlink" href="#error.exceptions.ScaleDatabaseError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#error.exceptions.ScaleError" title="error.exceptions.ScaleError"><code class="xref py py-class docutils literal"><span class="pre">error.exceptions.ScaleError</span></code></a></p>
+<p>Error class that wraps the Django DatabaseError</p>
+<dl class="method">
+<dt id="error.exceptions.ScaleDatabaseError.get_log_message">
+<code class="descname">get_log_message</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.exceptions.ScaleDatabaseError.get_log_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#error.exceptions.ScaleError.get_log_message" title="error.exceptions.ScaleError.get_log_message"><code class="xref py py-meth docutils literal"><span class="pre">error.exceptions.ScaleError.get_log_message()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="error.exceptions.ScaleError">
+<em class="property">exception </em><code class="descclassname">error.exceptions.</code><code class="descname">ScaleError</code><span class="sig-paren">(</span><em>exit_code</em>, <em>error_name</em>, <em>log_stacktrace=False</em>, <em>wrapped_ex=None</em><span class="sig-paren">)</span><a class="headerlink" href="#error.exceptions.ScaleError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Abstract base class for exceptions that represent Scale errors. The exceptions contain exit code and error
+information.</p>
+<dl class="method">
+<dt id="error.exceptions.ScaleError.get_log_message">
+<code class="descname">get_log_message</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.exceptions.ScaleError.get_log_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>The log message to print out when the error occurs. This should be overridden by derived classes to provide
+detailed log messaging.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The log message</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="error.exceptions.ScaleError.log">
+<code class="descname">log</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.exceptions.ScaleError.log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logs the error message</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="error.exceptions.ScaleIOError">
+<em class="property">exception </em><code class="descclassname">error.exceptions.</code><code class="descname">ScaleIOError</code><a class="headerlink" href="#error.exceptions.ScaleIOError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#error.exceptions.ScaleError" title="error.exceptions.ScaleError"><code class="xref py py-class docutils literal"><span class="pre">error.exceptions.ScaleError</span></code></a></p>
+<p>Error class that wraps the Python IOError</p>
+<dl class="method">
+<dt id="error.exceptions.ScaleIOError.get_log_message">
+<code class="descname">get_log_message</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.exceptions.ScaleIOError.get_log_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#error.exceptions.ScaleError.get_log_message" title="error.exceptions.ScaleError.get_log_message"><code class="xref py py-meth docutils literal"><span class="pre">error.exceptions.ScaleError.get_log_message()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="error.exceptions.ScaleOperationalError">
+<em class="property">exception </em><code class="descclassname">error.exceptions.</code><code class="descname">ScaleOperationalError</code><a class="headerlink" href="#error.exceptions.ScaleOperationalError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#error.exceptions.ScaleError" title="error.exceptions.ScaleError"><code class="xref py py-class docutils literal"><span class="pre">error.exceptions.ScaleError</span></code></a></p>
+<p>Error class that wraps the Django OperationalError</p>
+<dl class="method">
+<dt id="error.exceptions.ScaleOperationalError.get_log_message">
+<code class="descname">get_log_message</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.exceptions.ScaleOperationalError.get_log_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#error.exceptions.ScaleError.get_log_message" title="error.exceptions.ScaleError.get_log_message"><code class="xref py py-meth docutils literal"><span class="pre">error.exceptions.ScaleError.get_log_message()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="error.exceptions.get_error_by_exception">
+<code class="descclassname">error.exceptions.</code><code class="descname">get_error_by_exception</code><span class="sig-paren">(</span><em>wrapped_ex</em><span class="sig-paren">)</span><a class="headerlink" href="#error.exceptions.get_error_by_exception" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the ScaleError that corresponds to the given wrapped exception class name, possibly None</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>wrapped_ex</strong> (<em>string</em>) &#8211; The name of the wrapped exception class</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The error, possibly None</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#error.exceptions.ScaleError" title="error.exceptions.ScaleError"><code class="xref py py-class docutils literal"><span class="pre">error.exceptions.ScaleError</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="error.exceptions.get_error_by_exit_code">
+<code class="descclassname">error.exceptions.</code><code class="descname">get_error_by_exit_code</code><span class="sig-paren">(</span><em>exit_code</em><span class="sig-paren">)</span><a class="headerlink" href="#error.exceptions.get_error_by_exit_code" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the name of the error that corresponds to the given exit code, possibly None</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>exit_code</strong> (<em>int</em>) &#8211; The exit code</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The error model, possibly None</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="error.exceptions.register_error">
+<code class="descclassname">error.exceptions.</code><code class="descname">register_error</code><span class="sig-paren">(</span><em>error</em><span class="sig-paren">)</span><a class="headerlink" href="#error.exceptions.register_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers the given ScaleError</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>error</strong> (<a class="reference internal" href="#error.exceptions.ScaleError" title="error.exceptions.ScaleError"><code class="xref py py-class docutils literal"><span class="pre">error.exceptions.ScaleError</span></code></a>) &#8211; The ScaleError</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -316,6 +448,7 @@ support for logging messages to a database table.</p>
 <li><strong>description</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; A longer description of the error</li>
 <li><strong>category</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The category of the error</li>
 <li><strong>is_builtin</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Where the error was loaded during system installation.</li>
+<li><strong>should_be_retried</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether the error should be automatically retried</li>
 <li><strong>created</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the error model was created</li>
 <li><strong>last_modified</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the error model was last modified</li>
 </ul>
@@ -468,38 +601,6 @@ support for logging messages to a database table.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="error.models.ErrorManager.get_database_error">
-<code class="descname">get_database_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.models.ErrorManager.get_database_error" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the error for a database problem</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The database error</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="error.models.ErrorManager.get_database_operation_error">
-<code class="descname">get_database_operation_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.models.ErrorManager.get_database_operation_error" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the error for a database operation problem</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The database operation error</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="error.models.ErrorManager.get_errors">
 <code class="descname">get_errors</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#error.models.ErrorManager.get_errors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of errors within the given time range.</p>
@@ -519,54 +620,6 @@ support for logging messages to a database table.</p>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a>]</p>
 </td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="error.models.ErrorManager.get_filesystem_error">
-<code class="descname">get_filesystem_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.models.ErrorManager.get_filesystem_error" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the error for a filesystem problem</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The filesystem error</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="error.models.ErrorManager.get_interface_error">
-<code class="descname">get_interface_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.models.ErrorManager.get_interface_error" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the error for a missing required setting</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The missing setting error</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="error.models.ErrorManager.get_nfs_error">
-<code class="descname">get_nfs_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.models.ErrorManager.get_nfs_error" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the error for an NFS problem</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The NFS error</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a></td>
 </tr>
 </tbody>
 </table>

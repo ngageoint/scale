@@ -20,6 +20,14 @@ error.apps module
     :undoc-members:
     :show-inheritance:
 
+error.exceptions module
+-----------------------
+
+.. automodule:: error.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 error.handlers module
 ---------------------
 

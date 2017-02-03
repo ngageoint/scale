@@ -258,6 +258,7 @@ container volume, None will be given for volume_path.</p>
 absolute local container path where the file should be downloaded. Typically, no changes are needed to file
 models during a download, but any changes should be saved by the broker. Any directories in the absolute local
 container paths should already exist.</p>
+<p>If a file does not exist in its expected location, raise a MissingFile exception.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -271,6 +272,7 @@ None if this broker does not use a container volume</li>
 </tr>
 </tbody>
 </table>
+<p>:raises <a class="reference internal" href="storage.html#storage.exceptions.MissingFile" title="storage.exceptions.MissingFile"><code class="xref py py-class docutils literal"><span class="pre">storage.exceptions.MissingFile</span></code></a>: If a file to download does not exist at the expected path</p>
 </dd></dl>
 
 <dl class="method">
@@ -331,6 +333,7 @@ file_path field for the new location of the file. The broker is expected to set 
 ScaleFile model to its new location (which the broker may alter) and is free to alter any additional fields as
 necessary. The broker is responsible for saving any changes to models when a move is successful The directories
 in the new file_path may not exist, so it is the responsibility of the broker to create them if necessary.</p>
+<p>If a file does not exist in its expected location, raise a MissingFile exception.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -344,6 +347,7 @@ None if this broker does not use a container volume</li>
 </tr>
 </tbody>
 </table>
+<p>:raises <a class="reference internal" href="storage.html#storage.exceptions.MissingFile" title="storage.exceptions.MissingFile"><code class="xref py py-class docutils literal"><span class="pre">storage.exceptions.MissingFile</span></code></a>: If a file to move does not exist at the expected path</p>
 </dd></dl>
 
 <dl class="method">
