@@ -1,6 +1,7 @@
 """Defines the class that represents nodes in the scheduler"""
 from __future__ import unicode_literals
 
+import datetime
 import logging
 import threading
 from collections import namedtuple
@@ -13,7 +14,7 @@ from scheduler.sync.scheduler_manager import scheduler_mgr
 
 
 logger = logging.getLogger(__name__)
-NodeError = namedtuple('NodeError', ['name', 'description'])
+NodeError = namedtuple('NodeError', ['name', 'description', 'daemon_bad', 'pull_bad'])
 NodeState = namedtuple('NodeState', ['state', 'description'])
 
 
@@ -37,7 +38,9 @@ class Node(object):
     well as run-time information retrieved from Mesos. This class is thread-safe."""
 
     # Node Errors
-    IMAGE_PULL_ERR = NodeError(name='IMAGE_PULL', description='Unable to pull Scale image')
+    IMAGE_PULL_ERR_THRESHOLD = datetime.timedelta(minutes=5)
+    IMAGE_PULL_ERR = NodeError(name='IMAGE_PULL', description='Unable to pull Scale image', daemon_bad=False,
+                               pull_bad=False)
 
     # Node States
     INACTIVE = NodeState(state='INACTIVE', description='Inactive, ignored by Scale')
@@ -57,15 +60,17 @@ class Node(object):
         :type node: :class:`node.models.Node`
         """
 
+        self._active_errors = {}  # {Error name: ActiveError}
         self._agent_id = agent_id
-        self._errors = {}  # {Error name: ActiveError}
         self._hostname = node.hostname  # Never changes
         self._id = node.id  # Never changes
         self._is_active = node.is_active
+        self._is_daemon_bad = False
         self._is_image_pulled = False
         self._is_initial_cleanup_completed = False
         self._is_online = True
         self._is_paused = node.is_paused
+        self._is_pull_bad = False
         self._lock = threading.Lock()
         self._port = node.port
         self._pull_task = None
@@ -171,8 +176,8 @@ class Node(object):
         with self._lock:
             self._create_next_task()
 
-            # No task returned if node is paused, no task to launch, or task has already been launched
-            if self._is_paused or self._pull_task is None or self._pull_task.has_been_launched:
+            # No task returned if node is not ready, no task to launch, or task has already been launched
+            if not self._is_ready_for_pull_task() or self._pull_task is None or self._pull_task.has_been_launched:
                 return None
 
             return self._pull_task
@@ -265,8 +270,33 @@ class Node(object):
             # Pull task already exists
             return
 
-        if self._state == Node.IMAGE_PULL:
+        if self._is_ready_for_pull_task():
             self._pull_task = PullTask(scheduler_mgr.framework_id, self._agent_id)
+
+    def _is_ready_for_pull_task(self):
+        """Indicates whether this node is ready to launch the pull task for the Scale Docker image. Caller must have
+        obtained the thread lock.
+
+        :returns: True if this node is ready to launch a pull task, False otherwise
+        :rtype: bool
+        """
+
+        if self._state == Node.IMAGE_PULL:
+            return True
+        elif self._state == Node.DEGRADED:
+            # The pull task can be scheduled during DEGRADED state if other conditions match IMAGE_PULL state and the
+            # DEGRADED errors do not affect the ability to do an image pull
+
+            # Make sure initial cleanup is done, image pull is not done, and image pull on the node works
+            if not self._is_initial_cleanup_completed or self._is_image_pulled or self._is_pull_bad:
+                return False
+
+            # Schedule pull task if threshold has passed since last pull task error
+            if Node.IMAGE_PULL_ERR.name in self._active_errors:
+                last_updated = self._active_errors[Node.IMAGE_PULL_ERR.name].last_updated
+                return now() - last_updated > Node.IMAGE_PULL_ERR_THRESHOLD
+
+        return False
 
     def _error_active(self, error):
         """Indicates that the given error is now active. Caller must have obtained the thread lock.
@@ -276,8 +306,8 @@ class Node(object):
         """
 
         when = now()
-        if error.name in self._errors:
-            active_error = self._errors[error.name]
+        if error.name in self._active_errors:
+            active_error = self._active_errors[error.name]
         else:
             active_error = ActiveError(error)
             active_error.started = when
@@ -290,12 +320,18 @@ class Node(object):
         :type error: :class:`scheduler.node.node_class.NodeError`
         """
 
-        if error.name in self._errors:
-            del self._errors[error.name]
+        if error.name in self._active_errors:
+            del self._active_errors[error.name]
 
     def _update_state(self):
         """Updates the node's state. Caller must have obtained the node's thread lock.
         """
+
+        self._is_daemon_bad = False
+        self._is_pull_bad = False
+        for active_error in self._active_errors.values():
+            self._is_daemon_bad = self._is_daemon_bad or active_error.error.daemon_bad
+            self._is_pull_bad = self._is_pull_bad or active_error.error.pull_bad
 
         if not self._is_active:
             self._state = self.INACTIVE
@@ -303,7 +339,7 @@ class Node(object):
             self._state = self.OFFLINE
         elif self._is_paused:
             self._state = self.PAUSED
-        elif self._errors:
+        elif self._active_errors:
             self._state = self.DEGRADED
         elif not self._is_initial_cleanup_completed:
             self._state = self.INITIAL_CLEANUP
