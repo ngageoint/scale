@@ -112,7 +112,7 @@ class TestNodeManager(TestCase):
         mock_get_slaves.return_value = self.slave_infos
 
         manager = NodeManager()
-        tasks = manager.get_next_tasks()
+        tasks = manager.get_next_tasks(now())
         self.assertListEqual(tasks, [])  # No tasks yet due to no nodes
 
         manager.register_agent_ids([self.node_agent_1, self.node_agent_2])
@@ -120,7 +120,7 @@ class TestNodeManager(TestCase):
         for node in manager.get_nodes():
             node.initial_cleanup_completed()
 
-        tasks = manager.get_next_tasks()
+        tasks = manager.get_next_tasks(now())
         self.assertEqual(len(tasks), 2)
         for task in tasks:
             self.assertTrue(isinstance(task, PullTask))
@@ -136,7 +136,7 @@ class TestNodeManager(TestCase):
         manager.sync_with_database('master_host', 5050)
         for node in manager.get_nodes():
             node.initial_cleanup_completed()
-        tasks = manager.get_next_tasks()
+        tasks = manager.get_next_tasks(now())
 
         task_mgr = TaskManager()
         task_2 = None
@@ -152,7 +152,7 @@ class TestNodeManager(TestCase):
         manager.sync_with_database('master_host', 5050)
 
         # Should get new Docker pull task for node 1
-        tasks = manager.get_next_tasks()
+        tasks = manager.get_next_tasks(now())
         self.assertEqual(len(tasks), 1)
         new_task_2 = tasks[0]
         self.assertEqual(new_task_2.agent_id, self.node_agent_3)

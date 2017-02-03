@@ -166,18 +166,20 @@ class Node(object):
             self._is_initial_cleanup_completed = True
             self._update_state()
 
-    def get_next_task(self):
+    def get_next_task(self, when):
         """Returns the next node task to launch, possibly None
 
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
         :returns: The next node task to launch, possibly None
         :rtype: :class:`job.tasks.base_task.Task`
         """
 
         with self._lock:
-            self._create_next_task()
+            self._create_next_task(when)
 
             # No task returned if node is not ready, no task to launch, or task has already been launched
-            if not self._is_ready_for_pull_task() or self._pull_task is None or self._pull_task.has_been_launched:
+            if not self._is_ready_for_pull_task(when) or self._pull_task is None or self._pull_task.has_been_launched:
                 return None
 
             return self._pull_task
@@ -258,8 +260,11 @@ class Node(object):
             self._is_paused = node.is_paused
             self._update_state()
 
-    def _create_next_task(self):
+    def _create_next_task(self, when):
         """Creates the next task that needs to be run for this node. Caller must have obtained the thread lock.
+
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
         """
 
         # If we have a pull task, check that node's agent ID has not changed
@@ -270,13 +275,15 @@ class Node(object):
             # Pull task already exists
             return
 
-        if self._is_ready_for_pull_task():
+        if self._is_ready_for_pull_task(when):
             self._pull_task = PullTask(scheduler_mgr.framework_id, self._agent_id)
 
-    def _is_ready_for_pull_task(self):
+    def _is_ready_for_pull_task(self, when):
         """Indicates whether this node is ready to launch the pull task for the Scale Docker image. Caller must have
         obtained the thread lock.
 
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
         :returns: True if this node is ready to launch a pull task, False otherwise
         :rtype: bool
         """
@@ -294,7 +301,7 @@ class Node(object):
             # Schedule pull task if threshold has passed since last pull task error
             if Node.IMAGE_PULL_ERR.name in self._active_errors:
                 last_updated = self._active_errors[Node.IMAGE_PULL_ERR.name].last_updated
-                return now() - last_updated > Node.IMAGE_PULL_ERR_THRESHOLD
+                return when - last_updated > Node.IMAGE_PULL_ERR_THRESHOLD
 
         return False
 
@@ -311,6 +318,7 @@ class Node(object):
         else:
             active_error = ActiveError(error)
             active_error.started = when
+            self._active_errors[error.name] = active_error
         active_error.last_updated = when
 
     def _error_inactive(self, error):

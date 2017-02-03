@@ -33,9 +33,11 @@ class NodeManager(object):
             self._new_agent_ids = set()
             self._nodes = {}
 
-    def get_next_tasks(self):
+    def get_next_tasks(self, when):
         """Returns the next node tasks to schedule
 
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
         :returns: A list of the next node tasks to schedule
         :rtype: [:class:`job.tasks.base_task.Task`]
         """
@@ -43,7 +45,7 @@ class NodeManager(object):
         tasks = []
         with self._lock:
             for node in self._nodes.values():
-                task = node.get_next_task()
+                task = node.get_next_task(when)
                 if task:
                     tasks.append(task)
         return tasks
