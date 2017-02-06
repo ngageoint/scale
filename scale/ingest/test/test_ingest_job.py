@@ -2,13 +2,9 @@ from __future__ import unicode_literals
 
 import django
 from django.test import TransactionTestCase
-from mock import patch
 
-import ingest.ingest_job as ingest_job
 import ingest.test.utils as ingest_test_utils
 import source.test.utils as source_test_utils
-from ingest.models import Ingest
-from job.models import JobExecution
 
 
 class TestPerformIngest(TransactionTestCase):

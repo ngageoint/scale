@@ -8,8 +8,7 @@ from django.test import TestCase
 from mock import call, patch
 
 from source.configuration.source_data_file import SourceDataFileParseSaver
-from source.models import SourceFile
-from storage.models import Workspace
+from storage.models import ScaleFile, Workspace
 from util.parse import parse_datetime
 
 
@@ -21,12 +20,14 @@ class TestSourceDataFileParseSaverSaveParseResults(TestCase):
         self.workspace = Workspace.objects.create(name='Test workspace')
         self.file_name_1 = 'my_file.txt'
         self.media_type_1 = 'text/plain'
-        self.source_file_1 = SourceFile.objects.create(file_name=self.file_name_1, media_type=self.media_type_1, file_size=10,
-                                                       data_type='Dummy', file_path='the_path', workspace=self.workspace)
+        self.source_file_1 = ScaleFile.objects.create(file_name=self.file_name_1, file_type='SOURCE',
+                                                      media_type=self.media_type_1, file_size=10, data_type='Dummy',
+                                                      file_path='the_path', workspace=self.workspace)
         self.file_name_2 = 'my_file.json'
         self.media_type_2 = 'application/json'
-        self.source_file_2 = SourceFile.objects.create(file_name=self.file_name_2, media_type=self.media_type_2, file_size=10,
-                                                       data_type='Dummy', file_path='the_path', workspace=self.workspace)
+        self.source_file_2 = ScaleFile.objects.create(file_name=self.file_name_2, file_type='SOURCE',
+                                                      media_type=self.media_type_2, file_size=10, data_type='Dummy',
+                                                      file_path='the_path', workspace=self.workspace)
 
         self.extra_source_file_id = 99999
 

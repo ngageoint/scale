@@ -205,7 +205,7 @@ class ScaleFileManager(models.Manager):
             if not workspace.is_active:
                 raise ArchivedWorkspace('%s is no longer active' % workspace.name)
             if file_download.file.is_deleted:
-                raise DeletedFile('%s has been deleted' % file_download.file.file_name)
+                raise DeletedFile(file_download.file.file_name)
             if workspace.id in wp_dict:
                 wp_list = wp_dict[workspace.id][1]
             else:
@@ -250,7 +250,7 @@ class ScaleFileManager(models.Manager):
             if not workspace.is_active:
                 raise ArchivedWorkspace('%s is no longer active' % workspace.name)
             if file_move.file.is_deleted:
-                raise DeletedFile('%s has been deleted' % file_move.file.file_name)
+                raise DeletedFile(file_move.file.file_name)
             if workspace.id in wp_dict:
                 wp_list = wp_dict[workspace.id][1]
             else:
@@ -308,10 +308,10 @@ class ScaleFileManager(models.Manager):
 class ScaleFile(models.Model):
     """Represents a file that is stored within a Scale workspace
 
-    :keyword id: The ID of the file
-    :type id: :class:`storage.models.BigAutoField`
     :keyword file_name: The name of the file
     :type file_name: :class:`django.db.models.CharField`
+    :keyword file_type: The (Scale) type of the file
+    :type file_type: :class:`django.db.models.CharField`
     :keyword media_type: The IANA media type of the file
     :type media_type: :class:`django.db.models.CharField`
     :keyword file_size: The size of the file in bytes
@@ -347,9 +347,45 @@ class ScaleFile(models.Model):
     :type meta_data: :class:`djorm_pgjson.fields.JSONField`
     :keyword countries: List of countries represented in this file as indicated by the file's geometry.
     :type countries: :class:`django.db.models.ManyToManyField` of :class:`storage.models.CountryData`
+
+    :keyword is_parsed: Whether the source file has been parsed or not
+    :type is_parsed: :class:`django.db.models.BooleanField`
+    :keyword parsed: When the source file was parsed
+    :type parsed: :class:`django.db.models.DateTimeField`
+
+    :keyword job_exe: The job execution that created this product
+    :type job_exe: :class:`django.db.models.ForeignKey`
+    :keyword job: The job that created this product
+    :type job: :class:`django.db.models.ForeignKey`
+    :keyword job_type: The type of the job that created this product
+    :type job_type: :class:`django.db.models.ForeignKey`
+    :keyword is_operational: Whether this product was produced by an operational job type (True) or by a job type that
+        is still in a research & development (R&D) phase (False)
+    :type is_operational: :class:`django.db.models.BooleanField`
+    :keyword has_been_published: Whether this product has ever been published. A product becomes published when its job
+        execution completes successfully. A product that has been published will appear in the API call to retrieve
+        product updates.
+    :type has_been_published: :class:`django.db.models.BooleanField`
+    :keyword is_published: Whether this product is currently published. A published product has had its job execution
+        complete successfully and has not been unpublished.
+    :type is_published: :class:`django.db.models.BooleanField`
+    :keyword is_superseded: Whether this product has been superseded by another product with the same UUID
+    :type is_superseded: :class:`django.db.models.BooleanField`
+    :keyword published: When this product was published (its job execution was completed)
+    :type published: :class:`django.db.models.DateTimeField`
+    :keyword unpublished: When this product was unpublished
+    :type unpublished: :class:`django.db.models.DateTimeField`
+    :keyword superseded: When this product was superseded
+    :type superseded: :class:`django.db.models.DateTimeField`
     """
 
+    FILE_TYPES = (
+        ('SOURCE', 'SOURCE'),
+        ('PRODUCT', 'PRODUCT'),
+    )
+
     file_name = models.CharField(max_length=250, db_index=True)
+    file_type = models.CharField(choices=FILE_TYPES, default='SOURCE', max_length=50, db_index=True)
     media_type = models.CharField(max_length=250)
     file_size = models.BigIntegerField()
     data_type = models.TextField(blank=True)
@@ -369,6 +405,22 @@ class ScaleFile(models.Model):
     center_point = models.PointField(blank=True, null=True, srid=4326)
     meta_data = djorm_pgjson.fields.JSONField()
     countries = models.ManyToManyField(CountryData)
+
+    # Source file fields
+    is_parsed = models.BooleanField(default=False)
+    parsed = models.DateTimeField(blank=True, null=True)
+
+    # Product file fields
+    job_exe = models.ForeignKey('job.JobExecution', blank=True, null=True, on_delete=models.PROTECT)
+    job = models.ForeignKey('job.Job', blank=True, null=True, on_delete=models.PROTECT)
+    job_type = models.ForeignKey('job.JobType', blank=True, null=True, on_delete=models.PROTECT)
+    is_operational = models.BooleanField(default=True)
+    has_been_published = models.BooleanField(default=False)
+    is_published = models.BooleanField(default=False)
+    is_superseded = models.BooleanField(default=False)
+    published = models.DateTimeField(blank=True, null=True)
+    unpublished = models.DateTimeField(blank=True, null=True)
+    superseded = models.DateTimeField(blank=True, null=True)
 
     objects = ScaleFileManager()
 

@@ -86,11 +86,15 @@ class Broker(object):
         models during a download, but any changes should be saved by the broker. Any directories in the absolute local
         container paths should already exist.
 
+        If a file does not exist in its expected location, raise a MissingFile exception.
+
         :param volume_path: Absolute path to the local container location onto which the volume file system was mounted,
             None if this broker does not use a container volume
         :type volume_path: string
         :param file_downloads: List of files to download
         :type file_downloads: [:class:`storage.brokers.broker.FileDownload`]
+
+        :raises :class:`storage.exceptions.MissingFile`: If a file to download does not exist at the expected path
         """
 
         pass
@@ -139,11 +143,15 @@ class Broker(object):
         necessary. The broker is responsible for saving any changes to models when a move is successful The directories
         in the new file_path may not exist, so it is the responsibility of the broker to create them if necessary.
 
+        If a file does not exist in its expected location, raise a MissingFile exception.
+
         :param volume_path: Absolute path to the local container location onto which the volume file system was mounted,
             None if this broker does not use a container volume
         :type volume_path: string
         :param file_moves: List of files to move
         :type file_moves: [:class:`storage.brokers.broker.FileMove`]
+
+        :raises :class:`storage.exceptions.MissingFile`: If a file to move does not exist at the expected path
         """
 
         pass

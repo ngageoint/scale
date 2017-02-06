@@ -7,13 +7,9 @@ from optparse import make_option
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
-from django.db.utils import DatabaseError, OperationalError
 
-from error.models import Error
-from job.configuration.results.exceptions import InvalidResultsManifest, MissingRequiredOutput
-from job.errors import get_invalid_manifest_error, get_missing_output_error
+from error.exceptions import ScaleError, get_error_by_exception
 from job.models import JobExecution
-from storage.exceptions import NfsError
 from util.retry import retry_database_query
 
 
@@ -21,19 +17,6 @@ logger = logging.getLogger(__name__)
 
 
 GENERAL_FAIL_EXIT_CODE = 1
-# Exit codes that map to specific errors
-DB_EXIT_CODE = 2
-DB_OP_EXIT_CODE = 3
-IO_EXIT_CODE = 4
-NFS_EXIT_CODE = 5
-IV_MF_CODE = 6
-MI_OP_CODE = 7
-EXIT_CODE_DICT = {DB_EXIT_CODE: Error.objects.get_database_error,
-                  DB_OP_EXIT_CODE: Error.objects.get_database_operation_error,
-                  IO_EXIT_CODE: Error.objects.get_filesystem_error,
-                  NFS_EXIT_CODE: Error.objects.get_nfs_error,
-                  IV_MF_CODE: get_invalid_manifest_error,
-                  MI_OP_CODE: get_missing_output_error}
 
 
 class Command(BaseCommand):
@@ -60,28 +43,17 @@ class Command(BaseCommand):
             job_exe = self._get_job_exe(exe_id)
 
             self._perform_post_steps(job_exe)
+        except ScaleError as err:
+            err.log()
+            sys.exit(err.exit_code)
         except Exception as ex:
             exit_code = GENERAL_FAIL_EXIT_CODE
-            print_stacktrace = True
-            if isinstance(ex, OperationalError):
-                exit_code = DB_OP_EXIT_CODE
-            elif isinstance(ex, DatabaseError):
-                exit_code = DB_EXIT_CODE
-            elif isinstance(ex, NfsError):
-                exit_code = NFS_EXIT_CODE
-            elif isinstance(ex, IOError):
-                exit_code = IO_EXIT_CODE
-            elif isinstance(ex, InvalidResultsManifest):
-                exit_code = IV_MF_CODE
-                print_stacktrace = False
-            elif isinstance(ex, MissingRequiredOutput):
-                exit_code = MI_OP_CODE
-                print_stacktrace = False
-
-            if print_stacktrace:
-                logger.exception('Error in post-task')
+            err = get_error_by_exception(ex.__class__.__name__)
+            if err:
+                err.log()
+                exit_code = err.exit_code
             else:
-                logger.error('Failing post-task: %s', str(ex))
+                logger.exception('Job Execution %i: Error performing post-job steps', exe_id)
             sys.exit(exit_code)
 
         logger.info('Command completed: scale_post_steps')

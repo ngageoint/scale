@@ -136,18 +136,39 @@ class TestQueueManager(TransactionTestCase):
         job_type = job_test_utils.create_job_type(max_tries=2)
         job = job_test_utils.create_job(job_type=job_type, status='RUNNING', num_exes=1)
         job_exe = job_test_utils.create_job_exe(job=job, status='RUNNING')
+        error = Error.objects.get_builtin_error('database-operation')
 
         # Call method to test
-        Queue.objects.handle_job_failure(job_exe.id, now(), [])
+        Queue.objects.handle_job_failure(job_exe.id, now(), [], error=error)
 
         # Make sure execution failed and job retried
         job = Job.objects.get(pk=job.id)
         job_exe = JobExecution.objects.get(pk=job_exe.id)
-        unknown_error = Error.objects.get_unknown_error()
         self.assertEqual(job.status, 'QUEUED')
         self.assertIsNone(job.error)
         self.assertEqual(job_exe.status, 'FAILED')
-        self.assertEqual(job_exe.error_id, unknown_error.id)
+        self.assertEqual(job_exe.error_id, error.id)
+
+    def test_handle_job_failure_no_retry(self):
+        """Tests calling QueueManager.handle_job_failure() when the job should not retry because the error should not be
+        retried
+        """
+
+        job_type = job_test_utils.create_job_type(max_tries=2)
+        job = job_test_utils.create_job(job_type=job_type, status='RUNNING', num_exes=1)
+        job_exe = job_test_utils.create_job_exe(job=job, status='RUNNING')
+        error = Error.objects.get_unknown_error()
+
+        # Call method to test
+        Queue.objects.handle_job_failure(job_exe.id, now(), [], error=error)
+
+        # Make sure job and execution are failed
+        job = Job.objects.get(pk=job.id)
+        job_exe = JobExecution.objects.get(pk=job_exe.id)
+        self.assertEqual(job.status, 'FAILED')
+        self.assertEqual(job.error_id, error.id)
+        self.assertEqual(job_exe.status, 'FAILED')
+        self.assertEqual(job_exe.error_id, error.id)
 
     def test_handle_job_failure_superseded(self):
         """Tests calling QueueManager.handle_job_failure() when the job should not retry because it is superseded"""
@@ -155,21 +176,21 @@ class TestQueueManager(TransactionTestCase):
         job_type = job_test_utils.create_job_type(max_tries=2)
         job = job_test_utils.create_job(job_type=job_type, status='RUNNING', num_exes=1)
         job_exe = job_test_utils.create_job_exe(job=job, status='RUNNING')
+        error = Error.objects.get_builtin_error('database-operation')
 
         Job.objects.supersede_jobs([job], now())
 
         # Call method to test
-        Queue.objects.handle_job_failure(job_exe.id, now(), [])
+        Queue.objects.handle_job_failure(job_exe.id, now(), [], error=error)
 
         # Make sure job and execution are failed
         job = Job.objects.get(pk=job.id)
         job_exe = JobExecution.objects.get(pk=job_exe.id)
-        unknown_error = Error.objects.get_unknown_error()
         self.assertEqual(job.status, 'FAILED')
-        self.assertEqual(job.error_id, unknown_error.id)
+        self.assertEqual(job.error_id, error.id)
         self.assertTrue(job.is_superseded)
         self.assertEqual(job_exe.status, 'FAILED')
-        self.assertEqual(job_exe.error_id, unknown_error.id)
+        self.assertEqual(job_exe.error_id, error.id)
 
 
 class TestQueueManagerHandleJobCancellation(TransactionTestCase):
@@ -595,7 +616,7 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         queued_job_exe.accepted(node.id, JobResources(cpus=10, mem=1000, disk_in=1000, disk_out=1000, disk_total=2000))
         Queue.objects.schedule_job_executions('123', [queued_job_exe], {})
         results = JobResults()
-        results.add_file_list_parameter('Test Output 1', [product_test_utils.create_product().file_id])
+        results.add_file_list_parameter('Test Output 1', [product_test_utils.create_product().id])
         JobExecution.objects.filter(id=job_exe_1.id).update(results=results.get_dict())
         Queue.objects.handle_job_completion(job_exe_1.id, now(), [])
 

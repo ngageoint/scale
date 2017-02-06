@@ -6,7 +6,8 @@ import hashlib
 import django.utils.timezone as timezone
 
 from job.test import utils as job_utils
-from product.models import FileAncestryLink, ProductFile
+from product.models import FileAncestryLink
+from storage.models import ScaleFile
 from storage.test import utils as storage_utils
 
 
@@ -38,7 +39,7 @@ def create_product(job_exe=None, workspace=None, has_been_published=False, is_pu
     """Creates a product file model for unit testing
 
     :returns: The product model
-    :rtype: :class:`product.models.ProductFile`
+    :rtype: :class:`storage.models.ScaleFile`
     """
 
     if not job_exe:
@@ -55,11 +56,11 @@ def create_product(job_exe=None, workspace=None, has_been_published=False, is_pu
     if is_superseded and not superseded:
         superseded = timezone.now()
 
-    product_file = ProductFile.objects.create(job_exe=job_exe, job=job_exe.job, job_type=job_exe.job.job_type,
-                                              has_been_published=has_been_published, is_published=is_published,
-                                              uuid=uuid, file_name=file_name, media_type=media_type,
-                                              file_size=file_size, file_path=file_path, workspace=workspace,
-                                              is_superseded=is_superseded, superseded=superseded)
+    product_file = ScaleFile.objects.create(file_type='PRODUCT', job_exe=job_exe, job=job_exe.job,
+                                            job_type=job_exe.job.job_type, has_been_published=has_been_published,
+                                            is_published=is_published, uuid=uuid, file_name=file_name,
+                                            media_type=media_type, file_size=file_size, file_path=file_path,
+                                            workspace=workspace, is_superseded=is_superseded, superseded=superseded)
     if countries:
         product_file.countries = countries
         product_file.save()
