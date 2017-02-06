@@ -28,22 +28,30 @@ nav {
 }
 
 .nav-logo {
-    margin: 0 auto;
-    width: 50%;
-    padding: 10px 2px 2px 2px;
     font-size: 20px;
+    margin: 0 auto;
+    padding: 10px 2px 2px 2px;
+    text-align: center;
+    width: 50%;
+
     a {
-        color: #fff;
+        color: @light;
+
+        &:hover {
+            color: #ffffff;
+            text-decoration: none;
+        }
     }
+
     img {
         width: 75%;
         margin: 0 auto;
     }
-    text-align: center;
+
 }
 
 .nav-link {
-    color: darken(@nav_txt, 35%);
+    color: darken(@nav_txt, 25%);
     cursor: pointer;
     height: 100%;
     padding: 1.5em 1.5em;
