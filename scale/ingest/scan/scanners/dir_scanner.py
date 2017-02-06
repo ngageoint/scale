@@ -30,13 +30,10 @@ class DirScanner(Scanner):
         """See :meth:`ingest.scan.scanners.scanner.Scanner.load_configuration`
         """
 
-        self._scan_dir = self._monitored_workspace.workspace_volume_path
+        self._scan_dir = self._scanned_workspace.workspace_volume_path
 
     def _callback(self, file_list):
-        """Callback for handling files identified by list_files callback
-        
-        :param file_list: List of files found within workspace
-        :type file_list: string
+        """See :meth:`ingest.scan.scanners.scanner.Scanner._callback`
         """
         
         for file_name in file_list:
@@ -44,21 +41,6 @@ class DirScanner(Scanner):
                 self._ingest_file(file_name)
             else:
                 raise ScannerInterruptRequested
-
-    def run(self):
-        """See :meth:`ingest.scan.scanners.scanner.Scanner.run`
-        """
-
-        logger.info('Running S3 bucket scanner')
-
-        # Initialize workspace scan via storage broker.
-        self._scanned_workspace.list_files(callback)
-
-    def stop(self):
-        """See :meth:`ingest.scan.scanners.scanner.Scanner.stop`
-        """
-
-        self._stop_received = True
 
     def validate_configuration(self, configuration):
         """See :meth:`ingest.scan.scanners.scanner.Scanner.validate_configuration`
@@ -73,16 +55,17 @@ class DirScanner(Scanner):
         
         return []
 
-    def _ingest_s3_object(self, object_key):
-        """Applies rules and initiates ingest for a single S3 object
+    def _ingest_file(self, file_name):
+        """Applies rules and initiates ingest for a single file name
 
-        :param object_key: S3 object key
-        :type object_key: string
+        :param file_name: full path to file name
+        :type file_name: string
         """
         
         if self._dry_run:
-            logger.info("Scan detected '%s' in bucket '%s'." % (object_key, self._bucket_name))
+            logger.info("Scan detected file in workspace '%s': %s" % (self._scanned_workspace.name, file_name))
         else:
-            ingest = self._create_ingest(object_name)
-            self._process_ingest(ingest, object_key, None)
-            logger.info("Scan ingested '%s' from bucket '%s'..." % (object_key, self._bucket_name))
+            ingest = self._create_ingest(file_name)
+            size = os.path.getsize(file_name)
+            self._process_ingest(ingest, file_name, size)
+            logger.info("Scan ingested file from workspace '%s': %s" % (self._scanned_workspace.name, file_name))

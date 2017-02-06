@@ -1,7 +1,7 @@
 """Defines the base scanner class"""
 from __future__ import unicode_literals
 
-from abc import ABCMeta
+from abc import ABCMeta, abstractmethod
 import logging
 import os
 
@@ -40,11 +40,11 @@ class Scanner(object):
 
         self._scanner_type = scanner_type
         self._supported_broker_types = supported_broker_types
-        self._file_handler = None  # The file handler configured for this monitor
+        self._file_handler = None  # The file handler configured for this scanner
         self._scanned_workspace = None  # The workspace model that is being scanned
         self._workspaces = {}  # The workspaces needed by this scanner, stored by workspace name {string: workspace}
         self._stop_received = False
-        self._dry_run = True # Used to only scan and skip ingest process
+        self._dry_run = False # Used to only scan and skip ingest process
         self.scan_id = None
 
     @property
@@ -87,7 +87,11 @@ class Scanner(object):
         transfer time, it should just call _process_ingest().
         """
 
-        raise NotImplementedError
+        logger.info('Running %s scanner...' % self.scanner_type)
+
+        # Initialize workspace scan via storage broker.
+        # TODO: Recursive is currently applied at this point, but that doesn't jive with the individual match expressions controlling the recursive.
+        self._scanned_workspace.list_files(recursive=True, callback=self._callback)
 
     def setup_workspaces(self, scanned_workspace, file_handler):
         """Sets up the workspaces that will be used by this scanner
@@ -134,6 +138,16 @@ class Scanner(object):
             invalid
         """
 
+        raise NotImplementedError
+        
+    @abstractmethod
+    def _callback(self, file_list):
+        """Callback for handling files identified by list_files callback
+        
+        :param file_list: List of files found within workspace
+        :type file_list: string
+        """
+        
         raise NotImplementedError
 
     def _create_ingest(self, file_name):

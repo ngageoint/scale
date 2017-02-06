@@ -39,10 +39,7 @@ class S3Scanner(Scanner):
         self._credentials = AWSClient.instantiate_credentials_from_config(configuration)
 
     def _callback(self, object_list):
-        """Callback for handling objects identified by list_objects callback
-        
-        :param object_list: List of keys representing S3 objects in workspace
-        :type object_list: string
+        """See :meth:`ingest.scan.scanners.scanner.Scanner._callback`
         """
         
         for key in object_list:
@@ -50,25 +47,6 @@ class S3Scanner(Scanner):
                 self._ingest_s3_object(key)
             else:
                 raise ScannerInterruptRequested
-
-    def run(self):
-        """See :meth:`ingest.scan.scanners.scanner.Scanner.run`
-        """
-
-        logger.info('Running S3 bucket scanner')
-        
-        self.load_configuration(self, configuration)
-
-        # Initialize workspace scan via storage broker.
-        # All ingests will be triggered via processing in the callback method.
-        self._scanned_workspace.list_objects(callback)
-        
-
-    def stop(self):
-        """See :meth:`ingest.scan.scanners.scanner.Scanner.stop`
-        """
-
-        self._stop_received = True
 
     def validate_configuration(self, configuration):
         """See :meth:`ingest.scan.scanners.scanner.Scanner.validate_configuration`
@@ -105,8 +83,8 @@ class S3Scanner(Scanner):
         """
         
         if self._dry_run:
-            logger.info("Scan detected '%s' in bucket '%s'." % (object_key, self._bucket_name))
+            logger.info("Scan detected S3 object in workspace '%s': %s" % (self._scanned_workspace.name, object_key))
         else:
             ingest = self._create_ingest(object_name)
             self._process_ingest(ingest, object_key, None)
-            logger.info("Scan ingested '%s' from bucket '%s'..." % (object_key, self._bucket_name))
+            logger.info("Scan ingested S3 object from workspace '%s':" % (self._scanned_workspace.name, object_key))

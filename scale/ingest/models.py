@@ -10,6 +10,7 @@ from django.db import models, transaction
 from django.utils.timezone import now
 
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
+from ingest.scan.configuration.scan_configuration import ScanConfiguration
 from job.configuration.data.job_data import JobData
 from job.models import JobType
 from queue.models import Queue
@@ -332,7 +333,8 @@ class Ingest(models.Model):
     )
 
     file_name = models.CharField(max_length=250, db_index=True)
-    strike = models.ForeignKey('ingest.Strike', on_delete=models.PROTECT)
+    strike = models.ForeignKey('ingest.Strike', on_delete=models.PROTECT, null=True)
+    scan = models.ForeignKey('ingest.Scan', on_delete=models.PROTECT, null=True)
     status = models.CharField(choices=INGEST_STATUSES, default='TRANSFERRING', max_length=50, db_index=True)
 
     bytes_transferred = models.BigIntegerField(blank=True, null=True)

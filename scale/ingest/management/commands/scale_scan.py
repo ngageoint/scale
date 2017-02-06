@@ -4,11 +4,13 @@ from __future__ import unicode_literals
 import logging
 import signal
 import sys
+from mock import patch
 from optparse import make_option
 
 from django.core.management.base import BaseCommand
 
 from ingest.models import Scan
+from storage.models import Workspace
 
 
 logger = logging.getLogger(__name__)
@@ -20,7 +22,8 @@ class Command(BaseCommand):
 
     option_list = BaseCommand.option_list + (
         make_option('-i', '--scan-id', action='store', type='int', help=('ID of the Scan process to run')),
-        make_option('-d', '--dry-run', action="store_true", default=False, help=('Perform a dry-run of scan, skipping ingest'))
+        make_option('-d', '--dry-run', action="store_true", default=False, help=('Perform a dry-run of scan, skipping ingest')),
+        make_option('-l', '--local', action="store_true", default=False, help=('Perform a patch on workspace for local testing'))
     )
 
     help = 'Executes the Scan processor to make a single pass over a workspace for ingest'
@@ -55,13 +58,25 @@ class Command(BaseCommand):
         logger.info('Command starting: scale_scan')
         logger.info('Scan ID: %i', self._scan_id)
         logger.info('Dry Run: %s', self._dry_run)
-
+        
         logger.info('Querying database for Scan configuration')
         scan = Scan.objects.select_related('job').get(pk=self._scan_id)
         self._scanner = scan.get_scan_configuration().get_scanner()
+        self._scanner._dry_run = self._dry_run
         self._scanner.scan_id = self._scan_id
 
         logger.info('Starting %s scanner', self._scanner.scanner_type)
+        
+        # Patch _get_volume_path for local testing outside of docker.
+        # This is useful for testing when Scale isn't managing mounts.
+        workspace = self._scanner._scanned_workspace
+        if options['local'] and 'broker' in workspace.json_config and 'host_path' in workspace.json_config['broker']:
+            with patch.object(Workspace, '_get_volume_path', return_value=workspace.json_config['broker']['host_path']) as mock_method:
+                self._scanner.run()
+                logger.info('Scanner has stopped running')
+                logger.info('Command completed: scale_scan')
+                return
+
         self._scanner.run()
         logger.info('Scanner has stopped running')
 
