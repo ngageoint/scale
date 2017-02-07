@@ -38,14 +38,25 @@ class Scanner(object):
         :type supported_broker_types: [string]
         """
 
-        self._scanner_type = scanner_type
-        self._supported_broker_types = supported_broker_types
-        self._file_handler = None  # The file handler configured for this scanner
-        self._scanned_workspace = None  # The workspace model that is being scanned
-        self._workspaces = {}  # The workspaces needed by this scanner, stored by workspace name {string: workspace}
-        self._stop_received = False
-        self._dry_run = False # Used to only scan and skip ingest process
         self.scan_id = None
+        self._count = 0
+        self._dry_run = False # Used to only scan and skip ingest process
+        self._file_handler = None  # The file handler configured for this scanner
+        self._recursive = True
+        self._scanned_workspace = None  # The workspace model that is being scanned
+        self._scanner_type = scanner_type
+        self._stop_received = False
+        self._supported_broker_types = supported_broker_types
+        self._workspaces = {}  # The workspaces needed by this scanner, stored by workspace name {string: workspace}
+        
+    def set_recursive(self, recursive):
+        """Support configuration of scanner scan recursive property
+        
+        :param recursive: The flag indicating whether workspace will be recursively scanned
+        :type recursive: bool
+        """
+        
+        self._recursive = recursive
 
     @property
     def scanner_type(self):
@@ -67,6 +78,7 @@ class Scanner(object):
 
         return self._supported_broker_types
 
+    @abstractmethod
     def load_configuration(self, configuration):
         """Loads the given configuration
 
@@ -76,7 +88,7 @@ class Scanner(object):
 
         raise NotImplementedError
 
-    def run(self):
+    def run(self, dry_run):
         """Runs the scanner until signaled to stop by the stop() method or processing complete.
         Sub-classes that override this method should ensure the stop() method can quickly terminate the scan process.
 
@@ -87,11 +99,13 @@ class Scanner(object):
         transfer time, it should just call _process_ingest().
         """
 
-        logger.info('Running %s scanner...' % self.scanner_type)
+        logger.info('Running %s scanner %s...' % (self.scanner_type, 'in dry run mode ' if dry_run else ''))
+        self._dry_run = dry_run
 
-        # Initialize workspace scan via storage broker.
-        # TODO: Recursive is currently applied at this point, but that doesn't jive with the individual match expressions controlling the recursive.
-        self._scanned_workspace.list_files(recursive=True, callback=self._callback)
+        # Initialize workspace scan via storage broker. Configuration determines if recursive workspace walk.
+        self._scanned_workspace.list_files(recursive=self._recursive, callback=self._callback)
+        
+        logger.info('%s %i files during scan.' % ('Detected' if self._dry_run else 'Processed', self._count))
 
     def setup_workspaces(self, scanned_workspace, file_handler):
         """Sets up the workspaces that will be used by this scanner
@@ -124,6 +138,7 @@ class Scanner(object):
 
         self._stop_received = True
 
+    @abstractmethod
     def validate_configuration(self, configuration):
         """Validates the given configuration.
 
@@ -140,7 +155,6 @@ class Scanner(object):
 
         raise NotImplementedError
         
-    @abstractmethod
     def _callback(self, file_list):
         """Callback for handling files identified by list_files callback
         
@@ -148,7 +162,12 @@ class Scanner(object):
         :type file_list: string
         """
         
-        raise NotImplementedError
+        for file_name in file_list:
+            if not self._stop_received:
+                self._ingest_file(file_name)
+                self._count += 1
+            else:
+                raise ScannerInterruptRequested
 
     def _create_ingest(self, file_name):
         """Creates a new ingest for the given file name. The database save is the caller's responsibility.

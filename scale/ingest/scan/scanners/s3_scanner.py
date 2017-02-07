@@ -28,25 +28,15 @@ class S3Scanner(Scanner):
         self._credentials = None
         self._region_name = None
 
-
     def load_configuration(self, configuration):
         """See :meth:`ingest.scan.scanners.scanner.Scanner.load_configuration`
         """
 
         self._bucket_name = configuration['bucket_name']
-        self._region_name = configuration.get('region_name')
         # TODO Change credentials to use an encrypted store key reference
         self._credentials = AWSClient.instantiate_credentials_from_config(configuration)
-
-    def _callback(self, object_list):
-        """See :meth:`ingest.scan.scanners.scanner.Scanner._callback`
-        """
-        
-        for key in object_list:
-            if not self._stop_received:
-                self._ingest_s3_object(key)
-            else:
-                raise ScannerInterruptRequested
+        self._recursive = configuration['recursive']
+        self._region_name = configuration.get('region_name')
 
     def validate_configuration(self, configuration):
         """See :meth:`ingest.scan.scanners.scanner.Scanner.validate_configuration`
@@ -75,16 +65,16 @@ class S3Scanner(Scanner):
 
         return warnings
 
-    def _ingest_s3_object(self, object_key):
+    def _ingest_files(self, file_name):
         """Applies rules and initiates ingest for a single S3 object
 
-        :param object_key: S3 object key
-        :type object_key: string
+        :param file_name: S3 object key
+        :type file_name: string
         """
         
         if self._dry_run:
-            logger.info("Scan detected S3 object in workspace '%s': %s" % (self._scanned_workspace.name, object_key))
+            logger.info("Scan detected S3 object in workspace '%s': %s" % (self._scanned_workspace.name, file_name))
         else:
-            ingest = self._create_ingest(object_name)
-            self._process_ingest(ingest, object_key, None)
-            logger.info("Scan ingested S3 object from workspace '%s':" % (self._scanned_workspace.name, object_key))
+            ingest = self._create_ingest(file_name)
+            self._process_ingest(ingest, file_name, None)
+            logger.info("Scan ingested S3 object from workspace '%s':" % (self._scanned_workspace.name, file_name))

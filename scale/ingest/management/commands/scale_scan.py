@@ -34,9 +34,7 @@ class Command(BaseCommand):
 
         super(Command, self).__init__()
 
-        self._scan_id = None
         self._scanner = None
-        self._dry_run = False
 
     def handle(self, **options):
         """See :meth:`django.core.management.base.BaseCommand.handle`.
@@ -47,23 +45,21 @@ class Command(BaseCommand):
         # Register a listener to handle clean shutdowns
         signal.signal(signal.SIGTERM, self._onsigterm)
 
-        self._scan_id = options.get('scan_id')
-        self._dry_run = options.get('dry_run')
+        scan_id = options.get('scan_id')
+        dry_run = options.get('dry_run')
         
-        if not self._scan_id:
+        if not scan_id:
             logger.error('-i or --scan-id parameter must be specified for Scan configuration.')
-            print('what')
             sys.exit(1)
 
         logger.info('Command starting: scale_scan')
-        logger.info('Scan ID: %i', self._scan_id)
-        logger.info('Dry Run: %s', self._dry_run)
+        logger.info('Scan ID: %i', scan_id)
+        logger.info('Dry Run: %s', dry_run)
         
         logger.info('Querying database for Scan configuration')
-        scan = Scan.objects.select_related('job').get(pk=self._scan_id)
+        scan = Scan.objects.select_related('job').get(pk=scan_id)
         self._scanner = scan.get_scan_configuration().get_scanner()
-        self._scanner._dry_run = self._dry_run
-        self._scanner.scan_id = self._scan_id
+        self._scanner.scan_id = scan_id
 
         logger.info('Starting %s scanner', self._scanner.scanner_type)
         
@@ -72,12 +68,12 @@ class Command(BaseCommand):
         workspace = self._scanner._scanned_workspace
         if options['local'] and 'broker' in workspace.json_config and 'host_path' in workspace.json_config['broker']:
             with patch.object(Workspace, '_get_volume_path', return_value=workspace.json_config['broker']['host_path']) as mock_method:
-                self._scanner.run()
+                self._scanner.run(dry_run=dry_run)
                 logger.info('Scanner has stopped running')
                 logger.info('Command completed: scale_scan')
                 return
 
-        self._scanner.run()
+        self._scanner.run(dry_run=dry_run)
         logger.info('Scanner has stopped running')
 
         logger.info('Command completed: scale_scan')

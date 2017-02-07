@@ -49,7 +49,10 @@ STRIKE_CONFIGURATION_SCHEMA = {
             'type': 'array',
             'minItems': 1,
             'items': {'$ref': '#/definitions/file_item'}
-        }
+        },
+        'recursive': {
+            'type': 'boolean'
+        },
     },
     'definitions': {
         'file_item': {
@@ -60,9 +63,6 @@ STRIKE_CONFIGURATION_SCHEMA = {
                 'filename_regex': {
                     'type': 'string',
                     'minLength': 1
-                },
-                'recursive': {
-                    'type': 'boolean'
                 },
                 'data_types': {
                     'type': 'array',
@@ -172,7 +172,7 @@ class ScanConfiguration(object):
         """
 
         return self._configuration['workspace']
-
+        
     def load_scanner_configuration(self, scanner):
         """Loads the configuration into the given scanner
 
@@ -188,6 +188,7 @@ class ScanConfiguration(object):
         if scanner_type == scanner.scanner_type:
             scanner.setup_workspaces(workspace, self._file_handler)
             scanner.load_configuration(scanner_dict)
+            scanner.set_recursive(self._configuration['recursive'])
         else:
             msg = 'Scan scanner type has been changed from %s to %s. Cannot reload configuration.'
             logger.warning(msg, scanner.scanner_type, scanner_type)
@@ -246,10 +247,10 @@ class ScanConfiguration(object):
 
         if 'version' not in self._configuration:
             self._configuration['version'] = CURRENT_VERSION
+        
+        if 'recursive' not in self._configuration:
+            self._configuration['recursive'] = True
 
         for file_dict in self._configuration['files_to_ingest']:
-            if 'recursive' not in file_dict:
-                file_dict['recursive'] = True
-
             if 'data_types' not in file_dict:
                 file_dict['data_types'] = []

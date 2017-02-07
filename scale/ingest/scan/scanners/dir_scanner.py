@@ -39,6 +39,7 @@ class DirScanner(Scanner):
         for file_name in file_list:
             if not self._stop_received:
                 self._ingest_file(file_name)
+                self._count += 1
             else:
                 raise ScannerInterruptRequested
 
