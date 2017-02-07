@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 import django
 from django.test import TransactionTestCase
+from django.utils.timezone import now
 from mock import MagicMock, patch
 
 from job.execution.job_exe import RunningJobExecution
@@ -40,8 +41,9 @@ class TestSchedulingThread(TransactionTestCase):
         with patch('scheduler.node.manager.api.get_slaves') as mock_get_slaves:
             mock_get_slaves.return_value = self.slave_infos
             node_mgr.sync_with_database('master_host', 5050)
-        # Ignore initial cleanup tasks
+        # Ignore initial cleanup tasks and health check tasks
         for node in node_mgr.get_nodes():
+            node._last_heath_task = now()
             node._initial_cleanup_completed()
             node._update_state()
 

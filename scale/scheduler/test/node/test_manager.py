@@ -113,14 +113,16 @@ class TestNodeManager(TestCase):
 
         mock_get_slaves.return_value = self.slave_infos
 
+        when = now()
         manager = NodeManager()
         manager.register_agent_ids([self.node_agent_1, self.node_agent_2])
         manager.sync_with_database('master_host', 5050)
         for node in manager.get_nodes():
+            node._last_heath_task = when
             node._initial_cleanup_completed()
             node._update_state()
 
-        tasks = manager.get_next_tasks(now())
+        tasks = manager.get_next_tasks(when)
         self.assertEqual(len(tasks), 2)
         for task in tasks:
             self.assertTrue(isinstance(task, PullTask))
@@ -131,18 +133,20 @@ class TestNodeManager(TestCase):
 
         mock_get_slaves.return_value = self.slave_infos
 
+        when = now()
         manager = NodeManager()
         manager.register_agent_ids([self.node_agent_1, self.node_agent_2])
         manager.sync_with_database('master_host', 5050)
         for node in manager.get_nodes():
+            node._last_heath_task = when
             node._initial_cleanup_completed()
             node._update_state()
-        tasks = manager.get_next_tasks(now())
+        tasks = manager.get_next_tasks(when)
 
         task_mgr = TaskManager()
         task_2 = None
         for task in tasks:
-            task_mgr.launch_tasks([task], now())
+            task_mgr.launch_tasks([task], when)
             if task.agent_id == self.node_agent_2:
                 task_2 = task
 
@@ -153,13 +157,13 @@ class TestNodeManager(TestCase):
         manager.sync_with_database('master_host', 5050)
 
         # Should get new Docker pull task for node 2
-        tasks = manager.get_next_tasks(now())
+        tasks = manager.get_next_tasks(when)
         self.assertEqual(len(tasks), 1)
         new_task_2 = tasks[0]
         self.assertEqual(new_task_2.agent_id, self.node_agent_3)
 
         # Task update comes back for original node 2 Docker pull task, manager should ignore with no exception
-        update = job_test_utils.create_task_status_update(task_2.id, task_2.agent_id, TaskStatusUpdate.FAILED, now())
+        update = job_test_utils.create_task_status_update(task_2.id, task_2.agent_id, TaskStatusUpdate.FAILED, when)
         task_mgr.handle_task_update(update)
         manager.handle_task_update(update)
 
@@ -176,6 +180,8 @@ class TestNodeManager(TestCase):
 
         manager.register_agent_ids([self.node_agent_1, self.node_agent_2])
         manager.sync_with_database('master_host', 5050)
+        for node in manager.get_nodes():
+            node._last_heath_task = when
 
         tasks = manager.get_next_tasks(when)
         self.assertEqual(len(tasks), 2)

@@ -8,6 +8,7 @@ from collections import namedtuple
 
 from django.utils.timezone import now
 
+from job.tasks.health_task import HealthTask
 from job.tasks.pull_task import PullTask
 from job.tasks.update import TaskStatusUpdate
 from scheduler.cleanup.node import NodeCleanup
@@ -40,12 +41,19 @@ class Node(object):
 
     # Node Errors
     CLEANUP_ERR = NodeError(name='CLEANUP', description='Failed to perform cleanup', daemon_bad=False, pull_bad=False)
+    HEALTH_TIMEOUT_ERR = NodeError(name='HEALTH_TIMEOUT', description='Node health check timed out', daemon_bad=False,
+                                   pull_bad=False)
     IMAGE_PULL_ERR = NodeError(name='IMAGE_PULL', description='Failed to pull Scale image', daemon_bad=False,
                                pull_bad=False)
+    HEALTH_ERRORS = [HEALTH_TIMEOUT_ERR]
 
     # Error thresholds
     CLEANUP_ERR_THRESHOLD = datetime.timedelta(minutes=2)
+    HEALTH_ERR_THRESHOLD = datetime.timedelta(minutes=2)
     IMAGE_PULL_ERR_THRESHOLD = datetime.timedelta(minutes=5)
+
+    # Normal health check threshold
+    NORMAL_HEALTH_THRESHOLD = datetime.timedelta(minutes=5)
 
     # Node States
     INACTIVE = NodeState(state='INACTIVE', description='Inactive, ignored by Scale')
@@ -69,15 +77,18 @@ class Node(object):
         self._agent_id = agent_id
         self._cleanup = NodeCleanup()
         self._cleanup_task = None
+        self._health_task = None
         self._hostname = node.hostname  # Never changes
         self._id = node.id  # Never changes
         self._is_active = node.is_active
         self._is_daemon_bad = False
+        self._is_health_check_normal = True
         self._is_image_pulled = False
         self._is_initial_cleanup_completed = False
         self._is_online = True
         self._is_paused = node.is_paused
         self._is_pull_bad = False
+        self._last_heath_task = None
         self._lock = threading.Lock()
         self._port = node.port
         self._pull_task = None
@@ -153,6 +164,10 @@ class Node(object):
                 if self._cleanup_task and not self._cleanup_task.has_been_launched:
                     tasks.append(self._cleanup_task)
 
+            # Check if ready for health check task and it hasn't been launched yet
+            if self._is_ready_for_health_task(when) and self._health_task and not self._health_task.has_been_launched:
+                tasks.append(self._health_task)
+
             # Check if ready for pull task and it hasn't been launched yet
             if self._is_ready_for_pull_task(when) and self._pull_task and not self._pull_task.has_been_launched:
                 tasks.append(self._pull_task)
@@ -172,6 +187,14 @@ class Node(object):
                 if self._cleanup_task.has_ended:
                     self._cleanup_task = None
                 self._error_active(Node.CLEANUP_ERR)
+            elif self._health_task and self._health_task.id == task.id:
+                logger.warning('Health check task on host %s timed out', self._hostname)
+                if self._health_task.has_ended:
+                    self._health_task = None
+                self._is_health_check_normal = False
+                self._last_heath_task = now()
+                self._error_inactive_all_health()
+                self._error_active(Node.HEALTH_TIMEOUT_ERR)
             elif self._pull_task and self._pull_task.id == task.id:
                 logger.warning('Scale image pull task on host %s timed out', self._hostname)
                 if self._pull_task.has_ended:
@@ -189,6 +212,8 @@ class Node(object):
         with self._lock:
             if self._cleanup_task and self._cleanup_task.id == task_update.task_id:
                 self._handle_cleanup_task_update(task_update)
+            elif self._health_task and self._health_task.id == task_update.task_id:
+                self._handle_health_task_update(task_update)
             elif self._pull_task and self._pull_task.id == task_update.task_id:
                 self._handle_pull_task_update(task_update)
             self._update_state()
@@ -261,6 +286,13 @@ class Node(object):
             self._cleanup_task = self._cleanup.create_next_task(self._agent_id, self._hostname,
                                                                 self._is_initial_cleanup_completed)
 
+        # If we have a health task, check that node's agent ID has not changed
+        if self._health_task and self._health_task.agent_id != self._agent_id:
+            self._health_task = None
+
+        if not self._health_task and self._is_ready_for_health_task(when):
+            self._health_task = HealthTask(scheduler_mgr.framework_id, self._agent_id)
+
         # If we have a pull task, check that node's agent ID has not changed
         if self._pull_task and self._pull_task.agent_id != self._agent_id:
             self._pull_task = None
@@ -306,6 +338,25 @@ class Node(object):
             return True
 
         return False
+
+    def _is_ready_for_health_task(self, when):
+        """Indicates whether this node is ready to launch a health check task. Caller must have obtained the thread
+        lock.
+
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
+        :returns: True if this node is ready to launch a health check task, False otherwise
+        :rtype: bool
+        """
+
+        if self._state in [Node.INACTIVE, Node.OFFLINE]:
+            return False
+        elif not self._is_health_check_normal:
+            # Schedule health task if threshold has passed since last health task error
+            return when - self._last_heath_task > Node.HEALTH_ERR_THRESHOLD
+
+        # Node is normal, use normal threshold for when to schedule next health check
+        return not self._last_heath_task or (when - self._last_heath_task > Node.NORMAL_HEALTH_THRESHOLD)
 
     def _is_ready_for_pull_task(self, when):
         """Indicates whether this node is ready to launch the pull task for the Scale Docker image. Caller must have
@@ -362,6 +413,13 @@ class Node(object):
         if error.name in self._active_errors:
             del self._active_errors[error.name]
 
+    def _error_inactive_all_health(self):
+        """Inactivates all health-related node errors. Caller must have obtained the thread lock.
+        """
+
+        for error in Node.HEALTH_ERRORS:
+            self._error_inactive(error)
+
     def _handle_cleanup_task_update(self, task_update):
         """Handles the given task update for a cleanup task. Caller must have obtained the thread lock.
 
@@ -383,6 +441,28 @@ class Node(object):
             logger.warning('Cleanup task on host %s killed', self._hostname)
         if self._cleanup_task.has_ended:
             self._cleanup_task = None
+
+    def _handle_health_task_update(self, task_update):
+        """Handles the given task update for a health check task. Caller must have obtained the thread lock.
+
+        :param task_update: The health check task update
+        :type task_update: :class:`job.tasks.update.TaskStatusUpdate`
+        """
+
+        if task_update.status == TaskStatusUpdate.FINISHED:
+            self._is_health_check_normal = True
+            self._last_heath_task = now()
+            self._error_inactive_all_health()
+        elif task_update.status == TaskStatusUpdate.FAILED:
+            logger.warning('Health check task on host %s failed', self._hostname)
+            self._is_health_check_normal = False
+            self._last_heath_task = now()
+            self._error_inactive_all_health()
+            # TODO: active correct error based on exit code
+        elif task_update.status == TaskStatusUpdate.KILLED:
+            logger.warning('Health check task on host %s killed', self._hostname)
+        if self._health_task.has_ended:
+            self._health_task = None
 
     def _handle_pull_task_update(self, task_update):
         """Handles the given task update for a pull task. Caller must have obtained the thread lock.

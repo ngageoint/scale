@@ -31,6 +31,7 @@ class TestNode(TestCase):
 
         when = now()
         node = Node(self.node_agent, self.node)
+        node._last_heath_task = when
         node._initial_cleanup_completed()
         node._update_state()
         # Get Docker pull task
@@ -53,7 +54,9 @@ class TestNode(TestCase):
         self.assertFalse(node._is_image_pulled)
 
         # After error threshold, we should get new pull task
-        task = node.get_next_tasks(when + Node.IMAGE_PULL_ERR_THRESHOLD + datetime.timedelta(seconds=5))[0]
+        new_time = when + Node.IMAGE_PULL_ERR_THRESHOLD + datetime.timedelta(seconds=5)
+        node._last_heath_task = new_time  # Get rid of health check task
+        task = node.get_next_tasks(new_time)[0]
         self.assertNotEqual(task.id, task_1_id)
         self.assertTrue(task.id.startswith(PULL_TASK_ID_PREFIX))
 
@@ -62,6 +65,7 @@ class TestNode(TestCase):
 
         when = now()
         node = Node(self.node_agent, self.node)
+        node._last_heath_task = when
         node._initial_cleanup_completed()
         node._update_state()
 
@@ -92,6 +96,7 @@ class TestNode(TestCase):
 
         when = now()
         node = Node(self.node_agent, self.node)
+        node._last_heath_task = when
         node._initial_cleanup_completed()
         node._update_state()
         # Get pull task
@@ -117,6 +122,7 @@ class TestNode(TestCase):
 
         when = now()
         node = Node(self.node_agent, self.node)
+        node._last_heath_task = when
         node._initial_cleanup_completed()
         node._update_state()
         # Get pull task
@@ -163,6 +169,7 @@ class TestNode(TestCase):
         paused_node = node_test_utils.create_node(hostname='host_1', slave_id=self.node_agent)
         paused_node.is_paused = True
         node = Node(self.node_agent, paused_node)
+        node._last_heath_task = when
         node._initial_cleanup_completed()
         node._update_state()
         tasks = node.get_next_tasks(when)
@@ -184,6 +191,7 @@ class TestNode(TestCase):
 
         when = now()
         node = Node(self.node_agent, self.node)
+        node._last_heath_task = when
         # Get initial cleanup task
         task = node.get_next_tasks(when)[0]
         self.assertTrue(task.id.startswith(CLEANUP_TASK_ID_PREFIX))
@@ -213,6 +221,7 @@ class TestNode(TestCase):
 
         when = now()
         node = Node(self.node_agent, self.node)
+        node._last_heath_task = when
 
         # Get initial cleanup task
         task = node.get_next_tasks(when)[0]
@@ -305,6 +314,7 @@ class TestNode(TestCase):
 
         when = now()
         node = Node(self.node_agent, self.node)
+        node._last_heath_task = when
         node._initial_cleanup_completed()
         node._image_pull_completed()
         node._update_state()
@@ -333,8 +343,11 @@ class TestNode(TestCase):
     def test_paused_node_cleanup_task(self):
         """Tests not returning cleanup task when its node is paused"""
 
+        when = now()
         paused_node = node_test_utils.create_node(hostname='host_1', slave_id=self.node_agent)
         paused_node.is_paused = True
         node = Node(self.node_agent, paused_node)
+        # Turn off health task
+        node._last_heath_task = when
         # No task due to paused node
-        self.assertListEqual([], node.get_next_tasks(now()))
+        self.assertListEqual([], node.get_next_tasks(when))
