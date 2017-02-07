@@ -75,7 +75,7 @@ class TestOfferManager(TestCase):
 
         job_exe_2 = RunningJobExecution(self.running_job_exe_1)
         result = manager.consider_next_task(job_exe_2)
-        self.assertEqual(result, OfferManager.NODE_OFFLINE)
+        self.assertEqual(result, OfferManager.NODE_NOT_READY)
 
     def test_offers_with_no_nodes(self):
         """Tests considering job executions when offers cannot be readied due to no nodes updated"""
@@ -93,7 +93,7 @@ class TestOfferManager(TestCase):
 
         job_exe_2 = RunningJobExecution(self.running_job_exe_1)
         result = manager.consider_next_task(job_exe_2)
-        self.assertEqual(result, OfferManager.NODE_OFFLINE)
+        self.assertEqual(result, OfferManager.NODE_NOT_READY)
 
     def test_accepted(self):
         """Tests accepting a running and queued job execution and returning the node offers"""

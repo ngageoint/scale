@@ -211,7 +211,7 @@ class TestNodeOffers(TestCase):
         # Don't accept new job executions while paused
         job_exe_new = QueuedJobExecution(self.queue_1)
         result = node_offers.consider_new_job_exe(job_exe_new)
-        self.assertEqual(result, NodeOffers.NODE_PAUSED)
+        self.assertEqual(result, NodeOffers.NODE_NOT_READY)
 
         self.assertTrue(node_offers.has_accepted_job_exes())
         self.assertEqual(len(node_offers.get_accepted_running_job_exes()), 2)

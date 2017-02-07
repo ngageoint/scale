@@ -201,7 +201,7 @@ class TestNode(TestCase):
         # No new cleanup task right away
         tasks = node.get_next_tasks(when + datetime.timedelta(seconds=5))
         self.assertListEqual([], tasks)
-        self.assertFalse(node.is_initial_cleanup_completed)
+        self.assertFalse(node._is_initial_cleanup_completed)
 
         # After error threshold, we should get new cleanup task
         task = node.get_next_tasks(when + Node.CLEANUP_ERR_THRESHOLD + datetime.timedelta(seconds=5))[0]
@@ -223,7 +223,7 @@ class TestNode(TestCase):
         # Schedule initial cleanup and make sure no new task is ready
         self.task_mgr.launch_tasks([task], now())
         self.assertListEqual([], node.get_next_tasks(when))
-        self.assertFalse(node.is_initial_cleanup_completed)
+        self.assertFalse(node._is_initial_cleanup_completed)
 
         # Complete initial clean up, verify no new cleanup task
         update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.RUNNING, now())
@@ -234,7 +234,7 @@ class TestNode(TestCase):
         node.handle_task_update(update)
         for task in node.get_next_tasks(when):
             self.assertFalse(task.id.startswith(CLEANUP_TASK_ID_PREFIX))
-        self.assertTrue(node.is_initial_cleanup_completed)
+        self.assertTrue(node._is_initial_cleanup_completed)
 
     def test_handle_killed_cleanup_task(self):
         """Tests handling killed cleanup task"""
@@ -257,7 +257,7 @@ class TestNode(TestCase):
         task = node.get_next_tasks(when)[0]
         self.assertTrue(task.id.startswith(CLEANUP_TASK_ID_PREFIX))
         self.assertNotEqual(task.id, task_1_id)
-        self.assertFalse(node.is_initial_cleanup_completed)
+        self.assertFalse(node._is_initial_cleanup_completed)
 
     def test_handle_lost_cleanup_tasks(self):
         """Tests handling lost cleanup tasks"""
@@ -275,7 +275,7 @@ class TestNode(TestCase):
         task = node.get_next_tasks(when)[0]
         self.assertTrue(task.id.startswith(CLEANUP_TASK_ID_PREFIX))
         self.assertEqual(task.id, task_1_id)
-        self.assertFalse(node.is_initial_cleanup_completed)
+        self.assertFalse(node._is_initial_cleanup_completed)
 
         # Lose task with scheduling and get same task again
         self.task_mgr.launch_tasks([task], now())
@@ -285,7 +285,7 @@ class TestNode(TestCase):
         task = node.get_next_tasks(when)[0]
         self.assertTrue(task.id.startswith(CLEANUP_TASK_ID_PREFIX))
         self.assertEqual(task.id, task_1_id)
-        self.assertFalse(node.is_initial_cleanup_completed)
+        self.assertFalse(node._is_initial_cleanup_completed)
 
         # Lose task after running and get same task again
         self.task_mgr.launch_tasks([task], now())
@@ -298,7 +298,7 @@ class TestNode(TestCase):
         task = node.get_next_tasks(when)[0]
         self.assertTrue(task.id.startswith(CLEANUP_TASK_ID_PREFIX))
         self.assertEqual(task.id, task_1_id)
-        self.assertFalse(node.is_initial_cleanup_completed)
+        self.assertFalse(node._is_initial_cleanup_completed)
 
     def test_handle_regular_cleanup_task(self):
         """Tests handling a regular cleanup task"""

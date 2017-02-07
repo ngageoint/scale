@@ -58,9 +58,9 @@ class TestNodeManager(TestCase):
         nodes = manager.get_nodes()
         self.assertEqual(len(nodes), 2)
         node_1 = manager.get_node(self.node_agent_1)
-        self.assertTrue(node_1.is_online)
+        self.assertTrue(node_1._is_online)
         node_2 = manager.get_node(self.node_agent_2)
-        self.assertFalse(node_2.is_online)
+        self.assertFalse(node_2._is_online)
 
     @patch('scheduler.node.manager.api.get_slaves')
     def test_lost_unknown_node(self, mock_get_slaves):
@@ -78,7 +78,7 @@ class TestNodeManager(TestCase):
         self.assertEqual(len(nodes), 1)
         node_1 = manager.get_node(self.node_agent_1)
         self.assertEqual(node_1.hostname, self.node_1.hostname)
-        self.assertTrue(node_1.is_online)
+        self.assertTrue(node_1._is_online)
         self.assertIsNone(manager.get_node(self.node_agent_2))
 
     @patch('scheduler.node.manager.api.get_slaves')
@@ -101,11 +101,11 @@ class TestNodeManager(TestCase):
         self.assertEqual(len(nodes), 2)
         node_1 = manager.get_node(self.node_agent_1)
         self.assertEqual(node_1.hostname, self.node_1.hostname)
-        self.assertTrue(node_1.is_online)
+        self.assertTrue(node_1._is_online)
         self.assertIsNone(manager.get_node(self.node_agent_2))
         node_2 = manager.get_node(self.node_agent_3)
         self.assertEqual(node_2.hostname, 'host_2')
-        self.assertTrue(node_2.is_online)
+        self.assertTrue(node_2._is_online)
 
     @patch('scheduler.node.manager.api.get_slaves')
     def test_get_pull_tasks(self, mock_get_slaves):

@@ -124,46 +124,6 @@ class Node(object):
 
         return self._is_active
 
-    @property
-    def is_initial_cleanup_completed(self):
-        """Indicates whether this node has its initial cleanup completed (True) or not (False)
-
-        :returns: Whether this node has its initial cleanup completed
-        :rtype: bool
-        """
-
-        return self._is_initial_cleanup_completed
-
-    @property
-    def is_online(self):
-        """Indicates whether this node is online (True) or not (False)
-
-        :returns: Whether this node is online
-        :rtype: bool
-        """
-
-        return self._is_online
-
-    @property
-    def is_paused(self):
-        """Indicates whether this node is paused (True) or not (False)
-
-        :returns: Whether this node is paused
-        :rtype: bool
-        """
-
-        return self._is_paused
-
-    @property
-    def state(self):
-        """Returns the state of the node
-
-        :returns: The state
-        :rtype: :class:`scheduler.node.node_class.NodeState`
-        """
-
-        return self._state
-
     def add_job_execution(self, job_exe):
         """Adds a job execution that needs to be cleaned up
 
