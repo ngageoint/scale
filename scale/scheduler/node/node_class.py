@@ -233,6 +233,24 @@ class Node(object):
                 self._handle_pull_task_update(task_update)
             self._update_state()
 
+    def is_ready_for_new_job(self):
+        """Indicates whether this node is ready to launch a new job execution
+
+        :returns: True if this node is ready to launch a new job execution, False otherwise
+        :rtype: bool
+        """
+
+        return self._state == Node.READY
+
+    def is_ready_for_next_job_task(self):
+        """Indicates whether this node is ready to launch the next task of a job execution
+
+        :returns: True if this node is ready to launch a job task, False otherwise
+        :rtype: bool
+        """
+
+        return self._state not in [Node.INACTIVE, Node.OFFLINE]
+
     def update_from_mesos(self, agent_id=None, port=None, is_online=None):
         """Updates this node's data from Mesos
 

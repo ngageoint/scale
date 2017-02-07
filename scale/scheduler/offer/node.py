@@ -3,8 +3,6 @@ from __future__ import unicode_literals
 
 import threading
 
-from scheduler.node.node_class import Node
-
 
 class NodeOffers(object):
     """This class represents the set of all resource offers for a node. This class is thread-safe."""
@@ -106,7 +104,7 @@ class NodeOffers(object):
                 return NodeOffers.NODE_OFFLINE
             if self._node.is_paused:
                 return NodeOffers.NODE_PAUSED
-            if self._node.state != Node.READY:
+            if not self._node.is_ready_for_new_job():
                 return NodeOffers.NODE_NOT_READY
             if len(self._offers) == 0:
                 return NodeOffers.NO_OFFERS
@@ -140,7 +138,7 @@ class NodeOffers(object):
         with self._lock:
             if job_exe.id in self._accepted_running_job_exes:
                 return NodeOffers.ACCEPTED
-            if not self._node.is_online:
+            if not self._node.is_ready_for_next_job_task():
                 return NodeOffers.NODE_OFFLINE
             if len(self._offers) == 0:
                 return NodeOffers.NO_OFFERS
