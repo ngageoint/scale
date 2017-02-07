@@ -11,7 +11,6 @@ from mesos.interface import mesos_pb2
 
 from job.execution.manager import running_job_mgr
 from job.models import JobExecution
-from scheduler.cleanup.manager import cleanup_mgr
 from scheduler.node.manager import node_mgr
 from scheduler.sync.job_type_manager import job_type_mgr
 from scheduler.sync.scheduler_manager import scheduler_mgr

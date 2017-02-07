@@ -147,16 +147,6 @@ class SchedulingThread(object):
         for running_job_exe in running_job_mgr.get_ready_job_exes():
             offer_mgr.consider_next_task(running_job_exe)
 
-    def _consider_cleanup_tasks(self):
-        """Considers any cleanup tasks to schedule
-        """
-
-        if scheduler_mgr.is_paused():
-            return
-
-        for task in cleanup_mgr.get_next_tasks():
-            offer_mgr.consider_task(task)
-
     def _consider_node_tasks(self, when):
         """Considers any node tasks to schedule
 
@@ -196,7 +186,6 @@ class SchedulingThread(object):
                 self._job_type_limit_available[running_job_exe.job_type_id] -= 1
 
         self._consider_node_tasks(when)
-        self._consider_cleanup_tasks()
         self._consider_running_job_exes()
         self._consider_new_job_exes()
 

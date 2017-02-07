@@ -45,9 +45,7 @@ class NodeManager(object):
         tasks = []
         with self._lock:
             for node in self._nodes.values():
-                task = node.get_next_task(when)
-                if task:
-                    tasks.append(task)
+                tasks.extend(node.get_next_tasks(when))
         return tasks
 
     def get_node(self, agent_id):
