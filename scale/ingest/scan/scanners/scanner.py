@@ -280,16 +280,13 @@ class Scanner(object):
         for ingest in ingests:
             # We need to find the id of each ingest that was created. 
             # Using scan_id and file_name together as a unique composite key
-            saved_matches = Ingest.objects.all().filter(scan_id=ingest.scan_id, file_name=ingest.file_name)
-            if saved_matches is None or not len(saved_matches):
-                logger.error('Unable to find ingest id for Scan %i and file_name %s' % (ingest.scan_id, ingest.file_name))
-                continue
+            saved_match = Ingest.objects.get(scan_id=ingest.scan_id, file_name=ingest.file_name)
 
             logger.debug('Creating ingest task for %s', ingest.file_name)
             data = JobData()
             
-            # Use first result (should only be one) from query to get ingest ID
-            data.add_property_input('Ingest ID', str(saved_matches[0].id))
+            # Use result from query to get ingest ID
+            data.add_property_input('Ingest ID', str(saved_match.id))
             desc = {'scan_id': self.scan_id, 'file_name': ingest.file_name}
             when = ingest.transfer_ended if ingest.transfer_ended else now()
             event = TriggerEvent.objects.create_trigger_event('SCAN_TRANSFER', None, desc, when)
