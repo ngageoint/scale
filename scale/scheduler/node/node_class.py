@@ -451,8 +451,6 @@ class Node(object):
         :type task_update: :class:`job.tasks.update.TaskStatusUpdate`
         """
 
-        # TODO: remove this once done
-        logger.info('Health task exit code is %s', str(task_update.exit_code))
         if task_update.status == TaskStatusUpdate.FINISHED:
             self._is_health_check_normal = True
             self._last_heath_task = now()
@@ -464,6 +462,8 @@ class Node(object):
             self._error_inactive_all_health()
             if task_update.exit_code == HealthTask.BAD_DAEMON_CODE:
                 self._error_active(Node.BAD_DAEMON_ERR)
+            else:
+                logger.error('Unknown failed health check exit code: %s', str(task_update.exit_code))
         elif task_update.status == TaskStatusUpdate.KILLED:
             logger.warning('Health check task on host %s killed', self._hostname)
         if self._health_task.has_ended:
