@@ -24,46 +24,22 @@ class S3Scanner(Scanner):
         """
 
         super(S3Scanner, self).__init__('s3', ['s3'])
-        self._bucket_name = None
-        self._credentials = None
-        self._region_name = None
 
     def load_configuration(self, configuration):
         """See :meth:`ingest.scan.scanners.scanner.Scanner.load_configuration`
         """
 
-        self._bucket_name = configuration['bucket_name']
-        # TODO Change credentials to use an encrypted store key reference
-        self._credentials = AWSClient.instantiate_credentials_from_config(configuration)
-        self._recursive = configuration['recursive']
-        self._region_name = configuration.get('region_name')
+        # Nothing to do as all configuration is done at workspace broker level.
+        pass
 
     def validate_configuration(self, configuration):
         """See :meth:`ingest.scan.scanners.scanner.Scanner.validate_configuration`
         """
 
-        warnings = []
-        if 'bucket_name' not in configuration:
-            raise InvalidScannerConfiguration('bucket_name is required for s3 scanner')
-        if not isinstance(configuration['bucket_name'], basestring):
-            raise InvalidScannerConfiguration('bucket_name must be a string')
-        if not configuration['bucket_name']:
-            raise InvalidScannerConfiguration('bucket_name must be a non-empty string')
+        # No configuration is required for S3 scanner as everything is provided
+        # by way of the workspace configurations.
 
-        # If credentials exist, validate them.
-        credentials = AWSClient.instantiate_credentials_from_config(configuration)
-
-        region_name = configuration.get('region_name')
-
-        # Check whether the bucket can actually be accessed
-        with S3Client(credentials, region_name) as client:
-            try:
-                client.get_bucket(configuration['bucket_name'])
-            except ClientError:
-                warnings.append(ValidationWarning('bucket_access',
-                                                  'Unable to access S3 Bucket. Check the name, region and credentials.'))
-
-        return warnings
+        return []
 
     def _ingest_files(self, file_name):
         """Applies rules and update ingest for a single S3 object

@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 CURRENT_VERSION = '1.0'
 
 
-STRIKE_CONFIGURATION_SCHEMA = {
+SCAN_CONFIGURATION_SCHEMA = {
     'type': 'object',
     'required': ['workspace', 'scanner', 'files_to_ingest'],
     'additionalProperties': False,
@@ -115,7 +115,7 @@ class ScanConfiguration(object):
         self._configuration = configuration
 
         try:
-            validate(configuration, STRIKE_CONFIGURATION_SCHEMA)
+            validate(configuration, SCAN_CONFIGURATION_SCHEMA)
         except ValidationError as ex:
             raise InvalidScanConfiguration('Invalid Scan configuration: %s' % unicode(ex))
 

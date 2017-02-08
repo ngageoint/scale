@@ -24,13 +24,13 @@ class DirScanner(Scanner):
         """
 
         super(DirScanner, self).__init__('dir', ['host'])
-        self._scan_dir = None
+        self._transfer_suffix = None
 
     def load_configuration(self, configuration):
         """See :meth:`ingest.scan.scanners.scanner.Scanner.load_configuration`
         """
 
-        self._scan_dir = self._scanned_workspace.workspace_volume_path
+        self._transfer_suffix = configuration['transfer_suffix']
 
     def validate_configuration(self, configuration):
         """See :meth:`ingest.scan.scanners.scanner.Scanner.validate_configuration`
@@ -53,14 +53,17 @@ class DirScanner(Scanner):
         :returns: Ingest model prepped for bulk create
         :rtype: :class:`ingest.models.Ingest`
         """
-        
+
         ingest = None
-        
+
         if self._dry_run:
             logger.info("Scan detected file in workspace '%s': %s" % (self._scanned_workspace.name, file_name))
         else:
+            if file_name.endswith(self._transfer_suffix):
+                logger.info("Skipping file '%s' that is in transfer state." % file_name)
+                return
             size = os.path.getsize(file_name)
             ingest = self._process_ingest(file_name, size)
             logger.info("Scan processed file from workspace '%s': %s" % (self._scanned_workspace.name, file_name))
-            
+
         return ingest
