@@ -201,41 +201,52 @@ class Scanner(object):
         :rtype: List[:class:`ingest.models.Ingest`]
         """
         
+        deduplicate_file_names=set()
         list_count = len(new_ingests)
         ingest_file_names = [ingest.file_name for ingest in new_ingests]
-        
+
         existing_ingests = Ingest.objects.get_ingests_by_scan(scan_id, ingest_file_names)
         existing_ingest_file_names = [ingest.file_name for ingest in existing_ingests]
         
-        final_ingests = [x for x in new_ingests if x.file_name not in existing_ingest_file_names]
+        deduplicated_ingests = []
+        for ingest in new_ingests:
+            if ingest.file_name not in deduplicate_file_names:
+                deduplicate_file_names.add(ingest.file_name)
+                deduplicated_ingests.append(ingest)
+            else:
+                logging.info('Removed duplicate file_name %s from ingests at file_path %s' % (ingest.file_name, ingest.file_path))
 
-        logger.info('Removed %i duplicates from ingests.' % (list_count - len(final_ingests)))
+        final_ingests = [x for x in deduplicated_ingests if x.file_name not in existing_ingest_file_names]
+
+        logger.info('Removed %i duplicates of pre-existing ingests.' % (list_count - len(final_ingests)))
 
         return final_ingests
 
-    def _process_ingest(self, file_name, file_size):
+    def _process_ingest(self, file_path, file_size):
         """Processes the ingest file by applying the Scan configuration rules.
         
         This method will populate the ingest model and insert ingest object into
         appropriate list for later batch inserts.
 
-        :param file_name: The relative location of the ingest file within the workspace
-        :type file_name: string
+        :param file_path: The relative location of the ingest file within the workspace
+        :type file_path: string
         :param file_size: The size of the file in bytes
         :type file_size: long
         :returns: The ingest model prepped for bulk create
         :rtype: :class:`ingest.models.Ingest`
         """
 
+        file_name = os.path.basename(file_path)
+        
         ingest = Ingest()
         ingest.file_name = file_name
+        ingest.file_path = file_path
         ingest.scan_id = self.scan_id
-        ingest.media_type = get_media_type(file_name)
+        ingest.media_type = get_media_type(file_path)
         ingest.workspace = self._scanned_workspace
-        logger.info('New file on %s: %s', ingest.workspace.name, file_name)
+        logger.info('New file on %s: %s', ingest.workspace.name, file_path)
 
-        logger.info('Applying rules to %s (%s, %s)', file_name, ingest.media_type, file_size_to_string(file_size) if file_size else 'Unknown')
-        ingest.file_name = file_name
+        logger.info('Applying rules to %s (%s, %s)', file_path, ingest.media_type, file_size_to_string(file_size) if file_size else 'Unknown')
         if file_size:
             ingest.file_size = file_size
 
