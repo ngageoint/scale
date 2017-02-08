@@ -183,18 +183,11 @@ class Scanner(object):
         # Once all ingest rules have been applied, de-duplicate and then bulk insert
         ingests = self._deduplicate_ingest_list(self.scan_id, ingests)
         
-        deferred_ingests = [x for x in ingests if x.status == 'DEFERRED']
-        other_ingests = [x for x in ingests if x.status != 'DEFERRED']
-        
-        # bulk insert deferred
-        with transaction.atomic():
-            Ingest.objects.bulk_create(deferred_ingests)
-            
         # bulk insert remaining as queued
         with transaction.atomic():
-            Ingest.objects.bulk_create(other_ingests)
+            Ingest.objects.bulk_create(ingests)
             
-        self._start_ingest_tasks(other_ingests)
+        self._start_ingest_tasks(ingests)
         
     @staticmethod
     def _deduplicate_ingest_list(scan_id, new_ingests):
@@ -267,10 +260,9 @@ class Scanner(object):
             else:
                 logger.info('Rule match, %s will be registered as %s on workspace %s', file_name, file_path,
                             workspace_name)
-        # TODO: Do we really want items that are not matched to be deferred? Do we just want to omit them
         else:
-            logger.info('No rule match for %s, file is being deferred', file_name)
-            ingest.status = 'DEFERRED'
+            logger.info('No rule match for %s, file is being skipped', file_name)
+            ingest = None
             
         return ingest
 
@@ -288,7 +280,7 @@ class Scanner(object):
         for ingest in ingests:
             # We need to find the id of each ingest that was created. 
             # Using scan_id and file_name together as a unique composite key
-            saved_matches = Ingest.objects.all().filter(scan_id=ingest.scan_id).filter(file_name=ingest.file_name)
+            saved_matches = Ingest.objects.all().filter(scan_id=ingest.scan_id, file_name=ingest.file_name)
             if saved_matches is None or not len(saved_matches):
                 logger.error('Unable to find ingest id for Scan %i and file_name %s' % (ingest.scan_id, ingest.file_name))
                 continue
