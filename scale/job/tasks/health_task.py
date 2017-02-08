@@ -15,6 +15,8 @@ class HealthTask(Task):
     """Represents a task that performs a health check on a node. This class is thread-safe.
     """
 
+    BAD_DAEMON_CODE = 2
+
     def __init__(self, framework_id, agent_id):
         """Constructor
 
@@ -33,10 +35,11 @@ class HealthTask(Task):
         self._docker_params = []
         self._is_docker_privileged = False
         self._running_timeout_threshold = datetime.timedelta(minutes=15)
-        self._staging_timeout_threshold = datetime.timedelta(minutes=2)
+        self._staging_timeout_threshold = datetime.timedelta(minutes=5)
 
         # Create command that performs health check
-        self._command = 'echo Healthy!'
+        bad_daemon_check = 'docker version; if [[ $? != 0 ]]; then exit %d; fi' % HealthTask.BAD_DAEMON_CODE
+        self._command = bad_daemon_check
 
     def get_resources(self):
         """See :meth:`job.tasks.base_task.Task.get_resources`

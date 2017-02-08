@@ -8,7 +8,7 @@ from django.utils.timezone import now
 
 from job.execution.job_exe import RunningJobExecution
 from job.execution.tasks.cleanup_task import CLEANUP_TASK_ID_PREFIX
-from job.tasks.health_task import HEALTH_TASK_ID_PREFIX
+from job.tasks.health_task import HEALTH_TASK_ID_PREFIX, HealthTask
 from job.tasks.manager import TaskManager
 from job.tasks.pull_task import PULL_TASK_ID_PREFIX
 from job.tasks.update import TaskStatusUpdate
@@ -227,6 +227,32 @@ class TestNode(TestCase):
         task = node.get_next_tasks(new_time)[0]
         self.assertNotEqual(task.id, task_1_id)
         self.assertTrue(task.id.startswith(HEALTH_TASK_ID_PREFIX))
+
+    def test_handle_failed_health_task_bad_daemon(self):
+        """Tests handling a failed health task where the Docker daemon is bad"""
+
+        when = now()
+        node = Node(self.node_agent, self.node)
+        node._initial_cleanup_completed()
+        node._image_pull_completed()
+        node._update_state()
+        # Get health task
+        task = node.get_next_tasks(when)[0]
+        self.assertTrue(task.id.startswith(HEALTH_TASK_ID_PREFIX))
+
+        # Fail task with bad daemon exit code
+        self.task_mgr.launch_tasks([task], now())
+        update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.RUNNING, now())
+        self.task_mgr.handle_task_update(update)
+        node.handle_task_update(update)
+        update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.FAILED, now(),
+                                                          exit_code=HealthTask.BAD_DAEMON_CODE)
+        self.task_mgr.handle_task_update(update)
+        node.handle_task_update(update)
+
+        # Check node state
+        self.assertEqual(node._state, Node.DEGRADED)
+        self.assertTrue(Node.BAD_DAEMON_ERR.name in node._active_errors)
 
     def test_handle_successful_health_task(self):
         """Tests handling the health task successfully"""

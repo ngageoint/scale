@@ -40,12 +40,14 @@ class Node(object):
     well as run-time information retrieved from Mesos. This class is thread-safe."""
 
     # Node Errors
+    BAD_DAEMON_ERR = NodeError(name='BAD_DAEMON', description='Docker daemon is not responding', daemon_bad=True,
+                               pull_bad=True)
     CLEANUP_ERR = NodeError(name='CLEANUP', description='Failed to perform cleanup', daemon_bad=False, pull_bad=False)
     HEALTH_TIMEOUT_ERR = NodeError(name='HEALTH_TIMEOUT', description='Node health check timed out', daemon_bad=False,
                                    pull_bad=False)
     IMAGE_PULL_ERR = NodeError(name='IMAGE_PULL', description='Failed to pull Scale image', daemon_bad=False,
                                pull_bad=False)
-    HEALTH_ERRORS = [HEALTH_TIMEOUT_ERR]
+    HEALTH_ERRORS = [BAD_DAEMON_ERR, HEALTH_TIMEOUT_ERR]
 
     # Error thresholds
     CLEANUP_ERR_THRESHOLD = datetime.timedelta(minutes=2)
@@ -449,6 +451,8 @@ class Node(object):
         :type task_update: :class:`job.tasks.update.TaskStatusUpdate`
         """
 
+        # TODO: remove this once done
+        logger.info('Health task exit code is %s', str(task_update.exit_code))
         if task_update.status == TaskStatusUpdate.FINISHED:
             self._is_health_check_normal = True
             self._last_heath_task = now()
@@ -458,7 +462,8 @@ class Node(object):
             self._is_health_check_normal = False
             self._last_heath_task = now()
             self._error_inactive_all_health()
-            # TODO: active correct error based on exit code
+            if task_update.exit_code == HealthTask.BAD_DAEMON_CODE:
+                self._error_active(Node.BAD_DAEMON_ERR)
         elif task_update.status == TaskStatusUpdate.KILLED:
             logger.warning('Health check task on host %s killed', self._hostname)
         if self._health_task.has_ended:
