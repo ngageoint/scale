@@ -66,15 +66,20 @@ class S3Scanner(Scanner):
         return warnings
 
     def _ingest_files(self, file_name):
-        """Applies rules and initiates ingest for a single S3 object
+        """Applies rules and update ingest for a single S3 object
 
         :param file_name: S3 object key
         :type file_name: string
+        :returns: Ingest model prepped for bulk create
+        :rtype: :class:`ingest.models.Ingest`
         """
+        
+        ingest = None
         
         if self._dry_run:
             logger.info("Scan detected S3 object in workspace '%s': %s" % (self._scanned_workspace.name, file_name))
         else:
-            ingest = self._create_ingest(file_name)
-            self._process_ingest(ingest, file_name, None)
-            logger.info("Scan ingested S3 object from workspace '%s':" % (self._scanned_workspace.name, file_name))
+            ingest = self._process_ingest(file_name, None)
+            logger.info("Scan processed S3 object from workspace '%s':" % (self._scanned_workspace.name, file_name))
+            
+        return ingest

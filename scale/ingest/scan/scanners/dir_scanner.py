@@ -32,17 +32,6 @@ class DirScanner(Scanner):
 
         self._scan_dir = self._scanned_workspace.workspace_volume_path
 
-    def _callback(self, file_list):
-        """See :meth:`ingest.scan.scanners.scanner.Scanner._callback`
-        """
-        
-        for file_name in file_list:
-            if not self._stop_received:
-                self._ingest_file(file_name)
-                self._count += 1
-            else:
-                raise ScannerInterruptRequested
-
     def validate_configuration(self, configuration):
         """See :meth:`ingest.scan.scanners.scanner.Scanner.validate_configuration`
         """
@@ -61,12 +50,17 @@ class DirScanner(Scanner):
 
         :param file_name: full path to file name
         :type file_name: string
+        :returns: Ingest model prepped for bulk create
+        :rtype: :class:`ingest.models.Ingest`
         """
+        
+        ingest = None
         
         if self._dry_run:
             logger.info("Scan detected file in workspace '%s': %s" % (self._scanned_workspace.name, file_name))
         else:
-            ingest = self._create_ingest(file_name)
             size = os.path.getsize(file_name)
-            self._process_ingest(ingest, file_name, size)
-            logger.info("Scan ingested file from workspace '%s': %s" % (self._scanned_workspace.name, file_name))
+            ingest = self._process_ingest(file_name, size)
+            logger.info("Scan processed file from workspace '%s': %s" % (self._scanned_workspace.name, file_name))
+            
+        return ingest

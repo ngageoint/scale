@@ -128,7 +128,7 @@
             "description": "Scans a directory for existing source files to ingest",
             "category": "system",
             "is_system": true,
-            "is_long_running": true,
+            "is_long_running": false,
             "is_active": true,
             "is_paused": false,
             "uses_docker": true,
@@ -137,8 +137,9 @@
             "interface": {
                  "version": "1.0",
                  "command": "",
-                 "command_arguments": "scale_scan ${-i :Scan ID}",
-                 "input_data": [ { "name": "Scan ID", "type": "property" } ]
+                 "command_arguments": "scale_scan ${-i :Scan ID} ${-d :Dry Run}",
+                 "input_data": [ { "name": "Scan ID", "type": "property" },
+                                 { "name": "Dry Run", "type": "property" } ]
             },
             "revision_num": 1,
             "error_mapping": null,
@@ -149,8 +150,8 @@
             "mem_required": 1024.0,
             "disk_out_const_required": 0.0,
             "disk_out_mult_required": 0.0,
-            "created": "2017-01-16T00:00:00.0Z",
-            "last_modified": "2017-01-16T00:00:00.0Z",
+            "created": "2017-02-07T00:00:00.0Z",
+            "last_modified": "2017-02-07T00:00:00.0Z",
             "icon_code": "f02a"
         }
     },
@@ -163,10 +164,11 @@
             "interface": {
                  "version": "1.0",
                  "command": "",
-                 "command_arguments": "scale_scan ${-i :Scan ID}",
-                 "input_data": [ { "name": "Scan ID", "type": "property" } ]
+                 "command_arguments": "scale_scan ${-i :Scan ID} ${-d :Dry Run}",
+                 "input_data": [ { "name": "Scan ID", "type": "property" },
+                                 { "name": "Dry Run", "type": "property" } ]
             },
-            "created": "2017-01-16T00:00:00.0Z"
+            "created": "2017-02-07T00:00:00.0Z"
         }
     }
 ]

@@ -50,7 +50,7 @@ class Scanner(object):
         self._workspaces = {}  # The workspaces needed by this scanner, stored by workspace name {string: workspace}
         
     def set_recursive(self, recursive):
-        """Support configuration of scanner scan recursive property
+        """Support configuration of scanner recursive property
         
         :param recursive: The flag indicating whether workspace will be recursively scanned
         :type recursive: bool
@@ -88,15 +88,16 @@ class Scanner(object):
 
         raise NotImplementedError
 
-    def run(self, dry_run):
+    def run(self, dry_run=False):
         """Runs the scanner until signaled to stop by the stop() method or processing complete.
         Sub-classes that override this method should ensure the stop() method can quickly terminate the scan process.
 
-        Sub-classes should call _create_ingest() when they detect a new file in the monitored workspace. If the
-        sub-class is tracking transfer time (the amount of time it takes for the file to be copied into the monitored
-        workspace), it should call _start_transfer(), _update_transfer() as updates occur, and finally
-        _complete_transfer() and _process_ingest() when the transfer is complete. If the sub-class is not tracking
+        Sub-classes should call _create_ingest() when they identify a file within the workspace. 
+        Once _process_ingest() when the transfer is complete. If the sub-class is not tracking
         transfer time, it should just call _process_ingest().
+        
+        :param dry_run: Flag to enable file scanning only, no file ingestion will occur
+        :type dry_run: bool
         """
 
         logger.info('Running %s scanner %s...' % (self.scanner_type, 'in dry run mode ' if dry_run else ''))
@@ -162,19 +163,74 @@ class Scanner(object):
         :type file_list: string
         """
         
+        ingests = []
+        
         for file_name in file_list:
             if not self._stop_received:
-                self._ingest_file(file_name)
+                ingest = self._ingest_file(file_name)
+                # Only bother appending ingests 
+                if not self._dry_run:
+                    ingests.append(ingest)
                 self._count += 1
             else:
                 raise ScannerInterruptRequested
+                
+        # If no ingests were added, don't bother moving on
+        if not len(ingests):
+            logger.debug('No ingests for batch, this will always be the case during a dry-run.')
+            return
+                
+        # Once all ingest rules have been applied, de-duplicate and then bulk insert
+        ingests = self._deduplicate_ingest_list(self.scan_id, ingests)
+        
+        deferred_ingests = [x for x in ingests if x.status == 'DEFERRED']
+        other_ingests = [x for x in ingests if x.status != 'DEFERRED']
+        
+        # bulk insert deferred
+        with transaction.atomic():
+            Ingest.objects.bulk_create(deferred_ingests)
+            
+        # bulk insert remaining as queued
+        with transaction.atomic():
+            Ingest.objects.bulk_create(other_ingests)
+            
+        self._start_ingest_tasks(other_ingests)
+        
+    @staticmethod
+    def _deduplicate_ingest_list(scan_id, new_ingests):
+        """Check the ingest records to ensure these ingests are not already created by previous scan run
+        
+        :param scan_id: ID of scan to check against
+        :type scan_id: integer
+        :param new_ingests: List of ingest models to validate for uniqueness
+        :type new_ingests: :class:`ingest.models.Ingest`
+        :returns: List of deduplicated ingest models
+        :rtype: List[:class:`ingest.models.Ingest`]
+        """
+        
+        list_count = len(new_ingests)
+        ingest_file_names = [ingest.file_name for ingest in new_ingests]
+        
+        existing_ingests = Ingest.objects.get_ingests_by_scan(scan_id, ingest_file_names)
+        existing_ingest_file_names = [ingest.file_name for ingest in existing_ingests]
+        
+        final_ingests = [x for x in new_ingests if x.file_name not in existing_ingest_file_names]
 
-    def _create_ingest(self, file_name):
-        """Creates a new ingest for the given file name. The database save is the caller's responsibility.
+        logger.info('Removed %i duplicates from ingests.' % (list_count - len(final_ingests)))
 
-        :param file_name: The name of the file being ingested
+        return final_ingests
+
+    def _process_ingest(self, file_name, file_size):
+        """Processes the ingest file by applying the Scan configuration rules.
+        
+        This method will populate the ingest model and insert ingest object into
+        appropriate list for later batch inserts.
+
+        :param file_name: The relative location of the ingest file within the workspace
         :type file_name: string
-        :returns: The new ingest model
+        :param file_size: The size of the file in bytes
+        :type file_size: long
+        :returns: The ingest model prepped for bulk create
         :rtype: :class:`ingest.models.Ingest`
         """
 
@@ -183,26 +239,10 @@ class Scanner(object):
         ingest.scan_id = self.scan_id
         ingest.media_type = get_media_type(file_name)
         ingest.workspace = self._scanned_workspace
-
         logger.info('New file on %s: %s', ingest.workspace.name, file_name)
-        return ingest
 
-    @transaction.atomic
-    def _process_ingest(self, ingest, file_path, file_size):
-        """Processes the ingest file by applying the Scan configuration rules. This method will update the ingest
-        model in the database and create an ingest task (if applicable) in an atomic transaction. 
-
-        :param ingest: The ingest model
-        :type ingest: :class:`ingest.models.Ingest`
-        :param file_path: The relative location of the ingest file within the workspace
-        :type file_path: string
-        :param file_size: The size of the file in bytes
-        :type file_size: long
-        """
-
-        file_name = ingest.file_name
         logger.info('Applying rules to %s (%s, %s)', file_name, ingest.media_type, file_size_to_string(file_size) if file_size else 'Unknown')
-        ingest.file_path = file_path
+        ingest.file_name = file_name
         if file_size:
             ingest.file_size = file_size
 
@@ -227,40 +267,49 @@ class Scanner(object):
             else:
                 logger.info('Rule match, %s will be registered as %s on workspace %s', file_name, file_path,
                             workspace_name)
-            if not ingest.id:
-                ingest.save()
-            self._start_ingest_task(ingest)
+        # TODO: Do we really want items that are not matched to be deferred? Do we just want to omit them
         else:
             logger.info('No rule match for %s, file is being deferred', file_name)
             ingest.status = 'DEFERRED'
-            ingest.save()
+            
+        return ingest
 
     @transaction.atomic
-    def _start_ingest_task(self, ingest):
-        """Starts a task for the given ingest in an atomic transaction
+    def _start_ingest_tasks(self, ingests):
+        """Starts a batch of tasks for the given scan in an atomic transaction
 
-        :param ingest: The ingest model
-        :type ingest: :class:`ingest.models.Ingest`
+        :param ingests: The ingest models
+        :type ingests: list[:class:`ingest.models.Ingest`]
         """
-
-        logger.info('Creating ingest task for %s', ingest.file_name)
 
         # Create new ingest job and mark ingest as QUEUED
         ingest_job_type = Ingest.objects.get_ingest_job_type()
-        data = JobData()
-        data.add_property_input('Ingest ID', str(ingest.id))
-        desc = {'scan_id': self.scan_id, 'file_name': ingest.file_name}
-        when = ingest.transfer_ended if ingest.transfer_ended else now()
-        event = TriggerEvent.objects.create_trigger_event('SCAN_TRANSFER', None, desc, when)
-        job_configuration = JobConfiguration()
-        if ingest.workspace:
-            job_configuration.add_job_task_workspace(ingest.workspace.name, MODE_RW)
-        if ingest.new_workspace:
-            job_configuration.add_job_task_workspace(ingest.new_workspace.name, MODE_RW)
-        ingest_job = Queue.objects.queue_new_job(ingest_job_type, data, event, job_configuration)
+        
+        for ingest in ingests:
+            # We need to find the id of each ingest that was created. 
+            # Using scan_id and file_name together as a unique composite key
+            saved_matches = Ingest.objects.all().filter(scan_id=ingest.scan_id).filter(file_name=ingest.file_name)
+            if saved_matches is None or not len(saved_matches):
+                logger.error('Unable to find ingest id for Scan %i and file_name %s' % (ingest.scan_id, ingest.file_name))
+                continue
 
-        ingest.job = ingest_job
-        ingest.status = 'QUEUED'
-        ingest.save()
+            logger.debug('Creating ingest task for %s', ingest.file_name)
+            data = JobData()
+            
+            # Use first result (should only be one) from query to get ingest ID
+            data.add_property_input('Ingest ID', str(saved_matches[0].id))
+            desc = {'scan_id': self.scan_id, 'file_name': ingest.file_name}
+            when = ingest.transfer_ended if ingest.transfer_ended else now()
+            event = TriggerEvent.objects.create_trigger_event('SCAN_TRANSFER', None, desc, when)
+            job_configuration = JobConfiguration()
+            if ingest.workspace:
+                job_configuration.add_job_task_workspace(ingest.workspace.name, MODE_RW)
+            if ingest.new_workspace:
+                job_configuration.add_job_task_workspace(ingest.new_workspace.name, MODE_RW)
+            ingest_job = Queue.objects.queue_new_job(ingest_job_type, data, event, job_configuration)
 
-        logger.info('Successfully created ingest task for %s', ingest.file_name)
+            ingest.job = ingest_job
+            ingest.status = 'QUEUED'
+            ingest.save()
+
+            logger.debug('Successfully created ingest task for %s', ingest.file_name)

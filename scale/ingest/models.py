@@ -114,6 +114,27 @@ class IngestManager(models.Manager):
         else:
             ingests = ingests.order_by('last_modified')
         return ingests
+        
+    def get_ingests_by_scan(self, scan_id, file_names=None):
+        """Returns a list of ingests associated with a scan and optionally files
+
+        :param scan_id: Query ingests created by a specific scan processor.
+        :type scan_id: list[string]
+        :param file_names: Query ingests with the specific file names.
+        :type file_names: list[string]
+        :returns: The list of ingests that match the scan and file_names.
+        :rtype: list[:class:`ingest.models.Ingest`]
+        """
+
+        # Fetch a list of ingests
+        ingests = Ingest.objects.all()
+
+        if scan_id:
+            ingests = ingests.filter(scan_id=scan_id)
+        if file_names:
+            ingests = ingests.filter(file_name__in=file_names)
+        
+        return ingests
 
     def get_details(self, ingest_id):
         """Gets additional details for the given ingest model based on related model attributes.

@@ -35,7 +35,7 @@ class Command(BaseCommand):
         super(Command, self).__init__()
 
         self._scanner = None
-
+        
     def handle(self, **options):
         """See :meth:`django.core.management.base.BaseCommand.handle`.
 
