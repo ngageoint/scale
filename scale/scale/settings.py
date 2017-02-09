@@ -37,10 +37,6 @@ CONFIG_URI = None
 # Directory for rotating metrics storage
 METRICS_DIR = None
 
-# Base URL for influxdb access in the form http://<machine>:8086/db/<cadvisor_db_name>/series?u=<username>&p=<password>&
-# An invalid or None entry will disable gathering of these statistics
-INFLUXDB_BASE_URL = None
-
 # URL for logstash, or None to disable logstash
 LOGGING_ADDRESS = None
 # Base URL of elasticsearch nodes

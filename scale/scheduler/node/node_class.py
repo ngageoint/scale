@@ -96,7 +96,7 @@ class Node(object):
         self._lock = threading.Lock()
         self._port = node.port
         self._pull_task = None
-        self._state = self.INACTIVE
+        self._state = None
         self._update_state()
 
     @property
@@ -497,6 +497,8 @@ class Node(object):
         """Updates the node's state. Caller must have obtained the node's thread lock.
         """
 
+        old_state = self._state
+
         self._is_daemon_bad = False
         self._is_pull_bad = False
         for active_error in self._active_errors.values():
@@ -517,3 +519,9 @@ class Node(object):
             self._state = self.IMAGE_PULL
         else:
             self._state = self.READY
+
+        if old_state and old_state != self._state:
+            if self._state == self.DEGRADED:
+                logger.warning('Host %s is now %s', self._hostname, self._state.state)
+            else:
+                logger.info('Host %s is now %s', self._hostname, self._state.state)
