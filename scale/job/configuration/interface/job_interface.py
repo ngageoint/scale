@@ -16,6 +16,7 @@ from job.configuration.interface.scale_file import ScaleFileDescription
 from job.configuration.results.exceptions import InvalidResultsManifest
 from job.configuration.results.results_manifest.results_manifest import ResultsManifest
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
+from vault.secrets_handler import SecretsHandler
 
 
 
@@ -461,7 +462,7 @@ class JobInterface(object):
 
         return command_arguments
 
-    def populate_command_argument_settings(self, command_arguments, job_configuration):
+    def populate_command_argument_settings(self, command_arguments, job_configuration, job_type):
         """Return the command arguments string,
         populated with the settings from the job_configuration.
 
@@ -469,6 +470,8 @@ class JobInterface(object):
         :type command_arguments: string
         :param job_configuration: The job configuration
         :type job_configuration: :class:`job.configuration.configuration.job_configuration.JobConfiguration`
+        :param job_type: The job type definition 
+        :type job_type: :class:`job.models.JobType`
         :return: command arguments with the settings populated
         :rtype: str
         """
@@ -477,17 +480,20 @@ class JobInterface(object):
         interface_settings = self.definition['settings']
 
         param_replacements = self._get_settings_values(interface_settings,
-                                                       config_settings)
+                                                       config_settings,
+                                                       job_type)
 
         command_arguments = self._replace_command_parameters(command_arguments, param_replacements)
 
         return command_arguments
 
-    def populate_env_vars_arguments(self, job_configuration):
+    def populate_env_vars_arguments(self, job_configuration, job_type):
         """Populates the environment variables with the requested values.
 
         :param job_configuration: The job configuration
         :type job_configuration: :class:`job.configuration.configuration.job_configuration.JobConfiguration`
+        :param job_type: The job type definition 
+        :type job_type: :class:`job.models.JobType`
 
         :return: env_vars populated with values
         :rtype: dict
@@ -498,7 +504,8 @@ class JobInterface(object):
         interface_settings = self.definition['settings']
 
         param_replacements = self._get_settings_values(interface_settings,
-                                                       config_settings)
+                                                       config_settings,
+                                                       job_type)
         env_vars = self._replace_env_var_parameters(env_vars, param_replacements)
 
         return env_vars
@@ -692,8 +699,7 @@ class JobInterface(object):
             if data_item_name == output_data['name']:
                 return output_data
 
-    @staticmethod
-    def _get_settings_values(settings, config_settings):
+    def _get_settings_values(self, settings, config_settings, job_type):
         """
         :param settings: The job configuration
         :type settings: JSON
@@ -706,16 +712,25 @@ class JobInterface(object):
         param_replacements = {}
 
         # Isolate the job_type settings and convert to list
-        config_settings = config_settings['job_task']['settings']
+        config_settings =  ['job_task']['settings']
         config_settings_dict = {setting['name']: setting['value'] for setting in config_settings}
 
         for setting in settings:
             setting_name = setting['name']
-
-            if setting_name in config_settings_dict:
-                param_replacements[setting_name] = config_settings_dict[setting_name]
+            setting_is_secret = setting_secret['secret']
+            
+            if setting_is_secret:
+                secret_path = '/' + '/'.join([job_type.name, job_type.verison])
+                
+                secrets_handler = SecretsHandler()
+                settings_value = secrets_handler.get_job_task_secret(secret_path, secret_name)
+                
+                param_replacements[setting_name] = settings_value
             else:
-                param_replacements[setting_name] = ''
+                if setting_name in config_settings_dict:
+                    param_replacements[setting_name] = config_settings_dict[setting_name]
+                else:
+                    param_replacements[setting_name] = ''
 
         return param_replacements
 
