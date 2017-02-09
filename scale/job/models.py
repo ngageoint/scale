@@ -1037,7 +1037,8 @@ class JobExecutionManager(models.Manager):
             # Add configuration values for the settings to the command line.
             interface = job_exe.get_job_interface()
             job_exe.command_arguments = interface.populate_command_argument_settings(job_exe.command_arguments,
-                                                                                     job_exe.get_job_configuration())
+                                                                                     job_exe.get_job_configuration(),
+                                                                                     job_exe.job_type)
 
             job_exe.job = jobs[job_exe.job_id]
             job_exe.set_cluster_id(framework_id)
@@ -1322,7 +1323,7 @@ class JobExecution(models.Model):
         
         # Add job environment variable as docker parameters
         interface = self.get_job_interface()
-        env_vars = interface.populate_env_vars_arguments(configuration)
+        env_vars = interface.populate_env_vars_arguments(configuration, self.job.job_type)
 
         for env_var in env_vars:
             env_var_name = env_var['name']
