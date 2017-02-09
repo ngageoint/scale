@@ -47,6 +47,8 @@ class Node(object):
                                    pull_bad=False)
     IMAGE_PULL_ERR = NodeError(name='IMAGE_PULL', description='Failed to pull Scale image', daemon_bad=False,
                                pull_bad=False)
+    LOW_DOCKER_SPACE_ERR = NodeError(name='LOW_DOCKER_SPACE', description='Low Docker disk space', daemon_bad=False,
+                                     pull_bad=True)
     HEALTH_ERRORS = [BAD_DAEMON_ERR, HEALTH_TIMEOUT_ERR]
 
     # Error thresholds
@@ -461,7 +463,11 @@ class Node(object):
             self._last_heath_task = now()
             self._error_inactive_all_health()
             if task_update.exit_code == HealthTask.BAD_DAEMON_CODE:
+                logger.warning('Docker daemon not responding on host %s', self._hostname)
                 self._error_active(Node.BAD_DAEMON_ERR)
+            elif task_update.exit_code == HealthTask.LOW_DOCKER_SPACE_CODE:
+                logger.warning('Low Docker disk space on host %s', self._hostname)
+                self._error_active(Node.LOW_DOCKER_SPACE_ERR)
             else:
                 logger.error('Unknown failed health check exit code: %s', str(task_update.exit_code))
         elif task_update.status == TaskStatusUpdate.KILLED:
