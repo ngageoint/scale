@@ -170,9 +170,9 @@ class NodeManager(object):
         with self._lock:
             # Add new nodes
             for node_model in new_node_models:
+                logger.info('New node %s registered with agent ID %s', node_model.hostname, node_model.slave_id)
                 self._nodes[node_model.hostname] = SchedulerNode(node_model.slave_id, node_model)
                 self._agent_ids[node_model.slave_id] = node_model.hostname
-                logger.info('New node %s registered with agent ID %s', node_model.hostname, node_model.slave_id)
             # Update nodes with new agent IDs
             for hostname, slave_info in nodes_with_new_agent_id.items():
                 old_agent_id = self._nodes[hostname].agent_id
