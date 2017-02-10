@@ -432,7 +432,7 @@ class ScanManager(models.Manager):
     """
 
     @transaction.atomic
-    def create_scan(self, name, title, description, configuration):
+    def create_scan(self, name, title, description, configuration, dry_run=True):
         """Creates a new Scan process with the given configuration and returns the new Scan model. The Scan model
         will be saved in the database and the job to run the Scan process will be placed on the queue. All changes to
         the database will occur in an atomic transaction.
@@ -445,6 +445,8 @@ class ScanManager(models.Manager):
         :type description: string
         :param configuration: The Scan configuration
         :type configuration: dict
+        :param dry_run: Whether the scan will execute as a dry run
+        :type dry_run: bool
         :returns: The new Scan process
         :rtype: :class:`ingest.models.Scan`
 
@@ -466,6 +468,7 @@ class ScanManager(models.Manager):
         scan_type = self.get_scan_job_type()
         job_data = JobData()
         job_data.add_property_input('Scan ID', unicode(scan.id))
+        job_data.add_property_input('Dry Run', dry_run)
         event_description = {'scan_id': scan.id}
         event = TriggerEvent.objects.create_trigger_event('SCAN_CREATED', None, event_description, now())
         scan.job = Queue.objects.queue_new_job(scan_type, job_data, event)
