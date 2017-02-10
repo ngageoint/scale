@@ -56,7 +56,7 @@ def run(client):
         app_name = '%s-logstash' % FRAMEWORK_NAME
         log_port = deploy_logstash(client, app_name, es_urls)
         print("LOGGING_ADDRESS=tcp://%s.marathon.mesos:%s" % (app_name, log_port))
-        print("LOGGING_HEALTH_ADDRESS=%s.marathon.l4lb.thisdcos.directory:8000" % app_name)
+        print("LOGGING_HEALTH_ADDRESS=%s.marathon.l4lb.thisdcos.directory:80" % app_name)
 
     # Determine if Web Server should be deployed.
     if DEPLOY_WEBSERVER.lower() == 'true':
