@@ -712,12 +712,12 @@ class JobInterface(object):
         param_replacements = {}
 
         # Isolate the job_type settings and convert to list
-        config_settings =  ['job_task']['settings']
+        config_settings =  config_settings['job_task']['settings']
         config_settings_dict = {setting['name']: setting['value'] for setting in config_settings}
 
         for setting in settings:
             setting_name = setting['name']
-            setting_is_secret = setting_secret['secret']
+            setting_is_secret = setting['secret']
             
             if setting_is_secret:
                 secret_path = '/' + '/'.join([job_type.name, job_type.verison])

@@ -1038,7 +1038,7 @@ class JobExecutionManager(models.Manager):
             interface = job_exe.get_job_interface()
             job_exe.command_arguments = interface.populate_command_argument_settings(job_exe.command_arguments,
                                                                                      job_exe.get_job_configuration(),
-                                                                                     job_exe.job_type)
+                                                                                     job_exe.job.job_type)
 
             job_exe.job = jobs[job_exe.job_id]
             job_exe.set_cluster_id(framework_id)

@@ -5,7 +5,7 @@ import jwt
 import json
 
 from django.conf import settings
-from vault.exceptions import UnreachableSecretsBackend, InvalidSecretsAuthorization, InvalidSecretPath, InvalidSecretsRequest
+from vault.exceptions import InvalidSecretsBackend, InvalidSecretsAuthorization, InvalidSecretPath, InvalidSecretsRequest
 
 
 class SecretsHandler(object):

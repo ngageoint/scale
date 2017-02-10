@@ -7,6 +7,7 @@ from django.test import TestCase
 from mock import patch, MagicMock, Mock
 
 import storage.test.utils as storage_test_utils
+import job.test.utils as job_test_utils
 from job.configuration.data.exceptions import InvalidConnection, InvalidData
 from job.configuration.data.job_connection import JobConnection
 from job.configuration.data.job_data import JobData
@@ -906,8 +907,9 @@ class TestJobInterfacePreSteps(TestCase):
         job_config = JobConfiguration(job_config_json)
 
         job_interface = JobInterface(job_interface_dict)
+        job_exe = job_test_utils.create_job_exe(status='QUEUED', configuration=job_config.get_dict())
 
-        job_command_arguments = job_interface.populate_command_argument_settings(command_arguments, job_config)
+        job_command_arguments = job_interface.populate_command_argument_settings(command_arguments, job_config, job_exe)
         self.assertEqual(job_command_arguments, config_key_value, 'expected a different command from pre_steps')
 
     def test_required_settings_in_command(self):
@@ -930,8 +932,9 @@ class TestJobInterfacePreSteps(TestCase):
         job_config = JobConfiguration(job_config_json)
 
         job_interface = JobInterface(job_interface_dict)
+        job_exe = job_test_utils.create_job_exe(status='QUEUED', configuration=job_config.get_dict())
 
-        job_command_arguments = job_interface.populate_command_argument_settings(command_arguments, job_config)
+        job_command_arguments = job_interface.populate_command_argument_settings(command_arguments, job_config, job_exe)
         self.assertEqual(job_command_arguments,
                          ' '.join(config_key_values),
                          'expected a different command from pre_steps')
@@ -954,8 +957,9 @@ class TestJobInterfacePreSteps(TestCase):
         job_config = JobConfiguration(job_config_json)
 
         job_interface = JobInterface(job_interface_dict)
+        job_exe = job_test_utils.create_job_exe(status='QUEUED', configuration=job_config.get_dict())
 
-        job_command_arguments = job_interface.populate_command_argument_settings(command_arguments, job_config)
+        job_command_arguments = job_interface.populate_command_argument_settings(command_arguments, job_config, job_exe)
         self.assertEqual(job_command_arguments.strip(' '),
                          config_key_value,
                          'expected a different command from pre_steps')
@@ -985,8 +989,9 @@ class TestJobInterfacePreSteps(TestCase):
         job_config = JobConfiguration(job_config_json)
 
         job_interface = JobInterface(job_interface_dict)
+        job_exe = job_test_utils.create_job_exe(status='QUEUED', configuration=job_config.get_dict())
 
-        env_vars_arguments = job_interface.populate_env_vars_arguments(job_config)
+        env_vars_arguments = job_interface.populate_env_vars_arguments(job_config, job_exe)
         env_vars_value1 = env_vars_arguments[0]['value']
         env_vars_value2 = env_vars_arguments[1]['value']
         self.assertEqual(env_vars_value1, config_key_value[0], 'expected a different command from pre_steps')
