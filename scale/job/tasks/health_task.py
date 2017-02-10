@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 
 import datetime
 
+from django.conf import settings
+
 from job.resources import NodeResources
 from job.tasks.base_task import AtomicCounter, Task
 
@@ -17,6 +19,7 @@ class HealthTask(Task):
 
     BAD_DAEMON_CODE = 2
     LOW_DOCKER_SPACE_CODE = 3
+    BAD_LOGSTASH_CODE = 4
 
     def __init__(self, framework_id, agent_id):
         """Constructor
@@ -38,16 +41,26 @@ class HealthTask(Task):
         self._running_timeout_threshold = datetime.timedelta(minutes=15)
         self._staging_timeout_threshold = datetime.timedelta(minutes=5)
 
+        health_check_commands = []
+
         # Check if docker version works (indicates if daemon is working)
         bad_daemon_check = 'docker version; if [[ $? != 0 ]]; then exit %d; fi' % HealthTask.BAD_DAEMON_CODE
+        health_check_commands.append(bad_daemon_check)
 
         # Check if Docker disk space is below 1 GiB (assumes /var/lib/docker, ignores check otherwise)
         get_disk_space = 'df --output=avail /var/lib/docker | tail -1'
         test_disk_space = 'test `%s` -lt 1048576; if [[ $? == 0 ]]; then exit %d; fi'
         test_disk_space = test_disk_space % (get_disk_space, HealthTask.LOW_DOCKER_SPACE_CODE)
         low_docker_space_check = 'if [[ -d /var/lib/docker ]]; then %s; fi' % test_disk_space
+        health_check_commands.append(low_docker_space_check)
 
-        self._command = ' && '.join([bad_daemon_check, low_docker_space_check])
+        # Check to ensure that logstash is reachable
+        if settings.LOGGING_HEALTH_ADDRESS:
+            logstash_check = 'curl %s; if [[ $? != 0 ]]; then exit %d; fi'
+            logstash_check = logstash_check % (settings.LOGGING_HEALTH_ADDRESS, HealthTask.BAD_LOGSTASH_CODE)
+            health_check_commands.append(logstash_check)
+
+        self._command = ' && '.join(health_check_commands)
 
     def get_resources(self):
         """See :meth:`job.tasks.base_task.Task.get_resources`

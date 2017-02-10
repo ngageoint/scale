@@ -39,6 +39,8 @@ METRICS_DIR = None
 
 # URL for logstash, or None to disable logstash
 LOGGING_ADDRESS = None
+LOGGING_HEALTH_ADDRESS = None
+
 # Base URL of elasticsearch nodes
 ELASTICSEARCH_URLS = None
 # Placeholder for Elasticsearch object. Needed for unit tests.

@@ -42,6 +42,8 @@ class Node(object):
     # Node Errors
     BAD_DAEMON_ERR = NodeError(name='BAD_DAEMON', description='Docker daemon is not responding', daemon_bad=True,
                                pull_bad=True)
+    BAD_LOGSTASH_ERR = NodeError(name='BAD_LOGSTASH', description='Logstash is not responding', daemon_bad=False,
+                                 pull_bad=False)
     CLEANUP_ERR = NodeError(name='CLEANUP', description='Failed to perform cleanup', daemon_bad=False, pull_bad=False)
     HEALTH_TIMEOUT_ERR = NodeError(name='HEALTH_TIMEOUT', description='Node health check timed out', daemon_bad=False,
                                    pull_bad=False)
@@ -468,6 +470,9 @@ class Node(object):
             elif task_update.exit_code == HealthTask.LOW_DOCKER_SPACE_CODE:
                 logger.warning('Low Docker disk space on host %s', self._hostname)
                 self._error_active(Node.LOW_DOCKER_SPACE_ERR)
+            elif task_update.exit_code == HealthTask.BAD_LOGSTASH_CODE:
+                logger.warning('Logstash not responding on host %s', self._hostname)
+                self._error_active(Node.BAD_LOGSTASH_ERR)
             else:
                 logger.error('Unknown failed health check exit code: %s', str(task_update.exit_code))
         elif task_update.status == TaskStatusUpdate.KILLED:

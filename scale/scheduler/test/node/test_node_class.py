@@ -254,6 +254,32 @@ class TestNode(TestCase):
         self.assertEqual(node._state, Node.DEGRADED)
         self.assertTrue(Node.BAD_DAEMON_ERR.name in node._active_errors)
 
+    def test_handle_failed_health_task_bad_logstash(self):
+        """Tests handling a failed health task where logstash is unreachable"""
+
+        when = now()
+        node = Node(self.node_agent, self.node)
+        node._initial_cleanup_completed()
+        node._image_pull_completed()
+        node._update_state()
+        # Get health task
+        task = node.get_next_tasks(when)[0]
+        self.assertTrue(task.id.startswith(HEALTH_TASK_ID_PREFIX))
+
+        # Fail task with bad logstash exit code
+        self.task_mgr.launch_tasks([task], now())
+        update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.RUNNING, now())
+        self.task_mgr.handle_task_update(update)
+        node.handle_task_update(update)
+        update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.FAILED, now(),
+                                                          exit_code=HealthTask.BAD_LOGSTASH_CODE)
+        self.task_mgr.handle_task_update(update)
+        node.handle_task_update(update)
+
+        # Check node state
+        self.assertEqual(node._state, Node.DEGRADED)
+        self.assertTrue(Node.BAD_LOGSTASH_ERR.name in node._active_errors)
+
     def test_handle_failed_health_task_low_docker_space(self):
         """Tests handling a failed health task where Docker has low disk space"""
 
