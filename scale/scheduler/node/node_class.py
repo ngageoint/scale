@@ -525,7 +525,7 @@ class Node(object):
         else:
             self._state = self.READY
 
-        if old_state and old_state != self._state:
+        if old_state != self._state:
             if self._state == self.DEGRADED:
                 logger.warning('Host %s is now %s', self._hostname, self._state.state)
             else:
