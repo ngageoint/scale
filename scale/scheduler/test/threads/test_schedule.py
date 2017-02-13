@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 import django
 from django.test import TransactionTestCase
+from django.utils.timezone import now
 from mock import MagicMock, patch
 
 from job.execution.job_exe import RunningJobExecution
@@ -40,9 +41,11 @@ class TestSchedulingThread(TransactionTestCase):
         with patch('scheduler.node.manager.api.get_slaves') as mock_get_slaves:
             mock_get_slaves.return_value = self.slave_infos
             node_mgr.sync_with_database('master_host', 5050)
-        # Ignore initial cleanup tasks
+        # Ignore initial cleanup tasks and health check tasks
         for node in node_mgr.get_nodes():
-            node.initial_cleanup_completed()
+            node._last_heath_task = now()
+            node._initial_cleanup_completed()
+            node._update_state()
 
         self.queue_1 = queue_test_utils.create_queue(cpus_required=4.0, mem_required=1024.0, disk_in_required=100.0,
                                                      disk_out_required=200.0, disk_total_required=300.0)
@@ -108,7 +111,8 @@ class TestSchedulingThread(TransactionTestCase):
 
         # Ignore cleanup tasks
         for node in node_mgr.get_nodes():
-            node.initial_cleanup_completed()
+            node._initial_cleanup_completed()
+            node._update_state()
 
         num_tasks = self._scheduling_thread._perform_scheduling()
         self.assertEqual(num_tasks, 3)  # One is already running, should only be able to schedule 3 more

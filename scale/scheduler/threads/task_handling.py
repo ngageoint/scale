@@ -10,12 +10,9 @@ from django.utils.timezone import now
 from mesos.interface import mesos_pb2
 
 from job.execution.manager import running_job_mgr
-from job.execution.tasks.cleanup_task import CLEANUP_TASK_ID_PREFIX
 from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
 from job.models import JobExecution
 from job.tasks.manager import task_mgr
-from job.tasks.pull_task import PULL_TASK_ID_PREFIX
-from scheduler.cleanup.manager import cleanup_mgr
 from scheduler.node.manager import node_mgr
 from scheduler.recon.manager import recon_mgr
 
@@ -122,12 +119,8 @@ class TaskHandlingThread(object):
         # Time out tasks that have exceeded thresholds
         for task in task_mgr.get_timeout_tasks(when):
             task_to_kill = task
-            # Update the manager corresponding to the task's type so the manager can handle task failure
-            if task.id.startswith(PULL_TASK_ID_PREFIX):
-                node_mgr.handle_task_timeout(task)
-            elif task.id.startswith(CLEANUP_TASK_ID_PREFIX):
-                cleanup_mgr.handle_task_timeout(task)
-            elif task.id.startswith(JOB_TASK_ID_PREFIX):
+            # Handle task timeout based on the type of the task
+            if task.id.startswith(JOB_TASK_ID_PREFIX):
                 job_exe_id = JobExecution.get_job_exe_id(task.id)
                 running_job_exe = running_job_mgr.get_job_exe(job_exe_id)
 
@@ -137,6 +130,9 @@ class TaskHandlingThread(object):
                         task_to_kill = running_job_exe.execution_timed_out(task, when)
                     except DatabaseError:
                         logger.exception('Error failing timed out job execution %i', running_job_exe.id)
+            else:
+                # Not a job task, so must be a node task
+                node_mgr.handle_task_timeout(task)
 
             if task_to_kill:
                 pb_task_to_kill = mesos_pb2.TaskID()

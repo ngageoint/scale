@@ -33,9 +33,11 @@ class NodeManager(object):
             self._new_agent_ids = set()
             self._nodes = {}
 
-    def get_next_tasks(self):
+    def get_next_tasks(self, when):
         """Returns the next node tasks to schedule
 
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
         :returns: A list of the next node tasks to schedule
         :rtype: [:class:`job.tasks.base_task.Task`]
         """
@@ -43,9 +45,7 @@ class NodeManager(object):
         tasks = []
         with self._lock:
             for node in self._nodes.values():
-                task = node.get_next_task()
-                if task:
-                    tasks.append(task)
+                tasks.extend(node.get_next_tasks(when))
         return tasks
 
     def get_node(self, agent_id):
@@ -170,9 +170,9 @@ class NodeManager(object):
         with self._lock:
             # Add new nodes
             for node_model in new_node_models:
+                logger.info('New node %s registered with agent ID %s', node_model.hostname, node_model.slave_id)
                 self._nodes[node_model.hostname] = SchedulerNode(node_model.slave_id, node_model)
                 self._agent_ids[node_model.slave_id] = node_model.hostname
-                logger.info('New node %s registered with agent ID %s', node_model.hostname, node_model.slave_id)
             # Update nodes with new agent IDs
             for hostname, slave_info in nodes_with_new_agent_id.items():
                 old_agent_id = self._nodes[hostname].agent_id

@@ -294,31 +294,6 @@ class RunningJobExecution(object):
             from queue.models import Queue
             Queue.objects.handle_job_failure(self._id, now(), self._all_tasks, error)
 
-            # TODO: move this somewhere else and refactor it
-            from scheduler.models import Scheduler
-            job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._id)
-            node = job_exe.node
-            if not error:
-                error = Error.objects.get_unknown_error()
-            # Check for a high number of system errors and decide if we should pause the node
-            if error.category == 'SYSTEM' and job_exe.job.num_exes >= job_exe.job.max_tries and node is not None and not node.is_paused:
-                # search Job.objects. for the number of system failures in the past (configurable) 1 minute
-                # if (configurable) 5 or more have occurred, pause the node
-                node_error_period = Scheduler.objects.first().node_error_period
-                if node_error_period > 0:
-                    check_time = datetime.utcnow() - timedelta(minutes=node_error_period)
-                    # find out how many jobs have recently failed on this node with a system error
-                    num_node_errors = JobExecution.objects.select_related('error', 'node').filter(
-                        status='FAILED', error__category='SYSTEM', ended__gte=check_time, node=node).distinct('job').count()
-                    max_node_errors = Scheduler.objects.first().max_node_errors
-                    if num_node_errors >= max_node_errors:
-                        logger.warning('%s failed %d jobs in %d minutes, pausing the host' % (node.hostname, num_node_errors, node_error_period))
-                        with transaction.atomic():
-                            node.is_paused = True
-                            node.is_paused_errors = True
-                            node.pause_reason = "System Failure Rate Too High"
-                            node.save()
-
         with self._lock:
             self._current_task = None
             self._remaining_tasks = []
