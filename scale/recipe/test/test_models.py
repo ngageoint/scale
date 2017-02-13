@@ -3,12 +3,14 @@ from __future__ import unicode_literals
 import django
 from django.db import transaction
 from django.test import TransactionTestCase
+from django.utils.timezone import now
 from mock import patch
 
 import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
+from error.models import Error
 from job.configuration.interface.job_interface import JobInterface
 from job.models import Job, JobType, JobTypeRevision
 from recipe.configuration.data.exceptions import InvalidRecipeConnection
@@ -604,6 +606,8 @@ class TestRecipeManagerCreateRecipe(TransactionTestCase):
 
 class TestRecipeManagerReprocessRecipe(TransactionTestCase):
 
+    fixtures = ['basic_errors.json']
+
     def setUp(self):
         django.setup()
 
@@ -698,6 +702,25 @@ class TestRecipeManagerReprocessRecipe(TransactionTestCase):
             }],
             'workspace_id': self.workspace.id,
         }
+
+    def test_blocked_job(self):
+        """Tests reprocessing a recipe where a new job should be blocked due to a previously failed job"""
+
+        handler = Recipe.objects.create_recipe(recipe_type=self.recipe_type, data=RecipeData(self.data),
+                                               event=self.event)
+        for recipe_job in handler.recipe_jobs:
+            if recipe_job.job_name == 'Job 1':
+                Job.objects.update_status([recipe_job.job], 'FAILED', now(), Error.objects.get_unknown_error())
+
+        new_handler = Recipe.objects.reprocess_recipe(handler.recipe.id, ['Job 2'])
+
+        # Make sure that Job 1 is still FAILED and that Job 2 is BLOCKED
+        recipe_job_1 = RecipeJob.objects.get(recipe_id=new_handler.recipe.id, job_name='Job 1')
+        self.assertEqual(recipe_job_1.job.job_type.id, self.job_type_1.id)
+        self.assertEqual(recipe_job_1.job.status, 'FAILED')
+        recipe_job_2 = RecipeJob.objects.get(recipe_id=new_handler.recipe.id, job_name='Job 2')
+        self.assertEqual(recipe_job_2.job.job_type.id, self.job_type_2.id)
+        self.assertEqual(recipe_job_2.job.status, 'BLOCKED')
 
     def test_forced_all_job(self):
         """Tests reprocessing a recipe without any changes by forcing all jobs."""

@@ -122,7 +122,12 @@ class RecipeManager(models.Manager):
 
         # Create recipe jobs and link them to the recipe
         recipe_jobs = self._create_recipe_jobs(recipe, event, when, delta, superseded_jobs)
-        return RecipeHandler(recipe, recipe_jobs)
+        handler = RecipeHandler(recipe, recipe_jobs)
+        # Block any new jobs that need to be blocked
+        jobs_to_blocked = handler.get_blocked_jobs()
+        if jobs_to_blocked:
+            Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
+        return handler
 
     def _create_recipe_jobs(self, recipe, event, when, delta, superseded_jobs):
         """Creates and returns the job and recipe_job models for the given new recipe. If the new recipe is superseding
