@@ -15,6 +15,7 @@ from util.exceptions import ScaleLogicBug
 # Default timeout thresholds for tasks (None means no timeout)
 BASE_RUNNING_TIMEOUT_THRESHOLD = datetime.timedelta(hours=1)
 # TODO: Staging timeout threshold can be lowered once Docker pulls are not performed during task staging
+# TODO: also check all tasks to lower their staging and running times to appropriate values
 BASE_STAGING_TIMEOUT_THRESHOLD = datetime.timedelta(minutes=20)
 
 

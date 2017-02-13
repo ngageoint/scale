@@ -11,11 +11,10 @@ from mesos.interface import Scheduler as MesosScheduler
 
 from error.models import Error
 from job.execution.manager import running_job_mgr
-from job.execution.tasks.cleanup_task import CLEANUP_TASK_ID_PREFIX
+from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
 from job.models import JobExecution
 from job.resources import NodeResources
 from job.tasks.manager import task_mgr
-from job.tasks.pull_task import PULL_TASK_ID_PREFIX
 from job.tasks.update import TaskStatusUpdate
 from mesos_api import utils
 from queue.models import Queue
@@ -268,11 +267,7 @@ class ScaleScheduler(MesosScheduler):
         # Hand off task update to be saved in the database
         task_update_mgr.add_task_update(model)
 
-        if task_id.startswith(PULL_TASK_ID_PREFIX):
-            node_mgr.handle_task_update(task_update)
-        elif task_id.startswith(CLEANUP_TASK_ID_PREFIX):
-            cleanup_mgr.handle_task_update(task_update)
-        else:
+        if task_id.startswith(JOB_TASK_ID_PREFIX):
             job_exe_id = JobExecution.get_job_exe_id(task_id)
 
             try:
@@ -293,6 +288,9 @@ class ScaleScheduler(MesosScheduler):
                 logger.exception('Error handling status update for job execution: %s', job_exe_id)
                 # Error handling status update, add task so it can be reconciled
                 recon_mgr.add_task_ids([task_id])
+        else:
+            # Not a job task, so must be a node task
+            node_mgr.handle_task_update(task_update)
 
         duration = now() - started
         msg = 'Scheduler statusUpdate() took %.3f seconds'

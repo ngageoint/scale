@@ -147,24 +147,17 @@ class SchedulingThread(object):
         for running_job_exe in running_job_mgr.get_ready_job_exes():
             offer_mgr.consider_next_task(running_job_exe)
 
-    def _consider_cleanup_tasks(self):
-        """Considers any cleanup tasks to schedule
-        """
-
-        if scheduler_mgr.is_paused():
-            return
-
-        for task in cleanup_mgr.get_next_tasks():
-            offer_mgr.consider_task(task)
-
-    def _consider_node_tasks(self):
+    def _consider_node_tasks(self, when):
         """Considers any node tasks to schedule
+
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
         """
 
         if scheduler_mgr.is_paused():
             return
 
-        for task in node_mgr.get_next_tasks():
+        for task in node_mgr.get_next_tasks(when):
             offer_mgr.consider_task(task)
 
     def _perform_scheduling(self):
@@ -173,6 +166,8 @@ class SchedulingThread(object):
         :returns: The number of Mesos tasks that were scheduled
         :rtype: int
         """
+
+        when = now()
 
         # Get updated node and job type models from managers
         nodes = node_mgr.get_nodes()
@@ -190,8 +185,7 @@ class SchedulingThread(object):
             if running_job_exe.job_type_id in self._job_type_limit_available:
                 self._job_type_limit_available[running_job_exe.job_type_id] -= 1
 
-        self._consider_node_tasks()
-        self._consider_cleanup_tasks()
+        self._consider_node_tasks(when)
         self._consider_running_job_exes()
         self._consider_new_job_exes()
 

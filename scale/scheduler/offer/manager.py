@@ -13,8 +13,6 @@ class OfferManager(object):
     NOT_ENOUGH_MEM = NodeOffers.NOT_ENOUGH_MEM
     NOT_ENOUGH_DISK = NodeOffers.NOT_ENOUGH_DISK
     NO_OFFERS = NodeOffers.NO_OFFERS
-    NODE_PAUSED = NodeOffers.NODE_PAUSED
-    NODE_OFFLINE = NodeOffers.NODE_OFFLINE
     NODE_NOT_READY = NodeOffers.NODE_NOT_READY
     NO_NODES_AVAILABLE = 9
 
@@ -99,7 +97,7 @@ class OfferManager(object):
 
         with self._lock:
             if job_exe.node_id not in self._nodes_by_node_id:
-                return OfferManager.NODE_OFFLINE
+                return OfferManager.NODE_NOT_READY
 
             node_offers = self._nodes_by_node_id[job_exe.node_id]
             return node_offers.consider_next_task(job_exe)
@@ -115,7 +113,7 @@ class OfferManager(object):
 
         with self._lock:
             if task.agent_id not in self._nodes_by_agent_id:
-                return OfferManager.NODE_OFFLINE
+                return OfferManager.NODE_NOT_READY
 
             node_offers = self._nodes_by_agent_id[task.agent_id]
             return node_offers.consider_task(task)
