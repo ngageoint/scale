@@ -220,6 +220,7 @@
 <li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0001_initial">scheduler.migrations.0001_initial module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0002_auto_20151007_1352">scheduler.migrations.0002_auto_20151007_1352 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0003_auto_20160201_0846">scheduler.migrations.0003_auto_20160201_0846 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0004_auto_20170209_1616">scheduler.migrations.0004_auto_20170209_1616 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -260,13 +261,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="scheduler.test.html">scheduler.test package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.test.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="scheduler.test.cleanup.html">scheduler.test.cleanup package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="scheduler.test.cleanup.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="scheduler.test.cleanup.html#module-scheduler.test.cleanup.test_manager">scheduler.test.cleanup.test_manager module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="scheduler.test.cleanup.html#module-scheduler.test.cleanup.test_node">scheduler.test.cleanup.test_node module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="scheduler.test.cleanup.html#module-scheduler.test.cleanup">Module contents</a></li>
-</ul>
-</li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.test.node.html">scheduler.test.node package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.test.node.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.test.node.html#module-scheduler.test.node.test_manager">scheduler.test.node.test_manager module</a></li>
@@ -388,19 +382,14 @@
 <dt id="scheduler.models.Scheduler">
 <em class="property">class </em><code class="descclassname">scheduler.models.</code><code class="descname">Scheduler</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.models.Scheduler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
-<p>Represents a scheduler instance.
-There should only be a single instance of this and it&#8217;s used for
-storing cluster-wide state related to scheduling in mesos.</p>
+<p>Represents a scheduler instance. There should only be a single instance of this and it&#8217;s used for storing
+cluster-wide state related to scheduling in mesos.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>is_paused</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField()</span></code>) &#8211; True if the entire cluster is currently paused and should not accept new jobs</li>
-<li><strong>node_error_period</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The number of minutes sampled when deciding if a node should be paused due to excessive
-errors.</li>
-<li><strong>max_node_errors</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; The maximum number of system errors which can occur in node_error_period before a node is
-paused</li>
 <li><strong>master_hostname</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The full domain-qualified hostname of the Mesos master</li>
 <li><strong>master_port</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The port being used by the Mesos master REST API</li>
 </ul>

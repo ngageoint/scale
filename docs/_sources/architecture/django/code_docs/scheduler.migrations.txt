@@ -28,6 +28,14 @@ scheduler.migrations.0003_auto_20160201_0846 module
     :undoc-members:
     :show-inheritance:
 
+scheduler.migrations.0004_auto_20170209_1616 module
+---------------------------------------------------
+
+.. automodule:: scheduler.migrations.0004_auto_20170209_1616
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

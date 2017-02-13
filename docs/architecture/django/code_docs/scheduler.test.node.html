@@ -35,7 +35,7 @@
     <link rel="top" title="Scale 4.2.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="scheduler.test package" href="scheduler.test.html"/>
         <link rel="next" title="scheduler.test.offer package" href="scheduler.test.offer.html"/>
-        <link rel="prev" title="scheduler.test.cleanup package" href="scheduler.test.cleanup.html"/> 
+        <link rel="prev" title="scheduler.test package" href="scheduler.test.html"/> 
 
   
   <script src="../../../_static/js/modernizr.min.js"></script>
@@ -215,9 +215,21 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="scheduler.test.node.test_manager.TestNodeManager.test_get_initial_cleanup_tasks">
+<code class="descname">test_get_initial_cleanup_tasks</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_get_initial_cleanup_tasks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests getting initial cleanup tasks from the manager</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="scheduler.test.node.test_manager.TestNodeManager.test_get_pull_tasks">
 <code class="descname">test_get_pull_tasks</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_get_pull_tasks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests getting Docker pull tasks from the manager</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.node.test_manager.TestNodeManager.test_job_exe_clean_task">
+<code class="descname">test_job_exe_clean_task</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_job_exe_clean_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests the NodeManager where a cleanup task is returned to clean up a job execution</p>
 </dd></dl>
 
 <dl class="method">
@@ -259,9 +271,57 @@
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="scheduler.test.node.test_node_class.TestNode.test_handle_failed_cleanup_task">
+<code class="descname">test_handle_failed_cleanup_task</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_node_class.TestNode.test_handle_failed_cleanup_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests handling failed cleanup task</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.node.test_node_class.TestNode.test_handle_failed_health_task">
+<code class="descname">test_handle_failed_health_task</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_node_class.TestNode.test_handle_failed_health_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests handling failed health task</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.node.test_node_class.TestNode.test_handle_failed_health_task_bad_daemon">
+<code class="descname">test_handle_failed_health_task_bad_daemon</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_node_class.TestNode.test_handle_failed_health_task_bad_daemon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests handling a failed health task where the Docker daemon is bad</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.node.test_node_class.TestNode.test_handle_failed_health_task_bad_logstash">
+<code class="descname">test_handle_failed_health_task_bad_logstash</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_node_class.TestNode.test_handle_failed_health_task_bad_logstash" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests handling a failed health task where logstash is unreachable</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.node.test_node_class.TestNode.test_handle_failed_health_task_low_docker_space">
+<code class="descname">test_handle_failed_health_task_low_docker_space</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_node_class.TestNode.test_handle_failed_health_task_low_docker_space" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests handling a failed health task where Docker has low disk space</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="scheduler.test.node.test_node_class.TestNode.test_handle_failed_pull_task">
 <code class="descname">test_handle_failed_pull_task</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_node_class.TestNode.test_handle_failed_pull_task" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests handling failed Docker pull task</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.node.test_node_class.TestNode.test_handle_initial_cleanup_task">
+<code class="descname">test_handle_initial_cleanup_task</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_node_class.TestNode.test_handle_initial_cleanup_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests handling the initial cleanup task</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.node.test_node_class.TestNode.test_handle_killed_cleanup_task">
+<code class="descname">test_handle_killed_cleanup_task</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_node_class.TestNode.test_handle_killed_cleanup_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests handling killed cleanup task</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.node.test_node_class.TestNode.test_handle_killed_health_task">
+<code class="descname">test_handle_killed_health_task</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_node_class.TestNode.test_handle_killed_health_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests handling killed health task</p>
 </dd></dl>
 
 <dl class="method">
@@ -271,9 +331,33 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="scheduler.test.node.test_node_class.TestNode.test_handle_lost_cleanup_tasks">
+<code class="descname">test_handle_lost_cleanup_tasks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_node_class.TestNode.test_handle_lost_cleanup_tasks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests handling lost cleanup tasks</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.node.test_node_class.TestNode.test_handle_lost_health_task">
+<code class="descname">test_handle_lost_health_task</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_node_class.TestNode.test_handle_lost_health_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests handling lost health task</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="scheduler.test.node.test_node_class.TestNode.test_handle_lost_pull_task">
 <code class="descname">test_handle_lost_pull_task</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_node_class.TestNode.test_handle_lost_pull_task" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests handling lost pull task</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.node.test_node_class.TestNode.test_handle_regular_cleanup_task">
+<code class="descname">test_handle_regular_cleanup_task</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_node_class.TestNode.test_handle_regular_cleanup_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests handling a regular cleanup task</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.node.test_node_class.TestNode.test_handle_successful_health_task">
+<code class="descname">test_handle_successful_health_task</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_node_class.TestNode.test_handle_successful_health_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests handling the health task successfully</p>
 </dd></dl>
 
 <dl class="method">
@@ -283,15 +367,21 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="scheduler.test.node.test_node_class.TestNode.test_node_that_is_not_cleaned_yet">
-<code class="descname">test_node_that_is_not_cleaned_yet</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_node_class.TestNode.test_node_that_is_not_cleaned_yet" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests not returning tasks when the node hasn&#8217;t been cleaned up yet</p>
+<dt id="scheduler.test.node.test_node_class.TestNode.test_node_that_is_not_cleaned_yet_no_pull_task">
+<code class="descname">test_node_that_is_not_cleaned_yet_no_pull_task</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_node_class.TestNode.test_node_that_is_not_cleaned_yet_no_pull_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests not returning pull task when the node hasn&#8217;t been cleaned up yet</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="scheduler.test.node.test_node_class.TestNode.test_paused_node">
-<code class="descname">test_paused_node</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_node_class.TestNode.test_paused_node" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests not returning tasks when its node is paused</p>
+<dt id="scheduler.test.node.test_node_class.TestNode.test_paused_node_cleanup_task">
+<code class="descname">test_paused_node_cleanup_task</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_node_class.TestNode.test_paused_node_cleanup_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests not returning cleanup task when its node is paused</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.test.node.test_node_class.TestNode.test_paused_node_pull_task">
+<code class="descname">test_paused_node_pull_task</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_node_class.TestNode.test_paused_node_pull_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests not returning pull task when its node is paused</p>
 </dd></dl>
 
 </dd></dl>
@@ -312,7 +402,7 @@
         <a href="scheduler.test.offer.html" class="btn btn-neutral float-right" title="scheduler.test.offer package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="scheduler.test.cleanup.html" class="btn btn-neutral" title="scheduler.test.cleanup package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="scheduler.test.html" class="btn btn-neutral" title="scheduler.test package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

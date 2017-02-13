@@ -211,15 +211,17 @@
 
 <dl class="method">
 <dt id="scheduler.node.manager.NodeManager.get_next_tasks">
-<code class="descname">get_next_tasks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.manager.NodeManager.get_next_tasks" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_tasks</code><span class="sig-paren">(</span><em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.manager.NodeManager.get_next_tasks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the next node tasks to schedule</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of the next node tasks to schedule</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The current time</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="job.tasks.html#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a>]</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of the next node tasks to schedule</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="job.tasks.html#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a>]</td>
 </tr>
 </tbody>
 </table>
@@ -340,14 +342,71 @@
 <span id="scheduler-node-node-class-module"></span><h2>scheduler.node.node_class module<a class="headerlink" href="#module-scheduler.node.node_class" title="Permalink to this headline">¶</a></h2>
 <p>Defines the class that represents nodes in the scheduler</p>
 <dl class="class">
+<dt id="scheduler.node.node_class.ActiveError">
+<em class="property">class </em><code class="descclassname">scheduler.node.node_class.</code><code class="descname">ActiveError</code><span class="sig-paren">(</span><em>error</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.node_class.ActiveError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This class represents an active error for this node.</p>
+</dd></dl>
+
+<dl class="class">
 <dt id="scheduler.node.node_class.Node">
 <em class="property">class </em><code class="descclassname">scheduler.node.node_class.</code><code class="descname">Node</code><span class="sig-paren">(</span><em>agent_id</em>, <em>node</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.node_class.Node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>This class represents a node in the scheduler. It combines information retrieved from the database node models as
 well as run-time information retrieved from Mesos. This class is thread-safe.</p>
 <dl class="attribute">
+<dt id="scheduler.node.node_class.Node.BAD_DAEMON_ERR">
+<code class="descname">BAD_DAEMON_ERR</code><em class="property"> = NodeError(name=u'BAD_DAEMON', description=u'Docker daemon is not responding', daemon_bad=True, pull_bad=True)</em><a class="headerlink" href="#scheduler.node.node_class.Node.BAD_DAEMON_ERR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.node_class.Node.BAD_LOGSTASH_ERR">
+<code class="descname">BAD_LOGSTASH_ERR</code><em class="property"> = NodeError(name=u'BAD_LOGSTASH', description=u'Logstash is not responding', daemon_bad=False, pull_bad=False)</em><a class="headerlink" href="#scheduler.node.node_class.Node.BAD_LOGSTASH_ERR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.node_class.Node.CLEANUP_ERR">
+<code class="descname">CLEANUP_ERR</code><em class="property"> = NodeError(name=u'CLEANUP', description=u'Failed to perform cleanup', daemon_bad=False, pull_bad=False)</em><a class="headerlink" href="#scheduler.node.node_class.Node.CLEANUP_ERR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.node_class.Node.CLEANUP_ERR_THRESHOLD">
+<code class="descname">CLEANUP_ERR_THRESHOLD</code><em class="property"> = datetime.timedelta(0, 120)</em><a class="headerlink" href="#scheduler.node.node_class.Node.CLEANUP_ERR_THRESHOLD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.node_class.Node.DEGRADED">
+<code class="descname">DEGRADED</code><em class="property"> = NodeState(state=u'DEGRADED', description=u'Degraded ability to run jobs')</em><a class="headerlink" href="#scheduler.node.node_class.Node.DEGRADED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.node_class.Node.HEALTH_ERRORS">
+<code class="descname">HEALTH_ERRORS</code><em class="property"> = [NodeError(name=u'BAD_DAEMON', description=u'Docker daemon is not responding', daemon_bad=True, pull_bad=True), NodeError(name=u'HEALTH_TIMEOUT', description=u'Node health check timed out', daemon_bad=False, pull_bad=False)]</em><a class="headerlink" href="#scheduler.node.node_class.Node.HEALTH_ERRORS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.node_class.Node.HEALTH_ERR_THRESHOLD">
+<code class="descname">HEALTH_ERR_THRESHOLD</code><em class="property"> = datetime.timedelta(0, 120)</em><a class="headerlink" href="#scheduler.node.node_class.Node.HEALTH_ERR_THRESHOLD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.node_class.Node.HEALTH_TIMEOUT_ERR">
+<code class="descname">HEALTH_TIMEOUT_ERR</code><em class="property"> = NodeError(name=u'HEALTH_TIMEOUT', description=u'Node health check timed out', daemon_bad=False, pull_bad=False)</em><a class="headerlink" href="#scheduler.node.node_class.Node.HEALTH_TIMEOUT_ERR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="scheduler.node.node_class.Node.IMAGE_PULL">
 <code class="descname">IMAGE_PULL</code><em class="property"> = NodeState(state=u'IMAGE_PULL', description=u'Pulling Scale image')</em><a class="headerlink" href="#scheduler.node.node_class.Node.IMAGE_PULL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.node_class.Node.IMAGE_PULL_ERR">
+<code class="descname">IMAGE_PULL_ERR</code><em class="property"> = NodeError(name=u'IMAGE_PULL', description=u'Failed to pull Scale image', daemon_bad=False, pull_bad=False)</em><a class="headerlink" href="#scheduler.node.node_class.Node.IMAGE_PULL_ERR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.node_class.Node.IMAGE_PULL_ERR_THRESHOLD">
+<code class="descname">IMAGE_PULL_ERR_THRESHOLD</code><em class="property"> = datetime.timedelta(0, 300)</em><a class="headerlink" href="#scheduler.node.node_class.Node.IMAGE_PULL_ERR_THRESHOLD" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -358,6 +417,16 @@ well as run-time information retrieved from Mesos. This class is thread-safe.</p
 <dl class="attribute">
 <dt id="scheduler.node.node_class.Node.INITIAL_CLEANUP">
 <code class="descname">INITIAL_CLEANUP</code><em class="property"> = NodeState(state=u'INITIAL_CLEANUP', description=u'Performing initial cleanup')</em><a class="headerlink" href="#scheduler.node.node_class.Node.INITIAL_CLEANUP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.node_class.Node.LOW_DOCKER_SPACE_ERR">
+<code class="descname">LOW_DOCKER_SPACE_ERR</code><em class="property"> = NodeError(name=u'LOW_DOCKER_SPACE', description=u'Low Docker disk space', daemon_bad=False, pull_bad=True)</em><a class="headerlink" href="#scheduler.node.node_class.Node.LOW_DOCKER_SPACE_ERR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.node_class.Node.NORMAL_HEALTH_THRESHOLD">
+<code class="descname">NORMAL_HEALTH_THRESHOLD</code><em class="property"> = datetime.timedelta(0, 300)</em><a class="headerlink" href="#scheduler.node.node_class.Node.NORMAL_HEALTH_THRESHOLD" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -374,6 +443,20 @@ well as run-time information retrieved from Mesos. This class is thread-safe.</p
 <dt id="scheduler.node.node_class.Node.READY">
 <code class="descname">READY</code><em class="property"> = NodeState(state=u'READY', description=u'Ready for new jobs')</em><a class="headerlink" href="#scheduler.node.node_class.Node.READY" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="scheduler.node.node_class.Node.add_job_execution">
+<code class="descname">add_job_execution</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.node_class.Node.add_job_execution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a job execution that needs to be cleaned up</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe</strong> (<a class="reference internal" href="job.execution.html#job.execution.job_exe.RunningJobExecution" title="job.execution.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe.RunningJobExecution</span></code></a>) &#8211; The job execution to add</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="scheduler.node.node_class.Node.agent_id">
@@ -392,16 +475,18 @@ well as run-time information retrieved from Mesos. This class is thread-safe.</p
 </dd></dl>
 
 <dl class="method">
-<dt id="scheduler.node.node_class.Node.get_next_task">
-<code class="descname">get_next_task</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.node_class.Node.get_next_task" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the next node task to launch, possibly None</p>
+<dt id="scheduler.node.node_class.Node.get_next_tasks">
+<code class="descname">get_next_tasks</code><span class="sig-paren">(</span><em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.node_class.Node.get_next_tasks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the next node tasks to launch</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The next node task to launch, possibly None</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The current time</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.tasks.html#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a></td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of node tasks to launch</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="job.tasks.html#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a>]</td>
 </tr>
 </tbody>
 </table>
@@ -467,12 +552,6 @@ well as run-time information retrieved from Mesos. This class is thread-safe.</p
 </table>
 </dd></dl>
 
-<dl class="method">
-<dt id="scheduler.node.node_class.Node.initial_cleanup_completed">
-<code class="descname">initial_cleanup_completed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.node_class.Node.initial_cleanup_completed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tells this node that its initial cleanup task has succeeded</p>
-</dd></dl>
-
 <dl class="attribute">
 <dt id="scheduler.node.node_class.Node.is_active">
 <code class="descname">is_active</code><a class="headerlink" href="#scheduler.node.node_class.Node.is_active" title="Permalink to this definition">¶</a></dt>
@@ -489,15 +568,15 @@ well as run-time information retrieved from Mesos. This class is thread-safe.</p
 </table>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="scheduler.node.node_class.Node.is_initial_cleanup_completed">
-<code class="descname">is_initial_cleanup_completed</code><a class="headerlink" href="#scheduler.node.node_class.Node.is_initial_cleanup_completed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Indicates whether this node has its initial cleanup completed (True) or not (False)</p>
+<dl class="method">
+<dt id="scheduler.node.node_class.Node.is_ready_for_new_job">
+<code class="descname">is_ready_for_new_job</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.node_class.Node.is_ready_for_new_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this node is ready to launch a new job execution</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether this node has its initial cleanup completed</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if this node is ready to launch a new job execution, False otherwise</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
 </tr>
@@ -505,49 +584,17 @@ well as run-time information retrieved from Mesos. This class is thread-safe.</p
 </table>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="scheduler.node.node_class.Node.is_online">
-<code class="descname">is_online</code><a class="headerlink" href="#scheduler.node.node_class.Node.is_online" title="Permalink to this definition">¶</a></dt>
-<dd><p>Indicates whether this node is online (True) or not (False)</p>
+<dl class="method">
+<dt id="scheduler.node.node_class.Node.is_ready_for_next_job_task">
+<code class="descname">is_ready_for_next_job_task</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.node_class.Node.is_ready_for_next_job_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this node is ready to launch the next task of a job execution</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether this node is online</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if this node is ready to launch a job task, False otherwise</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="scheduler.node.node_class.Node.is_paused">
-<code class="descname">is_paused</code><a class="headerlink" href="#scheduler.node.node_class.Node.is_paused" title="Permalink to this definition">¶</a></dt>
-<dd><p>Indicates whether this node is paused (True) or not (False)</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether this node is paused</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="scheduler.node.node_class.Node.state">
-<code class="descname">state</code><a class="headerlink" href="#scheduler.node.node_class.Node.state" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the state of the node</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The state</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#scheduler.node.node_class.NodeState" title="scheduler.node.node_class.NodeState"><code class="xref py py-class docutils literal"><span class="pre">scheduler.node.node_class.NodeState</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -584,6 +631,36 @@ well as run-time information retrieved from Mesos. This class is thread-safe.</p
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="scheduler.node.node_class.NodeError">
+<em class="property">class </em><code class="descclassname">scheduler.node.node_class.</code><code class="descname">NodeError</code><span class="sig-paren">(</span><em>name</em>, <em>description</em>, <em>daemon_bad</em>, <em>pull_bad</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.node_class.NodeError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<dl class="attribute">
+<dt id="scheduler.node.node_class.NodeError.daemon_bad">
+<code class="descname">daemon_bad</code><a class="headerlink" href="#scheduler.node.node_class.NodeError.daemon_bad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.node_class.NodeError.description">
+<code class="descname">description</code><a class="headerlink" href="#scheduler.node.node_class.NodeError.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.node_class.NodeError.name">
+<code class="descname">name</code><a class="headerlink" href="#scheduler.node.node_class.NodeError.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.node_class.NodeError.pull_bad">
+<code class="descname">pull_bad</code><a class="headerlink" href="#scheduler.node.node_class.NodeError.pull_bad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 3</p>
 </dd></dl>
 
 </dd></dl>

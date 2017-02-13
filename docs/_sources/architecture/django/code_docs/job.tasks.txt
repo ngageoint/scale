@@ -12,6 +12,14 @@ job.tasks.base_task module
     :undoc-members:
     :show-inheritance:
 
+job.tasks.health_task module
+----------------------------
+
+.. automodule:: job.tasks.health_task
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 job.tasks.manager module
 ------------------------
 
