@@ -163,6 +163,11 @@
                 controllerAs: 'vm',
                 templateUrl: 'modules/feed/partials/strikesTemplate.html'
             })
+            .when('/batch', {
+                controller: 'batchesController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/batch/partials/batchesTemplate.html'
+            })
             .otherwise({
                 redirectTo: '/'
             });
