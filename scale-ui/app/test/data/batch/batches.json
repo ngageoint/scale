@@ -1,0 +1,61 @@
+
+    "count": 11,
+    "next": null,
+    "previous": null,
+    "results": [
+        {
+            "id": 16,
+            "title": "Test Batch Numero Uno",
+            "description": "My batch of recipes",
+            "status": "SUBMITTED",
+            "recipe_type": {
+                "id": 1,
+                "name": "my-recipe",
+                "version": "2.0.0",
+                "title": "My Recipe",
+                "description": "Does some stuff"
+            },
+            "event": {
+                "id": 7,
+                "type": "USER",
+                "rule": {
+                    "id": 8,
+                },
+                "occurred": "2015-06-15T19:03:26.346Z"
+            },
+            "creator_job": {
+                "id": 3,
+                "job_type": {
+                    "id": 1,
+                    "name": "scale-batch-creator",
+                    "version": "1.0",
+                    "title": "Scale Batch Creator",
+                    "description": "Creates and queues the jobs and recipes for a Scale batch",
+                    "category": "system",
+                    "author_name": null,
+                    "author_url": null,
+                    "is_system": true,
+                    "is_long_running": false,
+                    "is_active": true,
+                    "is_operational": true,
+                    "is_paused": false,
+                    "icon_code": "f0b1"
+                },
+                "job_type_rev": {
+                    "id": 2
+                },
+                "event": {
+                    "id": 3
+                },
+                "error": null,
+                "status": "RUNNING",
+                "priority": 20,
+                "num_exes": 1
+            },
+            "created_count": 256,
+            "failed_count": 0,
+            "total_count": 512,
+            "created": "2015-06-15T19:03:26.346Z",
+            "last_modified": "2015-06-15T19:05:26.346Z"
+        }
+    ]
