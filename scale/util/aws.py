@@ -11,13 +11,13 @@ from util.exceptions import InvalidAWSCredentials, FileDoesNotExist
 
 logger = logging.getLogger(__name__)
 
-AWSCredentials = namedtuple('AWSCredentials', ['access_key_id', 'secret_access_key'])
+AWSCredentials = namedtuple('AWSCredentials', ['access_key_id', 'secret_access_key', 'endpoint_url'])
 
 
 class AWSClient(object):
     """Manages automatically creating and destroying clients to AWS services."""
 
-    def __init__(self, resource, config, credentials=None, region_name=None):
+    def __init__(self, resource, config, credentials=None, region_name=None, endpoint_url=None):
         """Constructor
 
         :param resource: AWS specific token for resource type. e.g., 's3', 'sqs', etc.
@@ -29,10 +29,13 @@ class AWSClient(object):
         :type credentials: :class:`util.aws.AWSCredentials`
         :param region_name: The AWS region the resource resides in.
         :type region_name: string
+        :param endpoint_url: The AWS endpoint URL the resource resides in.
+        :type endpoint_url: string
         """
 
         self.credentials = credentials
         self.region_name = region_name
+        self.endpoint_url = endpoint_url
         self._client = None
         self._resource_name = resource
         self._config = config
@@ -50,7 +53,7 @@ class AWSClient(object):
             session_args['region_name'] = self.region_name
         self._session = Session(**session_args)
 
-        self._client = self._session.client(self._resource_name, config=self._config)
+        self._client = self._session.client(self._resource_name, config=self._config, endpoint_url=self.endpoint_url)
         self._resource = self._session.resource(self._resource_name, config=self._config)
         return self
 
@@ -81,13 +84,15 @@ class AWSClient(object):
 
             access_key = credentials_dict['access_key_id'].strip()
             secret_key = credentials_dict['secret_access_key'].strip()
+            endpoint_url = credentials_dict.get('endpoint_url', '').strip()
+            endpoint_url = None if len(endpoint_url) == 0 else endpoint_url
 
             # If either Access Key or Secret Access Key are empty, fail-over to role-based auth.
             # TODO: This should be changed to also raise as above, once the UI has been improved to prune unset values.
             if not len(access_key) or not len(secret_key):
                 return None
 
-            return AWSCredentials(access_key, secret_key)
+            return AWSCredentials(access_key, secret_key, endpoint_url)
 
 
 class SQSClient(AWSClient):
@@ -115,7 +120,7 @@ class SQSClient(AWSClient):
 
 
 class S3Client(AWSClient):
-    def __init__(self, credentials=None, region_name=None):
+    def __init__(self, credentials=None, region_name=None, endpoint_url=None):
         """Constructor
 
         :param credentials: Authentication values needed to access AWS. If no credentials are passed, then IAM
@@ -123,9 +128,11 @@ class S3Client(AWSClient):
         :type credentials: :class:`util.aws.AWSCredentials`
         :param region_name: The AWS region the resource resides in.
         :type region_name: string
+        :param endpoint_url: The AWS endpoibt URL the resource resides in.
+        :type endpoint_url: string
         """
         config = Config(s3={'addressing_style': getattr(settings, 'S3_ADDRESSING_STYLE', 'auto')})
-        AWSClient.__init__(self, 's3', config, credentials, region_name)
+        AWSClient.__init__(self, 's3', config, credentials, region_name, endpoint_url)
 
     def get_bucket(self, bucket_name, validate=True):
         """Gets a reference to an S3 bucket with the given identifier.
