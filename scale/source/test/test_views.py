@@ -15,8 +15,11 @@ class TestSourcesView(TestCase):
     def setUp(self):
         django.setup()
 
-        self.source1 = source_test_utils.create_source(is_parsed=True, file_name='test.txt')
-        self.source2 = source_test_utils.create_source(is_parsed=False)
+        self.source1 = source_test_utils.create_source(data_started='2016-01-01T00:00:00Z',
+                                                       data_ended='2016-01-01T00:00:00Z', is_parsed=True,
+                                                       file_name='test.txt')
+        self.source2 = source_test_utils.create_source(data_started='2017-01-01T00:00:00Z',
+                                                       data_ended='2017-01-01T00:00:00Z', is_parsed=False)
 
     def test_invalid_started(self):
         """Tests calling the source files view when the started parameter is invalid."""
@@ -57,6 +60,24 @@ class TestSourcesView(TestCase):
         response = self.client.generic('GET', url)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_invalid_time_field(self):
+        """Tests calling the source files view when the time_field parameter is invalid."""
+
+        url = rest_util.get_url('/sources/?started=1970-01-01T00:00:00Z&time_field=hello')
+        response = self.client.generic('GET', url)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_time_field(self):
+        """Tests successfully calling the source files view using the time_field parameter"""
+
+        url = rest_util.get_url('/sources/?started=2016-02-01T00:00:00Z&time_field=data')
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
 
     def test_is_parsed(self):
         """Tests successfully calling the source files view filtered by is_parsed flag."""
@@ -190,8 +211,11 @@ class TestSourceUpdatesView(TestCase):
     def setUp(self):
         django.setup()
 
-        self.source1 = source_test_utils.create_source(file_name='test.txt', is_parsed=True)
-        self.source2 = source_test_utils.create_source(is_parsed=False)
+        self.source1 = source_test_utils.create_source(data_started='2016-01-01T00:00:00Z',
+                                                       data_ended='2016-01-01T00:00:00Z', file_name='test.txt',
+                                                       is_parsed=True)
+        self.source2 = source_test_utils.create_source(data_started='2017-01-01T00:00:00Z',
+                                                       data_ended='2017-01-01T00:00:00Z', is_parsed=False)
 
     def test_invalid_started(self):
         """Tests calling the source file updates view when the started parameter is invalid."""
@@ -232,6 +256,24 @@ class TestSourceUpdatesView(TestCase):
         response = self.client.generic('GET', url)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_invalid_time_field(self):
+        """Tests calling the source file updates view when the time_field parameter is invalid."""
+
+        url = rest_util.get_url('/sources/updates/?started=1970-01-01T00:00:00Z&time_field=hello')
+        response = self.client.generic('GET', url)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_time_field(self):
+        """Tests successfully calling the source file updates view using the time_field parameter"""
+
+        url = rest_util.get_url('/sources/updates/?started=2016-02-01T00:00:00Z&time_field=data')
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
 
     def test_is_parsed(self):
         """Tests successfully calling the source files view filtered by is_parsed flag."""

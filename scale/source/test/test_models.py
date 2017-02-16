@@ -10,6 +10,7 @@ from mock import patch
 
 from job.test import utils as job_utils
 from source.models import SourceFile
+from source.test import utils as source_test_utils
 from storage.brokers.broker import FileMove
 from storage.models import ScaleFile, Workspace
 from storage.test import utils as storage_utils
@@ -19,6 +20,39 @@ from trigger.test import utils as trigger_utils
 FEATURE_COLLECTION_GEOJSON = {"type": "FeatureCollection", "features": [{ "type": "Feature", "properties": { "prop_a": "A", "prop_b": "B" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 1.0, 10.5 ], [ 1.1, 21.1 ], [ 1.2, 21.2 ], [ 1.3, 21.6 ], [ 1.0, 10.5 ] ] ] } }]}
 FEATURE_GEOJSON = {"type": "Feature", "properties": { "prop_a": "A", "prop_b": "B" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 1.0, 10.5 ], [ 1.1, 21.1 ], [ 1.2, 21.2 ], [ 1.3, 21.6 ], [ 1.0, 10.5 ] ] ] } }
 POLYGON_GEOJSON = {"type": "Polygon", "coordinates": [ [ [ 1.0, 10.5 ], [ 1.1, 21.1 ], [ 1.2, 21.2 ], [ 1.3, 21.6 ], [ 1.0, 10.5 ] ] ] }
+
+
+class TestSourceFileManager(TestCase):
+
+    def setUp(self):
+        django.setup()
+
+        workspace = Workspace.objects.create(name='Test Workspace', is_active=True, created=now(), last_modified=now())
+
+        self.src_file = ScaleFile.objects.create(file_name='text.txt', file_type='SOURCE', media_type='text/plain',
+                                                 file_size=10, data_type='type', file_path='the_path',
+                                                 workspace=workspace)
+
+        self.started = now()
+        self.ended = self.started + datetime.timedelta(days=1)
+
+    def test_get_sources_data_time(self):
+        """Tests calling get_sources() using data time"""
+
+        source_test_utils.create_source(data_started='2016-01-01T00:00:00Z', data_ended='2016-02-01T00:00:00Z')
+        source_test_utils.create_source(data_started='2016-02-01T00:00:00Z', data_ended='2016-02-01T00:00:00Z')
+        source_test_utils.create_source(data_started='2016-01-01T00:00:00Z', data_ended='2016-03-01T00:00:00Z')
+        source_test_utils.create_source(data_started='2016-01-01T00:00:00Z', data_ended='2016-04-01T00:00:00Z')
+
+        sources = SourceFile.objects.get_sources(started='2015-12-01T00:00:00Z', ended='2016-01-15T00:00:00Z',
+                                                 time_field='data')
+        self.assertEqual(len(sources), 3)
+
+        sources = SourceFile.objects.get_sources(started='2016-02-15T00:00:00Z', time_field='data')
+        self.assertEqual(len(sources), 2)
+
+        sources = SourceFile.objects.get_sources(ended='2016-01-15T00:00:00Z', time_field='data')
+        self.assertEqual(len(sources), 3)
 
 
 class TestSourceFileManagerSaveParseResults(TestCase):
