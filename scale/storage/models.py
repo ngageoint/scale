@@ -385,7 +385,7 @@ class ScaleFile(models.Model):
     )
 
     file_name = models.CharField(max_length=250, db_index=True)
-    file_type = models.CharField(choices=FILE_TYPES, default='SOURCE', max_length=50)
+    file_type = models.CharField(choices=FILE_TYPES, default='SOURCE', max_length=50, db_index=True)
     media_type = models.CharField(max_length=250)
     file_size = models.BigIntegerField()
     data_type = models.TextField(blank=True)
@@ -555,7 +555,6 @@ class ScaleFile(models.Model):
     class Meta(object):
         """meta information for the db"""
         db_table = 'scale_file'
-        index_together = [['file_type', 'data_started', 'data_ended'], ['file_type', 'last_modified']]
 
 
 class WorkspaceManager(models.Manager):
