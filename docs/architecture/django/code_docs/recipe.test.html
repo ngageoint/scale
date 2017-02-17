@@ -329,10 +329,21 @@ has one identical node, and deletes another node to replace it with a new one.</
 <dt id="recipe.test.test_models.TestRecipeManagerReprocessRecipe">
 <em class="property">class </em><code class="descclassname">recipe.test.test_models.</code><code class="descname">TestRecipeManagerReprocessRecipe</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerReprocessRecipe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<dl class="attribute">
+<dt id="recipe.test.test_models.TestRecipeManagerReprocessRecipe.fixtures">
+<code class="descname">fixtures</code><em class="property"> = [u'basic_errors.json']</em><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerReprocessRecipe.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="recipe.test.test_models.TestRecipeManagerReprocessRecipe.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerReprocessRecipe.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_blocked_job">
+<code class="descname">test_blocked_job</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_blocked_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests reprocessing a recipe where a new job should be blocked due to a previously failed job</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_different_recipe_type">
