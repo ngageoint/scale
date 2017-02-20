@@ -28,6 +28,14 @@ These services provide access to information about source files that Scale has i
 |                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
 |                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
+| time_field         | String            | Optional | Indicates the time field(s) that *started* and *ended* will use for |
+|                    |                   |          | time filtering. Valid values are:                                   |
+|                    |                   |          |                                                                     |
+|                    |                   |          | - *last_modified* - last modification of source file meta-data      |
+|                    |                   |          | - *data* - data time of source file (*data_started*, *data_ended*)  |
+|                    |                   |          |                                                                     |
+|                    |                   |          | The default value is *last_modified*.                               |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
 | order              | String            | Optional | One or more fields to use when ordering the results.                |
 |                    |                   |          | Duplicate it to multi-sort, (ex: order=file_name&order=created).    |
 |                    |                   |          | Nested objects require a delimiter (ex: order=job_type__name).      |
@@ -337,6 +345,14 @@ These services provide access to information about source files that Scale has i
 | ended              | ISO-8601 Datetime | Optional | End of the time range to query, defaults to the current time.       |
 |                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
 |                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| time_field         | String            | Optional | Indicates the time field(s) that *started* and *ended* will use for |
+|                    |                   |          | time filtering. Valid values are:                                   |
+|                    |                   |          |                                                                     |
+|                    |                   |          | - *last_modified* - last modification of source file meta-data      |
+|                    |                   |          | - *data* - data time of source file (*data_started*, *data_ended*)  |
+|                    |                   |          |                                                                     |
+|                    |                   |          | The default value is *last_modified*.                               |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | order              | String            | Optional | One or more fields to use when ordering the results.                |
 |                    |                   |          | Duplicate it to multi-sort, (ex: order=file_name&order=created).    |

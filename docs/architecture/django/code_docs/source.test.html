@@ -224,6 +224,23 @@
 <div class="section" id="module-source.test.test_models">
 <span id="source-test-test-models-module"></span><h2>source.test.test_models module<a class="headerlink" href="#module-source.test.test_models" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
+<dt id="source.test.test_models.TestSourceFileManager">
+<em class="property">class </em><code class="descclassname">source.test.test_models.</code><code class="descname">TestSourceFileManager</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_models.TestSourceFileManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="source.test.test_models.TestSourceFileManager.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_models.TestSourceFileManager.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_models.TestSourceFileManager.test_get_sources_data_time">
+<code class="descname">test_get_sources_data_time</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_models.TestSourceFileManager.test_get_sources_data_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling get_sources() using data time</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="source.test.test_models.TestSourceFileManagerSaveParseResults">
 <em class="property">class </em><code class="descclassname">source.test.test_models.</code><code class="descname">TestSourceFileManagerSaveParseResults</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_models.TestSourceFileManagerSaveParseResults" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
@@ -343,6 +360,12 @@ model</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="source.test.test_views.TestSourceUpdatesView.test_invalid_time_field">
+<code class="descname">test_invalid_time_field</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceUpdatesView.test_invalid_time_field" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the source file updates view when the time_field parameter is invalid.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="source.test.test_views.TestSourceUpdatesView.test_is_parsed">
 <code class="descname">test_is_parsed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceUpdatesView.test_is_parsed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the source files view filtered by is_parsed flag.</p>
@@ -370,6 +393,12 @@ model</p>
 <dt id="source.test.test_views.TestSourceUpdatesView.test_successful">
 <code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceUpdatesView.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the source file updates view.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourceUpdatesView.test_time_field">
+<code class="descname">test_time_field</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceUpdatesView.test_time_field" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the source file updates view using the time_field parameter</p>
 </dd></dl>
 
 </dd></dl>
@@ -402,6 +431,12 @@ model</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="source.test.test_views.TestSourcesView.test_invalid_time_field">
+<code class="descname">test_invalid_time_field</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourcesView.test_invalid_time_field" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the source files view when the time_field parameter is invalid.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="source.test.test_views.TestSourcesView.test_is_parsed">
 <code class="descname">test_is_parsed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourcesView.test_is_parsed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the source files view filtered by is_parsed flag.</p>
@@ -429,6 +464,12 @@ model</p>
 <dt id="source.test.test_views.TestSourcesView.test_successful">
 <code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourcesView.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the source files view.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourcesView.test_time_field">
+<code class="descname">test_time_field</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourcesView.test_time_field" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the source files view using the time_field parameter</p>
 </dd></dl>
 
 </dd></dl>

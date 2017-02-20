@@ -314,6 +314,11 @@ functionality specific to source files.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">storage.models.MultipleObjectsReturned</span></code></p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="source.models.SourceFile.VALID_TIME_FIELDS">
+<code class="descclassname">SourceFile.</code><code class="descname">VALID_TIME_FIELDS</code><em class="property"> = [u'data', u'last_modified']</em><a class="headerlink" href="#source.models.SourceFile.VALID_TIME_FIELDS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="classmethod">
 <dt id="source.models.SourceFile.create">
 <em class="property">classmethod </em><code class="descclassname">SourceFile.</code><code class="descname">create</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.models.SourceFile.create" title="Permalink to this definition">¶</a></dt>
@@ -388,7 +393,7 @@ functionality specific to source files.</p>
 
 <dl class="method">
 <dt id="source.models.SourceFileManager.get_sources">
-<code class="descname">get_sources</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>is_parsed=None</em>, <em>file_name=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#source.models.SourceFileManager.get_sources" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_sources</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>time_field=None</em>, <em>is_parsed=None</em>, <em>file_name=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#source.models.SourceFileManager.get_sources" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of source files within the given time range.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -397,6 +402,7 @@ functionality specific to source files.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query source files updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query source files updated before this amount of time.</li>
+<li><strong>time_field</strong> (<em>string</em>) &#8211; The time field to use for filtering.</li>
 <li><strong>is_parsed</strong> (<em>bool</em>) &#8211; Query source files flagged as successfully parsed.</li>
 <li><strong>file_name</strong> (<em>str</em>) &#8211; Query source files with the given file name.</li>
 <li><strong>order</strong> (<em>list[str]</em>) &#8211; A list of fields to control the sort order.</li>
