@@ -22,7 +22,7 @@ class NatsMonitor(Monitor):
         """Constructor
         """
 
-        super(NatsMonitor, self).__init__('s3', ['s3'])
+        super(NatsMonitor, self).__init__('nats', ['s3'])
         self._running = True
         self._topic_name = None
 
