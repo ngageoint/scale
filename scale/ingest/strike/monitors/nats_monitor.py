@@ -11,6 +11,8 @@ from ingest.strike.monitors.exceptions import (InvalidMonitorConfiguration, S3No
 from ingest.strike.monitors.monitor import Monitor
 from util.nats import NATSClient
 
+from urlparse import urlparse
+
 logger = logging.getLogger(__name__)
 
 
@@ -25,6 +27,7 @@ class NatsMonitor(Monitor):
         super(NatsMonitor, self).__init__('nats', ['s3'])
         self._running = True
         self._topic_name = None
+        self._endpoint_url = None
 
         # Set the event version supported in message
         self.event_version_supported = '2.0'
@@ -49,6 +52,7 @@ class NatsMonitor(Monitor):
         """See :meth:`ingest.strike.monitors.monitor.Monitor.load_configuration`
         """
 
+        self._endpoint_url = configuration['endpoint_url']
         self._topic_name = configuration['nats_topic_name']
 
     def run(self):
@@ -63,7 +67,7 @@ class NatsMonitor(Monitor):
             # This eliminates the need to stop and restart a Strike job to pick up configuration updates.
             self.reload_configuration()
 
-            with NATSClient() as client:
+            with NATSClient(self._endpoint_url) as client:
                 topic = client.get_topic_by_name(self._topic_name, self._process_s3_notification)
 
                 # For each new file we receive a notification about:
@@ -85,11 +89,21 @@ class NatsMonitor(Monitor):
             raise InvalidMonitorConfiguration('nats_topic_name is required for NATS monitor')
         if not isinstance(configuration['nats_topic_name'], basestring):
             raise InvalidMonitorConfiguration('nats_topic_name must be a string')
-        if not configuration['sqs_name']:
+        if not configuration['nats_topic_name']:
             raise InvalidMonitorConfiguration('nats_topic_name must be a non-empty string')
 
+        if 'endpoint_url' not in configuration:
+            raise InvalidMonitorConfiguration('endpoint_url is required for NATS monitor')
+        if not isinstance(configuration['endpoint_url'], basestring):
+            raise InvalidMonitorConfiguration('endpoint_url must be a string')
+        if not configuration['endpoint_url']:
+            raise InvalidMonitorConfiguration('endpoint_url must be a non-empty string')
+        p = urlparse(configuration['endpoint_url'])
+        if p.scheme != 'nats':
+            raise InvalidMonitorConfiguration('endpoint_url must be a nats:// url')
+
         # Check whether the bucket can actually be accessed
-        with NATSClient() as client:
+        with NATSClient(configuration['endpoint_url']) as client:
             if client.get_topic_by_name(configuration['nats_topic_name'], None) is None:
                 warnings.append(ValidationWarning('nats_topic_access',
                                                   'Unable to access NATS. Check the name and server.'))
