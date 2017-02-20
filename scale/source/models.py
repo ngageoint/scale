@@ -33,13 +33,15 @@ class SourceFileManager(models.GeoManager):
 
         return ScaleFile.objects.get(file_name=file_name, file_type='SOURCE')
 
-    def get_sources(self, started=None, ended=None, is_parsed=None, file_name=None, order=None):
+    def get_sources(self, started=None, ended=None, time_field=None, is_parsed=None, file_name=None, order=None):
         """Returns a list of source files within the given time range.
 
         :param started: Query source files updated after this amount of time.
         :type started: :class:`datetime.datetime`
         :param ended: Query source files updated before this amount of time.
         :type ended: :class:`datetime.datetime`
+        :param time_field: The time field to use for filtering.
+        :type time_field: string
         :param is_parsed: Query source files flagged as successfully parsed.
         :type is_parsed: bool
         :param file_name: Query source files with the given file name.
@@ -50,16 +52,25 @@ class SourceFileManager(models.GeoManager):
         :rtype: list[:class:`storage.models.ScaleFile`]
         """
 
+        if time_field and time_field not in SourceFile.VALID_TIME_FIELDS:
+            raise Exception('Invalid time field: %s' % time_field)
+
         # Fetch a list of source files
-        sources = ScaleFile.objects.all()
+        sources = ScaleFile.objects.filter(file_type='SOURCE')
         sources = sources.select_related('workspace').defer('workspace__json_config')
         sources = sources.prefetch_related('countries')
 
         # Apply time range filtering
         if started:
-            sources = sources.filter(last_modified__gte=started)
+            if time_field == 'data':
+                sources = sources.filter(data_ended__gte=started)
+            else:
+                sources = sources.filter(last_modified__gte=started)
         if ended:
-            sources = sources.filter(last_modified__lte=ended)
+            if time_field == 'data':
+                sources = sources.filter(data_started__lte=ended)
+            else:
+                sources = sources.filter(last_modified__lte=ended)
 
         if is_parsed is not None:
             sources = sources.filter(is_parsed=is_parsed)
@@ -183,6 +194,8 @@ class SourceFile(ScaleFile):
     :class:`storage.models.ScaleFile` model. It has the same set of fields, but a different manager that provides
     functionality specific to source files.
     """
+
+    VALID_TIME_FIELDS = ['data', 'last_modified']
 
     @classmethod
     def create(cls):

@@ -32,13 +32,15 @@ class SourcesView(ListAPIView):
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
+        time_field = rest_util.parse_string(request, 'time_field', required=False,
+                                            accepted_values=SourceFile.VALID_TIME_FIELDS)
 
         is_parsed = rest_util.parse_bool(request, 'is_parsed', required=False)
         file_name = rest_util.parse_string(request, 'file_name', required=False)
 
         order = rest_util.parse_string_list(request, 'order', required=False)
 
-        sources = SourceFile.objects.get_sources(started, ended, is_parsed, file_name, order)
+        sources = SourceFile.objects.get_sources(started, ended, time_field, is_parsed, file_name, order)
 
         page = self.paginate_queryset(sources)
         serializer = self.get_serializer(page, many=True)
@@ -97,13 +99,15 @@ class SourceUpdatesView(ListAPIView):
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
+        time_field = rest_util.parse_string(request, 'time_field', required=False,
+                                            accepted_values=SourceFile.VALID_TIME_FIELDS)
 
         is_parsed = rest_util.parse_bool(request, 'is_parsed', required=False)
         file_name = rest_util.parse_string(request, 'file_name', required=False)
 
         order = rest_util.parse_string_list(request, 'order', required=False)
 
-        sources = SourceFile.objects.get_sources(started, ended, is_parsed, file_name, order)
+        sources = SourceFile.objects.get_sources(started, ended, time_field, is_parsed, file_name, order)
 
         page = self.paginate_queryset(sources)
         serializer = self.get_serializer(page, many=True)
