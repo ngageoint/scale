@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import django
 from django.test import TestCase
 
-from job.configuration.interface.exceptions import InvalidInterfaceDefinition
+from job.configuration.interface.exceptions import InvalidJobTypeConfiguration
 from job.configuration.interface.job_type_configuration import JobTypeConfiguration
 
 
@@ -25,7 +25,7 @@ class TestJobTypeConfiguration(TestCase):
                       'name2': 'val2'
                   }}
 
-        self.assertRaises(InvalidInterfaceDefinition, JobTypeConfiguration, config)
+        self.assertRaises(InvalidJobTypeConfiguration, JobTypeConfiguration, config)
 
         # Missing value
         config = {'version': '1.0',
@@ -34,7 +34,7 @@ class TestJobTypeConfiguration(TestCase):
                       'name2': 'val2'
                   }}
 
-        self.assertRaises(InvalidInterfaceDefinition, JobTypeConfiguration, config)
+        self.assertRaises(InvalidJobTypeConfiguration, JobTypeConfiguration, config)
 
         # Wrong version
         config = {'version': '0.9',
@@ -42,4 +42,11 @@ class TestJobTypeConfiguration(TestCase):
                       'name1': 'val1',
                       'name2': 'val2'
                   }}
-        self.assertRaises(InvalidInterfaceDefinition, JobTypeConfiguration, config)
+        self.assertRaises(InvalidJobTypeConfiguration, JobTypeConfiguration, config)
+
+        # Invalid value (int)
+        config = {'version': '1.0',
+                  'default_settings': {
+                      'name1': 1234
+                  }}
+        self.assertRaises(InvalidJobTypeConfiguration, JobTypeConfiguration, config)
