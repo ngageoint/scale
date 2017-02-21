@@ -52,6 +52,12 @@
         </div>
     </div>
     <div class="nav-section">
+        <div class="nav-link" ng-class="{batch: 'selected'}[vm.activePage]"
+            ng-click="vm.goto('/batch')">
+            Batch
+        </div>
+    </div>
+    <div class="nav-section">
         <div class="nav-link" ng-class="{about: 'selected'}[vm.activePage]"
             ng-click="vm.goto('/about')">
             About
