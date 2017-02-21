@@ -122,7 +122,7 @@ class NatsMonitor(Monitor):
         """
 
         try:
-            message = json.loads(message.body)
+            message = json.loads(message.data)
 
             for record in message['Records']:
                 if 'eventName' in record and record['eventName'].startswith('s3:ObjectCreated') and \
