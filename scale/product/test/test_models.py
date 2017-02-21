@@ -25,6 +25,8 @@ from storage.models import ScaleFile
 
 class TestFileAncestryLinkManagerCreateFileAncestryLinks(TestCase):
 
+    fixtures = ['batch_job_types.json']
+
     def setUp(self):
         django.setup()
 
@@ -71,6 +73,23 @@ class TestFileAncestryLinkManagerCreateFileAncestryLinks(TestCase):
         FileAncestryLink.objects.create(ancestor=self.file_2, descendant=self.file_6, job_exe=job_exe_2,
                                         job=job_exe_2.job, recipe=recipe_job_2.recipe,
                                         ancestor_job_exe=job_exe_1, ancestor_job=job_exe_1.job)
+
+    def test_batch_recipe(self):
+        """Tests creating a link that has a recipe and batch."""
+
+        from batch.models import BatchRecipe, BatchJob
+        from batch.test import utils as batch_test_utils
+        parent_ids = [self.file_1.id]
+        job_exe = job_test_utils.create_job_exe()
+        recipe_job = recipe_test_utils.create_recipe_job(job=job_exe.job)
+        batch = batch_test_utils.create_batch()
+        BatchRecipe.objects.create(batch_id=batch.id, recipe_id=recipe_job.recipe.id)
+        BatchJob.objects.create(batch_id=batch.id, job_id=job_exe.job_id)
+        FileAncestryLink.objects.create_file_ancestry_links(parent_ids, None, job_exe)
+
+        link = FileAncestryLink.objects.get(job_exe=job_exe)
+        self.assertEqual(link.recipe_id, recipe_job.recipe_id)
+        self.assertEqual(link.batch_id, batch.id)
 
     def test_inputs(self):
         """Tests creating links for only input files before any products are generated."""
