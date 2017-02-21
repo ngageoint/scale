@@ -54,7 +54,7 @@ class AWSClient(object):
         self._session = Session(**session_args)
 
         self._client = self._session.client(self._resource_name, config=self._config, endpoint_url=self.endpoint_url)
-        self._resource = self._session.resource(self._resource_name, config=self._config)
+        self._resource = self._session.resource(self._resource_name, config=self._config, endpoint_url=self.endpoint_url)
         return self
 
     def __exit__(self, type, value, traceback):
