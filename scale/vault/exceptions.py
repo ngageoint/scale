@@ -7,8 +7,8 @@ class InvalidSecretsAuthorization(Exception):
     pass
 
 
-class InvalidSecretsRequest(Exception):
-    """Exception indicating that the secrets request was invalid
+class InvalidSecretsToken(Exception):
+    """Exception indicating that the secrets token was invalid
     """
     pass
 
