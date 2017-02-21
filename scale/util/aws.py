@@ -84,13 +84,14 @@ class AWSClient(object):
 
             access_key = credentials_dict['access_key_id'].strip()
             secret_key = credentials_dict['secret_access_key'].strip()
-            endpoint_url = credentials_dict.get('endpoint_url', '').strip()
-            endpoint_url = None if len(endpoint_url) == 0 else endpoint_url
 
             # If either Access Key or Secret Access Key are empty, fail-over to role-based auth.
             # TODO: This should be changed to also raise as above, once the UI has been improved to prune unset values.
             if not len(access_key) or not len(secret_key):
                 return None
+
+            endpoint_url = config.get('endpoint_url', '').strip()
+            endpoint_url = None if len(endpoint_url) == 0 else endpoint_url
 
             return AWSCredentials(access_key, secret_key, endpoint_url)
 
