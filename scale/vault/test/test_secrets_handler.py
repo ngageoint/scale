@@ -10,7 +10,7 @@ from django.test import TestCase, TransactionTestCase
 
 from error.models import Error
 from vault.secrets_handler import SecretsHandler
-from vault.exceptions import InvalidSecretsAuthorization, InvalidSecretsPath, InvalidSecretsRequest, InvalidSecretsToken
+from vault.exceptions import InvalidSecretsAuthorization, InvalidSecretsRequest, InvalidSecretsToken
 
 
 class SecretsBackendValidation(TestCase):
@@ -45,11 +45,11 @@ UB3V/SWf7Wqp9vDEbUtgzIn9y4l5cIjS/J2IKkYARg==
         r_return.content = json.dumps({
             "scale/": {
                 "config": {
-                    "default_lease_ttl":0,
-                    "max_lease_ttl":0
+                    "default_lease_ttl": 0,
+                    "max_lease_ttl": 0
                 },
-                "description":"scale secrets storage",
-                "type":"generic",
+                "description": "scale secrets storage",
+                "type": "generic",
             }
         })
         
@@ -63,38 +63,38 @@ UB3V/SWf7Wqp9vDEbUtgzIn9y4l5cIjS/J2IKkYARg==
     @patch('vault.secrets_handler.SecretsHandler._make_request', return_value=mocked_request_200())    
     def test_dcos_authenticate_good_return(self, mock_request):
         with self.settings(SECRETS_TOKEN=self.dcos_token,
-                          DCOS_SERVICE_ACCOUNT='some_account_name',
-                          SECRETS_URL='HTTP://127.0.0.1:8200'):
+                           DCOS_SERVICE_ACCOUNT='some_account_name',
+                           SECRETS_URL='HTTP://127.0.0.1:8200'):
             auth_test = SecretsHandler()
             
     @patch('vault.secrets_handler.SecretsHandler._make_request', return_value=mocked_request_200())    
     def test_dcos_authenticate_bad_token(self, mock_request):
         with self.settings(SECRETS_TOKEN='some_bad_token',
-                          DCOS_SERVICE_ACCOUNT='some_account_name',
-                          SECRETS_URL='HTTP://127.0.0.1:8200'):
+                           DCOS_SERVICE_ACCOUNT='some_account_name',
+                           SECRETS_URL='HTTP://127.0.0.1:8200'):
             self.assertRaises(InvalidSecretsToken, SecretsHandler)
             
             
     @patch('vault.secrets_handler.SecretsHandler._make_request', return_value=mocked_request_403())    
     def test_dcos_authenticate_bad_permission(self, mock_request):
         with self.settings(SECRETS_TOKEN=self.dcos_token,
-                          DCOS_SERVICE_ACCOUNT='some_account_name',
-                          SECRETS_URL='HTTP://127.0.0.1:8200'):
+                           DCOS_SERVICE_ACCOUNT='some_account_name',
+                           SECRETS_URL='HTTP://127.0.0.1:8200'):
             self.assertRaises(InvalidSecretsRequest, SecretsHandler)
         
             
     @patch('vault.secrets_handler.SecretsHandler._make_request', return_value=mocked_request_200())    
     def test_vault_authenticate_good_return(self, mock_request):
         with self.settings(SECRETS_TOKEN='some_master_token',
-                          DCOS_SERVICE_ACCOUNT=None,
-                          SECRETS_URL='HTTP://127.0.0.1:8200'):
+                           DCOS_SERVICE_ACCOUNT=None,
+                           SECRETS_URL='HTTP://127.0.0.1:8200'):
             auth_test = SecretsHandler()
             
     @patch('vault.secrets_handler.SecretsHandler._make_request', return_value=mocked_request_403())    
     def test_vault_authenticate_bad_permission(self, mock_request):
         with self.settings(SECRETS_TOKEN='some_master_token',
-                          DCOS_SERVICE_ACCOUNT=None,
-                          SECRETS_URL='HTTP://127.0.0.1:8200'):
+                           DCOS_SERVICE_ACCOUNT=None,
+                           SECRETS_URL='HTTP://127.0.0.1:8200'):
             self.assertRaises(InvalidSecretsRequest, SecretsHandler)
             
             
@@ -107,7 +107,7 @@ class VaultSecretsValueValidation(TestCase):
         self.vault_setup()
         django.setup()
         
-    def mocked_get_secret(*args, **kwargs):
+    def mocked_get_secret(*args):
         class MockResponse:
             def __init__(self, json_data, status_code):
                 self.json_data = json_data
@@ -146,11 +146,11 @@ class VaultSecretsValueValidation(TestCase):
         r_return.content = json.dumps({
             "scale/": {
                 "config": {
-                    "default_lease_ttl":0,
-                    "max_lease_ttl":0
+                    "default_lease_ttl": 0,
+                    "max_lease_ttl": 0
                 },
-                "description":"scale secrets storage",
-                "type":"generic",
+                "description": "scale secrets storage",
+                "type": "generic",
             }
         })
         
@@ -159,8 +159,8 @@ class VaultSecretsValueValidation(TestCase):
     @patch('vault.secrets_handler.SecretsHandler._make_request', return_value=mocked_request_setup())    
     def vault_setup(self, mock_request):
         with self.settings(SECRETS_TOKEN='some_master_token',
-                          DCOS_SERVICE_ACCOUNT=None,
-                          SECRETS_URL='HTTP://127.0.0.1:8200'):
+                           DCOS_SERVICE_ACCOUNT=None,
+                           SECRETS_URL='HTTP://127.0.0.1:8200'):
 
             self.vault_backend = SecretsHandler()
 
@@ -208,7 +208,7 @@ UB3V/SWf7Wqp9vDEbUtgzIn9y4l5cIjS/J2IKkYARg==
         self.dcos_setup()
         django.setup()
         
-    def mocked_get_secret(*args, **kwargs):
+    def mocked_get_secret(*args):
         class MockResponse:
             def __init__(self, json_data, status_code):
                 self.json_data = json_data
@@ -252,8 +252,8 @@ UB3V/SWf7Wqp9vDEbUtgzIn9y4l5cIjS/J2IKkYARg==
     @patch('vault.secrets_handler.SecretsHandler._make_request', return_value=mocked_get_secret('auth'))    
     def dcos_setup(self, mock_request):
         with self.settings(SECRETS_TOKEN=self.dcos_token,
-                          DCOS_SERVICE_ACCOUNT='some_account_name',
-                          SECRETS_URL='HTTP://127.0.0.1:8200'):
+                           DCOS_SERVICE_ACCOUNT='some_account_name',
+                           SECRETS_URL='HTTP://127.0.0.1:8200'):
             self.dcos_backend = SecretsHandler()
         
     @patch('vault.secrets_handler.SecretsHandler._make_request', return_value=mocked_get_secret('secret'))    
