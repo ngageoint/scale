@@ -10,6 +10,12 @@ class InvalidInterfaceDefinition(Exception):
     pass
 
 
+class InvalidJobTypeConfiguration(Exception):
+    """Exception indicating that the provided job type configuration was invalid
+    """
+    pass
+
+
 class InvalidEnvironment(Exception):
     """Exception indicating that the provided definition of a job interface was invalid
     """

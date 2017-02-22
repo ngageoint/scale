@@ -7,7 +7,7 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 from job.configuration.configuration import job_configuration_1_0 as previous_version
-from job.configuration.configuration.job_parameter import DockerParam, TaskWorkspace, TaskSetting
+from job.configuration.configuration.job_parameter import TaskSetting
 from job.configuration.configuration.exceptions import InvalidJobConfiguration
 
 
@@ -176,7 +176,7 @@ class JobConfiguration(previous_version.JobConfiguration):
         :type value: string
         """
 
-        self._configuration['job_task']['settings'].append({'name': name, 'value': value})
+        self._configuration['job_task']['settings'].append({'name': name, 'value': str(value)})
 
     def add_post_task_setting(self, name, value):
         """Adds a setting name/value to this job's post task
@@ -187,7 +187,7 @@ class JobConfiguration(previous_version.JobConfiguration):
         :type value: string
         """
 
-        self._configuration['post_task']['settings'].append({'name': name, 'value': value})
+        self._configuration['post_task']['settings'].append({'name': name, 'value': str(value)})
 
     def add_pre_task_setting(self, name, value):
         """Adds a setting name/value to this job's pre task
@@ -198,7 +198,7 @@ class JobConfiguration(previous_version.JobConfiguration):
         :type value: string
         """
 
-        self._configuration['pre_task']['settings'].append({'name': name, 'value': value})
+        self._configuration['pre_task']['settings'].append({'name': name, 'value': str(value)})
 
     def get_job_task_settings(self):
         """Returns the settings name/values needed for the job task
