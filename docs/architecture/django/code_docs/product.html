@@ -205,6 +205,8 @@
 <li class="toctree-l2"><a class="reference internal" href="product.migrations.html#module-product.migrations.0004_auto_20170127_1324">product.migrations.0004_auto_20170127_1324 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="product.migrations.html#module-product.migrations.0005_auto_20170127_1344">product.migrations.0005_auto_20170127_1344 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="product.migrations.html#module-product.migrations.0006_auto_20170127_1348">product.migrations.0006_auto_20170127_1348 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="product.migrations.html#module-product.migrations.0007_fileancestrylink_batch">product.migrations.0007_fileancestrylink_batch module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="product.migrations.html#module-product.migrations.0008_auto_20170221_1413">product.migrations.0008_auto_20170221_1413 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="product.migrations.html#module-product.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -284,7 +286,8 @@ a job execution and the child is created as an output of that job execution.</p>
 <li><strong>job_exe</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The job execution that caused this link to be formed</li>
 <li><strong>job</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The job that caused this link to be formed</li>
 <li><strong>recipe</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The recipe that caused this link to be formed. Note that not all jobs are created from a recipe and
-so this field could be null.</li>
+so this field could be None.</li>
+<li><strong>batch</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The batch associated with this link&#8217;s job/recipe, possibly None</li>
 <li><strong>ancestor_job</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The higher level job that took the ancestor as input and indirectly caused this link to be
 formed. Note that this field will be null for directly created files, where the ancestor is a parent that was
 fed as input to a job and the descendant is a child produced as output by that same job.</li>
@@ -323,6 +326,11 @@ execution.</li>
 <dl class="attribute">
 <dt id="product.models.FileAncestryLink.ancestor_job_exe">
 <code class="descclassname">FileAncestryLink.</code><code class="descname">ancestor_job_exe</code><a class="headerlink" href="#product.models.FileAncestryLink.ancestor_job_exe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="product.models.FileAncestryLink.batch">
+<code class="descclassname">FileAncestryLink.</code><code class="descname">batch</code><a class="headerlink" href="#product.models.FileAncestryLink.batch" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">

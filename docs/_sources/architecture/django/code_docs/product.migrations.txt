@@ -52,6 +52,22 @@ product.migrations.0006_auto_20170127_1348 module
     :undoc-members:
     :show-inheritance:
 
+product.migrations.0007_fileancestrylink_batch module
+-----------------------------------------------------
+
+.. automodule:: product.migrations.0007_fileancestrylink_batch
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+product.migrations.0008_auto_20170221_1413 module
+-------------------------------------------------
+
+.. automodule:: product.migrations.0008_auto_20170221_1413
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
