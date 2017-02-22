@@ -16,7 +16,7 @@ Usage
 1. Run the docker image:```
 ACCESS_KEY=$(openssl rand -base64 12)
 SECRET_KEY=$(openssl rand -base64 24)
-docker run -d -p 9000:9000 -p 4222:4222 -e "MINIO_ACCESS_KEY=$ACCESS_KEY" -e "MINIO_SECRET_KEY=$SECRET_KEY" docker.balldayton.com/ball-docker/minio-nats
+docker run -d -p 9000:9000 -p 4222:4222 -e "MINIO_ACCESS_KEY=$ACCESS_KEY" -e "MINIO_SECRET_KEY=$SECRET_KEY" geoint/minio-nats
 # use this for a local docker
 MINIO_URL=http://localhost:9000
 NATS_URL=nats://localhost:4222
