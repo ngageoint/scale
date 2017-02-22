@@ -35,6 +35,7 @@ class FileAncestryLinkManager(models.Manager):
         :param job_exe: The job execution that is creating the file links
         :type job_exe: :class:`job.models.JobExecution`
         """
+
         new_links = []
         created = timezone.now()
 
@@ -44,6 +45,13 @@ class FileAncestryLinkManager(models.Manager):
 
         # Not all jobs have a recipe so attempt to get one if applicable
         recipe = Recipe.objects.get_recipe_for_job(job_exe.job_id)
+
+        # See if this job is in a batch
+        from batch.models import BatchJob
+        try:
+            batch_id = BatchJob.objects.get(job_id=job_exe.job_id).batch_id
+        except BatchJob.DoesNotExist:
+            batch_id = None
 
         # Grab ancestors for the parents
         ancestor_map = dict()
@@ -69,6 +77,7 @@ class FileAncestryLinkManager(models.Manager):
                 link.job_exe_id = job_exe.id
                 link.job = job_exe.job
                 link.recipe = recipe
+                link.batch_id = batch_id
                 new_links.append(link)
 
         # Create indirect links by setting the ancestor job fields
@@ -84,6 +93,7 @@ class FileAncestryLinkManager(models.Manager):
                 link.job_exe_id = job_exe.id
                 link.job = job_exe.job
                 link.recipe = recipe
+                link.batch_id = batch_id
 
                 # Set references to the ancestor execution
                 link.ancestor_job = ancestor_link.job
@@ -124,8 +134,10 @@ class FileAncestryLink(models.Model):
     :keyword job: The job that caused this link to be formed
     :type job: :class:`django.db.models.ForeignKey`
     :keyword recipe: The recipe that caused this link to be formed. Note that not all jobs are created from a recipe and
-        so this field could be null.
+        so this field could be None.
     :type recipe: :class:`django.db.models.ForeignKey`
+    :keyword batch: The batch associated with this link's job/recipe, possibly None
+    :type batch: :class:`django.db.models.ForeignKey`
 
     :keyword ancestor_job: The higher level job that took the ancestor as input and indirectly caused this link to be
         formed. Note that this field will be null for directly created files, where the ancestor is a parent that was
@@ -149,6 +161,7 @@ class FileAncestryLink(models.Model):
     job = models.ForeignKey('job.Job', on_delete=models.PROTECT, related_name='file_links')
     recipe = models.ForeignKey('recipe.Recipe', blank=True, on_delete=models.PROTECT, null=True,
                                related_name='file_links')
+    batch = models.ForeignKey('batch.Batch', blank=True, on_delete=models.PROTECT, null=True)
 
     ancestor_job = models.ForeignKey('job.Job', blank=True, on_delete=models.PROTECT,
                                      related_name='ancestor_file_links', null=True)

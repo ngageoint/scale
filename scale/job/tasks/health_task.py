@@ -44,8 +44,16 @@ class HealthTask(Task):
         health_check_commands = []
 
         # Check if docker version works (indicates if daemon is working)
-        bad_daemon_check = 'docker version; if [[ $? != 0 ]]; then exit %d; fi' % HealthTask.BAD_DAEMON_CODE
+        bad_daemon_check = 'docker version'
+        bad_daemon_check = 'timeout -s SIGKILL 2s %s' % bad_daemon_check  # docker version has 2 seconds to succeed
+        bad_daemon_check = '%s; if [[ $? != 0 ]]; then exit %d; fi' % (bad_daemon_check, HealthTask.BAD_DAEMON_CODE)
         health_check_commands.append(bad_daemon_check)
+
+        # Check if docker ps works (also indicates if daemon is working)
+        docker_ps_check = 'docker ps'
+        docker_ps_check = 'timeout -s SIGKILL 5s %s' % docker_ps_check  # docker ps has 5 seconds to succeed
+        docker_ps_check = '%s; if [[ $? != 0 ]]; then exit %d; fi' % (docker_ps_check, HealthTask.BAD_DAEMON_CODE)
+        health_check_commands.append(docker_ps_check)
 
         # Check if Docker disk space is below 1 GiB (assumes /var/lib/docker, ignores check otherwise)
         get_disk_space = 'df --output=avail /var/lib/docker | tail -1'
@@ -56,7 +64,7 @@ class HealthTask(Task):
 
         # Check to ensure that logstash is reachable
         if settings.LOGGING_HEALTH_ADDRESS:
-            logstash_check = 'curl %s; if [[ $? != 0 ]]; then exit %d; fi'
+            logstash_check = 'timeout -s SIGKILL 5s curl %s; if [[ $? != 0 ]]; then exit %d; fi'
             logstash_check = logstash_check % (settings.LOGGING_HEALTH_ADDRESS, HealthTask.BAD_LOGSTASH_CODE)
             health_check_commands.append(logstash_check)
 
