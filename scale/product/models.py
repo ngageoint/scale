@@ -181,6 +181,71 @@ class ProductFileManager(models.GeoManager):
     """Provides additional methods for handling product files
     """
 
+    def filter_products(self, started=None, ended=None, job_type_ids=None, job_type_names=None,
+                        job_type_categories=None, is_operational=None, is_published=None, is_superseded=None,
+                        file_name=None, order=None):
+        """Returns a query for product models that filters on the given fields. The returned query includes the related
+        workspace, job_type, and job fields, except for the workspace.json_config field. The related countries are set
+        to be pre-fetched as part of the query.
+
+        :param started: Query product files updated after this amount of time.
+        :type started: :class:`datetime.datetime`
+        :param ended: Query product files updated before this amount of time.
+        :type ended: :class:`datetime.datetime`
+        :param job_type_ids: Query product files produced by jobs with the given type identifier.
+        :type job_type_ids: list[int]
+        :param job_type_names: Query product files produced by jobs with the given type name.
+        :type job_type_names: list[str]
+        :param job_type_categories: Query product files produced by jobs with the given type category.
+        :type job_type_categories: list[str]
+        :param is_operational: Query product files flagged as operational or R&D only.
+        :type is_operational: bool
+        :param is_published: Query product files flagged as currently exposed for publication.
+        :type is_published: bool
+        :param is_superseded: Query product files that have/have not been superseded.
+        :type is_superseded: bool
+        :param file_name: Query product files with the given file name.
+        :type file_name: str
+        :param order: A list of fields to control the sort order.
+        :type order: list[str]
+        :returns: The product file query
+        :rtype: :class:`django.db.models.QuerySet`
+        """
+
+        # Fetch a list of product files
+        products = ScaleFile.objects.filter(file_type='PRODUCT', has_been_published=True)
+        products = products.select_related('workspace', 'job_type', 'job', 'job_exe').defer('workspace__json_config')
+        products = products.prefetch_related('countries')
+
+        # Apply time range filtering
+        if started:
+            products = products.filter(last_modified__gte=started)
+        if ended:
+            products = products.filter(last_modified__lte=ended)
+
+        if job_type_ids:
+            products = products.filter(job_type_id__in=job_type_ids)
+        if job_type_names:
+            products = products.filter(job_type__name__in=job_type_names)
+        if job_type_categories:
+            products = products.filter(job_type__category__in=job_type_categories)
+        if is_operational is not None:
+            products = products.filter(job_type__is_operational=is_operational)
+        if is_published is not None:
+            products = products.filter(is_published=is_published)
+        if is_superseded is not None:
+            products = products.filter(is_superseded=is_superseded)
+        if file_name:
+            products = products.filter(file_name=file_name)
+
+        # Apply sorting
+        if order:
+            products = products.order_by(*order)
+        else:
+            products = products.order_by('last_modified')
+
+        return products
+
     def get_products(self, started=None, ended=None, job_type_ids=None, job_type_names=None, job_type_categories=None,
                      is_operational=None, is_published=None, file_name=None, order=None):
         """Returns a list of product files within the given time range.
@@ -207,37 +272,10 @@ class ProductFileManager(models.GeoManager):
         :rtype: list[:class:`storage.models.ScaleFile`]
         """
 
-        # Fetch a list of product files
-        products = ScaleFile.objects.filter(file_type='PRODUCT', has_been_published=True, is_superseded=False)
-        products = products.select_related('workspace', 'job_type').defer('workspace__json_config')
-        products = products.prefetch_related('countries')
-
-        # Apply time range filtering
-        if started:
-            products = products.filter(last_modified__gte=started)
-        if ended:
-            products = products.filter(last_modified__lte=ended)
-
-        if job_type_ids:
-            products = products.filter(job_type_id__in=job_type_ids)
-        if job_type_names:
-            products = products.filter(job_type__name__in=job_type_names)
-        if job_type_categories:
-            products = products.filter(job_type__category__in=job_type_categories)
-        if is_operational is not None:
-            products = products.filter(job_type__is_operational=is_operational)
-        if is_published is not None:
-            products = products.filter(is_published=is_published)
-        if file_name:
-            products = products.filter(file_name=file_name)
-
-        # Apply sorting
-        if order:
-            products = products.order_by(*order)
-        else:
-            products = products.order_by('last_modified')
-
-        return products
+        return self.filter_products(started=started, ended=ended, job_type_ids=job_type_ids,
+                                    job_type_names=job_type_names, job_type_categories=job_type_categories,
+                                    is_operational=is_operational, is_published=is_published, is_superseded=False,
+                                    file_name=file_name, order=order)
 
     def get_details(self, product_id):
         """Gets additional details for the given product model based on related model attributes.
