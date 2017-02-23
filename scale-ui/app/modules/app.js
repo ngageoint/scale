@@ -30,7 +30,7 @@
         });
 
         // stop pollers when route changes
-        pollerConfig.stopOnRouteChange = true;
+        pollerConfig.stopOn = '$routeChangeStart';
         pollerConfig.smart = true;
 
         // preserve trailing slashes
