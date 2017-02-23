@@ -465,6 +465,40 @@ functionality specific to product files.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.contrib.gis.db.models.manager.GeoManager</span></code></p>
 <p>Provides additional methods for handling product files</p>
 <dl class="method">
+<dt id="product.models.ProductFileManager.filter_products">
+<code class="descname">filter_products</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>is_operational=None</em>, <em>is_published=None</em>, <em>is_superseded=None</em>, <em>file_name=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#product.models.ProductFileManager.filter_products" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a query for product models that filters on the given fields. The returned query includes the related
+workspace, job_type, and job fields, except for the workspace.json_config field. The related countries are set
+to be pre-fetched as part of the query.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query product files updated after this amount of time.</li>
+<li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query product files updated before this amount of time.</li>
+<li><strong>job_type_ids</strong> (<em>list[int]</em>) &#8211; Query product files produced by jobs with the given type identifier.</li>
+<li><strong>job_type_names</strong> (<em>list[str]</em>) &#8211; Query product files produced by jobs with the given type name.</li>
+<li><strong>job_type_categories</strong> (<em>list[str]</em>) &#8211; Query product files produced by jobs with the given type category.</li>
+<li><strong>is_operational</strong> (<em>bool</em>) &#8211; Query product files flagged as operational or R&amp;D only.</li>
+<li><strong>is_published</strong> (<em>bool</em>) &#8211; Query product files flagged as currently exposed for publication.</li>
+<li><strong>is_superseded</strong> (<em>bool</em>) &#8211; Query product files that have/have not been superseded.</li>
+<li><strong>file_name</strong> (<em>str</em>) &#8211; Query product files with the given file name.</li>
+<li><strong>order</strong> (<em>list[str]</em>) &#8211; A list of fields to control the sort order.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The product file query</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal"><span class="pre">django.db.models.QuerySet</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="product.models.ProductFileManager.get_details">
 <code class="descname">get_details</code><span class="sig-paren">(</span><em>product_id</em><span class="sig-paren">)</span><a class="headerlink" href="#product.models.ProductFileManager.get_details" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets additional details for the given product model based on related model attributes.</p>

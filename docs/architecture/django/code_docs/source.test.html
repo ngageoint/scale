@@ -227,10 +227,21 @@
 <dt id="source.test.test_models.TestSourceFileManager">
 <em class="property">class </em><code class="descclassname">source.test.test_models.</code><code class="descname">TestSourceFileManager</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_models.TestSourceFileManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="attribute">
+<dt id="source.test.test_models.TestSourceFileManager.fixtures">
+<code class="descname">fixtures</code><em class="property"> = [u'batch_job_types.json']</em><a class="headerlink" href="#source.test.test_models.TestSourceFileManager.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="source.test.test_models.TestSourceFileManager.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_models.TestSourceFileManager.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_models.TestSourceFileManager.test_get_source_products">
+<code class="descname">test_get_source_products</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_models.TestSourceFileManager.test_get_source_products" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling get_source_products()</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="source.test.test_models.TestSourceFileManager.test_get_sources_data_time">
@@ -328,6 +339,106 @@ model</p>
 <dt id="source.test.test_views.TestSourceDetailsView.test_superseded">
 <code class="descname">test_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceDetailsView.test_superseded" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the source files view filtered by superseded.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="source.test.test_views.TestSourceProductsView">
+<em class="property">class </em><code class="descclassname">source.test.test_views.</code><code class="descname">TestSourceProductsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="attribute">
+<dt id="source.test.test_views.TestSourceProductsView.fixtures">
+<code class="descname">fixtures</code><em class="property"> = [u'batch_job_types.json']</em><a class="headerlink" href="#source.test.test_views.TestSourceProductsView.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourceProductsView.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourceProductsView.test_batch_id">
+<code class="descname">test_batch_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView.test_batch_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the source products view filtered by batch identifier.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourceProductsView.test_file_name">
+<code class="descname">test_file_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView.test_file_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the source products view filtered by file name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourceProductsView.test_invalid_ended">
+<code class="descname">test_invalid_ended</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView.test_invalid_ended" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the source products view when the ended parameter is invalid.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourceProductsView.test_invalid_source_id">
+<code class="descname">test_invalid_source_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView.test_invalid_source_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the source products view when the source ID is invalid.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourceProductsView.test_invalid_started">
+<code class="descname">test_invalid_started</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView.test_invalid_started" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the source products view when the started parameter is invalid.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourceProductsView.test_is_operational">
+<code class="descname">test_is_operational</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView.test_is_operational" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the source products view filtered by is_operational flag.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourceProductsView.test_is_published">
+<code class="descname">test_is_published</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView.test_is_published" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the source products view filtered by is_published flag.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourceProductsView.test_job_type_category">
+<code class="descname">test_job_type_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView.test_job_type_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the source products view filtered by job type category.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourceProductsView.test_job_type_id">
+<code class="descname">test_job_type_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView.test_job_type_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the source products view filtered by job type identifier.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourceProductsView.test_job_type_name">
+<code class="descname">test_job_type_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView.test_job_type_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the source products view filtered by job type name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourceProductsView.test_missing_tz_ended">
+<code class="descname">test_missing_tz_ended</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView.test_missing_tz_ended" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the source products view when the ended parameter is missing timezone.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourceProductsView.test_missing_tz_started">
+<code class="descname">test_missing_tz_started</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView.test_missing_tz_started" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the source products view when the started parameter is missing timezone.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourceProductsView.test_negative_time_range">
+<code class="descname">test_negative_time_range</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView.test_negative_time_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the source products view with a negative time range.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourceProductsView.test_successful">
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceProductsView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the source products view.</p>
 </dd></dl>
 
 </dd></dl>

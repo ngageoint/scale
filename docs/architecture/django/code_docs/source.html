@@ -392,6 +392,42 @@ functionality specific to source files.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="source.models.SourceFileManager.get_source_products">
+<code class="descname">get_source_products</code><span class="sig-paren">(</span><em>source_file_id</em>, <em>started=None</em>, <em>ended=None</em>, <em>batch_ids=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>is_operational=None</em>, <em>is_published=None</em>, <em>is_superseded=None</em>, <em>file_name=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#source.models.SourceFileManager.get_source_products" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a query for the list of products produced by the given source file ID. The returned query includes
+the related  workspace, job_type, and job fields, except for the workspace.json_config field. The related
+countries are set to be pre-fetched as part of the query.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>source_file_id</strong> (<em>int</em>) &#8211; The source file ID.</li>
+<li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query product files updated after this amount of time.</li>
+<li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query product files updated before this amount of time.</li>
+<li><strong>batch_ids</strong> (<em>list[int]</em>) &#8211; Query product files produced by batches with the given identifiers.</li>
+<li><strong>job_type_ids</strong> (<em>list[int]</em>) &#8211; Query product files produced by jobs with the given type identifiers.</li>
+<li><strong>job_type_names</strong> (<em>list[str]</em>) &#8211; Query product files produced by jobs with the given type names.</li>
+<li><strong>job_type_categories</strong> (<em>list[str]</em>) &#8211; Query product files produced by jobs with the given type categories.</li>
+<li><strong>is_operational</strong> (<em>bool</em>) &#8211; Query product files flagged as operational or R&amp;D only.</li>
+<li><strong>is_published</strong> (<em>bool</em>) &#8211; Query product files flagged as currently exposed for publication.</li>
+<li><strong>is_superseded</strong> (<em>bool</em>) &#8211; Query product files that have/have not been superseded.</li>
+<li><strong>file_name</strong> (<em>str</em>) &#8211; Query product files with the given file name.</li>
+<li><strong>order</strong> (<em>list[str]</em>) &#8211; A list of fields to control the sort order.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The product file query</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal"><span class="pre">django.db.models.QuerySet</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="source.models.SourceFileManager.get_sources">
 <code class="descname">get_sources</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>time_field=None</em>, <em>is_parsed=None</em>, <em>file_name=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#source.models.SourceFileManager.get_sources" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of source files within the given time range.</p>
@@ -625,6 +661,48 @@ None, the source file should not be moved.</li>
 <dt id="source.views.SourceDetailsView.serializer_class">
 <code class="descname">serializer_class</code><a class="headerlink" href="#source.views.SourceDetailsView.serializer_class" title="Permalink to this definition">¶</a></dt>
 <dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">SourceFileDetailsSerializer</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="source.views.SourceProductsView">
+<em class="property">class </em><code class="descclassname">source.views.</code><code class="descname">SourceProductsView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#source.views.SourceProductsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></code></p>
+<p>This view is the endpoint for retrieving products produced from a source file</p>
+<dl class="method">
+<dt id="source.views.SourceProductsView.list">
+<code class="descname">list</code><span class="sig-paren">(</span><em>request</em>, <em>source_id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#source.views.SourceProductsView.list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the products for a given source file ID and returns them in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
+<li><strong>source_id</strong> (<em>int encoded as a string</em>) &#8211; The id of the source</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="source.views.SourceProductsView.queryset">
+<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#source.views.SourceProductsView.queryset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="source.views.SourceProductsView.serializer_class">
+<code class="descname">serializer_class</code><a class="headerlink" href="#source.views.SourceProductsView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">ProductFileSerializer</span></code></p>
 </dd></dl>
 
 </dd></dl>
