@@ -4,7 +4,11 @@ from __future__ import unicode_literals
 import logging
 import signal
 import sys
-from mock import patch
+# Attempt this for development, if it fails ignore
+try:
+    from mock import patch
+except:
+    pass
 from optparse import make_option
 
 from django.core.management.base import BaseCommand
@@ -47,6 +51,7 @@ class Command(BaseCommand):
 
         scan_id = options.get('scan_id')
         dry_run = options.get('dry_run')
+        local = options.get('local')
         
         if not scan_id:
             logger.error('-i or --scan-id parameter must be specified for Scan configuration.')
@@ -55,6 +60,7 @@ class Command(BaseCommand):
         logger.info('Command starting: scale_scan')
         logger.info('Scan ID: %i', scan_id)
         logger.info('Dry Run: %s', dry_run)
+        logger.info('Local Test: %s', local)
         
         logger.info('Querying database for Scan configuration')
         scan = Scan.objects.select_related('job').get(pk=scan_id)
@@ -65,13 +71,14 @@ class Command(BaseCommand):
         
         # Patch _get_volume_path for local testing outside of docker.
         # This is useful for testing when Scale isn't managing mounts.
-        workspace = self._scanner._scanned_workspace
-        if options['local'] and 'broker' in workspace.json_config and 'host_path' in workspace.json_config['broker']:
-            with patch.object(Workspace, '_get_volume_path', return_value=workspace.json_config['broker']['host_path']) as mock_method:
-                self._scanner.run(dry_run=dry_run)
-                logger.info('Scanner has stopped running')
-                logger.info('Command completed: scale_scan')
-                return
+        if options['local'] and patch:
+            workspace = self._scanner._scanned_workspace
+            if 'broker' in workspace.json_config and 'host_path' in workspace.json_config['broker']:
+                with patch.object(Workspace, '_get_volume_path', return_value=workspace.json_config['broker']['host_path']) as mock_method:
+                    self._scanner.run(dry_run=dry_run)
+                    logger.info('Scanner has stopped running')
+                    logger.info('Command completed: scale_scan')
+                    return
 
         self._scanner.run(dry_run=dry_run)
         logger.info('Scanner has stopped running')
