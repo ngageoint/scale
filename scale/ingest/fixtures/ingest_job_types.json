@@ -139,7 +139,7 @@
                  "command": "",
                  "command_arguments": "scale_scan ${-i :Scan ID} ${-d :Dry Run}",
                  "input_data": [ { "name": "Scan ID", "type": "property" },
-                                 { "name": "Dry Run", "type": "property" } ]
+                                 { "name": "Dry Run", "type": "property", "required": false  } ]
             },
             "revision_num": 1,
             "error_mapping": null,
@@ -166,7 +166,7 @@
                  "command": "",
                  "command_arguments": "scale_scan ${-i :Scan ID} ${-d :Dry Run}",
                  "input_data": [ { "name": "Scan ID", "type": "property" },
-                                 { "name": "Dry Run", "type": "property" } ]
+                                 { "name": "Dry Run", "type": "property", "required": false } ]
             },
             "created": "2017-02-07T00:00:00.0Z"
         }
