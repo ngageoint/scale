@@ -14,6 +14,8 @@
             ingestsParams = {},
             nodesColDefs = [],
             nodeStatusParams = {},
+            batchesColDefs = [],
+            batchesParams = {},
             showActiveWorkspaces = true,
             nodesParams = {},
             logArgs = [],
@@ -126,6 +128,20 @@
                 page_size: data.page_size ? parseInt(data.page_size) : 25,
                 started: data.started ? data.started : moment.utc().subtract(3, 'hours').toISOString(),
                 ended: data.ended ? data.ended : moment.utc().toISOString()
+            };
+        };
+
+        var initBatchesParams = function (data) {
+            return {
+                page: data.page ? parseInt(data.page) : 1,
+                page_size: data.page_size ? parseInt(data.page_size) : 25,
+                started: data.started ? data.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
+                ended: data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
+                order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['-last_modified'],
+                status: data.status ? data.status : null,
+                recipe_type_id: data.recipe_type_id ? parseInt(data.recipe_type_id) : null,
+                job_type_id: data.job_type_id ? parseInt(data.job_type_id) : null,
+                url: null
             };
         };
 
@@ -260,6 +276,22 @@
             },
             setJobExecutionLogPoller: function (data) {
                 jobExecutionLogPoller.push(data);
+            },
+            getBatchesColDefs: function () {
+                return batchesColDefs;
+            },
+            setBatchesColDefs: function (data) {
+                batchesColDefs = data;
+            },
+            getBatchesParams: function () {
+                if (_.keys(batchesParams).length === 0) {
+                    return initBatchesParams($location.search());
+                }
+                return batchesParams;
+            },
+            setBatchesParams: function (data) {
+                batchesParams = initBatchesParams(data);
+                updateQuerystring(batchesParams);
             }
         };
     });

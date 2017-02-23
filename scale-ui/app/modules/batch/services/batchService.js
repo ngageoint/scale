@@ -15,7 +15,7 @@
         };
 
         return {
-            getBatchesOnce: function (params) {
+            getBatches: function (params) {
                 params = params || getBatchesParams();
                 var d = $q.defer();
                 var url = scaleConfig.getUrlPrefix() + 'batches/';
