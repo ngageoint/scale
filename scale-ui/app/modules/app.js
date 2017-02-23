@@ -168,6 +168,11 @@
                 controllerAs: 'vm',
                 templateUrl: 'modules/batch/partials/batchesTemplate.html'
             })
+            .when('/batch/:id', {
+                controller: 'batchDetailsController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/batch/partials/batchDetailsTemplate.html'
+            })
             .otherwise({
                 redirectTo: '/'
             });

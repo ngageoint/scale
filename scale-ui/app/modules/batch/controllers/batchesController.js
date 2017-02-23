@@ -1,7 +1,8 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('batchesController', function ($scope, $location, scaleConfig, gridFactory, userService, jobTypeService, recipeService, navService, stateService, batchService, moment) {
+    angular.module('scaleApp').controller('batchesController', function ($scope, $location, scaleConfig, gridFactory, subnavService, userService, jobTypeService, recipeService, navService, stateService, batchService, moment) {
+        subnavService.setCurrentPath('batch');
 
         var vm = this,
             jobTypeViewAll = { name: 'VIEW ALL', title: 'VIEW ALL', version: '', id: 0 },
@@ -10,12 +11,13 @@
         vm.batchesParams = stateService.getBatchesParams();
 
         vm.stateService = stateService;
+        vm.subnavLinks = scaleConfig.subnavLinks.batch;
         vm.loading = true;
         vm.readonly = true;
         vm.jobTypeValues = [jobTypeViewAll];
         vm.selectedJobType = vm.batchesParams.job_type_id ? vm.batchesParams.job_type_id : jobTypeViewAll;
         vm.recipeTypeValues = [recipeTypeViewAll];
-        vm.selectedJobType = vm.batchesParams.recipe_type_id ? vm.batchesParams.recipe_type_id : recipeTypeViewAll;
+        vm.selectedRecipeType = vm.batchesParams.recipe_type_id ? vm.batchesParams.recipe_type_id : recipeTypeViewAll;
         vm.batchStatusValues = scaleConfig.batchStatus;
         vm.selectedBatchStatus = vm.batchesParams.status || vm.batchStatusValues[0];
         vm.lastModifiedStart = moment.utc(vm.batchesParams.started).toDate();
@@ -103,7 +105,7 @@
             });
         };
 
-        vm.getJobTypes = function (id) {
+        vm.getJobTypes = function () {
             return jobTypeService.getJobTypesOnce().then(function (data) {
                 vm.jobTypeValues.push(data.results);
                 vm.jobTypeValues = _.flatten(vm.jobTypeValues);
