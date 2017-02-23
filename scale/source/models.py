@@ -33,6 +33,53 @@ class SourceFileManager(models.GeoManager):
 
         return ScaleFile.objects.get(file_name=file_name, file_type='SOURCE')
 
+    def get_source_products(self, source_file_id, started=None, ended=None, batch_ids=None, job_type_ids=None,
+                            job_type_names=None, job_type_categories=None, is_operational=None, is_published=None,
+                            is_superseded=None, file_name=None, order=None):
+        """Returns a query for the list of products produced by the given source file ID. The returned query includes
+        the related  workspace, job_type, and job fields, except for the workspace.json_config field. The related
+        countries are set to be pre-fetched as part of the query.
+
+        :param source_file_id: The source file ID.
+        :type source_file_id: int
+        :param started: Query product files updated after this amount of time.
+        :type started: :class:`datetime.datetime`
+        :param ended: Query product files updated before this amount of time.
+        :type ended: :class:`datetime.datetime`
+        :param batch_ids: Query product files produced by batches with the given identifiers.
+        :type batch_ids: list[int]
+        :param job_type_ids: Query product files produced by jobs with the given type identifiers.
+        :type job_type_ids: list[int]
+        :param job_type_names: Query product files produced by jobs with the given type names.
+        :type job_type_names: list[str]
+        :param job_type_categories: Query product files produced by jobs with the given type categories.
+        :type job_type_categories: list[str]
+        :param is_operational: Query product files flagged as operational or R&D only.
+        :type is_operational: bool
+        :param is_published: Query product files flagged as currently exposed for publication.
+        :type is_published: bool
+        :param is_superseded: Query product files that have/have not been superseded.
+        :type is_superseded: bool
+        :param file_name: Query product files with the given file name.
+        :type file_name: str
+        :param order: A list of fields to control the sort order.
+        :type order: list[str]
+        :returns: The product file query
+        :rtype: :class:`django.db.models.QuerySet`
+        """
+
+        from product.models import ProductFile
+        products = ProductFile.objects.filter_products(started=started, ended=ended, job_type_ids=job_type_ids,
+                                                       job_type_names=job_type_names,
+                                                       job_type_categories=job_type_categories,
+                                                       is_operational=is_operational, is_published=is_published,
+                                                       is_superseded=None, file_name=file_name, order=order)
+        products = products.filter(ancestors__ancestor_id=source_file_id)
+        if batch_ids:
+            products = products.filter(ancestors__batch_id__in=batch_ids)
+
+        return products
+
     def get_sources(self, started=None, ended=None, time_field=None, is_parsed=None, file_name=None, order=None):
         """Returns a list of source files within the given time range.
 

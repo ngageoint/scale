@@ -11,7 +11,7 @@ from storage.models import ScaleFile
 from storage.test import utils as storage_utils
 
 
-def create_file_link(ancestor=None, descendant=None, job=None, job_exe=None, recipe=None):
+def create_file_link(ancestor=None, descendant=None, job=None, job_exe=None, recipe=None, batch=None):
     """Creates a file ancestry link model for unit testing
 
     :returns: The file ancestry link model
@@ -30,7 +30,7 @@ def create_file_link(ancestor=None, descendant=None, job=None, job_exe=None, rec
             job_exe = job_utils.create_job_exe(job_type=job.job_type, job=job)
 
     return FileAncestryLink.objects.create(ancestor=ancestor, descendant=descendant, job=job, job_exe=job_exe,
-                                           recipe=recipe)
+                                           recipe=recipe, batch=batch)
 
 
 def create_product(job_exe=None, workspace=None, has_been_published=False, is_published=False, uuid=None,

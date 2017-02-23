@@ -24,17 +24,42 @@ POLYGON_GEOJSON = {"type": "Polygon", "coordinates": [ [ [ 1.0, 10.5 ], [ 1.1, 2
 
 class TestSourceFileManager(TestCase):
 
+    fixtures = ['batch_job_types.json']
+
     def setUp(self):
         django.setup()
 
-        workspace = Workspace.objects.create(name='Test Workspace', is_active=True, created=now(), last_modified=now())
+        self.workspace = Workspace.objects.create(name='Test Workspace', is_active=True, created=now(),
+                                                  last_modified=now())
 
         self.src_file = ScaleFile.objects.create(file_name='text.txt', file_type='SOURCE', media_type='text/plain',
                                                  file_size=10, data_type='type', file_path='the_path',
-                                                 workspace=workspace)
+                                                 workspace=self.workspace)
 
         self.started = now()
         self.ended = self.started + datetime.timedelta(days=1)
+
+    def test_get_source_products(self):
+        """Tests calling get_source_products()"""
+
+        from batch.test import utils as batch_test_utils
+        from product.test import utils as product_test_utils
+        job_exe_1 = job_utils.create_job_exe()
+        job_exe_2 = job_utils.create_job_exe()
+        product_1 = product_test_utils.create_product(job_exe=job_exe_1, has_been_published=True,
+                                                      workspace=self.workspace)
+        product_2 = product_test_utils.create_product(job_exe=job_exe_2, has_been_published=True,
+                                                      workspace=self.workspace)
+        batch_1 = batch_test_utils.create_batch()
+        batch_2 = batch_test_utils.create_batch()
+        product_test_utils.create_file_link(ancestor=self.src_file, descendant=product_1, job=job_exe_1.job,
+                                            job_exe=job_exe_1, batch=batch_1)
+        product_test_utils.create_file_link(ancestor=self.src_file, descendant=product_2, job=job_exe_2.job,
+                                            job_exe=job_exe_2, batch=batch_2)
+
+        products = SourceFile.objects.get_source_products(self.src_file.id, batch_ids=[batch_1.id])
+        self.assertEqual(len(products), 1)
+        self.assertEqual(products[0].id, product_1.id)
 
     def test_get_sources_data_time(self):
         """Tests calling get_sources() using data time"""
