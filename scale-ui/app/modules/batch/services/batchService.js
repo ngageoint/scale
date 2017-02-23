@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').service('batchService', function($http, $q, $resource, scaleConfig, poller, pollerFactory) {
+    angular.module('scaleApp').service('batchService', function($http, $q, $resource, scaleConfig) {
 
         var getBatchesParams = function (page, page_size, started, ended, order, status) {
             return {
@@ -27,6 +27,18 @@
                     //data.results = Job.transformer(data.results);
                     d.resolve(data);
                 }).error(function (error) {
+                    d.reject(error);
+                });
+
+                return d.promise;
+            },
+            validateBatch: function (batch) {
+                var d = $q.defer();
+                var cleanBatch = batch.clean();
+
+                $http.post(scaleConfig.urls.apiPrefix + 'batches/validation/', cleanBatch).success(function (result) {
+                    d.resolve(result);
+                }).error(function(error){
                     d.reject(error);
                 });
 

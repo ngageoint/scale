@@ -239,6 +239,10 @@
                 { "path": "feed", "label": "Status" },
                 { "path": "feed/ingests", "label": "Ingest Records" },
                 { "path": "feed/strikes", "label": "Strikes" }
+            ],
+            "batch": [
+                { "path": "batch", "label": "Batches" },
+                { "path": "batch/0", "label": "Create Batch" }
             ]
         },
         "headerOffset": 165,
