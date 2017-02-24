@@ -41,7 +41,7 @@ class S3Scanner(Scanner):
 
         return []
 
-    def _ingest_files(self, file_name):
+    def _ingest_file(self, file_name):
         """Applies rules and update ingest for a single S3 object
 
         :param file_name: S3 object key

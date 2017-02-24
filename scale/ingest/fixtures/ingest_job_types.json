@@ -123,7 +123,7 @@
         "pk": null,
         "fields": {
             "name": "scale-scan",
-            "version": "1.0",
+            "version": "1.2",
             "title": "Scale Scan",
             "description": "Scans a directory for existing source files to ingest",
             "category": "system",
@@ -139,7 +139,7 @@
                  "command": "",
                  "command_arguments": "scale_scan ${-i :Scan ID} ${-d :Dry Run}",
                  "input_data": [ { "name": "Scan ID", "type": "property" },
-                                 { "name": "Dry Run", "type": "property", "required": false  } ]
+                                 { "name": "Dry Run", "type": "property" } ]
             },
             "revision_num": 1,
             "error_mapping": null,
@@ -162,11 +162,11 @@
             "job_type": ["scale-scan", "1.0"],
             "revision_num": 1,
             "interface": {
-                 "version": "1.0",
+                 "version": "1.2",
                  "command": "",
                  "command_arguments": "scale_scan ${-i :Scan ID} ${-d :Dry Run}",
                  "input_data": [ { "name": "Scan ID", "type": "property" },
-                                 { "name": "Dry Run", "type": "property", "required": false } ]
+                                 { "name": "Dry Run", "type": "property" } ]
             },
             "created": "2017-02-07T00:00:00.0Z"
         }

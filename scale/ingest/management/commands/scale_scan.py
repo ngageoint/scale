@@ -9,6 +9,7 @@ try:
     from mock import patch
 except:
     pass
+from distutils.util import strtobool
 from optparse import make_option
 
 from django.core.management.base import BaseCommand
@@ -26,7 +27,9 @@ class Command(BaseCommand):
 
     option_list = BaseCommand.option_list + (
         make_option('-i', '--scan-id', action='store', type='int', help=('ID of the Scan process to run')),
-        make_option('-d', '--dry-run', action="store_true", default=False, help=('Perform a dry-run of scan, skipping ingest')),
+        # TODO: Using string instead of bool to accomodate job_data limitations.
+        # This should be refactored when seed integration is done.
+        make_option('-d', '--dry-run', action="store", type='string', default='False', help=('Perform a dry-run of scan, skipping ingest')),
         make_option('-l', '--local', action="store_true", default=False, help=('Perform a patch on workspace for local testing'))
     )
 
@@ -50,7 +53,7 @@ class Command(BaseCommand):
         signal.signal(signal.SIGTERM, self._onsigterm)
 
         scan_id = options.get('scan_id')
-        dry_run = options.get('dry_run')
+        dry_run = bool(strtobool(options.get('dry_run')))
         local = options.get('local')
         
         if not scan_id:
@@ -59,7 +62,7 @@ class Command(BaseCommand):
 
         logger.info('Command starting: scale_scan')
         logger.info('Scan ID: %i', scan_id)
-        logger.info('Dry Run: %s', dry_run)
+        logger.info('Dry Run: %s', str(dry_run))
         logger.info('Local Test: %s', local)
         
         logger.info('Querying database for Scan configuration')
