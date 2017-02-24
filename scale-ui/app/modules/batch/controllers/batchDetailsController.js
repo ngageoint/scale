@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('batchDetailsController', function ($scope, $routeParams, scaleConfig, subnavService, userService, batchService, recipeService, jobTypeService, Batch, toastr) {
+    angular.module('scaleApp').controller('batchDetailsController', function ($scope, $routeParams, $location, scaleConfig, navService, subnavService, userService, batchService, recipeService, jobTypeService, Batch, toastr) {
         var vm = this;
 
         vm.loading = false;
@@ -71,6 +71,22 @@
             });
         };
 
+        vm.saveBatch = function () {
+            vm.loading = true;
+            batchService.saveBatch(vm.batch).then(function (data) {
+                toastr['success']('Batch successfully created.');
+            }).catch(function (error) {
+                if (error && error.detail) {
+                    toastr['error'](error.detail);
+                } else {
+                    toastr['error']('Error creating batch');
+                }
+            }).finally(function () {
+                vm.loading = false;
+                $location.path('/batch');
+            })
+        };
+
         var getRecipeTypes = function () {
             recipeService.getRecipeTypes().then(function (data) {
                 vm.recipeTypes = data.results;
@@ -98,6 +114,7 @@
             vm.readonly = !(user && user.is_admin);
             getRecipeTypes();
             getJobTypes();
+            navService.updateLocation('batch');
         };
 
         initialize();

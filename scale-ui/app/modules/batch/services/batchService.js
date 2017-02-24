@@ -24,7 +24,6 @@
                     method: 'GET',
                     params: params
                 }).success(function (data) {
-                    //data.results = Job.transformer(data.results);
                     d.resolve(data);
                 }).error(function (error) {
                     d.reject(error);
@@ -34,11 +33,21 @@
             },
             validateBatch: function (batch) {
                 var d = $q.defer();
-                var cleanBatch = batch.clean();
 
-                $http.post(scaleConfig.urls.apiPrefix + 'batches/validation/', cleanBatch).success(function (result) {
+                $http.post(scaleConfig.urls.apiPrefix + 'batches/validation/', batch.clean()).success(function (result) {
                     d.resolve(result);
                 }).error(function(error){
+                    d.reject(error);
+                });
+
+                return d.promise;
+            },
+            saveBatch: function (batch) {
+                var d = $q.defer();
+
+                $http.post(scaleConfig.urls.apiPrefix + 'batches/', batch.clean()).success(function (result) {
+                    d.resolve(result);
+                }).error(function (error) {
                     d.reject(error);
                 });
 
