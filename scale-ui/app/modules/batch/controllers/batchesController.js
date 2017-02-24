@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('batchesController', function ($scope, $location, scaleConfig, gridFactory, subnavService, userService, jobTypeService, recipeService, navService, stateService, batchService, moment) {
+    angular.module('scaleApp').controller('batchesController', function ($scope, $location, scaleConfig, gridFactory, subnavService, userService, jobTypeService, recipeService, navService, stateService, batchService, Batch, moment) {
         subnavService.setCurrentPath('batch');
 
         var vm = this,
@@ -64,8 +64,8 @@
             {
                 field: 'creator_job',
                 displayName: 'Job Type',
-                cellTemplate: '<div class="ui-grid-cell-contents"><span ng-bind-html="row.entity.creator_job.job_type.getIcon()"></span> {{ row.entity.creator_job.job_type.title }} {{ row.entity.creator_job.job_type.version }}</div>',
-                filterHeaderTemplate: '<div class="ui-grid-filter-container"><select class="form-control input-sm" ng-model="grid.appScope.vm.selectedJobType" ng-options="jobType as (jobType.title + \' \' + jobType.version) for jobType in grid.appScope.vm.jobTypeValues"></select></div>'
+                enableFiltering: false,
+                cellTemplate: '<div class="ui-grid-cell-contents"><span ng-bind-html="row.entity.creator_job.job_type.getIcon()"></span> {{ row.entity.creator_job.job_type.title }} {{ row.entity.creator_job.job_type.version }}</div>'
             },
             {
                 field: 'status',
@@ -98,20 +98,10 @@
                 vm.gridOptions.totalItems = data.count;
                 vm.gridOptions.minRowsToShow = data.results.length;
                 vm.gridOptions.virtualizationThreshold = data.results.length;
-                vm.gridOptions.data = data.results;
+                vm.gridOptions.data = Batch.transformer(data.results);
             }).catch(function (e) {
                 console.log('Error retrieving batches: ' + e);
                 vm.loading = false;
-            });
-        };
-
-        vm.getJobTypes = function () {
-            return jobTypeService.getJobTypesOnce().then(function (data) {
-                vm.jobTypeValues.push(data.results);
-                vm.jobTypeValues = _.flatten(vm.jobTypeValues);
-                vm.selectedJobType = _.find(vm.jobTypeValues, { id: vm.batchesParams.job_type_id }) || jobTypeViewAll;
-            }).catch(function (e) {
-                console.log('Error retrieving job types: ' + e);
             });
         };
 
@@ -146,17 +136,6 @@
                 vm.batchesParams.page = 1;
             }
             vm.batchesParams.recipe_type_id = value.id === 0 ? null : value.id;
-            vm.batchesParams.page_size = vm.gridOptions.paginationPageSize;
-            if (!vm.loading) {
-                vm.filterResults();
-            }
-        };
-
-        vm.updateJobType = function (value) {
-            if (value.id !== vm.batchesParams.job_type_id) {
-                vm.batchesParams.page = 1;
-            }
-            vm.batchesParams.job_type_id = value.id === 0 ? null : value.id;
             vm.batchesParams.page_size = vm.gridOptions.paginationPageSize;
             if (!vm.loading) {
                 vm.filterResults();
@@ -208,8 +187,7 @@
             vm.updateColDefs();
             var user = userService.getUserCreds();
             vm.readonly = !(user && user.is_admin);
-            vm.getJobTypes(vm.batchesParams.job_type_id)
-                .then(vm.getRecipeTypes)
+            vm.getRecipeTypes()
                 .then(vm.getBatches);
             navService.updateLocation('batch');
         };
@@ -228,22 +206,6 @@
                 } else {
                     filteredByRecipeType = !angular.equals(value, recipeTypeViewAll);
                     vm.updateRecipeType(value);
-                }
-            }
-        });
-
-        $scope.$watch('vm.selectedJobType', function (value) {
-            if (parseInt(value)) {
-                value = _.find(vm.jobTypeValues, {id: parseInt(value)});
-            }
-            if (value) {
-                if (vm.loading) {
-                    if (filteredByJobType) {
-                        vm.updateJobType(value);
-                    }
-                } else {
-                    filteredByJobType = !angular.equals(value, jobTypeViewAll);
-                    vm.updateJobType(value);
                 }
             }
         });
@@ -281,7 +243,10 @@
             vm.updateColDefs();
         });
 
-        $scope.$watchCollection('vm.stateService.getBatchesParams()', function (newValue) {
+        $scope.$watchCollection('vm.stateService.getBatchesParams()', function (newValue, oldValue) {
+            if (angular.equals(newValue, oldValue)) {
+                return;
+            }
             vm.batchesParams = newValue;
             vm.updateColDefs();
         });
