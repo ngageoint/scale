@@ -45,13 +45,13 @@ class HealthTask(Task):
 
         # Check if docker version works (indicates if daemon is working)
         bad_daemon_check = 'docker version'
-        bad_daemon_check = 'timeout -s SIGKILL 2s %s' % bad_daemon_check  # docker version has 2 seconds to succeed
+        bad_daemon_check = 'timeout -s SIGKILL 10s %s' % bad_daemon_check  # docker version has 10 seconds to succeed
         bad_daemon_check = '%s; if [[ $? != 0 ]]; then exit %d; fi' % (bad_daemon_check, HealthTask.BAD_DAEMON_CODE)
         health_check_commands.append(bad_daemon_check)
 
         # Check if docker ps works (also indicates if daemon is working)
         docker_ps_check = 'docker ps'
-        docker_ps_check = 'timeout -s SIGKILL 5s %s' % docker_ps_check  # docker ps has 5 seconds to succeed
+        docker_ps_check = 'timeout -s SIGKILL 10s %s' % docker_ps_check  # docker ps has 10 seconds to succeed
         docker_ps_check = '%s; if [[ $? != 0 ]]; then exit %d; fi' % (docker_ps_check, HealthTask.BAD_DAEMON_CODE)
         health_check_commands.append(docker_ps_check)
 
