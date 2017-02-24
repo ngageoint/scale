@@ -170,6 +170,11 @@
                 }
             }
         ],
+        "allowedMonitorTypes": {
+            "nfs": [],
+            "host": ["dir-watcher"],
+            "s3": ["s3", "nats"]
+        },
         "strikeConfigurationVersion": "2.0",
         "nfsBrokerDescription": "The NFS broker mounts a remote network file system volume into the job’s container.",
         "hostBrokerDescription": "The host broker mounts a local directory from the host into the job’s container. This local directory should be a shared file system that has been mounted onto all hosts in the cluster. All hosts must have the same shared file system mounted at the same location for this broker to work properly.",

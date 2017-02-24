@@ -16,6 +16,7 @@
         vm.activeStrikeIngestFile = new StrikeIngestFile();
         vm.dataType = '';
         vm.availableWorkspaceTypes = _.cloneDeep(scaleConfig.workspaceTypes);
+        vm.allowedMonitorTypes = _.cloneDeep(scaleConfig.allowedMonitorTypes);
         vm.addBtnClass = 'btn-primary';
         vm.addBtnIcon = 'fa-plus-circle';
         vm.saveBtnClass = 'btn-default';
@@ -84,6 +85,12 @@
 
         vm.validateStrike = function () {
             vm.loading = true;
+            // only store the new workspace name, not the entire object
+            _.forEach(vm.activeStrike.configuration.files_to_ingest, function (file) {
+                if (file.new_workspace) {
+                    file.new_workspace = file.new_workspace.name;
+                }
+            });
             strikeService.validateStrike(vm.activeStrike).then(function (data) {
                 if (data.warnings && data.warnings.length > 0) {
                     // display the warnings
@@ -158,13 +165,6 @@
             vm.loading = true;
             workspacesService.getWorkspaceDetails(id).then(function (data) {
                 vm.activeWorkspace = data;
-                if (vm.activeWorkspace.json_config.broker.type === 'host') {
-                    vm.activeStrike.configuration.monitor.type = 'dir-watcher';
-                } else if (vm.activeWorkspace.json_config.broker.type === 's3') {
-                    vm.activeStrike.configuration.monitor.type = 's3';
-                } else {
-                    vm.activeStrike.configuration.monitor.type = null;
-                }
             }).catch(function (error) {
                 console.log(error);
             }).finally(function () {
