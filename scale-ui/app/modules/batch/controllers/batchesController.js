@@ -92,6 +92,11 @@
             }
         ];
 
+        vm.failRateStyle = function (error, total) {
+            var percentage = ((error / total) * 100).toFixed(0);
+            return percentage > 0 ? 'width: ' + percentage + '%' : 'display: none';
+        };
+
         vm.getBatches = function () {
             batchService.getBatches(vm.batchesParams).then(function (data) {
                 vm.loading = false;
@@ -162,7 +167,7 @@
             //set gridApi on scope
             vm.gridApi = gridApi;
             vm.gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-                $location.path('/batches/' + row.entity.id).search('');
+                $location.path('/batch/' + row.entity.id).search('');
             });
             vm.gridApi.pagination.on.paginationChanged($scope, function (currentPage, pageSize) {
                 vm.batchesParams.page = currentPage;

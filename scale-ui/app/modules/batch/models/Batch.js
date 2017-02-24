@@ -19,9 +19,9 @@
                 num_exes: creator_job.num_exes
             } : {};
             this.definition = definition || null;
-            this.created_count = created_count || null;
-            this.failed_count = failed_count || null;
-            this.total_count = total_count || null;
+            this.created_count = created_count || 0;
+            this.failed_count = failed_count || 0;
+            this.total_count = total_count || 0;
             this.created = created;
             this.created_formatted = moment.utc(created).format(scaleConfig.dateFormats.day_second_utc);
             this.last_modified = last_modified;

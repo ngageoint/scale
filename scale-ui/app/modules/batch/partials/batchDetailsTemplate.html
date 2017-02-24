@@ -101,5 +101,29 @@
 </div>
 
 <div ng-if="vm.mode === 'details'">
-
+    <h3 ng-if="vm.batch.title">{{ vm.batch.title }}</h3>
+    <dl class="dl-horizontal">
+        <dt>Description:</dt>
+        <dd>{{ vm.batch.description }}</dd>
+        <dt>Status:</dt>
+        <dd>{{ vm.batch.status.toUpperCase() }}</dd>
+        <dt>Recipe Type:</dt>
+        <dd><a ng-href="/#/recipes/types/{{ vm.batch.recipe_type.id }}">{{ vm.batch.recipe_type.title }}</a></dd>
+        <dt>Event Type:</dt>
+        <dd>{{ vm.batch.event.type }}</dd>
+        <dt>Event Occurred:</dt>
+        <dd>{{ vm.moment.utc(vm.batch.event.occurred).format(vm.scaleConfig.dateFormats.day_second_utc) }}</dd>
+        <dt>Creator Job:</dt>
+        <dd><span ng-bind-html="vm.batch.creator_job.job_type.getIcon()"></span> <a ng-href="/#/jobs/job/{{ vm.batch.creator_job.id }}">{{ vm.batch.creator_job.job_type.title }}: {{ vm.batch.creator_job.status }}</a></dd>
+        <dt>Created Count:</dt>
+        <dd>{{ vm.batch.created_count }}</dd>
+        <dt>Failed Count:</dt>
+        <dd>{{ vm.batch.failed_count }}</dd>
+        <dt>Total Count:</dt>
+        <dd>{{ vm.batch.total_count }}</dd>
+        <dt>Created:</dt>
+        <dd>{{ vm.batch.created_formatted }}</dd>
+        <dt>Last Modified:</dt>
+        <dd>{{ vm.batch.last_modified_formatted }}</dd>
+    </dl>
 </div>

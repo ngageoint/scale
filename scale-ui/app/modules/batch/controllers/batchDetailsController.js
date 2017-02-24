@@ -1,10 +1,12 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('batchDetailsController', function ($scope, $routeParams, $location, scaleConfig, navService, subnavService, userService, batchService, recipeService, jobTypeService, Batch, toastr) {
+    angular.module('scaleApp').controller('batchDetailsController', function ($scope, $routeParams, $location, scaleConfig, navService, subnavService, userService, batchService, recipeService, jobTypeService, Batch, toastr, moment) {
         var vm = this;
 
-        vm.loading = false;
+        vm.scaleConfig = scaleConfig;
+        vm.moment = moment;
+        vm.loading = true;
         vm.subnavLinks = scaleConfig.subnavLinks.batch;
         vm.mode = $routeParams.id > 0 ? 'details' : 'create';
         vm.name = $routeParams.id > 0 ? 'Batch Details' : null;
@@ -88,7 +90,7 @@
         };
 
         var getRecipeTypes = function () {
-            recipeService.getRecipeTypes().then(function (data) {
+            return recipeService.getRecipeTypes().then(function (data) {
                 vm.recipeTypes = data.results;
             }).catch(function (e) {
                 console.log('Error retrieving recipe types: ' + e);
@@ -109,12 +111,27 @@
             });
         };
 
+        var getBatch = function () {
+            batchService.getBatchById($routeParams.id).then(function (data) {
+                vm.loading = false;
+                vm.batch = Batch.transformer(data);
+            });
+        };
+
         var initialize = function () {
             var user = userService.getUserCreds();
             vm.readonly = !(user && user.is_admin);
-            getRecipeTypes();
-            getJobTypes();
             navService.updateLocation('batch');
+
+            if (vm.mode === 'create') {
+                getRecipeTypes()
+                    .then(getJobTypes)
+                    .finally(function () {
+                        vm.loading = false;
+                    });
+            } else if (vm.mode === 'details') {
+                getBatch();
+            }
         };
 
         initialize();
