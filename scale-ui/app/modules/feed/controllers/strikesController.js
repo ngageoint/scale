@@ -165,6 +165,19 @@
             vm.loading = true;
             workspacesService.getWorkspaceDetails(id).then(function (data) {
                 vm.activeWorkspace = data;
+                if (vm.activeStrike.configuration.monitor.type === ''){
+                    var mtypes = vm.allowedMonitorTypes[vm.activeWorkspace.json_config.broker.type];
+                    if (mtypes.length > 0) {
+                        vm.activeStrike.configuration.monitor.type = mtypes[0];
+                    }
+                }
+                if (vm.activeWorkspace.json_config.broker.type === 'host') {
+                    vm.activeStrike.configuration.monitor.type = 'dir-watcher';
+                } else if (vm.activeWorkspace.json_config.broker.type === 's3') {
+                    vm.activeStrike.configuration.monitor.type = 's3';
+                } else {
+                    vm.activeStrike.configuration.monitor.type = null;
+                }
             }).catch(function (error) {
                 console.log(error);
             }).finally(function () {
