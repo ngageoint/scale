@@ -30,19 +30,21 @@
 
         Batch.prototype = {
             clean: function () {
-                return {
+                var returnObj = {
                     recipe_type_id: this.recipe_type.id,
                     title: this.title,
                     description: this.description,
                     definition: this.definition
                 };
+                // remove empty/null/undefined values from returnObj
+                return _.pick(returnObj, _.identity);
             }
         };
 
         // static methods, assigned to class
         Batch.build = function (data) {
             if (data) {
-                return new Batch(
+                var returnObj = new Batch(
                     data.id,
                     data.title,
                     data.description,
@@ -57,6 +59,8 @@
                     data.created,
                     data.last_modified
                 );
+                // remove empty/null/undefined values from returnObj
+                return _.pick(returnObj, _.identity);
             }
             return new Batch();
         };

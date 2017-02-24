@@ -69,20 +69,20 @@
                 <div class="row">
                     <div class="col-xs-6">
                         <div class="row">
-                            <div class="col-xs-7">
+                            <div class="col-xs-6">
                                 <div class="form-group">
                                     <label for="bJobNames">Job Names</label><br />
-                                    <select id="bJobNames" ais-multiselect max-height="150" enable-filtering="true" multiple="multiple" multiselect-data-provider="vm.jobTypes" class="form-control input-sm" ng-model="vm.batch.definition.job_names"></select>
-                                    <p class="help-block">Jobs that will be re-processed as part of the batch recipe.</p>
+                                    <select id="bJobNames" ais-multiselect number-displayed="1" max-height="150" enable-filtering="true" multiple="multiple" multiselect-data-provider="vm.jobTypes" class="form-control input-sm" ng-model="vm.batch.definition.job_names"></select>
+                                    <p class="help-block">Additional jobs that did not have a revision change.</p>
                                 </div>
                             </div>
-                            <div class="col-xs-5">
+                            <div class="col-xs-6">
                                 <div class="checkbox">
                                     <label for="bAllJobs">
                                         <input id="bAllJobs" type="checkbox" ng-model="vm.batch.definition.all_jobs">
                                         <strong>All Jobs</strong>
                                     </label>
-                                    <p class="help-block">Re-process every job. This overrides the values included in the job_names parameter.</p>
+                                    <p class="help-block">Re-process every job. This overrides the values included in "Job Names".</p>
                                 </div>
                             </div>
                         </div>
