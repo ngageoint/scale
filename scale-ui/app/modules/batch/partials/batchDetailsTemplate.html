@@ -56,13 +56,23 @@
                     <div class="col-xs-6">
                         <div class="form-group">
                             <label for="bDateRangeStarted">Date Range Started</label>
-                            <input id="bDateRangeStarted" type="text" class="form-control" aria-describedby="bDateRangeStarted" uib-datepicker-popup="yyyy-MM-dd" ng-model="vm.batch.definition.date_range.started" ng-model-options="vm.dateModelOptions" is-open="vm.dateRangeStartedPopup.opened" close-text="Close" datepicker-append-to-body="true" ng-click="vm.openDateRangeStartedPopup($event)" />
+                            <div class="input-group">
+                                <span class="input-group-addon" id="from-input" ng-click="vm.openDateRangeStartedPopup($event)">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                <input id="bDateRangeStarted" type="text" class="form-control" aria-describedby="bDateRangeStarted" uib-datepicker-popup="yyyy-MM-dd" ng-model="vm.batch.definition.date_range.started" ng-model-options="vm.dateModelOptions" is-open="vm.dateRangeStartedPopup.opened" close-text="Close" datepicker-append-to-body="true" ng-click="vm.openDateRangeStartedPopup($event)" />
+                            </div>
                         </div>
                     </div>
                     <div class="col-xs-6">
                         <div class="form-group">
                             <label for="bDateRangeEnded">Date Range Ended</label>
-                            <input id="bDateRangeEnded" type="text" class="form-control" aria-describedby="bDateRangeEnded" uib-datepicker-popup="yyyy-MM-dd" ng-model="vm.batch.definition.date_range.ended" ng-model-options="vm.dateModelOptions" is-open="vm.dateRangeEndedPopup.opened" close-text="Close" datepicker-append-to-body="true" ng-click="vm.openDateRangeEndedPopup($event)" />
+                            <div class="input-group">
+                                <span class="input-group-addon" id="to-input" ng-click="vm.openDateRangeEndedPopup($event)">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                <input id="bDateRangeEnded" type="text" class="form-control" aria-describedby="bDateRangeEnded" uib-datepicker-popup="yyyy-MM-dd" ng-model="vm.batch.definition.date_range.ended" ng-model-options="vm.dateModelOptions" is-open="vm.dateRangeEndedPopup.opened" close-text="Close" datepicker-append-to-body="true" ng-click="vm.openDateRangeEndedPopup($event)" />
+                            </div>
                         </div>
                     </div>
                 </div>
