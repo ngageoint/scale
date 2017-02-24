@@ -31,6 +31,20 @@
 
                 return d.promise;
             },
+            getBatchById: function (id) {
+                var d = $q.defer();
+
+                $http({
+                    url: scaleConfig.getUrlPrefix() + 'batches/' + id + '/',
+                    method: 'GET'
+                }).success(function (data) {
+                    d.resolve(data);
+                }).error(function (error) {
+                    d.reject(error);
+                });
+
+                return d.promise;
+            },
             validateBatch: function (batch) {
                 var d = $q.defer();
 
