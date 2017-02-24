@@ -17,10 +17,10 @@ from job.configuration.interface.exceptions import InvalidInterfaceDefinition, I
 from job.configuration.interface.job_interface import JobInterface
 from job.configuration.results.exceptions import InvalidResultsManifest
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
+from vault.secrets_handler import SecretsHandler
 
 
 class TestJobInterfaceAddOutputToConnection(TestCase):
-
     def setUp(self):
         django.setup()
 
@@ -80,7 +80,6 @@ class TestJobInterfaceConvert(TestCase):
 
 
 class TestJobInterfacePostSteps(TestCase):
-
     def setUp(self):
         django.setup()
 
@@ -94,8 +93,8 @@ class TestJobInterfacePostSteps(TestCase):
     def test_output_file(self, mock_loads, mock_open, mock_exists, mock_isfile):
         job_interface_dict, job_data_dict = self._get_simple_interface_data()
         job_interface_dict['output_data'] = [{
-            'name':'output_file',
-            'type':'file',
+            'name': 'output_file',
+            'type': 'file',
             'required': True,
         }]
         job_data_dict['output_data'].append({
@@ -105,8 +104,8 @@ class TestJobInterfacePostSteps(TestCase):
         results_manifest = {
             'version': '1.0',
             'files': [{
-                'name':'output_file',
-                'path':'/some/path/foo.txt',
+                'name': 'output_file',
+                'path': '/some/path/foo.txt',
             }]
         }
         mock_loads.return_value = results_manifest
@@ -132,8 +131,8 @@ class TestJobInterfacePostSteps(TestCase):
     def test_invalid_output_file(self, mock_loads, mock_open, mock_exists, mock_isfile):
         job_interface_dict, job_data_dict = self._get_simple_interface_data()
         job_interface_dict['output_data'] = [{
-            'name':'output_file',
-            'type':'file',
+            'name': 'output_file',
+            'type': 'file',
             'required': True,
         }]
         job_data_dict['output_data'].append({
@@ -143,8 +142,8 @@ class TestJobInterfacePostSteps(TestCase):
         results_manifest = {
             'version': '1.0',
             'files': [{
-                'name':'output_file',
-                'path':'/some/path/foo.txt',
+                'name': 'output_file',
+                'path': '/some/path/foo.txt',
             }]
         }
         mock_loads.return_value = results_manifest
@@ -178,7 +177,7 @@ class TestJobInterfacePostSteps(TestCase):
         results_manifest = {
             'version': '1.0',
             'files': [{
-                'name':'output_files',
+                'name': 'output_files',
                 'paths': ['/some/path/foo.txt', '/other/path/foo.txt'],
             }]
         }
@@ -219,7 +218,7 @@ class TestJobInterfacePostSteps(TestCase):
         results_manifest = {
             'version': '1.0',
             'files': [{
-                'name':'output_files',
+                'name': 'output_files',
                 'paths': ['/some/path/foo.txt', '/other/path/foo.txt'],
             }]
         }
@@ -445,7 +444,7 @@ ARTIFACT:output_file_2:/path/to/foo_2.txt
         }]
         job_interface_dict['output_data'] = [{
             'name': 'output_file',
-            'type':'file',
+            'type': 'file',
             'required': True,
         }]
         job_data_dict['input_data'].append({
@@ -492,7 +491,7 @@ ARTIFACT:output_file:/path/to/foo.txt
             'required': True,
         }, {
             'name': 'output_file_2',
-            'type':'file',
+            'type': 'file',
             'required': True,
         }]
         job_data_dict['input_data'].append({
@@ -544,7 +543,7 @@ ARTIFACT:output_file_2:/path/to/foo_2.txt
         }]
         job_interface_dict['output_data'] = [{
             'name': 'output_file',
-            'type':'file',
+            'type': 'file',
             'required': True,
         }]
         job_data_dict['input_data'].append({
@@ -639,7 +638,6 @@ ARTIFACT:output_file_2:/path/to/foo_2.txt
 
 
 class TestJobInterfacePreSteps(TestCase):
-
     def setUp(self):
         django.setup()
 
@@ -716,7 +714,7 @@ class TestJobInterfacePreSteps(TestCase):
 
         input_file_path = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'file1', 'foo.txt')
         mock_retrieve_call.side_effect = new_retrieve
-        mock_get_one_file.side_effect = lambda(arg1): input_file_path
+        mock_get_one_file.side_effect = lambda (arg1): input_file_path
         job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
         job_interface_dict['command_arguments'] = '${file1}'
         job_interface_dict['input_data'] = [{
@@ -912,23 +910,25 @@ class TestJobInterfacePreSteps(TestCase):
         job_command_arguments = job_interface.populate_command_argument_settings(command_arguments, job_config, job_exe)
         self.assertEqual(job_command_arguments, config_key_value, 'expected a different command from pre_steps')
 
+    @patch('vault.secrets_handler.SecretsHandler.__init__', Mock(return_value=None))
+    @patch('vault.secrets_handler.SecretsHandler.get_job_type_secret', Mock(return_value='secret_val'))
     def test_required_settings_in_command(self):
         job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
 
-        job_interface_dict['version'] = '1.2'
+        job_interface_dict['version'] = '1.3'
         job_interface_dict['command_arguments'] = '${setting1} ${setting2}'
         job_interface_dict['settings'] = [{
             'name': 'setting1',
             'required': True,
+            'secret': True,
         }, {
             'name': 'setting2',
             'required': True,
         }]
 
         command_arguments = job_interface_dict['command_arguments']
-        config_key_values = ['required_value1', 'required_value2']
-        job_config_json = {'job_task': {'settings': [{'name': 'setting1', 'value': config_key_values[0]},
-                                                     {'name': 'setting2', 'value': config_key_values[1]}]}}
+        config_key_values = ['secret_val', 'required_value2']
+        job_config_json = {'job_task': {'settings': [{'name': 'setting2', 'value': config_key_values[1]}]}}
         job_config = JobConfiguration(job_config_json)
 
         job_interface = JobInterface(job_interface_dict)
@@ -997,13 +997,15 @@ class TestJobInterfacePreSteps(TestCase):
         self.assertEqual(env_vars_value1, config_key_value[0], 'expected a different command from pre_steps')
         self.assertEqual(env_vars_value2, '', 'expected a different command from pre_steps')
 
+    @patch('vault.secrets_handler.SecretsHandler.__init__', Mock(return_value=None))
+    @patch('vault.secrets_handler.SecretsHandler.get_job_type_secret', Mock(return_value='secret_val'))
     def test_validate_populated_settings(self):
         """Tests the validation of required settings defined in the job_interface"""
 
         job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
 
         job_interface_dict['command_arguments'] = '${setting1}'
-        job_interface_dict['version'] = '1.2'
+        job_interface_dict['version'] = '1.3'
         job_interface_dict['env_vars'] = [{
             'name': 'test_var',
             'value': '${setting2}',
@@ -1012,19 +1014,21 @@ class TestJobInterfacePreSteps(TestCase):
         job_interface_dict['settings'] = [{
             'name': 'setting1',
             'required': True,
+            'secret': True,
         }, {
             'name': 'setting2',
             'required': True,
         }]
 
-        job_config_json = {'job_task': {'settings': [{'name': 'setting1', 'value': 'test_setting'},
-                                                     {'name': 'setting2', 'value': 'another_setting'}]}}
+        job_config_json = {'job_task': {'settings': [{'name': 'setting2', 'value': 'another_setting'}]}}
 
         job_interface = JobInterface(job_interface_dict)
         job_config = JobConfiguration(job_config_json)
 
-        job_exe = MagicMock()
-        job_exe.command_arguments = 'test_setting'
+        job_type = MagicMock()
+        job_exe = job_test_utils.create_job_exe(status='QUEUED', configuration=job_config.get_dict())
+
+        job_interface.populate_command_argument_settings(job_interface_dict['command_arguments'], job_config, job_exe)
 
         try:
             # Validate acceptable job_interface and job_configuration
@@ -1090,7 +1094,6 @@ class TestJobInterfacePreSteps(TestCase):
 
 
 class TestJobInterfaceValidateConnection(TestCase):
-
     def setUp(self):
         django.setup()
 
@@ -1182,7 +1185,6 @@ class TestJobInterfaceValidateConnection(TestCase):
 
 
 class TestJobInterfaceValidation(TestCase):
-
     def setUp(self):
         django.setup()
 
@@ -1394,7 +1396,7 @@ class TestJobInterfaceValidation(TestCase):
             pass
 
     def test_definition_with_unkown_field_fails(self):
-        #This definition's shared resources attribute should be 'shared_resources' not 'shared-resources'
+        # This definition's shared resources attribute should be 'shared_resources' not 'shared-resources'
         definition = {
             'command': 'test-command',
             'command_arguments': '',
@@ -1513,8 +1515,8 @@ class TestJobInterfaceValidation(TestCase):
             'command_arguments': '${setting-1}',
             'version': '1.2',
             'settings': [{
-                    'name': 'setting-1',
-                    'required': True
+                'name': 'setting-1',
+                'required': True
             }]
         }
         try:

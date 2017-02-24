@@ -1436,6 +1436,15 @@ class JobExecution(models.Model):
         """
 
         return self.job.job_type.name
+        
+    def get_job_type_version(self):
+        """Returns the version of this job's type
+
+        :returns: The version of this job's type
+        :rtype: string
+        """
+
+        return self.job.job_type.version
 
     def get_log_json(self, include_stdout=True, include_stderr=True, since=None):
         """Get log data from elasticsearch as a dict (from the raw JSON).

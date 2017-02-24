@@ -16,8 +16,8 @@ from job.configuration.interface.scale_file import ScaleFileDescription
 from job.configuration.results.exceptions import InvalidResultsManifest
 from job.configuration.results.results_manifest.results_manifest import ResultsManifest
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
+from vault.exceptions import InvalidSecretsAuthorization, InvalidSecretsRequest, InvalidSecretsToken
 from vault.secrets_handler import SecretsHandler
-
 
 
 logger = logging.getLogger(__name__)
@@ -476,11 +476,10 @@ class JobInterface(object):
         :rtype: str
         """
 
-        config_settings = job_configuration.get_dict()
         interface_settings = self.definition['settings']
 
         param_replacements = self._get_settings_values(interface_settings,
-                                                       config_settings,
+                                                       job_configuration,
                                                        job_type)
 
         command_arguments = self._replace_command_parameters(command_arguments, param_replacements)
@@ -500,11 +499,10 @@ class JobInterface(object):
         """
 
         env_vars = self.definition['env_vars']
-        config_settings = job_configuration.get_dict()
         interface_settings = self.definition['settings']
 
         param_replacements = self._get_settings_values(interface_settings,
-                                                       config_settings,
+                                                       job_configuration,
                                                        job_type)
         env_vars = self._replace_env_var_parameters(env_vars, param_replacements)
 
@@ -559,9 +557,9 @@ class JobInterface(object):
 
         for setting in interface_settings:
             setting_name = setting['name']
-            setting_required = setting['required']
+            setting_is_required = setting['required']
 
-            if setting_required:
+            if setting_is_required:
                 if setting_name not in config_setting_names:
                     raise InvalidSetting('Required setting %s was not provided' % setting_name)
 
@@ -699,16 +697,17 @@ class JobInterface(object):
             if data_item_name == output_data['name']:
                 return output_data
 
-    def _get_settings_values(self, settings, config_settings, job_type):
+    def _get_settings_values(self, settings, job_configuration, job_type):
         """
         :param settings: The job configuration
         :type settings: JSON
-        :param config_settings: The job configuration
-        :type config_settings: :class:`job.configuration.configuration.job_configuration.JobConfiguration`
+        :param job_configuration: The job configuration
+        :type job_configuration: :class:`job.configuration.configuration.job_configuration.JobConfiguration`
         :return: settings name and the value to replace it with
         :rtype: dict
         """
 
+        config_settings = job_configuration.get_dict()
         param_replacements = {}
 
         # Isolate the job_type settings and convert to list
@@ -720,11 +719,17 @@ class JobInterface(object):
             setting_is_secret = setting['secret']
             
             if setting_is_secret:
-                secret_path = '/' + '/'.join([job_type.name, job_type.verison])
+                job_type_name = job_type.get_job_type_name()
+                job_type_ver = job_type.get_job_type_version()
+                secret_path = '/' + '/'.join([job_type_name, job_type_ver])
                 
-                secrets_handler = SecretsHandler()
-                settings_value = secrets_handler.get_job_task_secret(secret_path, secret_name)
-                
+                try:
+                    secrets_handler = SecretsHandler()
+                    settings_value = secrets_handler.get_job_type_secret(secret_path, setting_name)
+                    job_configuration.add_job_task_setting(setting_name, '*****')
+                except (InvalidSecretsAuthorization, InvalidSecretsRequest, InvalidSecretsToken):
+                    settings_value = ''
+                    
                 param_replacements[setting_name] = settings_value
             else:
                 if setting_name in config_settings_dict:
