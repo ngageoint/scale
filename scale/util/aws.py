@@ -7,6 +7,7 @@ from botocore.config import Config
 from botocore.exceptions import ClientError
 from django.conf import settings
 
+from storage.brokers.broker import FileDetails
 from util.exceptions import InvalidAWSCredentials, FileDoesNotExist
 
 logger = logging.getLogger(__name__)
@@ -175,12 +176,15 @@ class S3Client(AWSClient):
     def list_objects(self, bucket_name, recursive=False, prefix=None, callback=None):
         """Retrieves list of objects within an S3 bucket, optionally supporting batched callback delivery.
 
-        Retrieval of objects is provided by the boto3 paginator over list_objects. This allows for simple
-        paging support with unbounded object counts. As a result of the time that may be required for
-        the full result set to be returned, it is recommended that the provided callback support be used to receive
-        objects as they are retrieved (up to 1000 in a batch). The callback method must accept one list parameter. This
-        list will contain objects of type `string`. If the callback method is called without exception,
-        an emtpy list will be returned upon completion of list_objects call.
+        Retrieval of objects is provided by the boto3 paginator over 
+        list_objects. This allows for simple paging support with unbounded
+        object counts. As a result of the time that may be required for the full
+        result set to be returned, it is recommended that the provided callback
+        support be used to receive objects as they are retrieved (up to 1000 in
+        a batch). The callback method must accept one list parameter. This list
+        will contain objects of type `storage.brokers.broker.FileDetails`. If
+        the callback method is called without exception, an emtpy list will be
+        returned upon completion of list_objects call.
 
         :param bucket_name: The unique name of the bucket to retrieve.
         :type bucket_name: string
@@ -189,9 +193,9 @@ class S3Client(AWSClient):
         :param prefix: The parent key from which to search bucket. Trailing slash is optional
         :type prefix: string
         :param callback: Method that will be called on completion of each batch return. Max of 1000 objects per call.
-        :type callback: function([util.aws.S3Object])
-        :return: List of S3 keys that were found. Empty if all delivered via callback.
-        :rtype: list
+        :type callback: function([storage.brokers.broker.FileDetails])
+        :return: List of S3 objects that were found. Empty if all delivered via callback.
+        :rtype: list[storage.brokers.broker.FileDetails]
         """
 
         object_list = []
@@ -215,7 +219,7 @@ class S3Client(AWSClient):
             for result in page['Contents']:
                 # Filter out 0 size keys, these are directory keys as S3 objects must be at least 1 Byte
                 if result['Size'] > 0:
-                    object = result['Key']
+                    object = FileDetails(result['Key'], result['Size'])
                     objects.append(object)
 
             # Fire callback if set

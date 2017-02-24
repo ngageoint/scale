@@ -160,14 +160,14 @@ class Scanner(object):
         """Callback for handling files identified by list_files callback
         
         :param file_list: List of files found within workspace
-        :type file_list: string
+        :type file_list: storage.brokers.broker.FileDetails
         """
         
         ingests = []
         
-        for file_name in file_list:
+        for file_details in file_list:
             if not self._stop_received:
-                ingest = self._ingest_file(file_name)
+                ingest = self._ingest_file(file_details.file, file_details.size)
                 # Only bother appending ingests 
                 if not self._dry_run:
                     ingests.append(ingest)

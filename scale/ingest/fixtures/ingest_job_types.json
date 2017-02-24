@@ -123,7 +123,7 @@
         "pk": null,
         "fields": {
             "name": "scale-scan",
-            "version": "1.2",
+            "version": "1.0",
             "title": "Scale Scan",
             "description": "Scans a directory for existing source files to ingest",
             "category": "system",
@@ -135,7 +135,7 @@
             "docker_privileged": false,
             "docker_image": "scale",
             "interface": {
-                 "version": "1.0",
+                 "version": "1.2",
                  "command": "",
                  "command_arguments": "scale_scan ${-i :Scan ID} ${-d :Dry Run}",
                  "input_data": [ { "name": "Scan ID", "type": "property" },

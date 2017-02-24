@@ -45,11 +45,13 @@ class DirScanner(Scanner):
         
         return []
 
-    def _ingest_file(self, file_name):
+    def _ingest_file(self, file_name, file_size):
         """Applies rules and initiates ingest for a single file name
 
         :param file_name: full path to file name
         :type file_name: string
+        :param file_size: file size in bytes
+        :type file_size: int
         :returns: Ingest model prepped for bulk create
         :rtype: :class:`ingest.models.Ingest`
         """
@@ -62,8 +64,7 @@ class DirScanner(Scanner):
             if file_name.endswith(self._transfer_suffix):
                 logger.info("Skipping file '%s' that is in transfer state." % file_name)
                 return
-            size = os.path.getsize(file_name)
-            ingest = self._process_ingest(file_name, size)
+            ingest = self._process_ingest(file_name, file_size)
             logger.info("Scan processed file from workspace '%s': %s" % (self._scanned_workspace.name, file_name))
 
         return ingest

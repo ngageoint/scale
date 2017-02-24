@@ -5,7 +5,7 @@ import logging
 import os
 import shutil
 
-from storage.brokers.broker import Broker, BrokerVolume
+from storage.brokers.broker import Broker, BrokerVolume, FileDetails
 from storage.brokers.exceptions import InvalidBrokerConfiguration
 from storage.exceptions import MissingFile
 from util.command import execute_command_line
@@ -81,7 +81,8 @@ class HostBroker(Broker):
                 for name in files:
                     file_name = os.path.join(root, name)
                     if os.path.isfile(file_name):
-                        file_batch.append(file_name)
+                        file_details = FileDetails(file_name, os.path.getsize(file_name))
+                        file_batch.append(file_details)
                         if len(file_batch) % batch_size == 0:
                             try:
                                 if callback:
@@ -95,7 +96,8 @@ class HostBroker(Broker):
             for result in os.listdir(volume_path):
                 file_name = os.path.join(volume_path, result)
                 if os.path.isfile(file_name):
-                    file_batch.append(file_name)
+                    file_details = FileDetails(file_name, os.path.getsize(file_name))
+                    file_batch.append(file_details)
                     if len(file_batch) % batch_size == 0:
                         try:
                             if callback:

@@ -41,11 +41,13 @@ class S3Scanner(Scanner):
 
         return []
 
-    def _ingest_file(self, file_name):
+    def _ingest_file(self, file_name, file_size):
         """Applies rules and update ingest for a single S3 object
 
         :param file_name: S3 object key
         :type file_name: string
+        :param file_size: object size in bytes
+        :type file_size: int
         :returns: Ingest model prepped for bulk create
         :rtype: :class:`ingest.models.Ingest`
         """
@@ -55,7 +57,7 @@ class S3Scanner(Scanner):
         if self._dry_run:
             logger.info("Scan detected S3 object in workspace '%s': %s" % (self._scanned_workspace.name, file_name))
         else:
-            ingest = self._process_ingest(file_name, None)
-            logger.info("Scan processed S3 object from workspace '%s':" % (self._scanned_workspace.name, file_name))
+            ingest = self._process_ingest(file_name, file_size)
+            logger.info("Scan processed S3 object from workspace '%s': %s" % (self._scanned_workspace.name, file_name))
             
         return ingest

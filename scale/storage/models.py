@@ -872,9 +872,9 @@ class Workspace(models.Model):
         :param recursive: Flag to indicate whether file searching should be done recursively
         :type recursive: boolean
         :param callback: Method that will be called on completion of each batch return. Max of 1000 files per call.
-        :type callback: function([string])
+        :type callback: function([storage.brokers.broker.FileDetails])
         :returns: List of files matching given expression. Empty if all delivered via callback.
-        :rtype: [string]
+        :rtype: [storage.brokers.broker.FileDetails]
         """
         volume_path = self._get_volume_path()
 

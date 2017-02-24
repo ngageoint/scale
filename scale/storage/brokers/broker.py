@@ -12,6 +12,7 @@ on the input workspace.
 FileDownload = namedtuple('FileDownload', ['file', 'local_path', 'partial'])
 FileMove = namedtuple('FileMove', ['file', 'new_path'])
 FileUpload = namedtuple('FileUpload', ['file', 'local_path'])
+FileDetails = namedtuple('FileDetails', ['file', 'size'])
 
 
 class Broker(object):
@@ -128,8 +129,8 @@ class Broker(object):
 
         As a result of the time that may be required for the full result set to be returned, it is recommended that the
         provided callback support be used to receive objects as they are retrieved (up to 1000 in a batch). The callback
-        method must accept one list parameter. This list will contain elements of type string. If the callback method is
-        called without exception, no objects will be returned upon completion of list_files call.
+        method must accept one list parameter. This list will contain elements of type storage.brokers.broker.FileDetails.
+        If the callback method is called without exception, no objects will be returned upon completion of list_files call.
 
         :param volume_path: Absolute path to the local container location onto which the volume file system was mounted,
             None if this broker does not use a container volume
@@ -137,9 +138,9 @@ class Broker(object):
         :param recursive: Flag to indicate whether file searching should be done recursively
         :type recursive: boolean
         :param callback: Method that will be called on completion of each batch return. Max of 1000 files per call.
-        :type callback: function([string])
+        :type callback: function([storage.brokers.broker.FileDetails])
         :returns: List of files matching given expression. Empty if all delivered via callback.
-        :rtype: [string]
+        :rtype: [storage.brokers.broker.FileDetails]
         """
 
         raise NotImplementedError
