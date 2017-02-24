@@ -20,7 +20,7 @@ before_script:
 - source ~/.nvm/nvm.sh
 - nvm install 6
 install:
-- pip install -q -r scale/pip/build_linux.txt
+- pip install --find-links=scale/pip -q -r scale/pip/build_linux.txt
 script: ./travis-build.sh
 
 branches:
