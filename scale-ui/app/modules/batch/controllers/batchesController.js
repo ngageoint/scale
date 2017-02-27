@@ -1,11 +1,10 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('batchesController', function ($scope, $location, scaleConfig, gridFactory, subnavService, userService, jobTypeService, recipeService, navService, stateService, batchService, Batch, moment) {
+    angular.module('scaleApp').controller('batchesController', function ($scope, $location, scaleConfig, gridFactory, subnavService, userService, recipeService, navService, stateService, batchService, Batch, moment) {
         subnavService.setCurrentPath('batch');
 
         var vm = this,
-            jobTypeViewAll = { name: 'VIEW ALL', title: 'VIEW ALL', version: '', id: 0 },
             recipeTypeViewAll = { name: 'VIEW ALL', title: 'VIEW ALL', version: '', id: 0 };
 
         vm.batchesParams = stateService.getBatchesParams();
@@ -14,8 +13,6 @@
         vm.subnavLinks = scaleConfig.subnavLinks.batch;
         vm.loading = true;
         vm.readonly = true;
-        vm.jobTypeValues = [jobTypeViewAll];
-        vm.selectedJobType = vm.batchesParams.job_type_id ? vm.batchesParams.job_type_id : jobTypeViewAll;
         vm.recipeTypeValues = [recipeTypeViewAll];
         vm.selectedRecipeType = vm.batchesParams.recipe_type_id ? vm.batchesParams.recipe_type_id : recipeTypeViewAll;
         vm.batchStatusValues = scaleConfig.batchStatus;
@@ -44,8 +41,7 @@
         vm.gridOptions.paginationPageSize = vm.batchesParams.page_size || vm.gridOptions.paginationPageSize;
         vm.gridOptions.data = [];
 
-        var filteredByJobType = vm.batchesParams.job_type_id ? true : false,
-            filteredByBatchStatus = vm.batchesParams.status ? true : false,
+        var filteredByBatchStatus = vm.batchesParams.status ? true : false,
             filteredByRecipeType = vm.batchesParams.recipe_type_id ? true : false,
             filteredByOrder = vm.batchesParams.order ? true : false;
 
@@ -60,12 +56,6 @@
                 displayName: 'Recipe Type',
                 cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.recipe_type.title }} {{ row.entity.recipe_type.version }}</div>',
                 filterHeaderTemplate: '<div class="ui-grid-filter-container"><select class="form-control input-sm" ng-model="grid.appScope.vm.selectedRecipeType" ng-options="recipeType as (recipeType.title + \' \' + recipeType.version) for recipeType in grid.appScope.vm.recipeTypeValues"></select></div>'
-            },
-            {
-                field: 'creator_job',
-                displayName: 'Job Type',
-                enableFiltering: false,
-                cellTemplate: '<div class="ui-grid-cell-contents"><span ng-bind-html="row.entity.creator_job.job_type.getIcon()"></span> {{ row.entity.creator_job.job_type.title }} {{ row.entity.creator_job.job_type.version }}</div>'
             },
             {
                 field: 'status',

@@ -10,15 +10,21 @@
             this.recipe_type = recipe_type ? RecipeType.transformer(recipe_type) : null;
             this.event = event || null;
             this.creator_job = creator_job ? {
-                id: creator_job.id,
-                job_type: JobType.transformer(creator_job.job_type),
-                job_type_rev: creator_job.job_type_rev,
-                event: creator_job.event,
-                status: creator_job.status,
-                priority: creator_job.priority,
-                num_exes: creator_job.num_exes
+                id: creator_job.id || null,
+                job_type: creator_job.job_type ? JobType.transformer(creator_job.job_type) : null,
+                job_type_rev: creator_job.job_type_rev || null,
+                event: creator_job.event || null,
+                status: creator_job.status || null,
+                priority: creator_job.priority || null,
+                num_exes: creator_job.num_exes || null
             } : {};
-            this.definition = definition || null;
+            this.definition = definition ? {
+                version: scaleConfig.batchDefinitionVersion,
+                date_range: definition.date_range || null,
+                job_names: definition.job_names || null,
+                all_jobs: definition.all_jobs || null,
+                priority: definition.priority || null
+            } : { version: scaleConfig.batchDefinitionVersion };
             this.created_count = created_count || 0;
             this.failed_count = failed_count || 0;
             this.total_count = total_count || 0;
@@ -31,7 +37,7 @@
         Batch.prototype = {
             clean: function () {
                 var returnObj = {
-                    recipe_type_id: this.recipe_type.id,
+                    recipe_type_id: this.recipe_type ? this.recipe_type.id : null,
                     title: this.title,
                     description: this.description,
                     definition: this.definition
@@ -44,7 +50,7 @@
         // static methods, assigned to class
         Batch.build = function (data) {
             if (data) {
-                return new Batch(
+                var returnObj = new Batch(
                     data.id,
                     data.title,
                     data.description,
@@ -59,6 +65,13 @@
                     data.created,
                     data.last_modified
                 );
+                // remove empty/null/undefined values from returnObj
+                returnObj = _.pick(returnObj, _.identity);
+                // restore 0 counts if necessary
+                returnObj.created_count = typeof returnObj.created_count === 'undefined' ? 0 : returnObj.created_count;
+                returnObj.failed_count = typeof returnObj.failed_count === 'undefined' ? 0 : returnObj.failed_count;
+                returnObj.total_count = typeof returnObj.total_count === 'undefined' ? 0 : returnObj.total_count;
+                return returnObj;
             }
             return new Batch();
         };

@@ -247,6 +247,7 @@
         },
         "headerOffset": 165,
         "dateFilterOffset": 45,
-        "paginationOffset": 35
+        "paginationOffset": 35,
+        "batchDefinitionVersion": "1.0"
     }
 }

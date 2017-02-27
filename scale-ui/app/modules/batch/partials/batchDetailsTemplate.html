@@ -35,13 +35,6 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-xs-6">
-                        <div class="form-group" ng-class="{ 'has-error': batchForm.bVersion.$invalid }">
-                            <label for="bVersion">Version</label>
-                            <input id="bVersion" name="bVersion" type="text" class="form-control" ng-model="vm.batch.definition.version" placeholder="Version" required>
-                            <p class="help-block">Defines the version of the definition specification used.</p>
-                        </div>
-                    </div>
-                    <div class="col-xs-6">
                         <div class="form-group">
                             <label for="bDateRangeType">Date Range Type</label>
                             <select id="bDateRangeType" name="bDateRangeType" class="form-control" ng-model="vm.batch.definition.date_range.type">
@@ -50,10 +43,6 @@
                             </select>
                             <p class="help-block">"Created" matches recipes based on the timestamp of when they were originally created; "Data" matches recipes based on the timestamp of when its input files were collected.</p>
                         </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-6">
                         <div class="form-group">
                             <label for="bDateRangeStarted">Date Range Started</label>
                             <div class="input-group">
@@ -63,8 +52,6 @@
                                 <input id="bDateRangeStarted" type="text" class="form-control" aria-describedby="bDateRangeStarted" uib-datepicker-popup="yyyy-MM-dd" ng-model="vm.batch.definition.date_range.started" ng-model-options="vm.dateModelOptions" is-open="vm.dateRangeStartedPopup.opened" close-text="Close" datepicker-append-to-body="true" ng-click="vm.openDateRangeStartedPopup($event)" />
                             </div>
                         </div>
-                    </div>
-                    <div class="col-xs-6">
                         <div class="form-group">
                             <label for="bDateRangeEnded">Date Range Ended</label>
                             <div class="input-group">
@@ -75,29 +62,19 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="row">
                     <div class="col-xs-6">
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <div class="form-group">
-                                    <label for="bJobNames">Job Names</label><br />
-                                    <select id="bJobNames" ais-multiselect number-displayed="1" max-height="150" enable-filtering="true" multiple="multiple" multiselect-data-provider="vm.jobTypes" class="form-control input-sm" ng-model="vm.batch.definition.job_names"></select>
-                                    <p class="help-block">Additional jobs that did not have a revision change.</p>
-                                </div>
-                            </div>
-                            <div class="col-xs-6">
-                                <div class="checkbox">
-                                    <label for="bAllJobs">
-                                        <input id="bAllJobs" type="checkbox" ng-model="vm.batch.definition.all_jobs">
-                                        <strong>All Jobs</strong>
-                                    </label>
-                                    <p class="help-block">Re-process every job. This overrides the values included in "Job Names".</p>
-                                </div>
-                            </div>
+                        <div class="form-group">
+                            <label for="bJobNames">Job Names</label><br />
+                            <select id="bJobNames" ais-multiselect number-displayed="1" max-height="150" enable-filtering="true" multiple="multiple" multiselect-data-provider="vm.jobTypes" class="form-control input-sm" ng-model="vm.batch.definition.job_names"></select>
+                            <p class="help-block">Additional jobs that did not have a revision change.</p>
                         </div>
-                    </div>
-                    <div class="col-xs-6">
+                        <div class="checkbox">
+                            <label for="bAllJobs">
+                                <input id="bAllJobs" type="checkbox" ng-model="vm.batch.definition.all_jobs">
+                                <strong>All Jobs</strong>
+                            </label>
+                            <p class="help-block">Re-process every job. This overrides the values included in "Job Names".</p>
+                        </div>
                         <div class="form-group">
                             <label for="bPriority">Priority</label>
                             <input id="bPriority" name="bPriority" type="text" class="form-control" ng-model="vm.batch.definition.priority" placeholder="Priority">
@@ -123,8 +100,6 @@
         <dd>{{ vm.batch.event.type }}</dd>
         <dt>Event Occurred:</dt>
         <dd>{{ vm.moment.utc(vm.batch.event.occurred).format(vm.scaleConfig.dateFormats.day_second_utc) }}</dd>
-        <dt>Creator Job:</dt>
-        <dd><span ng-bind-html="vm.batch.creator_job.job_type.getIcon()"></span> <a ng-href="/#/jobs/job/{{ vm.batch.creator_job.id }}">{{ vm.batch.creator_job.job_type.title }}: {{ vm.batch.creator_job.status }}</a></dd>
         <dt>Created Count:</dt>
         <dd>{{ vm.batch.created_count }}</dd>
         <dt>Failed Count:</dt>
