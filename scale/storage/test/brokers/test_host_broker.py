@@ -1,6 +1,9 @@
 from __future__ import unicode_literals
 
 import os
+import shutil
+import tempfile
+import uuid
 
 import django
 from django.test import TestCase
@@ -88,6 +91,97 @@ class TestHostBrokerDownloadFiles(TestCase):
         two_calls = [call(['ln', '-s', full_workspace_path_file_1, local_path_file_1]),
                      call(['ln', '-s', full_workspace_path_file_2, local_path_file_2])]
         mock_execute.assert_has_calls(two_calls)
+
+
+class TestHostBrokerListFiles(TestCase):
+
+    def setUp(self):
+        django.setup()
+        
+        self.temp_dir = tempfile.mkdtemp()
+        self.broker = HostBroker()
+
+    def tearDown(self):
+        shutil.rmtree(self.temp_dir)
+
+    def test_no_files(self):
+        """Tests calling HostBroker.list_files() with no files in directory"""
+        file_list = self.broker.list_files(self.temp_dir, False, None)
+        self.assertEqual(len(file_list), 0)
+    
+    def test_multi_batches(self):
+        """Tests calling HostBroker.list_files() with multiple batches (1000+)"""
+        
+        self.count = 0
+        
+        def callback(file_list):
+            self.count += len(file_list)
+            
+        for number in range(1500):
+            storage_test_utils.create_uningested_file(str(uuid.uuid4()), self.temp_dir)
+        
+        file_list = self.broker.list_files(self.temp_dir, True, callback)
+        
+        self.assertEqual(len(file_list), 0)
+        self.assertEqual(self.count, 1500)
+    
+    def test_no_callback(self):
+        """Tests calling HostBroker.list_files() without using callback for
+        results of search directory"""
+        
+        for number in range(10):
+            storage_test_utils.create_uningested_file(str(uuid.uuid4()), self.temp_dir)
+        
+        file_list = self.broker.list_files(self.temp_dir, True, None)
+        
+        self.assertEqual(len(file_list), 10)
+    
+    def test_recursive_successfully(self):
+        """Tests calling HostBroker.list_files() with files across multi-level 
+        directory tree"""
+        for number in range(10):
+            full_dir = self.temp_dir
+            
+            # Intersperse multiple sub-directories to test recursing
+            if number % 2:
+                full_dir = tempfile.mkdtemp(dir=self.temp_dir)
+                
+            storage_test_utils.create_uningested_file(str(uuid.uuid4()), full_dir)
+
+        file_list = self.broker.list_files(self.temp_dir, True, None)
+        
+        self.assertEqual(len(file_list), 10)
+
+    def test_single_dir_successfully(self):
+        """Tests calling HostBroker.list_files() successfully"""
+
+        for number in range(10):
+            full_dir = self.temp_dir
+            
+            # Intersperse multiple sub-directories to test recursing
+            if number % 2:
+                full_dir = tempfile.mkdtemp(dir=self.temp_dir)
+                
+            storage_test_utils.create_uningested_file(str(uuid.uuid4()), full_dir)
+
+        file_list = self.broker.list_files(self.temp_dir, False, None)
+        
+        # All files within sub-directories should not be discovered
+        self.assertEqual(len(file_list), 5)
+        
+    def test_bad_callback(self):
+        """Tests calling HostBroker.list_files() with a bad callback"""
+
+        for number in range(10):
+            storage_test_utils.create_uningested_file(str(uuid.uuid4()), self.temp_dir)
+
+        def callback(invalid, args):
+            pass
+
+        file_list = self.broker.list_files(self.temp_dir, False, callback)
+        
+        # Bad callback should be logged and results returned on completion
+        self.assertEqual(len(file_list), 10)
 
 
 class TestHostBrokerLoadConfiguration(TestCase):

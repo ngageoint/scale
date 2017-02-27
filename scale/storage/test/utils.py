@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import datetime
+import os
 
 import django.contrib.gis.geos as geos
 import django.utils.timezone as timezone
@@ -54,6 +55,22 @@ def create_file(file_name='my_test_file.txt', media_type='text/plain', file_size
         scale_file.countries = countries
         scale_file.save()
     return scale_file
+    
+    
+def create_uningested_file(file_name='my_test_file.txt', file_path=None, contents=None):
+    """Creates a raw file for use in testing list_files broker
+
+    :returns: The full path and name
+    :rtype: string
+    """
+
+    output_file = os.path.join(file_path if file_path else '', file_name)
+
+    with open(output_file, 'w') as fp:
+        if contents:
+            fp.write(contents)
+            
+    return output_file
 
 
 def create_workspace(name=None, title=None, json_config=None, base_url=None, is_active=True, archived=None):

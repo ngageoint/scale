@@ -28,7 +28,7 @@ class TestS3Monitor(TestCase):
         self.assertTrue(scanner._recursive)
 
     def test_validate_configuration_extra_key(self):
-        """Tests calling S3Scanner.validate_configuration() with empty sqs_name"""
+        """Tests calling S3Scanner.validate_configuration() with extra key"""
 
         config = {
             'type': 's3',
