@@ -112,15 +112,16 @@
         ];
 
         vm.getJobs = function () {
-            jobService.getJobsOnce(vm.jobsParams).then(function (data) {
-                vm.gridOptions.totalItems = data.count;
-                vm.gridOptions.minRowsToShow = data.results.length;
-                vm.gridOptions.virtualizationThreshold = data.results.length;
-                vm.gridOptions.data = data.results;
-            }).catch(function (error) {
-                console.log(error);
-            }).finally(function () {
+            jobService.getJobs(vm.jobsParams).then(null, null, function (data) {
                 vm.loading = false;
+                if (data.$resolved) {
+                    vm.gridOptions.totalItems = data.count;
+                    vm.gridOptions.minRowsToShow = data.results.length;
+                    vm.gridOptions.virtualizationThreshold = data.results.length;
+                    vm.gridOptions.data = data.results;
+                } else {
+                    console.log(error);
+                }
             });
         };
 

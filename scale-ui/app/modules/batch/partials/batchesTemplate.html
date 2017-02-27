@@ -1,8 +1,7 @@
-<ais-header hide-title="true" name="'Jobs (' + vm.gridOptions.totalItems + ')'" loading="vm.loading" show-subnav="true" subnav-links="vm.subnavLinks"></ais-header>
+<ais-header hide-title="true" name="'Batch Processing (' + vm.gridOptions.totalItems + ')'" show-subnav="true" subnav-links="vm.subnavLinks" loading="vm.loading"></ais-header>
 <div class="page-header">
     <h1>
-        Jobs ({{ vm.gridOptions.totalItems }})
-        <small ng-if="!vm.readonly"><button class="btn btn-default" ng-click="vm.requeueJobs()"><i class="fa fa-refresh"></i> Requeue All</button></small>
+        Batch Processing ({{ vm.gridOptions.totalItems }})
     </h1>
     <hr />
 </div>
@@ -24,22 +23,21 @@
 <div class="row">
     <div class="col-xs-12">
         <div class="grid-container">
-            <div ui-grid="vm.gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns class="scale-grid"></div>
+            <div ui-grid="vm.gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns class="scale-grid job-type-error-rates-grid"></div>
         </div>
         <ais-grid-pagination></ais-grid-pagination>
     </div>
 </div>
 
-<script type="text/ng-template" id="showLog.html">
-    <div>
-        <div class="modal-header">
-            <h3>{{ vm.selectedJob }}</h3>
-        </div>
-        <div class="modal-body">
-            <job-execution-log execution="vm.jobExecution"></job-execution-log>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-default" ng-click="$dismiss()">Close</button>
-        </div>
+<script type="text/ng-template" id="failureRate.html">
+    <div class="ui-grid-cell-contents">
+        <span ng-show="row.entity.total_count > 0" class="fail-rate-container">
+            <span class="fail-rate" style="{{ grid.appScope.vm.failRateStyle(row.entity.error_count, row.entity.total_count) }}"></span>
+        </span>
+        <span ng-show="row.entity.total_count > 0" class="percentage">{{ ((row.entity.error_count / row.entity.total_count) * 100).toFixed(0) }}%</span>
+        <span ng-show="row.entity.total_count === 0" class="fail-rate-container">
+            <span class="fail-rate" style="display: none"></span>
+        </span>
+        <span ng-show="row.entity.total_count === 0" class="percentage">0%</span>
     </div>
 </script>

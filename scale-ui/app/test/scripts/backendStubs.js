@@ -136,7 +136,7 @@
             // sourceDetailsOverrideUrl = 'test/data/source-details/' + filename + '.json';
             return getSync(sourceDetailsOverrideUrl);
         });
-        
+
         // Sources
         var sourcesOverrideUrl = 'test/data/sources.json';
         var sourcesRegex = new RegExp('^' + scaleConfig.getUrlPrefix('sources') + 'sources/', 'i');
@@ -289,7 +289,7 @@
 
             return returnObj;
         });
-        
+
         // Job execution logs
         var jobExecutionLogRegex = new RegExp('^' + scaleConfig.getUrlPrefix('job-executions') + 'job-executions/.*/logs/combined/', 'i');
         $httpBackend.whenGET(jobExecutionLogRegex).respond(function () {
@@ -435,7 +435,7 @@
         $httpBackend.whenGET(queueStatusRegex).respond(function () {
             return getSync(queueStatusOverrideUrl);
         });
-        
+
         // Recipe Details
         var recipeDetailsOverrideUrl = 'test/data/recipeDetails.json';
         var recipeDetailsRegex = new RegExp('^' + scaleConfig.getUrlPrefix('recipes') + 'recipes/.*/', 'i');
@@ -687,6 +687,13 @@
             var id = url.substring(url.substring(0,url.lastIndexOf('/')).lastIndexOf('/')+1,url.length-1);
             var returnStrike = getStrikeReturn(data, id);
             return [200, JSON.stringify(returnStrike), {}];
+        });
+
+        // Batch
+        var batchesOverrideUrl = 'test/data/batch/batches.json';
+        var batchesRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'batches/', 'i');
+        $httpBackend.whenGET(batchesRegex).respond(function() {
+            return getSync(batchesOverrideUrl);
         });
 
         // For everything else, don't mock

@@ -148,6 +148,7 @@
 
         "jobStatus": ["VIEW ALL","COMPLETED","BLOCKED","QUEUED","RUNNING","FAILED","CANCELED","PENDING"],
         "ingestStatus": ["VIEW ALL","TRANSFERRING","TRANSFERRED","QUEUED","DEFERRED","INGESTING","INGESTED","ERRORED","DUPLICATE"],
+        "batchStatus": ["VIEW ALL","SUBMITTED","CREATED"],
         "workspaceTypes": [
             {
                 "broker": {
@@ -238,10 +239,15 @@
                 { "path": "feed", "label": "Status" },
                 { "path": "feed/ingests", "label": "Ingest Records" },
                 { "path": "feed/strikes", "label": "Strikes" }
+            ],
+            "batch": [
+                { "path": "batch", "label": "Batches" },
+                { "path": "batch/0", "label": "Create Batch" }
             ]
         },
         "headerOffset": 165,
         "dateFilterOffset": 45,
-        "paginationOffset": 35
+        "paginationOffset": 35,
+        "batchDefinitionVersion": "1.0"
     }
 }
