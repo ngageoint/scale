@@ -79,10 +79,7 @@
                         <div class="col-xs-12 col-md-6">
                             <div class="form-group">
                                 <label>Monitor Type:</label>
-                                <input type="text" class="form-control" value="S3" disabled ng-if="vm.activeWorkspace.json_config.broker.type === 's3'">
-                                <input type="text" class="form-control" value="Directory Watcher" disabled ng-if="vm.activeWorkspace.json_config.broker.type === 'host'">
-                                <input type="text" class="form-control" value="Unavailable for NFS workspaces" disabled ng-if="vm.activeWorkspace.json_config.broker.type === 'nfs'">
-                                <!--<select id="scMonitorType" name="scMonitorType" class="form-control" ng-model="vm.activeStrike.configuration.monitor.type" ng-options="t.broker.type as t.broker.type.toUpperCase() for t in vm.availableWorkspaceTypes" required></select>-->
+                                <select id="scMonitorType" name="scMonitorType" class="form-control" ng-model="vm.activeStrike.configuration.monitor.type" ng-options="t for t in vm.allowedMonitorTypes[vm.activeWorkspace.json_config.broker.type]" required></select>
                             </div>
                         </div>
                         <div class="col-xs-12 col-md-6">
@@ -101,6 +98,14 @@
                             <div class="form-group" ng-if="vm.activeStrike.configuration.monitor.type === 's3'">
                                 <label for="secret_access_key">Secret Access Key</label>
                                 <input id="secret_access_key" type="text" class="form-control" placeholder="Secret Access Key" ng-model="vm.activeStrike.configuration.monitor.credentials.secret_access_key">
+                            </div>
+                            <div class="form-group" ng-if="vm.activeStrike.configuration.monitor.type === 'nats'">
+                                <label for="nats_topic_name">NATS Topic Name</label>
+                                <input id="nats_topic_name" type="text" class="form-control" placeholder="Topic Name" ng-model="vm.activeStrike.configuration.monitor.nats_topic_name">
+                            </div>
+                            <div class="form-group" ng-if="vm.activeStrike.configuration.monitor.type === 'nats'">
+                                <label for="endpoint_url">NATS Streaming Server Endpoint URL</label>
+                                <input id="endpoint_url" type="text" class="form-control" placeholder="Endpoint URL" ng-model="vm.activeStrike.configuration.monitor.endpoint_url">
                             </div>
                             <div class="form-group" ng-if="vm.activeStrike.configuration.monitor.type === 'dir-watcher'">
                                 <label for="transfer_suffix">Transfer Suffix</label>

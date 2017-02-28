@@ -32,11 +32,12 @@ class S3Broker(Broker):
         self._credentials = None
         self._bucket_name = None
         self._region_name = None
+        self._endpoint_url = None
 
     def delete_files(self, volume_path, files):
         """See :meth:`storage.brokers.broker.Broker.delete_files`"""
 
-        with S3Client(self._credentials, self._region_name) as client:
+        with S3Client(self._credentials, self._region_name, self._endpoint_url) as client:
             for scale_file in files:
                 s3_object = client.get_object(self._bucket_name, scale_file.file_path)
 
@@ -49,7 +50,7 @@ class S3Broker(Broker):
     def download_files(self, volume_path, file_downloads):
         """See :meth:`storage.brokers.broker.Broker.download_files`"""
 
-        with S3Client(self._credentials, self._region_name) as client:
+        with S3Client(self._credentials, self._region_name, self._endpoint_url) as client:
             for file_download in file_downloads:
                 # If file supports partial mount and volume is configured attempt sym-link
                 if file_download.partial and self._volume:
@@ -77,6 +78,7 @@ class S3Broker(Broker):
 
         self._bucket_name = config['bucket_name']
         self._region_name = config.get('region_name')
+        self._endpoint_url = config.get('endpoint_url')
 
         # TODO Change credentials to use an encrypted store key reference
         self._credentials = AWSClient.instantiate_credentials_from_config(config)
@@ -90,7 +92,7 @@ class S3Broker(Broker):
     def move_files(self, volume_path, file_moves):
         """See :meth:`storage.brokers.broker.Broker.move_files`"""
 
-        with S3Client(self._credentials, self._region_name) as client:
+        with S3Client(self._credentials, self._region_name, self._endpoint_url) as client:
             for file_move in file_moves:
                 try:
                     s3_object_src = client.get_object(self._bucket_name, file_move.file.file_path)
@@ -107,7 +109,7 @@ class S3Broker(Broker):
     def upload_files(self, volume_path, file_uploads):
         """See :meth:`storage.brokers.broker.Broker.upload_files`"""
 
-        with S3Client(self._credentials, self._region_name) as client:
+        with S3Client(self._credentials, self._region_name, self._endpoint_url) as client:
             for file_upload in file_uploads:
                 s3_object = client.get_object(self._bucket_name, file_upload.file.file_path, False)
 
@@ -123,11 +125,12 @@ class S3Broker(Broker):
         if 'bucket_name' not in config or not config['bucket_name']:
             raise InvalidBrokerConfiguration('S3 broker requires "bucket_name" to be populated')
         region_name = config.get('region_name')
+        endpoint_url = config.get('endpoint_url')
 
         credentials = AWSClient.instantiate_credentials_from_config(config)
 
         # Check whether the bucket can actually be accessed
-        with S3Client(credentials, region_name) as client:
+        with S3Client(credentials, region_name, endpoint_url) as client:
             try:
                 client.get_bucket(config['bucket_name'])
             except (ClientError, NoCredentialsError):

@@ -14,3 +14,4 @@ mesos.interface>=0.21.1,<=0.25
 psycopg2>=2.5.0,<2.6.0
 pytz
 urllib3>=1.8,<1.9
+pynats

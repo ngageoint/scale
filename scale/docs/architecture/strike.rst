@@ -75,6 +75,13 @@ A valid Strike configuration is a JSON document with the following structure:
             An "s3" monitor utilizes an Amazon Web Services (AWS) Simple Queue Service (SQS) to receive AWS S3 file
             notification events. This monitor may only be used with an *s3* workspace.
 
+        **nats**
+
+            An alternative "s3" monitor for the minio s3 compatible storage system. Minio can publish AWS S3 file
+            notification events to a number of different queue and notification systems. NATS is a simple and fast
+            subscription system which can be run alongside the minio service in a single docker image. This can only
+            be used with an *s3* workspace backed by a minio server with NATS notifications enabled.
+
         Additional *monitor* fields may be required depending on the type of monitor selected. See below for more
         information on each monitor type.
 
@@ -222,3 +229,49 @@ The S3 monitor has the following additional fields in its configuration:
     The *region_name* is an optional string that specifies the AWS region where the SQS Queue is located. This is not
     always required, as environment variables or configuration files could set the default region, but it is a highly
     recommended setting for explicitly indicating the SQS region.
+
+
+NATS Monitor
+------------------------------------------------------------------------------------------------------------------------
+
+The NATS monitor subscribes a NATS streaming server topic for object creation notifications that describe new source data
+files available in a minio S3 bucket (so this monitor only works with an S3 workspace). After the monitor finds a new
+file in the S3 bucket, it applies the file against the configured Strike rules.
+
+Example NATS monitor configuration:
+
+.. code-block:: javascript
+
+   {
+       "version": "2.0",
+       "workspace": "my-host-workspace",
+       "monitor": {
+           "type": "nats",
+           "nats_topic_name": "minio",
+           "endpoint_url": "nats://natsserver:4222"
+       },
+       "files_to_ingest": [
+           {
+               "filename_regex": "*.h5",
+               "data_types": [
+                   "data type 1",
+                   "data type 2"
+               ],
+               "new_workspace": "my-new-workspace",
+               "new_file_path": "/new/file/path"
+           }
+       ]
+   }
+
+The NATS monitor has the following additional fields in its configuration:
+
+**nats_topic_name**: JSON string
+
+    The *nats_topic_name* field is a required string that defines the name of the NATS streaming server queue that
+    should be subscribed to for object creation notifications that describe new files in the minio S3 bucket. This
+    must match the topic name set in the minio notifications settings.
+
+**endpoint_url**: JSON string
+
+    The *endpoint_url* field is a required string that defines the NATS streaming server endpoint url. This url is
+    in the form *nats://servername:4222*.
