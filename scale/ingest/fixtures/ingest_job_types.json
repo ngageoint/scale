@@ -125,7 +125,7 @@
             "name": "scale-scan",
             "version": "1.0",
             "title": "Scale Scan",
-            "description": "Scans a directory for existing source files to ingest",
+            "description": "Scans a workspace for existing files to ingest",
             "category": "system",
             "is_system": true,
             "is_long_running": false,
