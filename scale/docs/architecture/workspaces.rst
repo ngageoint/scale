@@ -226,3 +226,9 @@ The S3 broker requires the following additional fields in its configuration:
     The *region_name* is an optional string that specifies the AWS region where the S3 bucket is located. This is not
     always required, as environment variables or configuration files could set the default region, but it is a highly
     recommended setting for explicitly indicating the bucket region.
+
+**endpoint_url**: JSON string
+
+    The *endpoint_url* is an optional string that specifies the AWS endpoint URL where the S3 bucket is located. This is not
+    typically required, as the default points to Amazon AWS. If you are using a non-AWS S3 compatible object store such as
+    minio or ceph then this should be set to the appropriate endpoint for your server.
