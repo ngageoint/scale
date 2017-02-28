@@ -9,7 +9,7 @@
                     <tbody>
                         <tr><td>Media Type:</td> <td>{{ vm.ingestRecord.media_type }}</td></tr>
                         <tr><td>File Size:</td> <td>{{ vm.scaleService.calculateFileSizeFromBytes(vm.ingestRecord.file_size) }}</td></tr>
-                        <tr><td>Workspace:</td> <td><a href="/#/workspaces/{{ vm.ingestRecord.workspace.id }}">{{ vm.ingestRecord.workspace.name }}</a></td></tr>
+                        <tr><td>Workspace:</td> <td><a href="#/workspaces/{{ vm.ingestRecord.workspace.id }}">{{ vm.ingestRecord.workspace.name }}</a></td></tr>
                         <tr><td>Created:</td> <td>{{ vm.moment.utc(vm.ingestRecord.created).format('YYYY-MM-DD HH:mm:ss[Z]') }}</td></tr>
                         <tr><td>Last Modified:</td> <td>{{ vm.moment.utc(vm.ingestRecord.last_modified).format('YYYY-MM-DD HH:mm:ss[Z]') }}</td></tr>
                         <tr ng-if="vm.ingestRecord.parsed"><td>Parsed:</td> <td>{{ vm.moment.utc(vm.ingestRecord.parsed).format('YYYY-MM-DD HH:mm:ss[Z]') }}</td></tr>
