@@ -9,6 +9,7 @@ from django.db import transaction
 from django.utils.timezone import now
 
 from ingest.models import Ingest, Scan
+from ingest.scan.scanners.exceptions import ScannerInterruptRequested
 from job.configuration.configuration.job_configuration import JobConfiguration, MODE_RW
 from job.configuration.data.job_data import JobData
 from queue.models import Queue
