@@ -13,45 +13,42 @@ from util.exceptions import InvalidAWSCredentials
 
 
 class TestAws(TestCase):
-
     def setUp(self):
         django.setup()
 
     def test_instantiate_credentials_from_config(self):
         """Tests instantiating AWS Credentials from a valid configuration."""
-        config = { 'credentials': { 'access_key_id': 'ACCESSKEY', 'secret_access_key': 'SECRETKEY'}}
+        config = {'credentials': {'access_key_id': 'ACCESSKEY', 'secret_access_key': 'SECRETKEY'}}
         credential = AWSClient.instantiate_credentials_from_config(config)
         self.assertEqual(credential.access_key_id, 'ACCESSKEY')
         self.assertEqual(credential.secret_access_key, 'SECRETKEY')
 
     def test_instantiate_credentials_from_config_missing_access_key(self):
         """Tests instantiating AWS Credentials from a configuration missing access key."""
-        config = { 'credentials': { 'secret_access_key': 'SECRETKEY' }}
+        config = {'credentials': {'secret_access_key': 'SECRETKEY'}}
         with self.assertRaises(InvalidAWSCredentials):
             AWSClient.instantiate_credentials_from_config(config)
 
     def test_instantiate_credentials_from_config_missing_secret_key(self):
         """Tests instantiating AWS Credentials from a configuration missing secret key."""
-        config = { 'credentials': { 'access_key_id': 'ACCESSKEY' }}
+        config = {'credentials': {'access_key_id': 'ACCESSKEY'}}
         with self.assertRaises(InvalidAWSCredentials):
             AWSClient.instantiate_credentials_from_config(config)
 
     def test_instantiate_credentials_from_config_empty_access_key(self):
         """Tests instantiating AWS Credentials from a configuration with an empty access key."""
-        config = { 'credentials': { 'access_key_id': '', 'secret_access_key': 'SECRETKEY' }}
+        config = {'credentials': {'access_key_id': '', 'secret_access_key': 'SECRETKEY'}}
         self.assertIsNone(AWSClient.instantiate_credentials_from_config(config))
 
     def test_instantiate_credentials_from_config_empty_secret_key(self):
         """Tests instantiating AWS Credentials from a configuration with an empty secret key."""
-        config = { 'credentials': { 'access_key_id': 'ACCESSKEY', 'secret_access_key': ' ' }}
+        config = {'credentials': {'access_key_id': 'ACCESSKEY', 'secret_access_key': ' '}}
         self.assertIsNone(AWSClient.instantiate_credentials_from_config(config))
 
 
 class TestS3Client(TestCase):
-
     def setUp(self):
         self.credentials = AWSCredentials('ACCCESSKEY', 'SECRETKEY')
-
 
         self.sample_content = {
             'Key': 'test/string',
@@ -156,7 +153,6 @@ class TestS3Client(TestCase):
             results = client.list_objects('sample-bucket', True, callback=callback)
 
         self.assertEquals(len(results), 0)
-
 
     @patch('botocore.paginate.PageIterator._make_request')
     def test_list_objects_with_callback_exception(self, mock_func):

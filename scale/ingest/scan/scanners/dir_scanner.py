@@ -1,16 +1,10 @@
 """Defines a scanner that scans an S3 bucket backed workspace for files"""
 from __future__ import unicode_literals
 
-import json
 import logging
-import os
 
-from botocore.exceptions import ClientError
-
-from ingest.scan.configuration.scan_configuration import ValidationWarning
-from ingest.scan.scanners.exceptions import (InvalidScannerConfiguration, ScannerInterruptRequested)
+from ingest.scan.scanners.exceptions import (InvalidScannerConfiguration)
 from ingest.scan.scanners.scanner import Scanner
-from util.aws import AWSClient, S3Client
 
 logger = logging.getLogger(__name__)
 
@@ -42,7 +36,7 @@ class DirScanner(Scanner):
             raise InvalidScannerConfiguration('transfer_suffix must be a string')
         if not configuration['transfer_suffix']:
             raise InvalidScannerConfiguration('transfer_suffix must be a non-empty string')
-        
+
         return []
 
     def _ingest_file(self, file_name, file_size):

@@ -2,13 +2,11 @@
 from __future__ import unicode_literals
 
 import logging
-import os
 import sys
-from mock import patch
 from optparse import make_option
 
-
 from django.core.management.base import BaseCommand
+from mock import patch
 
 from storage.models import Workspace
 
@@ -20,11 +18,11 @@ class Command(BaseCommand):
 
     option_list = BaseCommand.option_list + (
         make_option('-r', '--recursive', action='store_true', dest='recursive',
-            default=False, help='Recursively process workspace tree.'),
+                    default=False, help='Recursively process workspace tree.'),
         make_option('-l', '--local', action='store_true', dest='local',
-            default=False, help='Local patch for testing. Remote will match '
-                                'host_path.'),
-        make_option('-w', '--workspace-id', 
+                    default=False, help='Local patch for testing. Remote will match '
+                                        'host_path.'),
+        make_option('-w', '--workspace-id',
                     help='Workspace ID to traverse.'),
     )
 
@@ -37,7 +35,7 @@ class Command(BaseCommand):
         """
 
         logger.info('Command starting: scale_list_files')
-        
+
         if 'workspace_id' in options:
             workspace_id = options['workspace_id']
         else:
@@ -52,10 +50,12 @@ class Command(BaseCommand):
             sys.exit(1)
 
         try:
+            conf = workspace.json_config
             # Patch _get_volume_path for local testing outside of docker.
             # This is useful for testing when Scale isn't managing mounts.
-            if options['local'] and 'broker' in workspace.json_config and 'host_path' in workspace.json_config['broker']:
-                with patch.object(Workspace, '_get_volume_path', return_value=workspace.json_config['broker']['host_path']) as mock_method:
+            if options['local'] and 'broker' in conf and 'host_path' in conf['broker']:
+                with patch.object(Workspace, '_get_volume_path',
+                                  return_value=conf['broker']['host_path']) as mock_method:
                     results = workspace.list_files(options['recursive'], self.callback)
                     logger.info('Results that were not returned via callback: %s' % results)
             else:

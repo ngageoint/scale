@@ -1,6 +1,5 @@
 """Defines a utility method for displaying file sizes"""
 
-
 SIZE_LABELS = ['bytes', 'KiB', 'MiB', 'GiB', 'TiB']
 MAX_LABEL_INDEX = len(SIZE_LABELS) - 1
 

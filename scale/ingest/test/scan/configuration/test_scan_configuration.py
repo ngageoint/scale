@@ -8,11 +8,9 @@ from django.test import TestCase
 import storage.test.utils as storage_test_utils
 from ingest.scan.configuration.exceptions import InvalidScanConfiguration
 from ingest.scan.configuration.scan_configuration import ScanConfiguration
-from storage.models import Workspace
 
 
 class TestScanConfiguration(TestCase):
-
     def setUp(self):
         django.setup()
 
@@ -183,7 +181,7 @@ class TestScanConfiguration(TestCase):
         }
 
         self.assertRaises(InvalidScanConfiguration, ScanConfiguration(config).validate)
-        
+
     def test_validate_recursive_invalid_type(self):
         """Tests calling ScanConfiguration.validate() with recursive set to invalid type"""
 

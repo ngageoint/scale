@@ -1,16 +1,9 @@
 """Defines a scanner that scans an S3 bucket backed workspace for files"""
 from __future__ import unicode_literals
 
-import json
 import logging
-import os
 
-from botocore.exceptions import ClientError
-
-from ingest.scan.configuration.scan_configuration import ValidationWarning
-from ingest.scan.scanners.exceptions import (InvalidScannerConfiguration, ScannerInterruptRequested)
 from ingest.scan.scanners.scanner import Scanner
-from util.aws import AWSClient, S3Client
 
 logger = logging.getLogger(__name__)
 
@@ -51,13 +44,13 @@ class S3Scanner(Scanner):
         :returns: Ingest model prepped for bulk create
         :rtype: :class:`ingest.models.Ingest`
         """
-        
+
         ingest = None
-        
+
         if self._dry_run:
             logger.info("Scan detected S3 object in workspace '%s': %s" % (self._scanned_workspace.name, file_name))
         else:
             ingest = self._process_ingest(file_name, file_size)
             logger.info("Scan processed S3 object from workspace '%s': %s" % (self._scanned_workspace.name, file_name))
-            
+
         return ingest

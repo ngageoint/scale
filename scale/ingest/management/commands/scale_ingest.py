@@ -10,7 +10,6 @@ from django.core.management.base import BaseCommand
 
 import ingest.ingest_job as ingest_job
 
-
 logger = logging.getLogger(__name__)
 
 

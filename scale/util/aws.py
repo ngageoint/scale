@@ -200,7 +200,7 @@ class S3Client(AWSClient):
 
         object_list = []
 
-        params = { 'Bucket': bucket_name }
+        params = {'Bucket': bucket_name}
         if prefix:
             params['Prefix'] = prefix
         if not recursive:
@@ -234,7 +234,3 @@ class S3Client(AWSClient):
                 object_list.extend(objects)
 
         return object_list
-
-
-
-

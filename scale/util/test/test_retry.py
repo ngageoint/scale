@@ -1,8 +1,6 @@
-import datetime
-
 from django.db.utils import OperationalError
 from django.test import SimpleTestCase
-from mock import MagicMock, call, patch
+from mock import call, patch
 
 from util.retry import retry, retry_database_query
 
@@ -87,7 +85,9 @@ class TestRetry(SimpleTestCase):
 
         self.assertRaises(Exception, self.always_fail_10_times)
 
-        mock_randint.assert_has_calls([call(0, 2000), call(0, 4000), call(0, 8000), call(0, 16000), call(0, 30000), call(0, 30000), call(0, 30000), call(0, 30000), call(0, 30000)])
+        mock_randint.assert_has_calls(
+            [call(0, 2000), call(0, 4000), call(0, 8000), call(0, 16000), call(0, 30000), call(0, 30000),
+             call(0, 30000), call(0, 30000), call(0, 30000)])
         self.assertEqual(mock_sleep.call_count, 9)
 
     @patch('util.retry.time.sleep')

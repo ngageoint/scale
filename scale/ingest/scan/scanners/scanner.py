@@ -1,14 +1,14 @@
 """Defines the base scanner class"""
 from __future__ import unicode_literals
 
-from abc import ABCMeta, abstractmethod
 import logging
 import os
+from abc import ABCMeta, abstractmethod
 
 from django.db import transaction
 from django.utils.timezone import now
 
-from ingest.models import Ingest, Scan
+from ingest.models import Ingest
 from ingest.scan.scanners.exceptions import ScannerInterruptRequested
 from job.configuration.configuration.job_configuration import JobConfiguration, MODE_RW
 from job.configuration.data.job_data import JobData
@@ -17,7 +17,6 @@ from storage.media_type import get_media_type
 from storage.models import Workspace
 from trigger.models import TriggerEvent
 from util.file_size import file_size_to_string
-
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +40,7 @@ class Scanner(object):
 
         self.scan_id = None
         self._count = 0
-        self._dry_run = False # Used to only scan and skip ingest process
+        self._dry_run = False  # Used to only scan and skip ingest process
         self._file_handler = None  # The file handler configured for this scanner
         self._recursive = True
         self._scanned_workspace = None  # The workspace model that is being scanned
@@ -49,14 +48,14 @@ class Scanner(object):
         self._stop_received = False
         self._supported_broker_types = supported_broker_types
         self._workspaces = {}  # The workspaces needed by this scanner, stored by workspace name {string: workspace}
-        
+
     def set_recursive(self, recursive):
         """Support configuration of scanner recursive property
         
         :param recursive: The flag indicating whether workspace will be recursively scanned
         :type recursive: bool
         """
-        
+
         self._recursive = recursive
 
     @property
@@ -106,7 +105,7 @@ class Scanner(object):
 
         # Initialize workspace scan via storage broker. Configuration determines if recursive workspace walk.
         self._scanned_workspace.list_files(recursive=self._recursive, callback=self._callback)
-        
+
         logger.info('%s %i files during scan.' % ('Detected' if self._dry_run else 'Processed', self._count))
 
     def setup_workspaces(self, scanned_workspace, file_handler):
@@ -156,16 +155,16 @@ class Scanner(object):
         """
 
         raise NotImplementedError
-        
+
     def _callback(self, file_list):
         """Callback for handling files identified by list_files callback
         
         :param file_list: List of files found within workspace
         :type file_list: storage.brokers.broker.FileDetails
         """
-        
+
         ingests = []
-        
+
         for file_details in file_list:
             if not self._stop_received:
                 ingest = self._ingest_file(file_details.file, file_details.size)
@@ -175,21 +174,21 @@ class Scanner(object):
                 self._count += 1
             else:
                 raise ScannerInterruptRequested
-                
+
         # If no ingests were added, don't bother moving on
         if not len(ingests):
             logger.debug('No ingests for batch, this will always be the case during a dry-run.')
             return
-                
+
         # Once all ingest rules have been applied, de-duplicate and then bulk insert
         ingests = self._deduplicate_ingest_list(self.scan_id, ingests)
-        
+
         # bulk insert remaining as queued
         with transaction.atomic():
             Ingest.objects.bulk_create(ingests)
-            
+
         self._start_ingest_tasks(ingests)
-        
+
     @staticmethod
     def _deduplicate_ingest_list(scan_id, new_ingests):
         """Check the ingest records to ensure these ingests are not already created by previous scan run
@@ -201,25 +200,26 @@ class Scanner(object):
         :returns: List of deduplicated ingest models
         :rtype: List[:class:`ingest.models.Ingest`]
         """
-        
-        deduplicate_file_names=set()
+
+        deduplicate_file_names = set()
         list_count = len(new_ingests)
         ingest_file_names = [ingest.file_name for ingest in new_ingests]
 
         existing_ingests = Ingest.objects.get_ingests_by_scan(scan_id, ingest_file_names)
         existing_ingest_file_names = [ingest.file_name for ingest in existing_ingests]
-        
+
         deduplicated_ingests = []
         for ingest in new_ingests:
             if ingest.file_name not in deduplicate_file_names:
                 deduplicate_file_names.add(ingest.file_name)
                 deduplicated_ingests.append(ingest)
             else:
-                logging.info('Removed duplicate file_name %s from ingests at file_path %s' % (ingest.file_name, ingest.file_path))
+                logging.info('Removed duplicate file_name %s from ingests at file_path %s',
+                             ingest.file_name, ingest.file_path)
 
         final_ingests = [x for x in deduplicated_ingests if x.file_name not in existing_ingest_file_names]
 
-        logger.info('Removed %i duplicates of pre-existing ingests.' % (list_count - len(final_ingests)))
+        logger.info('Removed %i duplicates of pre-existing ingests.', list_count - len(final_ingests))
 
         return final_ingests
 
@@ -238,7 +238,7 @@ class Scanner(object):
         """
 
         file_name = os.path.basename(file_path)
-        
+
         ingest = Ingest()
         ingest.file_name = file_name
         ingest.file_path = file_path
@@ -247,7 +247,8 @@ class Scanner(object):
         ingest.workspace = self._scanned_workspace
         logger.info('New file on %s: %s', ingest.workspace.name, file_path)
 
-        logger.info('Applying rules to %s (%s, %s)', file_path, ingest.media_type, file_size_to_string(file_size) if file_size else 'Unknown')
+        logger.info('Applying rules to %s (%s, %s)', file_path, ingest.media_type,
+                    file_size_to_string(file_size) if file_size else 'Unknown')
         if file_size:
             ingest.file_size = file_size
 
@@ -275,7 +276,7 @@ class Scanner(object):
         else:
             logger.info('No rule match for %s, file is being skipped', file_name)
             ingest = None
-            
+
         return ingest
 
     @transaction.atomic
@@ -288,7 +289,7 @@ class Scanner(object):
 
         # Create new ingest job and mark ingest as QUEUED
         ingest_job_type = Ingest.objects.get_ingest_job_type()
-        
+
         for ingest in ingests:
             # We need to find the id of each ingest that was created. 
             # Using scan_id and file_name together as a unique composite key
@@ -296,7 +297,7 @@ class Scanner(object):
 
             logger.debug('Creating ingest task for %s', ingest.file_name)
             data = JobData()
-            
+
             # Use result from query to get ingest ID
             data.add_property_input('Ingest ID', str(saved_match.id))
             desc = {'scan_id': self.scan_id, 'file_name': ingest.file_name}

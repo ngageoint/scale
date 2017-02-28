@@ -2,7 +2,6 @@
 from abc import ABCMeta
 from collections import namedtuple
 
-
 """
 FileDownload tuple contains an additional partial flag for defining whether the file
 is allowed to be accessed directly or must be copied into running container. This is

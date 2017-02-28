@@ -4,7 +4,6 @@ import logging
 
 
 class ExceptionLoggingMiddleware(object):
-
     def process_exception(self, request, exception):
         """Logs exceptions during service calls."""
         logging.exception('Exception handling request for %s.' % request.path)

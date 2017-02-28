@@ -4,13 +4,13 @@ from __future__ import unicode_literals
 import datetime
 import logging
 
-import djorm_pgjson.fields
 import django.utils.timezone as timezone
+import djorm_pgjson.fields
 from django.db import models, transaction
 from django.utils.timezone import now
 
-from ingest.strike.configuration.strike_configuration import StrikeConfiguration
 from ingest.scan.configuration.scan_configuration import ScanConfiguration
+from ingest.strike.configuration.strike_configuration import StrikeConfiguration
 from job.configuration.data.job_data import JobData
 from job.models import JobType
 from queue.models import Queue
@@ -31,6 +31,7 @@ class IngestCounts(object):
     :keyword size: The total size of all files ingested for the time slot in bytes.
     :type size: int
     """
+
     def __init__(self, time, files=0, size=0):
         self.time = time
         self.files = files
@@ -51,6 +52,7 @@ class IngestStatus(object):
     :keyword values: A list of values that summarize work done by the strike process.
     :type values: list[:class:`ingest.models.IngestCounts`]
     """
+
     def __init__(self, strike, most_recent=None, files=0, size=0, values=None):
         self.strike = strike
         self.most_recent = most_recent
@@ -114,7 +116,7 @@ class IngestManager(models.Manager):
         else:
             ingests = ingests.order_by('last_modified')
         return ingests
-        
+
     def get_ingests_by_scan(self, scan_id, file_names=None):
         """Returns a list of ingests associated with a scan and optionally files
 
@@ -133,7 +135,7 @@ class IngestManager(models.Manager):
             ingests = ingests.filter(scan_id=scan_id)
         if file_names:
             ingests = ingests.filter(file_name__in=file_names)
-        
+
         return ingests
 
     def get_details(self, ingest_id):

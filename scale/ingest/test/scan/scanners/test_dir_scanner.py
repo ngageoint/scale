@@ -1,16 +1,14 @@
 from __future__ import unicode_literals
 
-from mock import Mock, patch
-
 import django
 from django.test import TestCase
+from mock import Mock, patch
 
-from ingest.scan.scanners.dir_scanner import DirScanner
 from ingest.scan.configuration.exceptions import InvalidScanConfiguration
+from ingest.scan.scanners.dir_scanner import DirScanner
 
 
 class TestDirScanner(TestCase):
-
     def setUp(self):
         django.setup()
 
@@ -20,13 +18,13 @@ class TestDirScanner(TestCase):
             'type': 'dir',
             'transfer_suffix': '_tmp'
         }
-        
+
         scanner = DirScanner()
-        
+
         self.assertIsNone(scanner._transfer_suffix)
-        
+
         scanner.load_configuration(config)
-        
+
         self.assertEquals('_tmp', scanner._transfer_suffix)
 
     def test_validate_configuration_missing_transfer_suffix(self):
@@ -70,44 +68,44 @@ class TestDirScanner(TestCase):
 
         file_name = 'file_name'
         process_ingest.return_value = file_name
-        
+
         config = {
             'type': 'dir',
             'transfer_suffix': '_tmp'
         }
-        
+
         scanner = DirScanner()
         scanner._scanned_workspace = Mock()
         scanner.load_configuration(config)
-        
+
         ingest_file = scanner._ingest_file(file_name, 0)
-        
+
         self.assertTrue(process_ingest.called)
         self.assertEquals(ingest_file, file_name)
-        
+
     def test_ingest_file_in_transit(self):
         """Tests calling DirScanner._ingest_file() with dry_run off and transfer in-progress"""
-        
+
         config = {
             'type': 'dir',
             'transfer_suffix': '_tmp'
         }
-        
+
         scanner = DirScanner()
         scanner._scanned_workspace = Mock()
         scanner.load_configuration(config)
-        
+
         ingest_file = scanner._ingest_file('file_name_tmp', 0)
-        
+
         self.assertIsNone(ingest_file)
-        
+
     def test_ingest_file_dry_run(self):
         """Tests calling DirScanner._ingest_file() in dry_run mode"""
-        
+
         scanner = DirScanner()
         scanner._dry_run = True
         scanner._scanned_workspace = Mock()
-        
+
         ingest_file = scanner._ingest_file('file_name', 0)
-        
+
         self.assertIsNone(ingest_file)

@@ -9,6 +9,7 @@ class InvalidScannerConfiguration(InvalidScanConfiguration):
 
     pass
 
+
 class ScannerInterruptRequested(Exception):
     """Exception indicating that a scanner run was interrupted
     """

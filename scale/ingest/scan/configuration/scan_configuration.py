@@ -8,18 +8,15 @@ import re
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
-from ingest.scan.configuration.exceptions import InvalidScanConfiguration
 from ingest.handlers.file_handler import FileHandler
 from ingest.handlers.file_rule import FileRule
+from ingest.scan.configuration.exceptions import InvalidScanConfiguration
 from ingest.scan.scanners import factory
 from storage.models import Workspace
 
-
 logger = logging.getLogger(__name__)
 
-
 CURRENT_VERSION = '1.0'
-
 
 SCAN_CONFIGURATION_SCHEMA = {
     'type': 'object',
@@ -172,7 +169,7 @@ class ScanConfiguration(object):
         """
 
         return self._configuration['workspace']
-        
+
     def load_scanner_configuration(self, scanner):
         """Loads the configuration into the given scanner
 
@@ -247,7 +244,7 @@ class ScanConfiguration(object):
 
         if 'version' not in self._configuration:
             self._configuration['version'] = CURRENT_VERSION
-        
+
         if 'recursive' not in self._configuration:
             self._configuration['recursive'] = True
 
