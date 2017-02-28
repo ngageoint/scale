@@ -50,7 +50,7 @@ class Node(object):
         :type node: :class:`node.models.Node`
         """
 
-        self._hostname = node.hostname  # Never changes
+        self._hostname = str(node.hostname)  # Never changes
         self._id = node.id  # Never changes
 
         self._agent_id = agent_id
@@ -119,6 +119,7 @@ class Node(object):
 
         with self._lock:
             self._cleanup.add_job_execution(job_exe)
+            self._conditions.update_cleanup_count(self._cleanup.get_num_job_exes())
 
     def get_next_tasks(self, when):
         """Returns the next node tasks to launch
@@ -161,18 +162,18 @@ class Node(object):
                 logger.warning('Cleanup task on host %s timed out', self._hostname)
                 if self._cleanup_task.has_ended:
                     self._cleanup_task = None
-                self._conditions.cleanup_task_timeout()
+                self._conditions.handle_cleanup_task_timeout()
             elif self._health_task and self._health_task.id == task.id:
                 logger.warning('Health check task on host %s timed out', self._hostname)
                 if self._health_task.has_ended:
                     self._health_task = None
                 self._last_heath_task = now()
-                self._conditions.health_task_timeout()
+                self._conditions.handle_health_task_timeout()
             elif self._pull_task and self._pull_task.id == task.id:
                 logger.warning('Scale image pull task on host %s timed out', self._hostname)
                 if self._pull_task.has_ended:
                     self._pull_task = None
-                self._conditions.pull_task_timeout()
+                self._conditions.handle_pull_task_timeout()
             self._update_state()
 
     def handle_task_update(self, task_update):
@@ -300,13 +301,13 @@ class Node(object):
             return True
         elif self._state == Node.DEGRADED:
             # The cleanup task can be scheduled during DEGRADED state as long as the Docker daemon is OK
-            if self._is_daemon_bad:
+            if self._conditions.is_daemon_bad:
                 return False
 
             # Schedule cleanup task if threshold has passed since last cleanup task error
-            if Node.CLEANUP_ERR.name in self._active_errors:
-                last_updated = self._active_errors[Node.CLEANUP_ERR.name].last_updated
-                return when - last_updated > Node.CLEANUP_ERR_THRESHOLD
+            last_cleanup_error = self._conditions.last_cleanup_task_error()
+            if last_cleanup_error:
+                return when - last_cleanup_error > Node.CLEANUP_ERR_THRESHOLD
             # No cleanup error
             return True
 
@@ -348,13 +349,13 @@ class Node(object):
             # DEGRADED errors do not affect the ability to do an image pull
 
             # Make sure initial cleanup is done, image pull is not done, and image pull on the node works
-            if not self._is_initial_cleanup_completed or self._is_image_pulled or self._is_pull_bad:
+            if not self._is_initial_cleanup_completed or self._is_image_pulled or self._conditions.is_pull_bad:
                 return False
 
             # Schedule pull task if threshold has passed since last pull task error
-            if Node.IMAGE_PULL_ERR.name in self._active_errors:
-                last_updated = self._active_errors[Node.IMAGE_PULL_ERR.name].last_updated
-                return when - last_updated > Node.IMAGE_PULL_ERR_THRESHOLD
+            last_pull_error = self._conditions.last_image_pull_task_error()
+            if last_pull_error:
+                return when - last_pull_error > Node.IMAGE_PULL_ERR_THRESHOLD
             # No pull error
             return True
 
@@ -373,6 +374,7 @@ class Node(object):
             else:
                 # Clear job executions that were cleaned up
                 self._cleanup.delete_job_executions(self._cleanup_task.job_exes)
+                self._conditions.update_cleanup_count(self._cleanup.get_num_job_exes())
             self._conditions.handle_cleanup_task_completed()
         elif task_update.status == TaskStatusUpdate.FAILED:
             logger.warning('Cleanup task on host %s failed', self._hostname)
@@ -412,8 +414,8 @@ class Node(object):
             self._image_pull_completed()
             self._conditions.handle_pull_task_completed()
         elif task_update.status == TaskStatusUpdate.FAILED:
-            self._conditions.handle_pull_task_failed()
             logger.warning('Scale image pull task on host %s failed', self._hostname)
+            self._conditions.handle_pull_task_failed()
         elif task_update.status == TaskStatusUpdate.KILLED:
             logger.warning('Scale image pull task on host %s killed', self._hostname)
         if self._pull_task.has_ended:
@@ -425,19 +427,13 @@ class Node(object):
 
         old_state = self._state
 
-        self._is_daemon_bad = False
-        self._is_pull_bad = False
-        for active_error in self._active_errors.values():
-            self._is_daemon_bad = self._is_daemon_bad or active_error.error.daemon_bad
-            self._is_pull_bad = self._is_pull_bad or active_error.error.pull_bad
-
         if not self._is_active:
             self._state = self.INACTIVE
         elif not self._is_online:
             self._state = self.OFFLINE
         elif self._is_paused:
             self._state = self.PAUSED
-        elif self._active_errors:
+        elif self._conditions.has_active_errors():
             self._state = self.DEGRADED
         elif not self._is_initial_cleanup_completed:
             self._state = self.INITIAL_CLEANUP

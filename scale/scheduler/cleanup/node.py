@@ -72,3 +72,12 @@ class NodeCleanup(object):
                     break
 
         return CleanupTask(scheduler_mgr.framework_id, agent_id, cleanup_job_exes)
+
+    def get_num_job_exes(self):
+        """Returns the number of job executions waiting to be cleaned up
+
+        :returns: The number of job executions waiting to be cleaned up
+        :rtype: int
+        """
+
+        return len(self._job_exes.values())

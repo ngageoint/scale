@@ -14,6 +14,7 @@ from job.tasks.pull_task import PULL_TASK_ID_PREFIX
 from job.tasks.update import TaskStatusUpdate
 from job.test import utils as job_test_utils
 from node.test import utils as node_test_utils
+from scheduler.node.conditions import NodeConditions
 from scheduler.node.node_class import Node
 
 
@@ -220,7 +221,7 @@ class TestNode(TestCase):
         # No new health task right away
         tasks = node.get_next_tasks(when + datetime.timedelta(seconds=5))
         self.assertListEqual([], tasks)
-        self.assertFalse(node._is_health_check_normal)
+        self.assertFalse(node._conditions.is_health_check_normal)
 
         # After error threshold, we should get new health task
         new_time = when + Node.HEALTH_ERR_THRESHOLD + datetime.timedelta(seconds=5)
@@ -252,7 +253,7 @@ class TestNode(TestCase):
 
         # Check node state
         self.assertEqual(node._state, Node.DEGRADED)
-        self.assertTrue(Node.BAD_DAEMON_ERR.name in node._active_errors)
+        self.assertTrue(NodeConditions.BAD_DAEMON_ERR.name in node._conditions._active_errors)
 
     def test_handle_failed_health_task_bad_logstash(self):
         """Tests handling a failed health task where logstash is unreachable"""
@@ -278,7 +279,7 @@ class TestNode(TestCase):
 
         # Check node state
         self.assertEqual(node._state, Node.DEGRADED)
-        self.assertTrue(Node.BAD_LOGSTASH_ERR.name in node._active_errors)
+        self.assertTrue(NodeConditions.BAD_LOGSTASH_ERR.name in node._conditions._active_errors)
 
     def test_handle_failed_health_task_low_docker_space(self):
         """Tests handling a failed health task where Docker has low disk space"""
@@ -304,7 +305,7 @@ class TestNode(TestCase):
 
         # Check node state
         self.assertEqual(node._state, Node.DEGRADED)
-        self.assertTrue(Node.LOW_DOCKER_SPACE_ERR.name in node._active_errors)
+        self.assertTrue(NodeConditions.LOW_DOCKER_SPACE_ERR.name in node._conditions._active_errors)
 
     def test_handle_successful_health_task(self):
         """Tests handling the health task successfully"""
@@ -323,7 +324,7 @@ class TestNode(TestCase):
         # Schedule health task and make sure no new task is ready
         self.task_mgr.launch_tasks([task], now())
         self.assertListEqual([], node.get_next_tasks(when))
-        self.assertTrue(node._is_health_check_normal)
+        self.assertTrue(node._conditions.is_health_check_normal)
 
         # Complete pull task, verify no new task
         update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.RUNNING, now())
@@ -333,7 +334,7 @@ class TestNode(TestCase):
         self.task_mgr.handle_task_update(update)
         node.handle_task_update(update)
         self.assertListEqual([], node.get_next_tasks(when))
-        self.assertTrue(node._is_health_check_normal)
+        self.assertTrue(node._conditions.is_health_check_normal)
 
     def test_handle_killed_health_task(self):
         """Tests handling killed health task"""
@@ -359,7 +360,7 @@ class TestNode(TestCase):
         task = node.get_next_tasks(when)[0]
         self.assertTrue(task.id.startswith(HEALTH_TASK_ID_PREFIX))
         self.assertNotEqual(task.id, task_1_id)
-        self.assertTrue(node._is_health_check_normal)
+        self.assertTrue(node._conditions.is_health_check_normal)
 
     def test_handle_lost_health_task(self):
         """Tests handling lost health task"""
@@ -381,7 +382,7 @@ class TestNode(TestCase):
         task = node.get_next_tasks(when)[0]
         self.assertTrue(task.id.startswith(HEALTH_TASK_ID_PREFIX))
         self.assertEqual(task.id, task_1_id)
-        self.assertTrue(node._is_health_check_normal)
+        self.assertTrue(node._conditions.is_health_check_normal)
 
         # Lose task with scheduling and get same task again
         self.task_mgr.launch_tasks([task], now())
@@ -391,7 +392,7 @@ class TestNode(TestCase):
         task = node.get_next_tasks(when)[0]
         self.assertTrue(task.id.startswith(HEALTH_TASK_ID_PREFIX))
         self.assertEqual(task.id, task_1_id)
-        self.assertTrue(node._is_health_check_normal)
+        self.assertTrue(node._conditions.is_health_check_normal)
 
         # Lose task after running and get same task again
         self.task_mgr.launch_tasks([task], now())
@@ -404,7 +405,7 @@ class TestNode(TestCase):
         task = node.get_next_tasks(when)[0]
         self.assertTrue(task.id.startswith(HEALTH_TASK_ID_PREFIX))
         self.assertEqual(task.id, task_1_id)
-        self.assertTrue(node._is_health_check_normal)
+        self.assertTrue(node._conditions.is_health_check_normal)
 
     def test_handle_failed_pull_task(self):
         """Tests handling failed Docker pull task"""

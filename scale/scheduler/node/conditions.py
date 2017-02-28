@@ -7,10 +7,12 @@ from collections import namedtuple
 from django.utils.timezone import now
 
 from job.tasks.health_task import HealthTask
+from scheduler.cleanup.node import JOB_EXES_WARNING_THRESHOLD
 
 
 logger = logging.getLogger(__name__)
 NodeError = namedtuple('NodeError', ['name', 'title', 'description', 'daemon_bad', 'pull_bad'])
+NodeWarning = namedtuple('NodeWarning', ['name', 'title', 'description'])
 
 
 class ActiveError(object):
@@ -24,6 +26,24 @@ class ActiveError(object):
         """
 
         self.error = error
+        self.started = None
+        self.last_updated = None
+
+
+class ActiveWarning(object):
+    """This class represents an active warning for a node."""
+
+    def __init__(self, warning, description=None):
+        """Constructor
+
+        :param warning: The node warning
+        :type warning: :class:`scheduler.node.conditions.NodeWarning`
+        :param description: A specific description that overrides the general description
+        :type description: string
+        """
+
+        self.warning = warning
+        self.description = description
         self.started = None
         self.last_updated = None
 
@@ -53,6 +73,10 @@ class NodeConditions(object):
     # Errors that can occur due to health checks
     HEALTH_ERRORS = [BAD_DAEMON_ERR, BAD_LOGSTASH_ERR, HEALTH_TIMEOUT_ERR, LOW_DOCKER_SPACE_ERR]
 
+    # Warnings
+    CLEANUP_WARNING = NodeWarning(name='CLEANUP', title='Slow Cleanup',
+                                  description='There are %s job executions waiting to be cleaned up on this node.')
+
     def __init__(self, hostname):
         """Constructor
 
@@ -61,9 +85,9 @@ class NodeConditions(object):
         """
 
         self._active_errors = {}  # {Error name: ActiveError}
+        self._active_warnings = {}  # {Warning name: ActiveWarning}
         self._hostname = hostname
 
-        # TODO: figure out when to calculate is_daemon_bad and is_pull_bad
         self.is_daemon_bad = False  # Whether the node's Docker daemon is bad, preventing Docker tasks from running
         self.is_health_check_normal = True  # Whether the last node health check was normal
         self.is_pull_bad = False  # Whether the node should attempt to perform Docker image pulls
@@ -73,12 +97,21 @@ class NodeConditions(object):
         """
 
         self._error_inactive(NodeConditions.CLEANUP_ERR)
+        self._update_state()
 
     def handle_cleanup_task_failed(self):
         """Handles the failure of a node cleanup task
         """
 
         self._error_active(NodeConditions.CLEANUP_ERR)
+        self._update_state()
+
+    def handle_cleanup_task_timeout(self):
+        """Indicates that a node cleanup task has timed out
+        """
+
+        self._error_active(NodeConditions.CLEANUP_ERR)
+        self._update_state()
 
     def handle_health_task_completed(self):
         """Handles the successful completion of a node health check task
@@ -86,6 +119,7 @@ class NodeConditions(object):
 
         self.is_health_check_normal = True
         self._error_inactive_all_health()
+        self._update_state()
 
     def handle_health_task_failed(self, task_update):
         """Handles the given failed task update for a node health check task
@@ -107,38 +141,82 @@ class NodeConditions(object):
             self._error_active(NodeConditions.BAD_LOGSTASH_ERR)
         else:
             logger.error('Unknown failed health check exit code: %s', str(task_update.exit_code))
+        self._update_state()
 
-    def handle_pull_task_completed(self):
-        """Handles the successful completion of a node image pull task
-        """
-
-        self._error_inactive(NodeConditions.IMAGE_PULL_ERR)
-
-    def handle_pull_task_failed(self):
-        """Handles the failure of a node image pull task
-        """
-
-        self._error_active(NodeConditions.IMAGE_PULL_ERR)
-
-    def cleanup_task_timeout(self):
-        """Indicates that a node cleanup task has timed out
-        """
-
-        self._error_active(NodeConditions.CLEANUP_ERR)
-
-    def health_task_timeout(self):
+    def handle_health_task_timeout(self):
         """Indicates that a node health check task has timed out
         """
 
         self.is_health_check_normal = False
         self._error_inactive_all_health()
         self._error_active(NodeConditions.HEALTH_TIMEOUT_ERR)
+        self._update_state()
 
-    def pull_task_timeout(self):
+    def handle_pull_task_completed(self):
+        """Handles the successful completion of a node image pull task
+        """
+
+        self._error_inactive(NodeConditions.IMAGE_PULL_ERR)
+        self._update_state()
+
+    def handle_pull_task_failed(self):
+        """Handles the failure of a node image pull task
+        """
+
+        self._error_active(NodeConditions.IMAGE_PULL_ERR)
+        self._update_state()
+
+    def handle_pull_task_timeout(self):
         """Indicates that a node image pull task has timed out
         """
 
         self._error_active(NodeConditions.IMAGE_PULL_ERR)
+        self._update_state()
+
+    def has_active_errors(self):
+        """Indicates if any errors are currently active
+
+        :returns: True if at least one error is active, False otherwise
+        :rtype: bool
+        """
+
+        return len(self._active_errors) > 0
+
+    def last_cleanup_task_error(self):
+        """Returns the last time that the cleanup task failed, None if the last cleanup task succeeded
+
+        :returns: The time of the last cleanup task failure, possibly None
+        :rtype: :class:`datetime.datetime`
+        """
+
+        if NodeConditions.CLEANUP_ERR.name in self._active_errors:
+            return self._active_errors[NodeConditions.CLEANUP_ERR.name].last_updated
+        return None
+
+    def last_image_pull_task_error(self):
+        """Returns the last time that the image pull task failed, None if the last image pull task succeeded
+
+        :returns: The time of the last image pull task failure, possibly None
+        :rtype: :class:`datetime.datetime`
+        """
+
+        if NodeConditions.IMAGE_PULL_ERR.name in self._active_errors:
+            return self._active_errors[NodeConditions.IMAGE_PULL_ERR.name].last_updated
+        return None
+
+    def update_cleanup_count(self, num_job_exes):
+        """Updates the number of job executions that need to be cleaned up
+
+        :param num_job_exes: The number of job executions that need to be cleaned up
+        :type num_job_exes: int`
+        """
+
+        if num_job_exes < JOB_EXES_WARNING_THRESHOLD:
+            self._warning_inactive(NodeConditions.CLEANUP_WARNING)
+        else:
+            description = NodeConditions.CLEANUP_WARNING.description % str(num_job_exes)
+            self._warning_active(NodeConditions.CLEANUP_WARNING, description)
+        self._update_state()
 
     def _error_active(self, error):
         """Indicates that the given error is now active
@@ -172,3 +250,42 @@ class NodeConditions(object):
 
         for error in NodeConditions.HEALTH_ERRORS:
             self._error_inactive(error)
+
+    def _update_state(self):
+        """Updates some internal state
+        """
+
+        self.is_daemon_bad = False
+        self.is_pull_bad = False
+        for active_error in self._active_errors.values():
+            self.is_daemon_bad = self.is_daemon_bad or active_error.error.daemon_bad
+            self.is_pull_bad = self.is_pull_bad or active_error.error.pull_bad
+
+    def _warning_active(self, warning, description=None):
+        """Indicates that the given warning is now active
+
+        :param warning: The node warning
+        :type warning: :class:`scheduler.node.conditions.NodeWarning`
+        :param description: An optional specific description for the warning
+        :type description: string
+        """
+
+        when = now()
+        if warning.name in self._active_warnings:
+            active_warning = self._active_warnings[warning.name]
+        else:
+            active_warning = ActiveWarning(warning, description)
+            active_warning.started = when
+            self._active_warnings[warning.name] = active_warning
+        active_warning.description = description
+        active_warning.last_updated = when
+
+    def _warning_inactive(self, warning):
+        """Indicates that the given warning is now inactive
+
+        :param warning: The node warning
+        :type warning: :class:`scheduler.node.conditions.NodeWarning`
+        """
+
+        if warning.name in self._active_warnings:
+            del self._active_warnings[warning.name]
