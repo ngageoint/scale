@@ -74,37 +74,18 @@ class HostBroker(Broker):
 
         batch_size = 1000
 
-        # Handle a full recursive walk of the directory tree.
-        if recursive:
-            for root, dirs, files in os.walk(volume_path):
-                for name in files:
-                    file_name = os.path.join(root, name)
-                    if os.path.isfile(file_name):
-                        file_details = FileDetails(file_name, os.path.getsize(file_name))
-                        file_batch.append(file_details)
-                        if len(file_batch) % batch_size == 0:
-                            try:
-                                if callback:
-                                    callback(file_batch)
-                                    file_batch = []
-                            except:
-                                logger.exception('list_files callback failure.')
-                            file_list.extend(file_batch)
-        # Handle identifying files only from a single directory.
-        else:
-            for result in os.listdir(volume_path):
-                file_name = os.path.join(volume_path, result)
-                if os.path.isfile(file_name):
-                    file_details = FileDetails(file_name, os.path.getsize(file_name))
-                    file_batch.append(file_details)
-                    if len(file_batch) % batch_size == 0:
-                        try:
-                            if callback:
-                                callback(file_batch)
-                                file_batch = []
-                        except:
-                            logger.exception('list_files callback failure.')
-                        file_list.extend(file_batch)
+        for file_name in self._dir_walker(volume_path, recursive):
+            if os.path.isfile(file_name):
+                file_details = FileDetails(file_name, os.path.getsize(file_name))
+                file_batch.append(file_details)
+                if len(file_batch) >= batch_size:
+                    try:
+                        if callback:
+                            callback(file_batch)
+                            file_batch = []
+                    except:
+                        logger.exception('list_files callback failure.')
+                    file_list.extend(file_batch)
 
         # Fire callback for any remaining files in file_batch list
         try:
@@ -116,6 +97,25 @@ class HostBroker(Broker):
         file_list.extend(file_batch)
 
         return file_list
+
+    def _dir_walker(path, recursive):
+        """Generator to handle both flat and recursive storage traversal
+        
+        :param path: The path to the directory tree to walk
+        :type path: string
+        :param recursive: The type of this broker
+        :type recursive: bool
+        """
+        # Handle a full recursive walk of the directory tree.
+        if recursive:
+            for root, dirs, files in os.walk(volume_path):
+                for name in files:
+                    yield os.path.join(root, name)
+        # Handle identifying files only from a single directory.
+        else:
+            for result in os.listdir(volume_path):
+                yield os.path.join(volume_path, result)
+                    
 
     def load_configuration(self, config):
         """See :meth:`storage.brokers.broker.Broker.load_configuration`
