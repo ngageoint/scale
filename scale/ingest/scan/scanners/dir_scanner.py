@@ -24,18 +24,18 @@ class DirScanner(Scanner):
         """See :meth:`ingest.scan.scanners.scanner.Scanner.load_configuration`
         """
 
-        self._transfer_suffix = configuration['transfer_suffix']
+        if 'transfer_suffix' in configuration:
+            self._transfer_suffix = configuration['transfer_suffix']
 
     def validate_configuration(self, configuration):
         """See :meth:`ingest.scan.scanners.scanner.Scanner.validate_configuration`
         """
 
-        if 'transfer_suffix' not in configuration:
-            raise InvalidScannerConfiguration('transfer_suffix is required for dir scanner')
-        if not isinstance(configuration['transfer_suffix'], basestring):
-            raise InvalidScannerConfiguration('transfer_suffix must be a string')
-        if not configuration['transfer_suffix']:
-            raise InvalidScannerConfiguration('transfer_suffix must be a non-empty string')
+        if 'transfer_suffix' in configuration:
+            if not isinstance(configuration['transfer_suffix'], basestring):
+                raise InvalidScannerConfiguration('transfer_suffix must be a string')
+            if not configuration['transfer_suffix']:
+                raise InvalidScannerConfiguration('transfer_suffix must be a non-empty string')
 
         return []
 
@@ -55,7 +55,7 @@ class DirScanner(Scanner):
         if self._dry_run:
             logger.info("Scan detected file in workspace '%s': %s" % (self._scanned_workspace.name, file_name))
         else:
-            if file_name.endswith(self._transfer_suffix):
+            if self._transfer_suffix and file_name.endswith(self._transfer_suffix):
                 logger.info("Skipping file '%s' that is in transfer state." % file_name)
                 return
             ingest = self._process_ingest(file_name, file_size)
