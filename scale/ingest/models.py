@@ -94,7 +94,6 @@ class IngestManager(models.Manager):
         ingest.media_type = get_media_type(ingest.file_name)
         ingest.workspace = workspace
 
-        logger.info('New file on %s: %s', ingest.workspace.name, ingest.file_name)
         return ingest
 
     def get_ingest_job_type(self):

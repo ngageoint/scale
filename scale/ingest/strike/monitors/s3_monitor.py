@@ -189,5 +189,6 @@ class S3Monitor(Monitor):
 
         object_name = os.path.basename(object_key)
         ingest = Ingest.objects.create_ingest(object_name, self._monitored_workspace, strike_id=self.strike_id)
+        logger.info('New ingest in %s: %s', ingest.workspace.name, ingest.file_name)
         self._process_ingest(ingest, object_key, object_size)
         logger.info("Strike ingested '%s' from bucket '%s'..." % (object_key, bucket_name))

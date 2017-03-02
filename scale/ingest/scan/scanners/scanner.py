@@ -230,6 +230,7 @@ class Scanner(object):
         ingest = Ingest.objects.create_ingest(file_name, self._scanned_workspace, scan_id=self.scan_id)
         ingest.file_path = file_path
         ingest.file_size = file_size
+        logger.info('New ingest in %s: %s', ingest.workspace.name, ingest.file_name)
 
         if ingest.apply_file_rules(self._file_handler, self._workspaces):
             return ingest
