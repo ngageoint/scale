@@ -113,9 +113,11 @@ class JobManager(models.Manager):
 
         return job
 
-    def get_jobs(self, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None, job_type_names=None,
-                 job_type_categories=None, error_categories=None, include_superseded=False, order=None):
-        """Returns a list of jobs within the given time range.
+    def filter_jobs(self, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None, job_type_names=None,
+                    job_type_categories=None, error_categories=None, include_superseded=False, order=None):
+        """Returns a query for job models that filters on the given fields. The returned query includes the related
+        job_type, job_type_rev, event, and error fields, except for the job_type.interface and job_type_rev.interface
+        fields.
 
         :param started: Query jobs updated after this amount of time.
         :type started: :class:`datetime.datetime`
@@ -137,8 +139,8 @@ class JobManager(models.Manager):
         :type include_superseded: bool
         :param order: A list of fields to control the sort order.
         :type order: [string]
-        :returns: The list of jobs that match the time range.
-        :rtype: [:class:`job.models.Job`]
+        :returns: The job query
+        :rtype: :class:`django.db.models.QuerySet`
         """
 
         # Fetch a list of jobs
@@ -173,6 +175,39 @@ class JobManager(models.Manager):
         else:
             jobs = jobs.order_by('last_modified')
         return jobs
+
+    def get_jobs(self, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None, job_type_names=None,
+                 job_type_categories=None, error_categories=None, include_superseded=False, order=None):
+        """Returns a list of jobs within the given time range.
+
+        :param started: Query jobs updated after this amount of time.
+        :type started: :class:`datetime.datetime`
+        :param ended: Query jobs updated before this amount of time.
+        :type ended: :class:`datetime.datetime`
+        :param statuses: Query jobs with the a specific execution status.
+        :type statuses: [string]
+        :param job_ids: Query jobs associated with the identifier.
+        :type job_ids: [int]
+        :param job_type_ids: Query jobs of the type associated with the identifier.
+        :type job_type_ids: [int]
+        :param job_type_names: Query jobs of the type associated with the name.
+        :type job_type_names: [string]
+        :param job_type_categories: Query jobs of the type associated with the category.
+        :type job_type_categories: [string]
+        :param error_categories: Query jobs that failed due to errors associated with the category.
+        :type error_categories: [string]
+        :param include_superseded: Whether to include jobs that are superseded.
+        :type include_superseded: bool
+        :param order: A list of fields to control the sort order.
+        :type order: [string]
+        :returns: The list of jobs that match the time range.
+        :rtype: [:class:`job.models.Job`]
+        """
+
+        return self.filter_jobs(started=started, ended=ended, statuses=statuses, job_ids=job_ids,
+                                job_type_ids=job_type_ids, job_type_names=job_type_names,
+                                job_type_categories=job_type_categories, error_categories=error_categories,
+                                include_superseded=include_superseded, order=order)
 
     def get_details(self, job_id):
         """Gets additional details for the given job model based on related model attributes.

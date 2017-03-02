@@ -8,6 +8,7 @@ from django.db import transaction
 from django.utils.timezone import now
 
 import storage.geospatial_utils as geo_utils
+from job.models import Job
 from source.triggers.parse_trigger_handler import ParseTriggerHandler
 from storage.brokers.broker import FileMove
 from storage.models import ScaleFile
@@ -32,6 +33,52 @@ class SourceFileManager(models.GeoManager):
         """
 
         return ScaleFile.objects.get(file_name=file_name, file_type='SOURCE')
+
+    def get_source_jobs(self, source_file_id, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None,
+                        job_type_names=None, job_type_categories=None, error_categories=None, include_superseded=False,
+                        order=None):
+        """Returns a query for the list of jobs that have used the given source file as input. The returned query
+        includes the related job_type, job_type_rev, event, and error fields, except for the job_type.interface and
+        job_type_rev.interface fields.
+
+        :param source_file_id: The source file ID.
+        :type source_file_id: int
+        :param started: Query jobs updated after this amount of time.
+        :type started: :class:`datetime.datetime`
+        :param ended: Query jobs updated before this amount of time.
+        :type ended: :class:`datetime.datetime`
+        :param statuses: Query jobs with the a specific execution status.
+        :type statuses: [string]
+        :param job_ids: Query jobs associated with the identifier.
+        :type job_ids: [int]
+        :param job_type_ids: Query jobs of the type associated with the identifier.
+        :type job_type_ids: [int]
+        :param job_type_names: Query jobs of the type associated with the name.
+        :type job_type_names: [string]
+        :param job_type_categories: Query jobs of the type associated with the category.
+        :type job_type_categories: [string]
+        :param error_categories: Query jobs that failed due to errors associated with the category.
+        :type error_categories: [string]
+        :param include_superseded: Whether to include jobs that are superseded.
+        :type include_superseded: bool
+        :param order: A list of fields to control the sort order.
+        :type order: [string]
+        :returns: The list of jobs that match the time range.
+        :rtype: [:class:`job.models.Job`]
+        """
+
+        # Order must start with job ID so we can do a distinct on the job ID
+        order_with_id = ['id']
+        if order:
+            order_with_id.extend(order)
+        else:
+            order_with_id.append('last_modified')
+        jobs = Job.objects.filter_jobs(started=started, ended=ended, statuses=statuses, job_ids=job_ids,
+                                       job_type_ids=job_type_ids, job_type_names=job_type_names,
+                                       job_type_categories=job_type_categories, error_categories=error_categories,
+                                       include_superseded=include_superseded, order=order_with_id)
+        jobs = jobs.filter(job_file_links__ancestor_id=source_file_id).distinct('id')
+        return jobs
 
     def get_source_products(self, source_file_id, started=None, ended=None, batch_ids=None, job_type_ids=None,
                             job_type_names=None, job_type_categories=None, is_operational=None, is_published=None,
