@@ -44,6 +44,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -153,8 +154,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../../index.html">Scale</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Scale</a>
+        
       </nav>
 
 
@@ -163,29 +166,46 @@
         <div class="rst-content">
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../../index.html">Architecture</a> &raquo;</li>
-      
+        
           <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
-      
+        
           <li><a href="storage.html">storage package</a> &raquo;</li>
-      
-    <li>storage.brokers package</li>
+        
+      <li>storage.brokers package</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
             <a href="../../../_sources/architecture/django/code_docs/storage.brokers.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -299,6 +319,39 @@ None if this broker does not use a container volume</li>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[string]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.brokers.broker.Broker.list_files">
+<code class="descname">list_files</code><span class="sig-paren">(</span><em>volume_path</em>, <em>recursive</em>, <em>callback</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.broker.Broker.list_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>List the files under the given file system paths.</p>
+<p>If this broker uses a container volume, volume_path will contain the absolute local container location where
+that volume file system is mounted. If this broker does not use a container volume, None will be given for
+volume_path.</p>
+<p>As a result of the time that may be required for the full result set to be returned, it is recommended that the
+provided callback support be used to receive objects as they are retrieved (up to 1000 in a batch). The callback
+method must accept one list parameter. This list will contain elements of type storage.brokers.broker.FileDetails.
+If the callback method is called without exception, no objects will be returned upon completion of list_files call.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>volume_path</strong> (<em>string</em>) &#8211; Absolute path to the local container location onto which the volume file system was mounted,
+None if this broker does not use a container volume</li>
+<li><strong>recursive</strong> (<em>boolean</em>) &#8211; Flag to indicate whether file searching should be done recursively</li>
+<li><strong>callback</strong> (<em>function([storage.brokers.broker.FileDetails])</em>) &#8211; Method that will be called on completion of each batch return. Max of 1000 files per call.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">List of files matching given expression. Empty if all delivered via callback.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[storage.brokers.broker.FileDetails]</p>
 </td>
 </tr>
 </tbody>
@@ -424,6 +477,24 @@ None.</p>
 <em class="property">class </em><code class="descclassname">storage.brokers.broker.</code><code class="descname">BrokerVolume</code><span class="sig-paren">(</span><em>driver</em>, <em>remote_path</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.broker.BrokerVolume" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Represents the properties of a container volume that must be mounted into the container for a broker to work</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.brokers.broker.FileDetails">
+<em class="property">class </em><code class="descclassname">storage.brokers.broker.</code><code class="descname">FileDetails</code><span class="sig-paren">(</span><em>file</em>, <em>size</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.broker.FileDetails" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<dl class="attribute">
+<dt id="storage.brokers.broker.FileDetails.file">
+<code class="descname">file</code><a class="headerlink" href="#storage.brokers.broker.FileDetails.file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.brokers.broker.FileDetails.size">
+<code class="descname">size</code><a class="headerlink" href="#storage.brokers.broker.FileDetails.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -577,6 +648,12 @@ None.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="storage.brokers.host_broker.HostBroker.list_files">
+<code class="descname">list_files</code><span class="sig-paren">(</span><em>volume_path</em>, <em>recursive</em>, <em>callback</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.host_broker.HostBroker.list_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.list_files" title="storage.brokers.broker.Broker.list_files"><code class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.list_files()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
 <dt id="storage.brokers.host_broker.HostBroker.load_configuration">
 <code class="descname">load_configuration</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.host_broker.HostBroker.load_configuration" title="Permalink to this definition">¶</a></dt>
 <dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.load_configuration" title="storage.brokers.broker.Broker.load_configuration"><code class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.load_configuration()</span></code></a></p>
@@ -678,6 +755,12 @@ mount an NFS volume into the task container</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="storage.brokers.s3_broker.S3Broker.list_files">
+<code class="descname">list_files</code><span class="sig-paren">(</span><em>volume_path</em>, <em>recursive</em>, <em>callback</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.s3_broker.S3Broker.list_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.list_files" title="storage.brokers.broker.Broker.list_files"><code class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.list_files()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
 <dt id="storage.brokers.s3_broker.S3Broker.load_configuration">
 <code class="descname">load_configuration</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.s3_broker.S3Broker.load_configuration" title="Permalink to this definition">¶</a></dt>
 <dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.load_configuration" title="storage.brokers.broker.Broker.load_configuration"><code class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.load_configuration()</span></code></a></p>
@@ -710,6 +793,9 @@ mount an NFS volume into the task container</p>
 </div>
 
 
+           </div>
+           <div class="articleComments">
+            
            </div>
           </div>
           <footer>
@@ -753,7 +839,8 @@ mount an NFS volume into the task container</p>
             VERSION:'4.3.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: ''
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

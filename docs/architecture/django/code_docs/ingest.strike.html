@@ -35,7 +35,7 @@
     <link rel="top" title="Scale 4.3.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="ingest package" href="ingest.html"/>
         <link rel="next" title="ingest.strike.configuration package" href="ingest.strike.configuration.html"/>
-        <link rel="prev" title="ingest.migrations package" href="ingest.migrations.html"/> 
+        <link rel="prev" title="ingest.scan.scanners package" href="ingest.scan.scanners.html"/> 
 
   
   <script src="../../../_static/js/modernizr.min.js"></script>
@@ -44,6 +44,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -149,8 +150,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../../index.html">Scale</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Scale</a>
+        
       </nav>
 
 
@@ -159,29 +162,46 @@
         <div class="rst-content">
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../../index.html">Architecture</a> &raquo;</li>
-      
+        
           <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
-      
+        
           <li><a href="ingest.html">ingest package</a> &raquo;</li>
-      
-    <li>ingest.strike package</li>
+        
+      <li>ingest.strike package</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
             <a href="../../../_sources/architecture/django/code_docs/ingest.strike.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -199,13 +219,6 @@
 <li class="toctree-l2"><a class="reference internal" href="ingest.strike.configuration.html#module-ingest.strike.configuration.strike_configuration">ingest.strike.configuration.strike_configuration module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.strike.configuration.html#module-ingest.strike.configuration.strike_configuration_1_0">ingest.strike.configuration.strike_configuration_1_0 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.strike.configuration.html#module-ingest.strike.configuration">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="ingest.strike.handlers.html">ingest.strike.handlers package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ingest.strike.handlers.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ingest.strike.handlers.html#module-ingest.strike.handlers.file_handler">ingest.strike.handlers.file_handler module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ingest.strike.handlers.html#module-ingest.strike.handlers.file_rule">ingest.strike.handlers.file_rule module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ingest.strike.handlers.html#module-ingest.strike.handlers">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ingest.strike.monitors.html">ingest.strike.monitors package</a><ul>
@@ -228,6 +241,9 @@
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
@@ -236,7 +252,7 @@
         <a href="ingest.strike.configuration.html" class="btn btn-neutral float-right" title="ingest.strike.configuration package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="ingest.migrations.html" class="btn btn-neutral" title="ingest.migrations package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="ingest.scan.scanners.html" class="btn btn-neutral" title="ingest.scan.scanners package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -270,7 +286,8 @@
             VERSION:'4.3.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: ''
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

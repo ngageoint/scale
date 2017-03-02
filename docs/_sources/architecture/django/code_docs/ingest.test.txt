@@ -6,6 +6,7 @@ Subpackages
 
 .. toctree::
 
+    ingest.test.scan
     ingest.test.strike
     ingest.test.triggers
 

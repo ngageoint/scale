@@ -42,6 +42,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -105,8 +106,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="index.html">Scale</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Scale</a>
+        
       </nav>
 
 
@@ -119,17 +122,34 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="index.html">Docs</a> &raquo;</li>
-      
-    <li>Index</li>
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Index</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -233,6 +253,10 @@
   </dt>
 
       </dl></dd>
+      
+  <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.add_file">add_file() (ingest.models.Ingest method)</a>
+  </dt>
+
       
   <dt><a href="architecture/django/code_docs/job.configuration.data.html#job.configuration.data.job_data.JobData.add_file_input">add_file_input() (job.configuration.data.job_data.JobData method)</a>
   </dt>
@@ -404,7 +428,11 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/ingest.strike.handlers.html#ingest.strike.handlers.file_handler.FileHandler.add_rule">add_rule() (ingest.strike.handlers.file_handler.FileHandler method)</a>
+  <dt><a href="architecture/django/code_docs/ingest.handlers.html#ingest.handlers.file_handler.FileHandler.add_rule">add_rule() (ingest.handlers.file_handler.FileHandler method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.scan.scanners.html#ingest.scan.scanners.factory.add_scanner_type">add_scanner_type() (in module ingest.scan.scanners.factory)</a>
   </dt>
 
       
@@ -854,6 +882,10 @@
 
       </dl></dd>
       
+  <dt><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_list_files.Command.callback">callback() (storage.management.commands.scale_list_files.Command method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/job.html#job.models.Job.can_be_canceled">can_be_canceled (job.models.Job attribute)</a>
   </dt>
 
@@ -945,6 +977,10 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/ingest.management.commands.html#ingest.management.commands.scale_scan.Command">(class in ingest.management.commands.scale_scan)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/ingest.management.commands.html#ingest.management.commands.scale_strike.Command">(class in ingest.management.commands.scale_strike)</a>
   </dt>
 
@@ -978,6 +1014,10 @@
 
         
   <dt><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_download_file.Command">(class in storage.management.commands.scale_download_file)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_list_files.Command">(class in storage.management.commands.scale_list_files)</a>
   </dt>
 
         
@@ -1028,10 +1068,14 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.Strike.configuration">configuration (ingest.models.Strike attribute)</a>
+  <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.Scan.configuration">configuration (ingest.models.Scan attribute)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.Strike.configuration">(ingest.models.Strike attribute)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/job.html#job.models.Job.configuration">(job.models.Job attribute)</a>
   </dt>
@@ -1326,6 +1370,10 @@
   <dt><a href="architecture/django/code_docs/metrics.test.html#metrics.test.utils.create_ingest">(in module metrics.test.utils)</a>
   </dt>
 
+        
+  <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestManager.create_ingest">(ingest.models.IngestManager method)</a>
+  </dt>
+
       </dl></dd>
       
   <dt><a href="architecture/django/code_docs/job.test.html#job.test.utils.create_job">create_job() (in module job.test.utils)</a>
@@ -1429,6 +1477,10 @@
 
       
   <dt><a href="architecture/django/code_docs/shared_resource.test.html#shared_resource.test.utils.create_resource">create_resource() (in module shared_resource.test.utils)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.ScanManager.create_scan">create_scan() (ingest.models.ScanManager method)</a>
   </dt>
 
       
@@ -1613,8 +1665,6 @@
   <dt><a href="architecture/django/code_docs/storage.html#storage.exceptions.DeletedFile">DeletedFile</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/batch.migrations.html#batch.migrations.0001_initial.Migration.dependencies">dependencies (batch.migrations.0001_initial.Migration attribute)</a>
   </dt>
@@ -1666,6 +1716,14 @@
 
         
   <dt><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0008_auto_20170127_1332.Migration.dependencies">(ingest.migrations.0008_auto_20170127_1332.Migration attribute)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0009_scan.Migration.dependencies">(ingest.migrations.0009_scan.Migration attribute)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0010_auto_20170206_1646.Migration.dependencies">(ingest.migrations.0010_auto_20170206_1646.Migration attribute)</a>
   </dt>
 
         
@@ -1997,6 +2055,8 @@
   </dt>
 
       </dl></dd>
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.connection.DependencyInputConnection">DependencyInputConnection (class in recipe.handlers.connection)</a>
   </dt>
@@ -2041,6 +2101,10 @@
   </dt>
 
       </dl></dd>
+      
+  <dt><a href="architecture/django/code_docs/ingest.scan.scanners.html#ingest.scan.scanners.dir_scanner.DirScanner">DirScanner (class in ingest.scan.scanners.dir_scanner)</a>
+  </dt>
+
       
   <dt><a href="architecture/django/code_docs/ingest.strike.monitors.html#ingest.strike.monitors.dir_monitor.DirWatcherMonitor">DirWatcherMonitor (class in ingest.strike.monitors.dir_monitor)</a>
   </dt>
@@ -2153,6 +2217,10 @@
   </dt>
 
       </dl></dd>
+      
+  <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.ScanManager.edit_scan">edit_scan() (ingest.models.ScanManager method)</a>
+  </dt>
+
       
   <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.StrikeManager.edit_strike">edit_strike() (ingest.models.StrikeManager method)</a>
   </dt>
@@ -2388,10 +2456,14 @@
 
       </dl></dd>
       
-  <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.broker.FileDownload.file">file (storage.brokers.broker.FileDownload attribute)</a>
+  <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.broker.FileDetails.file">file (storage.brokers.broker.FileDetails attribute)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.broker.FileDownload.file">(storage.brokers.broker.FileDownload attribute)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.broker.FileMove.file">(storage.brokers.broker.FileMove attribute)</a>
   </dt>
@@ -2458,6 +2530,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.broker.FileDetails">FileDetails (class in storage.brokers.broker)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/util.html#util.exceptions.FileDoesNotExist">FileDoesNotExist</a>
   </dt>
 
@@ -2466,7 +2542,7 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/ingest.strike.handlers.html#ingest.strike.handlers.file_handler.FileHandler">FileHandler (class in ingest.strike.handlers.file_handler)</a>
+  <dt><a href="architecture/django/code_docs/ingest.handlers.html#ingest.handlers.file_handler.FileHandler">FileHandler (class in ingest.handlers.file_handler)</a>
   </dt>
 
   </dl></td>
@@ -2480,7 +2556,7 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/ingest.strike.handlers.html#ingest.strike.handlers.file_rule.FileRule">FileRule (class in ingest.strike.handlers.file_rule)</a>
+  <dt><a href="architecture/django/code_docs/ingest.handlers.html#ingest.handlers.file_rule.FileRule">FileRule (class in ingest.handlers.file_rule)</a>
   </dt>
 
       
@@ -2865,6 +2941,10 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.ScanManager.get_details">(ingest.models.ScanManager method)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.StrikeManager.get_details">(ingest.models.StrikeManager method)</a>
   </dt>
 
@@ -2910,6 +2990,10 @@
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.scan.configuration.html#ingest.scan.configuration.scan_configuration.ScanConfiguration.get_dict">(ingest.scan.configuration.scan_configuration.ScanConfiguration method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_dict">(ingest.strike.configuration.strike_configuration.StrikeConfiguration method)</a>
   </dt>
@@ -3081,6 +3165,10 @@
 
       
   <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestManager.get_ingests">get_ingests() (ingest.models.IngestManager method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestManager.get_ingests_by_scan">get_ingests_by_scan() (ingest.models.IngestManager method)</a>
   </dt>
 
       
@@ -3389,8 +3477,6 @@
   <dt><a href="architecture/django/code_docs/error.html#error.handlers.DatabaseLogHandler.get_model">get_model() (error.handlers.DatabaseLogHandler method)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/ingest.strike.monitors.html#ingest.strike.monitors.factory.get_monitor">get_monitor() (in module ingest.strike.monitors.factory)</a>
   </dt>
@@ -3409,6 +3495,8 @@
   <dt><a href="architecture/django/code_docs/ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration_1_0.StrikeConfiguration.get_mount">get_mount() (ingest.strike.configuration.strike_configuration_1_0.StrikeConfiguration method)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.graph_delta.RecipeGraphDelta.get_new_nodes">get_new_nodes() (recipe.handlers.graph_delta.RecipeGraphDelta method)</a>
   </dt>
@@ -3440,6 +3528,10 @@
 
         
   <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.get_next_by_created">(ingest.models.Ingest method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.Scan.get_next_by_created">(ingest.models.Scan method)</a>
   </dt>
 
         
@@ -3538,6 +3630,10 @@
 
         
   <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.get_next_by_last_modified">(ingest.models.Ingest method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.Scan.get_next_by_last_modified">(ingest.models.Scan method)</a>
   </dt>
 
         
@@ -3757,6 +3853,10 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.Scan.get_previous_by_created">(ingest.models.Scan method)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.Strike.get_previous_by_created">(ingest.models.Strike method)</a>
   </dt>
 
@@ -3852,6 +3952,10 @@
 
         
   <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.get_previous_by_last_modified">(ingest.models.Ingest method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.Scan.get_previous_by_last_modified">(ingest.models.Scan method)</a>
   </dt>
 
         
@@ -4080,6 +4184,36 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.Scan.get_scan_configuration">get_scan_configuration() (ingest.models.Scan method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.Scan.get_scan_configuration_as_dict">get_scan_configuration_as_dict() (ingest.models.Scan method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.ScanManager.get_scan_job_type">get_scan_job_type() (ingest.models.ScanManager method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.scan.scanners.html#ingest.scan.scanners.factory.get_scanner">get_scanner() (in module ingest.scan.scanners.factory)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.scan.configuration.html#ingest.scan.configuration.scan_configuration.ScanConfiguration.get_scanner">(ingest.scan.configuration.scan_configuration.ScanConfiguration method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="architecture/django/code_docs/ingest.scan.scanners.html#ingest.scan.scanners.factory.get_scanner_types">get_scanner_types() (in module ingest.scan.scanners.factory)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.ScanManager.get_scans">get_scans() (ingest.models.ScanManager method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.api.get_scheduler">get_scheduler() (in module mesos_api.api)</a>
   </dt>
 
@@ -4264,9 +4398,15 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_workspace">get_workspace() (ingest.strike.configuration.strike_configuration.StrikeConfiguration method)</a>
+  <dt><a href="architecture/django/code_docs/ingest.scan.configuration.html#ingest.scan.configuration.scan_configuration.ScanConfiguration.get_workspace">get_workspace() (ingest.scan.configuration.scan_configuration.ScanConfiguration method)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration.StrikeConfiguration.get_workspace">(ingest.strike.configuration.strike_configuration.StrikeConfiguration method)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="architecture/django/code_docs/recipe.configuration.data.html#recipe.configuration.data.recipe_data.RecipeData.get_workspace_id">get_workspace_id() (recipe.configuration.data.recipe_data.RecipeData method)</a>
   </dt>
@@ -4357,6 +4497,10 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/ingest.management.commands.html#ingest.management.commands.scale_scan.Command.handle">(ingest.management.commands.scale_scan.Command method)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/ingest.management.commands.html#ingest.management.commands.scale_strike.Command.handle">(ingest.management.commands.scale_strike.Command method)</a>
   </dt>
 
@@ -4390,6 +4534,10 @@
 
         
   <dt><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_download_file.Command.handle">(storage.management.commands.scale_download_file.Command method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_list_files.Command.handle">(storage.management.commands.scale_list_files.Command method)</a>
   </dt>
 
         
@@ -4507,6 +4655,10 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/ingest.management.commands.html#ingest.management.commands.scale_scan.Command.help">(ingest.management.commands.scale_scan.Command attribute)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/ingest.management.commands.html#ingest.management.commands.scale_strike.Command.help">(ingest.management.commands.scale_strike.Command attribute)</a>
   </dt>
 
@@ -4540,6 +4692,10 @@
 
         
   <dt><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_download_file.Command.help">(storage.management.commands.scale_download_file.Command attribute)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_list_files.Command.help">(storage.management.commands.scale_list_files.Command attribute)</a>
   </dt>
 
         
@@ -4652,6 +4808,18 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/ingest.handlers.html#module-ingest.handlers">ingest.handlers (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.handlers.html#module-ingest.handlers.file_handler">ingest.handlers.file_handler (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.handlers.html#module-ingest.handlers.file_rule">ingest.handlers.file_rule (module)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/ingest.html#module-ingest.ingest_job">ingest.ingest_job (module)</a>
   </dt>
 
@@ -4665,6 +4833,10 @@
 
       
   <dt><a href="architecture/django/code_docs/ingest.management.commands.html#module-ingest.management.commands.scale_ingest">ingest.management.commands.scale_ingest (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.management.commands.html#module-ingest.management.commands.scale_scan">ingest.management.commands.scale_scan (module)</a>
   </dt>
 
       
@@ -4708,11 +4880,59 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/ingest.migrations.html#module-ingest.migrations.0009_scan">ingest.migrations.0009_scan (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.migrations.html#module-ingest.migrations.0010_auto_20170206_1646">ingest.migrations.0010_auto_20170206_1646 (module)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/ingest.html#module-ingest.models">ingest.models (module)</a>
   </dt>
 
       
   <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.MultipleObjectsReturned">Ingest.MultipleObjectsReturned</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.scan.html#module-ingest.scan">ingest.scan (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.scan.configuration.html#module-ingest.scan.configuration">ingest.scan.configuration (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.scan.configuration.html#module-ingest.scan.configuration.exceptions">ingest.scan.configuration.exceptions (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.scan.configuration.html#module-ingest.scan.configuration.scan_configuration">ingest.scan.configuration.scan_configuration (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.scan.scanners.html#module-ingest.scan.scanners">ingest.scan.scanners (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.scan.scanners.html#module-ingest.scan.scanners.dir_scanner">ingest.scan.scanners.dir_scanner (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.scan.scanners.html#module-ingest.scan.scanners.exceptions">ingest.scan.scanners.exceptions (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.scan.scanners.html#module-ingest.scan.scanners.factory">ingest.scan.scanners.factory (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.scan.scanners.html#module-ingest.scan.scanners.s3_scanner">ingest.scan.scanners.s3_scanner (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.scan.scanners.html#module-ingest.scan.scanners.scanner">ingest.scan.scanners.scanner (module)</a>
   </dt>
 
       
@@ -4737,18 +4957,6 @@
 
       
   <dt><a href="architecture/django/code_docs/ingest.strike.configuration.html#module-ingest.strike.configuration.strike_configuration_1_0">ingest.strike.configuration.strike_configuration_1_0 (module)</a>
-  </dt>
-
-      
-  <dt><a href="architecture/django/code_docs/ingest.strike.handlers.html#module-ingest.strike.handlers">ingest.strike.handlers (module)</a>
-  </dt>
-
-      
-  <dt><a href="architecture/django/code_docs/ingest.strike.handlers.html#module-ingest.strike.handlers.file_handler">ingest.strike.handlers.file_handler (module)</a>
-  </dt>
-
-      
-  <dt><a href="architecture/django/code_docs/ingest.strike.handlers.html#module-ingest.strike.handlers.file_rule">ingest.strike.handlers.file_rule (module)</a>
   </dt>
 
       
@@ -4777,6 +4985,30 @@
 
       
   <dt><a href="architecture/django/code_docs/ingest.test.html#module-ingest.test">ingest.test (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.html#module-ingest.test.scan">ingest.test.scan (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#module-ingest.test.scan.configuration">ingest.test.scan.configuration (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#module-ingest.test.scan.configuration.test_scan_configuration">ingest.test.scan.configuration.test_scan_configuration (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#module-ingest.test.scan.scanners">ingest.test.scan.scanners (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#module-ingest.test.scan.scanners.test_dir_scanner">ingest.test.scan.scanners.test_dir_scanner (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#module-ingest.test.scan.scanners.test_s3_scanner">ingest.test.scan.scanners.test_s3_scanner (module)</a>
   </dt>
 
       
@@ -4835,6 +5067,8 @@
   <dt><a href="architecture/django/code_docs/ingest.test.triggers.html#module-ingest.test.triggers.test_ingest_trigger_condition">ingest.test.triggers.test_ingest_trigger_condition (module)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/ingest.test.triggers.html#module-ingest.test.triggers.test_ingest_trigger_handler">ingest.test.triggers.test_ingest_trigger_handler (module)</a>
   </dt>
@@ -4867,17 +5101,19 @@
   <dt><a href="architecture/django/code_docs/ingest.html#module-ingest.urls">ingest.urls (module)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/ingest.html#module-ingest.views">ingest.views (module)</a>
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.Strike.ingest_set">ingest_set (ingest.models.Strike attribute)</a>
+  <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.Scan.ingest_set">ingest_set (ingest.models.Scan attribute)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.Strike.ingest_set">(ingest.models.Strike attribute)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/job.html#job.models.Job.ingest_set">(job.models.Job attribute)</a>
   </dt>
@@ -5058,6 +5294,14 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/ingest.scan.configuration.html#ingest.scan.configuration.exceptions.InvalidScanConfiguration">InvalidScanConfiguration</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.scan.scanners.html#ingest.scan.scanners.exceptions.InvalidScannerConfiguration">InvalidScannerConfiguration</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/ingest.strike.configuration.html#ingest.strike.configuration.exceptions.InvalidStrikeConfiguration">InvalidStrikeConfiguration</a>
   </dt>
 
@@ -5165,6 +5409,10 @@
   <dt><a href="architecture/django/code_docs/job.html#job.models.JobExecution.is_system">is_system (job.models.JobExecution attribute)</a>
   </dt>
 
+      
+  <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.is_there_rule_match">is_there_rule_match() (ingest.models.Ingest method)</a>
+  </dt>
+
   </dl></td>
 </tr></table>
 
@@ -5184,6 +5432,10 @@
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.Scan.job">(ingest.models.Scan attribute)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.Strike.job">(ingest.models.Strike attribute)</a>
   </dt>
@@ -6450,10 +6702,44 @@
 
       </dl></dd>
       
-  <dt><a href="architecture/django/code_docs/ingest.strike.monitors.html#ingest.strike.monitors.dir_monitor.DirWatcherMonitor.load_configuration">load_configuration() (ingest.strike.monitors.dir_monitor.DirWatcherMonitor method)</a>
+  <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.broker.Broker.list_files">list_files() (storage.brokers.broker.Broker method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.host_broker.HostBroker.list_files">(storage.brokers.host_broker.HostBroker method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.s3_broker.S3Broker.list_files">(storage.brokers.s3_broker.S3Broker method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/storage.html#storage.models.Workspace.list_files">(storage.models.Workspace method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="architecture/django/code_docs/util.html#util.aws.S3Client.list_objects">list_objects() (util.aws.S3Client method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.scan.scanners.html#ingest.scan.scanners.dir_scanner.DirScanner.load_configuration">load_configuration() (ingest.scan.scanners.dir_scanner.DirScanner method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.scan.scanners.html#ingest.scan.scanners.s3_scanner.S3Scanner.load_configuration">(ingest.scan.scanners.s3_scanner.S3Scanner method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/ingest.scan.scanners.html#ingest.scan.scanners.scanner.Scanner.load_configuration">(ingest.scan.scanners.scanner.Scanner method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/ingest.strike.monitors.html#ingest.strike.monitors.dir_monitor.DirWatcherMonitor.load_configuration">(ingest.strike.monitors.dir_monitor.DirWatcherMonitor method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/ingest.strike.monitors.html#ingest.strike.monitors.monitor.Monitor.load_configuration">(ingest.strike.monitors.monitor.Monitor method)</a>
   </dt>
@@ -6484,6 +6770,12 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/ingest.scan.configuration.html#ingest.scan.configuration.scan_configuration.ScanConfiguration.load_scanner_configuration">load_scanner_configuration() (ingest.scan.configuration.scan_configuration.ScanConfiguration method)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
   <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.broker.FileDownload.local_path">local_path (storage.brokers.broker.FileDownload attribute)</a>
   </dt>
 
@@ -6497,8 +6789,6 @@
   <dt><a href="architecture/django/code_docs/job.html#job.models.JobManager.lock_jobs">lock_jobs() (job.models.JobManager method)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/error.html#error.exceptions.ScaleError.log">log() (error.exceptions.ScaleError method)</a>
   </dt>
@@ -6552,17 +6842,17 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration_1_0.StrikeConfiguration.match_file_name">match_file_name() (ingest.strike.configuration.strike_configuration_1_0.StrikeConfiguration method)</a>
+  <dt><a href="architecture/django/code_docs/ingest.handlers.html#ingest.handlers.file_handler.FileHandler.match_file_name">match_file_name() (ingest.handlers.file_handler.FileHandler method)</a>
   </dt>
 
       <dd><dl>
         
-  <dt><a href="architecture/django/code_docs/ingest.strike.handlers.html#ingest.strike.handlers.file_handler.FileHandler.match_file_name">(ingest.strike.handlers.file_handler.FileHandler method)</a>
+  <dt><a href="architecture/django/code_docs/ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration_1_0.StrikeConfiguration.match_file_name">(ingest.strike.configuration.strike_configuration_1_0.StrikeConfiguration method)</a>
   </dt>
 
       </dl></dd>
       
-  <dt><a href="architecture/django/code_docs/ingest.strike.handlers.html#ingest.strike.handlers.file_rule.FileRule.matches_file_name">matches_file_name() (ingest.strike.handlers.file_rule.FileRule method)</a>
+  <dt><a href="architecture/django/code_docs/ingest.handlers.html#ingest.handlers.file_rule.FileRule.matches_file_name">matches_file_name() (ingest.handlers.file_rule.FileRule method)</a>
   </dt>
 
       
@@ -6964,6 +7254,14 @@
 
         
   <dt><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0008_auto_20170127_1332.Migration">(class in ingest.migrations.0008_auto_20170127_1332)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0009_scan.Migration">(class in ingest.migrations.0009_scan)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0010_auto_20170206_1646.Migration">(class in ingest.migrations.0010_auto_20170206_1646)</a>
   </dt>
 
         
@@ -7863,6 +8161,10 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.Scan.objects">(ingest.models.Scan attribute)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.Strike.objects">(ingest.models.Strike attribute)</a>
   </dt>
 
@@ -8044,6 +8346,14 @@
 
         
   <dt><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0008_auto_20170127_1332.Migration.operations">(ingest.migrations.0008_auto_20170127_1332.Migration attribute)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0009_scan.Migration.operations">(ingest.migrations.0009_scan.Migration attribute)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0010_auto_20170206_1646.Migration.operations">(ingest.migrations.0010_auto_20170206_1646.Migration attribute)</a>
   </dt>
 
         
@@ -8389,6 +8699,10 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/ingest.management.commands.html#ingest.management.commands.scale_scan.Command.option_list">(ingest.management.commands.scale_scan.Command attribute)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/ingest.management.commands.html#ingest.management.commands.scale_strike.Command.option_list">(ingest.management.commands.scale_strike.Command attribute)</a>
   </dt>
 
@@ -8402,6 +8716,10 @@
 
         
   <dt><a href="architecture/django/code_docs/scheduler.management.commands.html#scheduler.management.commands.scale_scheduler.Command.option_list">(scheduler.management.commands.scale_scheduler.Command attribute)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/storage.management.commands.html#storage.management.commands.scale_list_files.Command.option_list">(storage.management.commands.scale_list_files.Command attribute)</a>
   </dt>
 
         
@@ -10286,10 +10604,14 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/ingest.strike.monitors.html#ingest.strike.monitors.dir_monitor.DirWatcherMonitor.run">run() (ingest.strike.monitors.dir_monitor.DirWatcherMonitor method)</a>
+  <dt><a href="architecture/django/code_docs/ingest.scan.scanners.html#ingest.scan.scanners.scanner.Scanner.run">run() (ingest.scan.scanners.scanner.Scanner method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.strike.monitors.html#ingest.strike.monitors.dir_monitor.DirWatcherMonitor.run">(ingest.strike.monitors.dir_monitor.DirWatcherMonitor method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/ingest.strike.monitors.html#ingest.strike.monitors.monitor.Monitor.run">(ingest.strike.monitors.monitor.Monitor method)</a>
   </dt>
@@ -10359,6 +10681,10 @@
 
       
   <dt><a href="architecture/django/code_docs/ingest.strike.monitors.html#ingest.strike.monitors.exceptions.S3NoDataNotificationError">S3NoDataNotificationError</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.scan.scanners.html#ingest.scan.scanners.s3_scanner.S3Scanner">S3Scanner (class in ingest.scan.scanners.s3_scanner)</a>
   </dt>
 
       
@@ -10455,6 +10781,46 @@
 
       
   <dt><a href="architecture/django/code_docs/scheduler.html#scheduler.scale_scheduler.ScaleScheduler">ScaleScheduler (class in scheduler.scale_scheduler)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.Scan">Scan (class in ingest.models)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.scan">scan (ingest.models.Ingest attribute)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.Scan.DoesNotExist">Scan.DoesNotExist</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.Scan.MultipleObjectsReturned">Scan.MultipleObjectsReturned</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/job.html#job.models.Job.scan_set">scan_set (job.models.Job attribute)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.scan.configuration.html#ingest.scan.configuration.scan_configuration.ScanConfiguration">ScanConfiguration (class in ingest.scan.configuration.scan_configuration)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.ScanManager">ScanManager (class in ingest.models)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.scan.scanners.html#ingest.scan.scanners.scanner.Scanner">Scanner (class in ingest.scan.scanners.scanner)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.scan.scanners.html#ingest.scan.scanners.scanner.Scanner.scanner_type">scanner_type (ingest.scan.scanners.scanner.Scanner attribute)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.scan.scanners.html#ingest.scan.scanners.exceptions.ScannerInterruptRequested">ScannerInterruptRequested</a>
   </dt>
 
       
@@ -10968,6 +11334,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/ingest.scan.scanners.html#ingest.scan.scanners.scanner.Scanner.set_recursive">set_recursive() (ingest.scan.scanners.scanner.Scanner method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/recipe.configuration.data.html#recipe.configuration.data.recipe_data.RecipeData.set_workspace_id">set_workspace_id() (recipe.configuration.data.recipe_data.RecipeData method)</a>
   </dt>
 
@@ -11006,6 +11376,22 @@
 
         
   <dt><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorsView.setUp">(error.test.test_views.TestErrorsView method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.setUp">(ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_dir_scanner.TestDirScanner.setUp">(ingest.test.scan.scanners.test_dir_scanner.TestDirScanner method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_s3_scanner.TestS3Scanner.setUp">(ingest.test.scan.scanners.test_s3_scanner.TestS3Scanner method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_s3_scanner.TestScanner.setUp">(ingest.test.scan.scanners.test_s3_scanner.TestScanner method)</a>
   </dt>
 
         
@@ -11717,6 +12103,10 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_host_broker.TestHostBrokerListFiles.setUp">(storage.test.brokers.test_host_broker.TestHostBrokerListFiles method)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_host_broker.TestHostBrokerLoadConfiguration.setUp">(storage.test.brokers.test_host_broker.TestHostBrokerLoadConfiguration method)</a>
   </dt>
 
@@ -11829,6 +12219,10 @@
   </dt>
 
         
+  <dt><a href="architecture/django/code_docs/util.test.html#util.test.test_aws.TestS3Client.setUp">(util.test.test_aws.TestS3Client method)</a>
+  </dt>
+
+        
   <dt><a href="architecture/django/code_docs/util.test.html#util.test.test_parse.TestParse.setUp">(util.test.test_parse.TestParse method)</a>
   </dt>
 
@@ -11842,9 +12236,15 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/ingest.strike.monitors.html#ingest.strike.monitors.monitor.Monitor.setup_workspaces">setup_workspaces() (ingest.strike.monitors.monitor.Monitor method)</a>
+  <dt><a href="architecture/django/code_docs/ingest.scan.scanners.html#ingest.scan.scanners.scanner.Scanner.setup_workspaces">setup_workspaces() (ingest.scan.scanners.scanner.Scanner method)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.strike.monitors.html#ingest.strike.monitors.monitor.Monitor.setup_workspaces">(ingest.strike.monitors.monitor.Monitor method)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="architecture/django/code_docs/shared_resource.html#module-shared_resource">shared_resource (module)</a>
   </dt>
@@ -11964,9 +12364,15 @@
 
       </dl></dd>
       
+  <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.broker.FileDetails.size">size (storage.brokers.broker.FileDetails attribute)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.api.SlaveInfo">SlaveInfo (class in mesos_api.api)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/scheduler.html#scheduler.scale_scheduler.ScaleScheduler.slaveLost">slaveLost() (scheduler.scale_scheduler.ScaleScheduler method)</a>
   </dt>
@@ -11991,8 +12397,6 @@
   <dt><a href="architecture/django/code_docs/source.migrations.html#module-source.migrations">source.migrations (module)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/source.migrations.html#module-source.migrations.0001_initial">source.migrations.0001_initial (module)</a>
   </dt>
@@ -12186,6 +12590,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestManager.start_ingest_tasks">start_ingest_tasks() (ingest.models.IngestManager method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/job.execution.html#job.execution.job_exe.RunningJobExecution.start_next_task">start_next_task() (job.execution.job_exe.RunningJobExecution method)</a>
   </dt>
 
@@ -12220,10 +12628,14 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/ingest.strike.monitors.html#ingest.strike.monitors.dir_monitor.DirWatcherMonitor.stop">stop() (ingest.strike.monitors.dir_monitor.DirWatcherMonitor method)</a>
+  <dt><a href="architecture/django/code_docs/ingest.scan.scanners.html#ingest.scan.scanners.scanner.Scanner.stop">stop() (ingest.scan.scanners.scanner.Scanner method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.strike.monitors.html#ingest.strike.monitors.dir_monitor.DirWatcherMonitor.stop">(ingest.strike.monitors.dir_monitor.DirWatcherMonitor method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/ingest.strike.monitors.html#ingest.strike.monitors.monitor.Monitor.stop">(ingest.strike.monitors.monitor.Monitor method)</a>
   </dt>
@@ -12307,6 +12719,10 @@
 
       
   <dt><a href="architecture/django/code_docs/storage.management.commands.html#module-storage.management.commands.scale_download_file">storage.management.commands.scale_download_file (module)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/storage.management.commands.html#module-storage.management.commands.scale_list_files">storage.management.commands.scale_list_files (module)</a>
   </dt>
 
       
@@ -12584,9 +13000,15 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/ingest.strike.monitors.html#ingest.strike.monitors.monitor.Monitor.supported_broker_types">supported_broker_types (ingest.strike.monitors.monitor.Monitor attribute)</a>
+  <dt><a href="architecture/django/code_docs/ingest.scan.scanners.html#ingest.scan.scanners.scanner.Scanner.supported_broker_types">supported_broker_types (ingest.scan.scanners.scanner.Scanner attribute)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.strike.monitors.html#ingest.strike.monitors.monitor.Monitor.supported_broker_types">(ingest.strike.monitors.monitor.Monitor attribute)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.manager.NodeManager.sync_with_database">sync_with_database() (scheduler.node.manager.NodeManager method)</a>
   </dt>
@@ -12702,9 +13124,15 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_absolute_workspace_path">test_absolute_workspace_path() (ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_absolute_workspace_path">test_absolute_workspace_path() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_absolute_workspace_path">(ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_scale_file.TestScaleFileDescriptionMediaTypeAllowed.test_accept_all">test_accept_all() (job.test.configuration.interface.test_scale_file.TestScaleFileDescriptionMediaTypeAllowed method)</a>
   </dt>
@@ -12789,6 +13217,10 @@
 
       
   <dt><a href="architecture/django/code_docs/util.test.html#util.test.test_retry.TestRetry.test_always_fail_no_decorator_args">test_always_fail_no_decorator_args() (util.test.test_retry.TestRetry method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_host_broker.TestHostBrokerListFiles.test_bad_callback">test_bad_callback() (storage.test.brokers.test_host_broker.TestHostBrokerListFiles method)</a>
   </dt>
 
       
@@ -12916,10 +13348,14 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_bad_version">test_bad_version() (ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_bad_version">test_bad_version() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_bad_version">(ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_bad_version">(job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation method)</a>
   </dt>
@@ -12940,10 +13376,14 @@
 
       </dl></dd>
       
-  <dt><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_bare_min">test_bare_min() (ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_bare_min">test_bare_min() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_bare_min">(ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/storage.test.configuration.html#storage.test.configuration.test_workspace_configuration.TestWorkspaceConfigurationInit.test_bare_min">(storage.test.configuration.test_workspace_configuration.TestWorkspaceConfigurationInit method)</a>
   </dt>
@@ -12958,9 +13398,15 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_blank_filename_regex">test_blank_filename_regex() (ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_blank_filename_regex">test_blank_filename_regex() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_blank_filename_regex">(ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_blocked_job">test_blocked_job() (recipe.test.test_models.TestRecipeManagerReprocessRecipe method)</a>
   </dt>
@@ -13071,6 +13517,22 @@
       </dl></dd>
       
   <dt><a href="architecture/django/code_docs/queue.test.html#queue.test.test_models.TestJobLoadManager.test_calculate_status">test_calculate_status() (queue.test.test_models.TestJobLoadManager method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_s3_scanner.TestScanner.test_callback_dry_run">test_callback_dry_run() (ingest.test.scan.scanners.test_s3_scanner.TestScanner method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_s3_scanner.TestScanner.test_callback_interrupted">test_callback_interrupted() (ingest.test.scan.scanners.test_s3_scanner.TestScanner method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_s3_scanner.TestScanner.test_callback_no_ingests">test_callback_no_ingests() (ingest.test.scan.scanners.test_s3_scanner.TestScanner method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_s3_scanner.TestScanner.test_callback_successfully">test_callback_successfully() (ingest.test.scan.scanners.test_s3_scanner.TestScanner method)</a>
   </dt>
 
       
@@ -13503,6 +13965,18 @@
 
       
   <dt><a href="architecture/django/code_docs/batch.test.configuration.definition.html#batch.test.configuration.definition.test_batch_definition.TestBatchDefinition.test_date_range_type_invalid">test_date_range_type_invalid() (batch.test.configuration.definition.test_batch_definition.TestBatchDefinition method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_s3_scanner.TestScanner.test_deduplicate_ingest_list_no_existing">test_deduplicate_ingest_list_no_existing() (ingest.test.scan.scanners.test_s3_scanner.TestScanner method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_s3_scanner.TestScanner.test_deduplicate_ingest_list_with_duplicate_file_names">test_deduplicate_ingest_list_with_duplicate_file_names() (ingest.test.scan.scanners.test_s3_scanner.TestScanner method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_s3_scanner.TestScanner.test_deduplicate_ingest_list_with_existing_no_other_dups">test_deduplicate_ingest_list_with_existing_no_other_dups() (ingest.test.scan.scanners.test_s3_scanner.TestScanner method)</a>
   </dt>
 
       
@@ -14288,6 +14762,18 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_dir_scanner.TestDirScanner.test_ingest_file">test_ingest_file() (ingest.test.scan.scanners.test_dir_scanner.TestDirScanner method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_dir_scanner.TestDirScanner.test_ingest_file_dry_run">test_ingest_file_dry_run() (ingest.test.scan.scanners.test_dir_scanner.TestDirScanner method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_dir_scanner.TestDirScanner.test_ingest_file_in_transit">test_ingest_file_in_transit() (ingest.test.scan.scanners.test_dir_scanner.TestDirScanner method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/job.test.configuration.data.html#job.test.configuration.data.test_job_data.TestJobDataInit.test_init_bad_version">test_init_bad_version() (job.test.configuration.data.test_job_data.TestJobDataInit method)</a>
   </dt>
 
@@ -14906,9 +15392,51 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_s3_broker.TestS3Broker.test_load_configuration">test_load_configuration() (storage.test.brokers.test_s3_broker.TestS3Broker method)</a>
+  <dt><a href="architecture/django/code_docs/util.test.html#util.test.test_aws.TestS3Client.test_list_objects_bucket_not_found">test_list_objects_bucket_not_found() (util.test.test_aws.TestS3Client method)</a>
   </dt>
 
+      
+  <dt><a href="architecture/django/code_docs/util.test.html#util.test.test_aws.TestS3Client.test_list_objects_empty_bucket">test_list_objects_empty_bucket() (util.test.test_aws.TestS3Client method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/util.test.html#util.test.test_aws.TestS3Client.test_list_objects_invalid_bucket_name">test_list_objects_invalid_bucket_name() (util.test.test_aws.TestS3Client method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/util.test.html#util.test.test_aws.TestS3Client.test_list_objects_iteration">test_list_objects_iteration() (util.test.test_aws.TestS3Client method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/util.test.html#util.test.test_aws.TestS3Client.test_list_objects_prefix">test_list_objects_prefix() (util.test.test_aws.TestS3Client method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/util.test.html#util.test.test_aws.TestS3Client.test_list_objects_prefix_recursive">test_list_objects_prefix_recursive() (util.test.test_aws.TestS3Client method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/util.test.html#util.test.test_aws.TestS3Client.test_list_objects_with_callback">test_list_objects_with_callback() (util.test.test_aws.TestS3Client method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/util.test.html#util.test.test_aws.TestS3Client.test_list_objects_with_callback_exception">test_list_objects_with_callback_exception() (util.test.test_aws.TestS3Client method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_dir_scanner.TestDirScanner.test_load_configuration">test_load_configuration() (ingest.test.scan.scanners.test_dir_scanner.TestDirScanner method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_s3_scanner.TestS3Scanner.test_load_configuration">(ingest.test.scan.scanners.test_s3_scanner.TestS3Scanner method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_s3_broker.TestS3Broker.test_load_configuration">(storage.test.brokers.test_s3_broker.TestS3Broker method)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_s3_broker.TestS3Broker.test_load_configuration_whitespace_filled_host_path">test_load_configuration_whitespace_filled_host_path() (storage.test.brokers.test_s3_broker.TestS3Broker method)</a>
   </dt>
@@ -15114,6 +15642,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_missing_scanner">test_missing_scanner() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/product.test.html#product.test.test_views.TestProductsUpdatesView.test_missing_tz_ended">test_missing_tz_ended() (product.test.test_views.TestProductsUpdatesView method)</a>
   </dt>
 
@@ -15168,10 +15700,14 @@
 
       </dl></dd>
       
-  <dt><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_missing_workspace">test_missing_workspace() (ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_missing_workspace">test_missing_workspace() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_missing_workspace">(ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/recipe.test.configuration.definition.html#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateData.test_missing_workspace">(recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionValidateData method)</a>
   </dt>
@@ -15197,6 +15733,10 @@
 
       
   <dt><a href="architecture/django/code_docs/source.test.html#source.test.test_models.TestSourceFileManagerSaveParseResults.test_move_source_file_denied">test_move_source_file_denied() (source.test.test_models.TestSourceFileManagerSaveParseResults method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_host_broker.TestHostBrokerListFiles.test_multi_batches">test_multi_batches() (storage.test.brokers.test_host_broker.TestHostBrokerListFiles method)</a>
   </dt>
 
       
@@ -15296,6 +15836,10 @@
 
       </dl></dd>
       
+  <dt><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_host_broker.TestHostBrokerListFiles.test_no_callback">test_no_callback() (storage.test.brokers.test_host_broker.TestHostBrokerListFiles method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_no_changes">test_no_changes() (recipe.test.test_models.TestRecipeManagerReprocessRecipe method)</a>
   </dt>
 
@@ -15315,6 +15859,14 @@
   </dt>
 
       </dl></dd>
+      
+  <dt><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_host_broker.TestHostBrokerListFiles.test_no_files">test_no_files() (storage.test.brokers.test_host_broker.TestHostBrokerListFiles method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_host_broker.TestHostBrokerListFiles.test_no_files_flat_walk">test_no_files_flat_walk() (storage.test.brokers.test_host_broker.TestHostBrokerListFiles method)</a>
+  </dt>
+
       
   <dt><a href="architecture/django/code_docs/product.test.html#product.test.test_models.TestProductFileManagerGetProductUpdatesQuery.test_no_job_types">test_no_job_types() (product.test.test_models.TestProductFileManagerGetProductUpdatesQuery method)</a>
   </dt>
@@ -15631,6 +16183,8 @@
   <dt><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_float_valid">test_parse_float_valid() (util.test.test_rest.TestRest method)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_float_zero">test_parse_float_zero() (util.test.test_rest.TestRest method)</a>
   </dt>
@@ -15647,8 +16201,6 @@
   <dt><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_accepted_all">test_parse_int_accepted_all() (util.test.test_rest.TestRest method)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_accepted_none">test_parse_int_accepted_none() (util.test.test_rest.TestRest method)</a>
   </dt>
@@ -16008,6 +16560,20 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_s3_scanner.TestS3Scanner.test_recursive_default">test_recursive_default() (ingest.test.scan.scanners.test_s3_scanner.TestS3Scanner method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_s3_scanner.TestScanner.test_recursive_default">(ingest.test.scan.scanners.test_s3_scanner.TestScanner method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_host_broker.TestHostBrokerListFiles.test_recursive_successfully">test_recursive_successfully() (storage.test.brokers.test_host_broker.TestHostBrokerListFiles method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/scheduler.test.offer.html#scheduler.test.offer.test_node.TestNodeOffers.test_remove_offer">test_remove_offer() (scheduler.test.offer.test_node.TestNodeOffers method)</a>
   </dt>
 
@@ -16212,6 +16778,16 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_s3_scanner.TestS3Scanner.test_set_recursive_false">test_set_recursive_false() (ingest.test.scan.scanners.test_s3_scanner.TestS3Scanner method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_s3_scanner.TestScanner.test_set_recursive_false">(ingest.test.scan.scanners.test_s3_scanner.TestScanner method)</a>
+  </dt>
+
+      </dl></dd>
+      
   <dt><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation.test_settings_required">test_settings_required() (job.test.configuration.interface.test_job_interface.TestJobInterfaceValidation method)</a>
   </dt>
 
@@ -16305,6 +16881,10 @@
 
       
   <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobExecutionSpecificLogView.test_stdout_log_html_no_time">test_stdout_log_html_no_time() (job.test.test_views.TestJobExecutionSpecificLogView method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_s3_scanner.TestScanner.test_stop">test_stop() (ingest.test.scan.scanners.test_s3_scanner.TestScanner method)</a>
   </dt>
 
       
@@ -16698,10 +17278,14 @@
 
       </dl></dd>
       
-  <dt><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_successful_all">test_successful_all() (ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_successful_all">test_successful_all() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_successful_all">(ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesView.test_successful_all">(recipe.test.test_views.TestRecipesView method)</a>
   </dt>
@@ -17250,23 +17834,49 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_validate_bad_workspace">test_validate_bad_workspace() (ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_validate_bad_scanner_type">test_validate_bad_scanner_type() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
   </dt>
 
+      
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_validate_bad_workspace">test_validate_bad_workspace() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_validate_bad_workspace">(ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="architecture/django/code_docs/ingest.test.strike.monitors.html#ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_validate_configuration_bad_sqs_name">test_validate_configuration_bad_sqs_name() (ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor method)</a>
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/ingest.test.strike.monitors.html#ingest.test.strike.monitors.test_dir_monitor.TestDirWatcherMonitor.test_validate_configuration_bad_transfer_suffix">test_validate_configuration_bad_transfer_suffix() (ingest.test.strike.monitors.test_dir_monitor.TestDirWatcherMonitor method)</a>
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_dir_scanner.TestDirScanner.test_validate_configuration_bad_transfer_suffix">test_validate_configuration_bad_transfer_suffix() (ingest.test.scan.scanners.test_dir_scanner.TestDirScanner method)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.test.strike.monitors.html#ingest.test.strike.monitors.test_dir_monitor.TestDirWatcherMonitor.test_validate_configuration_bad_transfer_suffix">(ingest.test.strike.monitors.test_dir_monitor.TestDirWatcherMonitor method)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="architecture/django/code_docs/ingest.test.strike.monitors.html#ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_validate_configuration_empty_sqs_name">test_validate_configuration_empty_sqs_name() (ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor method)</a>
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/ingest.test.strike.monitors.html#ingest.test.strike.monitors.test_dir_monitor.TestDirWatcherMonitor.test_validate_configuration_empty_transfer_suffix">test_validate_configuration_empty_transfer_suffix() (ingest.test.strike.monitors.test_dir_monitor.TestDirWatcherMonitor method)</a>
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_dir_scanner.TestDirScanner.test_validate_configuration_empty_transfer_suffix">test_validate_configuration_empty_transfer_suffix() (ingest.test.scan.scanners.test_dir_scanner.TestDirScanner method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.test.strike.monitors.html#ingest.test.strike.monitors.test_dir_monitor.TestDirWatcherMonitor.test_validate_configuration_empty_transfer_suffix">(ingest.test.strike.monitors.test_dir_monitor.TestDirWatcherMonitor method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_s3_scanner.TestS3Scanner.test_validate_configuration_extra_key">test_validate_configuration_extra_key() (ingest.test.scan.scanners.test_s3_scanner.TestS3Scanner method)</a>
   </dt>
 
       
@@ -17282,18 +17892,32 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/ingest.test.strike.monitors.html#ingest.test.strike.monitors.test_dir_monitor.TestDirWatcherMonitor.test_validate_configuration_missing_transfer_suffix">test_validate_configuration_missing_transfer_suffix() (ingest.test.strike.monitors.test_dir_monitor.TestDirWatcherMonitor method)</a>
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_dir_scanner.TestDirScanner.test_validate_configuration_missing_transfer_suffix">test_validate_configuration_missing_transfer_suffix() (ingest.test.scan.scanners.test_dir_scanner.TestDirScanner method)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.test.strike.monitors.html#ingest.test.strike.monitors.test_dir_monitor.TestDirWatcherMonitor.test_validate_configuration_missing_transfer_suffix">(ingest.test.strike.monitors.test_dir_monitor.TestDirWatcherMonitor method)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_s3_broker.TestS3Broker.test_validate_configuration_roles">test_validate_configuration_roles() (storage.test.brokers.test_s3_broker.TestS3Broker method)</a>
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/ingest.test.strike.monitors.html#ingest.test.strike.monitors.test_dir_monitor.TestDirWatcherMonitor.test_validate_configuration_success">test_validate_configuration_success() (ingest.test.strike.monitors.test_dir_monitor.TestDirWatcherMonitor method)</a>
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_dir_scanner.TestDirScanner.test_validate_configuration_success">test_validate_configuration_success() (ingest.test.scan.scanners.test_dir_scanner.TestDirScanner method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_s3_scanner.TestS3Scanner.test_validate_configuration_success">(ingest.test.scan.scanners.test_s3_scanner.TestS3Scanner method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/ingest.test.strike.monitors.html#ingest.test.strike.monitors.test_dir_monitor.TestDirWatcherMonitor.test_validate_configuration_success">(ingest.test.strike.monitors.test_dir_monitor.TestDirWatcherMonitor method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/ingest.test.strike.monitors.html#ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_validate_configuration_success">(ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor method)</a>
   </dt>
@@ -17305,6 +17929,10 @@
 
       
   <dt><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_validate_mismatched_monitor_type">test_validate_mismatched_monitor_type() (ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_validate_mismatched_scanner_type">test_validate_mismatched_scanner_type() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
   </dt>
 
       
@@ -17324,17 +17952,33 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_validate_recursive_invalid_type">test_validate_recursive_invalid_type() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate.test_validate_success">test_validate_success() (job.test.configuration.interface.test_error_interface.TestErrorInterfaceValidate method)</a>
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_validate_successful_all">test_validate_successful_all() (ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_validate_successful_all">test_validate_successful_all() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_validate_successful_all">(ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
+  </dt>
+
+      </dl></dd>
       
-  <dt><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_validate_workspace_not_active">test_validate_workspace_not_active() (ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_validate_workspace_not_active">test_validate_workspace_not_active() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_validate_workspace_not_active">(ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="architecture/django/code_docs/job.test.configuration.data.html#job.test.configuration.data.test_job_data.TestJobDataValidateProperties.test_value_not_string">test_value_not_string() (job.test.configuration.data.test_job_data.TestJobDataValidateProperties method)</a>
   </dt>
@@ -17363,6 +18007,14 @@
   </dt>
 
       </dl></dd>
+      
+  <dt><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_host_broker.TestHostBrokerListFiles.test_with_files_flat_dir_walker">test_with_files_flat_dir_walker() (storage.test.brokers.test_host_broker.TestHostBrokerListFiles method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_host_broker.TestHostBrokerListFiles.test_with_files_recursive_dir_walker">test_with_files_recursive_dir_walker() (storage.test.brokers.test_host_broker.TestHostBrokerListFiles method)</a>
+  </dt>
+
       
   <dt><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsWithExecutionView.test_with_job_type_category_filter">test_with_job_type_category_filter() (job.test.test_views.TestJobsWithExecutionView method)</a>
   </dt>
@@ -17468,6 +18120,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_dir_scanner.TestDirScanner">TestDirScanner (class in ingest.test.scan.scanners.test_dir_scanner)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/ingest.test.strike.monitors.html#ingest.test.strike.monitors.test_dir_monitor.TestDirWatcherMonitor">TestDirWatcherMonitor (class in ingest.test.strike.monitors.test_dir_monitor)</a>
   </dt>
 
@@ -17505,6 +18161,10 @@
 
       
   <dt><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_host_broker.TestHostBrokerDownloadFiles">TestHostBrokerDownloadFiles (class in storage.test.brokers.test_host_broker)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_host_broker.TestHostBrokerListFiles">TestHostBrokerListFiles (class in storage.test.brokers.test_host_broker)</a>
   </dt>
 
       
@@ -18168,7 +18828,15 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/util.test.html#util.test.test_aws.TestS3Client">TestS3Client (class in util.test.test_aws)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/ingest.test.strike.monitors.html#ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor">TestS3Monitor (class in ingest.test.strike.monitors.test_s3_monitor)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_s3_scanner.TestS3Scanner">TestS3Scanner (class in ingest.test.scan.scanners.test_s3_scanner)</a>
   </dt>
 
       
@@ -18205,6 +18873,14 @@
 
       
   <dt><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFileUpdateUUID">TestScaleFileUpdateUUID (class in storage.test.test_models)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration">TestScanConfiguration (class in ingest.test.scan.configuration.test_scan_configuration)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_s3_scanner.TestScanner">TestScanner (class in ingest.test.scan.scanners.test_s3_scanner)</a>
   </dt>
 
       
@@ -18822,10 +19498,14 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration.StrikeConfiguration.validate">validate() (ingest.strike.configuration.strike_configuration.StrikeConfiguration method)</a>
+  <dt><a href="architecture/django/code_docs/ingest.scan.configuration.html#ingest.scan.configuration.scan_configuration.ScanConfiguration.validate">validate() (ingest.scan.configuration.scan_configuration.ScanConfiguration method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration.StrikeConfiguration.validate">(ingest.strike.configuration.strike_configuration.StrikeConfiguration method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/ingest.triggers.configuration.html#ingest.triggers.configuration.ingest_trigger_rule.IngestTriggerRuleConfiguration.validate">(ingest.triggers.configuration.ingest_trigger_rule.IngestTriggerRuleConfiguration method)</a>
   </dt>
@@ -18876,10 +19556,22 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/ingest.strike.monitors.html#ingest.strike.monitors.dir_monitor.DirWatcherMonitor.validate_configuration">validate_configuration() (ingest.strike.monitors.dir_monitor.DirWatcherMonitor method)</a>
+  <dt><a href="architecture/django/code_docs/ingest.scan.scanners.html#ingest.scan.scanners.dir_scanner.DirScanner.validate_configuration">validate_configuration() (ingest.scan.scanners.dir_scanner.DirScanner method)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.scan.scanners.html#ingest.scan.scanners.s3_scanner.S3Scanner.validate_configuration">(ingest.scan.scanners.s3_scanner.S3Scanner method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/ingest.scan.scanners.html#ingest.scan.scanners.scanner.Scanner.validate_configuration">(ingest.scan.scanners.scanner.Scanner method)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/ingest.strike.monitors.html#ingest.strike.monitors.dir_monitor.DirWatcherMonitor.validate_configuration">(ingest.strike.monitors.dir_monitor.DirWatcherMonitor method)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/ingest.strike.monitors.html#ingest.strike.monitors.monitor.Monitor.validate_configuration">(ingest.strike.monitors.monitor.Monitor method)</a>
   </dt>
@@ -19046,10 +19738,14 @@
 
       </dl></dd>
       
-  <dt><a href="architecture/django/code_docs/ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration.ValidationWarning">ValidationWarning (class in ingest.strike.configuration.strike_configuration)</a>
+  <dt><a href="architecture/django/code_docs/ingest.scan.configuration.html#ingest.scan.configuration.scan_configuration.ValidationWarning">ValidationWarning (class in ingest.scan.configuration.scan_configuration)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration.ValidationWarning">(class in ingest.strike.configuration.strike_configuration)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration_1_0.ValidationWarning">(class in ingest.strike.configuration.strike_configuration_1_0)</a>
   </dt>
@@ -19245,6 +19941,9 @@
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
@@ -19278,7 +19977,8 @@
             VERSION:'4.3.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: ''
         };
     </script>
       <script type="text/javascript" src="_static/jquery.js"></script>

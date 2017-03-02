@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ingest.strike.handlers package &mdash; Scale 4.3.0-snapshot documentation</title>
+  <title>ingest.scan package &mdash; Scale 4.3.0-snapshot documentation</title>
   
 
   
@@ -33,9 +33,9 @@
 
   
     <link rel="top" title="Scale 4.3.0-snapshot documentation" href="../../../index.html"/>
-        <link rel="up" title="ingest.strike package" href="ingest.strike.html"/>
-        <link rel="next" title="ingest.strike.monitors package" href="ingest.strike.monitors.html"/>
-        <link rel="prev" title="ingest.strike.configuration package" href="ingest.strike.configuration.html"/> 
+        <link rel="up" title="ingest package" href="ingest.html"/>
+        <link rel="next" title="ingest.scan.configuration package" href="ingest.scan.configuration.html"/>
+        <link rel="prev" title="ingest.migrations package" href="ingest.migrations.html"/> 
 
   
   <script src="../../../_static/js/modernizr.min.js"></script>
@@ -44,6 +44,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -149,8 +150,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../../index.html">Scale</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Scale</a>
+        
       </nav>
 
 
@@ -159,129 +162,96 @@
         <div class="rst-content">
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../../index.html">Architecture</a> &raquo;</li>
-      
+        
           <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
-      
+        
           <li><a href="ingest.html">ingest package</a> &raquo;</li>
-      
-          <li><a href="ingest.strike.html">ingest.strike package</a> &raquo;</li>
-      
-    <li>ingest.strike.handlers package</li>
+        
+      <li>ingest.scan package</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="../../../_sources/architecture/django/code_docs/ingest.strike.handlers.txt" rel="nofollow"> View page source</a>
+            
+            <a href="../../../_sources/architecture/django/code_docs/ingest.scan.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="ingest-strike-handlers-package">
-<h1>ingest.strike.handlers package<a class="headerlink" href="#ingest-strike-handlers-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="ingest-scan-package">
+<h1>ingest.scan package<a class="headerlink" href="#ingest-scan-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ingest.scan.configuration.html">ingest.scan.configuration package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingest.scan.configuration.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.scan.configuration.html#module-ingest.scan.configuration.exceptions">ingest.scan.configuration.exceptions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.scan.configuration.html#module-ingest.scan.configuration.scan_configuration">ingest.scan.configuration.scan_configuration module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.scan.configuration.html#module-ingest.scan.configuration">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ingest.scan.scanners.html">ingest.scan.scanners package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingest.scan.scanners.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.scan.scanners.html#module-ingest.scan.scanners.dir_scanner">ingest.scan.scanners.dir_scanner module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.scan.scanners.html#module-ingest.scan.scanners.exceptions">ingest.scan.scanners.exceptions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.scan.scanners.html#module-ingest.scan.scanners.factory">ingest.scan.scanners.factory module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.scan.scanners.html#module-ingest.scan.scanners.s3_scanner">ingest.scan.scanners.s3_scanner module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.scan.scanners.html#module-ingest.scan.scanners.scanner">ingest.scan.scanners.scanner module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.scan.scanners.html#module-ingest.scan.scanners">Module contents</a></li>
+</ul>
+</li>
+</ul>
 </div>
-<div class="section" id="module-ingest.strike.handlers.file_handler">
-<span id="ingest-strike-handlers-file-handler-module"></span><h2>ingest.strike.handlers.file_handler module<a class="headerlink" href="#module-ingest.strike.handlers.file_handler" title="Permalink to this headline">¶</a></h2>
-<p>Defines the handler for files processed by Strike</p>
-<dl class="class">
-<dt id="ingest.strike.handlers.file_handler.FileHandler">
-<em class="property">class </em><code class="descclassname">ingest.strike.handlers.file_handler.</code><code class="descname">FileHandler</code><a class="headerlink" href="#ingest.strike.handlers.file_handler.FileHandler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>This class handles the rules for files processed by Strike</p>
-<dl class="method">
-<dt id="ingest.strike.handlers.file_handler.FileHandler.add_rule">
-<code class="descname">add_rule</code><span class="sig-paren">(</span><em>rule</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.handlers.file_handler.FileHandler.add_rule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds the given rule to the handler</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rule</strong> (<a class="reference internal" href="#ingest.strike.handlers.file_rule.FileRule" title="ingest.strike.handlers.file_rule.FileRule"><code class="xref py py-class docutils literal"><span class="pre">ingest.strike.handlers.file_rule.FileRule</span></code></a>) &#8211; The name of the file</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.strike.handlers.file_handler.FileHandler.match_file_name">
-<code class="descname">match_file_name</code><span class="sig-paren">(</span><em>file_name</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.handlers.file_handler.FileHandler.match_file_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks the given file name and returns the first rule that matches it, returning None if no match is made</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_name</strong> (<em>string</em>) &#8211; The name of the file</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The matched rule, possibly None</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#ingest.strike.handlers.file_rule.FileRule" title="ingest.strike.handlers.file_rule.FileRule"><code class="xref py py-class docutils literal"><span class="pre">ingest.strike.handlers.file_rule.FileRule</span></code></a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
 </div>
-<div class="section" id="module-ingest.strike.handlers.file_rule">
-<span id="ingest-strike-handlers-file-rule-module"></span><h2>ingest.strike.handlers.file_rule module<a class="headerlink" href="#module-ingest.strike.handlers.file_rule" title="Permalink to this headline">¶</a></h2>
-<p>Defines a file rule for handling files processed by Strike</p>
-<dl class="class">
-<dt id="ingest.strike.handlers.file_rule.FileRule">
-<em class="property">class </em><code class="descclassname">ingest.strike.handlers.file_rule.</code><code class="descname">FileRule</code><span class="sig-paren">(</span><em>filename_regex</em>, <em>data_types</em>, <em>new_workspace</em>, <em>new_file_path</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.handlers.file_rule.FileRule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>This class represents a rule for handling files processed by Strike</p>
-<dl class="method">
-<dt id="ingest.strike.handlers.file_rule.FileRule.matches_file_name">
-<code class="descname">matches_file_name</code><span class="sig-paren">(</span><em>file_name</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.strike.handlers.file_rule.FileRule.matches_file_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Indicates whether the given file name matches this rule</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_name</strong> (<em>string</em>) &#8211; The name of the file</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if this file name matches the rule, False otherwise</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-ingest.strike.handlers">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ingest.strike.handlers" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-ingest.scan">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ingest.scan" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
 
+           </div>
+           <div class="articleComments">
+            
            </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="ingest.strike.monitors.html" class="btn btn-neutral float-right" title="ingest.strike.monitors package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="ingest.scan.configuration.html" class="btn btn-neutral float-right" title="ingest.scan.configuration package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="ingest.strike.configuration.html" class="btn btn-neutral" title="ingest.strike.configuration package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="ingest.migrations.html" class="btn btn-neutral" title="ingest.migrations package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -315,7 +285,8 @@
             VERSION:'4.3.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: ''
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

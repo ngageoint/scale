@@ -35,7 +35,7 @@
     <link rel="top" title="Scale 4.3.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="ingest.strike package" href="ingest.strike.html"/>
         <link rel="next" title="ingest.test package" href="ingest.test.html"/>
-        <link rel="prev" title="ingest.strike.handlers package" href="ingest.strike.handlers.html"/> 
+        <link rel="prev" title="ingest.strike.configuration package" href="ingest.strike.configuration.html"/> 
 
   
   <script src="../../../_static/js/modernizr.min.js"></script>
@@ -44,6 +44,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -149,8 +150,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../../index.html">Scale</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Scale</a>
+        
       </nav>
 
 
@@ -159,31 +162,48 @@
         <div class="rst-content">
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../../index.html">Architecture</a> &raquo;</li>
-      
+        
           <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
-      
+        
           <li><a href="ingest.html">ingest package</a> &raquo;</li>
-      
+        
           <li><a href="ingest.strike.html">ingest.strike package</a> &raquo;</li>
-      
-    <li>ingest.strike.monitors package</li>
+        
+      <li>ingest.strike.monitors package</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
             <a href="../../../_sources/architecture/django/code_docs/ingest.strike.monitors.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -358,9 +378,9 @@ load_configuration(), run(), stop(), and validate_configuration() methods.</p>
 <dd><p>Runs the monitor until signaled to stop by the stop() method. Sub-classes that override this method should
 make it block until the stop() method is called and should call reload_configuration() on a regular basis to get
 updated configuration from the database.</p>
-<p>Sub-classes should call _create_ingest() when they detect a new file in the monitored workspace. If the
-sub-class is tracking transfer time (the amount of time it takes for the file to be copied into the monitored
-workspace), it should call _start_transfer(), _update_transfer() as updates occur, and finally
+<p>Sub-classes should call Ingest.objects.create_ingest() when they detect a new file in the monitored workspace.
+If the sub-class is tracking transfer time (the amount of time it takes for the file to be copied into the
+monitored workspace), it should call _start_transfer(), _update_transfer() as updates occur, and finally
 _complete_transfer() and _process_ingest() when the transfer is complete. If the sub-class is not tracking
 transfer time, it should just call _process_ingest().</p>
 </dd></dl>
@@ -375,7 +395,7 @@ transfer time, it should just call _process_ingest().</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>monitored_workspace</strong> (<em>string</em>) &#8211; The name of the workspace that is being monitored</li>
-<li><strong>file_handler</strong> (<a class="reference internal" href="ingest.strike.handlers.html#ingest.strike.handlers.file_handler.FileHandler" title="ingest.strike.handlers.file_handler.FileHandler"><code class="xref py py-class docutils literal"><span class="pre">ingest.strike.handlers.file_handler.FileHandler</span></code></a>) &#8211; The file handler configured for this monitor</li>
+<li><strong>file_handler</strong> (<code class="xref py py-class docutils literal"><span class="pre">ingest.strike.handlers.file_handler.FileHandler</span></code>) &#8211; The file handler configured for this monitor</li>
 </ul>
 </td>
 </tr>
@@ -473,6 +493,9 @@ as gracefully and quickly as possible.</p>
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
@@ -481,7 +504,7 @@ as gracefully and quickly as possible.</p>
         <a href="ingest.test.html" class="btn btn-neutral float-right" title="ingest.test package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="ingest.strike.handlers.html" class="btn btn-neutral" title="ingest.strike.handlers package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="ingest.strike.configuration.html" class="btn btn-neutral" title="ingest.strike.configuration package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -515,7 +538,8 @@ as gracefully and quickly as possible.</p>
             VERSION:'4.3.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: ''
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

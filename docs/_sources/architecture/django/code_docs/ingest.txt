@@ -6,8 +6,10 @@ Subpackages
 
 .. toctree::
 
+    ingest.handlers
     ingest.management
     ingest.migrations
+    ingest.scan
     ingest.strike
     ingest.test
     ingest.triggers

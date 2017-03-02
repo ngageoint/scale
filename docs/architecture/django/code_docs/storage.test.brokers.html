@@ -44,6 +44,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -153,8 +154,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../../index.html">Scale</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Scale</a>
+        
       </nav>
 
 
@@ -163,31 +166,48 @@
         <div class="rst-content">
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../../index.html">Architecture</a> &raquo;</li>
-      
+        
           <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
-      
+        
           <li><a href="storage.html">storage package</a> &raquo;</li>
-      
+        
           <li><a href="storage.test.html">storage.test package</a> &raquo;</li>
-      
-    <li>storage.test.brokers package</li>
+        
+      <li>storage.test.brokers package</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
             <a href="../../../_sources/architecture/django/code_docs/storage.test.brokers.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -230,6 +250,67 @@
 <dt id="storage.test.brokers.test_host_broker.TestHostBrokerDownloadFiles.test_successfully">
 <code class="descname">test_successfully</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_host_broker.TestHostBrokerDownloadFiles.test_successfully" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling HostBroker.download_files() successfully</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="storage.test.brokers.test_host_broker.TestHostBrokerListFiles">
+<em class="property">class </em><code class="descclassname">storage.test.brokers.test_host_broker.</code><code class="descname">TestHostBrokerListFiles</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_host_broker.TestHostBrokerListFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="storage.test.brokers.test_host_broker.TestHostBrokerListFiles.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_host_broker.TestHostBrokerListFiles.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.test.brokers.test_host_broker.TestHostBrokerListFiles.test_bad_callback">
+<code class="descname">test_bad_callback</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_host_broker.TestHostBrokerListFiles.test_bad_callback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling HostBroker.list_files() with a bad callback</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.brokers.test_host_broker.TestHostBrokerListFiles.test_multi_batches">
+<code class="descname">test_multi_batches</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_host_broker.TestHostBrokerListFiles.test_multi_batches" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling HostBroker.list_files() with multiple batches (1000+)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.brokers.test_host_broker.TestHostBrokerListFiles.test_no_callback">
+<code class="descname">test_no_callback</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_host_broker.TestHostBrokerListFiles.test_no_callback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling HostBroker.list_files() without using callback for
+results of search directory</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.brokers.test_host_broker.TestHostBrokerListFiles.test_no_files">
+<code class="descname">test_no_files</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_host_broker.TestHostBrokerListFiles.test_no_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling HostBroker.list_files() with no files in directory</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.brokers.test_host_broker.TestHostBrokerListFiles.test_no_files_flat_walk">
+<code class="descname">test_no_files_flat_walk</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_host_broker.TestHostBrokerListFiles.test_no_files_flat_walk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling HostBroker._dir_walker() with no files in directory</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.brokers.test_host_broker.TestHostBrokerListFiles.test_recursive_successfully">
+<code class="descname">test_recursive_successfully</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_host_broker.TestHostBrokerListFiles.test_recursive_successfully" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling HostBroker.list_files() with files across multi-level 
+directory tree</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.brokers.test_host_broker.TestHostBrokerListFiles.test_with_files_flat_dir_walker">
+<code class="descname">test_with_files_flat_dir_walker</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_host_broker.TestHostBrokerListFiles.test_with_files_flat_dir_walker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling HostBroker._dir_walker() with files in a directory</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="storage.test.brokers.test_host_broker.TestHostBrokerListFiles.test_with_files_recursive_dir_walker">
+<code class="descname">test_with_files_recursive_dir_walker</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.test.brokers.test_host_broker.TestHostBrokerListFiles.test_with_files_recursive_dir_walker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling HostBroker._dir_walker() with files throughout tree</p>
 </dd></dl>
 
 </dd></dl>
@@ -501,6 +582,9 @@
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
@@ -543,7 +627,8 @@
             VERSION:'4.3.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: ''
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

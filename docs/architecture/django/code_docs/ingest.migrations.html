@@ -34,7 +34,7 @@
   
     <link rel="top" title="Scale 4.3.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="ingest package" href="ingest.html"/>
-        <link rel="next" title="ingest.strike package" href="ingest.strike.html"/>
+        <link rel="next" title="ingest.scan package" href="ingest.scan.html"/>
         <link rel="prev" title="ingest.management.commands package" href="ingest.management.commands.html"/> 
 
   
@@ -44,6 +44,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -149,8 +150,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../../index.html">Scale</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Scale</a>
+        
       </nav>
 
 
@@ -159,29 +162,46 @@
         <div class="rst-content">
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../../index.html">Architecture</a> &raquo;</li>
-      
+        
           <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
-      
+        
           <li><a href="ingest.html">ingest package</a> &raquo;</li>
-      
-    <li>ingest.migrations package</li>
+        
+      <li>ingest.migrations package</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
             <a href="../../../_sources/architecture/django/code_docs/ingest.migrations.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -262,7 +282,7 @@
 
 <dl class="attribute">
 <dt id="ingest.migrations.0004_auto_20160711_1058.Migration.operations">
-<code class="descname">operations</code><em class="property"> = [&lt;RunPython &lt;function populate_new_workspace at 0x2ad03dc495f0&gt;&gt;]</em><a class="headerlink" href="#ingest.migrations.0004_auto_20160711_1058.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<code class="descname">operations</code><em class="property"> = [&lt;RunPython &lt;function populate_new_workspace at 0x2b0fdc6d0848&gt;&gt;]</em><a class="headerlink" href="#ingest.migrations.0004_auto_20160711_1058.Migration.operations" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -324,7 +344,7 @@
 
 <dl class="attribute">
 <dt id="ingest.migrations.0007_auto_20170127_1327.Migration.operations">
-<code class="descname">operations</code><em class="property"> = [&lt;AlterField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'source_file', model_name=u'ingest'&gt;, &lt;RunPython &lt;function delete_constraint at 0x2ad03dc49b18&gt;&gt;]</em><a class="headerlink" href="#ingest.migrations.0007_auto_20170127_1327.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<code class="descname">operations</code><em class="property"> = [&lt;AlterField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'source_file', model_name=u'ingest'&gt;, &lt;RunPython &lt;function delete_constraint at 0x2b0fdc6d0578&gt;&gt;]</em><a class="headerlink" href="#ingest.migrations.0007_auto_20170127_1327.Migration.operations" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -354,6 +374,44 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-ingest.migrations.0009_scan">
+<span id="ingest-migrations-0009-scan-module"></span><h2>ingest.migrations.0009_scan module<a class="headerlink" href="#module-ingest.migrations.0009_scan" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ingest.migrations.0009_scan.Migration">
+<em class="property">class </em><code class="descclassname">ingest.migrations.0009_scan.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.migrations.0009_scan.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="ingest.migrations.0009_scan.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'job', u'0022_jobtype_configuration'), (u'ingest', u'0008_auto_20170127_1332')]</em><a class="headerlink" href="#ingest.migrations.0009_scan.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.migrations.0009_scan.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'name', &lt;django.db.models.fields.CharField&gt;), (u'title', &lt;django.db.models.fields.CharField&gt;), (u'description', &lt;django.db.models.fields.CharField&gt;), (u'configuration', &lt;djorm_pgjson.fields.JSONField&gt;), (u'created', &lt;django.db.models.fields.DateTimeField&gt;), (u'last_modified', &lt;django.db.models.fields.DateTimeField&gt;), (u'job', &lt;django.db.models.fields.related.ForeignKey&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={u'db_table': u'scan'}, name=u'Scan'&gt;]</em><a class="headerlink" href="#ingest.migrations.0009_scan.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ingest.migrations.0010_auto_20170206_1646">
+<span id="ingest-migrations-0010-auto-20170206-1646-module"></span><h2>ingest.migrations.0010_auto_20170206_1646 module<a class="headerlink" href="#module-ingest.migrations.0010_auto_20170206_1646" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="ingest.migrations.0010_auto_20170206_1646.Migration">
+<em class="property">class </em><code class="descclassname">ingest.migrations.0010_auto_20170206_1646.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.migrations.0010_auto_20170206_1646.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="ingest.migrations.0010_auto_20170206_1646.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'ingest', u'0009_scan')]</em><a class="headerlink" href="#ingest.migrations.0010_auto_20170206_1646.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.migrations.0010_auto_20170206_1646.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;AddField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'scan', model_name=u'ingest'&gt;, &lt;AlterField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'strike', model_name=u'ingest'&gt;]</em><a class="headerlink" href="#ingest.migrations.0010_auto_20170206_1646.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-ingest.migrations">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ingest.migrations" title="Permalink to this headline">¶</a></h2>
 </div>
@@ -361,12 +419,15 @@
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="ingest.strike.html" class="btn btn-neutral float-right" title="ingest.strike package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="ingest.scan.html" class="btn btn-neutral float-right" title="ingest.scan package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="ingest.management.commands.html" class="btn btn-neutral" title="ingest.management.commands package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -403,7 +464,8 @@
             VERSION:'4.3.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: ''
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

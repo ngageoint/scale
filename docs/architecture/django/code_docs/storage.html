@@ -44,6 +44,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -153,8 +154,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../../index.html">Scale</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Scale</a>
+        
       </nav>
 
 
@@ -163,27 +166,44 @@
         <div class="rst-content">
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../../index.html">Architecture</a> &raquo;</li>
-      
+        
           <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
-      
-    <li>storage package</li>
+        
+      <li>storage package</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
             <a href="../../../_sources/architecture/django/code_docs/storage.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -219,6 +239,7 @@
 <li class="toctree-l4"><a class="reference internal" href="storage.management.commands.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.management.commands.html#module-storage.management.commands.scale_delete_file">storage.management.commands.scale_delete_file module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.management.commands.html#module-storage.management.commands.scale_download_file">storage.management.commands.scale_download_file module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="storage.management.commands.html#module-storage.management.commands.scale_list_files">storage.management.commands.scale_list_files module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.management.commands.html#module-storage.management.commands.scale_move_file">storage.management.commands.scale_move_file module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.management.commands.html#module-storage.management.commands.scale_upload_file">storage.management.commands.scale_upload_file module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="storage.management.commands.html#module-storage.management.commands">Module contents</a></li>
@@ -1134,6 +1155,32 @@ at workspace_volume_path or an exception will be raised.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="storage.models.Workspace.list_files">
+<code class="descclassname">Workspace.</code><code class="descname">list_files</code><span class="sig-paren">(</span><em>recursive</em>, <em>callback</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.list_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lists files within a workspace, with optional full tree recursion. Callback support will enable updates
+to caller without waiting for entire workspace to be traversed. If callbacks are used an empty list will be
+returned at the completion of call.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>recursive</strong> (<em>boolean</em>) &#8211; Flag to indicate whether file searching should be done recursively</li>
+<li><strong>callback</strong> (<em>function([storage.brokers.broker.FileDetails])</em>) &#8211; Method that will be called on completion of each batch return. Max of 1000 files per call.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">List of files matching given expression. Empty if all delivered via callback.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[storage.brokers.broker.FileDetails]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="storage.models.Workspace.move_files">
 <code class="descclassname">Workspace.</code><code class="descname">move_files</code><span class="sig-paren">(</span><em>file_moves</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.move_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Moves the given files to the new file system paths and saves the ScaleFile model changes in the database. If
@@ -1659,6 +1706,9 @@ transaction. An argument of None for a field indicates that the field should not
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
@@ -1701,7 +1751,8 @@ transaction. An argument of None for a field indicates that the field should not
             VERSION:'4.3.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: ''
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

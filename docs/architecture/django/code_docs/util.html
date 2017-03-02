@@ -44,6 +44,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -154,8 +155,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../../index.html">Scale</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Scale</a>
+        
       </nav>
 
 
@@ -164,27 +167,44 @@
         <div class="rst-content">
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../../index.html">Architecture</a> &raquo;</li>
-      
+        
           <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
-      
-    <li>util package</li>
+        
+      <li>util package</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
             <a href="../../../_sources/architecture/django/code_docs/util.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -340,6 +360,41 @@ empty, None will be returned. In this case, role-based authentication should be 
 </table>
 <p>:raises <code class="xref py py-class docutils literal"><span class="pre">botocore.exceptions.ClientError</span></code>: If the request is invalid.
 :raises <code class="xref py py-class docutils literal"><span class="pre">storage.exceptions.FileDoesNotExist</span></code>: If the file is not found in the bucket.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.aws.S3Client.list_objects">
+<code class="descname">list_objects</code><span class="sig-paren">(</span><em>bucket_name</em>, <em>recursive=False</em>, <em>prefix=None</em>, <em>callback=None</em><span class="sig-paren">)</span><a class="headerlink" href="#util.aws.S3Client.list_objects" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves list of objects within an S3 bucket, optionally supporting batched callback delivery.</p>
+<p>Retrieval of objects is provided by the boto3 paginator over 
+list_objects. This allows for simple paging support with unbounded
+object counts. As a result of the time that may be required for the full
+result set to be returned, it is recommended that the provided callback
+support be used to receive objects as they are retrieved (up to 1000 in
+a batch). The callback method must accept one list parameter. This list
+will contain objects of type <cite>storage.brokers.broker.FileDetails</cite>. If
+the callback method is called without exception, an emtpy list will be
+returned upon completion of list_objects call.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>bucket_name</strong> (<em>string</em>) &#8211; The unique name of the bucket to retrieve.</li>
+<li><strong>recursive</strong> (<em>bool</em>) &#8211; Whether the bucket should be recursively searched from the given prefix</li>
+<li><strong>prefix</strong> (<em>string</em>) &#8211; The parent key from which to search bucket. Trailing slash is optional</li>
+<li><strong>callback</strong> (<em>function([storage.brokers.broker.FileDetails])</em>) &#8211; Method that will be called on completion of each batch return. Max of 1000 objects per call.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">List of S3 objects that were found. Empty if all delivered via callback.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[storage.brokers.broker.FileDetails]</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -1142,6 +1197,9 @@ exceed max_ms_delay milliseconds.</p>
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
@@ -1184,7 +1242,8 @@ exceed max_ms_delay milliseconds.</p>
             VERSION:'4.3.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: ''
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

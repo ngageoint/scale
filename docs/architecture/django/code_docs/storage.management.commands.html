@@ -44,6 +44,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -153,8 +154,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../../index.html">Scale</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Scale</a>
+        
       </nav>
 
 
@@ -163,31 +166,48 @@
         <div class="rst-content">
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../../index.html">Architecture</a> &raquo;</li>
-      
+        
           <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
-      
+        
           <li><a href="storage.html">storage package</a> &raquo;</li>
-      
+        
           <li><a href="storage.management.html">storage.management package</a> &raquo;</li>
-      
-    <li>storage.management.commands package</li>
+        
+      <li>storage.management.commands package</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
             <a href="../../../_sources/architecture/django/code_docs/storage.management.commands.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -244,6 +264,39 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-storage.management.commands.scale_list_files">
+<span id="storage-management-commands-scale-list-files-module"></span><h2>storage.management.commands.scale_list_files module<a class="headerlink" href="#module-storage.management.commands.scale_list_files" title="Permalink to this headline">¶</a></h2>
+<p>Defines the command line method for listing files within a workspace</p>
+<dl class="class">
+<dt id="storage.management.commands.scale_list_files.Command">
+<em class="property">class </em><code class="descclassname">storage.management.commands.scale_list_files.</code><code class="descname">Command</code><a class="headerlink" href="#storage.management.commands.scale_list_files.Command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.management.base.BaseCommand</span></code></p>
+<p>Command for listing files within a workspace.</p>
+<dl class="method">
+<dt id="storage.management.commands.scale_list_files.Command.callback">
+<code class="descname">callback</code><span class="sig-paren">(</span><em>files</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.management.commands.scale_list_files.Command.callback" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="storage.management.commands.scale_list_files.Command.handle">
+<code class="descname">handle</code><span class="sig-paren">(</span><em>*args</em>, <em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.management.commands.scale_list_files.Command.handle" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <code class="xref py py-meth docutils literal"><span class="pre">django.core.management.base.BaseCommand.handle()</span></code>.</p>
+<p>This method will list the entire contents of a workspace.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.management.commands.scale_list_files.Command.help">
+<code class="descname">help</code><em class="property"> = u'Lists files within a workspace.'</em><a class="headerlink" href="#storage.management.commands.scale_list_files.Command.help" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="storage.management.commands.scale_list_files.Command.option_list">
+<code class="descname">option_list</code><em class="property"> = (&lt;Option at 0x2b0fc9e17368: -v/--verbosity&gt;, &lt;Option at 0x2b0fc9e17488: --settings&gt;, &lt;Option at 0x2b0fc9e174d0: --pythonpath&gt;, &lt;Option at 0x2b0fc9e17518: --traceback&gt;, &lt;Option at 0x2b0fc9e175a8: --no-color&gt;, &lt;Option at 0x2b0fe3b87b90: -r/--recursive&gt;, &lt;Option at 0x2b0fe3b87200: -l/--local&gt;, &lt;Option at 0x2b0fe3b872d8: -w/--workspace-id&gt;)</em><a class="headerlink" href="#storage.management.commands.scale_list_files.Command.option_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-storage.management.commands.scale_move_file">
 <span id="storage-management-commands-scale-move-file-module"></span><h2>storage.management.commands.scale_move_file module<a class="headerlink" href="#module-storage.management.commands.scale_move_file" title="Permalink to this headline">¶</a></h2>
 <p>Defines the command line method for moving a file</p>
@@ -289,7 +342,7 @@
 
 <dl class="attribute">
 <dt id="storage.management.commands.scale_upload_file.Command.option_list">
-<code class="descname">option_list</code><em class="property"> = (&lt;Option at 0x2ad02c47a248: -v/--verbosity&gt;, &lt;Option at 0x2ad02c47a368: --settings&gt;, &lt;Option at 0x2ad02c47a3b0: --pythonpath&gt;, &lt;Option at 0x2ad02c47a3f8: --traceback&gt;, &lt;Option at 0x2ad02c47a488: --no-color&gt;, &lt;Option at 0x2ad046183290: -w/--workspace&gt;)</em><a class="headerlink" href="#storage.management.commands.scale_upload_file.Command.option_list" title="Permalink to this definition">¶</a></dt>
+<code class="descname">option_list</code><em class="property"> = (&lt;Option at 0x2b0fc9e17368: -v/--verbosity&gt;, &lt;Option at 0x2b0fc9e17488: --settings&gt;, &lt;Option at 0x2b0fc9e174d0: --pythonpath&gt;, &lt;Option at 0x2b0fc9e17518: --traceback&gt;, &lt;Option at 0x2b0fc9e175a8: --no-color&gt;, &lt;Option at 0x2b0fe3bb4368: -w/--workspace&gt;)</em><a class="headerlink" href="#storage.management.commands.scale_upload_file.Command.option_list" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -301,6 +354,9 @@
 </div>
 
 
+           </div>
+           <div class="articleComments">
+            
            </div>
           </div>
           <footer>
@@ -344,7 +400,8 @@
             VERSION:'4.3.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: ''
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

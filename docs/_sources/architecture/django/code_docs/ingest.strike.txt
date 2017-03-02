@@ -7,7 +7,6 @@ Subpackages
 .. toctree::
 
     ingest.strike.configuration
-    ingest.strike.handlers
     ingest.strike.monitors
 
 Module contents

@@ -1,0 +1,54 @@
+ingest.scan.scanners package
+============================
+
+Submodules
+----------
+
+ingest.scan.scanners.dir_scanner module
+---------------------------------------
+
+.. automodule:: ingest.scan.scanners.dir_scanner
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+ingest.scan.scanners.exceptions module
+--------------------------------------
+
+.. automodule:: ingest.scan.scanners.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+ingest.scan.scanners.factory module
+-----------------------------------
+
+.. automodule:: ingest.scan.scanners.factory
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+ingest.scan.scanners.s3_scanner module
+--------------------------------------
+
+.. automodule:: ingest.scan.scanners.s3_scanner
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+ingest.scan.scanners.scanner module
+-----------------------------------
+
+.. automodule:: ingest.scan.scanners.scanner
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: ingest.scan.scanners
+    :members:
+    :undoc-members:
+    :show-inheritance:

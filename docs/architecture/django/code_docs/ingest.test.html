@@ -34,7 +34,7 @@
   
     <link rel="top" title="Scale 4.3.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="ingest package" href="ingest.html"/>
-        <link rel="next" title="ingest.test.strike package" href="ingest.test.strike.html"/>
+        <link rel="next" title="ingest.test.scan package" href="ingest.test.scan.html"/>
         <link rel="prev" title="ingest.strike.monitors package" href="ingest.strike.monitors.html"/> 
 
   
@@ -44,6 +44,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -149,8 +150,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../../index.html">Scale</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Scale</a>
+        
       </nav>
 
 
@@ -159,29 +162,46 @@
         <div class="rst-content">
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../../index.html">Architecture</a> &raquo;</li>
-      
+        
           <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
-      
+        
           <li><a href="ingest.html">ingest package</a> &raquo;</li>
-      
-    <li>ingest.test package</li>
+        
+      <li>ingest.test package</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
             <a href="../../../_sources/architecture/django/code_docs/ingest.test.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -193,6 +213,26 @@
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="ingest.test.scan.html">ingest.test.scan package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingest.test.scan.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ingest.test.scan.configuration.html">ingest.test.scan.configuration package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ingest.test.scan.configuration.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.test.scan.configuration.html#module-ingest.test.scan.configuration.test_scan_configuration">ingest.test.scan.configuration.test_scan_configuration module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.test.scan.configuration.html#module-ingest.test.scan.configuration">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.test.scan.scanners.html">ingest.test.scan.scanners package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ingest.test.scan.scanners.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.test.scan.scanners.html#module-ingest.test.scan.scanners.test_dir_scanner">ingest.test.scan.scanners.test_dir_scanner module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.test.scan.scanners.html#module-ingest.test.scan.scanners.test_s3_scanner">ingest.test.scan.scanners.test_s3_scanner module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.test.scan.scanners.html#module-ingest.test.scan.scanners">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.test.scan.html#module-ingest.test.scan">Module contents</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="ingest.test.strike.html">ingest.test.strike package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="ingest.test.strike.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ingest.test.strike.configuration.html">ingest.test.strike.configuration package</a><ul>
@@ -653,12 +693,15 @@
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="ingest.test.strike.html" class="btn btn-neutral float-right" title="ingest.test.strike package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="ingest.test.scan.html" class="btn btn-neutral float-right" title="ingest.test.scan package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="ingest.strike.monitors.html" class="btn btn-neutral" title="ingest.strike.monitors package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -695,7 +738,8 @@
             VERSION:'4.3.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: ''
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

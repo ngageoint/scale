@@ -44,6 +44,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -151,8 +152,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../../index.html">Scale</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Scale</a>
+        
       </nav>
 
 
@@ -161,27 +164,44 @@
         <div class="rst-content">
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../../index.html">Architecture</a> &raquo;</li>
-      
+        
           <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
-      
-    <li>metrics package</li>
+        
+      <li>metrics package</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
             <a href="../../../_sources/architecture/django/code_docs/metrics.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -345,7 +365,7 @@
 
 <dl class="attribute">
 <dt id="metrics.models.MetricsError.GROUPS">
-<code class="descclassname">MetricsError.</code><code class="descname">GROUPS</code><em class="property"> = [&lt;metrics.registry.MetricsTypeGroup object at 0x2ad03c8c1f10&gt;]</em><a class="headerlink" href="#metrics.models.MetricsError.GROUPS" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">MetricsError.</code><code class="descname">GROUPS</code><em class="property"> = [&lt;metrics.registry.MetricsTypeGroup object at 0x2b0fda281bd0&gt;]</em><a class="headerlink" href="#metrics.models.MetricsError.GROUPS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="exception">
@@ -453,7 +473,7 @@
 
 <dl class="attribute">
 <dt id="metrics.models.MetricsIngest.GROUPS">
-<code class="descclassname">MetricsIngest.</code><code class="descname">GROUPS</code><em class="property"> = [&lt;metrics.registry.MetricsTypeGroup object at 0x2ad03c8d4590&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2ad03c8d4450&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2ad03c8d4510&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2ad03c8d4550&gt;]</em><a class="headerlink" href="#metrics.models.MetricsIngest.GROUPS" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">MetricsIngest.</code><code class="descname">GROUPS</code><em class="property"> = [&lt;metrics.registry.MetricsTypeGroup object at 0x2b0fda28f250&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b0fda28f110&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b0fda28f1d0&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b0fda28f210&gt;]</em><a class="headerlink" href="#metrics.models.MetricsIngest.GROUPS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="exception">
@@ -576,7 +596,7 @@
 
 <dl class="attribute">
 <dt id="metrics.models.MetricsJobType.GROUPS">
-<code class="descclassname">MetricsJobType.</code><code class="descname">GROUPS</code><em class="property"> = [&lt;metrics.registry.MetricsTypeGroup object at 0x2ad03c8d4f50&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2ad03c8e20d0&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2ad03c8e2050&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2ad03c8e2090&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2ad03c8e2110&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2ad03c8e2150&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2ad03c8e2190&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2ad03c8e21d0&gt;]</em><a class="headerlink" href="#metrics.models.MetricsJobType.GROUPS" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">MetricsJobType.</code><code class="descname">GROUPS</code><em class="property"> = [&lt;metrics.registry.MetricsTypeGroup object at 0x2b0fda28fd50&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b0fda28fc10&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b0fda28fcd0&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b0fda28fd10&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b0fda28fd90&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b0fda28fdd0&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b0fda28fe10&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b0fda28fe50&gt;]</em><a class="headerlink" href="#metrics.models.MetricsJobType.GROUPS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="exception">
@@ -1359,7 +1379,7 @@ are not included by default.</li>
 
 <dl class="attribute">
 <dt id="metrics.views.MetricsView.queryset">
-<code class="descname">queryset</code><em class="property"> = [&lt;metrics.registry.MetricsType object at 0x2ad042223a90&gt;, &lt;metrics.registry.MetricsType object at 0x2ad0422230d0&gt;, &lt;metrics.registry.MetricsType object at 0x2ad04209af90&gt;]</em><a class="headerlink" href="#metrics.views.MetricsView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = [&lt;metrics.registry.MetricsType object at 0x2b0fddb13bd0&gt;, &lt;metrics.registry.MetricsType object at 0x2b0fddb13950&gt;, &lt;metrics.registry.MetricsType object at 0x2b0fdf5ca050&gt;]</em><a class="headerlink" href="#metrics.views.MetricsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1377,6 +1397,9 @@ are not included by default.</li>
 </div>
 
 
+           </div>
+           <div class="articleComments">
+            
            </div>
           </div>
           <footer>
@@ -1420,7 +1443,8 @@ are not included by default.</li>
             VERSION:'4.3.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: ''
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

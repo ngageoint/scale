@@ -44,6 +44,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -149,8 +150,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../../index.html">Scale</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Scale</a>
+        
       </nav>
 
 
@@ -159,31 +162,48 @@
         <div class="rst-content">
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../../index.html">Architecture</a> &raquo;</li>
-      
+        
           <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
-      
+        
           <li><a href="ingest.html">ingest package</a> &raquo;</li>
-      
+        
           <li><a href="ingest.management.html">ingest.management package</a> &raquo;</li>
-      
-    <li>ingest.management.commands package</li>
+        
+      <li>ingest.management.commands package</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
             <a href="../../../_sources/architecture/django/code_docs/ingest.management.commands.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -216,7 +236,35 @@
 
 <dl class="attribute">
 <dt id="ingest.management.commands.scale_ingest.Command.option_list">
-<code class="descname">option_list</code><em class="property"> = (&lt;Option at 0x2ad02c47a248: -v/--verbosity&gt;, &lt;Option at 0x2ad02c47a368: --settings&gt;, &lt;Option at 0x2ad02c47a3b0: --pythonpath&gt;, &lt;Option at 0x2ad02c47a3f8: --traceback&gt;, &lt;Option at 0x2ad02c47a488: --no-color&gt;, &lt;Option at 0x2ad03eb84050: -i/--ingest-id&gt;)</em><a class="headerlink" href="#ingest.management.commands.scale_ingest.Command.option_list" title="Permalink to this definition">¶</a></dt>
+<code class="descname">option_list</code><em class="property"> = (&lt;Option at 0x2b0fc9e17368: -v/--verbosity&gt;, &lt;Option at 0x2b0fc9e17488: --settings&gt;, &lt;Option at 0x2b0fc9e174d0: --pythonpath&gt;, &lt;Option at 0x2b0fc9e17518: --traceback&gt;, &lt;Option at 0x2b0fc9e175a8: --no-color&gt;, &lt;Option at 0x2b0fdc164998: -i/--ingest-id&gt;)</em><a class="headerlink" href="#ingest.management.commands.scale_ingest.Command.option_list" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ingest.management.commands.scale_scan">
+<span id="ingest-management-commands-scale-scan-module"></span><h2>ingest.management.commands.scale_scan module<a class="headerlink" href="#module-ingest.management.commands.scale_scan" title="Permalink to this headline">¶</a></h2>
+<p>Defines the command line method for running a Scan process</p>
+<dl class="class">
+<dt id="ingest.management.commands.scale_scan.Command">
+<em class="property">class </em><code class="descclassname">ingest.management.commands.scale_scan.</code><code class="descname">Command</code><a class="headerlink" href="#ingest.management.commands.scale_scan.Command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.management.base.BaseCommand</span></code></p>
+<p>Command that executes the Workspace Scan processor</p>
+<dl class="method">
+<dt id="ingest.management.commands.scale_scan.Command.handle">
+<code class="descname">handle</code><span class="sig-paren">(</span><em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.management.commands.scale_scan.Command.handle" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <code class="xref py py-meth docutils literal"><span class="pre">django.core.management.base.BaseCommand.handle()</span></code>.</p>
+<p>This method starts the Scan processor.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.management.commands.scale_scan.Command.help">
+<code class="descname">help</code><em class="property"> = u'Executes the Scan processor to make a single pass over a workspace for ingest'</em><a class="headerlink" href="#ingest.management.commands.scale_scan.Command.help" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.management.commands.scale_scan.Command.option_list">
+<code class="descname">option_list</code><em class="property"> = (&lt;Option at 0x2b0fc9e17368: -v/--verbosity&gt;, &lt;Option at 0x2b0fc9e17488: --settings&gt;, &lt;Option at 0x2b0fc9e174d0: --pythonpath&gt;, &lt;Option at 0x2b0fc9e17518: --traceback&gt;, &lt;Option at 0x2b0fc9e175a8: --no-color&gt;, &lt;Option at 0x2b0fdb520f80: -i/--scan-id&gt;, &lt;Option at 0x2b0fdc40b5a8: -d/--dry-run&gt;, &lt;Option at 0x2b0fdc40bd40: -l/--local&gt;)</em><a class="headerlink" href="#ingest.management.commands.scale_scan.Command.option_list" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -244,7 +292,7 @@
 
 <dl class="attribute">
 <dt id="ingest.management.commands.scale_strike.Command.option_list">
-<code class="descname">option_list</code><em class="property"> = (&lt;Option at 0x2ad02c47a248: -v/--verbosity&gt;, &lt;Option at 0x2ad02c47a368: --settings&gt;, &lt;Option at 0x2ad02c47a3b0: --pythonpath&gt;, &lt;Option at 0x2ad02c47a3f8: --traceback&gt;, &lt;Option at 0x2ad02c47a488: --no-color&gt;, &lt;Option at 0x2ad03ec02638: -i/--strike-id&gt;)</em><a class="headerlink" href="#ingest.management.commands.scale_strike.Command.option_list" title="Permalink to this definition">¶</a></dt>
+<code class="descname">option_list</code><em class="property"> = (&lt;Option at 0x2b0fc9e17368: -v/--verbosity&gt;, &lt;Option at 0x2b0fc9e17488: --settings&gt;, &lt;Option at 0x2b0fc9e174d0: --pythonpath&gt;, &lt;Option at 0x2b0fc9e17518: --traceback&gt;, &lt;Option at 0x2b0fc9e175a8: --no-color&gt;, &lt;Option at 0x2b0fdbe35560: -i/--strike-id&gt;)</em><a class="headerlink" href="#ingest.management.commands.scale_strike.Command.option_list" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -257,6 +305,9 @@
 </div>
 
 
+           </div>
+           <div class="articleComments">
+            
            </div>
           </div>
           <footer>
@@ -300,7 +351,8 @@
             VERSION:'4.3.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: ''
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

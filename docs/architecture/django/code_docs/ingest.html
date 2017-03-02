@@ -34,7 +34,7 @@
   
     <link rel="top" title="Scale 4.3.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="Django/Code Base" href="../index.html"/>
-        <link rel="next" title="ingest.management package" href="ingest.management.html"/>
+        <link rel="next" title="ingest.handlers package" href="ingest.handlers.html"/>
         <link rel="prev" title="error.test package" href="error.test.html"/> 
 
   
@@ -44,6 +44,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -149,8 +150,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../../index.html">Scale</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Scale</a>
+        
       </nav>
 
 
@@ -159,27 +162,44 @@
         <div class="rst-content">
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../../index.html">Architecture</a> &raquo;</li>
-      
+        
           <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
-      
-    <li>ingest package</li>
+        
+      <li>ingest package</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
             <a href="../../../_sources/architecture/django/code_docs/ingest.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -191,11 +211,19 @@
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="ingest.handlers.html">ingest.handlers package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingest.handlers.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.handlers.html#module-ingest.handlers.file_handler">ingest.handlers.file_handler module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.handlers.html#module-ingest.handlers.file_rule">ingest.handlers.file_rule module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.handlers.html#module-ingest.handlers">Module contents</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="ingest.management.html">ingest.management package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="ingest.management.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="ingest.management.commands.html">ingest.management.commands package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ingest.management.commands.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.management.commands.html#module-ingest.management.commands.scale_ingest">ingest.management.commands.scale_ingest module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.management.commands.html#module-ingest.management.commands.scale_scan">ingest.management.commands.scale_scan module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.management.commands.html#module-ingest.management.commands.scale_strike">ingest.management.commands.scale_strike module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.management.commands.html#module-ingest.management.commands">Module contents</a></li>
 </ul>
@@ -215,7 +243,33 @@
 <li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations.0006_auto_20161202_1621">ingest.migrations.0006_auto_20161202_1621 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations.0007_auto_20170127_1327">ingest.migrations.0007_auto_20170127_1327 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations.0008_auto_20170127_1332">ingest.migrations.0008_auto_20170127_1332 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations.0009_scan">ingest.migrations.0009_scan module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations.0010_auto_20170206_1646">ingest.migrations.0010_auto_20170206_1646 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ingest.scan.html">ingest.scan package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ingest.scan.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ingest.scan.configuration.html">ingest.scan.configuration package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ingest.scan.configuration.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.scan.configuration.html#module-ingest.scan.configuration.exceptions">ingest.scan.configuration.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.scan.configuration.html#module-ingest.scan.configuration.scan_configuration">ingest.scan.configuration.scan_configuration module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.scan.configuration.html#module-ingest.scan.configuration">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.scan.scanners.html">ingest.scan.scanners package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ingest.scan.scanners.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.scan.scanners.html#module-ingest.scan.scanners.dir_scanner">ingest.scan.scanners.dir_scanner module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.scan.scanners.html#module-ingest.scan.scanners.exceptions">ingest.scan.scanners.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.scan.scanners.html#module-ingest.scan.scanners.factory">ingest.scan.scanners.factory module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.scan.scanners.html#module-ingest.scan.scanners.s3_scanner">ingest.scan.scanners.s3_scanner module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.scan.scanners.html#module-ingest.scan.scanners.scanner">ingest.scan.scanners.scanner module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.scan.scanners.html#module-ingest.scan.scanners">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.scan.html#module-ingest.scan">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ingest.strike.html">ingest.strike package</a><ul>
@@ -226,13 +280,6 @@
 <li class="toctree-l4"><a class="reference internal" href="ingest.strike.configuration.html#module-ingest.strike.configuration.strike_configuration">ingest.strike.configuration.strike_configuration module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.strike.configuration.html#module-ingest.strike.configuration.strike_configuration_1_0">ingest.strike.configuration.strike_configuration_1_0 module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ingest.strike.configuration.html#module-ingest.strike.configuration">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="ingest.strike.handlers.html">ingest.strike.handlers package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="ingest.strike.handlers.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ingest.strike.handlers.html#module-ingest.strike.handlers.file_handler">ingest.strike.handlers.file_handler module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ingest.strike.handlers.html#module-ingest.strike.handlers.file_rule">ingest.strike.handlers.file_rule module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="ingest.strike.handlers.html#module-ingest.strike.handlers">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.strike.monitors.html">ingest.strike.monitors package</a><ul>
@@ -252,6 +299,26 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ingest.test.html">ingest.test package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="ingest.test.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ingest.test.scan.html">ingest.test.scan package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="ingest.test.scan.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="ingest.test.scan.configuration.html">ingest.test.scan.configuration package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="ingest.test.scan.configuration.html#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ingest.test.scan.configuration.html#module-ingest.test.scan.configuration.test_scan_configuration">ingest.test.scan.configuration.test_scan_configuration module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ingest.test.scan.configuration.html#module-ingest.test.scan.configuration">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="ingest.test.scan.scanners.html">ingest.test.scan.scanners package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="ingest.test.scan.scanners.html#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ingest.test.scan.scanners.html#module-ingest.test.scan.scanners.test_dir_scanner">ingest.test.scan.scanners.test_dir_scanner module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ingest.test.scan.scanners.html#module-ingest.test.scan.scanners.test_s3_scanner">ingest.test.scan.scanners.test_s3_scanner module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ingest.test.scan.scanners.html#module-ingest.test.scan.scanners">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.test.scan.html#module-ingest.test.scan">Module contents</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.test.strike.html">ingest.test.strike package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="ingest.test.strike.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="ingest.test.strike.configuration.html">ingest.test.strike.configuration package</a><ul>
@@ -445,6 +512,26 @@ spaces.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="ingest.models.Ingest.add_file">
+<code class="descclassname">Ingest.</code><code class="descname">add_file</code><span class="sig-paren">(</span><em>file_name</em>, <em>workspace</em>, <em>scan_id=None</em>, <em>strike_id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Ingest.add_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add file source metadata to ingest record</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>file_name</strong> (<em>string</em>) &#8211; File name excluding full path</li>
+<li><strong>workspace</strong> (<em>string</em>) &#8211; </li>
+<li><strong>scan_id</strong> (<em>int</em>) &#8211; </li>
+<li><strong>strike_id</strong> (<em>int</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="ingest.models.Ingest.get_data_type_tags">
 <code class="descclassname">Ingest.</code><code class="descname">get_data_type_tags</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Ingest.get_data_type_tags" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the set of data type tags associated with this file</p>
@@ -485,6 +572,47 @@ spaces.</p>
 <code class="descclassname">Ingest.</code><code class="descname">get_status_display</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Ingest.get_status_display" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="method">
+<dt id="ingest.models.Ingest.is_there_rule_match">
+<code class="descclassname">Ingest.</code><code class="descname">is_there_rule_match</code><span class="sig-paren">(</span><em>file_handler</em>, <em>workspaces</em>, <em>no_match_status=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Ingest.is_there_rule_match" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies rules to an ingest record, determining if there is a match and updating as indicated in rule match</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>file_handler</strong> &#8211; Rules to be matched against the ingest record</li>
+<li><strong>workspaces</strong> &#8211; mimetype to workspace mapping</li>
+<li><strong>no_match_status</strong> &#8211; Optional status to apply when rules aren&#8217;t matched</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><table class="first docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">class:</th><td class="field-body"><cite>ingest.handlers.file_handler.FileHandler</cite></td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Type:</th><td class="field-body"><p class="first">dict</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><p class="first">string</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The ingest record if matched otherwise None</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#ingest.models.Ingest" title="ingest.models.Ingest"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.Ingest</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="ingest.models.Ingest.job">
 <code class="descclassname">Ingest.</code><code class="descname">job</code><a class="headerlink" href="#ingest.models.Ingest.job" title="Permalink to this definition">¶</a></dt>
@@ -498,6 +626,11 @@ spaces.</p>
 <dl class="attribute">
 <dt id="ingest.models.Ingest.objects">
 <code class="descclassname">Ingest.</code><code class="descname">objects</code><em class="property"> = &lt;ingest.models.IngestManager object&gt;</em><a class="headerlink" href="#ingest.models.Ingest.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Ingest.scan">
+<code class="descclassname">Ingest.</code><code class="descname">scan</code><a class="headerlink" href="#ingest.models.Ingest.scan" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -542,6 +675,32 @@ spaces.</p>
 <em class="property">class </em><code class="descclassname">ingest.models.</code><code class="descname">IngestManager</code><a class="headerlink" href="#ingest.models.IngestManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <p>Provides additional methods for handling ingests.</p>
+<dl class="method">
+<dt id="ingest.models.IngestManager.create_ingest">
+<code class="descname">create_ingest</code><span class="sig-paren">(</span><em>file_name</em>, <em>workspace</em>, <em>scan_id=None</em>, <em>strike_id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.IngestManager.create_ingest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new ingest for the given file name. The database save is the caller&#8217;s responsibility.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>file_name</strong> (<em>string</em>) &#8211; The name of the file being ingested</li>
+<li><strong>workspace</strong> (<em>string</em>) &#8211; </li>
+<li><strong>scan_id</strong> (<em>int</em>) &#8211; </li>
+<li><strong>strike_id</strong> (<em>int</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The new ingest model</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#ingest.models.Ingest" title="ingest.models.Ingest"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.Ingest</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="ingest.models.IngestManager.get_details">
 <code class="descname">get_details</code><span class="sig-paren">(</span><em>ingest_id</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.IngestManager.get_details" title="Permalink to this definition">¶</a></dt>
@@ -605,6 +764,30 @@ spaces.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="ingest.models.IngestManager.get_ingests_by_scan">
+<code class="descname">get_ingests_by_scan</code><span class="sig-paren">(</span><em>scan_id</em>, <em>file_names=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.IngestManager.get_ingests_by_scan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of ingests associated with a scan and optionally files</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>scan_id</strong> (<em>list[string]</em>) &#8211; Query ingests created by a specific scan processor.</li>
+<li><strong>file_names</strong> (<em>list[string]</em>) &#8211; Query ingests with the specific file names.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of ingests that match the scan and file_names.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#ingest.models.Ingest" title="ingest.models.Ingest"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.Ingest</span></code></a>]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="ingest.models.IngestManager.get_status">
 <code class="descname">get_status</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>use_ingest_time=False</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.IngestManager.get_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns ingest status information within the given time range grouped by strike process.</p>
@@ -623,6 +806,26 @@ spaces.</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#ingest.models.IngestStatus" title="ingest.models.IngestStatus"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.IngestStatus</span></code></a>]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.IngestManager.start_ingest_tasks">
+<code class="descname">start_ingest_tasks</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.IngestManager.start_ingest_tasks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts a batch of tasks for the given scan in an atomic transaction.</p>
+<p>One of scan_id or strike_id must be set.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ingests</strong> (list[<a class="reference internal" href="#ingest.models.Ingest" title="ingest.models.Ingest"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.Ingest</span></code></a>]) &#8211; The ingest models</li>
+<li><strong>scan_id</strong> (<em>int</em>) &#8211; ID of Scan that generated ingest</li>
+<li><strong>strike_id</strong> (<em>int</em>) &#8211; ID of Strike that generated ingest</li>
+</ul>
 </td>
 </tr>
 </tbody>
@@ -651,6 +854,241 @@ spaces.</p>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.models.Scan">
+<em class="property">class </em><code class="descclassname">ingest.models.</code><code class="descname">Scan</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Scan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
+<p>Represents an instance of a Scan process which will run and detect files
+in a workspace for ingest</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The identifying name of this Scan process</li>
+<li><strong>title</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The human-readable name of this Scan process</li>
+<li><strong>description</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; An optional description of this Scan process</li>
+<li><strong>configuration</strong> (<code class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></code>) &#8211; JSON configuration for this Scan process</li>
+<li><strong>job</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The job that is performing the Scan process</li>
+<li><strong>created</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the Scan process was created</li>
+<li><strong>last_modified</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the Scan process was last modified</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="exception">
+<dt id="ingest.models.Scan.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#ingest.models.Scan.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="ingest.models.Scan.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descclassname">Scan.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#ingest.models.Scan.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Scan.configuration">
+<code class="descclassname">Scan.</code><code class="descname">configuration</code><a class="headerlink" href="#ingest.models.Scan.configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>A placeholder class that provides a way to set the attribute on the model.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.Scan.get_next_by_created">
+<code class="descclassname">Scan.</code><code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Scan.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.Scan.get_next_by_last_modified">
+<code class="descclassname">Scan.</code><code class="descname">get_next_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Scan.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.Scan.get_previous_by_created">
+<code class="descclassname">Scan.</code><code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Scan.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.Scan.get_previous_by_last_modified">
+<code class="descclassname">Scan.</code><code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Scan.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.Scan.get_scan_configuration">
+<code class="descclassname">Scan.</code><code class="descname">get_scan_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Scan.get_scan_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the configuration for this Scan process</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The configuration for this Scan process</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.scan.configuration.html#ingest.scan.configuration.scan_configuration.ScanConfiguration" title="ingest.scan.configuration.scan_configuration.ScanConfiguration"><code class="xref py py-class docutils literal"><span class="pre">ingest.scan.configuration.scan_configuration.ScanConfiguration</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.Scan.get_scan_configuration_as_dict">
+<code class="descclassname">Scan.</code><code class="descname">get_scan_configuration_as_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Scan.get_scan_configuration_as_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the configuration for this Scan process as a dict</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The configuration for this Scan process</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Scan.ingest_set">
+<code class="descclassname">Scan.</code><code class="descname">ingest_set</code><a class="headerlink" href="#ingest.models.Scan.ingest_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Scan.job">
+<code class="descclassname">Scan.</code><code class="descname">job</code><a class="headerlink" href="#ingest.models.Scan.job" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Scan.objects">
+<code class="descclassname">Scan.</code><code class="descname">objects</code><em class="property"> = &lt;ingest.models.ScanManager object&gt;</em><a class="headerlink" href="#ingest.models.Scan.objects" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.models.ScanManager">
+<em class="property">class </em><code class="descclassname">ingest.models.</code><code class="descname">ScanManager</code><a class="headerlink" href="#ingest.models.ScanManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
+<p>Provides additional methods for handling Scan processes</p>
+<dl class="method">
+<dt id="ingest.models.ScanManager.create_scan">
+<code class="descname">create_scan</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.ScanManager.create_scan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new Scan process with the given configuration and returns the new Scan model. The Scan model
+will be saved in the database and the job to run the Scan process will be placed on the queue. All changes to
+the database will occur in an atomic transaction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; The identifying name of this Scan process</li>
+<li><strong>title</strong> (<em>string</em>) &#8211; The human-readable name of this Scan process</li>
+<li><strong>description</strong> (<em>string</em>) &#8211; A description of this Scan process</li>
+<li><strong>configuration</strong> (<em>dict</em>) &#8211; The Scan configuration</li>
+<li><strong>dry_run</strong> (<em>bool</em>) &#8211; Whether the scan will execute as a dry run</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The new Scan process</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#ingest.models.Scan" title="ingest.models.Scan"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.Scan</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>:raises <a class="reference internal" href="ingest.scan.configuration.html#ingest.scan.configuration.exceptions.InvalidScanConfiguration" title="ingest.scan.configuration.exceptions.InvalidScanConfiguration"><code class="xref py py-class docutils literal"><span class="pre">ingest.scan.configuration.exceptions.InvalidScanConfiguration</span></code></a>: If the configuration is</dt>
+<dd>invalid.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.ScanManager.edit_scan">
+<code class="descname">edit_scan</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.ScanManager.edit_scan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Edits the given Scan process and saves the changes in the database. All database changes occur in an atomic
+transaction. An argument of None for a field indicates that the field should not change.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>scan_id</strong> (<em>int</em>) &#8211; The unique identifier of the Scan process to edit</li>
+<li><strong>title</strong> (<em>string</em>) &#8211; The human-readable name of this Scan process</li>
+<li><strong>description</strong> (<em>string</em>) &#8211; A description of this Scan process</li>
+<li><strong>configuration</strong> (<em>dict</em>) &#8211; The Strike process configuration</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>:raises <a class="reference internal" href="ingest.scan.configuration.html#ingest.scan.configuration.exceptions.InvalidScanConfiguration" title="ingest.scan.configuration.exceptions.InvalidScanConfiguration"><code class="xref py py-class docutils literal"><span class="pre">ingest.scan.configuration.exceptions.InvalidScanConfiguration</span></code></a>: If the configuration is</dt>
+<dd>invalid.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.ScanManager.get_details">
+<code class="descname">get_details</code><span class="sig-paren">(</span><em>scan_id</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.ScanManager.get_details" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the Scan process for the given ID with all detail fields included.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>scan_id</strong> (<em>int</em>) &#8211; The unique identifier of the Scan process.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The Scan process with all detail fields included.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#ingest.models.Scan" title="ingest.models.Scan"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.Scan</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.ScanManager.get_scan_job_type">
+<code class="descname">get_scan_job_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.ScanManager.get_scan_job_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the Scale Scan job type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The Scan job type</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.ScanManager.get_scans">
+<code class="descname">get_scans</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>names=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.ScanManager.get_scans" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of Scan processes within the given time range.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query Scan processes updated after this amount of time.</li>
+<li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query Scan processes updated before this amount of time.</li>
+<li><strong>names</strong> (<em>list[string]</em>) &#8211; Query Scan processes associated with the name.</li>
+<li><strong>order</strong> (<em>list[string]</em>) &#8211; A list of fields to control the sort order.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of Scan processes that match the time range.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#ingest.models.Scan" title="ingest.models.Scan"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.Scan</span></code></a>]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
@@ -1289,12 +1727,15 @@ transaction. An argument of None for a field indicates that the field should not
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="ingest.management.html" class="btn btn-neutral float-right" title="ingest.management package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="ingest.handlers.html" class="btn btn-neutral float-right" title="ingest.handlers package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="error.test.html" class="btn btn-neutral" title="error.test package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -1331,7 +1772,8 @@ transaction. An argument of None for a field indicates that the field should not
             VERSION:'4.3.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: ''
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

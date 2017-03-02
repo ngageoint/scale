@@ -44,6 +44,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -154,8 +155,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../../../index.html">Scale</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Scale</a>
+        
       </nav>
 
 
@@ -164,29 +167,46 @@
         <div class="rst-content">
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../../../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="../../index.html">Architecture</a> &raquo;</li>
-      
+        
           <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
-      
+        
           <li><a href="util.html">util package</a> &raquo;</li>
-      
-    <li>util.test package</li>
+        
+      <li>util.test package</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
+            
             <a href="../../../_sources/architecture/django/code_docs/util.test.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -237,6 +257,57 @@
 <code class="descname">test_instantiate_credentials_from_config_missing_secret_key</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_aws.TestAws.test_instantiate_credentials_from_config_missing_secret_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests instantiating AWS Credentials from a configuration missing secret key.</p>
 </dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="util.test.test_aws.TestS3Client">
+<em class="property">class </em><code class="descclassname">util.test.test_aws.</code><code class="descname">TestS3Client</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_aws.TestS3Client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="util.test.test_aws.TestS3Client.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_aws.TestS3Client.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_aws.TestS3Client.test_list_objects_bucket_not_found">
+<code class="descname">test_list_objects_bucket_not_found</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_aws.TestS3Client.test_list_objects_bucket_not_found" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_aws.TestS3Client.test_list_objects_empty_bucket">
+<code class="descname">test_list_objects_empty_bucket</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_aws.TestS3Client.test_list_objects_empty_bucket" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_aws.TestS3Client.test_list_objects_invalid_bucket_name">
+<code class="descname">test_list_objects_invalid_bucket_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_aws.TestS3Client.test_list_objects_invalid_bucket_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_aws.TestS3Client.test_list_objects_iteration">
+<code class="descname">test_list_objects_iteration</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_aws.TestS3Client.test_list_objects_iteration" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_aws.TestS3Client.test_list_objects_prefix">
+<code class="descname">test_list_objects_prefix</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_aws.TestS3Client.test_list_objects_prefix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_aws.TestS3Client.test_list_objects_prefix_recursive">
+<code class="descname">test_list_objects_prefix_recursive</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_aws.TestS3Client.test_list_objects_prefix_recursive" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_aws.TestS3Client.test_list_objects_with_callback">
+<code class="descname">test_list_objects_with_callback</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_aws.TestS3Client.test_list_objects_with_callback" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_aws.TestS3Client.test_list_objects_with_callback_exception">
+<code class="descname">test_list_objects_with_callback_exception</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_aws.TestS3Client.test_list_objects_with_callback_exception" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -903,6 +974,9 @@
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
@@ -945,7 +1019,8 @@
             VERSION:'4.3.0-snapshot',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: ''
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

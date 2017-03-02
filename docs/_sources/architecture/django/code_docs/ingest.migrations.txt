@@ -68,6 +68,22 @@ ingest.migrations.0008_auto_20170127_1332 module
     :undoc-members:
     :show-inheritance:
 
+ingest.migrations.0009_scan module
+----------------------------------
+
+.. automodule:: ingest.migrations.0009_scan
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+ingest.migrations.0010_auto_20170206_1646 module
+------------------------------------------------
+
+.. automodule:: ingest.migrations.0010_auto_20170206_1646
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

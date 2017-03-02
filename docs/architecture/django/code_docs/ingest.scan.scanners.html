@@ -1,0 +1,546 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ingest.scan.scanners package &mdash; Scale 4.3.0-snapshot documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Scale 4.3.0-snapshot documentation" href="../../../index.html"/>
+        <link rel="up" title="ingest.scan package" href="ingest.scan.html"/>
+        <link rel="next" title="ingest.strike package" href="ingest.strike.html"/>
+        <link rel="prev" title="ingest.scan.configuration package" href="ingest.scan.configuration.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../../../_static/scale3-transparent-128.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                4.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../logs.html">ElasticSearch Logs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="batch.html">batch package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="ingest.html">ingest package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="ingest.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.apps">ingest.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.ingest_job">ingest.ingest_job module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.models">ingest.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.serializers">ingest.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.urls">ingest.urls module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest.views">ingest.views module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ingest.html#module-ingest">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manage.html">manage module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rest/index.html">REST API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Scale</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Architecture</a> &raquo;</li>
+        
+          <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
+        
+          <li><a href="ingest.html">ingest package</a> &raquo;</li>
+        
+          <li><a href="ingest.scan.html">ingest.scan package</a> &raquo;</li>
+        
+      <li>ingest.scan.scanners package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/architecture/django/code_docs/ingest.scan.scanners.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="ingest-scan-scanners-package">
+<h1>ingest.scan.scanners package<a class="headerlink" href="#ingest-scan-scanners-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-ingest.scan.scanners.dir_scanner">
+<span id="ingest-scan-scanners-dir-scanner-module"></span><h2>ingest.scan.scanners.dir_scanner module<a class="headerlink" href="#module-ingest.scan.scanners.dir_scanner" title="Permalink to this headline">¶</a></h2>
+<p>Defines a scanner that scans an S3 bucket backed workspace for files</p>
+<dl class="class">
+<dt id="ingest.scan.scanners.dir_scanner.DirScanner">
+<em class="property">class </em><code class="descclassname">ingest.scan.scanners.dir_scanner.</code><code class="descname">DirScanner</code><a class="headerlink" href="#ingest.scan.scanners.dir_scanner.DirScanner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ingest.scan.scanners.scanner.Scanner" title="ingest.scan.scanners.scanner.Scanner"><code class="xref py py-class docutils literal"><span class="pre">ingest.scan.scanners.scanner.Scanner</span></code></a></p>
+<p>A scanner for an S3 bucket backed workspace</p>
+<dl class="method">
+<dt id="ingest.scan.scanners.dir_scanner.DirScanner.load_configuration">
+<code class="descname">load_configuration</code><span class="sig-paren">(</span><em>configuration</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.scan.scanners.dir_scanner.DirScanner.load_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#ingest.scan.scanners.scanner.Scanner.load_configuration" title="ingest.scan.scanners.scanner.Scanner.load_configuration"><code class="xref py py-meth docutils literal"><span class="pre">ingest.scan.scanners.scanner.Scanner.load_configuration()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.scan.scanners.dir_scanner.DirScanner.validate_configuration">
+<code class="descname">validate_configuration</code><span class="sig-paren">(</span><em>configuration</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.scan.scanners.dir_scanner.DirScanner.validate_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#ingest.scan.scanners.scanner.Scanner.validate_configuration" title="ingest.scan.scanners.scanner.Scanner.validate_configuration"><code class="xref py py-meth docutils literal"><span class="pre">ingest.scan.scanners.scanner.Scanner.validate_configuration()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ingest.scan.scanners.exceptions">
+<span id="ingest-scan-scanners-exceptions-module"></span><h2>ingest.scan.scanners.exceptions module<a class="headerlink" href="#module-ingest.scan.scanners.exceptions" title="Permalink to this headline">¶</a></h2>
+<p>Defines the exceptions related to Scan scanners</p>
+<dl class="exception">
+<dt id="ingest.scan.scanners.exceptions.InvalidScannerConfiguration">
+<em class="property">exception </em><code class="descclassname">ingest.scan.scanners.exceptions.</code><code class="descname">InvalidScannerConfiguration</code><a class="headerlink" href="#ingest.scan.scanners.exceptions.InvalidScannerConfiguration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="ingest.scan.configuration.html#ingest.scan.configuration.exceptions.InvalidScanConfiguration" title="ingest.scan.configuration.exceptions.InvalidScanConfiguration"><code class="xref py py-class docutils literal"><span class="pre">ingest.scan.configuration.exceptions.InvalidScanConfiguration</span></code></a></p>
+<p>Exception indicating that a scanner configuration was invalid</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="ingest.scan.scanners.exceptions.ScannerInterruptRequested">
+<em class="property">exception </em><code class="descclassname">ingest.scan.scanners.exceptions.</code><code class="descname">ScannerInterruptRequested</code><a class="headerlink" href="#ingest.scan.scanners.exceptions.ScannerInterruptRequested" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Exception indicating that a scanner run was interrupted</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ingest.scan.scanners.factory">
+<span id="ingest-scan-scanners-factory-module"></span><h2>ingest.scan.scanners.factory module<a class="headerlink" href="#module-ingest.scan.scanners.factory" title="Permalink to this headline">¶</a></h2>
+<p>Defines the factory for creating monitors</p>
+<dl class="function">
+<dt id="ingest.scan.scanners.factory.add_scanner_type">
+<code class="descclassname">ingest.scan.scanners.factory.</code><code class="descname">add_scanner_type</code><span class="sig-paren">(</span><em>scanner_class</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.scan.scanners.factory.add_scanner_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers a scanner class so it can be used for Scale Scans</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>scanner_class</strong> (class:<cite>ingest.scan.scanners.scanner.Scanner</cite>) &#8211; The class definition for a scanner</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="ingest.scan.scanners.factory.get_scanner">
+<code class="descclassname">ingest.scan.scanners.factory.</code><code class="descname">get_scanner</code><span class="sig-paren">(</span><em>scanner_type</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.scan.scanners.factory.get_scanner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a scanner of the given type that is set to scan the given workspace</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>scanner_type</strong> (<em>string</em>) &#8211; The unique identifier of a registered scanner</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A scanner for storing and retrieving files.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#ingest.scan.scanners.scanner.Scanner" title="ingest.scan.scanners.scanner.Scanner"><code class="xref py py-class docutils literal"><span class="pre">ingest.scan.scanners.scanner.Scanner</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="ingest.scan.scanners.factory.get_scanner_types">
+<code class="descclassname">ingest.scan.scanners.factory.</code><code class="descname">get_scanner_types</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.scan.scanners.factory.get_scanner_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of type identifiers for all registered scanners</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of scanner types</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[string]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-ingest.scan.scanners.s3_scanner">
+<span id="ingest-scan-scanners-s3-scanner-module"></span><h2>ingest.scan.scanners.s3_scanner module<a class="headerlink" href="#module-ingest.scan.scanners.s3_scanner" title="Permalink to this headline">¶</a></h2>
+<p>Defines a scanner that scans an S3 bucket backed workspace for files</p>
+<dl class="class">
+<dt id="ingest.scan.scanners.s3_scanner.S3Scanner">
+<em class="property">class </em><code class="descclassname">ingest.scan.scanners.s3_scanner.</code><code class="descname">S3Scanner</code><a class="headerlink" href="#ingest.scan.scanners.s3_scanner.S3Scanner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ingest.scan.scanners.scanner.Scanner" title="ingest.scan.scanners.scanner.Scanner"><code class="xref py py-class docutils literal"><span class="pre">ingest.scan.scanners.scanner.Scanner</span></code></a></p>
+<p>A scanner for an S3 bucket backed workspace</p>
+<dl class="method">
+<dt id="ingest.scan.scanners.s3_scanner.S3Scanner.load_configuration">
+<code class="descname">load_configuration</code><span class="sig-paren">(</span><em>configuration</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.scan.scanners.s3_scanner.S3Scanner.load_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#ingest.scan.scanners.scanner.Scanner.load_configuration" title="ingest.scan.scanners.scanner.Scanner.load_configuration"><code class="xref py py-meth docutils literal"><span class="pre">ingest.scan.scanners.scanner.Scanner.load_configuration()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.scan.scanners.s3_scanner.S3Scanner.validate_configuration">
+<code class="descname">validate_configuration</code><span class="sig-paren">(</span><em>configuration</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.scan.scanners.s3_scanner.S3Scanner.validate_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#ingest.scan.scanners.scanner.Scanner.validate_configuration" title="ingest.scan.scanners.scanner.Scanner.validate_configuration"><code class="xref py py-meth docutils literal"><span class="pre">ingest.scan.scanners.scanner.Scanner.validate_configuration()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ingest.scan.scanners.scanner">
+<span id="ingest-scan-scanners-scanner-module"></span><h2>ingest.scan.scanners.scanner module<a class="headerlink" href="#module-ingest.scan.scanners.scanner" title="Permalink to this headline">¶</a></h2>
+<p>Defines the base scanner class</p>
+<dl class="class">
+<dt id="ingest.scan.scanners.scanner.Scanner">
+<em class="property">class </em><code class="descclassname">ingest.scan.scanners.scanner.</code><code class="descname">Scanner</code><span class="sig-paren">(</span><em>scanner_type</em>, <em>supported_broker_types</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.scan.scanners.scanner.Scanner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Abstract class for a scanner that processes existing files to ingest. Sub-classes must have a no-argument
+constructor that passes in the correct scanner type and supported broker types and should override the
+load_configuration(), run(), stop(), and validate_configuration() methods.</p>
+<dl class="method">
+<dt id="ingest.scan.scanners.scanner.Scanner.load_configuration">
+<code class="descname">load_configuration</code><span class="sig-paren">(</span><em>configuration</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.scan.scanners.scanner.Scanner.load_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads the given configuration</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>configuration</strong> (<em>dict</em>) &#8211; The configuration as a dictionary</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.scan.scanners.scanner.Scanner.run">
+<code class="descname">run</code><span class="sig-paren">(</span><em>dry_run=False</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.scan.scanners.scanner.Scanner.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs the scanner until signaled to stop by the stop() method or processing complete.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dry_run</strong> (<em>bool</em>) &#8211; Flag to enable file scanning only, no file ingestion will occur</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.scan.scanners.scanner.Scanner.scanner_type">
+<code class="descname">scanner_type</code><a class="headerlink" href="#ingest.scan.scanners.scanner.Scanner.scanner_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>The type of this scanner</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The scanner type</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.scan.scanners.scanner.Scanner.set_recursive">
+<code class="descname">set_recursive</code><span class="sig-paren">(</span><em>recursive</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.scan.scanners.scanner.Scanner.set_recursive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Support configuration of scanner recursive property</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recursive</strong> (<em>bool</em>) &#8211; The flag indicating whether workspace will be recursively scanned</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.scan.scanners.scanner.Scanner.setup_workspaces">
+<code class="descname">setup_workspaces</code><span class="sig-paren">(</span><em>scanned_workspace</em>, <em>file_handler</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.scan.scanners.scanner.Scanner.setup_workspaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets up the workspaces that will be used by this scanner</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>scanned_workspace</strong> (<em>string</em>) &#8211; The name of the workspace that is being scanned</li>
+<li><strong>file_handler</strong> (<a class="reference internal" href="ingest.handlers.html#ingest.handlers.file_handler.FileHandler" title="ingest.handlers.file_handler.FileHandler"><code class="xref py py-class docutils literal"><span class="pre">ingest.handlers.file_handler.FileHandler</span></code></a>) &#8211; The file handler configured for this monitor</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.scan.scanners.scanner.Scanner.stop">
+<code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.scan.scanners.scanner.Scanner.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Signals the scanner to stop running.</p>
+<p>It is the responsibility of sub-classes that override the run() call to monitor this instance variable and stop
+as gracefully and quickly as possible.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.scan.scanners.scanner.Scanner.supported_broker_types">
+<code class="descname">supported_broker_types</code><a class="headerlink" href="#ingest.scan.scanners.scanner.Scanner.supported_broker_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>The broker types supported by this scanner</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The broker types supported by this scanner</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[string]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.scan.scanners.scanner.Scanner.validate_configuration">
+<code class="descname">validate_configuration</code><span class="sig-paren">(</span><em>configuration</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.scan.scanners.scanner.Scanner.validate_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates the given configuration.</p>
+<p>Sub-classes must validate scanner type specific configuration and return a list of warnings if encountered.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>configuration</strong> (<em>dict</em>) &#8211; The configuration as a dictionary</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="ingest.scan.configuration.html#ingest.scan.configuration.scan_configuration.ValidationWarning" title="ingest.scan.configuration.scan_configuration.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">ingest.scan.configuration.scan_configuration.ValidationWarning</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>:raises <a class="reference internal" href="#ingest.scan.scanners.exceptions.InvalidScannerConfiguration" title="ingest.scan.scanners.exceptions.InvalidScannerConfiguration"><code class="xref py py-class docutils literal"><span class="pre">ingest.scan.scanners.exceptions.InvalidScannerConfiguration</span></code></a>: If the given configuration is</dt>
+<dd>invalid</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-ingest.scan.scanners">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ingest.scan.scanners" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ingest.strike.html" class="btn btn-neutral float-right" title="ingest.strike package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ingest.scan.configuration.html" class="btn btn-neutral" title="ingest.scan.configuration package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'4.3.0-snapshot',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: ''
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

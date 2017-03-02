@@ -1,0 +1,30 @@
+ingest.handlers package
+=======================
+
+Submodules
+----------
+
+ingest.handlers.file_handler module
+-----------------------------------
+
+.. automodule:: ingest.handlers.file_handler
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+ingest.handlers.file_rule module
+--------------------------------
+
+.. automodule:: ingest.handlers.file_rule
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: ingest.handlers
+    :members:
+    :undoc-members:
+    :show-inheritance:

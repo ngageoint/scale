@@ -20,6 +20,14 @@ storage.management.commands.scale_download_file module
     :undoc-members:
     :show-inheritance:
 
+storage.management.commands.scale_list_files module
+---------------------------------------------------
+
+.. automodule:: storage.management.commands.scale_list_files
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 storage.management.commands.scale_move_file module
 --------------------------------------------------
 
