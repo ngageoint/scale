@@ -14,9 +14,8 @@ from storage.brokers.exceptions import InvalidBrokerConfiguration
 from storage.configuration.workspace_configuration import ValidationWarning
 from storage.exceptions import MissingFile
 from util.aws import S3Client, AWSClient
-from util.exceptions import FileDoesNotExist
-
 from util.command import execute_command_line
+from util.exceptions import FileDoesNotExist
 
 logger = logging.getLogger(__name__)
 
@@ -71,6 +70,13 @@ class S3Broker(Broker):
                         raise MissingFile(file_download.file.file_name)
 
                     self._download_file(s3_object, file_download.file, file_download.local_path)
+
+    def list_files(self, volume_path, recursive, callback):
+        """See :meth:`storage.brokers.broker.Broker.list_files`
+        """
+
+        with S3Client(self._credentials, self._region_name) as client:
+            return client.list_objects(self._bucket_name, recursive, volume_path, callback)
 
     def load_configuration(self, config):
         """See :meth:`storage.brokers.broker.Broker.load_configuration`"""

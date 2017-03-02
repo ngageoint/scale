@@ -10,7 +10,6 @@ from django.core.management.base import BaseCommand
 
 from ingest.models import Strike
 
-
 logger = logging.getLogger(__name__)
 
 

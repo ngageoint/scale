@@ -1,8 +1,8 @@
-"""Defines a file rule for handling files processed by Strike"""
+"""Defines a file rule for handling files processed by Strike and Scan"""
 
 
 class FileRule(object):
-    """This class represents a rule for handling files processed by Strike
+    """This class represents a rule for handling files processed by Strike and Scan
     """
 
     def __init__(self, filename_regex, data_types, new_workspace, new_file_path):

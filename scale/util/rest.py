@@ -61,7 +61,7 @@ def check_update(request, fields):
     :raises :class:`exceptions.AssertionError`: If fields in not a list or None.
     """
     fields = fields or []
-    assert(isinstance(fields, list))
+    assert (isinstance(fields, list))
     extra = filter(lambda x, y=fields: x not in y, request.data.keys())
     if extra:
         raise ReadOnly('Fields do not allow updates: %s' % ', '.join(extra))

@@ -5,9 +5,8 @@ import datetime
 import re
 
 import django.utils.dateparse as dateparse
-import django.utils.timezone as timezone
 import django.utils.six as six
-
+import django.utils.timezone as timezone
 
 iso8601_duration_re = re.compile(
     r'^P'

@@ -10,7 +10,6 @@ from storage.brokers.exceptions import InvalidBrokerConfiguration
 from storage.exceptions import MissingFile
 from util.command import execute_command_line
 
-
 logger = logging.getLogger(__name__)
 
 

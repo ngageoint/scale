@@ -4,12 +4,10 @@ from __future__ import unicode_literals
 import logging
 import threading
 
-
 logger = logging.getLogger(__name__)
 
 
 class DebugLock(object):
-
     def __init__(self, class_name):
         self._class_name = class_name
         self._lock = threading.Lock()

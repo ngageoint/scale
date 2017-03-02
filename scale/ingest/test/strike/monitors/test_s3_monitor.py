@@ -1,17 +1,14 @@
 from __future__ import unicode_literals
 
-from util.aws import SQSClient
-
 import django
 from django.test import TestCase
-from mock import MagicMock, Mock, patch
+from mock import patch
 
 from ingest.strike.monitors.exceptions import InvalidMonitorConfiguration
 from ingest.strike.monitors.s3_monitor import S3Monitor
 
 
 class TestS3Monitor(TestCase):
-
     def setUp(self):
         django.setup()
 

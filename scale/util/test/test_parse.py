@@ -11,7 +11,6 @@ import util.parse as parse_util
 
 
 class TestParse(TestCase):
-
     def setUp(self):
         django.setup()
 
