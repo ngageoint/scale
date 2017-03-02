@@ -5,6 +5,31 @@ from ingest.models import Ingest
 from util.rest import ModelIdSerializer
 
 
+class ScanBaseSerializer(ModelIdSerializer):
+    """Converts scan model fields to REST output"""
+    name = serializers.CharField()
+    title = serializers.CharField()
+    description = serializers.CharField()
+    job = ModelIdSerializer()
+    dry_run_job = ModelIdSerializer()
+
+
+class ScanSerializer(ScanBaseSerializer):
+    """Converts scan model fields to REST output"""
+    from job.serializers import JobBaseSerializer
+
+    job = JobBaseSerializer()
+    dry_run_job = JobBaseSerializer()
+
+    created = serializers.DateTimeField()
+    last_modified = serializers.DateTimeField()
+
+
+class ScanDetailsSerializer(ScanSerializer):
+    """Converts scan model fields to REST output"""
+    configuration = serializers.JSONField(source='get_scan_configuration_as_dict')
+
+
 class StrikeBaseSerializer(ModelIdSerializer):
     """Converts strike model fields to REST output"""
     name = serializers.CharField()
@@ -56,8 +81,9 @@ class IngestSerializer(IngestBaseSerializer):
     """Converts ingest model fields to REST output"""
     from source.serializers import SourceFileBaseSerializer
 
-    strike = StrikeBaseSerializer()
     source_file = SourceFileBaseSerializer()
+    scan = ScanBaseSerializer()
+    strike = StrikeBaseSerializer()
 
 
 class IngestDetailsSerializer(IngestBaseSerializer):
@@ -67,8 +93,9 @@ class IngestDetailsSerializer(IngestBaseSerializer):
     file_path = serializers.CharField()
     new_file_path = serializers.CharField()
 
-    strike = StrikeDetailsSerializer()
     source_file = SourceFileSerializer()
+    scan = ScanDetailsSerializer()
+    strike = StrikeDetailsSerializer()
 
 
 class IngestStatusValuesSerializer(serializers.Serializer):

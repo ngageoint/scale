@@ -57,7 +57,7 @@ class IngestStatus(object):
     :type values: list[:class:`ingest.models.IngestCounts`]
     """
 
-    def __init__(self, strike, most_recent=None, files=0, size=0, values=None):
+    def __init__(self, strike=None, most_recent=None, files=0, size=0, values=None):
         self.strike = strike
         self.most_recent = most_recent
         self.files = files
@@ -105,7 +105,7 @@ class IngestManager(models.Manager):
 
         return JobType.objects.get(name='scale-ingest', version='1.0')
 
-    def get_ingests(self, started=None, ended=None, statuses=None, strike_ids=None, file_name=None, order=None):
+    def get_ingests(self, started=None, ended=None, statuses=None, scan_ids=None, strike_ids=None, file_name=None, order=None):
         """Returns a list of ingests within the given time range.
 
         :param started: Query ingests updated after this amount of time.
@@ -114,6 +114,8 @@ class IngestManager(models.Manager):
         :type ended: :class:`datetime.datetime`
         :param statuses: Query ingests with the a specific process status.
         :type statuses: [string]
+        :param scan_ids: Query ingests created by a specific scan processor.
+        :type scan_ids: list[string]
         :param strike_ids: Query ingests created by a specific strike processor.
         :type strike_ids: list[string]
         :param file_name: Query ingests with the a specific file name.
@@ -126,8 +128,8 @@ class IngestManager(models.Manager):
 
         # Fetch a list of ingests
         ingests = Ingest.objects.all()
-        ingests = ingests.select_related('strike', 'source_file', 'source_file__workspace')
-        ingests = ingests.defer('strike__configuration', 'source_file__workspace__json_config')
+        ingests = ingests.select_related('strike', 'scan', 'source_file', 'source_file__workspace')
+        ingests = ingests.defer('strike__configuration', 'scan__configuration', 'source_file__workspace__json_config')
 
         # Apply time range filtering
         if started:
@@ -137,6 +139,8 @@ class IngestManager(models.Manager):
 
         if statuses:
             ingests = ingests.filter(status__in=statuses)
+        if scan_ids:
+            ingests = ingests.filter(scan_id__in=scan_ids)    
         if strike_ids:
             ingests = ingests.filter(strike_id__in=strike_ids)
         if file_name:
@@ -386,6 +390,8 @@ class Ingest(models.Model):
     :type file_name: :class:`django.db.models.CharField`
     :keyword strike: The Strike process that created this ingest
     :type strike: :class:`django.db.models.ForeignKey`
+    :keyword scan: The Scan process that created this ingest
+    :type scan: :class:`django.db.models.ForeignKey`
     :keyword status: The status of the file ingest process
     :type status: :class:`django.db.models.CharField`
 
@@ -594,9 +600,8 @@ class ScanManager(models.Manager):
 
     @transaction.atomic
     def create_scan(self, name, title, description, configuration, dry_run=True):
-        """Creates a new Scan process with the given configuration and returns the new Scan model. The Scan model
-        will be saved in the database and the job to run the Scan process will be placed on the queue. All changes to
-        the database will occur in an atomic transaction.
+        """Creates a new Scan process with the given configuration and returns 
+        the new Scan model. All changes to the database will occur in an atomic transaction.
 
         :param name: The identifying name of this Scan process
         :type name: string
@@ -624,15 +629,6 @@ class ScanManager(models.Manager):
         scan.title = title
         scan.description = description
         scan.configuration = config.get_dict()
-        scan.save()
-
-        scan_type = self.get_scan_job_type()
-        job_data = JobData()
-        job_data.add_property_input('Scan ID', unicode(scan.id))
-        job_data.add_property_input('Dry Run', str(dry_run))
-        event_description = {'scan_id': scan.id}
-        event = TriggerEvent.objects.create_trigger_event('SCAN_CREATED', None, event_description, now())
-        scan.job = Queue.objects.queue_new_job(scan_type, job_data, event)
         scan.save()
 
         return scan
@@ -694,8 +690,9 @@ class ScanManager(models.Manager):
         :rtype: list[:class:`ingest.models.Scan`]
         """
 
-        # Fetch a list of strikes
-        scans = Scab.objects.select_related('job', 'job__job_type').defer('configuration')
+        # Fetch a list of scans
+        scans = Scan.objects.select_related('job', 'job__job_type').defer('configuration')
+        scans = scans.select_related('dry_run_job', 'dry_run_job__job_type').defer('configuration')
 
         # Apply time range filtering
         if started:
@@ -722,8 +719,44 @@ class ScanManager(models.Manager):
         :returns: The Scan process with all detail fields included.
         :rtype: :class:`ingest.models.Scan`
         """
+        
+        scan = Scan.objects.select_related('job', 'job__job_type')
+        scan = scan.select_related('dry_run_job', 'dry_run_job__job_type')
+        scan = scan.get(pk=scan_id)
 
-        return Scan.objects.select_related('job', 'job__job_type').get(pk=scan_id)
+        return scan
+
+    @transaction.atomic
+    def queue_scan(self, scan_id, dry_run=True):
+        """Retrieves a Scan model and uses metadata to place a job to run the
+        Scan process on the queue. All changes to the database will occur in an
+        atomic transaction.
+
+        :param scan_id: The unique identifier of the Scan process.
+        :type scan_id: int
+        :param dry_run: Whether the scan will execute as a dry run
+        :type dry_run: bool
+        :returns: The new Scan process
+        :rtype: :class:`ingest.models.Scan`
+        """
+
+        scan = Scan.objects.get(pk=scan_id)
+        scan_type = self.get_scan_job_type()
+        
+        job_data = JobData()
+        job_data.add_property_input('Scan ID', unicode(scan.id))
+        job_data.add_property_input('Dry Run', str(dry_run))
+        event_description = {'scan_id': scan.id}
+        
+        if dry_run:
+            event = TriggerEvent.objects.create_trigger_event('SCAN_CREATED', None, event_description, now())
+            scan.job = Queue.objects.queue_new_job(scan_type, job_data, event)
+        else:
+            event = TriggerEvent.objects.create_trigger_event('DRY_RUN_SCAN_CREATED', None, event_description, now())
+            scan.dry_run_job = Queue.objects.queue_new_job(scan_type, job_data, event)
+        scan.save()
+
+        return scan
 
 
 class Scan(models.Model):
@@ -739,7 +772,9 @@ class Scan(models.Model):
 
     :keyword configuration: JSON configuration for this Scan process
     :type configuration: :class:`djorm_pgjson.fields.JSONField`
-    :keyword job: The job that is performing the Scan process
+    :keyword dry_run_job: The job that is performing the Scan process as dry run
+    :type dry_run_job: :class:`django.db.models.ForeignKey`
+    :keyword job: The job that is performing the Scan process with ingests
     :type job: :class:`django.db.models.ForeignKey`
 
     :keyword created: When the Scan process was created
@@ -753,7 +788,8 @@ class Scan(models.Model):
     description = models.CharField(blank=True, max_length=500)
 
     configuration = djorm_pgjson.fields.JSONField()
-    job = models.ForeignKey('job.Job', blank=True, null=True, on_delete=models.PROTECT)
+    dry_run_job = models.ForeignKey('job.Job', blank=True, null=True, on_delete=models.PROTECT, related_name='+')
+    job = models.ForeignKey('job.Job', blank=True, null=True, on_delete=models.PROTECT, related_name='+')
 
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)

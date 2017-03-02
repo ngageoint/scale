@@ -12,9 +12,9 @@ from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
 import util.rest as rest_util
-from ingest.models import Ingest, Strike
+from ingest.models import Ingest, Scan, Strike
 from ingest.serializers import (IngestDetailsSerializer, IngestSerializer, IngestStatusSerializer,
-                                StrikeDetailsSerializer, StrikeSerializer)
+                                ScanSerializer, StrikeSerializer, ScanDetailsSerializer, StrikeDetailsSerializer)
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
 from util.rest import BadParameter
@@ -42,10 +42,16 @@ class IngestsView(ListAPIView):
 
         ingest_statuses = rest_util.parse_string_list(request, 'status', required=False)
         strike_ids = rest_util.parse_int_list(request, 'strike_id', required=False)
+        scan_ids = rest_util.parse_int_list(request, 'scan_id', required=False)
         file_name = rest_util.parse_string(request, 'file_name', required=False)
         order = rest_util.parse_string_list(request, 'order', required=False)
 
-        ingests = Ingest.objects.get_ingests(started, ended, ingest_statuses, strike_ids, file_name, order)
+        ingests = Ingest.objects.get_ingests(started=started, ended=ended, 
+                                             statuses=ingest_statuses,
+                                             scan_ids=scan_ids,
+                                             strike_ids=strike_ids,
+                                             file_name=file_name,
+                                             order=order)
 
         page = self.paginate_queryset(ingests)
         serializer = self.get_serializer(page, many=True)
@@ -111,6 +117,170 @@ class IngestsStatusView(ListAPIView):
         page = self.paginate_queryset(ingests)
         serializer = self.get_serializer(page, many=True)
         return self.get_paginated_response(serializer.data)
+
+
+class ScansProcessView(APIView):
+    """This view is the endpoint for launching a scan execution to ingest"""
+    queryset = Scan.objects.all()
+    serializer_class = ScanDetailsSerializer
+
+    def post(self, request, scan_id=None):
+        """Launches a scan to ingest from an existing scan model instance
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :param scan_id: ID for Scan record to pull configuration from
+        :type scan_id: int
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        ingest = rest_util.parse_bool(request, 'ingest', default_value=False)
+
+        scan = Scan.objects.queue_scan(scan_id, dry_run=not ingest)
+
+        serializer = self.get_serializer(scan)
+        scan_url = reverse('scan_process_view', args=[scan.id], request=request)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=scan_url))
+
+class ScansView(ListCreateAPIView):
+    """This view is the endpoint for retrieving the list of all Scan process."""
+    queryset = Scan.objects.all()
+    serializer_class = ScanSerializer
+
+    def list(self, request):
+        """Retrieves the list of all Scan process and returns it in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        started = rest_util.parse_timestamp(request, 'started', required=False)
+        ended = rest_util.parse_timestamp(request, 'ended', required=False)
+        rest_util.check_time_range(started, ended)
+
+        names = rest_util.parse_string_list(request, 'name', required=False)
+        order = rest_util.parse_string_list(request, 'order', required=False)
+
+        scans = Scan.objects.get_scans(started, ended, names, order)
+
+        page = self.paginate_queryset(scans)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
+
+    def create(self, request):
+        """Creates a new Scan process and returns a link to the detail URL
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        name = rest_util.parse_string(request, 'name')
+        title = rest_util.parse_string(request, 'title', required=False)
+        description = rest_util.parse_string(request, 'description', required=False)
+        configuration = rest_util.parse_dict(request, 'configuration')
+
+        try:
+            scan = Scan.objects.create_scan(name, title, description, configuration)
+        except InvalidScanConfiguration as ex:
+            raise BadParameter('Scan configuration invalid: %s' % unicode(ex))
+
+        # Fetch the full scan process with details
+        try:
+            scan = Scan.objects.get_details(scan.id)
+        except Scan.DoesNotExist:
+            raise Http404
+
+        serializer = ScanDetailsSerializer(scan)
+        scan_url = reverse('scan_details_view', args=[scan.id], request=request)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=scan_url))
+
+
+class ScansDetailsView(GenericAPIView):
+    """This view is the endpoint for retrieving/updating details of a Scan process."""
+    queryset = Scan.objects.all()
+    serializer_class = ScanDetailsSerializer
+
+    def get(self, request, scan_id):
+        """Retrieves the details for a Scan process and return them in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param scan_id: The ID of the Scan process
+        :type scan_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        try:
+            scan = Scan.objects.get_details(scan_id)
+        except Scan.DoesNotExist:
+            raise Http404
+
+        serializer = self.get_serializer(scan)
+        return Response(serializer.data)
+
+    def patch(self, request, scan_id):
+        """Edits an existing Scan process and returns the updated details
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param scan_id: The ID of the Scan process
+        :type scan_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        title = rest_util.parse_string(request, 'title', required=False)
+        description = rest_util.parse_string(request, 'description', required=False)
+        configuration = rest_util.parse_dict(request, 'configuration', required=False)
+
+        try:
+            Scan.objects.edit_scan(scan_id, title, description, configuration)
+
+            scan = Scan.objects.get_details(scan_id)
+        except Scan.DoesNotExist:
+            raise Http404
+        except InvalidScanConfiguration as ex:
+            logger.exception('Unable to edit Scan process: %s', scan_id)
+            raise BadParameter(unicode(ex))
+
+        serializer = self.get_serializer(scan)
+        return Response(serializer.data)
+
+
+class ScansValidationView(APIView):
+    """This view is the endpoint for validating a new Scan process before attempting to actually create it"""
+    queryset = Scan.objects.all()
+
+    def post(self, request):
+        """Validates a new Scan process and returns any warnings discovered
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        name = rest_util.parse_string(request, 'name')
+        configuration = rest_util.parse_dict(request, 'configuration')
+
+        rest_util.parse_string(request, 'title', required=False)
+        rest_util.parse_string(request, 'description', required=False)
+
+        # Validate the Scan configuration
+        try:
+            config = ScanConfiguration(configuration)
+            warnings = config.validate()
+        except InvalidScanConfiguration as ex:
+            logger.exception('Unable to validate new Scan process: %s', name)
+            raise BadParameter(unicode(ex))
+
+        results = [{'id': w.key, 'details': w.details} for w in warnings]
+        return Response({'warnings': results})
 
 
 class StrikesView(ListCreateAPIView):
