@@ -7,6 +7,7 @@ import os
 
 from botocore.exceptions import ClientError
 
+from ingest.models import Ingest
 from ingest.strike.configuration.strike_configuration import ValidationWarning
 from ingest.strike.monitors.exceptions import (InvalidMonitorConfiguration, S3NoDataNotificationError,
                                                SQSNotificationError)
@@ -187,6 +188,6 @@ class S3Monitor(Monitor):
             raise S3NoDataNotificationError('Skipping folder or 0 byte file: %s' % object_key)
 
         object_name = os.path.basename(object_key)
-        ingest = self._create_ingest(object_name)
+        ingest = Ingest.objects.create_ingest(object_name, self._monitored_workspace, strike_id=self.strike_id)
         self._process_ingest(ingest, object_key, object_size)
         logger.info("Strike ingested '%s' from bucket '%s'..." % (object_key, bucket_name))

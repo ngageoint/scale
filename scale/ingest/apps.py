@@ -34,7 +34,7 @@ class IngestConfig(AppConfig):
         # Register monitor types
         factory.add_monitor_type(DirWatcherMonitor)
         factory.add_monitor_type(S3Monitor)
-        
+
         # Registers the scanners with the Scan system
         import ingest.scan.scanners.factory as factory
         from ingest.scan.scanners.dir_scanner import DirScanner

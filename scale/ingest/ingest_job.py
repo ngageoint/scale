@@ -14,7 +14,6 @@ from storage.brokers.broker import FileDownload, FileMove, FileUpload
 from storage.models import ScaleFile
 from util.retry import retry_database_query
 
-
 logger = logging.getLogger(__name__)
 
 

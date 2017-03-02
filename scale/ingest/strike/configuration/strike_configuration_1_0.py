@@ -10,9 +10,7 @@ from jsonschema.exceptions import ValidationError
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
 from storage.models import Workspace
 
-
 DEFAULT_VERSION = '1.0'
-
 
 STRIKE_CONFIGURATION_SCHEMA = {
     'type': 'object',

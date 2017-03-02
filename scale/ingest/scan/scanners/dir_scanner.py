@@ -40,7 +40,7 @@ class DirScanner(Scanner):
         return []
 
     def _ingest_file(self, file_name, file_size):
-        """Applies rules and initiates ingest for a single file name
+        """Initiates ingest for a single file name
 
         :param file_name: full path to file name
         :type file_name: string

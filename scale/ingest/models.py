@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import datetime
 import logging
+import os
 
 import django.utils.timezone as timezone
 import djorm_pgjson.fields
@@ -11,12 +12,15 @@ from django.utils.timezone import now
 
 from ingest.scan.configuration.scan_configuration import ScanConfiguration
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
+from job.configuration.configuration.job_configuration import JobConfiguration
 from job.configuration.data.job_data import JobData
 from job.models import JobType
 from queue.models import Queue
 from storage.exceptions import InvalidDataTypeTag
+from storage.media_type import get_media_type
 from storage.models import VALID_TAG_PATTERN
 from trigger.models import TriggerEvent
+from util.file_size import file_size_to_string
 
 logger = logging.getLogger(__name__)
 
@@ -63,6 +67,35 @@ class IngestStatus(object):
 
 class IngestManager(models.Manager):
     """Provides additional methods for handling ingests."""
+
+    def create_ingest(self, file_name, workspace, scan_id=None, strike_id=None):
+        """Creates a new ingest for the given file name. The database save is the caller's responsibility.
+
+        :param file_name: The name of the file being ingested
+        :type file_name: string
+        :param workspace:
+        :type workspace: string
+        :param scan_id:
+        :type scan_id: int
+        :param strike_id:
+        :type strike_id: int
+        :returns: The new ingest model
+        :rtype: :class:`ingest.models.Ingest`
+        """
+
+        ingest = Ingest()
+
+        if scan_id:
+            ingest.scan_id = scan_id
+        if strike_id:
+            ingest.strike_id = strike_id
+
+        ingest.file_name = file_name
+        ingest.media_type = get_media_type(ingest.file_name)
+        ingest.workspace = workspace
+
+        logger.info('New file on %s: %s', ingest.workspace.name, ingest.file_name)
+        return ingest
 
     def get_ingest_job_type(self):
         """Returns the Scale Ingest job type
@@ -193,6 +226,60 @@ class IngestManager(models.Manager):
 
         groups = self._group_by_time(ingests, use_ingest_time)
         return [self._fill_status(status, time_slots, started, ended) for status, time_slots in groups.iteritems()]
+
+    @transaction.atomic
+    def start_ingest_tasks(self, ingests, scan_id=None, strike_id=None):
+        """Starts a batch of tasks for the given scan in an atomic transaction.
+
+        One of scan_id or strike_id must be set.
+
+        :param ingests: The ingest models
+        :type ingests: list[:class:`ingest.models.Ingest`]
+        :param scan_id: ID of Scan that generated ingest
+        :type scan_id: int
+        :param strike_id: ID of Strike that generated ingest
+        :type strike_id: int
+        """
+
+        # Create new ingest job and mark ingest as QUEUED
+        ingest_job_type = Ingest.objects.get_ingest_job_type()
+
+        for ingest in ingests:
+            logger.debug('Creating ingest task for %s', ingest.file_name)
+
+            when = ingest.transfer_ended if ingest.transfer_ended else now()
+            desc = {'file_name': ingest.file_name}
+
+            if scan_id:
+                # Use result from query to get ingest ID
+                # We need to find the id of each ingest that was created.
+                # Using scan_id and file_name together as a unique composite key
+                ingest_id = Ingest.objects.get(scan_id=ingest.scan_id, file_name=ingest.file_name).id
+
+                desc['scan_id'] = scan_id
+                event = TriggerEvent.objects.create_trigger_event('SCAN_TRANSFER', None, desc, when)
+            elif strike_id:
+                ingest_id = ingest.id
+                desc['strike_id'] = strike_id
+                event = TriggerEvent.objects.create_trigger_event('STRIKE_TRANSFER', None, desc, when)
+            else:
+                raise Exception('One of scan_id or strike_id must be set')
+
+            data = JobData()
+            data.add_property_input('Ingest ID', str(ingest_id))
+
+            job_configuration = JobConfiguration()
+            if ingest.workspace:
+                job_configuration.add_job_task_workspace(ingest.workspace.name, MODE_RW)
+            if ingest.new_workspace:
+                job_configuration.add_job_task_workspace(ingest.new_workspace.name, MODE_RW)
+            ingest_job = Queue.objects.queue_new_job(ingest_job_type, data, event, job_configuration)
+
+            ingest.job = ingest_job
+            ingest.status = 'QUEUED'
+            ingest.save()
+
+            logger.debug('Successfully created ingest task for %s', ingest.file_name)
 
     def _group_by_time(self, ingests, use_ingest_time):
         """Groups the given ingests by hourly time slots.
@@ -414,6 +501,79 @@ class Ingest(models.Model):
             for tag in self.data_type.split(','):
                 tags.add(tag)
         return tags
+
+    def add_file(self, file_name, workspace, scan_id=None, strike_id=None):
+        """Add file source metadata to ingest record
+
+        :param file_name: File name excluding full path
+        :type file_name: string
+        :param workspace:
+        :type workspace: string
+        :param scan_id:
+        :type scan_id: int
+        :param strike_id:
+        :type strike_id: int
+        """
+
+        if scan_id:
+            self.scan_id = scan_id
+        if strike_id:
+            self.strike_id = strike_id
+
+        self.file_name = file_name
+        self.media_type = get_media_type(self.file_name)
+        self.workspace = workspace
+
+        logger.info('New file on %s: %s', self.workspace.name, self.file_name)
+
+    def is_there_rule_match(self, file_handler, workspaces, no_match_status=None):
+        """Applies rules to an ingest record, determining if there is a match and updating as indicated in rule match
+
+        :param file_handler: Rules to be matched against the ingest record
+        :type: :class: `ingest.handlers.file_handler.FileHandler`
+        :param workspaces: mimetype to workspace mapping
+        :type: dict
+        :param no_match_status: Optional status to apply when rules aren't matched
+        :type: string
+        :return: The ingest record if matched otherwise None
+        :rtype: :class:`ingest.models.Ingest`
+        """
+
+        matched = True
+        logger.info('Applying rules to %s (%s, %s)',
+                    self.file_name, self.media_type, file_size_to_string(self.file_size))
+        matched_rule = file_handler.match_file_name(self.file_name)
+        if matched_rule:
+            for data_type_tag in matched_rule.data_types:
+                self.add_data_type_tag(data_type_tag)
+            file_path = self.file_path
+            if matched_rule.new_file_path:
+                today = now()
+                year_dir = str(today.year)
+                month_dir = '%02d' % today.month
+                day_dir = '%02d' % today.day
+                self.new_file_path = os.path.join(matched_rule.new_file_path, year_dir, month_dir, day_dir,
+                                                  self.file_name)
+                file_path = self.new_file_path
+            workspace_name = self.workspace.name
+            if matched_rule.new_workspace:
+                self.new_workspace = workspaces[matched_rule.new_workspace]
+                workspace_name = self.new_workspace.name
+            if self.new_file_path or self.new_workspace:
+                logger.info('Rule match, %s will be moved to %s on workspace %s',
+                            self.file_name, file_path, workspace_name)
+            else:
+                logger.info('Rule match, %s will be registered as %s on workspace %s',
+                            self.file_name, file_path, workspace_name)
+        else:
+            matched = False
+            if no_match_status:
+                logger.info('No rule match for %s, file is being set to %s', self.file_name, no_match_status)
+                self.status = no_match_status
+            else:
+                logger.info('No rule match for %s, file is being skipped', self.file_name)
+
+        return matched
 
     def _set_data_type_tags(self, tags):
         """Sets the data type tags on the model

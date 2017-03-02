@@ -6,17 +6,10 @@ import os
 from abc import ABCMeta, abstractmethod
 
 from django.db import transaction
-from django.utils.timezone import now
 
 from ingest.models import Ingest
 from ingest.scan.scanners.exceptions import ScannerInterruptRequested
-from job.configuration.configuration.job_configuration import JobConfiguration, MODE_RW
-from job.configuration.data.job_data import JobData
-from queue.models import Queue
-from storage.media_type import get_media_type
 from storage.models import Workspace
-from trigger.models import TriggerEvent
-from util.file_size import file_size_to_string
 
 logger = logging.getLogger(__name__)
 
@@ -90,12 +83,7 @@ class Scanner(object):
 
     def run(self, dry_run=False):
         """Runs the scanner until signaled to stop by the stop() method or processing complete.
-        Sub-classes that override this method should ensure the stop() method can quickly terminate the scan process.
 
-        Sub-classes should call _create_ingest() when they identify a file within the workspace. 
-        Once _process_ingest() when the transfer is complete. If the sub-class is not tracking
-        transfer time, it should just call _process_ingest().
-        
         :param dry_run: Flag to enable file scanning only, no file ingestion will occur
         :type dry_run: bool
         """
@@ -187,7 +175,7 @@ class Scanner(object):
         with transaction.atomic():
             Ingest.objects.bulk_create(ingests)
 
-        self._start_ingest_tasks(ingests)
+        Ingest.objects.start_ingest_tasks(ingests, scan_id=self.scan_id)
 
     @staticmethod
     def _deduplicate_ingest_list(scan_id, new_ingests):
@@ -239,79 +227,11 @@ class Scanner(object):
 
         file_name = os.path.basename(file_path)
 
-        ingest = Ingest()
-        ingest.file_name = file_name
+        ingest = Ingest.objects.create_ingest(file_name, self._scanned_workspace, scan_id=self.scan_id)
         ingest.file_path = file_path
-        ingest.scan_id = self.scan_id
-        ingest.media_type = get_media_type(file_path)
-        ingest.workspace = self._scanned_workspace
-        logger.info('New file on %s: %s', ingest.workspace.name, file_path)
+        ingest.file_size = file_size
 
-        logger.info('Applying rules to %s (%s, %s)', file_path, ingest.media_type,
-                    file_size_to_string(file_size) if file_size else 'Unknown')
-        if file_size:
-            ingest.file_size = file_size
+        if ingest.apply_file_rules(self._file_handler, self._workspaces):
+            return ingest
 
-        matched_rule = self._file_handler.match_file_name(file_name)
-        if matched_rule:
-            for data_type_tag in matched_rule.data_types:
-                ingest.add_data_type_tag(data_type_tag)
-            file_path = ingest.file_path
-            if matched_rule.new_file_path:
-                today = now()
-                year_dir = str(today.year)
-                month_dir = '%02d' % today.month
-                day_dir = '%02d' % today.day
-                ingest.new_file_path = os.path.join(matched_rule.new_file_path, year_dir, month_dir, day_dir, file_name)
-                file_path = ingest.new_file_path
-            workspace_name = ingest.workspace.name
-            if matched_rule.new_workspace:
-                ingest.new_workspace = self._workspaces[matched_rule.new_workspace]
-                workspace_name = ingest.new_workspace.name
-            if ingest.new_file_path or ingest.new_workspace:
-                logger.info('Rule match, %s will be moved to %s on workspace %s', file_name, file_path, workspace_name)
-            else:
-                logger.info('Rule match, %s will be registered as %s on workspace %s', file_name, file_path,
-                            workspace_name)
-        else:
-            logger.info('No rule match for %s, file is being skipped', file_name)
-            ingest = None
-
-        return ingest
-
-    @transaction.atomic
-    def _start_ingest_tasks(self, ingests):
-        """Starts a batch of tasks for the given scan in an atomic transaction
-
-        :param ingests: The ingest models
-        :type ingests: list[:class:`ingest.models.Ingest`]
-        """
-
-        # Create new ingest job and mark ingest as QUEUED
-        ingest_job_type = Ingest.objects.get_ingest_job_type()
-
-        for ingest in ingests:
-            # We need to find the id of each ingest that was created. 
-            # Using scan_id and file_name together as a unique composite key
-            saved_match = Ingest.objects.get(scan_id=ingest.scan_id, file_name=ingest.file_name)
-
-            logger.debug('Creating ingest task for %s', ingest.file_name)
-            data = JobData()
-
-            # Use result from query to get ingest ID
-            data.add_property_input('Ingest ID', str(saved_match.id))
-            desc = {'scan_id': self.scan_id, 'file_name': ingest.file_name}
-            when = ingest.transfer_ended if ingest.transfer_ended else now()
-            event = TriggerEvent.objects.create_trigger_event('SCAN_TRANSFER', None, desc, when)
-            job_configuration = JobConfiguration()
-            if ingest.workspace:
-                job_configuration.add_job_task_workspace(ingest.workspace.name, MODE_RW)
-            if ingest.new_workspace:
-                job_configuration.add_job_task_workspace(ingest.new_workspace.name, MODE_RW)
-            ingest_job = Queue.objects.queue_new_job(ingest_job_type, data, event, job_configuration)
-
-            ingest.job = ingest_job
-            ingest.status = 'QUEUED'
-            ingest.save()
-
-            logger.debug('Successfully created ingest task for %s', ingest.file_name)
+            # If apply_file_rules matches a rule ingest will be returned above, otherwise None is default

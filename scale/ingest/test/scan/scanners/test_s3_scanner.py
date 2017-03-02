@@ -94,7 +94,7 @@ class TestScanner(TestCase):
         # Verify we returned prior to calling _deduplicate_ingest_list 
         self.assertFalse(dedup.called)
 
-    @patch('ingest.scan.scanners.s3_scanner.S3Scanner._start_ingest_tasks')
+    @patch('ingest.models.IngestManager.start_ingest_tasks')
     @patch('ingest.scan.scanners.s3_scanner.S3Scanner._deduplicate_ingest_list')
     @patch('ingest.scan.scanners.s3_scanner.S3Scanner._ingest_file')
     def test_callback_successfully(self, ingest_file, dedup, start_ingests):

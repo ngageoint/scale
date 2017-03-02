@@ -1,18 +1,17 @@
 """Defines a monitor that watches a file system directory for incoming files"""
 from __future__ import unicode_literals
 
-from datetime import datetime
 import logging
 import math
 import os
 import time
+from datetime import datetime
 
 from django.utils.timezone import now
 
 from ingest.models import Ingest
 from ingest.strike.monitors.exceptions import InvalidMonitorConfiguration
 from ingest.strike.monitors.monitor import Monitor
-
 
 logger = logging.getLogger(__name__)
 
@@ -228,7 +227,7 @@ class DirWatcherMonitor(Monitor):
         if ingest is None:
             msg = 'New file %s has arrived, creating ingest for %s'
             logger.info(msg, file_path, final_name)
-            ingest = self._create_ingest(final_name)
+            ingest = Ingest.objects.create_ingest(final_name, self._monitored_workspace, strike_id=self.strike_id)
             # TODO: investigate better way to get start time of transfer
             last_access = os.path.getatime(file_path)
             self._start_transfer(ingest, datetime.utcfromtimestamp(last_access))
