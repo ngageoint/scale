@@ -33,7 +33,7 @@ class TestDirScanner(TestCase):
         config = {
             'type': 'dir'
         }
-        self.assertRaises(InvalidScanConfiguration, DirScanner().validate_configuration, config)
+        DirScanner().validate_configuration(config)
 
     def test_validate_configuration_bad_transfer_suffix(self):
         """Tests calling DirScanner.validate_configuration() with bad type for transfer_suffix"""

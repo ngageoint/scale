@@ -98,24 +98,25 @@ class HostBroker(Broker):
 
         return file_list
 
+    @staticmethod
     def _dir_walker(path, recursive):
-        """Generator to handle both flat and recursive storage traversal
+        """Generator to handle both flat and recursive directory traversal
         
         :param path: The path to the directory tree to walk
         :type path: string
-        :param recursive: The type of this broker
+        :param recursive: Whether directory walk is only at path or recursive
         :type recursive: bool
         """
         # Handle a full recursive walk of the directory tree.
         if recursive:
-            for root, dirs, files in os.walk(volume_path):
+            for root, dirs, files in os.walk(path):
                 for name in files:
                     yield os.path.join(root, name)
         # Handle identifying files only from a single directory.
         else:
-            for result in os.listdir(volume_path):
-                yield os.path.join(volume_path, result)
-                    
+            for result in os.listdir(path):
+                yield os.path.join(path, result)
+
 
     def load_configuration(self, config):
         """See :meth:`storage.brokers.broker.Broker.load_configuration`
