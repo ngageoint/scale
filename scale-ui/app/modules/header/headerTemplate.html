@@ -5,7 +5,7 @@
     <h1 ng-if="!hideTitle">{{ name }}</h1>
     <hr ng-if="!hideTitle" />
 </div>
-<div ng-if="loading" class="loading-content">
+<div ng-if="loading" class="{{ vm.loadingClass }}">
     <h3>
         <i class="fa fa-circle-o-notch fa-spin fa-3x"></i><br />
         Loading
