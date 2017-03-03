@@ -166,17 +166,14 @@ class VaultSecretsValueValidation(TestCase):
 
     @patch('vault.secrets_handler.SecretsHandler._make_request', return_value=mocked_get_secret('secret'))    
     def test_vault_get_secret(self, mock_request):
-        secret_name = 'test_val_name'
-        test_secret = self.vault_backend.get_job_type_secret(self.secret_test_path, secret_name)
-        self.assertEqual(test_secret, "vault_backend_secret")
+        test_secret = self.vault_backend.get_job_type_secrets(self.secret_test_path)
+        self.assertEqual(test_secret, {"test_val_name": "vault_backend_secret", "foo": "bar"})
         
     @patch('vault.secrets_handler.SecretsHandler._make_request', return_value=mocked_get_secret())    
     def test_vault_get_bad_secret(self, mock_request):
-        secret_name = 'test_val_name'
         self.assertRaises(InvalidSecretsAuthorization, 
-                          self.vault_backend.get_job_type_secret, 
-                          self.secret_test_path, 
-                          secret_name)
+                          self.vault_backend.get_job_type_secrets, 
+                          self.secret_test_path)
 
 
 class DCOSSecretsValueValidation(TestCase):
@@ -226,7 +223,7 @@ UB3V/SWf7Wqp9vDEbUtgzIn9y4l5cIjS/J2IKkYARg==
         elif args[0] == 'secret':
             status_code = 200
             content = {
-                "value": "dcos_backend_secret"
+                "value": "{'some_name': 'some_secret'}"
                 }
             return MockResponse(content, status_code)
             
@@ -258,14 +255,12 @@ UB3V/SWf7Wqp9vDEbUtgzIn9y4l5cIjS/J2IKkYARg==
         
     @patch('vault.secrets_handler.SecretsHandler._make_request', return_value=mocked_get_secret('secret'))    
     def test_dcos_get_secret(self, mock_request):
-            secret_name = 'test_val_name'
-            test_secret = self.dcos_backend.get_job_type_secret(self.secret_test_path, secret_name)
-            self.assertEqual(test_secret, "dcos_backend_secret")
+            test_secret = self.dcos_backend.get_job_type_secrets(self.secret_test_path)
+            self.assertEqual(test_secret, {'some_name': 'some_secret'})
     
     @patch('vault.secrets_handler.SecretsHandler._make_request', return_value=mocked_get_secret())    
     def test_dcos_get_bad_secret(self, mock_request):
             secret_name = 'test_val_name'
             self.assertRaises(InvalidSecretsAuthorization, 
-                              self.dcos_backend.get_job_type_secret,
-                              self.secret_test_path, 
-                              secret_name)
+                              self.dcos_backend.get_job_type_secrets,
+                              self.secret_test_path)

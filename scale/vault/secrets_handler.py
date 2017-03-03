@@ -1,11 +1,12 @@
 """Handles secret getters and setters for Scale"""
 
-import requests
+import ast
 import jwt
 import json
+import requests
 
 from django.conf import settings
-from vault.exceptions import InvalidSecretsAuthorization, InvalidSecretsRequest, InvalidSecretsToken
+from vault.exceptions import InvalidSecretsAuthorization, InvalidSecretsRequest, InvalidSecretsToken, InvalidSecretsValue
 
 
 class SecretsHandler(object):
@@ -40,35 +41,36 @@ class SecretsHandler(object):
 
         self._check_secrets_backend()
 
-    def get_job_type_secret(self, secret_path, secret_name):
-        """Retrieves the value pertaining to the secret_name provided, located at the secret_path
+    def get_job_type_secrets(self, job_name):
+        """Retrieves the secrets located at the job_name within the backend
 
-        :param secret_path: path within the secrets backend that the secret is stored
-        :type secret_path: str
-        :param secret_name: name of the secret being requested
-        :type secret_name: str
-        :return: secret_value
+        :param job_name: path within the secrets backend that the secret is stored
+        :type job_name: str
+        :return: secret_values
         :rtype: str
         """
 
         url = self.secrets_url
 
         if self.dcos_token:
-            url = ''.join([url, 'secret/default/scale/job-type', secret_path, '/', secret_name])
+            url = ''.join([url, 'secret/default/scale/job-type/', job_name])
             data = json.dumps({'uid': self.service_account, 'token': self.dcos_token})
 
             get_secret = self._make_request('GET', url, data=data)
 
-            if get_secret.status_code == 200:
-                response = get_secret.json()
-                secret_value = response['value']
-            elif get_secret.status_code == 403:
+            if get_secret.status_code == 403:
                 raise InvalidSecretsAuthorization('Permission was denied when accessing ' + url)
-            else:
+            elif get_secret.status_code != 200:
                 raise InvalidSecretsRequest('Expected status code 200 from ' + url + ' - Received: ' +
                                             str(get_secret.status_code))
+            try:
+                response = get_secret.json()
+                secret_values = ast.literal_eval(response['value'])
+            except SyntaxError:
+                raise InvalidSecretsValue('The DCOS secrets at ' + url + ' could not be converted to JSON format.')
+
         else:
-            url = url + 'secret/scale/job-type' + secret_path
+            url = url + 'secret/scale/job-type/' + job_name
             headers = {
                 'Content-Type': 'application/json',
                 'X-Vault-Token': self.secrets_token
@@ -76,41 +78,81 @@ class SecretsHandler(object):
 
             get_secret = self._make_request('GET', url, headers=headers)
 
-            if get_secret.status_code == 200:
-                response = get_secret.json()
-                secret_value = response['data'][secret_name]
-            elif get_secret.status_code == 403:
+            if get_secret.status_code == 403:
                 raise InvalidSecretsAuthorization('Permission was denied when accessing ' + url)
-            else:
+            elif get_secret.status_code != 200:
                 raise InvalidSecretsRequest('Expected status code 200 from ' + url + ' - Received: ' +
                                             self.vault_error_codes[get_secret.status_code])
+            response = get_secret.json()
+            secret_values = response['data']
 
-        return secret_value
+        return secret_values
 
-    def set_job_type_secret(self, secret_path, secret_value, secret_name):
-        """write a job-type secret to the secrets backend
+    def list_job_types(self):
+        """Gets the names of all job types that have secrets 
 
-        :param secret_path: path within the secrets backend that the secret will be stored.
-        :type secret_path: str
-        :param secret_value: secret value to be stored
-        :type secret_value: str
-        :param secret_name: name to associate with the stored value
-        :type secret_name: str
-        :return:
+        :return: all_job_types
+        :rtype: list
         """
 
         url = self.secrets_url
 
         if self.dcos_token:
-            url = ''.join([url, 'secret/default/scale/job-type', secret_path, '/', secret_name])
+            url += 'secret/default/scale/job-type?list=true'
+            data = json.dumps({'uid': self.service_account, 'token': self.dcos_token})
+
+            list_jobs = self._make_request('GET', url, data=data)
+
+            if list_jobs.status_code == 403:
+                raise InvalidSecretsAuthorization('Permission was denied when accessing ' + url)
+            elif list_jobs.status_code != 200:
+                raise InvalidSecretsRequest('Expected status code 200 from ' + url + ' - Received: ' +
+                                            str(list_jobs.status_code))
+            response = list_jobs.json()
+            all_job_types = response['array']
+
+        else:
+            url += 'secret/scale/job-type'
+            headers = {
+                'Content-Type': 'application/json',
+                'X-Vault-Token': self.secrets_token
+            }
+
+            list_jobs = self._make_request('LIST', url, headers)
+
+            if list_jobs.status_code == 403:
+                raise InvalidSecretsAuthorization('Permission was denied when accessing ' + url)
+            elif list_jobs.status_code != 200:
+                raise InvalidSecretsRequest('Expected status code 204 from ' + url + ' - Received: ' +
+                                            self.vault_error_codes[list_jobs.status_code])
+            response = list_jobs.json()
+            all_job_types = response['data']['keys']
+
+        return all_job_types
+
+    def set_job_type_secrets(self, secret_path, secret_json):
+        """write job-type secrets to the secrets backend
+
+        :param secret_path: path within the secrets backend that the secret will be stored.
+        :type secret_path: str
+        :param secret_json: dict with name:value pairs for all secrets associated with the job
+        :type secret_json: dict
+        :return:
+        """
+
+        url = self.secrets_url
+        secret_values = json.dumps(secret_json)
+
+        if self.dcos_token:
+            url = ''.join([url, 'secret/default/scale/job-type', secret_path])
             data = json.dumps({
                 'uid': self.service_account,
                 'token': self.dcos_token,
                 'author': 'scale',
-                'value': secret_value
+                'value': secret_values
             })
 
-            set_secret = self._make_request('GET', url, data=data)
+            set_secret = self._make_request('PUT', url, data=data)
 
             if set_secret.status_code == 403:
                 raise InvalidSecretsAuthorization('Permission was denied when accessing ' + url)
@@ -118,16 +160,14 @@ class SecretsHandler(object):
                 raise InvalidSecretsRequest('Expected status code 201 from ' + url + ' - Received: ' +
                                             str(set_secret.status_code))
         else:
-            url = url + 'secret/scale/job-type' + secret_path
+            url = ''.join([url, 'secret/scale/job-type', secret_path])
             headers = {
                 'Content-Type': 'application/json',
                 'X-Vault-Token': self.secrets_token
             }
-            data = json.dumps({
-                secret_name: secret_value
-            })
+            data = secret_values
 
-            set_secret = self._make_request('GET', url, headers, data)
+            set_secret = self._make_request('PUT', url, headers, data)
 
             if set_secret.status_code == 403:
                 raise InvalidSecretsAuthorization('Permission was denied when accessing ' + url)
@@ -234,7 +274,7 @@ class SecretsHandler(object):
             raise InvalidSecretsRequest('Expected status code 200 from ' + url + ' - Received: ' +
                                         str(request_auth.status_code) + ' - ' + request_auth.content)
 
-        self.secrets_url += '/secrets/v1'
+        self.secrets_url += '/secrets/v1/'
         access_token = [k + '=' + v for k, v in request_auth.json().items()]
         return access_token
 
@@ -276,4 +316,4 @@ class SecretsHandler(object):
         if request_auth.status_code != 200:
             raise InvalidSecretsRequest('Expected status code 200 from ' + url + ' - Received: ' +
                                         self.vault_error_codes[request_auth.status_code])
-        self.secrets_url += '/v1'
+        self.secrets_url += '/v1/'

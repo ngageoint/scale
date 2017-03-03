@@ -17,3 +17,9 @@ class InvalidSecretsToken(Exception):
     """Exception indicating that the secrets token was invalid
     """
     pass
+
+
+class InvalidSecretsValue(Exception):
+    """Exception indicating that the secrets value was invalid
+    """
+    pass
