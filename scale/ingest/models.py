@@ -12,7 +12,7 @@ from django.utils.timezone import now
 
 from ingest.scan.configuration.scan_configuration import ScanConfiguration
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
-from job.configuration.configuration.job_configuration import JobConfiguration
+from job.configuration.configuration.job_configuration import JobConfiguration, MODE_RW
 from job.configuration.data.job_data import JobData
 from job.models import JobType
 from queue.models import Queue

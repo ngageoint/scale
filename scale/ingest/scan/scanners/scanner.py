@@ -7,7 +7,7 @@ from abc import ABCMeta, abstractmethod
 
 from django.db import transaction
 
-from ingest.models import Ingest
+from ingest.models import Ingest, Scan
 from ingest.scan.scanners.exceptions import ScannerInterruptRequested
 from storage.models import Workspace
 
