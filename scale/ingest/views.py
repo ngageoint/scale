@@ -17,6 +17,7 @@ from ingest.serializers import (IngestDetailsSerializer, IngestSerializer, Inges
                                 ScanSerializer, StrikeSerializer, ScanDetailsSerializer, StrikeDetailsSerializer)
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
+from scan.configuration.exceptions import InvalidScanConfiguration
 from util.rest import BadParameter
 
 logger = logging.getLogger(__name__)
@@ -122,7 +123,6 @@ class IngestsStatusView(ListAPIView):
 class ScansProcessView(APIView):
     """This view is the endpoint for launching a scan execution to ingest"""
     queryset = Scan.objects.all()
-    serializer_class = ScanDetailsSerializer
 
     def post(self, request, scan_id=None):
         """Launches a scan to ingest from an existing scan model instance
@@ -139,9 +139,8 @@ class ScansProcessView(APIView):
 
         scan = Scan.objects.queue_scan(scan_id, dry_run=not ingest)
 
-        serializer = self.get_serializer(scan)
-        scan_url = reverse('scan_process_view', args=[scan.id], request=request)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=scan_url))
+        scan_url = reverse('scans_details_view', args=[scan.id], request=request)
+        return Response(status=status.HTTP_201_CREATED, headers=dict(location=scan_url))
 
 class ScansView(ListCreateAPIView):
     """This view is the endpoint for retrieving the list of all Scan process."""
@@ -196,7 +195,7 @@ class ScansView(ListCreateAPIView):
             raise Http404
 
         serializer = ScanDetailsSerializer(scan)
-        scan_url = reverse('scan_details_view', args=[scan.id], request=request)
+        scan_url = reverse('scans_details_view', args=[scan.id], request=request)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=scan_url))
 
 

@@ -21,6 +21,8 @@ class ScanSerializer(ScanBaseSerializer):
     job = JobBaseSerializer()
     dry_run_job = JobBaseSerializer()
 
+    file_count = serializers.IntegerField()
+
     created = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
 

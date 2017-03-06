@@ -171,9 +171,10 @@ class Scanner(object):
         # Once all ingest rules have been applied, de-duplicate and then bulk insert
         ingests = self._deduplicate_ingest_list(self.scan_id, ingests)
 
-        # bulk insert remaining as queued
+        # bulk insert remaining as queued and note detected files in Scan model
         with transaction.atomic():
             Ingest.objects.bulk_create(ingests)
+            Scan.objects.filter(pk=self.scan_id).update(file_count=self._count)
 
         Ingest.objects.start_ingest_tasks(ingests, scan_id=self.scan_id)
 

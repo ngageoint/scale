@@ -749,11 +749,12 @@ class ScanManager(models.Manager):
         event_description = {'scan_id': scan.id}
         
         if dry_run:
-            event = TriggerEvent.objects.create_trigger_event('SCAN_CREATED', None, event_description, now())
-            scan.job = Queue.objects.queue_new_job(scan_type, job_data, event)
-        else:
             event = TriggerEvent.objects.create_trigger_event('DRY_RUN_SCAN_CREATED', None, event_description, now())
             scan.dry_run_job = Queue.objects.queue_new_job(scan_type, job_data, event)
+        else:
+            event = TriggerEvent.objects.create_trigger_event('SCAN_CREATED', None, event_description, now())
+            scan.job = Queue.objects.queue_new_job(scan_type, job_data, event)
+
         scan.save()
 
         return scan
@@ -777,6 +778,8 @@ class Scan(models.Model):
     :keyword job: The job that is performing the Scan process with ingests
     :type job: :class:`django.db.models.ForeignKey`
 
+    :keyword file_count: Number of files identified by last execution of Scan
+    :type file_count: :class:`django.db.models.BigIntegerField`
     :keyword created: When the Scan process was created
     :type created: :class:`django.db.models.DateTimeField`
     :keyword last_modified: When the Scan process was last modified
@@ -788,8 +791,11 @@ class Scan(models.Model):
     description = models.CharField(blank=True, max_length=500)
 
     configuration = djorm_pgjson.fields.JSONField()
+    
     dry_run_job = models.ForeignKey('job.Job', blank=True, null=True, on_delete=models.PROTECT, related_name='+')
     job = models.ForeignKey('job.Job', blank=True, null=True, on_delete=models.PROTECT, related_name='+')
+
+    file_count = models.BigIntegerField(blank=True, null=True)
 
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
