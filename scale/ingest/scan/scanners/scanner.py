@@ -233,7 +233,7 @@ class Scanner(object):
         ingest.file_size = file_size
         logger.info('New ingest in %s: %s', ingest.workspace.name, ingest.file_name)
 
-        if ingest.apply_file_rules(self._file_handler, self._workspaces):
+        if ingest.is_there_rule_match(self._file_handler, self._workspaces):
             return ingest
 
-            # If apply_file_rules matches a rule ingest will be returned above, otherwise None is default
+            # If is_there_rule_match matches a rule ingest will be returned above, otherwise None is default
