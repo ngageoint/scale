@@ -61,42 +61,14 @@ class HostBroker(Broker):
             paths.append(os.path.join(volume_path, scale_file.file_path))
         return paths
 
-    def list_files(self, volume_path, recursive, callback):
+    def list_files(self, volume_path, recursive):
         """See :meth:`storage.brokers.broker.Broker.list_files`
         """
 
-        # List used to store files that are being returned on completion. Only used
-        # if callback is not defined or fails.
-        file_list = []
-
-        # List used to store files being batched. Flushed to callback on batch_size.
-        file_batch = []
-
-        batch_size = 1000
-
         for file_name in self._dir_walker(volume_path, recursive):
             if os.path.isfile(file_name):
-                file_details = FileDetails(file_name, os.path.getsize(file_name))
-                file_batch.append(file_details)
-                if len(file_batch) >= batch_size:
-                    try:
-                        if callback:
-                            callback(file_batch)
-                            file_batch = []
-                    except:
-                        logger.exception('list_files callback failure.')
-                    file_list.extend(file_batch)
-
-        # Fire callback for any remaining files in file_batch list
-        try:
-            if callback:
-                callback(file_batch)
-                file_batch = []
-        except:
-            logger.exception('list_files callback failure.')
-        file_list.extend(file_batch)
-
-        return file_list
+                yield FileDetails(file_name, os.path.getsize(file_name))
+                
 
     @staticmethod
     def _dir_walker(path, recursive):

@@ -90,7 +90,7 @@ class TestS3Client(TestCase):
         with S3Client(self.credentials) as client:
             results = client.list_objects('sample-bucket', False, 'test/')
 
-        self.assertEqual(len(results), 1)
+        self.assertEqual(len(list(results)), 1)
 
     @patch('botocore.paginate.PageIterator._make_request')
     def test_list_objects_prefix_recursive(self, mock_func):
@@ -102,7 +102,7 @@ class TestS3Client(TestCase):
         with S3Client(self.credentials) as client:
             results = client.list_objects('sample-bucket', True)
 
-        self.assertEqual(len(results), 2)
+        self.assertEqual(len(list(results)), 2)
 
     @patch('botocore.paginate.PageIterator._make_request')
     def test_list_objects_empty_bucket(self, mock_func):
@@ -113,12 +113,13 @@ class TestS3Client(TestCase):
         with S3Client(self.credentials) as client:
             results = client.list_objects('empty-bucket', True)
 
-        self.assertEqual(len(results), 0)
+        self.assertEqual(len(list(results)), 0)
 
     def test_list_objects_invalid_bucket_name(self):
         with self.assertRaises(ParamValidationError):
             with S3Client(self.credentials) as client:
-                client.list_objects('invalid:bucket:name')
+                items = list(client.list_objects('invalid:bucket:name'))
+                
 
     @patch('botocore.paginate.Paginator.paginate')
     def test_list_objects_bucket_not_found(self, mock_func):
@@ -127,7 +128,7 @@ class TestS3Client(TestCase):
 
         with self.assertRaises(ClientError):
             with S3Client(self.credentials) as client:
-                client.list_objects('nonexistent-bucket')
+                items = list(client.list_objects('nonexistent-bucket'))
 
     @patch('botocore.paginate.PageIterator._make_request')
     def test_list_objects_iteration(self, mock_func):
@@ -140,30 +141,4 @@ class TestS3Client(TestCase):
         with S3Client(self.credentials) as client:
             results = client.list_objects('iterating-bucket', True)
 
-        self.assertEqual(len(results), 2)
-
-    @patch('botocore.paginate.PageIterator._make_request')
-    def test_list_objects_with_callback(self, mock_func):
-        mock_func.return_value = self.sample_response
-
-        def callback(results):
-            self.assertEqual(len(results), 1)
-
-        with S3Client(self.credentials) as client:
-            results = client.list_objects('sample-bucket', True, callback=callback)
-
-        self.assertEquals(len(results), 0)
-
-    @patch('botocore.paginate.PageIterator._make_request')
-    def test_list_objects_with_callback_exception(self, mock_func):
-        mock_func.return_value = self.sample_response
-
-        def callback(results):
-            self.assertEqual(len(results), 1)
-            raise Exception('Error during callback')
-
-        with S3Client(self.credentials) as client:
-            results = client.list_objects('sample-bucket', True, callback=callback)
-
-        # As a result of exception within callback there should still be results returned
-        self.assertEquals(len(results), 1)
+        self.assertEqual(len(list(results)), 2)

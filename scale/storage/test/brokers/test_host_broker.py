@@ -148,39 +148,32 @@ class TestHostBrokerListFiles(TestCase):
         """Tests calling HostBroker.list_files() with no files in directory"""
         
         walk.return_value = []
-        file_list = self.broker.list_files(self.root_path, False, None)
-        self.assertEqual(len(file_list), 0)
+        files = self.broker.list_files(self.root_path, False)
+        self.assertEqual(len(list(files)), 0)
     
     @patch('os.path.getsize', lambda x: 0)
     @patch('os.path.isfile', lambda x: True)
     @patch('storage.brokers.host_broker.HostBroker._dir_walker')
-    def test_multi_batches(self, walk):
+    def test_list_a_thousand(self, walk):
         """Tests calling HostBroker.list_files() with multiple batches (1000+)"""
-        
-        self.count = 0
         
         walk.return_value = [str(uuid.uuid4()) for _ in range(1500)]
         
-        def callback(file_list):
-            self.count += len(file_list)
+        files = self.broker.list_files(self.root_path, True)
         
-        file_list = self.broker.list_files(self.root_path, True, callback)
-        
-        self.assertEqual(len(file_list), 0)
-        self.assertEqual(self.count, 1500)
+        self.assertEqual(len(list(files)), 1500)
     
     @patch('os.path.getsize', lambda x: 0)
     @patch('os.path.isfile', lambda x: True)
     @patch('storage.brokers.host_broker.HostBroker._dir_walker')
-    def test_no_callback(self, walk):
-        """Tests calling HostBroker.list_files() without using callback for
-        results of search directory"""
+    def test_list_ten(self, walk):
+        """Tests calling HostBroker.list_files() to search directory"""
         
         walk.return_value = [str(uuid.uuid4()) for _ in range(10)]
         
-        file_list = self.broker.list_files(self.root_path, True, None)
+        files = self.broker.list_files(self.root_path, True)
         
-        self.assertEqual(len(file_list), 10)
+        self.assertEqual(len(list(files)), 10)
     
     @patch('os.path.getsize', lambda x: 0)
     @patch('os.path.isfile', lambda x: True)
@@ -191,24 +184,9 @@ class TestHostBrokerListFiles(TestCase):
         
         walk.return_value = [os.path.join(str(x), str(uuid.uuid4())) for x in range(10)]
 
-        file_list = self.broker.list_files(self.root_path, True, None)
+        files = self.broker.list_files(self.root_path, True)
         
-        self.assertEqual(len(file_list), 10)
-
-    @patch('os.path.getsize', lambda x: 0)
-    @patch('os.path.isfile', lambda x: True)
-    @patch('storage.brokers.host_broker.HostBroker._dir_walker')
-    def test_bad_callback(self, walk):
-        """Tests calling HostBroker.list_files() with a bad callback"""
-
-        walk.return_value = [str(uuid.uuid4()) for _ in range(10)]
-        def callback(invalid, args):
-            pass
-
-        file_list = self.broker.list_files(self.root_path, False, callback)
-        
-        # Bad callback should be logged and results returned on completion
-        self.assertEqual(len(file_list), 10)
+        self.assertEqual(len(list(files)), 10)
 
 
 class TestHostBrokerLoadConfiguration(TestCase):

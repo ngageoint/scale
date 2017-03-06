@@ -60,32 +60,32 @@ class TestScanner(TestCase):
     def setUp(self):
         django.setup()
 
-    def test_callback_interrupted(self):
-        """Tests calling S3Scanner._callback() with interruption"""
+    def test_process_scanned_interrupted(self):
+        """Tests calling S3Scanner._process_scanned() with interruption"""
 
         scanner = S3Scanner()
         scanner._stop_received = True
         with self.assertRaises(ScannerInterruptRequested):
-            scanner._callback([None])
+            scanner._process_scanned([None])
 
-    def test_callback_no_ingests(self):
-        """Tests calling S3Scanner._callback() with no ingests"""
+    def test_process_scanned_no_ingests(self):
+        """Tests calling S3Scanner._process_scanned() with no ingests"""
 
         scanner = S3Scanner()
-        scanner._callback([])
+        scanner._process_scanned([])
 
         # Ensure no files were detected
         self.assertEquals(scanner._count, 0)
 
     @patch('ingest.scan.scanners.s3_scanner.S3Scanner._deduplicate_ingest_list')
     @patch('ingest.scan.scanners.s3_scanner.S3Scanner._ingest_file')
-    def test_callback_dry_run(self, ingest_file, dedup):
-        """Tests calling S3Scanner._callback() during dry run"""
+    def test_process_scanned_dry_run(self, ingest_file, dedup):
+        """Tests calling S3Scanner._process_scanned() during dry run"""
 
         scanner = S3Scanner()
         scanner._dry_run = True
 
-        scanner._callback([FileDetails('test', 0)])
+        scanner._process_scanned([FileDetails('test', 0)])
 
         # Ensure we counted the one file
         self.assertEquals(scanner._count, 1)
@@ -97,11 +97,11 @@ class TestScanner(TestCase):
     @patch('ingest.models.IngestManager.start_ingest_tasks')
     @patch('ingest.scan.scanners.s3_scanner.S3Scanner._deduplicate_ingest_list')
     @patch('ingest.scan.scanners.s3_scanner.S3Scanner._ingest_file')
-    def test_callback_successfully(self, ingest_file, dedup, start_ingests):
-        """Tests calling S3Scanner._callback() successfully"""
+    def test_process_scanned_successfully(self, ingest_file, dedup, start_ingests):
+        """Tests calling S3Scanner._process_scanned() successfully"""
 
         scanner = S3Scanner()
-        scanner._callback([FileDetails('test1', 0), FileDetails('test2', 0)])
+        scanner._process_scanned([FileDetails('test1', 0), FileDetails('test2', 0)])
 
         # Verify that 2 files were received
         self.assertEquals(scanner._count, 2)

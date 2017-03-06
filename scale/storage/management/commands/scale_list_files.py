@@ -56,17 +56,13 @@ class Command(BaseCommand):
             if options['local'] and 'broker' in conf and 'host_path' in conf['broker']:
                 with patch.object(Workspace, '_get_volume_path',
                                   return_value=conf['broker']['host_path']) as mock_method:
-                    results = workspace.list_files(options['recursive'], self.callback)
-                    logger.info('Results that were not returned via callback: %s' % results)
+                    results = workspace.list_files(options['recursive'])
             else:
-                results = workspace.list_files(options['recursive'], self.callback)
-                logger.info('Results that were not returned via callback: %s' % results)
+                results = workspace.list_files(options['recursive'])
+                
+            for result in results:
+                logger.info(file)
         except:
             logger.exception('Unknown error occurred, exit code 1 returning')
             sys.exit(1)
         logger.info('Command completed: scale_list_files')
-
-    # Callback definition to support updates as workspace is traversed
-    def callback(self, files):
-        for file in files:
-            logger.info(file)

@@ -119,27 +119,26 @@ class Broker(object):
 
         return None
 
-    def list_files(self, volume_path, recursive, callback):
+    def list_files(self, volume_path, recursive):
         """List the files under the given file system paths.
 
         If this broker uses a container volume, volume_path will contain the absolute local container location where
         that volume file system is mounted. If this broker does not use a container volume, None will be given for
         volume_path.
 
-        As a result of the time that may be required for the full result set to be returned, it is recommended that the
-        provided callback support be used to receive objects as they are retrieved (up to 1000 in a batch). The callback
-        method must accept one list parameter. This list will contain elements of type storage.brokers.broker.FileDetails.
-        If the callback method is called without exception, no objects will be returned upon completion of list_files call.
+        Retrieval of objects is provided by the boto3 paginator over 
+        list_objects. This allows for simple paging support with unbounded
+        object counts. As a result of the time that may be required for the full
+        result set to be returned, the results are returned via a generator. 
+        This generator will contain objects of type `storage.brokers.broker.FileDetails`.
 
         :param volume_path: Absolute path to the local container location onto which the volume file system was mounted,
             None if this broker does not use a container volume
         :type volume_path: string
         :param recursive: Flag to indicate whether file searching should be done recursively
         :type recursive: boolean
-        :param callback: Method that will be called on completion of each batch return. Max of 1000 files per call.
-        :type callback: function([storage.brokers.broker.FileDetails])
-        :returns: List of files matching given expression. Empty if all delivered via callback.
-        :rtype: [storage.brokers.broker.FileDetails]
+        :return: Generator of files matching given expression
+        :rtype: Generator[:class:`storage.brokers.broker.FileDetails`]
         """
 
         raise NotImplementedError

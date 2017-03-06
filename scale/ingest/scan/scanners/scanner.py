@@ -32,6 +32,7 @@ class Scanner(object):
         """
 
         self.scan_id = None
+        self._batch_size = 1000 # Use a batch size of 1000 for scan
         self._count = 0
         self._dry_run = False  # Used to only scan and skip ingest process
         self._file_handler = None  # The file handler configured for this scanner
@@ -92,7 +93,20 @@ class Scanner(object):
         self._dry_run = dry_run
 
         # Initialize workspace scan via storage broker. Configuration determines if recursive workspace walk.
-        self._scanned_workspace.list_files(recursive=self._recursive, callback=self._callback)
+        files = self._scanned_workspace.list_files(recursive=self._recursive)
+        
+        batched_files = []
+        for file in files:
+            batched_files.append(file)
+            
+            # Process files every time a batch size is reached
+            if len(batched_files) >= self._batch_size:
+                self._process_scanned(batched_files)
+                batched_files = []
+
+        # If any remaining files, process
+        if len(batched_files):
+            self._process_scanned(batched_files)
 
         logger.info('%s %i files during scan.' % ('Detected' if self._dry_run else 'Processed', self._count))
 
@@ -144,15 +158,15 @@ class Scanner(object):
 
         raise NotImplementedError
 
-    def _callback(self, file_list):
-        """Callback for handling files identified by list_files callback
+    def _process_scanned(self, file_list):
+        """Method for handling files identified by list_files Generator
         
         :param file_list: List of files found within workspace
         :type file_list: storage.brokers.broker.FileDetails
         """
 
         ingests = []
-
+        
         for file_details in file_list:
             if not self._stop_received:
                 ingest = self._ingest_file(file_details.file, file_details.size)
@@ -171,7 +185,7 @@ class Scanner(object):
         # Once all ingest rules have been applied, de-duplicate and then bulk insert
         ingests = self._deduplicate_ingest_list(self.scan_id, ingests)
 
-        # bulk insert remaining as queued and note detected files in Scan model
+        # bulk insert remaining as queued and note detected files in Scan mode
         with transaction.atomic():
             Ingest.objects.bulk_create(ingests)
             Scan.objects.filter(pk=self.scan_id).update(file_count=self._count)
