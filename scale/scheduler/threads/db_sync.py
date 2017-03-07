@@ -101,6 +101,8 @@ class DatabaseSyncThread(object):
         node_mgr.sync_with_database(mesos_master.hostname, mesos_master.port)
 
         self._sync_running_job_executions()
+        
+        secrets_mgr.sync_with_backend()
 
     def _sync_running_job_executions(self):
         """Syncs job executions that are currently running by handling any canceled executions
