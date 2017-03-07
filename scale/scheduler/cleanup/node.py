@@ -41,7 +41,8 @@ class NodeCleanup(object):
         """
 
         for job_exe in job_exes:
-            del self._job_exes[job_exe.id]
+            if job_exe.id in self._job_exes:
+                del self._job_exes[job_exe.id]
 
     def create_next_task(self, agent_id, hostname, is_initial_cleanup_completed):
         """Creates and returns the next cleanup task that needs to be run, possibly None
