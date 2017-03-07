@@ -67,17 +67,17 @@ class SourceFileManager(models.GeoManager):
         :rtype: [:class:`job.models.Job`]
         """
 
-        # Order must start with job ID so we can do a distinct on the job ID
-        order_with_id = ['id']
+        # Order must end with job ID so we can do a distinct on the job ID and remove duplicate jobs
         if order:
-            order_with_id.extend(order)
+            order.append('id')
         else:
-            order_with_id.append('last_modified')
+            order = ['last_modified', 'id']
         jobs = Job.objects.filter_jobs(started=started, ended=ended, statuses=statuses, job_ids=job_ids,
                                        job_type_ids=job_type_ids, job_type_names=job_type_names,
                                        job_type_categories=job_type_categories, error_categories=error_categories,
-                                       include_superseded=include_superseded, order=order_with_id)
-        jobs = jobs.filter(job_file_links__ancestor_id=source_file_id).distinct('id')
+                                       include_superseded=include_superseded, order=order)
+        distinct = [field.replace('-', '') for field in order]  # Remove - char for reverse sort fields
+        jobs = jobs.filter(job_file_links__ancestor_id=source_file_id).distinct(*distinct)
         return jobs
 
     def get_source_products(self, source_file_id, started=None, ended=None, batch_ids=None, job_type_ids=None,

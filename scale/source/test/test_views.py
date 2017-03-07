@@ -6,6 +6,7 @@ import django
 from django.test import TestCase
 from rest_framework import status
 
+import error.test.utils as error_test_utils
 import job.test.utils as job_test_utils
 import source.test.utils as source_test_utils
 import storage.test.utils as storage_test_utils
@@ -206,6 +207,165 @@ class TestSourceDetailsView(TestCase):
             self.assertEqual(len(result['products']), 2)
             for product in result['products']:
                 self.assertIn(product['id'], [self.product1.id, self.product2.id])
+
+
+class TestSourceJobsView(TestCase):
+
+    def setUp(self):
+        django.setup()
+
+        from product.test import utils as product_test_utils
+        self.src_file = source_test_utils.create_source()
+
+        self.job_type1 = job_test_utils.create_job_type(name='test1', version='1.0', category='test-1')
+        self.job1 = job_test_utils.create_job(job_type=self.job_type1, status='RUNNING')
+        self.job_exe1 = job_test_utils.create_job_exe(job=self.job1)
+        product_test_utils.create_file_link(ancestor=self.src_file, job=self.job1, job_exe=self.job_exe1)
+
+        self.job_type2 = job_test_utils.create_job_type(name='test2', version='1.0', category='test-2')
+        self.job2 = job_test_utils.create_job(job_type=self.job_type2, status='PENDING')
+        self.job_exe2 = job_test_utils.create_job_exe(job=self.job2)
+        product_test_utils.create_file_link(ancestor=self.src_file, job=self.job2, job_exe=self.job_exe2)
+
+        self.job3 = job_test_utils.create_job(is_superseded=True)
+        self.job_exe3 = job_test_utils.create_job_exe(job=self.job3)
+        product_test_utils.create_file_link(ancestor=self.src_file, job=self.job3, job_exe=self.job_exe3)
+
+    def test_invalid_source_id(self):
+        """Tests calling the source jobs view when the source ID is invalid."""
+
+        url = rest_util.get_url('/sources/12345678/jobs/')
+        response = self.client.generic('GET', url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+
+    def test_successful(self):
+        """Tests successfully calling the source jobs view."""
+
+        url = rest_util.get_url('/sources/%d/jobs/' % self.src_file.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 2)
+        for entry in result['results']:
+            if entry['id'] == self.job1.id:
+                expected = self.job1
+            elif entry['id'] == self.job2.id:
+                expected = self.job2
+            else:
+                self.fail('Found unexpected result: %s' % entry['id'])
+            self.assertEqual(entry['job_type']['name'], expected.job_type.name)
+            self.assertEqual(entry['job_type_rev']['job_type']['id'], expected.job_type.id)
+
+    def test_status(self):
+        """Tests successfully calling the source jobs view filtered by status."""
+
+        url = rest_util.get_url('/sources/%d/jobs/?status=RUNNING' % self.src_file.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['job_type']['id'], self.job1.job_type.id)
+
+    def test_job_id(self):
+        """Tests successfully calling the source jobs view filtered by job identifier."""
+
+        url = rest_util.get_url('/sources/%d/jobs/?job_id=%s' % (self.src_file.id, self.job1.id))
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['id'], self.job1.id)
+
+    def test_job_type_id(self):
+        """Tests successfully calling the source jobs view filtered by job type identifier."""
+
+        url = rest_util.get_url('/sources/%d/jobs/?job_type_id=%s' % (self.src_file.id, self.job1.job_type.id))
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['job_type']['id'], self.job1.job_type.id)
+
+    def test_job_type_name(self):
+        """Tests successfully calling the source jobs view filtered by job type name."""
+
+        url = rest_util.get_url('/sources/%d/jobs/?job_type_name=%s' % (self.src_file.id, self.job1.job_type.name))
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['job_type']['name'], self.job1.job_type.name)
+
+    def test_job_type_category(self):
+        """Tests successfully calling the source jobs view filtered by job type category."""
+
+        url = rest_util.get_url('/sources/%d/jobs/?job_type_category=%s')
+        url = url % (self.src_file.id, self.job1.job_type.category)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['job_type']['category'], self.job1.job_type.category)
+
+    def test_error_category(self):
+        """Tests successfully calling the source jobs view filtered by error category."""
+
+        from product.test import utils as product_test_utils
+        error = error_test_utils.create_error(category='DATA')
+        job = job_test_utils.create_job(error=error)
+        job_exe = job_test_utils.create_job_exe(job=job)
+        product_test_utils.create_file_link(ancestor=self.src_file, job=job, job_exe=job_exe)
+
+        url = rest_util.get_url('/sources/%d/jobs/?error_category=%s' % (self.src_file.id, error.category))
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['id'], job.id)
+        self.assertEqual(result['results'][0]['error']['category'], error.category)
+
+    def test_superseded(self):
+        """Tests getting superseded jobs from source jobs view."""
+
+        url = rest_util.get_url('/sources/%d/jobs/?include_superseded=true' % self.src_file.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 3)
+
+    def test_order_by(self):
+        """Tests successfully calling the source jobs view with sorting."""
+
+        from product.test import utils as product_test_utils
+        job_type1b = job_test_utils.create_job_type(name='test1', version='2.0', category='test-1')
+        job1b = job_test_utils.create_job(job_type=job_type1b, status='RUNNING')
+        job_exe1b = job_test_utils.create_job_exe(job=job1b)
+        product_test_utils.create_file_link(ancestor=self.src_file, job=job1b, job_exe=job_exe1b)
+
+        job_type1c = job_test_utils.create_job_type(name='test1', version='3.0', category='test-1')
+        job1c = job_test_utils.create_job(job_type=job_type1c, status='RUNNING')
+        job_exe1c = job_test_utils.create_job_exe(job=job1c)
+        product_test_utils.create_file_link(ancestor=self.src_file, job=job1c, job_exe=job_exe1c)
+
+        url = rest_util.get_url('/sources/%d/jobs/?order=job_type__name&order=-job_type__version' % self.src_file.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 4)
+        self.assertEqual(result['results'][0]['job_type']['id'], job_type1c.id)
+        self.assertEqual(result['results'][1]['job_type']['id'], job_type1b.id)
+        self.assertEqual(result['results'][2]['job_type']['id'], self.job_type1.id)
+        self.assertEqual(result['results'][3]['job_type']['id'], self.job_type2.id)
 
 
 class TestSourceProductsView(TestCase):
