@@ -10,11 +10,11 @@
                 <span ng-show="COL_FIELD.total > 0" class="fail-rate-container">
                     <span class="fail-rate" style="{{ grid.appScope.vm.failRateStyle(COL_FIELD.errorTotal, COL_FIELD.total) }}"></span>
                 </span>
-                <span ng-show="COL_FIELD.total > 0">{{ ((COL_FIELD.errorTotal / COL_FIELD.total) * 100).toFixed(0) }}%</span>
+                <span ng-show="COL_FIELD.total > 0" class="percentage">{{ ((COL_FIELD.errorTotal / COL_FIELD.total) * 100).toFixed(0) }}%</span>
                 <span ng-show="COL_FIELD.total === 0" class="fail-rate-container">
                     <span class="fail-rate" style="display: none"></span>
                 </span>
-                <span ng-show="COL_FIELD.total === 0">0%</span>
+                <span ng-show="COL_FIELD.total === 0" class="percentage">0%</span>
             </div>
             <div class="col-xs-8 col-md-6 text-right">
                 <div class="label label-system" ng-show="COL_FIELD.system > 0" style="{{ grid.appScope.vm.setStyle(COL_FIELD, 'system') }}" uib-tooltip="{{ COL_FIELD.system }} System Errors ({{ grid.appScope.vm.getPercentageOfTotal(COL_FIELD.system, COL_FIELD.total) }})" tooltip-append-to-body="true">{{ COL_FIELD.system }}</div>

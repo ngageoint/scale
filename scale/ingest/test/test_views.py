@@ -16,7 +16,6 @@ from ingest.strike.configuration.strike_configuration import StrikeConfiguration
 
 
 class TestIngestsView(TestCase):
-
     fixtures = ['ingest_job_types.json']
 
     def setUp(self):
@@ -80,7 +79,6 @@ class TestIngestsView(TestCase):
 
 
 class TestIngestDetailsView(TestCase):
-
     fixtures = ['ingest_job_types.json']
 
     def setUp(self):
@@ -125,7 +123,6 @@ class TestIngestDetailsView(TestCase):
 
 
 class TestIngestStatusView(TestCase):
-
     fixtures = ['ingest_job_types.json']
 
     def setUp(self):
@@ -220,7 +217,6 @@ class TestIngestStatusView(TestCase):
 
 
 class TestStrikesView(TestCase):
-
     def setUp(self):
         django.setup()
 
@@ -284,7 +280,6 @@ class TestStrikesView(TestCase):
 
 
 class TestStrikeCreateView(TestCase):
-
     fixtures = ['ingest_job_types.json']
 
     def setUp(self):
@@ -377,7 +372,6 @@ class TestStrikeCreateView(TestCase):
 
 
 class TestStrikeDetailsView(TestCase):
-
     def setUp(self):
         django.setup()
 

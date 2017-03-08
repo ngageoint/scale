@@ -8,7 +8,6 @@ from ingest.triggers.ingest_trigger_condition import IngestTriggerCondition
 
 
 class TestIngestTriggerConditionIsConditionMet(TestCase):
-
     def setUp(self):
         django.setup()
 
@@ -17,15 +16,15 @@ class TestIngestTriggerConditionIsConditionMet(TestCase):
 
         condition = IngestTriggerCondition(None, None)
         source_file = source_test_utils.create_source(media_type='text/plain')
-        
+
         self.assertEqual(condition.is_condition_met(source_file), True)
-    
+
     def test_media_type_match(self):
         """Tests calling IngestTriggerCondition.is_condition_met() with a matching media type"""
 
         condition = IngestTriggerCondition('text/plain', None)
         source_file = source_test_utils.create_source(media_type='text/plain')
-        
+
         self.assertEqual(condition.is_condition_met(source_file), True)
 
     def test_media_type_mismatch(self):
@@ -33,7 +32,7 @@ class TestIngestTriggerConditionIsConditionMet(TestCase):
 
         condition = IngestTriggerCondition('application/json', None)
         source_file = source_test_utils.create_source(media_type='text/plain')
-        
+
         self.assertEqual(condition.is_condition_met(source_file), False)
 
     def test_has_data_types(self):
@@ -46,7 +45,7 @@ class TestIngestTriggerConditionIsConditionMet(TestCase):
         source_file.add_data_type_tag('C')
         source_file.add_data_type_tag('D')
         source_file.add_data_type_tag('E')
-        
+
         self.assertEqual(condition.is_condition_met(source_file), True)
 
     def test_does_not_have_data_types(self):
@@ -56,7 +55,7 @@ class TestIngestTriggerConditionIsConditionMet(TestCase):
         source_file = source_test_utils.create_source(media_type='text/plain')
         source_file.add_data_type_tag('A')
         source_file.add_data_type_tag('B')
-        
+
         self.assertEqual(condition.is_condition_met(source_file), False)
 
     def test_both_correct(self):
@@ -67,7 +66,7 @@ class TestIngestTriggerConditionIsConditionMet(TestCase):
         source_file.add_data_type_tag('A')
         source_file.add_data_type_tag('B')
         source_file.add_data_type_tag('C')
-        
+
         self.assertEqual(condition.is_condition_met(source_file), True)
 
     def test_media_type_incorrect(self):
@@ -78,7 +77,7 @@ class TestIngestTriggerConditionIsConditionMet(TestCase):
         source_file.add_data_type_tag('A')
         source_file.add_data_type_tag('B')
         source_file.add_data_type_tag('C')
-        
+
         self.assertEqual(condition.is_condition_met(source_file), False)
 
     def test_data_types_incorrect(self):
@@ -89,5 +88,5 @@ class TestIngestTriggerConditionIsConditionMet(TestCase):
         source_file.add_data_type_tag('A')
         source_file.add_data_type_tag('B')
         source_file.add_data_type_tag('C')
-        
+
         self.assertEqual(condition.is_condition_met(source_file), False)

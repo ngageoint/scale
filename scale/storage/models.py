@@ -19,9 +19,7 @@ from storage.container import get_workspace_volume_path
 from storage.exceptions import ArchivedWorkspace, DeletedFile, InvalidDataTypeTag, MissingVolumeMount
 from storage.media_type import get_media_type
 
-
 logger = logging.getLogger(__name__)
-
 
 # Allow alphanumerics, dashes, underscores, and spaces
 VALID_TAG_PATTERN = re.compile('^[a-zA-Z0-9\\-_ ]+$')
@@ -67,7 +65,7 @@ class CountryDataManager(models.Manager):
         :returns: A query set
         :rtype: :class:`django.db.models.query.QuerySet`
         """
-        assert((name is not None and iso2 is None) or (iso2 is not None and name is None))
+        assert ((name is not None and iso2 is None) or (iso2 is not None and name is None))
         if name is not None:
             return self.filter(name=name, effective__lte=target_date).order_by('-effective').first()
         else:
@@ -550,6 +548,7 @@ class ScaleFile(models.Model):
 
             # Combine the workspace and file path
             return '%s/%s' % (base_url, relative_url)
+
     url = property(_get_url)
 
     class Meta(object):
@@ -711,8 +710,11 @@ class WorkspaceManager(models.Manager):
         try:
             workspace = Workspace.objects.get(name=name)
 
-            if (json_config['broker'] and workspace.json_config['broker'] and
-                    json_config['broker']['type'] != workspace.json_config['broker']['type']):
+            # Assign to short names in the interest of single-line conditional
+            old_conf = workspace.json_config
+            new_conf = json_config
+
+            if new_conf['broker'] and old_conf['broker'] and new_conf['broker']['type'] != old_conf['broker']['type']:
                 warnings.append(ValidationWarning('broker_type',
                                                   'Changing the broker type may disrupt queued/running jobs.'))
         except Workspace.DoesNotExist:
@@ -863,6 +865,25 @@ class Workspace(models.Model):
 
         volume_path = self._get_volume_path()
         return self.get_broker().get_file_system_paths(volume_path, files)
+
+    def list_files(self, recursive, callback):
+        """Lists files within a workspace, with optional full tree recursion. Callback support will enable updates
+        to caller without waiting for entire workspace to be traversed. If callbacks are used an empty list will be
+        returned at the completion of call.
+
+        :param recursive: Flag to indicate whether file searching should be done recursively
+        :type recursive: boolean
+        :param callback: Method that will be called on completion of each batch return. Max of 1000 files per call.
+        :type callback: function([storage.brokers.broker.FileDetails])
+        :returns: List of files matching given expression. Empty if all delivered via callback.
+        :rtype: [storage.brokers.broker.FileDetails]
+        """
+        volume_path = self._get_volume_path()
+
+        logger.info('Beginning%s%s file list for workspace: %s' % (' callback enabled' if callback else '',
+                                                                   ' recursive' if recursive else '',
+                                                                   self.name))
+        return self.get_broker().list_files(volume_path, recursive, callback)
 
     def move_files(self, file_moves):
         """Moves the given files to the new file system paths and saves the ScaleFile model changes in the database. If

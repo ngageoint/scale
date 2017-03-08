@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import datetime
+import os
 
 import django.contrib.gis.geos as geos
 import django.utils.timezone as timezone

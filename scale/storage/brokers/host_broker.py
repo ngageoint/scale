@@ -5,11 +5,10 @@ import logging
 import os
 import shutil
 
-from storage.brokers.broker import Broker, BrokerVolume
+from storage.brokers.broker import Broker, BrokerVolume, FileDetails
 from storage.brokers.exceptions import InvalidBrokerConfiguration
 from storage.exceptions import MissingFile
 from util.command import execute_command_line
-
 
 logger = logging.getLogger(__name__)
 
@@ -61,6 +60,63 @@ class HostBroker(Broker):
         for scale_file in files:
             paths.append(os.path.join(volume_path, scale_file.file_path))
         return paths
+
+    def list_files(self, volume_path, recursive, callback):
+        """See :meth:`storage.brokers.broker.Broker.list_files`
+        """
+
+        # List used to store files that are being returned on completion. Only used
+        # if callback is not defined or fails.
+        file_list = []
+
+        # List used to store files being batched. Flushed to callback on batch_size.
+        file_batch = []
+
+        batch_size = 1000
+
+        for file_name in self._dir_walker(volume_path, recursive):
+            if os.path.isfile(file_name):
+                file_details = FileDetails(file_name, os.path.getsize(file_name))
+                file_batch.append(file_details)
+                if len(file_batch) >= batch_size:
+                    try:
+                        if callback:
+                            callback(file_batch)
+                            file_batch = []
+                    except:
+                        logger.exception('list_files callback failure.')
+                    file_list.extend(file_batch)
+
+        # Fire callback for any remaining files in file_batch list
+        try:
+            if callback:
+                callback(file_batch)
+                file_batch = []
+        except:
+            logger.exception('list_files callback failure.')
+        file_list.extend(file_batch)
+
+        return file_list
+
+    @staticmethod
+    def _dir_walker(path, recursive):
+        """Generator to handle both flat and recursive directory traversal
+        
+        :param path: The path to the directory tree to walk
+        :type path: string
+        :param recursive: Whether directory walk is only at path or recursive
+        :type recursive: bool
+        """
+        # Handle a full recursive walk of the directory tree.
+        if recursive:
+            for root, dirs, files in os.walk(path):
+                for name in files:
+                    yield os.path.join(root, name)
+        # Handle identifying files only from a single directory.
+        else:
+            for result in os.listdir(path):
+                yield os.path.join(path, result)
+
 
     def load_configuration(self, config):
         """See :meth:`storage.brokers.broker.Broker.load_configuration`

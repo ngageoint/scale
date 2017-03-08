@@ -8,7 +8,6 @@ from ingest.strike.monitors.exceptions import InvalidMonitorConfiguration
 
 
 class TestDirWatcherMonitor(TestCase):
-
     def setUp(self):
         django.setup()
 

@@ -16,7 +16,6 @@ from trigger.configuration.exceptions import InvalidTriggerRule
 
 
 class TestIngestTriggerRuleConfigurationInit(TestCase):
-
     def setUp(self):
         django.setup()
 
@@ -34,7 +33,6 @@ class TestIngestTriggerRuleConfigurationInit(TestCase):
 
 
 class TestIngestTriggerRuleConfigurationValidate(TestCase):
-
     def setUp(self):
         django.setup()
 
@@ -58,7 +56,6 @@ class TestIngestTriggerRuleConfigurationValidate(TestCase):
 
 
 class TestIngestTriggerRuleConfigurationValidateTriggerForJob(TestCase):
-
     def setUp(self):
         django.setup()
 
@@ -101,7 +98,6 @@ class TestIngestTriggerRuleConfigurationValidateTriggerForJob(TestCase):
 
 
 class TestIngestTriggerRuleConfigurationValidateTriggerForRecipe(TestCase):
-
     def setUp(self):
         django.setup()
 

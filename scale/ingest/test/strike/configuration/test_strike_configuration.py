@@ -12,7 +12,6 @@ from storage.models import Workspace
 
 
 class TestStrikeConfiguration(TestCase):
-
     def setUp(self):
         django.setup()
 

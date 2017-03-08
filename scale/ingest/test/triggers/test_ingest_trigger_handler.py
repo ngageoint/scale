@@ -4,18 +4,17 @@ import django
 from django.test import TestCase
 from django.utils.timezone import now
 
-from ingest.triggers.ingest_trigger_handler import IngestTriggerHandler
-from job.models import JobExecution
 import job.test.utils as job_test_utils
-from queue.models import Queue
 import recipe.test.utils as recipe_test_utils
-from storage.models import ScaleFile
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
+from ingest.triggers.ingest_trigger_handler import IngestTriggerHandler
+from job.models import JobExecution
+from queue.models import Queue
+from storage.models import ScaleFile
 
 
 class TestIngestTriggerHandlerProcessIngestedSourceFile(TestCase):
-
     def setUp(self):
         django.setup()
 

@@ -1,6 +1,7 @@
 env/
 .idea/
 .DS_Store
+.c9/
 temp/
 bin/
 pkg/

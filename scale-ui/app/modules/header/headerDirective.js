@@ -1,9 +1,10 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('aisHeaderController', function(subnavService) {
+    angular.module('scaleApp').controller('aisHeaderController', function ($scope, subnavService) {
         var vm = this;
         vm.currentPath = subnavService.getCurrentPath();
+        vm.loadingClass = $scope.showSubnav ? 'loading-content-subnav' : 'loading-content';
     })
     .directive('aisHeader', function () {
         /**

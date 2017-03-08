@@ -8,7 +8,6 @@ import source.test.utils as source_test_utils
 
 
 class TestPerformIngest(TransactionTestCase):
-
     fixtures = ['ingest_job_types.json']
 
     def setUp(self):

@@ -5,7 +5,6 @@ import time
 
 from django.db.utils import OperationalError
 
-
 logger = logging.getLogger(__name__)
 
 
