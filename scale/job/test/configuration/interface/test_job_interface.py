@@ -912,7 +912,6 @@ class TestJobInterfacePreSteps(TestCase):
 
     @patch('scheduler.vault.manager.SecretsManager.retrieve_job_type_secrets')
     def test_required_settings_in_command(self, mock_secrets_mgr):
-        mock_secrets_mgr = Mock()
         mock_secrets_mgr.return_value = {
             'setting1': 'secret_val'
         }
@@ -1005,7 +1004,6 @@ class TestJobInterfacePreSteps(TestCase):
     def test_validate_populated_settings(self, mock_secrets_mgr):
         """Tests the validation of required settings defined in the job_interface"""
 
-        mock_secrets_mgr = Mock()
         mock_secrets_mgr.return_value = {
             'setting1': 'secret_val'
         }
