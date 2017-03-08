@@ -76,6 +76,7 @@ class BatchesView(ListCreateAPIView):
         try:
             if definition_dict:
                 definition = BatchDefinition(definition_dict)
+                definition.validate(recipe_type)
         except InvalidDefinition as ex:
             raise BadParameter('Batch definition invalid: %s' % unicode(ex))
 
@@ -140,16 +141,20 @@ class BatchesValidationView(APIView):
         # Validate the batch definition
         definition_dict = rest_util.parse_dict(request, 'definition')
         definition = None
+        warnings = []
         try:
             if definition_dict:
                 definition = BatchDefinition(definition_dict)
+                warnings = definition.validate(recipe_type)
         except InvalidDefinition as ex:
             raise BadParameter('Batch definition invalid: %s' % unicode(ex))
 
-        # Get a rough estimate of how many recipes will be affected
+        # Get a rough estimate of how many recipes/files will be affected
         old_recipes = Batch.objects.get_matched_recipes(recipe_type, definition)
+        old_files = Batch.objects.get_matched_files(recipe_type, definition)
 
         return Response({
             'recipe_count': old_recipes.count(),
-            'warnings': [],
+            'file_count': old_files.count(),
+            'warnings': warnings,
         })

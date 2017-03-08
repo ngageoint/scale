@@ -138,3 +138,44 @@ class TestBatchDefinition(TestCase):
         }
 
         self.assertRaises(InvalidDefinition, BatchDefinition, definition)
+
+    def test_trigger_default(self):
+        """Tests defining the current recipe type trigger should be used."""
+
+        definition = {
+            'version': '1.0',
+            'trigger_rule': True,
+        }
+
+        # No exception means success
+        BatchDefinition(definition)
+
+    def test_trigger_custom(self):
+        """Tests defining a custom trigger to use."""
+
+        definition = {
+            'version': '1.0',
+            'trigger_rule':   {
+                'condition': {
+                    'media_type': 'text/plain',
+                    'data_types': ['foo', 'bar'],
+                },
+                'data': {
+                    'input_data_name': 'my_file',
+                    'workspace_name': 'my_workspace',
+                },
+            },
+        }
+
+        # No exception means success
+        BatchDefinition(definition)
+
+    def test_trigger_invalid(self):
+        """Tests defining a custom trigger that is invalid."""
+
+        definition = {
+            'version': '1.0',
+            'trigger_rule': 'BAD',
+        }
+
+        self.assertRaises(InvalidDefinition, BatchDefinition, definition)

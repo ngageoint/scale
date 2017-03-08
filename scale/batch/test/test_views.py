@@ -8,6 +8,7 @@ from rest_framework import status
 
 import recipe.test.utils as recipe_test_utils
 import batch.test.utils as batch_test_utils
+import storage.test.utils as storage_test_utils
 import util.rest as rest_util
 from batch.models import Batch
 
@@ -124,6 +125,74 @@ class TestBatchesView(TestCase):
         self.assertIsNotNone(result['creator_job'])
         self.assertIsNotNone(result['definition'])
 
+    def test_create_trigger_true(self):
+        """Tests creating a new batch using the default trigger rule."""
+        storage_test_utils.create_file(media_type='text/plain')
+
+        json_data = {
+            'recipe_type_id': self.recipe_type1.id,
+            'title': 'batch-title-test',
+            'description': 'batch-description-test',
+            'definition': {
+                'version': '1.0',
+                'trigger_rule': True,
+            },
+        }
+
+        url = rest_util.get_url('/batches/')
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        batch = Batch.objects.filter(title='batch-title-test').first()
+
+        result = json.loads(response.content)
+        self.assertEqual(result['id'], batch.id)
+        self.assertEqual(result['title'], 'batch-title-test')
+        self.assertEqual(result['description'], 'batch-description-test')
+        self.assertEqual(result['recipe_type']['id'], self.recipe_type1.id)
+        self.assertIsNotNone(result['event'])
+        self.assertIsNotNone(result['creator_job'])
+        self.assertIsNotNone(result['definition'])
+
+    def test_create_trigger_custom(self):
+        """Tests creating a new batch using a custom trigger rule."""
+        workspace = storage_test_utils.create_workspace()
+        storage_test_utils.create_file(media_type='text/plain', data_type='test', workspace=workspace)
+
+        json_data = {
+            'recipe_type_id': self.recipe_type1.id,
+            'title': 'batch-title-test',
+            'description': 'batch-description-test',
+            'definition': {
+                'version': '1.0',
+                'trigger_rule': {
+                    'condition': {
+                        'media_type': 'text/custom',
+                        'data_types': ['test'],
+                    },
+                    'data': {
+                        'input_data_name': 'Recipe Input',
+                        'workspace_name': workspace.name,
+                    },
+                },
+            },
+        }
+
+        url = rest_util.get_url('/batches/')
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        batch = Batch.objects.filter(title='batch-title-test').first()
+
+        result = json.loads(response.content)
+        self.assertEqual(result['id'], batch.id)
+        self.assertEqual(result['title'], 'batch-title-test')
+        self.assertEqual(result['description'], 'batch-description-test')
+        self.assertEqual(result['recipe_type']['id'], self.recipe_type1.id)
+        self.assertIsNotNone(result['event'])
+        self.assertIsNotNone(result['creator_job'])
+        self.assertIsNotNone(result['definition'])
+
     def test_create_missing_param(self):
         """Tests creating a batch with missing fields."""
         json_data = {
@@ -199,7 +268,64 @@ class TestBatchesValidationView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
+        self.assertEqual(result['file_count'], 0)
         self.assertEqual(result['recipe_count'], 1)
+        self.assertEqual(len(result['warnings']), 0)
+
+    def test_successful_trigger_true(self):
+        """Tests validating a batch definition using the default trigger rule."""
+        storage_test_utils.create_file(media_type='text/plain')
+
+        json_data = {
+            'recipe_type_id': self.recipe_type1.id,
+            'title': 'batch-title-test',
+            'description': 'batch-description-test',
+            'definition': {
+                'version': '1.0',
+                'trigger_rule': True,
+            },
+        }
+
+        url = rest_util.get_url('/batches/validation/')
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(result['file_count'], 1)
+        self.assertEqual(result['recipe_count'], 0)
+        self.assertEqual(len(result['warnings']), 0)
+
+    def test_successful_trigger_custom(self):
+        """Tests validating a batch definition with a custom trigger rule."""
+        workspace = storage_test_utils.create_workspace()
+        storage_test_utils.create_file(media_type='text/plain', data_type='test', workspace=workspace)
+
+        json_data = {
+            'recipe_type_id': self.recipe_type1.id,
+            'title': 'batch-title-test',
+            'description': 'batch-description-test',
+            'definition': {
+                'version': '1.0',
+                'trigger_rule': {
+                    'condition': {
+                        'media_type': 'text/custom',
+                        'data_types': ['test'],
+                    },
+                    'data': {
+                        'input_data_name': 'Recipe Input',
+                        'workspace_name': workspace.name,
+                    },
+                },
+            },
+        }
+
+        url = rest_util.get_url('/batches/validation/')
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(result['file_count'], 1)
+        self.assertEqual(result['recipe_count'], 0)
         self.assertEqual(len(result['warnings']), 0)
 
     def test_missing_param(self):

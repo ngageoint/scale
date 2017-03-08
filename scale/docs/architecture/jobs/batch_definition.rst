@@ -6,12 +6,15 @@ Batch Definition
 
 A batch represents a collection of recipes that should be scheduled for re-processing. The batch definition is a JSON
 document that defines exactly which recipes will be included in the batch. It will describe things like a date range and
-specific jobs within a recipe type to queue for execution.
+specific jobs within a recipe type to queue for execution. It also allows new recipes to be created for existing source
+files that have never been queued for the recipe type before using the current recipe type trigger rule or a custom
+batch-specific trigger rule.
 
 Consider the following example that is a request to re-process all recipes in the batch that were originally created
 within the 2016 calendar year and have since gone through a revision. Additionally, the job names "Job 1" and "Job 2"
 should also be included even if they have not actually changed since the original recipe type revision. The priority is
-used to override the original priority of each job type.
+used to override the original priority of each job type. Lastly, it will create new recipes for all source files that
+have not already been queued that are plain/text and have the data tags "foo" and "bar".
 
 **Example batch definition:**
 
@@ -28,7 +31,20 @@ used to override the original priority of each job type.
           "Job 1",
           "Job 2"
       ],
-      "priority": 1000
+      "priority": 1000,
+      "trigger_rule": {
+         "condition": {
+            "media_type": "text/plain",
+            "data_types": [
+               "foo",
+               "bar"
+            ]
+         },
+         "data": {
+            "input_data_name": "my_file",
+            "workspace_name": "my_workspace"
+         }
+      }
    }
 
 
@@ -53,7 +69,20 @@ A valid batch definition is a JSON document with the following structure:
          STRING
       ],
       "all_jobs": true|false,
-      "priority": INTEGER
+      "priority": INTEGER,
+      "trigger_rule": {
+         "condition": {
+            "media_type": STRING,
+            "data_types": [
+               STRING,
+               STRING
+            ]
+         },
+         "data": {
+            "input_data_name": STRING,
+            "workspace_name": STRING
+         }
+      }
    }
 
 **version**: JSON string
@@ -116,3 +145,44 @@ A valid batch definition is a JSON document with the following structure:
     override priority instead of the default priority defined by the job type. This option allows for large batches to
     be executed with a lower priority to avoid impacting real-time processing or to fix products as quickly as possible
     using a higher priority.
+
+**trigger_rule**: JSON object or boolean
+
+    The *trigger_rule* field is optional and defines rules used to determine whether new recipes should be queued for
+    existing source files that have never been run with the associated recipe type before. Omitting the field indicates
+    old source files will be ignored. Setting the field to *True* is a special case that will cause old source files to
+    be evaluated using the current trigger rule defined by the recipe type. Lastly, a completely custom trigger rule can
+    be included using the nested fields below that will evaluate old source files in the context of this batch. The
+    supported fields are similar to the ingest trigger definition.
+
+    **condition**: JSON object
+
+        The *condition* field is optional and contains other fields that specify the conditions under which this rule is
+        triggered. If not provided, the rule is triggered by EVERY source file.
+
+        **media_type**: JSON string
+
+            The *media_type* field is an optional string that defines a media type. A source file must have the
+            identical media type defined here in order to match this trigger rule. If not provided, the field defaults
+            to "" and all file media types are accepted by the rule.
+
+        **data_types**: JSON array
+
+            The *data_types* field is an optional list of data type strings. A source file must have all of the data
+            types that are listed here tagged to the file in order to match this trigger rule. If not provided, the
+            field defaults to [] and no data types are required.
+
+    **data**: JSON object
+
+        The *data* field is required and contains other fields that specify the details for creating the job/recipe
+        linked to this trigger rule.
+
+        **input_data_name**: JSON string
+
+            The *input_data_name* field is a required string that specifies the input parameter name of the triggered
+            job/recipe that the source file should be passed to when the job/recipe is created and placed on the queue.
+
+        **workspace_name**: JSON string
+
+            The *workspace_name* field is required and contains the unique system name of the workspace that should
+            store the products created by the triggered job/recipe.
