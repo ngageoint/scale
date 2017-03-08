@@ -17,7 +17,7 @@ from job.configuration.interface.exceptions import InvalidInterfaceDefinition, I
 from job.configuration.interface.job_interface import JobInterface
 from job.configuration.results.exceptions import InvalidResultsManifest
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
-from vault.secrets_handler import SecretsHandler
+from scheduler.vault.manager import SecretsManager
 
 
 class TestJobInterfaceAddOutputToConnection(TestCase):
@@ -910,9 +910,13 @@ class TestJobInterfacePreSteps(TestCase):
         job_command_arguments = job_interface.populate_command_argument_settings(command_arguments, job_config, job_exe)
         self.assertEqual(job_command_arguments, config_key_value, 'expected a different command from pre_steps')
 
-    @patch('vault.secrets_handler.SecretsHandler.__init__', Mock(return_value=None))
-    @patch('vault.secrets_handler.SecretsHandler.get_job_type_secret', Mock(return_value='secret_val'))
-    def test_required_settings_in_command(self):
+    @patch('scheduler.vault.manager.SecretsManager.retrieve_job_type_secrets')
+    def test_required_settings_in_command(self, mock_secrets_mgr):
+        mock_secrets_mgr = Mock()
+        mock_secrets_mgr.return_value = {
+            'setting1': 'secret_val'
+        }
+        
         job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
 
         job_interface_dict['version'] = '1.3'
@@ -997,11 +1001,15 @@ class TestJobInterfacePreSteps(TestCase):
         self.assertEqual(env_vars_value1, config_key_value[0], 'expected a different command from pre_steps')
         self.assertEqual(env_vars_value2, '', 'expected a different command from pre_steps')
 
-    @patch('vault.secrets_handler.SecretsHandler.__init__', Mock(return_value=None))
-    @patch('vault.secrets_handler.SecretsHandler.get_job_type_secret', Mock(return_value='secret_val'))
-    def test_validate_populated_settings(self):
+    @patch('scheduler.vault.manager.SecretsManager.retrieve_job_type_secrets')
+    def test_validate_populated_settings(self, mock_secrets_mgr):
         """Tests the validation of required settings defined in the job_interface"""
 
+        mock_secrets_mgr = Mock()
+        mock_secrets_mgr.return_value = {
+            'setting1': 'secret_val'
+        }
+        
         job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
 
         job_interface_dict['command_arguments'] = '${setting1}'

@@ -16,8 +16,7 @@ from job.configuration.interface.scale_file import ScaleFileDescription
 from job.configuration.results.exceptions import InvalidResultsManifest
 from job.configuration.results.results_manifest.results_manifest import ResultsManifest
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
-from vault.exceptions import InvalidSecretsAuthorization, InvalidSecretsRequest, InvalidSecretsToken
-from vault.secrets_handler import SecretsHandler
+from scheduler.vault.manager import secrets_mgr
 
 
 logger = logging.getLogger(__name__)
@@ -709,6 +708,7 @@ class JobInterface(object):
 
         config_settings = job_configuration.get_dict()
         param_replacements = {}
+        secret_settings = {}
 
         # Isolate the job_type settings and convert to list
         config_settings =  config_settings['job_task']['settings']
@@ -721,16 +721,17 @@ class JobInterface(object):
             if setting_is_secret:
                 job_type_name = job_type.get_job_type_name()
                 job_type_ver = job_type.get_job_type_version()
-                secret_path = '/' + '/'.join([job_type_name, job_type_ver])
+                job_index = '-'.join([job_type_name, job_type_ver])
                 
-                try:
-                    secrets_handler = SecretsHandler()
-                    settings_value = secrets_handler.get_job_type_secret(secret_path, setting_name)
+                if not secret_settings:
+                    secret_settings = secrets_mgr.retrieve_job_type_secrets(job_index)
+                
+                if setting_name in secret_settings.keys():
+                    settings_value = secret_settings[setting_name]
                     job_configuration.add_job_task_setting(setting_name, '*****')
-                except (InvalidSecretsAuthorization, InvalidSecretsRequest, InvalidSecretsToken):
-                    settings_value = ''
-                    
-                param_replacements[setting_name] = settings_value
+                    param_replacements[setting_name] = settings_value
+                else:
+                    param_replacements[setting_name] = ''
             else:
                 if setting_name in config_settings_dict:
                     param_replacements[setting_name] = config_settings_dict[setting_name]
