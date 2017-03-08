@@ -1,0 +1,114 @@
+<ais-header show-title="vm.name" name="vm.name" loading="vm.loading" show-subnav="true" subnav-links="vm.subnavLinks"></ais-header>
+
+<div ng-if="vm.mode === 'create' && !vm.readonly">
+    <form name="batchForm" novalidate>
+        <div class="pull-right">
+            <div class="btn-group btn-group-sm">
+                <button class="btn btn-default" ng-click="vm.validateBatch()" tooltip-append-to-body="true" uib-tooltip="Validate"><i class="fa fa-check"></i></button>
+                <button class="btn btn-" ng-class="vm.saveBtnClass" ng-click="vm.saveBatch()" ng-disabled="vm.disableSaveBtn(batchForm.$invalid)" tooltip-append-to-body="true" uib-tooltip="Save Batch" tooltip-placement="left"><i class="fa fa-save"></i></button>
+            </div>
+        </div>
+        <h3 ng-show="!vm.batch.title">Untitled Batch</h3>
+        <h3 ng-show="vm.batch.title !== ''">{{ vm.batch.title }}</h3>
+        <div class="row">
+            <div class="col-xs-6">
+                <div class="form-group" ng-class="{ 'has-error': batchForm.bTitle.$invalid }">
+                    <label for="bTitle">Title</label>
+                    <input id="bTitle" name="bTitle" type="text" class="form-control" ng-model="vm.batch.title" placeholder="Title">
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="form-group" ng-class="{ 'has-error': batchForm.bRecipe.$invalid }">
+                    <label for="bRecipe">Recipe Type</label>
+                    <select id="bRecipe" name="bRecipe" class="form-control" ng-model="vm.batch.recipe_type" ng-options="r as r.title for r in vm.recipeTypes" required></select>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="bDescription">Description</label>
+            <textarea id="bDescription" name="bDescription" class="form-control" ng-model="vm.batch.description" placeholder="Description" rows="5"></textarea>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><b>Definition</b></h3>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label for="bDateRangeType">Date Range Type</label>
+                            <select id="bDateRangeType" name="bDateRangeType" class="form-control" ng-model="vm.batch.definition.date_range.type">
+                                <option value="created">Created</option>
+                                <option value="data">Data</option>
+                            </select>
+                            <p class="help-block">"Created" matches recipes based on the timestamp of when they were originally created; "Data" matches recipes based on the timestamp of when its input files were collected.</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="bDateRangeStarted">Date Range Started</label>
+                            <div class="input-group">
+                                <span class="input-group-addon" id="from-input" ng-click="vm.openDateRangeStartedPopup($event)">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                <input id="bDateRangeStarted" type="text" class="form-control" aria-describedby="bDateRangeStarted" uib-datepicker-popup="yyyy-MM-dd" ng-model="vm.batch.definition.date_range.started" ng-model-options="vm.dateModelOptions" is-open="vm.dateRangeStartedPopup.opened" close-text="Close" datepicker-append-to-body="true" ng-click="vm.openDateRangeStartedPopup($event)" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="bDateRangeEnded">Date Range Ended</label>
+                            <div class="input-group">
+                                <span class="input-group-addon" id="to-input" ng-click="vm.openDateRangeEndedPopup($event)">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                <input id="bDateRangeEnded" type="text" class="form-control" aria-describedby="bDateRangeEnded" uib-datepicker-popup="yyyy-MM-dd" ng-model="vm.batch.definition.date_range.ended" ng-model-options="vm.dateModelOptions" is-open="vm.dateRangeEndedPopup.opened" close-text="Close" datepicker-append-to-body="true" ng-click="vm.openDateRangeEndedPopup($event)" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label for="bJobNames">Job Names</label><br />
+                            <select id="bJobNames" ais-multiselect number-displayed="1" max-height="150" enable-filtering="true" multiple="multiple" multiselect-data-provider="vm.jobTypes" class="form-control input-sm" ng-model="vm.batch.definition.job_names"></select>
+                            <p class="help-block">Additional jobs that did not have a revision change.</p>
+                        </div>
+                        <div class="checkbox">
+                            <label for="bAllJobs">
+                                <input id="bAllJobs" type="checkbox" ng-model="vm.batch.definition.all_jobs">
+                                <strong>All Jobs</strong>
+                            </label>
+                            <p class="help-block">Re-process every job. This overrides the values included in "Job Names".</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="bPriority">Priority</label>
+                            <input id="bPriority" name="bPriority" type="text" class="form-control" ng-model="vm.batch.definition.priority" placeholder="Priority">
+                            <p class="help-block">Indicates every job in the recipe should be queued with an override priority instead of the default priority defined by the job type.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div ng-if="vm.mode === 'details'">
+    <h3 ng-if="vm.batch.title">{{ vm.batch.title }}</h3>
+    <dl class="dl-horizontal">
+        <dt>Description:</dt>
+        <dd>{{ vm.batch.description }}</dd>
+        <dt>Status:</dt>
+        <dd>{{ vm.batch.status.toUpperCase() }}</dd>
+        <dt>Recipe Type:</dt>
+        <dd><a ng-href="/#/recipes/types/{{ vm.batch.recipe_type.id }}">{{ vm.batch.recipe_type.title }}</a></dd>
+        <dt>Event Type:</dt>
+        <dd>{{ vm.batch.event.type }}</dd>
+        <dt>Event Occurred:</dt>
+        <dd>{{ vm.moment.utc(vm.batch.event.occurred).format(vm.scaleConfig.dateFormats.day_second_utc) }}</dd>
+        <dt>Created Count:</dt>
+        <dd>{{ vm.batch.created_count }}</dd>
+        <dt>Failed Count:</dt>
+        <dd>{{ vm.batch.failed_count }}</dd>
+        <dt>Total Count:</dt>
+        <dd>{{ vm.batch.total_count }}</dd>
+        <dt>Created:</dt>
+        <dd>{{ vm.batch.created_formatted }}</dd>
+        <dt>Last Modified:</dt>
+        <dd>{{ vm.batch.last_modified_formatted }}</dd>
+    </dl>
+</div>

@@ -15,9 +15,7 @@ from storage.models import Workspace
 from trigger.handler import TriggerRuleHandler
 from trigger.models import TriggerEvent
 
-
 logger = logging.getLogger(__name__)
-
 
 INGEST_TYPE = 'INGEST'
 

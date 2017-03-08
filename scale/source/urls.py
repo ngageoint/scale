@@ -9,4 +9,5 @@ urlpatterns = patterns(
     url(r'^sources/updates/$', views.SourceUpdatesView.as_view(), name='source_updates_view'),
     url(r'^sources/(?P<source_id>\d+)/$', views.SourceDetailsView.as_view(), name='source_details_view'),
     url(r'^sources/(?P<file_name>[\w.]{0,250})/$', views.SourceDetailsView.as_view(), name='source_details_view'),
+    url(r'^sources/(?P<source_id>\d+)/products/$', views.SourceProductsView.as_view(), name='source_products_view'),
 )

@@ -9,7 +9,6 @@ from storage.exceptions import InvalidDataTypeTag
 
 
 class TestIngestAddDataTypeTag(TestCase):
-
     def setUp(self):
         django.setup()
 
@@ -37,7 +36,6 @@ class TestIngestAddDataTypeTag(TestCase):
 
 
 class TestIngestGetDataTypeTags(TestCase):
-
     def setUp(self):
         django.setup()
 
@@ -64,7 +62,6 @@ class TestIngestGetDataTypeTags(TestCase):
 
 
 class TestStrikeManagerCreateStrikeProcess(TransactionTestCase):
-
     fixtures = ['ingest_job_types.json']
 
     def setUp(self):

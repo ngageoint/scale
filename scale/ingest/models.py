@@ -3,19 +3,24 @@ from __future__ import unicode_literals
 
 import datetime
 import logging
+import os
 
-import djorm_pgjson.fields
 import django.utils.timezone as timezone
+import djorm_pgjson.fields
 from django.db import models, transaction
 from django.utils.timezone import now
 
+from ingest.scan.configuration.scan_configuration import ScanConfiguration
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
+from job.configuration.configuration.job_configuration import JobConfiguration
 from job.configuration.data.job_data import JobData
 from job.models import JobType
 from queue.models import Queue
 from storage.exceptions import InvalidDataTypeTag
+from storage.media_type import get_media_type
 from storage.models import VALID_TAG_PATTERN
 from trigger.models import TriggerEvent
+from util.file_size import file_size_to_string
 
 logger = logging.getLogger(__name__)
 
@@ -30,6 +35,7 @@ class IngestCounts(object):
     :keyword size: The total size of all files ingested for the time slot in bytes.
     :type size: int
     """
+
     def __init__(self, time, files=0, size=0):
         self.time = time
         self.files = files
@@ -50,6 +56,7 @@ class IngestStatus(object):
     :keyword values: A list of values that summarize work done by the strike process.
     :type values: list[:class:`ingest.models.IngestCounts`]
     """
+
     def __init__(self, strike, most_recent=None, files=0, size=0, values=None):
         self.strike = strike
         self.most_recent = most_recent
@@ -60,6 +67,34 @@ class IngestStatus(object):
 
 class IngestManager(models.Manager):
     """Provides additional methods for handling ingests."""
+
+    def create_ingest(self, file_name, workspace, scan_id=None, strike_id=None):
+        """Creates a new ingest for the given file name. The database save is the caller's responsibility.
+
+        :param file_name: The name of the file being ingested
+        :type file_name: string
+        :param workspace:
+        :type workspace: string
+        :param scan_id:
+        :type scan_id: int
+        :param strike_id:
+        :type strike_id: int
+        :returns: The new ingest model
+        :rtype: :class:`ingest.models.Ingest`
+        """
+
+        ingest = Ingest()
+
+        if scan_id:
+            ingest.scan_id = scan_id
+        if strike_id:
+            ingest.strike_id = strike_id
+
+        ingest.file_name = file_name
+        ingest.media_type = get_media_type(ingest.file_name)
+        ingest.workspace = workspace
+
+        return ingest
 
     def get_ingest_job_type(self):
         """Returns the Scale Ingest job type
@@ -112,6 +147,27 @@ class IngestManager(models.Manager):
             ingests = ingests.order_by(*order)
         else:
             ingests = ingests.order_by('last_modified')
+        return ingests
+
+    def get_ingests_by_scan(self, scan_id, file_names=None):
+        """Returns a list of ingests associated with a scan and optionally files
+
+        :param scan_id: Query ingests created by a specific scan processor.
+        :type scan_id: list[string]
+        :param file_names: Query ingests with the specific file names.
+        :type file_names: list[string]
+        :returns: The list of ingests that match the scan and file_names.
+        :rtype: list[:class:`ingest.models.Ingest`]
+        """
+
+        # Fetch a list of ingests
+        ingests = Ingest.objects.all()
+
+        if scan_id:
+            ingests = ingests.filter(scan_id=scan_id)
+        if file_names:
+            ingests = ingests.filter(file_name__in=file_names)
+
         return ingests
 
     def get_details(self, ingest_id):
@@ -169,6 +225,60 @@ class IngestManager(models.Manager):
 
         groups = self._group_by_time(ingests, use_ingest_time)
         return [self._fill_status(status, time_slots, started, ended) for status, time_slots in groups.iteritems()]
+
+    @transaction.atomic
+    def start_ingest_tasks(self, ingests, scan_id=None, strike_id=None):
+        """Starts a batch of tasks for the given scan in an atomic transaction.
+
+        One of scan_id or strike_id must be set.
+
+        :param ingests: The ingest models
+        :type ingests: list[:class:`ingest.models.Ingest`]
+        :param scan_id: ID of Scan that generated ingest
+        :type scan_id: int
+        :param strike_id: ID of Strike that generated ingest
+        :type strike_id: int
+        """
+
+        # Create new ingest job and mark ingest as QUEUED
+        ingest_job_type = Ingest.objects.get_ingest_job_type()
+
+        for ingest in ingests:
+            logger.debug('Creating ingest task for %s', ingest.file_name)
+
+            when = ingest.transfer_ended if ingest.transfer_ended else now()
+            desc = {'file_name': ingest.file_name}
+
+            if scan_id:
+                # Use result from query to get ingest ID
+                # We need to find the id of each ingest that was created.
+                # Using scan_id and file_name together as a unique composite key
+                ingest_id = Ingest.objects.get(scan_id=ingest.scan_id, file_name=ingest.file_name).id
+
+                desc['scan_id'] = scan_id
+                event = TriggerEvent.objects.create_trigger_event('SCAN_TRANSFER', None, desc, when)
+            elif strike_id:
+                ingest_id = ingest.id
+                desc['strike_id'] = strike_id
+                event = TriggerEvent.objects.create_trigger_event('STRIKE_TRANSFER', None, desc, when)
+            else:
+                raise Exception('One of scan_id or strike_id must be set')
+
+            data = JobData()
+            data.add_property_input('Ingest ID', str(ingest_id))
+
+            job_configuration = JobConfiguration()
+            if ingest.workspace:
+                job_configuration.add_job_task_workspace(ingest.workspace.name, MODE_RW)
+            if ingest.new_workspace:
+                job_configuration.add_job_task_workspace(ingest.new_workspace.name, MODE_RW)
+            ingest_job = Queue.objects.queue_new_job(ingest_job_type, data, event, job_configuration)
+
+            ingest.job = ingest_job
+            ingest.status = 'QUEUED'
+            ingest.save()
+
+            logger.debug('Successfully created ingest task for %s', ingest.file_name)
 
     def _group_by_time(self, ingests, use_ingest_time):
         """Groups the given ingests by hourly time slots.
@@ -332,7 +442,8 @@ class Ingest(models.Model):
     )
 
     file_name = models.CharField(max_length=250, db_index=True)
-    strike = models.ForeignKey('ingest.Strike', on_delete=models.PROTECT)
+    strike = models.ForeignKey('ingest.Strike', on_delete=models.PROTECT, null=True)
+    scan = models.ForeignKey('ingest.Scan', on_delete=models.PROTECT, null=True)
     status = models.CharField(choices=INGEST_STATUSES, default='TRANSFERRING', max_length=50, db_index=True)
 
     bytes_transferred = models.BigIntegerField(blank=True, null=True)
@@ -352,7 +463,7 @@ class Ingest(models.Model):
     ingest_started = models.DateTimeField(blank=True, null=True)
     ingest_ended = models.DateTimeField(blank=True, null=True, db_index=True)
 
-    source_file = models.ForeignKey('source.SourceFile', blank=True, null=True)
+    source_file = models.ForeignKey('storage.ScaleFile', blank=True, null=True)
     data_started = models.DateTimeField(blank=True, null=True, db_index=True)
     data_ended = models.DateTimeField(blank=True, null=True, db_index=True)
 
@@ -390,6 +501,79 @@ class Ingest(models.Model):
                 tags.add(tag)
         return tags
 
+    def add_file(self, file_name, workspace, scan_id=None, strike_id=None):
+        """Add file source metadata to ingest record
+
+        :param file_name: File name excluding full path
+        :type file_name: string
+        :param workspace:
+        :type workspace: string
+        :param scan_id:
+        :type scan_id: int
+        :param strike_id:
+        :type strike_id: int
+        """
+
+        if scan_id:
+            self.scan_id = scan_id
+        if strike_id:
+            self.strike_id = strike_id
+
+        self.file_name = file_name
+        self.media_type = get_media_type(self.file_name)
+        self.workspace = workspace
+
+        logger.info('New file on %s: %s', self.workspace.name, self.file_name)
+
+    def is_there_rule_match(self, file_handler, workspaces, no_match_status=None):
+        """Applies rules to an ingest record, determining if there is a match and updating as indicated in rule match
+
+        :param file_handler: Rules to be matched against the ingest record
+        :type: :class: `ingest.handlers.file_handler.FileHandler`
+        :param workspaces: mimetype to workspace mapping
+        :type: dict
+        :param no_match_status: Optional status to apply when rules aren't matched
+        :type: string
+        :return: The ingest record if matched otherwise None
+        :rtype: :class:`ingest.models.Ingest`
+        """
+
+        matched = True
+        logger.info('Applying rules to %s (%s, %s)',
+                    self.file_name, self.media_type, file_size_to_string(self.file_size))
+        matched_rule = file_handler.match_file_name(self.file_name)
+        if matched_rule:
+            for data_type_tag in matched_rule.data_types:
+                self.add_data_type_tag(data_type_tag)
+            file_path = self.file_path
+            if matched_rule.new_file_path:
+                today = now()
+                year_dir = str(today.year)
+                month_dir = '%02d' % today.month
+                day_dir = '%02d' % today.day
+                self.new_file_path = os.path.join(matched_rule.new_file_path, year_dir, month_dir, day_dir,
+                                                  self.file_name)
+                file_path = self.new_file_path
+            workspace_name = self.workspace.name
+            if matched_rule.new_workspace:
+                self.new_workspace = workspaces[matched_rule.new_workspace]
+                workspace_name = self.new_workspace.name
+            if self.new_file_path or self.new_workspace:
+                logger.info('Rule match, %s will be moved to %s on workspace %s',
+                            self.file_name, file_path, workspace_name)
+            else:
+                logger.info('Rule match, %s will be registered as %s on workspace %s',
+                            self.file_name, file_path, workspace_name)
+        else:
+            matched = False
+            if no_match_status:
+                logger.info('No rule match for %s, file is being set to %s', self.file_name, no_match_status)
+                self.status = no_match_status
+            else:
+                logger.info('No rule match for %s, file is being skipped', self.file_name)
+
+        return matched
+
     def _set_data_type_tags(self, tags):
         """Sets the data type tags on the model
 
@@ -402,6 +586,201 @@ class Ingest(models.Model):
     class Meta(object):
         """meta information for database"""
         db_table = 'ingest'
+
+
+class ScanManager(models.Manager):
+    """Provides additional methods for handling Scan processes
+    """
+
+    @transaction.atomic
+    def create_scan(self, name, title, description, configuration, dry_run=True):
+        """Creates a new Scan process with the given configuration and returns the new Scan model. The Scan model
+        will be saved in the database and the job to run the Scan process will be placed on the queue. All changes to
+        the database will occur in an atomic transaction.
+
+        :param name: The identifying name of this Scan process
+        :type name: string
+        :param title: The human-readable name of this Scan process
+        :type title: string
+        :param description: A description of this Scan process
+        :type description: string
+        :param configuration: The Scan configuration
+        :type configuration: dict
+        :param dry_run: Whether the scan will execute as a dry run
+        :type dry_run: bool
+        :returns: The new Scan process
+        :rtype: :class:`ingest.models.Scan`
+
+        :raises :class:`ingest.scan.configuration.exceptions.InvalidScanConfiguration`: If the configuration is
+            invalid.
+        """
+
+        # Validate the configuration, no exception is success
+        config = ScanConfiguration(configuration)
+        config.validate()
+
+        scan = Scan()
+        scan.name = name
+        scan.title = title
+        scan.description = description
+        scan.configuration = config.get_dict()
+        scan.save()
+
+        scan_type = self.get_scan_job_type()
+        job_data = JobData()
+        job_data.add_property_input('Scan ID', unicode(scan.id))
+        job_data.add_property_input('Dry Run', str(dry_run))
+        event_description = {'scan_id': scan.id}
+        event = TriggerEvent.objects.create_trigger_event('SCAN_CREATED', None, event_description, now())
+        scan.job = Queue.objects.queue_new_job(scan_type, job_data, event)
+        scan.save()
+
+        return scan
+
+    @transaction.atomic
+    def edit_scan(self, scan_id, title=None, description=None, configuration=None):
+        """Edits the given Scan process and saves the changes in the database. All database changes occur in an atomic
+        transaction. An argument of None for a field indicates that the field should not change.
+
+        :param scan_id: The unique identifier of the Scan process to edit
+        :type scan_id: int
+        :param title: The human-readable name of this Scan process
+        :type title: string
+        :param description: A description of this Scan process
+        :type description: string
+        :param configuration: The Strike process configuration
+        :type configuration: dict
+
+        :raises :class:`ingest.scan.configuration.exceptions.InvalidScanConfiguration`: If the configuration is
+            invalid.
+        """
+
+        scan = Scan.objects.get(pk=scan_id)
+
+        # Validate the configuration, no exception is success
+        if configuration:
+            config = ScanConfiguration(configuration)
+            config.validate()
+            scan.configuration = config.get_dict()
+
+        # Update editable fields
+        if title:
+            scan.title = title
+        if description:
+            scan.description = description
+        scan.save()
+
+    def get_scan_job_type(self):
+        """Returns the Scale Scan job type
+
+        :returns: The Scan job type
+        :rtype: :class:`job.models.JobType`
+        """
+
+        return JobType.objects.get(name='scale-scan', version='1.0')
+
+    def get_scans(self, started=None, ended=None, names=None, order=None):
+        """Returns a list of Scan processes within the given time range.
+
+        :param started: Query Scan processes updated after this amount of time.
+        :type started: :class:`datetime.datetime`
+        :param ended: Query Scan processes updated before this amount of time.
+        :type ended: :class:`datetime.datetime`
+        :param names: Query Scan processes associated with the name.
+        :type names: list[string]
+        :param order: A list of fields to control the sort order.
+        :type order: list[string]
+        :returns: The list of Scan processes that match the time range.
+        :rtype: list[:class:`ingest.models.Scan`]
+        """
+
+        # Fetch a list of strikes
+        scans = Scab.objects.select_related('job', 'job__job_type').defer('configuration')
+
+        # Apply time range filtering
+        if started:
+            scans = scans.filter(last_modified__gte=started)
+        if ended:
+            scans = scans.filter(last_modified__lte=ended)
+
+        # Apply additional filters
+        if names:
+            scans = scans.filter(name__in=names)
+
+        # Apply sorting
+        if order:
+            scans = scans.order_by(*order)
+        else:
+            scans = scans.order_by('last_modified')
+        return scans
+
+    def get_details(self, scan_id):
+        """Returns the Scan process for the given ID with all detail fields included.
+
+        :param scan_id: The unique identifier of the Scan process.
+        :type scan_id: int
+        :returns: The Scan process with all detail fields included.
+        :rtype: :class:`ingest.models.Scan`
+        """
+
+        return Scan.objects.select_related('job', 'job__job_type').get(pk=scan_id)
+
+
+class Scan(models.Model):
+    """Represents an instance of a Scan process which will run and detect files
+    in a workspace for ingest
+
+    :keyword name: The identifying name of this Scan process
+    :type name: :class:`django.db.models.CharField`
+    :keyword title: The human-readable name of this Scan process
+    :type title: :class:`django.db.models.CharField`
+    :keyword description: An optional description of this Scan process
+    :type description: :class:`django.db.models.CharField`
+
+    :keyword configuration: JSON configuration for this Scan process
+    :type configuration: :class:`djorm_pgjson.fields.JSONField`
+    :keyword job: The job that is performing the Scan process
+    :type job: :class:`django.db.models.ForeignKey`
+
+    :keyword created: When the Scan process was created
+    :type created: :class:`django.db.models.DateTimeField`
+    :keyword last_modified: When the Scan process was last modified
+    :type last_modified: :class:`django.db.models.DateTimeField`
+    """
+
+    name = models.CharField(max_length=50, unique=True)
+    title = models.CharField(blank=True, max_length=50, null=True)
+    description = models.CharField(blank=True, max_length=500)
+
+    configuration = djorm_pgjson.fields.JSONField()
+    job = models.ForeignKey('job.Job', blank=True, null=True, on_delete=models.PROTECT)
+
+    created = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
+
+    objects = ScanManager()
+
+    def get_scan_configuration(self):
+        """Returns the configuration for this Scan process
+
+        :returns: The configuration for this Scan process
+        :rtype: :class:`ingest.scan.configuration.scan_configuration.ScanConfiguration`
+        """
+
+        return ScanConfiguration(self.configuration)
+
+    def get_scan_configuration_as_dict(self):
+        """Returns the configuration for this Scan process as a dict
+
+        :returns: The configuration for this Scan process
+        :rtype: dict
+        """
+
+        return self.get_scan_configuration().get_dict()
+
+    class Meta(object):
+        """meta information for database"""
+        db_table = 'scan'
 
 
 class StrikeManager(models.Manager):

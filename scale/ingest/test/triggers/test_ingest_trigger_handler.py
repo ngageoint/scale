@@ -4,18 +4,17 @@ import django
 from django.test import TestCase
 from django.utils.timezone import now
 
-from ingest.triggers.ingest_trigger_handler import IngestTriggerHandler
-from job.models import JobExecution
 import job.test.utils as job_test_utils
-from queue.models import Queue
 import recipe.test.utils as recipe_test_utils
-from source.models import SourceFile
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
+from ingest.triggers.ingest_trigger_handler import IngestTriggerHandler
+from job.models import JobExecution
+from queue.models import Queue
+from storage.models import ScaleFile
 
 
 class TestIngestTriggerHandlerProcessIngestedSourceFile(TestCase):
-
     def setUp(self):
         django.setup()
 
@@ -88,9 +87,9 @@ class TestIngestTriggerHandlerProcessIngestedSourceFile(TestCase):
         self.media_type = 'text/plain'
 
         self.workspace = storage_test_utils.create_workspace()
-        self.source_file = SourceFile.objects.create(file_name=self.file_name, media_type=self.media_type, file_size=10,
-                                                     data_type=self.data_type, file_path='the_path',
-                                                     workspace=self.workspace)
+        self.source_file = ScaleFile.objects.create(file_name=self.file_name, file_type='SOURCE',
+                                                    media_type=self.media_type, file_size=10, data_type=self.data_type,
+                                                    file_path='the_path', workspace=self.workspace)
         self.source_file.add_data_type_tag('type1')
         self.source_file.add_data_type_tag('type2')
         self.source_file.add_data_type_tag('type3')

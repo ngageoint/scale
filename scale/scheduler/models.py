@@ -126,19 +126,11 @@ class SchedulerManager(models.Manager):
 
 
 class Scheduler(models.Model):
-    """Represents a scheduler instance.
-    There should only be a single instance of this and it's used for
-    storing cluster-wide state related to scheduling in mesos.
+    """Represents a scheduler instance. There should only be a single instance of this and it's used for storing
+    cluster-wide state related to scheduling in mesos.
 
     :keyword is_paused: True if the entire cluster is currently paused and should not accept new jobs
     :type is_paused: :class:`django.db.models.BooleanField()`
-    :keyword node_error_period: The number of minutes sampled when deciding if a node should be paused due to excessive
-        errors.
-    :type node_error_period: :class:`django.db.models.IntegerField`
-    :keyword max_node_errors: The maximum number of system errors which can occur in node_error_period before a node is
-        paused
-    :type max_node_errors: :class:`django.db.models.FloatField`
-
     :keyword master_hostname: The full domain-qualified hostname of the Mesos master
     :type master_hostname: :class:`django.db.models.CharField`
     :keyword master_port: The port being used by the Mesos master REST API
@@ -146,9 +138,6 @@ class Scheduler(models.Model):
     """
 
     is_paused = models.BooleanField(default=False)
-    node_error_period = models.IntegerField(default=1)
-    max_node_errors = models.FloatField(default=50.)
-
     master_hostname = models.CharField(max_length=250, default='localhost')
     master_port = models.IntegerField(default=5050)
 

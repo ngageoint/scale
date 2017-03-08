@@ -3,8 +3,6 @@ from __future__ import unicode_literals
 
 import threading
 
-from scheduler.node.node_class import Node
-
 
 class NodeOffers(object):
     """This class represents the set of all resource offers for a node. This class is thread-safe."""
@@ -15,8 +13,6 @@ class NodeOffers(object):
     NOT_ENOUGH_MEM = 3
     NOT_ENOUGH_DISK = 4
     NO_OFFERS = 5
-    NODE_PAUSED = 6
-    NODE_OFFLINE = 7
     NODE_NOT_READY = 8
 
     def __init__(self, node):
@@ -102,11 +98,7 @@ class NodeOffers(object):
         with self._lock:
             if job_exe.id in self._accepted_new_job_exes:
                 return NodeOffers.ACCEPTED
-            if not self._node.is_online:
-                return NodeOffers.NODE_OFFLINE
-            if self._node.is_paused:
-                return NodeOffers.NODE_PAUSED
-            if self._node.state != Node.READY:
+            if not self._node.is_ready_for_new_job():
                 return NodeOffers.NODE_NOT_READY
             if len(self._offers) == 0:
                 return NodeOffers.NO_OFFERS
@@ -140,8 +132,8 @@ class NodeOffers(object):
         with self._lock:
             if job_exe.id in self._accepted_running_job_exes:
                 return NodeOffers.ACCEPTED
-            if not self._node.is_online:
-                return NodeOffers.NODE_OFFLINE
+            if not self._node.is_ready_for_next_job_task():
+                return NodeOffers.NODE_NOT_READY
             if len(self._offers) == 0:
                 return NodeOffers.NO_OFFERS
 
@@ -173,8 +165,6 @@ class NodeOffers(object):
         with self._lock:
             if self._node.agent_id != task.agent_id:
                 return NodeOffers.TASK_INVALID
-            if not self._node.is_online:
-                return NodeOffers.NODE_OFFLINE
             if len(self._offers) == 0:
                 return NodeOffers.NO_OFFERS
 

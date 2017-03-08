@@ -2,7 +2,6 @@
 from abc import ABCMeta
 from collections import namedtuple
 
-
 """
 FileDownload tuple contains an additional partial flag for defining whether the file
 is allowed to be accessed directly or must be copied into running container. This is
@@ -12,6 +11,7 @@ on the input workspace.
 FileDownload = namedtuple('FileDownload', ['file', 'local_path', 'partial'])
 FileMove = namedtuple('FileMove', ['file', 'new_path'])
 FileUpload = namedtuple('FileUpload', ['file', 'local_path'])
+FileDetails = namedtuple('FileDetails', ['file', 'size'])
 
 
 class Broker(object):
@@ -71,7 +71,7 @@ class Broker(object):
         :type files: [:class:`storage.models.ScaleFile`]
         """
 
-        pass
+        raise NotImplementedError
 
     def download_files(self, volume_path, file_downloads):
         """Downloads the given files to the given local file system paths.
@@ -86,14 +86,18 @@ class Broker(object):
         models during a download, but any changes should be saved by the broker. Any directories in the absolute local
         container paths should already exist.
 
+        If a file does not exist in its expected location, raise a MissingFile exception.
+
         :param volume_path: Absolute path to the local container location onto which the volume file system was mounted,
             None if this broker does not use a container volume
         :type volume_path: string
         :param file_downloads: List of files to download
         :type file_downloads: [:class:`storage.brokers.broker.FileDownload`]
+
+        :raises :class:`storage.exceptions.MissingFile`: If a file to download does not exist at the expected path
         """
 
-        pass
+        raise NotImplementedError
 
     def get_file_system_paths(self, volume_path, files):
         """Returns the local file system paths for the given files, if supported by the broker.
@@ -115,6 +119,31 @@ class Broker(object):
 
         return None
 
+    def list_files(self, volume_path, recursive, callback):
+        """List the files under the given file system paths.
+
+        If this broker uses a container volume, volume_path will contain the absolute local container location where
+        that volume file system is mounted. If this broker does not use a container volume, None will be given for
+        volume_path.
+
+        As a result of the time that may be required for the full result set to be returned, it is recommended that the
+        provided callback support be used to receive objects as they are retrieved (up to 1000 in a batch). The callback
+        method must accept one list parameter. This list will contain elements of type storage.brokers.broker.FileDetails.
+        If the callback method is called without exception, no objects will be returned upon completion of list_files call.
+
+        :param volume_path: Absolute path to the local container location onto which the volume file system was mounted,
+            None if this broker does not use a container volume
+        :type volume_path: string
+        :param recursive: Flag to indicate whether file searching should be done recursively
+        :type recursive: boolean
+        :param callback: Method that will be called on completion of each batch return. Max of 1000 files per call.
+        :type callback: function([storage.brokers.broker.FileDetails])
+        :returns: List of files matching given expression. Empty if all delivered via callback.
+        :rtype: [storage.brokers.broker.FileDetails]
+        """
+
+        raise NotImplementedError
+
     def load_configuration(self, config):
         """Loads the given configuration
 
@@ -122,7 +151,7 @@ class Broker(object):
         :type config: dict
         """
 
-        pass
+        raise NotImplementedError
 
     def move_files(self, volume_path, file_moves):
         """Moves the given files to the new file system paths.
@@ -139,14 +168,18 @@ class Broker(object):
         necessary. The broker is responsible for saving any changes to models when a move is successful The directories
         in the new file_path may not exist, so it is the responsibility of the broker to create them if necessary.
 
+        If a file does not exist in its expected location, raise a MissingFile exception.
+
         :param volume_path: Absolute path to the local container location onto which the volume file system was mounted,
             None if this broker does not use a container volume
         :type volume_path: string
         :param file_moves: List of files to move
         :type file_moves: [:class:`storage.brokers.broker.FileMove`]
+
+        :raises :class:`storage.exceptions.MissingFile`: If a file to move does not exist at the expected path
         """
 
-        pass
+        raise NotImplementedError
 
     def upload_files(self, volume_path, file_uploads):
         """Uploads the given files from the given local file system paths.
@@ -171,7 +204,7 @@ class Broker(object):
         :type file_uploads: [:class:`storage.brokers.broker.FileUpload`]
         """
 
-        pass
+        raise NotImplementedError
 
     def validate_configuration(self, config):
         """Validates the given configuration
@@ -184,7 +217,7 @@ class Broker(object):
         :raises :class:`storage.brokers.exceptions.InvalidBrokerConfiguration`: If the given configuration is invalid
         """
 
-        return []
+        raise NotImplementedError
 
 
 class BrokerVolume(object):

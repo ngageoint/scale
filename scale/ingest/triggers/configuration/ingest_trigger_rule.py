@@ -13,9 +13,7 @@ from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfigur
 from storage.models import Workspace
 from trigger.configuration.exceptions import InvalidTriggerRule
 
-
 logger = logging.getLogger(__name__)
-
 
 INGEST_TRIGGER_SCHEMA = {
     "type": "object",

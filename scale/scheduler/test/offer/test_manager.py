@@ -27,7 +27,8 @@ class TestOfferManager(TestCase):
         self.node_model = node_test_utils.create_node(slave_id=self.node_agent)
         self.node = Node(self.node_agent, self.node_model)
         self.node._is_image_pulled = True
-        self.node.initial_cleanup_completed()
+        self.node._initial_cleanup_completed()
+        self.node._update_state()
         self.paused_node_model = node_test_utils.create_node(slave_id=self.node_agent_paused)
         self.paused_node_model.is_paused = True
         self.paused_node = Node(self.node_agent_paused, self.paused_node_model)
@@ -74,7 +75,7 @@ class TestOfferManager(TestCase):
 
         job_exe_2 = RunningJobExecution(self.running_job_exe_1)
         result = manager.consider_next_task(job_exe_2)
-        self.assertEqual(result, OfferManager.NODE_OFFLINE)
+        self.assertEqual(result, OfferManager.NODE_NOT_READY)
 
     def test_offers_with_no_nodes(self):
         """Tests considering job executions when offers cannot be readied due to no nodes updated"""
@@ -92,7 +93,7 @@ class TestOfferManager(TestCase):
 
         job_exe_2 = RunningJobExecution(self.running_job_exe_1)
         result = manager.consider_next_task(job_exe_2)
-        self.assertEqual(result, OfferManager.NODE_OFFLINE)
+        self.assertEqual(result, OfferManager.NODE_NOT_READY)
 
     def test_accepted(self):
         """Tests accepting a running and queued job execution and returning the node offers"""

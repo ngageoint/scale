@@ -2,17 +2,13 @@
 from __future__ import unicode_literals
 
 import logging
-import subprocess
 import sys
 
 from django.core.management.base import BaseCommand
-from django.db.utils import DatabaseError, OperationalError
 from optparse import make_option
 
-from error.models import Error
+from error.exceptions import ScaleError, get_error_by_exception
 from job.models import JobExecution
-from job.configuration.interface.exceptions import InvalidSetting
-from storage.exceptions import NfsError
 from util.retry import retry_database_query
 
 
@@ -20,17 +16,6 @@ logger = logging.getLogger(__name__)
 
 
 GENERAL_FAIL_EXIT_CODE = 1
-# Exit codes that map to specific errors
-DB_EXIT_CODE = 2
-DB_OP_EXIT_CODE = 3
-IO_EXIT_CODE = 4
-NFS_EXIT_CODE = 5
-INT_EXIT_CODE = 6
-EXIT_CODE_DICT = {DB_EXIT_CODE: Error.objects.get_database_error,
-                  DB_OP_EXIT_CODE: Error.objects.get_database_operation_error,
-                  IO_EXIT_CODE: Error.objects.get_filesystem_error,
-                  NFS_EXIT_CODE: Error.objects.get_nfs_error,
-                  INT_EXIT_CODE: Error.objects.get_interface_error}
 
 
 class Command(BaseCommand):
@@ -67,20 +52,17 @@ class Command(BaseCommand):
 
             logger.info('Executing job: %i -> %s', job_exe_id, ' '.join(command_args))
             self._populate_command_arguments(job_exe_id, command_args)
+        except ScaleError as err:
+            err.log()
+            sys.exit(err.exit_code)
         except Exception as ex:
-            logger.exception('Job Execution %i: Error performing pre-job steps', job_exe_id)
-
             exit_code = GENERAL_FAIL_EXIT_CODE
-            if isinstance(ex, OperationalError):
-                exit_code = DB_OP_EXIT_CODE
-            elif isinstance(ex, DatabaseError):
-                exit_code = DB_EXIT_CODE
-            elif isinstance(ex, NfsError):
-                exit_code = NFS_EXIT_CODE
-            elif isinstance(ex, IOError):
-                exit_code = IO_EXIT_CODE
-            elif isinstance(ex, InvalidSetting):
-                exit_code = INT_EXIT_CODE
+            err = get_error_by_exception(ex.__class__.__name__)
+            if err:
+                err.log()
+                exit_code = err.exit_code
+            else:
+                logger.exception('Job Execution %i: Error performing pre-job steps', job_exe_id)
             sys.exit(exit_code)
 
         logger.info('Command completed: scale_pre_steps')

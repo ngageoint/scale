@@ -1,22 +1,14 @@
 """Defines the base monitor class"""
 from __future__ import unicode_literals
 
-from abc import ABCMeta
 import logging
-import os
+from abc import ABCMeta
 
 from django.db import transaction
-from django.utils.timezone import now
 
 from ingest.models import Ingest, Strike
-from job.configuration.configuration.job_configuration import JobConfiguration, MODE_RW
-from job.configuration.data.job_data import JobData
-from queue.models import Queue
-from storage.media_type import get_media_type
 from storage.models import Workspace
-from trigger.models import TriggerEvent
 from util.file_size import file_size_to_string
-
 
 logger = logging.getLogger(__name__)
 
@@ -91,9 +83,9 @@ class Monitor(object):
         make it block until the stop() method is called and should call reload_configuration() on a regular basis to get
         updated configuration from the database.
 
-        Sub-classes should call _create_ingest() when they detect a new file in the monitored workspace. If the
-        sub-class is tracking transfer time (the amount of time it takes for the file to be copied into the monitored
-        workspace), it should call _start_transfer(), _update_transfer() as updates occur, and finally
+        Sub-classes should call Ingest.objects.create_ingest() when they detect a new file in the monitored workspace.
+        If the sub-class is tracking transfer time (the amount of time it takes for the file to be copied into the
+        monitored workspace), it should call _start_transfer(), _update_transfer() as updates occur, and finally
         _complete_transfer() and _process_ingest() when the transfer is complete. If the sub-class is not tracking
         transfer time, it should just call _process_ingest().
         """
@@ -165,29 +157,11 @@ class Monitor(object):
         logger.info('%s has finished transferring to %s, total of %s copied', ingest.file_name, ingest.workspace.name,
                     file_size_to_string(bytes_transferred))
 
-    def _create_ingest(self, file_name):
-        """Creates a new ingest for the given file name. The database save is the caller's responsibility.
-
-        :param file_name: The name of the file being ingested
-        :type file_name: string
-        :returns: The new ingest model
-        :rtype: :class:`ingest.models.Ingest`
-        """
-
-        ingest = Ingest()
-        ingest.file_name = file_name
-        ingest.strike_id = self.strike_id
-        ingest.media_type = get_media_type(file_name)
-        ingest.workspace = self._monitored_workspace
-
-        logger.info('New file on %s: %s', ingest.workspace.name, file_name)
-        return ingest
-
     @transaction.atomic
     def _process_ingest(self, ingest, file_path, file_size):
         """Processes the ingest file by applying the Strike configuration rules. This method will update the ingest
         model in the database and create an ingest task (if applicable) in an atomic transaction. This method should
-        either be called immediately after _create_ingest() or after _complete_transfer().
+        either be called immediately after Ingest.objects.create_ingest() or after _complete_transfer().
 
         :param ingest: The ingest model
         :type ingest: :class:`ingest.models.Ingest`
@@ -200,73 +174,21 @@ class Monitor(object):
         if ingest.status not in ['TRANSFERRING', 'TRANSFERRED']:
             raise Exception('Invalid ingest status: %s' % ingest.status)
 
-        file_name = ingest.file_name
-        logger.info('Applying rules to %s (%s, %s)', file_name, ingest.media_type, file_size_to_string(file_size))
         ingest.file_path = file_path
         ingest.file_size = file_size
 
-        matched_rule = self._file_handler.match_file_name(file_name)
-        if matched_rule:
-            for data_type_tag in matched_rule.data_types:
-                ingest.add_data_type_tag(data_type_tag)
-            file_path = ingest.file_path
-            if matched_rule.new_file_path:
-                today = now()
-                year_dir = str(today.year)
-                month_dir = '%02d' % today.month
-                day_dir = '%02d' % today.day
-                ingest.new_file_path = os.path.join(matched_rule.new_file_path, year_dir, month_dir, day_dir, file_name)
-                file_path = ingest.new_file_path
-            workspace_name = ingest.workspace.name
-            if matched_rule.new_workspace:
-                ingest.new_workspace = self._workspaces[matched_rule.new_workspace]
-                workspace_name = ingest.new_workspace.name
-            if ingest.new_file_path or ingest.new_workspace:
-                logger.info('Rule match, %s will be moved to %s on workspace %s', file_name, file_path, workspace_name)
-            else:
-                logger.info('Rule match, %s will be registered as %s on workspace %s', file_name, file_path,
-                            workspace_name)
+        # Rule match case
+        if ingest.is_there_rule_match(self._file_handler, self._workspaces):
             if not ingest.id:
                 ingest.save()
-            self._start_ingest_task(ingest)
+            Ingest.objects.start_ingest_tasks([ingest], strike_id=self.strike_id)
+        # No rule match
         else:
-            logger.info('No rule match for %s, file is being deferred', file_name)
-            ingest.status = 'DEFERRED'
             ingest.save()
-
-    @transaction.atomic
-    def _start_ingest_task(self, ingest):
-        """Starts a task for the given ingest in an atomic transaction
-
-        :param ingest: The ingest model
-        :type ingest: :class:`ingest.models.Ingest`
-        """
-
-        logger.info('Creating ingest task for %s', ingest.file_name)
-
-        # Create new ingest job and mark ingest as QUEUED
-        ingest_job_type = Ingest.objects.get_ingest_job_type()
-        data = JobData()
-        data.add_property_input('Ingest ID', str(ingest.id))
-        desc = {'strike_id': self.strike_id, 'file_name': ingest.file_name}
-        when = ingest.transfer_ended if ingest.transfer_ended else now()
-        event = TriggerEvent.objects.create_trigger_event('STRIKE_TRANSFER', None, desc, when)
-        job_configuration = JobConfiguration()
-        if ingest.workspace:
-            job_configuration.add_job_task_workspace(ingest.workspace.name, MODE_RW)
-        if ingest.new_workspace:
-            job_configuration.add_job_task_workspace(ingest.new_workspace.name, MODE_RW)
-        ingest_job = Queue.objects.queue_new_job(ingest_job_type, data, event, job_configuration)
-
-        ingest.job = ingest_job
-        ingest.status = 'QUEUED'
-        ingest.save()
-
-        logger.info('Successfully created ingest task for %s', ingest.file_name)
 
     def _start_transfer(self, ingest, when):
         """Starts recording the transfer of the given ingest into a workspace. The database save is the caller's
-        responsibility. This method should only be used immediately after _create_ingest().
+        responsibility. This method should only be used immediately after Ingest.objects.create_ingest().
 
         :param ingest: The ingest model
         :type ingest: :class:`ingest.models.Ingest`

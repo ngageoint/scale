@@ -11,7 +11,7 @@ from jsonschema.exceptions import ValidationError
 
 from job.configuration.data.exceptions import InvalidData, InvalidConnection
 from job.configuration.interface import job_interface_1_2 as previous_interface
-from job.configuration.interface.exceptions import InvalidInterfaceDefinition, InvalidSetting
+from job.configuration.interface.exceptions import InvalidInterfaceDefinition, MissingSetting
 from job.configuration.interface.scale_file import ScaleFileDescription
 from job.configuration.results.exceptions import InvalidResultsManifest
 from job.configuration.results.results_manifest.results_manifest import ResultsManifest
@@ -560,7 +560,7 @@ class JobInterface(object):
 
             if setting_is_required:
                 if setting_name not in config_setting_names:
-                    raise InvalidSetting('Required setting %s was not provided' % setting_name)
+                    raise MissingSetting('Required setting %s was not provided' % setting_name)
 
     def _check_env_var_uniqueness(self):
         """Ensures all the enviornmental variable names are unique, and throws a
@@ -939,3 +939,13 @@ class JobInterface(object):
             if not found_match:
                 msg = 'The %s parameter was not found in any inputs, shared_resources, or system variables' % param
                 raise InvalidInterfaceDefinition(msg)
+
+    def _check_env_var_uniqueness(self):
+        """Ensures all the enviornmental variable names are unique, and throws a
+        :class:`job.configuration.interface.exceptions.InvalidInterfaceDefinition` if they are not unique
+        """
+
+        env_vars = [env_var['name'] for env_var in self.definition['env_vars']]
+
+        if len(env_vars) != len(set(env_vars)):
+            raise InvalidInterfaceDefinition('Environment variable names must be unique')

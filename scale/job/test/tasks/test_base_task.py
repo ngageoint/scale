@@ -5,10 +5,10 @@ import datetime
 import django
 from django.test import TestCase
 from django.utils.timezone import now
-from job.tasks.base_task import Task
 
 import job.test.utils as job_test_utils
 from job.resources import NodeResources
+from job.tasks.base_task import Task
 from job.tasks.update import TaskStatusUpdate
 
 

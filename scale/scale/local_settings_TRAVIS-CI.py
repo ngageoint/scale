@@ -44,7 +44,3 @@ MESOS_MASTER = 'zk://localhost:2181/mesos'
 
 # Metrics collection directory
 METRICS_DIR = '/tmp'
-
-# Base URL for influxdb access in the form http://<machine>:8086/db/<cadvisor_db_name>/series?u=<username>&p=<password>&
-# An invalid or None entry will disable gathering of these statistics
-#INFLUXDB_BASE_URL = None

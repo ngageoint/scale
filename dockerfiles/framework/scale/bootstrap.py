@@ -56,6 +56,7 @@ def run(client):
         app_name = '%s-logstash' % FRAMEWORK_NAME
         log_port = deploy_logstash(client, app_name, es_urls)
         print("LOGGING_ADDRESS=tcp://%s.marathon.mesos:%s" % (app_name, log_port))
+        print("LOGGING_HEALTH_ADDRESS=%s.marathon.l4lb.thisdcos.directory:80" % app_name)
 
     # Determine if Web Server should be deployed.
     if DEPLOY_WEBSERVER.lower() == 'true':
@@ -294,12 +295,18 @@ def deploy_logstash(client, app_name, es_urls):
                 'portMappings': [{
                     'containerPort': 8000,
                     'hostPort': 9229,
-                    'protocol': 'tcp'
+                    'protocol': 'tcp',
+                    'labels': {
+                        'VIP_0': '%s:8000' % app_name
+                    }
                 },
                     {
                         'containerPort': 80,
                         'hostPort': 0,
-                        'protocol': 'tcp'
+                        'protocol': 'tcp',
+                        'labels': {
+                            'VIP_1': '%s:80' % app_name
+                        }
                     }
                 ],
                 'forcePullImage': True

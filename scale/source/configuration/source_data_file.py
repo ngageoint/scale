@@ -1,6 +1,7 @@
 """Defines the source data file input type contained within job data"""
 from job.configuration.data.data_file import AbstractDataFileParseSaver
 from source.models import SourceFile
+from storage.models import ScaleFile
 from util.parse import parse_datetime
 
 
@@ -13,7 +14,7 @@ class SourceDataFileParseSaver(AbstractDataFileParseSaver):
         """
 
         file_name_to_id = {}
-        source_files = SourceFile.objects.filter(id__in=input_file_ids)
+        source_files = ScaleFile.objects.filter(id__in=input_file_ids, file_type='SOURCE')
         for source_file in source_files:
             file_name_to_id[source_file.file_name] = source_file.id
 

@@ -240,6 +240,8 @@ class NodeManager(models.Manager):
         node.last_offer = now()
 
 
+# TODO: At some point we need to refactor the node models to remove the slave_id, is_paused_errors, and last_offer
+# fields. To do this we would first need to rework the node REST API endpoints to not rely on these fields.
 class Node(models.Model):
     """Represents a cluster node on which jobs can be run
 

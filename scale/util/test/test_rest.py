@@ -15,7 +15,6 @@ from util.rest import BadParameter, ReadOnly
 
 
 class TestRest(TestCase):
-
     def setUp(self):
         django.setup()
 

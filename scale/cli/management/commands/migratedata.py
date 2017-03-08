@@ -105,7 +105,7 @@ class Command(BaseCommand):
                 logging.info("Processing ingest %s" % ingest.file_name)
                 with transaction.atomic():
                     ingest.ingest_started = datetime.utcnow()
-                    sf = ingest.source_file = SourceFile()
+                    sf = ingest.source_file = SourceFile.create()
                     sf.update_uuid(ingest.file_name)
                     for tag in ingest.get_data_type_tags():
                         sf.add_data_type_tag(tag)

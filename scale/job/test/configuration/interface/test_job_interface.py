@@ -13,7 +13,7 @@ from job.configuration.data.job_connection import JobConnection
 from job.configuration.data.job_data import JobData
 from job.configuration.environment.job_environment import JobEnvironment
 from job.configuration.configuration.job_configuration import JobConfiguration
-from job.configuration.interface.exceptions import InvalidInterfaceDefinition, InvalidSetting
+from job.configuration.interface.exceptions import InvalidInterfaceDefinition, MissingSetting
 from job.configuration.interface.job_interface import JobInterface
 from job.configuration.results.exceptions import InvalidResultsManifest
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
@@ -1039,7 +1039,7 @@ class TestJobInterfacePreSteps(TestCase):
         try:
             # Validate acceptable job_interface and job_configuration
             job_interface.validate_populated_settings(job_config)
-        except InvalidSetting:
+        except MissingSetting:
             self.fail('Valid job_interface settings definition should not raise an Exception')
 
     def test_validate_populated_settings_no_cmd_args(self):
@@ -1070,7 +1070,7 @@ class TestJobInterfacePreSteps(TestCase):
         job_exe = MagicMock()
         job_exe.command_arguments = ''
 
-        self.assertRaises(InvalidSetting, job_interface.validate_populated_settings, job_config)
+        self.assertRaises(MissingSetting, job_interface.validate_populated_settings, job_config)
 
     def test_validate_populated_settings_no_env_vars(self):
         """Tests the validation of required settings defined in the job_interface"""
@@ -1096,7 +1096,7 @@ class TestJobInterfacePreSteps(TestCase):
         job_exe = MagicMock()
         job_exe.command_arguments = 'test_setting'
 
-        self.assertRaises(InvalidSetting, job_interface.validate_populated_settings, job_config)
+        self.assertRaises(MissingSetting, job_interface.validate_populated_settings, job_config)
 
 
 class TestJobInterfaceValidateConnection(TestCase):

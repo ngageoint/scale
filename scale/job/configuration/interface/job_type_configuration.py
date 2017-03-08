@@ -6,9 +6,7 @@ import logging
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
-from job.configuration.interface.exceptions import InvalidInterfaceDefinition
-
-from error.models import Error
+from job.configuration.interface.exceptions import InvalidJobTypeConfiguration
 
 logger = logging.getLogger(__name__)
 
@@ -53,13 +51,13 @@ class JobTypeConfiguration(object):
         try:
             validate(definition, JOB_TYPE_CONFIGURATION_SCHEMA)
         except ValidationError as validation_error:
-            raise InvalidInterfaceDefinition(validation_error)
+            raise InvalidJobTypeConfiguration(validation_error)
 
         self._populate_default_values()
         self._validate_default_settings()
 
         if self.definition['version'] != '1.0':
-            raise InvalidInterfaceDefinition('%s is an unsupported version number' % self.definition['version'])
+            raise InvalidJobTypeConfiguration('%s is an unsupported version number' % self.definition['version'])
 
     def get_dict(self):
         """Returns the internal dictionary that represents this error mapping
@@ -79,14 +77,17 @@ class JobTypeConfiguration(object):
 
         for setting_name, setting_value in self.definition['default_settings'].iteritems():
             if setting_name in self._default_setting_names:
-                raise InvalidInterfaceDefinition('Duplicate setting name %s in default_settings' % setting_name)
+                raise InvalidJobTypeConfiguration('Duplicate setting name %s in default_settings' % setting_name)
             self._default_setting_names.add(setting_name)
 
             if not setting_name:
-                raise InvalidInterfaceDefinition('Blank setting name (value = %s) in default_settings' % setting_value)
+                raise InvalidJobTypeConfiguration('Blank setting name (value = %s) in default_settings' % setting_value)
 
             if not setting_value:
-                raise InvalidInterfaceDefinition('Blank setting value (name = %s) in default_settings' % setting_name)
+                raise InvalidJobTypeConfiguration('Blank setting value (name = %s) in default_settings' % setting_name)
+
+            if not isinstance(setting_value, basestring):
+                raise InvalidJobTypeConfiguration('Setting value (name = %s) is not a string' % setting_name)
 
     def _populate_default_values(self):
         """Goes through the definition and fills in any missing default values"""

@@ -30,7 +30,7 @@
         });
 
         // stop pollers when route changes
-        pollerConfig.stopOnRouteChange = true;
+        pollerConfig.stopOn = '$routeChangeStart';
         pollerConfig.smart = true;
 
         // preserve trailing slashes
@@ -162,6 +162,16 @@
                 controller: 'strikesController',
                 controllerAs: 'vm',
                 templateUrl: 'modules/feed/partials/strikesTemplate.html'
+            })
+            .when('/batch', {
+                controller: 'batchesController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/batch/partials/batchesTemplate.html'
+            })
+            .when('/batch/:id', {
+                controller: 'batchDetailsController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/batch/partials/batchDetailsTemplate.html'
             })
             .otherwise({
                 redirectTo: '/'

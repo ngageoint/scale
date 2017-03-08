@@ -7,6 +7,7 @@ import os
 
 from botocore.exceptions import ClientError
 
+from ingest.models import Ingest
 from ingest.strike.configuration.strike_configuration import ValidationWarning
 from ingest.strike.monitors.exceptions import (InvalidMonitorConfiguration, S3NoDataNotificationError,
                                                SQSNotificationError)
@@ -60,7 +61,6 @@ class S3Monitor(Monitor):
         self._region_name = configuration.get('region_name')
         # TODO Change credentials to use an encrypted store key reference
         self._credentials = AWSClient.instantiate_credentials_from_config(configuration)
-
 
     def run(self):
         """See :meth:`ingest.strike.monitors.monitor.Monitor.run`
@@ -188,7 +188,7 @@ class S3Monitor(Monitor):
             raise S3NoDataNotificationError('Skipping folder or 0 byte file: %s' % object_key)
 
         object_name = os.path.basename(object_key)
-        ingest = self._create_ingest(object_name)
+        ingest = Ingest.objects.create_ingest(object_name, self._monitored_workspace, strike_id=self.strike_id)
+        logger.info('New ingest in %s: %s', ingest.workspace.name, ingest.file_name)
         self._process_ingest(ingest, object_key, object_size)
         logger.info("Strike ingested '%s' from bucket '%s'..." % (object_key, bucket_name))
-

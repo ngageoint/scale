@@ -20,13 +20,75 @@ class SourceFileManager(models.GeoManager):
     """Provides additional methods for handling source files
     """
 
-    def get_sources(self, started=None, ended=None, is_parsed=None, file_name=None, order=None):
+    def get_source_file_by_name(self, file_name):
+        """Returns the source file with the given file name
+
+        :param file_name: The name of the source file
+        :type file_name: string
+        :returns: The list of source files that match the time range.
+        :rtype: :class:`storage.models.ScaleFile`
+
+        :raises :class:`storage.models.ScaleFile.DoesNotExist`: If the file does not exist
+        """
+
+        return ScaleFile.objects.get(file_name=file_name, file_type='SOURCE')
+
+    def get_source_products(self, source_file_id, started=None, ended=None, batch_ids=None, job_type_ids=None,
+                            job_type_names=None, job_type_categories=None, is_operational=None, is_published=None,
+                            is_superseded=None, file_name=None, order=None):
+        """Returns a query for the list of products produced by the given source file ID. The returned query includes
+        the related  workspace, job_type, and job fields, except for the workspace.json_config field. The related
+        countries are set to be pre-fetched as part of the query.
+
+        :param source_file_id: The source file ID.
+        :type source_file_id: int
+        :param started: Query product files updated after this amount of time.
+        :type started: :class:`datetime.datetime`
+        :param ended: Query product files updated before this amount of time.
+        :type ended: :class:`datetime.datetime`
+        :param batch_ids: Query product files produced by batches with the given identifiers.
+        :type batch_ids: list[int]
+        :param job_type_ids: Query product files produced by jobs with the given type identifiers.
+        :type job_type_ids: list[int]
+        :param job_type_names: Query product files produced by jobs with the given type names.
+        :type job_type_names: list[str]
+        :param job_type_categories: Query product files produced by jobs with the given type categories.
+        :type job_type_categories: list[str]
+        :param is_operational: Query product files flagged as operational or R&D only.
+        :type is_operational: bool
+        :param is_published: Query product files flagged as currently exposed for publication.
+        :type is_published: bool
+        :param is_superseded: Query product files that have/have not been superseded.
+        :type is_superseded: bool
+        :param file_name: Query product files with the given file name.
+        :type file_name: str
+        :param order: A list of fields to control the sort order.
+        :type order: list[str]
+        :returns: The product file query
+        :rtype: :class:`django.db.models.QuerySet`
+        """
+
+        from product.models import ProductFile
+        products = ProductFile.objects.filter_products(started=started, ended=ended, job_type_ids=job_type_ids,
+                                                       job_type_names=job_type_names,
+                                                       job_type_categories=job_type_categories,
+                                                       is_operational=is_operational, is_published=is_published,
+                                                       is_superseded=None, file_name=file_name, order=order)
+        products = products.filter(ancestors__ancestor_id=source_file_id)
+        if batch_ids:
+            products = products.filter(ancestors__batch_id__in=batch_ids)
+
+        return products
+
+    def get_sources(self, started=None, ended=None, time_field=None, is_parsed=None, file_name=None, order=None):
         """Returns a list of source files within the given time range.
 
         :param started: Query source files updated after this amount of time.
         :type started: :class:`datetime.datetime`
         :param ended: Query source files updated before this amount of time.
         :type ended: :class:`datetime.datetime`
+        :param time_field: The time field to use for filtering.
+        :type time_field: string
         :param is_parsed: Query source files flagged as successfully parsed.
         :type is_parsed: bool
         :param file_name: Query source files with the given file name.
@@ -34,19 +96,28 @@ class SourceFileManager(models.GeoManager):
         :param order: A list of fields to control the sort order.
         :type order: list[str]
         :returns: The list of source files that match the time range.
-        :rtype: list[:class:`source.models.SourceFile`]
+        :rtype: list[:class:`storage.models.ScaleFile`]
         """
 
+        if time_field and time_field not in SourceFile.VALID_TIME_FIELDS:
+            raise Exception('Invalid time field: %s' % time_field)
+
         # Fetch a list of source files
-        sources = SourceFile.objects.all()
+        sources = ScaleFile.objects.filter(file_type='SOURCE')
         sources = sources.select_related('workspace').defer('workspace__json_config')
         sources = sources.prefetch_related('countries')
 
         # Apply time range filtering
         if started:
-            sources = sources.filter(last_modified__gte=started)
+            if time_field == 'data':
+                sources = sources.filter(data_ended__gte=started)
+            else:
+                sources = sources.filter(last_modified__gte=started)
         if ended:
-            sources = sources.filter(last_modified__lte=ended)
+            if time_field == 'data':
+                sources = sources.filter(data_started__lte=ended)
+            else:
+                sources = sources.filter(last_modified__lte=ended)
 
         if is_parsed is not None:
             sources = sources.filter(is_parsed=is_parsed)
@@ -69,12 +140,14 @@ class SourceFileManager(models.GeoManager):
         :param include_superseded: Whether or not superseded products should be included.
         :type include_superseded: bool
         :returns: The source with extra related attributes: ingests and products.
-        :rtype: :class:`source.models.SourceFile`
+        :rtype: :class:`storage.models.ScaleFile`
+
+        :raises :class:`storage.models.ScaleFile.DoesNotExist`: If the file does not exist
         """
 
         # Attempt to fetch the requested source
-        source = SourceFile.objects.all().select_related('workspace')
-        source = source.get(pk=source_id)
+        source = ScaleFile.objects.all().select_related('workspace')
+        source = source.get(pk=source_id, file_type='SOURCE')
 
         # Attempt to fetch all ingests for the source
         # Use a localized import to make higher level application dependencies optional
@@ -85,20 +158,13 @@ class SourceFileManager(models.GeoManager):
             source.ingests = []
 
         # Attempt to fetch all products derived from the source
-        # Use a localized import to make higher level application dependencies optional
-        try:
-            from product.models import ProductFile
-            products = ProductFile.objects.filter(ancestors__ancestor_id=source.id)
-
-            # Exclude superseded products by default
-            if not include_superseded:
-                products = products.filter(is_superseded=False)
-
-            products = products.select_related('job_type', 'workspace').defer('workspace__json_config')
-            products = products.prefetch_related('countries').order_by('created')
-            source.products = products
-        except:
-            source.products = []
+        products = ScaleFile.objects.filter(ancestors__ancestor_id=source.id, file_type='PRODUCT')
+        # Exclude superseded products by default
+        if not include_superseded:
+            products = products.filter(is_superseded=False)
+        products = products.select_related('job_type', 'workspace').defer('workspace__json_config')
+        products = products.prefetch_related('countries').order_by('created')
+        source.products = products
 
         return source
 
@@ -128,7 +194,7 @@ class SourceFileManager(models.GeoManager):
             geom, props = geo_utils.parse_geo_json(geo_json)
 
         # Acquire model lock
-        src_file = SourceFile.objects.select_for_update().get(pk=src_file_id)
+        src_file = ScaleFile.objects.select_for_update().get(pk=src_file_id, file_type='SOURCE')
         src_file.is_parsed = True
         src_file.parsed = now()
         src_file.data_started = data_started
@@ -171,25 +237,27 @@ class SourceFileManager(models.GeoManager):
 
 
 class SourceFile(ScaleFile):
-    """Represents a source data file that is available for processing. This is an extension of the
-    :class:`storage.models.ScaleFile` model.
-
-    :keyword file: The corresponding ScaleFile model
-    :type file: :class:`django.db.models.OneToOneField`
-
-    :keyword is_parsed: Whether the source file has been parsed or not
-    :type is_parsed: :class:`django.db.models.BooleanField`
-    :keyword parsed: When the source file was parsed
-    :type parsed: :class:`django.db.models.DateTimeField`
+    """Represents a source data file that is available for processing. This is a proxy model of the
+    :class:`storage.models.ScaleFile` model. It has the same set of fields, but a different manager that provides
+    functionality specific to source files.
     """
 
-    file = models.OneToOneField('storage.ScaleFile', primary_key=True, parent_link=True)
+    VALID_TIME_FIELDS = ['data', 'last_modified']
 
-    is_parsed = models.BooleanField(default=False)
-    parsed = models.DateTimeField(blank=True, null=True)
+    @classmethod
+    def create(cls):
+        """Creates a new source file
+
+        :returns: The new source file
+        :rtype: :class:`source.models.SourceFile`
+        """
+
+        src_file = SourceFile()
+        src_file.file_type = 'SOURCE'
+        return src_file
 
     objects = SourceFileManager()
 
     class Meta(object):
         """meta information for the db"""
-        db_table = 'source_file'
+        proxy = True

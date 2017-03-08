@@ -211,14 +211,9 @@ class JobManager(models.Manager):
         input_files = input_files.order_by('id').distinct('id')
 
         # Attempt to get related products
-        # Use a localized import to make higher level application dependencies optional
-        try:
-            from product.models import ProductFile
-            output_files = ProductFile.objects.filter(job=job)
-            output_files = output_files.select_related('file', 'file__workspace').defer('file__workspace__json_config')
-            output_files = output_files.order_by('id').distinct('id')
-        except:
-            output_files = []
+        output_files = ScaleFile.objects.filter(job=job)
+        output_files = output_files.select_related('workspace').defer('workspace__json_config')
+        output_files = output_files.order_by('id').distinct('id')
 
         # Merge job interface definitions with mapped values
         job_interface_dict = job.get_job_interface().get_dict()
