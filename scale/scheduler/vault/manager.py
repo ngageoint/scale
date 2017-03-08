@@ -2,9 +2,7 @@
 from __future__ import unicode_literals
 
 import logging
-import threading
 
-from util.retry import retry_database_query
 from vault.exceptions import InvalidSecretsAuthorization, InvalidSecretsRequest, InvalidSecretsToken, InvalidSecretsValue
 from vault.secrets_handler import SecretsHandler
 
@@ -22,7 +20,12 @@ class SecretsManager(object):
         self._all_secrets = {}
     
     def retrieve_job_type_secrets(self, job_name) :
-        """
+        """Get the secret values from the cache pertaining to the provided job
+        
+        :param job_name: the name of the job 
+        :param type: string
+        :return: job type secrets
+        :rtype: dict
         """
         
         if job_name in self._all_secrets:
@@ -34,9 +37,6 @@ class SecretsManager(object):
 
     def sync_with_backend(self):
         """Gather all job type secrets that are stored in the secrets backend.
-        
-        :return: all job type secrets
-        :rtype: dict
         """
 
         updated_secrets = {}
@@ -50,12 +50,9 @@ class SecretsManager(object):
         for job in jobs_with_secrets:
             try:
                 job_secrets = self.sh.get_job_type_secrets(job)
+                updated_secrets[job] = job_secrets
             except (InvalidSecretsAuthorization, InvalidSecretsRequest, InvalidSecretsValue) as e:
                 logger.exception('Secrets Error: %s', e.message)
-            
-            updated_secrets[job] = job_secrets
-                
-        self._all_secrets = updated_secrets
 
 
 secrets_mgr = SecretsManager()
