@@ -4,10 +4,10 @@ from __future__ import unicode_literals
 import logging
 import threading
 
-from job.models import JobType
 from util.retry import retry_database_query
 from vault.exceptions import InvalidSecretsAuthorization, InvalidSecretsRequest, InvalidSecretsToken, InvalidSecretsValue
 from vault.secrets_handler import SecretsHandler
+
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +28,7 @@ class SecretsManager(object):
         if job_name in self._all_secrets:
             secret_values = self._all_secrets[job_name]
         else:
-            secret_values = None
+            secret_values = {}
             
         return secret_values
 
