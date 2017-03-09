@@ -223,7 +223,11 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.ActiveError">ActiveError (class in scheduler.node.node_class)</a>
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.ActiveError">ActiveError (class in scheduler.node.conditions)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.ActiveWarning">ActiveWarning (class in scheduler.node.conditions)</a>
   </dt>
 
       
@@ -376,12 +380,12 @@
   <dt><a href="architecture/django/code_docs/job.configuration.data.html#job.configuration.data.job_data.JobData.add_output">add_output() (job.configuration.data.job_data.JobData method)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/job.configuration.interface.html#job.configuration.interface.job_interface_1_0.JobInterface.add_output_to_connection">add_output_to_connection() (job.configuration.interface.job_interface_1_0.JobInterface method)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/job.configuration.results.html#job.configuration.results.job_results.JobResults.add_output_to_data">add_output_to_data() (job.configuration.results.job_results.JobResults method)</a>
   </dt>
@@ -549,7 +553,7 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.Node.BAD_DAEMON_ERR">BAD_DAEMON_ERR (scheduler.node.node_class.Node attribute)</a>
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeConditions.BAD_DAEMON_ERR">BAD_DAEMON_ERR (scheduler.node.conditions.NodeConditions attribute)</a>
   </dt>
 
       
@@ -557,7 +561,7 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.Node.BAD_LOGSTASH_ERR">BAD_LOGSTASH_ERR (scheduler.node.node_class.Node attribute)</a>
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeConditions.BAD_LOGSTASH_ERR">BAD_LOGSTASH_ERR (scheduler.node.conditions.NodeConditions attribute)</a>
   </dt>
 
       
@@ -917,11 +921,15 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.Node.CLEANUP_ERR">CLEANUP_ERR (scheduler.node.node_class.Node attribute)</a>
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeConditions.CLEANUP_ERR">CLEANUP_ERR (scheduler.node.conditions.NodeConditions attribute)</a>
   </dt>
 
       
   <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.Node.CLEANUP_ERR_THRESHOLD">CLEANUP_ERR_THRESHOLD (scheduler.node.node_class.Node attribute)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeConditions.CLEANUP_WARNING">CLEANUP_WARNING (scheduler.node.conditions.NodeConditions attribute)</a>
   </dt>
 
       
@@ -1561,7 +1569,7 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.NodeError.daemon_bad">daemon_bad (scheduler.node.node_class.NodeError attribute)</a>
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeError.daemon_bad">daemon_bad (scheduler.node.conditions.NodeError attribute)</a>
   </dt>
 
       
@@ -2077,10 +2085,14 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.NodeError.description">description (scheduler.node.node_class.NodeError attribute)</a>
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeError.description">description (scheduler.node.conditions.NodeError attribute)</a>
   </dt>
 
       <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeWarning.description">(scheduler.node.conditions.NodeWarning attribute)</a>
+  </dt>
+
         
   <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.NodeState.description">(scheduler.node.node_class.NodeState attribute)</a>
   </dt>
@@ -3492,12 +3504,12 @@
   <dt><a href="architecture/django/code_docs/ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration_1_0.StrikeConfiguration.get_mount">get_mount() (ingest.strike.configuration.strike_configuration_1_0.StrikeConfiguration method)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.graph_delta.RecipeGraphDelta.get_new_nodes">get_new_nodes() (recipe.handlers.graph_delta.RecipeGraphDelta method)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/job.tasks.html#job.tasks.base_task.AtomicCounter.get_next">get_next() (job.tasks.base_task.AtomicCounter method)</a>
   </dt>
@@ -3744,6 +3756,10 @@
   </dt>
 
       </dl></dd>
+      
+  <dt><a href="architecture/django/code_docs/scheduler.cleanup.html#scheduler.cleanup.node.NodeCleanup.get_num_job_exes">get_num_job_exes() (scheduler.cleanup.node.NodeCleanup method)</a>
+  </dt>
+
       
   <dt><a href="architecture/django/code_docs/util.html#util.aws.S3Client.get_object">get_object() (util.aws.S3Client method)</a>
   </dt>
@@ -4551,6 +4567,30 @@
 
       </dl></dd>
       
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeConditions.handle_cleanup_task_completed">handle_cleanup_task_completed() (scheduler.node.conditions.NodeConditions method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeConditions.handle_cleanup_task_failed">handle_cleanup_task_failed() (scheduler.node.conditions.NodeConditions method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeConditions.handle_cleanup_task_timeout">handle_cleanup_task_timeout() (scheduler.node.conditions.NodeConditions method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeConditions.handle_health_task_completed">handle_health_task_completed() (scheduler.node.conditions.NodeConditions method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeConditions.handle_health_task_failed">handle_health_task_failed() (scheduler.node.conditions.NodeConditions method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeConditions.handle_health_task_timeout">handle_health_task_timeout() (scheduler.node.conditions.NodeConditions method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/queue.html#queue.models.QueueManager.handle_job_cancellation">handle_job_cancellation() (queue.models.QueueManager method)</a>
   </dt>
 
@@ -4560,6 +4600,18 @@
 
       
   <dt><a href="architecture/django/code_docs/queue.html#queue.models.QueueManager.handle_job_failure">handle_job_failure() (queue.models.QueueManager method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeConditions.handle_pull_task_completed">handle_pull_task_completed() (scheduler.node.conditions.NodeConditions method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeConditions.handle_pull_task_failed">handle_pull_task_failed() (scheduler.node.conditions.NodeConditions method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeConditions.handle_pull_task_timeout">handle_pull_task_timeout() (scheduler.node.conditions.NodeConditions method)</a>
   </dt>
 
       
@@ -4590,12 +4642,18 @@
   <dt><a href="architecture/django/code_docs/error.html#error.handlers.DatabaseLogHandler.handleError">handleError() (error.handlers.DatabaseLogHandler method)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.api.HardwareResources">HardwareResources (class in mesos_api.api)</a>
   </dt>
 
       
   <dt><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.node.NodeOffers.has_accepted_job_exes">has_accepted_job_exes() (scheduler.offer.node.NodeOffers method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeConditions.has_active_errors">has_active_errors() (scheduler.node.conditions.NodeConditions method)</a>
   </dt>
 
       
@@ -4606,8 +4664,6 @@
   <dt><a href="architecture/django/code_docs/job.tasks.html#job.tasks.base_task.Task.has_ended">has_ended (job.tasks.base_task.Task attribute)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/util.html#util.rest.has_params">has_params() (in module util.rest)</a>
   </dt>
@@ -4631,11 +4687,11 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.Node.HEALTH_ERRORS">HEALTH_ERRORS (scheduler.node.node_class.Node attribute)</a>
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeConditions.HEALTH_ERRORS">HEALTH_ERRORS (scheduler.node.conditions.NodeConditions attribute)</a>
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.Node.HEALTH_TIMEOUT_ERR">HEALTH_TIMEOUT_ERR (scheduler.node.node_class.Node attribute)</a>
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeConditions.HEALTH_TIMEOUT_ERR">HEALTH_TIMEOUT_ERR (scheduler.node.conditions.NodeConditions attribute)</a>
   </dt>
 
       
@@ -4759,7 +4815,7 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.Node.IMAGE_PULL_ERR">IMAGE_PULL_ERR (scheduler.node.node_class.Node attribute)</a>
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeConditions.IMAGE_PULL_ERR">IMAGE_PULL_ERR (scheduler.node.conditions.NodeConditions attribute)</a>
   </dt>
 
       
@@ -6591,6 +6647,14 @@
 
       </dl></dd>
       
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeConditions.last_cleanup_task_error">last_cleanup_task_error() (scheduler.node.conditions.NodeConditions method)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeConditions.last_image_pull_task_error">last_image_pull_task_error() (scheduler.node.conditions.NodeConditions method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/job.tasks.html#job.tasks.base_task.Task.launch">launch() (job.tasks.base_task.Task method)</a>
   </dt>
 
@@ -6782,12 +6846,12 @@
   <dt><a href="architecture/django/code_docs/ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration.StrikeConfiguration.load_monitor_configuration">load_monitor_configuration() (ingest.strike.configuration.strike_configuration.StrikeConfiguration method)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/ingest.scan.configuration.html#ingest.scan.configuration.scan_configuration.ScanConfiguration.load_scanner_configuration">load_scanner_configuration() (ingest.scan.configuration.scan_configuration.ScanConfiguration method)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.broker.FileDownload.local_path">local_path (storage.brokers.broker.FileDownload attribute)</a>
   </dt>
@@ -6841,7 +6905,7 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.Node.LOW_DOCKER_SPACE_ERR">LOW_DOCKER_SPACE_ERR (scheduler.node.node_class.Node attribute)</a>
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeConditions.LOW_DOCKER_SPACE_ERR">LOW_DOCKER_SPACE_ERR (scheduler.node.conditions.NodeConditions attribute)</a>
   </dt>
 
   </dl></td>
@@ -7794,7 +7858,11 @@
   </dt>
 
         
-  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.NodeError.name">(scheduler.node.node_class.NodeError attribute)</a>
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeError.name">(scheduler.node.conditions.NodeError attribute)</a>
+  </dt>
+
+        
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeWarning.name">(scheduler.node.conditions.NodeWarning attribute)</a>
   </dt>
 
         
@@ -7988,18 +8056,22 @@
   <dt><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.offer.ResourceOffer.node_resources">node_resources (scheduler.offer.offer.ResourceOffer attribute)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/node.html#node.admin.NodeAdmin">NodeAdmin (class in node.admin)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/node.html#node.serializers.NodeBaseSerializer">NodeBaseSerializer (class in node.serializers)</a>
   </dt>
 
       
   <dt><a href="architecture/django/code_docs/scheduler.cleanup.html#scheduler.cleanup.node.NodeCleanup">NodeCleanup (class in scheduler.cleanup.node)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeConditions">NodeConditions (class in scheduler.node.conditions)</a>
   </dt>
 
       
@@ -8031,7 +8103,7 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.NodeError">NodeError (class in scheduler.node.node_class)</a>
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeError">NodeError (class in scheduler.node.conditions)</a>
   </dt>
 
       
@@ -8106,6 +8178,10 @@
 
       
   <dt><a href="architecture/django/code_docs/node.html#node.views.NodesView">NodesView (class in node.views)</a>
+  </dt>
+
+      
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeWarning">NodeWarning (class in scheduler.node.conditions)</a>
   </dt>
 
       
@@ -9389,7 +9465,7 @@
   </dt>
 
       
-  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.NodeError.pull_bad">pull_bad (scheduler.node.node_class.NodeError attribute)</a>
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeError.pull_bad">pull_bad (scheduler.node.conditions.NodeError attribute)</a>
   </dt>
 
       
@@ -10967,6 +11043,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#module-scheduler.node.conditions">scheduler.node.conditions (module)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/scheduler.node.html#module-scheduler.node.manager">scheduler.node.manager (module)</a>
   </dt>
 
@@ -12412,12 +12492,12 @@
   <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.api.SlaveInfo">SlaveInfo (class in mesos_api.api)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/scheduler.html#scheduler.scale_scheduler.ScaleScheduler.slaveLost">slaveLost() (scheduler.scale_scheduler.ScaleScheduler method)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/source.html#module-source">source (module)</a>
   </dt>
@@ -19113,6 +19193,16 @@
 
       </dl></dd>
       
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeError.title">title (scheduler.node.conditions.NodeError attribute)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeWarning.title">(scheduler.node.conditions.NodeWarning attribute)</a>
+  </dt>
+
+      </dl></dd>
+      
   <dt><a href="architecture/django/code_docs/mesos_api.html#mesos_api.api.HardwareResources.to_dict">to_dict() (mesos_api.api.HardwareResources method)</a>
   </dt>
 
@@ -19397,6 +19487,10 @@
   </dt>
 
       
+  <dt><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeConditions.update_cleanup_count">update_cleanup_count() (scheduler.node.conditions.NodeConditions method)</a>
+  </dt>
+
+      
   <dt><a href="architecture/django/code_docs/node.html#node.views.NodeDetailsView.update_fields">update_fields (node.views.NodeDetailsView attribute)</a>
   </dt>
 
@@ -19502,12 +19596,12 @@
   <dt><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.url">url (storage.models.ScaleFile attribute)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/job.tasks.html#job.tasks.base_task.Task.uses_docker">uses_docker (job.tasks.base_task.Task attribute)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="architecture/django/code_docs/job.html#job.models.JobExecution.uses_docker">uses_docker() (job.models.JobExecution method)</a>
   </dt>

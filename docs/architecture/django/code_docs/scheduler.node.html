@@ -220,6 +220,255 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="module-scheduler.node.conditions">
+<span id="scheduler-node-conditions-module"></span><h2>scheduler.node.conditions module<a class="headerlink" href="#module-scheduler.node.conditions" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class that holds a node&#8217;s current conditions</p>
+<dl class="class">
+<dt id="scheduler.node.conditions.ActiveError">
+<em class="property">class </em><code class="descclassname">scheduler.node.conditions.</code><code class="descname">ActiveError</code><span class="sig-paren">(</span><em>error</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.conditions.ActiveError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This class represents an active error for a node.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="scheduler.node.conditions.ActiveWarning">
+<em class="property">class </em><code class="descclassname">scheduler.node.conditions.</code><code class="descname">ActiveWarning</code><span class="sig-paren">(</span><em>warning</em>, <em>description=None</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.conditions.ActiveWarning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This class represents an active warning for a node.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="scheduler.node.conditions.NodeConditions">
+<em class="property">class </em><code class="descclassname">scheduler.node.conditions.</code><code class="descname">NodeConditions</code><span class="sig-paren">(</span><em>hostname</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.conditions.NodeConditions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This class represents the set of current conditions that apply to a node.</p>
+<dl class="attribute">
+<dt id="scheduler.node.conditions.NodeConditions.BAD_DAEMON_ERR">
+<code class="descname">BAD_DAEMON_ERR</code><em class="property"> = NodeError(name=u'BAD_DAEMON', title=u'Docker Not Responding', description=u'The Docker daemon on this node is not responding.', daemon_bad=True, pull_bad=True)</em><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.BAD_DAEMON_ERR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.conditions.NodeConditions.BAD_LOGSTASH_ERR">
+<code class="descname">BAD_LOGSTASH_ERR</code><em class="property"> = NodeError(name=u'BAD_LOGSTASH', title=u'Logstash Not Responding', description=u'The Scale logstash is not responding to this node.', daemon_bad=False, pull_bad=False)</em><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.BAD_LOGSTASH_ERR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.conditions.NodeConditions.CLEANUP_ERR">
+<code class="descname">CLEANUP_ERR</code><em class="property"> = NodeError(name=u'CLEANUP', title=u'Cleanup Failure', description=u'The node failed to clean up some Scale Docker containers and volumes.', daemon_bad=False, pull_bad=False)</em><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.CLEANUP_ERR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.conditions.NodeConditions.CLEANUP_WARNING">
+<code class="descname">CLEANUP_WARNING</code><em class="property"> = NodeWarning(name=u'CLEANUP', title=u'Slow Cleanup', description=u'There are %s job executions waiting to be cleaned up on this node.')</em><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.CLEANUP_WARNING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.conditions.NodeConditions.HEALTH_ERRORS">
+<code class="descname">HEALTH_ERRORS</code><em class="property"> = [NodeError(name=u'BAD_DAEMON', title=u'Docker Not Responding', description=u'The Docker daemon on this node is not responding.', daemon_bad=True, pull_bad=True), NodeError(name=u'BAD_LOGSTASH', title=u'Logstash Not Responding', description=u'The Scale logstash is not responding to this node.', daemon_bad=False, pull_bad=False), NodeError(name=u'HEALTH_TIMEOUT', title=u'Health Check Timeout', description=u'The last node health check timed out.', daemon_bad=False, pull_bad=False), NodeError(name=u'LOW_DOCKER_SPACE', title=u'Low Docker Disk Space', description=u'The free disk space available to Docker is low.', daemon_bad=False, pull_bad=True)]</em><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.HEALTH_ERRORS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.conditions.NodeConditions.HEALTH_TIMEOUT_ERR">
+<code class="descname">HEALTH_TIMEOUT_ERR</code><em class="property"> = NodeError(name=u'HEALTH_TIMEOUT', title=u'Health Check Timeout', description=u'The last node health check timed out.', daemon_bad=False, pull_bad=False)</em><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.HEALTH_TIMEOUT_ERR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.conditions.NodeConditions.IMAGE_PULL_ERR">
+<code class="descname">IMAGE_PULL_ERR</code><em class="property"> = NodeError(name=u'IMAGE_PULL', title=u'Image Pull Failure', description=u'The node failed to pull the Scale Docker image from the registry.', daemon_bad=False, pull_bad=False)</em><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.IMAGE_PULL_ERR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.conditions.NodeConditions.LOW_DOCKER_SPACE_ERR">
+<code class="descname">LOW_DOCKER_SPACE_ERR</code><em class="property"> = NodeError(name=u'LOW_DOCKER_SPACE', title=u'Low Docker Disk Space', description=u'The free disk space available to Docker is low.', daemon_bad=False, pull_bad=True)</em><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.LOW_DOCKER_SPACE_ERR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="scheduler.node.conditions.NodeConditions.handle_cleanup_task_completed">
+<code class="descname">handle_cleanup_task_completed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.handle_cleanup_task_completed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles the successful completion of a node cleanup task</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.node.conditions.NodeConditions.handle_cleanup_task_failed">
+<code class="descname">handle_cleanup_task_failed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.handle_cleanup_task_failed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles the failure of a node cleanup task</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.node.conditions.NodeConditions.handle_cleanup_task_timeout">
+<code class="descname">handle_cleanup_task_timeout</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.handle_cleanup_task_timeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates that a node cleanup task has timed out</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.node.conditions.NodeConditions.handle_health_task_completed">
+<code class="descname">handle_health_task_completed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.handle_health_task_completed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles the successful completion of a node health check task</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.node.conditions.NodeConditions.handle_health_task_failed">
+<code class="descname">handle_health_task_failed</code><span class="sig-paren">(</span><em>task_update</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.handle_health_task_failed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles the given failed task update for a node health check task</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_update</strong> (<a class="reference internal" href="job.tasks.html#job.tasks.update.TaskStatusUpdate" title="job.tasks.update.TaskStatusUpdate"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.update.TaskStatusUpdate</span></code></a>) &#8211; The health check task update</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.node.conditions.NodeConditions.handle_health_task_timeout">
+<code class="descname">handle_health_task_timeout</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.handle_health_task_timeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates that a node health check task has timed out</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.node.conditions.NodeConditions.handle_pull_task_completed">
+<code class="descname">handle_pull_task_completed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.handle_pull_task_completed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles the successful completion of a node image pull task</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.node.conditions.NodeConditions.handle_pull_task_failed">
+<code class="descname">handle_pull_task_failed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.handle_pull_task_failed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles the failure of a node image pull task</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.node.conditions.NodeConditions.handle_pull_task_timeout">
+<code class="descname">handle_pull_task_timeout</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.handle_pull_task_timeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates that a node image pull task has timed out</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.node.conditions.NodeConditions.has_active_errors">
+<code class="descname">has_active_errors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.has_active_errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates if any errors are currently active</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if at least one error is active, False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.node.conditions.NodeConditions.last_cleanup_task_error">
+<code class="descname">last_cleanup_task_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.last_cleanup_task_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the last time that the cleanup task failed, None if the last cleanup task succeeded</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The time of the last cleanup task failure, possibly None</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.node.conditions.NodeConditions.last_image_pull_task_error">
+<code class="descname">last_image_pull_task_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.last_image_pull_task_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the last time that the image pull task failed, None if the last image pull task succeeded</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The time of the last image pull task failure, possibly None</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.node.conditions.NodeConditions.update_cleanup_count">
+<code class="descname">update_cleanup_count</code><span class="sig-paren">(</span><em>num_job_exes</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.update_cleanup_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the number of job executions that need to be cleaned up</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>num_job_exes</strong> (<em>int`</em>) &#8211; The number of job executions that need to be cleaned up</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="scheduler.node.conditions.NodeError">
+<em class="property">class </em><code class="descclassname">scheduler.node.conditions.</code><code class="descname">NodeError</code><span class="sig-paren">(</span><em>name</em>, <em>title</em>, <em>description</em>, <em>daemon_bad</em>, <em>pull_bad</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.conditions.NodeError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<dl class="attribute">
+<dt id="scheduler.node.conditions.NodeError.daemon_bad">
+<code class="descname">daemon_bad</code><a class="headerlink" href="#scheduler.node.conditions.NodeError.daemon_bad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 3</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.conditions.NodeError.description">
+<code class="descname">description</code><a class="headerlink" href="#scheduler.node.conditions.NodeError.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.conditions.NodeError.name">
+<code class="descname">name</code><a class="headerlink" href="#scheduler.node.conditions.NodeError.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.conditions.NodeError.pull_bad">
+<code class="descname">pull_bad</code><a class="headerlink" href="#scheduler.node.conditions.NodeError.pull_bad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 4</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.conditions.NodeError.title">
+<code class="descname">title</code><a class="headerlink" href="#scheduler.node.conditions.NodeError.title" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="scheduler.node.conditions.NodeWarning">
+<em class="property">class </em><code class="descclassname">scheduler.node.conditions.</code><code class="descname">NodeWarning</code><span class="sig-paren">(</span><em>name</em>, <em>title</em>, <em>description</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.conditions.NodeWarning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<dl class="attribute">
+<dt id="scheduler.node.conditions.NodeWarning.description">
+<code class="descname">description</code><a class="headerlink" href="#scheduler.node.conditions.NodeWarning.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.conditions.NodeWarning.name">
+<code class="descname">name</code><a class="headerlink" href="#scheduler.node.conditions.NodeWarning.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.conditions.NodeWarning.title">
+<code class="descname">title</code><a class="headerlink" href="#scheduler.node.conditions.NodeWarning.title" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-scheduler.node.manager">
 <span id="scheduler-node-manager-module"></span><h2>scheduler.node.manager module<a class="headerlink" href="#module-scheduler.node.manager" title="Permalink to this headline">¶</a></h2>
 <p>Defines the class that manages the scheduler nodes</p>
@@ -367,33 +616,11 @@
 <span id="scheduler-node-node-class-module"></span><h2>scheduler.node.node_class module<a class="headerlink" href="#module-scheduler.node.node_class" title="Permalink to this headline">¶</a></h2>
 <p>Defines the class that represents nodes in the scheduler</p>
 <dl class="class">
-<dt id="scheduler.node.node_class.ActiveError">
-<em class="property">class </em><code class="descclassname">scheduler.node.node_class.</code><code class="descname">ActiveError</code><span class="sig-paren">(</span><em>error</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.node_class.ActiveError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>This class represents an active error for this node.</p>
-</dd></dl>
-
-<dl class="class">
 <dt id="scheduler.node.node_class.Node">
 <em class="property">class </em><code class="descclassname">scheduler.node.node_class.</code><code class="descname">Node</code><span class="sig-paren">(</span><em>agent_id</em>, <em>node</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.node_class.Node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>This class represents a node in the scheduler. It combines information retrieved from the database node models as
 well as run-time information retrieved from Mesos. This class is thread-safe.</p>
-<dl class="attribute">
-<dt id="scheduler.node.node_class.Node.BAD_DAEMON_ERR">
-<code class="descname">BAD_DAEMON_ERR</code><em class="property"> = NodeError(name=u'BAD_DAEMON', description=u'Docker daemon is not responding', daemon_bad=True, pull_bad=True)</em><a class="headerlink" href="#scheduler.node.node_class.Node.BAD_DAEMON_ERR" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="scheduler.node.node_class.Node.BAD_LOGSTASH_ERR">
-<code class="descname">BAD_LOGSTASH_ERR</code><em class="property"> = NodeError(name=u'BAD_LOGSTASH', description=u'Logstash is not responding', daemon_bad=False, pull_bad=False)</em><a class="headerlink" href="#scheduler.node.node_class.Node.BAD_LOGSTASH_ERR" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="scheduler.node.node_class.Node.CLEANUP_ERR">
-<code class="descname">CLEANUP_ERR</code><em class="property"> = NodeError(name=u'CLEANUP', description=u'Failed to perform cleanup', daemon_bad=False, pull_bad=False)</em><a class="headerlink" href="#scheduler.node.node_class.Node.CLEANUP_ERR" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="attribute">
 <dt id="scheduler.node.node_class.Node.CLEANUP_ERR_THRESHOLD">
 <code class="descname">CLEANUP_ERR_THRESHOLD</code><em class="property"> = datetime.timedelta(0, 120)</em><a class="headerlink" href="#scheduler.node.node_class.Node.CLEANUP_ERR_THRESHOLD" title="Permalink to this definition">¶</a></dt>
@@ -405,28 +632,13 @@ well as run-time information retrieved from Mesos. This class is thread-safe.</p
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="scheduler.node.node_class.Node.HEALTH_ERRORS">
-<code class="descname">HEALTH_ERRORS</code><em class="property"> = [NodeError(name=u'BAD_DAEMON', description=u'Docker daemon is not responding', daemon_bad=True, pull_bad=True), NodeError(name=u'HEALTH_TIMEOUT', description=u'Node health check timed out', daemon_bad=False, pull_bad=False)]</em><a class="headerlink" href="#scheduler.node.node_class.Node.HEALTH_ERRORS" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
 <dt id="scheduler.node.node_class.Node.HEALTH_ERR_THRESHOLD">
 <code class="descname">HEALTH_ERR_THRESHOLD</code><em class="property"> = datetime.timedelta(0, 120)</em><a class="headerlink" href="#scheduler.node.node_class.Node.HEALTH_ERR_THRESHOLD" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="scheduler.node.node_class.Node.HEALTH_TIMEOUT_ERR">
-<code class="descname">HEALTH_TIMEOUT_ERR</code><em class="property"> = NodeError(name=u'HEALTH_TIMEOUT', description=u'Node health check timed out', daemon_bad=False, pull_bad=False)</em><a class="headerlink" href="#scheduler.node.node_class.Node.HEALTH_TIMEOUT_ERR" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
 <dt id="scheduler.node.node_class.Node.IMAGE_PULL">
 <code class="descname">IMAGE_PULL</code><em class="property"> = NodeState(state=u'IMAGE_PULL', description=u'Pulling Scale image')</em><a class="headerlink" href="#scheduler.node.node_class.Node.IMAGE_PULL" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="scheduler.node.node_class.Node.IMAGE_PULL_ERR">
-<code class="descname">IMAGE_PULL_ERR</code><em class="property"> = NodeError(name=u'IMAGE_PULL', description=u'Failed to pull Scale image', daemon_bad=False, pull_bad=False)</em><a class="headerlink" href="#scheduler.node.node_class.Node.IMAGE_PULL_ERR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -442,11 +654,6 @@ well as run-time information retrieved from Mesos. This class is thread-safe.</p
 <dl class="attribute">
 <dt id="scheduler.node.node_class.Node.INITIAL_CLEANUP">
 <code class="descname">INITIAL_CLEANUP</code><em class="property"> = NodeState(state=u'INITIAL_CLEANUP', description=u'Performing initial cleanup')</em><a class="headerlink" href="#scheduler.node.node_class.Node.INITIAL_CLEANUP" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="scheduler.node.node_class.Node.LOW_DOCKER_SPACE_ERR">
-<code class="descname">LOW_DOCKER_SPACE_ERR</code><em class="property"> = NodeError(name=u'LOW_DOCKER_SPACE', description=u'Low Docker disk space', daemon_bad=False, pull_bad=True)</em><a class="headerlink" href="#scheduler.node.node_class.Node.LOW_DOCKER_SPACE_ERR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -656,36 +863,6 @@ well as run-time information retrieved from Mesos. This class is thread-safe.</p
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="scheduler.node.node_class.NodeError">
-<em class="property">class </em><code class="descclassname">scheduler.node.node_class.</code><code class="descname">NodeError</code><span class="sig-paren">(</span><em>name</em>, <em>description</em>, <em>daemon_bad</em>, <em>pull_bad</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.node_class.NodeError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
-<dl class="attribute">
-<dt id="scheduler.node.node_class.NodeError.daemon_bad">
-<code class="descname">daemon_bad</code><a class="headerlink" href="#scheduler.node.node_class.NodeError.daemon_bad" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for field number 2</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="scheduler.node.node_class.NodeError.description">
-<code class="descname">description</code><a class="headerlink" href="#scheduler.node.node_class.NodeError.description" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for field number 1</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="scheduler.node.node_class.NodeError.name">
-<code class="descname">name</code><a class="headerlink" href="#scheduler.node.node_class.NodeError.name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for field number 0</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="scheduler.node.node_class.NodeError.pull_bad">
-<code class="descname">pull_bad</code><a class="headerlink" href="#scheduler.node.node_class.NodeError.pull_bad" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for field number 3</p>
 </dd></dl>
 
 </dd></dl>
