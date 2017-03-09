@@ -417,6 +417,41 @@ functionality specific to source files.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="source.models.SourceFileManager.get_source_jobs">
+<code class="descname">get_source_jobs</code><span class="sig-paren">(</span><em>source_file_id</em>, <em>started=None</em>, <em>ended=None</em>, <em>statuses=None</em>, <em>job_ids=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>error_categories=None</em>, <em>include_superseded=False</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#source.models.SourceFileManager.get_source_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a query for the list of jobs that have used the given source file as input. The returned query
+includes the related job_type, job_type_rev, event, and error fields, except for the job_type.interface and
+job_type_rev.interface fields.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>source_file_id</strong> (<em>int</em>) &#8211; The source file ID.</li>
+<li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated after this amount of time.</li>
+<li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated before this amount of time.</li>
+<li><strong>statuses</strong> (<em>[string]</em>) &#8211; Query jobs with the a specific execution status.</li>
+<li><strong>job_ids</strong> (<em>[int]</em>) &#8211; Query jobs associated with the identifier.</li>
+<li><strong>job_type_ids</strong> (<em>[int]</em>) &#8211; Query jobs of the type associated with the identifier.</li>
+<li><strong>job_type_names</strong> (<em>[string]</em>) &#8211; Query jobs of the type associated with the name.</li>
+<li><strong>job_type_categories</strong> (<em>[string]</em>) &#8211; Query jobs of the type associated with the category.</li>
+<li><strong>error_categories</strong> (<em>[string]</em>) &#8211; Query jobs that failed due to errors associated with the category.</li>
+<li><strong>include_superseded</strong> (<em>bool</em>) &#8211; Whether to include jobs that are superseded.</li>
+<li><strong>order</strong> (<em>[string]</em>) &#8211; A list of fields to control the sort order.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of jobs that match the time range.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="source.models.SourceFileManager.get_source_products">
 <code class="descname">get_source_products</code><span class="sig-paren">(</span><em>source_file_id</em>, <em>started=None</em>, <em>ended=None</em>, <em>batch_ids=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>is_operational=None</em>, <em>is_published=None</em>, <em>is_superseded=None</em>, <em>file_name=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#source.models.SourceFileManager.get_source_products" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a query for the list of products produced by the given source file ID. The returned query includes
@@ -686,6 +721,48 @@ None, the source file should not be moved.</li>
 <dt id="source.views.SourceDetailsView.serializer_class">
 <code class="descname">serializer_class</code><a class="headerlink" href="#source.views.SourceDetailsView.serializer_class" title="Permalink to this definition">¶</a></dt>
 <dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">SourceFileDetailsSerializer</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="source.views.SourceJobsView">
+<em class="property">class </em><code class="descclassname">source.views.</code><code class="descname">SourceJobsView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#source.views.SourceJobsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></code></p>
+<p>This view is the endpoint for retrieving a list of all jobs related to a source file.</p>
+<dl class="method">
+<dt id="source.views.SourceJobsView.list">
+<code class="descname">list</code><span class="sig-paren">(</span><em>request</em>, <em>source_id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#source.views.SourceJobsView.list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the jobs for a given source file ID and returns them in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
+<li><strong>source_id</strong> (<em>int encoded as a string</em>) &#8211; The id of the source</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="source.views.SourceJobsView.queryset">
+<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#source.views.SourceJobsView.queryset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="source.views.SourceJobsView.serializer_class">
+<code class="descname">serializer_class</code><a class="headerlink" href="#source.views.SourceJobsView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobSerializer</span></code></p>
 </dd></dl>
 
 </dd></dl>

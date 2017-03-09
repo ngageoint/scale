@@ -68,6 +68,14 @@ product.migrations.0008_auto_20170221_1413 module
     :undoc-members:
     :show-inheritance:
 
+product.migrations.0009_auto_20170301_1130 module
+-------------------------------------------------
+
+.. automodule:: product.migrations.0009_auto_20170301_1130
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

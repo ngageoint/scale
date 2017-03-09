@@ -268,7 +268,7 @@
 
 <dl class="attribute">
 <dt id="product.migrations.0003_auto_20170127_1319.Migration.operations">
-<code class="descname">operations</code><em class="property"> = [&lt;AlterField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'descendant', model_name=u'fileancestrylink'&gt;, &lt;RunPython &lt;function delete_constraint at 0x2ad372d16398&gt;&gt;]</em><a class="headerlink" href="#product.migrations.0003_auto_20170127_1319.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<code class="descname">operations</code><em class="property"> = [&lt;AlterField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'descendant', model_name=u'fileancestrylink'&gt;, &lt;RunPython &lt;function delete_constraint at 0x2af04a0a8b90&gt;&gt;]</em><a class="headerlink" href="#product.migrations.0003_auto_20170127_1319.Migration.operations" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -311,7 +311,7 @@
 
 <dl class="attribute">
 <dt id="product.migrations.0005_auto_20170127_1344.Migration.operations">
-<code class="descname">operations</code><em class="property"> = [&lt;RunPython &lt;function copy_product_file at 0x2ad372d16b18&gt;&gt;]</em><a class="headerlink" href="#product.migrations.0005_auto_20170127_1344.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<code class="descname">operations</code><em class="property"> = [&lt;RunPython &lt;function copy_product_file at 0x2af04a0a8500&gt;&gt;]</em><a class="headerlink" href="#product.migrations.0005_auto_20170127_1344.Migration.operations" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -373,12 +373,31 @@
 
 <dl class="attribute">
 <dt id="product.migrations.0008_auto_20170221_1413.Migration.operations">
-<code class="descname">operations</code><em class="property"> = [&lt;RunPython &lt;function populate_file_ancestry_link_batch at 0x2ad372d16cf8&gt;&gt;]</em><a class="headerlink" href="#product.migrations.0008_auto_20170221_1413.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<code class="descname">operations</code><em class="property"> = [&lt;RunPython &lt;function populate_file_ancestry_link_batch at 0x2af04a0a8ed8&gt;&gt;]</em><a class="headerlink" href="#product.migrations.0008_auto_20170221_1413.Migration.operations" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="product.migrations.0008_auto_20170221_1413.Migration.populate_file_ancestry_link_batch">
 <code class="descname">populate_file_ancestry_link_batch</code><span class="sig-paren">(</span><em>apps</em>, <em>schema_editor</em><span class="sig-paren">)</span><a class="headerlink" href="#product.migrations.0008_auto_20170221_1413.Migration.populate_file_ancestry_link_batch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-product.migrations.0009_auto_20170301_1130">
+<span id="product-migrations-0009-auto-20170301-1130-module"></span><h2>product.migrations.0009_auto_20170301_1130 module<a class="headerlink" href="#module-product.migrations.0009_auto_20170301_1130" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="product.migrations.0009_auto_20170301_1130.Migration">
+<em class="property">class </em><code class="descclassname">product.migrations.0009_auto_20170301_1130.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#product.migrations.0009_auto_20170301_1130.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="product.migrations.0009_auto_20170301_1130.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'product', u'0008_auto_20170221_1413')]</em><a class="headerlink" href="#product.migrations.0009_auto_20170301_1130.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="product.migrations.0009_auto_20170301_1130.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;AlterField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'ancestor_job', model_name=u'fileancestrylink'&gt;, &lt;AlterField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'ancestor_job_exe', model_name=u'fileancestrylink'&gt;, &lt;AlterField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'job', model_name=u'fileancestrylink'&gt;, &lt;AlterField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'job_exe', model_name=u'fileancestrylink'&gt;, &lt;AlterField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'recipe', model_name=u'fileancestrylink'&gt;]</em><a class="headerlink" href="#product.migrations.0009_auto_20170301_1130.Migration.operations" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

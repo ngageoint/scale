@@ -693,8 +693,8 @@ using &#8216;superseded_by_job&#8217;.</li>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="job.models.Job.ancestor_file_links">
-<code class="descclassname">Job.</code><code class="descname">ancestor_file_links</code><a class="headerlink" href="#job.models.Job.ancestor_file_links" title="Permalink to this definition">¶</a></dt>
+<dt id="job.models.Job.ancestor_job_file_links">
+<code class="descclassname">Job.</code><code class="descname">ancestor_job_file_links</code><a class="headerlink" href="#job.models.Job.ancestor_job_file_links" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -743,11 +743,6 @@ using &#8216;superseded_by_job&#8217;.</li>
 <dl class="attribute">
 <dt id="job.models.Job.event">
 <code class="descclassname">Job.</code><code class="descname">event</code><a class="headerlink" href="#job.models.Job.event" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.Job.file_links">
-<code class="descclassname">Job.</code><code class="descname">file_links</code><a class="headerlink" href="#job.models.Job.file_links" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -882,6 +877,11 @@ Callers must save the model to persist the change.</p>
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="attribute">
+<dt id="job.models.Job.job_file_links">
+<code class="descclassname">Job.</code><code class="descname">job_file_links</code><a class="headerlink" href="#job.models.Job.job_file_links" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="attribute">
 <dt id="job.models.Job.job_type">
@@ -1040,8 +1040,8 @@ post-job steps are successfully completed.</li>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="job.models.JobExecution.ancestor_file_links">
-<code class="descclassname">JobExecution.</code><code class="descname">ancestor_file_links</code><a class="headerlink" href="#job.models.JobExecution.ancestor_file_links" title="Permalink to this definition">¶</a></dt>
+<dt id="job.models.JobExecution.ancestor_job_exe_file_links">
+<code class="descclassname">JobExecution.</code><code class="descname">ancestor_job_exe_file_links</code><a class="headerlink" href="#job.models.JobExecution.ancestor_job_exe_file_links" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1082,11 +1082,6 @@ might be required by this job execution&#8217;s workspaces.</p>
 <dl class="attribute">
 <dt id="job.models.JobExecution.error">
 <code class="descclassname">JobExecution.</code><code class="descname">error</code><a class="headerlink" href="#job.models.JobExecution.error" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="job.models.JobExecution.file_links">
-<code class="descclassname">JobExecution.</code><code class="descname">file_links</code><a class="headerlink" href="#job.models.JobExecution.file_links" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1438,6 +1433,11 @@ scheduled (is no longer queued) and if this is not a system job type.</p>
 <dl class="attribute">
 <dt id="job.models.JobExecution.job">
 <code class="descclassname">JobExecution.</code><code class="descname">job</code><a class="headerlink" href="#job.models.JobExecution.job" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.models.JobExecution.job_exe_file_links">
+<code class="descclassname">JobExecution.</code><code class="descname">job_exe_file_links</code><a class="headerlink" href="#job.models.JobExecution.job_exe_file_links" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1837,6 +1837,40 @@ returned job model will have not yet been saved in the database.</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.models.JobManager.filter_jobs">
+<code class="descname">filter_jobs</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>statuses=None</em>, <em>job_ids=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>error_categories=None</em>, <em>include_superseded=False</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.filter_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a query for job models that filters on the given fields. The returned query includes the related
+job_type, job_type_rev, event, and error fields, except for the job_type.interface and job_type_rev.interface
+fields.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated after this amount of time.</li>
+<li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated before this amount of time.</li>
+<li><strong>statuses</strong> (<em>[string]</em>) &#8211; Query jobs with the a specific execution status.</li>
+<li><strong>job_ids</strong> (<em>[int]</em>) &#8211; Query jobs associated with the identifier.</li>
+<li><strong>job_type_ids</strong> (<em>[int]</em>) &#8211; Query jobs of the type associated with the identifier.</li>
+<li><strong>job_type_names</strong> (<em>[string]</em>) &#8211; Query jobs of the type associated with the name.</li>
+<li><strong>job_type_categories</strong> (<em>[string]</em>) &#8211; Query jobs of the type associated with the category.</li>
+<li><strong>error_categories</strong> (<em>[string]</em>) &#8211; Query jobs that failed due to errors associated with the category.</li>
+<li><strong>include_superseded</strong> (<em>bool</em>) &#8211; Whether to include jobs that are superseded.</li>
+<li><strong>order</strong> (<em>[string]</em>) &#8211; A list of fields to control the sort order.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The job query</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal"><span class="pre">django.db.models.QuerySet</span></code></p>
 </td>
 </tr>
 </tbody>

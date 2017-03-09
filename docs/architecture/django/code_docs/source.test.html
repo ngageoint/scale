@@ -263,6 +263,12 @@
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="source.test.test_models.TestSourceFileManager.test_get_source_jobs">
+<code class="descname">test_get_source_jobs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_models.TestSourceFileManager.test_get_source_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling get_source_jobs()</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="source.test.test_models.TestSourceFileManager.test_get_source_products">
 <code class="descname">test_get_source_products</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_models.TestSourceFileManager.test_get_source_products" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling get_source_products()</p>
@@ -364,6 +370,77 @@ model</p>
 <dt id="source.test.test_views.TestSourceDetailsView.test_superseded">
 <code class="descname">test_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceDetailsView.test_superseded" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the source files view filtered by superseded.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="source.test.test_views.TestSourceJobsView">
+<em class="property">class </em><code class="descclassname">source.test.test_views.</code><code class="descname">TestSourceJobsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="source.test.test_views.TestSourceJobsView.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourceJobsView.test_error_category">
+<code class="descname">test_error_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsView.test_error_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the source jobs view filtered by error category.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourceJobsView.test_invalid_source_id">
+<code class="descname">test_invalid_source_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsView.test_invalid_source_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the source jobs view when the source ID is invalid.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourceJobsView.test_job_id">
+<code class="descname">test_job_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsView.test_job_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the source jobs view filtered by job identifier.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourceJobsView.test_job_type_category">
+<code class="descname">test_job_type_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsView.test_job_type_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the source jobs view filtered by job type category.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourceJobsView.test_job_type_id">
+<code class="descname">test_job_type_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsView.test_job_type_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the source jobs view filtered by job type identifier.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourceJobsView.test_job_type_name">
+<code class="descname">test_job_type_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsView.test_job_type_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the source jobs view filtered by job type name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourceJobsView.test_order_by">
+<code class="descname">test_order_by</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsView.test_order_by" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the source jobs view with sorting.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourceJobsView.test_status">
+<code class="descname">test_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsView.test_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the source jobs view filtered by status.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourceJobsView.test_successful">
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the source jobs view.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.test.test_views.TestSourceJobsView.test_superseded">
+<code class="descname">test_superseded</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.test.test_views.TestSourceJobsView.test_superseded" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests getting superseded jobs from source jobs view.</p>
 </dd></dl>
 
 </dd></dl>
