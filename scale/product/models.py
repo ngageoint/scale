@@ -157,16 +157,16 @@ class FileAncestryLink(models.Model):
     descendant = models.ForeignKey('storage.ScaleFile', blank=True, null=True, on_delete=models.PROTECT,
                                    related_name='ancestors')
 
-    job_exe = models.ForeignKey('job.JobExecution', on_delete=models.PROTECT, related_name='file_links')
-    job = models.ForeignKey('job.Job', on_delete=models.PROTECT, related_name='file_links')
+    job_exe = models.ForeignKey('job.JobExecution', on_delete=models.PROTECT, related_name='job_exe_file_links')
+    job = models.ForeignKey('job.Job', on_delete=models.PROTECT, related_name='job_file_links')
     recipe = models.ForeignKey('recipe.Recipe', blank=True, on_delete=models.PROTECT, null=True,
-                               related_name='file_links')
+                               related_name='recipe_file_links')
     batch = models.ForeignKey('batch.Batch', blank=True, on_delete=models.PROTECT, null=True)
 
     ancestor_job = models.ForeignKey('job.Job', blank=True, on_delete=models.PROTECT,
-                                     related_name='ancestor_file_links', null=True)
+                                     related_name='ancestor_job_file_links', null=True)
     ancestor_job_exe = models.ForeignKey('job.JobExecution', blank=True, on_delete=models.PROTECT,
-                                         related_name='ancestor_file_links', null=True)
+                                         related_name='ancestor_job_exe_file_links', null=True)
 
     created = models.DateTimeField(auto_now_add=True)
 

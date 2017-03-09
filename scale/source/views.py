@@ -8,6 +8,8 @@ from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
 
 import util.rest as rest_util
+from job.models import Job
+from job.serializers import JobSerializer
 from product.serializers import ProductFileSerializer
 from source.models import SourceFile
 from source.serializers import SourceFileSerializer, SourceFileUpdateSerializer
@@ -82,6 +84,53 @@ class SourceDetailsView(RetrieveAPIView):
 
         serializer = self.get_serializer(source)
         return Response(serializer.data)
+
+
+class SourceJobsView(ListAPIView):
+    """This view is the endpoint for retrieving a list of all jobs related to a source file."""
+    queryset = Job.objects.all()
+    serializer_class = JobSerializer
+
+    def list(self, request, source_id=None):
+        """Retrieves the jobs for a given source file ID and returns them in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param source_id: The id of the source
+        :type source_id: int encoded as a string
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        try:
+            ScaleFile.objects.get(id=source_id, file_type='SOURCE')
+        except ScaleFile.DoesNotExist:
+            raise Http404
+
+        started = rest_util.parse_timestamp(request, 'started', required=False)
+        ended = rest_util.parse_timestamp(request, 'ended', required=False)
+        rest_util.check_time_range(started, ended)
+
+        statuses = rest_util.parse_string_list(request, 'status', required=False)
+        job_ids = rest_util.parse_int_list(request, 'job_id', required=False)
+        job_type_ids = rest_util.parse_int_list(request, 'job_type_id', required=False)
+        job_type_names = rest_util.parse_string_list(request, 'job_type_name', required=False)
+        job_type_categories = rest_util.parse_string_list(request, 'job_type_category', required=False)
+        error_categories = rest_util.parse_string_list(request, 'error_category', required=False)
+        include_superseded = rest_util.parse_bool(request, 'include_superseded', required=False)
+
+        order = rest_util.parse_string_list(request, 'order', required=False)
+
+        jobs = SourceFile.objects.get_source_jobs(source_id, started=started, ended=ended, statuses=statuses,
+                                                  job_ids=job_ids, job_type_ids=job_type_ids,
+                                                  job_type_names=job_type_names,
+                                                  job_type_categories=job_type_categories,
+                                                  error_categories=error_categories,
+                                                  include_superseded=include_superseded, order=order)
+
+        page = self.paginate_queryset(jobs)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
 
 class SourceProductsView(ListAPIView):

@@ -39,6 +39,25 @@ class TestSourceFileManager(TestCase):
         self.started = now()
         self.ended = self.started + datetime.timedelta(days=1)
 
+    def test_get_source_jobs(self):
+        """Tests calling get_source_jobs()"""
+
+        from product.test import utils as product_test_utils
+        job_exe = job_utils.create_job_exe()
+        product_1 = product_test_utils.create_product(job_exe=job_exe, has_been_published=True,
+                                                      workspace=self.workspace)
+        product_2 = product_test_utils.create_product(job_exe=job_exe, has_been_published=True,
+                                                      workspace=self.workspace)
+        product_test_utils.create_file_link(ancestor=self.src_file, descendant=product_1, job=job_exe.job,
+                                            job_exe=job_exe)
+        product_test_utils.create_file_link(ancestor=self.src_file, descendant=product_2, job=job_exe.job,
+                                            job_exe=job_exe)
+
+        jobs = SourceFile.objects.get_source_jobs(self.src_file.id)
+        # Should only return one job despite two file_ancestry_link models
+        self.assertEqual(len(jobs), 1)
+        self.assertEqual(jobs[0].id, job_exe.job.id)
+
     def test_get_source_products(self):
         """Tests calling get_source_products()"""
 
