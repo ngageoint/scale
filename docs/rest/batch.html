@@ -665,19 +665,24 @@ Choices: [SUBMITTED, CREATED].</td>
 <td colspan="3">Integer</td>
 <td colspan="2">The estimated total count of the recipes that might be affected by the batch.</td>
 </tr>
-<tr class="row-even"><td>warnings</td>
+<tr class="row-even"><td>file_count</td>
+<td colspan="3">Integer</td>
+<td colspan="2">The estimated total count of the input files that might be affected by the
+batch when using a trigger rule.</td>
+</tr>
+<tr class="row-odd"><td>warnings</td>
 <td colspan="3">Array</td>
 <td colspan="2">A list of warnings discovered during validation.</td>
 </tr>
-<tr class="row-odd"><td>.id</td>
+<tr class="row-even"><td>.id</td>
 <td colspan="3">String</td>
 <td colspan="2">An identifier for the warning.</td>
 </tr>
-<tr class="row-even"><td>.details</td>
+<tr class="row-odd"><td>.details</td>
 <td colspan="3">String</td>
 <td colspan="2">A human-readable description of the problem.</td>
 </tr>
-<tr class="row-odd"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-even"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;recipe_count&quot;</span><span class="o">:</span> <span class="mi">1235</span><span class="p">,</span>
     <span class="s2">&quot;warnings&quot;</span><span class="o">:</span> <span class="p">[]</span>
 <span class="p">}</span>

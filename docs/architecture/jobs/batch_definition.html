@@ -195,11 +195,14 @@
 <span id="architecture-jobs-batch-definition"></span><h1>Batch Definition<a class="headerlink" href="#batch-definition" title="Permalink to this headline">¶</a></h1>
 <p>A batch represents a collection of recipes that should be scheduled for re-processing. The batch definition is a JSON
 document that defines exactly which recipes will be included in the batch. It will describe things like a date range and
-specific jobs within a recipe type to queue for execution.</p>
+specific jobs within a recipe type to queue for execution. It also allows new recipes to be created for existing source
+files that have never been queued for the recipe type before using the current recipe type trigger rule or a custom
+batch-specific trigger rule.</p>
 <p>Consider the following example that is a request to re-process all recipes in the batch that were originally created
 within the 2016 calendar year and have since gone through a revision. Additionally, the job names &#8220;Job 1&#8221; and &#8220;Job 2&#8221;
 should also be included even if they have not actually changed since the original recipe type revision. The priority is
-used to override the original priority of each job type.</p>
+used to override the original priority of each job type. Lastly, it will create new recipes for all source files that
+have not already been queued that are plain/text and have the data tags &#8220;foo&#8221; and &#8220;bar&#8221;.</p>
 <p><strong>Example batch definition:</strong></p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
@@ -212,7 +215,20 @@ used to override the original priority of each job type.</p>
        <span class="s2">&quot;Job 1&quot;</span><span class="p">,</span>
        <span class="s2">&quot;Job 2&quot;</span>
    <span class="p">],</span>
-   <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">1000</span>
+   <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="mi">1000</span><span class="p">,</span>
+   <span class="s2">&quot;trigger_rule&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;condition&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;data_types&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="s2">&quot;foo&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;bar&quot;</span>
+         <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;input_data_name&quot;</span><span class="o">:</span> <span class="s2">&quot;my_file&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;workspace_name&quot;</span><span class="o">:</span> <span class="s2">&quot;my_workspace&quot;</span>
+      <span class="p">}</span>
+   <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -231,7 +247,20 @@ used to override the original priority of each job type.</p>
       <span class="nx">STRING</span>
    <span class="p">],</span>
    <span class="s2">&quot;all_jobs&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="o">|</span><span class="kc">false</span><span class="p">,</span>
-   <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="nx">INTEGER</span>
+   <span class="s2">&quot;priority&quot;</span><span class="o">:</span> <span class="nx">INTEGER</span><span class="p">,</span>
+   <span class="s2">&quot;trigger_rule&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;condition&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+         <span class="s2">&quot;data_types&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="nx">STRING</span><span class="p">,</span>
+            <span class="nx">STRING</span>
+         <span class="p">]</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;input_data_name&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+         <span class="s2">&quot;workspace_name&quot;</span><span class="o">:</span> <span class="nx">STRING</span>
+      <span class="p">}</span>
+   <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -288,6 +317,43 @@ regardless of whether the recipe type revision actually changed. This parameter 
 override priority instead of the default priority defined by the job type. This option allows for large batches to
 be executed with a lower priority to avoid impacting real-time processing or to fix products as quickly as possible
 using a higher priority.</div></blockquote>
+<p><strong>trigger_rule</strong>: JSON object or boolean</p>
+<blockquote>
+<div><p>The <em>trigger_rule</em> field is optional and defines rules used to determine whether new recipes should be queued for
+existing source files that have never been run with the associated recipe type before. Omitting the field indicates
+old source files will be ignored. Setting the field to <em>True</em> is a special case that will cause old source files to
+be evaluated using the current trigger rule defined by the recipe type. Lastly, a completely custom trigger rule can
+be included using the nested fields below that will evaluate old source files in the context of this batch. The
+supported fields are similar to the ingest trigger definition.</p>
+<p><strong>condition</strong>: JSON object</p>
+<blockquote>
+<div><p>The <em>condition</em> field is optional and contains other fields that specify the conditions under which this rule is
+triggered. If not provided, the rule is triggered by EVERY source file.</p>
+<p><strong>media_type</strong>: JSON string</p>
+<blockquote>
+<div>The <em>media_type</em> field is an optional string that defines a media type. A source file must have the
+identical media type defined here in order to match this trigger rule. If not provided, the field defaults
+to &#8220;&#8221; and all file media types are accepted by the rule.</div></blockquote>
+<p><strong>data_types</strong>: JSON array</p>
+<blockquote>
+<div>The <em>data_types</em> field is an optional list of data type strings. A source file must have all of the data
+types that are listed here tagged to the file in order to match this trigger rule. If not provided, the
+field defaults to [] and no data types are required.</div></blockquote>
+</div></blockquote>
+<p><strong>data</strong>: JSON object</p>
+<blockquote>
+<div><p>The <em>data</em> field is required and contains other fields that specify the details for creating the job/recipe
+linked to this trigger rule.</p>
+<p><strong>input_data_name</strong>: JSON string</p>
+<blockquote>
+<div>The <em>input_data_name</em> field is a required string that specifies the input parameter name of the triggered
+job/recipe that the source file should be passed to when the job/recipe is created and placed on the queue.</div></blockquote>
+<p><strong>workspace_name</strong>: JSON string</p>
+<blockquote>
+<div>The <em>workspace_name</em> field is required and contains the unique system name of the workspace that should
+store the products created by the triggered job/recipe.</div></blockquote>
+</div></blockquote>
+</div></blockquote>
 </div>
 </div>
 

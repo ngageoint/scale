@@ -604,6 +604,30 @@ transaction.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="batch.models.BatchManager.get_matched_files">
+<code class="descname">get_matched_files</code><span class="sig-paren">(</span><em>recipe_type</em>, <em>definition</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchManager.get_matched_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets all the input files that were never triggered against the given batch criteria.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>recipe_type</strong> (<a class="reference internal" href="recipe.html#recipe.models.RecipeType" title="recipe.models.RecipeType"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeType</span></code></a>) &#8211; The type of recipes that should be re-processed</li>
+<li><strong>definition</strong> (<a class="reference internal" href="batch.configuration.definition.html#batch.configuration.definition.batch_definition.BatchDefinition" title="batch.configuration.definition.batch_definition.BatchDefinition"><code class="xref py py-class docutils literal"><span class="pre">batch.configuration.definition.batch_definition.BatchDefinition</span></code></a>) &#8211; The definition for running a batch</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of files that match the batch definition and were never run before.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference internal" href="storage.html#storage.models.ScaleFile" title="storage.models.ScaleFile"><code class="xref py py-class docutils literal"><span class="pre">storage.models.ScaleFile</span></code></a>]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="batch.models.BatchManager.get_matched_recipes">
 <code class="descname">get_matched_recipes</code><span class="sig-paren">(</span><em>recipe_type</em>, <em>definition</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchManager.get_matched_recipes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets all the recipes that might be affected by the given batch criteria.</p>
