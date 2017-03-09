@@ -265,6 +265,7 @@ These services allow a user to create, view, and manage Scan processes.
 |        "name": "my-scan-process",                                                                                       |
 |        "title": "My Scan Process",                                                                                      |
 |        "description": "This is my Scan process for detecting my favorite files!",                                       |
+|        "file_count": 50,                                                                                                |
 |		 "job": {                                                                                                         |
 |			 "id": 7,                                                                                                     |
 |			 "job_type": {                                                                                                |
@@ -401,34 +402,34 @@ These services allow a user to create, view, and manage Scan processes.
 .. _rest_scan_edit:
 
 +-------------------------------------------------------------------------------------------------------------------------+
-| **Edit Scan**                                                                                                         |
+| **Edit Scan**                                                                                                           |
 +=========================================================================================================================+
-| Edits an existing Scan process with associated configuration                                                          |
+| Edits an existing Scan process with associated configuration                                                            |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **PATCH** /scans/{id}/                                                                                                |
+| **PATCH** /scans/{id}/                                                                                                  |
 |           Where {id} is the unique identifier of an existing model.                                                     |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| title              | String            | Optional | The human readable display name of the Scan process.              |
+| title              | String            | Optional | The human readable display name of the Scan process.                |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| description        | String            | Optional | A longer description of the Scan process.                         |
+| description        | String            | Optional | A longer description of the Scan process.                           |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| configuration      | JSON Object       | Optional | JSON defining the Scan configuration.                             |
-|                    |                   |          | (See :ref:`architecture_scan_spec`)                               |
+| configuration      | JSON Object       | Optional | JSON defining the Scan configuration.                               |
+|                    |                   |          | (See :ref:`architecture_scan_spec`)                                 |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
 |    {                                                                                                                    |
-|        "title": "My Scan Process",                                                                                    |
-|        "description": "This is my Scan process for detecting my favorite files!",                                     |
+|        "title": "My Scan Process",                                                                                      |
+|        "description": "This is my Scan process for detecting my favorite files!",                                       |
 |        "configuration": {                                                                                               |
 |            "version": "1.0",                                                                                            |
 |            "workspace": "my-workspace",                                                                                 |
 |            "scanner": {                                                                                                 |
-|                "type": "dir",                                                                                   |
+|                "type": "dir",                                                                                           |
 |            },                                                                                                           |
 |            "files_to_ingest": [{                                                                                        |
 |                "filename_regex": ".*txt"                                                                                |
@@ -444,8 +445,8 @@ These services allow a user to create, view, and manage Scan processes.
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-|                    | JSON Object       | All fields are the same as the Scan process details model.                   |
-|                    |                   | (See :ref:`Scan Details <rest_scan_details>`)                              |
+|                    | JSON Object       | All fields are the same as the Scan process details model.                     |
+|                    |                   | (See :ref:`Scan Details <rest_scan_details>`)                                  |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
@@ -486,11 +487,41 @@ These services allow a user to create, view, and manage Scan processes.
 |            "version": "2.0",                                                                                            |
 |            "workspace": "my-workspace",                                                                                 |
 |            "scanner": {                                                                                                 |
-|                "type": "dir",                                                                                   |
+|                "type": "dir",                                                                                           |
 |            },                                                                                                           |
 |            "files_to_ingest": [{                                                                                        |
 |                "filename_regex": ".*txt"                                                                                |
 |            }]                                                                                                           |
 |        }                                                                                                                |
 |    }                                                                                                                    |
++-------------------------------------------------------------------------------------------------------------------------+
+
+.. _rest_scan_process:
+
++-------------------------------------------------------------------------------------------------------------------------+
+| **Process Scan**                                                                                                           |
++=========================================================================================================================+
+| Launches an existing Scan with associated configuration                                                            |
++-------------------------------------------------------------------------------------------------------------------------+
+| **POST** /scans/process/{id}/                                                                                                  |
+|           Where {id} is the unique identifier of an existing model.                                                     |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| ingest             | Boolean           | Optional | Whether a dry run or ingest triggering scan should be run.          |
+|                    |                   |          | Defaults to false when unset.                                       |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| .. code-block:: javascript                                                                                              |
+|                                                                                                                         |
+|    {                                                                                                                    |
+|        "ingest": true                                                                                                   |
+|    }                                                                                                                    |
++-------------------------------------------------------------------------------------------------------------------------+
+| **Successful Response**                                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Status**         | 201 OK                                                                                             |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Location**       | URL pointing to the details of the Scan model used to launch process                               |
 +-------------------------------------------------------------------------------------------------------------------------+

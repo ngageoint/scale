@@ -15,9 +15,11 @@ import util.rest as rest_util
 from ingest.models import Ingest, Scan, Strike
 from ingest.serializers import (IngestDetailsSerializer, IngestSerializer, IngestStatusSerializer,
                                 ScanSerializer, StrikeSerializer, ScanDetailsSerializer, StrikeDetailsSerializer)
+from ingest.scan.configuration.exceptions import InvalidScanConfiguration
+from ingest.scan.configuration.scan_configuration import ScanConfiguration
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
-from scan.configuration.exceptions import InvalidScanConfiguration
+
 from util.rest import BadParameter
 
 logger = logging.getLogger(__name__)
