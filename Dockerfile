@@ -74,6 +74,11 @@ RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
          systemd-container-EOL \
          unzip \
          make \
+ && yum install -y \
+         gcc \
+         libffi-devel \
+         openssl-devel \
+         python-devel \
  # Shim in any environment specific configuration from script
  && sh /tmp/env-shim.sh \
  && pip install marathon==0.8.7 mesos.interface==0.25.0 protobuf==2.5.0 requests \
@@ -91,6 +96,7 @@ RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
 		/etc/httpd/conf/httpd.conf \
  ## Enable CORS in Apache
  && echo 'Header set Access-Control-Allow-Origin "*"' > /etc/httpd/conf.d/cors.conf \
+ && yum -y history undo last \
  && yum clean all
 
 # install the source code and config files
