@@ -69,7 +69,6 @@ RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
          nfs-utils \
          postgresql \
          protobuf \
-	 python-devel \
          python-pip \
          python-psycopg2 \
          subversion-libs \
