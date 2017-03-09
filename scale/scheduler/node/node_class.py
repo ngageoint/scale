@@ -12,53 +12,24 @@ from job.tasks.health_task import HealthTask
 from job.tasks.pull_task import PullTask
 from job.tasks.update import TaskStatusUpdate
 from scheduler.cleanup.node import NodeCleanup
+from scheduler.node.conditions import NodeConditions
 from scheduler.sync.scheduler_manager import scheduler_mgr
 
 
 logger = logging.getLogger(__name__)
-NodeError = namedtuple('NodeError', ['name', 'description', 'daemon_bad', 'pull_bad'])
 NodeState = namedtuple('NodeState', ['state', 'description'])
-
-
-class ActiveError(object):
-    """This class represents an active error for this node."""
-
-    def __init__(self, error):
-        """Constructor
-
-        :param error: The node error
-        :type error: :class:`scheduler.node.node_class.NodeError`
-        """
-
-        self.error = error
-        self.started = None
-        self.last_updated = None
 
 
 class Node(object):
     """This class represents a node in the scheduler. It combines information retrieved from the database node models as
     well as run-time information retrieved from Mesos. This class is thread-safe."""
 
-    # Node Errors
-    BAD_DAEMON_ERR = NodeError(name='BAD_DAEMON', description='Docker daemon is not responding', daemon_bad=True,
-                               pull_bad=True)
-    BAD_LOGSTASH_ERR = NodeError(name='BAD_LOGSTASH', description='Logstash is not responding', daemon_bad=False,
-                                 pull_bad=False)
-    CLEANUP_ERR = NodeError(name='CLEANUP', description='Failed to perform cleanup', daemon_bad=False, pull_bad=False)
-    HEALTH_TIMEOUT_ERR = NodeError(name='HEALTH_TIMEOUT', description='Node health check timed out', daemon_bad=False,
-                                   pull_bad=False)
-    IMAGE_PULL_ERR = NodeError(name='IMAGE_PULL', description='Failed to pull Scale image', daemon_bad=False,
-                               pull_bad=False)
-    LOW_DOCKER_SPACE_ERR = NodeError(name='LOW_DOCKER_SPACE', description='Low Docker disk space', daemon_bad=False,
-                                     pull_bad=True)
-    HEALTH_ERRORS = [BAD_DAEMON_ERR, HEALTH_TIMEOUT_ERR]
-
-    # Error thresholds
+    # Thresholds for when to schedule node tasks again that have failed
     CLEANUP_ERR_THRESHOLD = datetime.timedelta(minutes=2)
     HEALTH_ERR_THRESHOLD = datetime.timedelta(minutes=2)
     IMAGE_PULL_ERR_THRESHOLD = datetime.timedelta(minutes=5)
 
-    # Normal health check threshold
+    # Normal health check task threshold
     NORMAL_HEALTH_THRESHOLD = datetime.timedelta(minutes=5)
 
     # Node States
@@ -79,21 +50,19 @@ class Node(object):
         :type node: :class:`node.models.Node`
         """
 
-        self._active_errors = {}  # {Error name: ActiveError}
+        self._hostname = str(node.hostname)  # Never changes
+        self._id = node.id  # Never changes
+
         self._agent_id = agent_id
         self._cleanup = NodeCleanup()
         self._cleanup_task = None
+        self._conditions = NodeConditions(self._hostname)
         self._health_task = None
-        self._hostname = node.hostname  # Never changes
-        self._id = node.id  # Never changes
         self._is_active = node.is_active
-        self._is_daemon_bad = False
-        self._is_health_check_normal = True
         self._is_image_pulled = False
         self._is_initial_cleanup_completed = False
         self._is_online = True
         self._is_paused = node.is_paused
-        self._is_pull_bad = False
         self._last_heath_task = None
         self._lock = threading.Lock()
         self._port = node.port
@@ -150,6 +119,7 @@ class Node(object):
 
         with self._lock:
             self._cleanup.add_job_execution(job_exe)
+            self._conditions.update_cleanup_count(self._cleanup.get_num_job_exes())
 
     def get_next_tasks(self, when):
         """Returns the next node tasks to launch
@@ -192,20 +162,18 @@ class Node(object):
                 logger.warning('Cleanup task on host %s timed out', self._hostname)
                 if self._cleanup_task.has_ended:
                     self._cleanup_task = None
-                self._error_active(Node.CLEANUP_ERR)
+                self._conditions.handle_cleanup_task_timeout()
             elif self._health_task and self._health_task.id == task.id:
                 logger.warning('Health check task on host %s timed out', self._hostname)
                 if self._health_task.has_ended:
                     self._health_task = None
-                self._is_health_check_normal = False
                 self._last_heath_task = now()
-                self._error_inactive_all_health()
-                self._error_active(Node.HEALTH_TIMEOUT_ERR)
+                self._conditions.handle_health_task_timeout()
             elif self._pull_task and self._pull_task.id == task.id:
                 logger.warning('Scale image pull task on host %s timed out', self._hostname)
                 if self._pull_task.has_ended:
                     self._pull_task = None
-                self._error_active(Node.IMAGE_PULL_ERR)
+                self._conditions.handle_pull_task_timeout()
             self._update_state()
 
     def handle_task_update(self, task_update):
@@ -333,13 +301,13 @@ class Node(object):
             return True
         elif self._state == Node.DEGRADED:
             # The cleanup task can be scheduled during DEGRADED state as long as the Docker daemon is OK
-            if self._is_daemon_bad:
+            if self._conditions.is_daemon_bad:
                 return False
 
             # Schedule cleanup task if threshold has passed since last cleanup task error
-            if Node.CLEANUP_ERR.name in self._active_errors:
-                last_updated = self._active_errors[Node.CLEANUP_ERR.name].last_updated
-                return when - last_updated > Node.CLEANUP_ERR_THRESHOLD
+            last_cleanup_error = self._conditions.last_cleanup_task_error()
+            if last_cleanup_error:
+                return when - last_cleanup_error > Node.CLEANUP_ERR_THRESHOLD
             # No cleanup error
             return True
 
@@ -357,7 +325,7 @@ class Node(object):
 
         if self._state in [Node.INACTIVE, Node.OFFLINE]:
             return False
-        elif not self._is_health_check_normal:
+        elif not self._conditions.is_health_check_normal:
             # Schedule health task if threshold has passed since last health task error
             return when - self._last_heath_task > Node.HEALTH_ERR_THRESHOLD
 
@@ -381,50 +349,17 @@ class Node(object):
             # DEGRADED errors do not affect the ability to do an image pull
 
             # Make sure initial cleanup is done, image pull is not done, and image pull on the node works
-            if not self._is_initial_cleanup_completed or self._is_image_pulled or self._is_pull_bad:
+            if not self._is_initial_cleanup_completed or self._is_image_pulled or self._conditions.is_pull_bad:
                 return False
 
             # Schedule pull task if threshold has passed since last pull task error
-            if Node.IMAGE_PULL_ERR.name in self._active_errors:
-                last_updated = self._active_errors[Node.IMAGE_PULL_ERR.name].last_updated
-                return when - last_updated > Node.IMAGE_PULL_ERR_THRESHOLD
+            last_pull_error = self._conditions.last_image_pull_task_error()
+            if last_pull_error:
+                return when - last_pull_error > Node.IMAGE_PULL_ERR_THRESHOLD
             # No pull error
             return True
 
         return False
-
-    def _error_active(self, error):
-        """Indicates that the given error is now active. Caller must have obtained the thread lock.
-
-        :param error: The node error
-        :type error: :class:`scheduler.node.node_class.NodeError`
-        """
-
-        when = now()
-        if error.name in self._active_errors:
-            active_error = self._active_errors[error.name]
-        else:
-            active_error = ActiveError(error)
-            active_error.started = when
-            self._active_errors[error.name] = active_error
-        active_error.last_updated = when
-
-    def _error_inactive(self, error):
-        """Indicates that the given error is now inactive. Caller must have obtained the thread lock.
-
-        :param error: The node error
-        :type error: :class:`scheduler.node.node_class.NodeError`
-        """
-
-        if error.name in self._active_errors:
-            del self._active_errors[error.name]
-
-    def _error_inactive_all_health(self):
-        """Inactivates all health-related node errors. Caller must have obtained the thread lock.
-        """
-
-        for error in Node.HEALTH_ERRORS:
-            self._error_inactive(error)
 
     def _handle_cleanup_task_update(self, task_update):
         """Handles the given task update for a cleanup task. Caller must have obtained the thread lock.
@@ -439,10 +374,11 @@ class Node(object):
             else:
                 # Clear job executions that were cleaned up
                 self._cleanup.delete_job_executions(self._cleanup_task.job_exes)
-            self._error_inactive(Node.CLEANUP_ERR)
+                self._conditions.update_cleanup_count(self._cleanup.get_num_job_exes())
+            self._conditions.handle_cleanup_task_completed()
         elif task_update.status == TaskStatusUpdate.FAILED:
             logger.warning('Cleanup task on host %s failed', self._hostname)
-            self._error_active(Node.CLEANUP_ERR)
+            self._conditions.handle_cleanup_task_failed()
         elif task_update.status == TaskStatusUpdate.KILLED:
             logger.warning('Cleanup task on host %s killed', self._hostname)
         if self._cleanup_task.has_ended:
@@ -456,25 +392,12 @@ class Node(object):
         """
 
         if task_update.status == TaskStatusUpdate.FINISHED:
-            self._is_health_check_normal = True
             self._last_heath_task = now()
-            self._error_inactive_all_health()
+            self._conditions.handle_health_task_completed()
         elif task_update.status == TaskStatusUpdate.FAILED:
             logger.warning('Health check task on host %s failed', self._hostname)
-            self._is_health_check_normal = False
             self._last_heath_task = now()
-            self._error_inactive_all_health()
-            if task_update.exit_code == HealthTask.BAD_DAEMON_CODE:
-                logger.warning('Docker daemon not responding on host %s', self._hostname)
-                self._error_active(Node.BAD_DAEMON_ERR)
-            elif task_update.exit_code == HealthTask.LOW_DOCKER_SPACE_CODE:
-                logger.warning('Low Docker disk space on host %s', self._hostname)
-                self._error_active(Node.LOW_DOCKER_SPACE_ERR)
-            elif task_update.exit_code == HealthTask.BAD_LOGSTASH_CODE:
-                logger.warning('Logstash not responding on host %s', self._hostname)
-                self._error_active(Node.BAD_LOGSTASH_ERR)
-            else:
-                logger.error('Unknown failed health check exit code: %s', str(task_update.exit_code))
+            self._conditions.handle_health_task_failed(task_update)
         elif task_update.status == TaskStatusUpdate.KILLED:
             logger.warning('Health check task on host %s killed', self._hostname)
         if self._health_task.has_ended:
@@ -489,10 +412,10 @@ class Node(object):
 
         if task_update.status == TaskStatusUpdate.FINISHED:
             self._image_pull_completed()
-            self._error_inactive(Node.IMAGE_PULL_ERR)
+            self._conditions.handle_pull_task_completed()
         elif task_update.status == TaskStatusUpdate.FAILED:
-            self._error_active(Node.IMAGE_PULL_ERR)
             logger.warning('Scale image pull task on host %s failed', self._hostname)
+            self._conditions.handle_pull_task_failed()
         elif task_update.status == TaskStatusUpdate.KILLED:
             logger.warning('Scale image pull task on host %s killed', self._hostname)
         if self._pull_task.has_ended:
@@ -504,19 +427,13 @@ class Node(object):
 
         old_state = self._state
 
-        self._is_daemon_bad = False
-        self._is_pull_bad = False
-        for active_error in self._active_errors.values():
-            self._is_daemon_bad = self._is_daemon_bad or active_error.error.daemon_bad
-            self._is_pull_bad = self._is_pull_bad or active_error.error.pull_bad
-
         if not self._is_active:
             self._state = self.INACTIVE
         elif not self._is_online:
             self._state = self.OFFLINE
         elif self._is_paused:
             self._state = self.PAUSED
-        elif self._active_errors:
+        elif self._conditions.has_active_errors():
             self._state = self.DEGRADED
         elif not self._is_initial_cleanup_completed:
             self._state = self.INITIAL_CLEANUP
