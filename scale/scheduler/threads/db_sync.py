@@ -5,6 +5,7 @@ import logging
 import math
 import time
 
+from django.conf import settings
 from django.db import DatabaseError
 from django.utils.timezone import now
 from mesos.interface import mesos_pb2
@@ -102,7 +103,8 @@ class DatabaseSyncThread(object):
 
         self._sync_running_job_executions()
         
-        secrets_mgr.sync_with_backend()
+        if settings.SECRETS_URL:
+            secrets_mgr.sync_with_backend()
 
     def _sync_running_job_executions(self):
         """Syncs job executions that are currently running by handling any canceled executions
