@@ -526,3 +526,60 @@ class TestBatchManager(TransactionTestCase):
 
         batch_job = BatchJob.objects.get(batch=batch, job__job_type=self.job_type_1)
         self.assertEqual(batch_job.job.priority, 1111)
+
+    def test_schedule_trigger_rule_true(self):
+        """Tests calling BatchManager.schedule_recipes() using the default trigger rule of a recipe type."""
+
+        # Make sure trigger condition skips mismatched media types
+        storage_test_utils.create_file(media_type='text/ignore')
+
+        definition = {
+            'trigger_rule': True,
+        }
+
+        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
+
+        Batch.objects.schedule_recipes(batch.id)
+
+        batch = Batch.objects.get(pk=batch.id)
+        self.assertEqual(batch.status, 'CREATED')
+        self.assertEqual(batch.total_count, 1)
+
+        batch_recipes = BatchRecipe.objects.all()
+        self.assertEqual(len(batch_recipes), 1)
+        self.assertEqual(batch_recipes[0].batch, batch)
+        self.assertEqual(batch_recipes[0].recipe.recipe_type, self.recipe_type)
+        self.assertIsNone(batch_recipes[0].superseded_recipe)
+
+    def test_schedule_trigger_rule_custom(self):
+        """Tests calling BatchManager.schedule_recipes() using a custom trigger rule."""
+
+        file1 = storage_test_utils.create_file(media_type='text/custom', data_type='test')
+
+        definition = {
+            'trigger_rule': {
+                'condition': {
+                    'media_type': 'text/custom',
+                    'data_types': ['test'],
+                },
+                'data': {
+                    'input_data_name': 'Recipe Input',
+                    'workspace_name': self.workspace.name,
+                },
+            },
+        }
+
+        batch = batch_test_utils.create_batch(recipe_type=self.recipe_type, definition=definition)
+
+        Batch.objects.schedule_recipes(batch.id)
+
+        batch = Batch.objects.get(pk=batch.id)
+        self.assertEqual(batch.status, 'CREATED')
+        self.assertEqual(batch.total_count, 1)
+
+        batch_recipes = BatchRecipe.objects.all()
+        self.assertEqual(len(batch_recipes), 1)
+        self.assertEqual(batch_recipes[0].batch, batch)
+        self.assertEqual(batch_recipes[0].recipe.recipe_type, self.recipe_type)
+        self.assertIsNone(batch_recipes[0].superseded_recipe)
+        self.assertEqual(batch_recipes[0].recipe.data['input_data'][0]['file_id'], file1.id)

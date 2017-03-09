@@ -351,6 +351,9 @@ These services provide access to information about registered batch re-processin
 +--------------------+---------------------+------------------------------------------------------------------------------+
 | recipe_count       | Integer             | The estimated total count of the recipes that might be affected by the batch.|
 +--------------------+---------------------+------------------------------------------------------------------------------+
+| file_count         | Integer             | The estimated total count of the input files that might be affected by the   |
+|                    |                     | batch when using a trigger rule.                                             |
++--------------------+---------------------+------------------------------------------------------------------------------+
 | warnings           | Array               | A list of warnings discovered during validation.                             |
 +--------------------+---------------------+------------------------------------------------------------------------------+
 | .id                | String              | An identifier for the warning.                                               |
