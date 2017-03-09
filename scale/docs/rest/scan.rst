@@ -499,11 +499,11 @@ These services allow a user to create, view, and manage Scan processes.
 .. _rest_scan_process:
 
 +-------------------------------------------------------------------------------------------------------------------------+
-| **Process Scan**                                                                                                           |
+| **Process Scan**                                                                                                        |
 +=========================================================================================================================+
-| Launches an existing Scan with associated configuration                                                            |
+| Launches an existing Scan with associated configuration                                                                 |
 +-------------------------------------------------------------------------------------------------------------------------+
-| **POST** /scans/process/{id}/                                                                                                  |
+| **POST** /scans/process/{id}/                                                                                           |
 |           Where {id} is the unique identifier of an existing model.                                                     |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Content Type**   | *application/json*                                                                                 |
