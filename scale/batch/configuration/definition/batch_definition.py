@@ -70,7 +70,7 @@ BATCH_DEFINITION_SCHEMA = {
             },
         },
         'trigger_rule_item': {
-            'description': 'A range of dates used to determine which recipes should be re-processed',
+            'description': 'Configuration used to evaluate a file for potential batch processing',
             'type': ['object', 'boolean'],
             'condition': {
                 'description': 'Condition for an input file to trigger an event',
