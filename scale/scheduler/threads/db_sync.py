@@ -15,6 +15,7 @@ from scheduler.node.manager import node_mgr
 from scheduler.sync.job_type_manager import job_type_mgr
 from scheduler.sync.scheduler_manager import scheduler_mgr
 from scheduler.sync.workspace_manager import workspace_mgr
+from scheduler.vault.manager import secrets_mgr
 
 
 logger = logging.getLogger(__name__)
