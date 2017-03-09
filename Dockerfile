@@ -61,12 +61,14 @@ RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
  && yum install -y \
          systemd-container-EOL \
          bzip2 \
-	 gcc \
+         gcc \ 
          gdal-python \
          geos \
          httpd \
+         libffi-devel \
          mod_wsgi \
          nfs-utils \
+         openssl-devel \
          postgresql \
          protobuf \
          python-devel \
