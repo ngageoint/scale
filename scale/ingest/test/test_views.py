@@ -327,7 +327,7 @@ class TestScanCreateView(TestCase):
             'configuration': {
                 'version': '1.0',
                 'workspace': 'raw',
-                'scanner': { 'type': 'dir', 'transfer_suffix': '_tmp' },
+                'scanner': {'type': 'dir', 'transfer_suffix': '_tmp'},
                 'files_to_ingest': [{
                     'filename_regex': '.*txt',
                     'workspace_path': 'my/path',
@@ -351,7 +351,7 @@ class TestScanCreateView(TestCase):
             'configuration': {
                 'version': '1.0',
                 'workspace': 'raw',
-                'scanner': { 'type': 'dir', 'transfer_suffix': '_tmp' },
+                'scanner': {'type': 'dir', 'transfer_suffix': '_tmp'},
                 'files_to_ingest': [{
                     'filename_regex': '.*txt',
                     'new_file_path': 'my_path',
@@ -431,7 +431,7 @@ class TestScanDetailsView(TestCase):
         config = {
             'version': '1.0',
             'workspace': 'raw',
-            'scanner': { 'type': 'dir', 'transfer_suffix': '_tmp' },
+            'scanner': {'type': 'dir', 'transfer_suffix': '_tmp'},
             'files_to_ingest': [{
                 'data_types': ['test'],
                 'filename_regex': '.*txt',
@@ -499,7 +499,7 @@ class TestScansValidationView(TestCase):
             'configuration': {
                 'version': '1.0',
                 'workspace': self.workspace.name,
-                'scanner': { 'type': 'dir' },
+                'scanner': {'type': 'dir'},
                 'files_to_ingest': [{
                     'filename_regex': '.*txt'
                 }],
@@ -551,7 +551,7 @@ class TestScansValidationView(TestCase):
             'description': 'Scan description',
             'configuration': {
                 'workspace': 'raw',
-                'scanner': { 'type': 'dir', 'transfer_suffix': None },
+                'scanner': {'type': 'dir', 'transfer_suffix': None},
                 'files_to_ingest': [{
                     'filename_regex': '.*txt',
                     'new_file_path': 'my_path',

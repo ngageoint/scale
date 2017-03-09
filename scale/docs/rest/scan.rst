@@ -1,4 +1,3 @@
-
 .. _rest_scan:
 
 Scan Services
@@ -266,62 +265,62 @@ These services allow a user to create, view, and manage Scan processes.
 |        "title": "My Scan Process",                                                                                      |
 |        "description": "This is my Scan process for detecting my favorite files!",                                       |
 |        "file_count": 50,                                                                                                |
-|		 "job": {                                                                                                         |
-|			 "id": 7,                                                                                                     |
-|			 "job_type": {                                                                                                |
-|				 "id": 2,                                                                                                 |
-|				 "name": "scale-scan",                                                                                    |
-|				 "version": "1.0",                                                                                        |
-|				 "title": "Scale Scan",                                                                                   |
-|				 "description": "Scans a workspace for existing files to ingest",                                         |
-|				 "category": "system",                                                                                    |
-|				 "author_name": null,                                                                                     |
-|				 "author_url": null,                                                                                      |
-|				 "is_system": true,                                                                                       |
-|				 "is_long_running": false,                                                                                |
-|				 "is_active": true,                                                                                       |
-|				 "is_operational": true,                                                                                  |
-|				 "is_paused": false,                                                                                      |
-|				 "icon_code": "f02a"                                                                                      |
-|			 },                                                                                                           |
-|			 "job_type_rev": {                                                                                            |
-|				 "id": 2                                                                                                  |
-|			 },                                                                                                           |
-|			 "event": {                                                                                                   |
-|				 "id": 1                                                                                                  |
-|			 },                                                                                                           |
-|			 "status": "RUNNING",                                                                                         |
-|			 "priority": 5,                                                                                               |
-|			 "num_exes": 1                                                                                                |
-|		 },                                                                                                               |
-|		 "dry_run_job": {                                                                                                 |
-|			 "id": 8,                                                                                                     |
-|			 "job_type": {                                                                                                |
-|				 "id": 2,                                                                                                 |
-|				 "name": "scale-scan",                                                                                    |
-|				 "version": "1.0",                                                                                        |
-|				 "title": "Scale Scan",                                                                                   |
-|				 "description": "Scans a workspace for existing files to ingest",                                         |
-|				 "category": "system",                                                                                    |
-|				 "author_name": null,                                                                                     |
-|				 "author_url": null,                                                                                      |
-|				 "is_system": true,                                                                                       |
-|				 "is_long_running": false,                                                                                |
-|				 "is_active": true,                                                                                       |
-|				 "is_operational": true,                                                                                  |
-|				 "is_paused": false,                                                                                      |
-|				 "icon_code": "f02a"                                                                                      |
-|			 },                                                                                                           |
-|			 "job_type_rev": {                                                                                            |
-|			 	"id": 2                                                                                                   |
-|			 },                                                                                                           |
-|			 "event": {                                                                                                   |
-|			 	"id": 1                                                                                                   |
-|			 },                                                                                                           |
-|			 "status": "COMPLETED",                                                                                       |
-|			 "priority": 5,                                                                                               |
-|			 "num_exes": 1                                                                                                |
-|		 }                                                                                                                |
+|         "job": {                                                                                                        |
+|             "id": 7,                                                                                                    |
+|             "job_type": {                                                                                               |
+|                 "id": 2,                                                                                                |
+|                 "name": "scale-scan",                                                                                   |
+|                 "version": "1.0",                                                                                       |
+|                 "title": "Scale Scan",                                                                                  |
+|                 "description": "Scans a workspace for existing files to ingest",                                        |
+|                 "category": "system",                                                                                   |
+|                 "author_name": null,                                                                                    |
+|                 "author_url": null,                                                                                     |
+|                 "is_system": true,                                                                                      |
+|                 "is_long_running": false,                                                                               |
+|                 "is_active": true,                                                                                      |
+|                 "is_operational": true,                                                                                 |
+|                 "is_paused": false,                                                                                     |
+|                 "icon_code": "f02a"                                                                                     |
+|             },                                                                                                          |
+|             "job_type_rev": {                                                                                           |
+|                 "id": 2                                                                                                 |
+|             },                                                                                                          |
+|             "event": {                                                                                                  |
+|                 "id": 1                                                                                                 |
+|             },                                                                                                          |
+|             "status": "RUNNING",                                                                                        |
+|             "priority": 5,                                                                                              |
+|             "num_exes": 1                                                                                               |
+|         },                                                                                                              |
+|         "dry_run_job": {                                                                                                |
+|             "id": 8,                                                                                                    |
+|             "job_type": {                                                                                               |
+|                 "id": 2,                                                                                                |
+|                 "name": "scale-scan",                                                                                   |
+|                 "version": "1.0",                                                                                       |
+|                 "title": "Scale Scan",                                                                                  |
+|                 "description": "Scans a workspace for existing files to ingest",                                        |
+|                 "category": "system",                                                                                   |
+|                 "author_name": null,                                                                                    |
+|                 "author_url": null,                                                                                     |
+|                 "is_system": true,                                                                                      |
+|                 "is_long_running": false,                                                                               |
+|                 "is_active": true,                                                                                      |
+|                 "is_operational": true,                                                                                 |
+|                 "is_paused": false,                                                                                     |
+|                 "icon_code": "f02a"                                                                                     |
+|             },                                                                                                          |
+|             "job_type_rev": {                                                                                           |
+|                "id": 2                                                                                                  |
+|             },                                                                                                          |
+|             "event": {                                                                                                  |
+|                "id": 1                                                                                                  |
+|             },                                                                                                          |
+|             "status": "COMPLETED",                                                                                      |
+|             "priority": 5,                                                                                              |
+|             "num_exes": 1                                                                                               |
+|         }                                                                                                               |
 |        "configuration": {                                                                                               |
 |            "version": "1.0",                                                                                            |
 |            "workspace": "my-workspace",                                                                                 |

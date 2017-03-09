@@ -105,7 +105,8 @@ class IngestManager(models.Manager):
 
         return JobType.objects.get(name='scale-ingest', version='1.0')
 
-    def get_ingests(self, started=None, ended=None, statuses=None, scan_ids=None, strike_ids=None, file_name=None, order=None):
+    def get_ingests(self, started=None, ended=None, statuses=None, scan_ids=None, strike_ids=None, file_name=None,
+                    order=None):
         """Returns a list of ingests within the given time range.
 
         :param started: Query ingests updated after this amount of time.
@@ -140,7 +141,7 @@ class IngestManager(models.Manager):
         if statuses:
             ingests = ingests.filter(status__in=statuses)
         if scan_ids:
-            ingests = ingests.filter(scan_id__in=scan_ids)    
+            ingests = ingests.filter(scan_id__in=scan_ids)
         if strike_ids:
             ingests = ingests.filter(strike_id__in=strike_ids)
         if file_name:
@@ -719,7 +720,7 @@ class ScanManager(models.Manager):
         :returns: The Scan process with all detail fields included.
         :rtype: :class:`ingest.models.Scan`
         """
-        
+
         scan = Scan.objects.select_related('job', 'job__job_type')
         scan = scan.select_related('dry_run_job', 'dry_run_job__job_type')
         scan = scan.get(pk=scan_id)
@@ -742,12 +743,12 @@ class ScanManager(models.Manager):
 
         scan = Scan.objects.get(pk=scan_id)
         scan_type = self.get_scan_job_type()
-        
+
         job_data = JobData()
         job_data.add_property_input('Scan ID', unicode(scan.id))
         job_data.add_property_input('Dry Run', str(dry_run))
         event_description = {'scan_id': scan.id}
-        
+
         if dry_run:
             event = TriggerEvent.objects.create_trigger_event('DRY_RUN_SCAN_CREATED', None, event_description, now())
             scan.dry_run_job = Queue.objects.queue_new_job(scan_type, job_data, event)
@@ -791,7 +792,7 @@ class Scan(models.Model):
     description = models.CharField(blank=True, max_length=500)
 
     configuration = djorm_pgjson.fields.JSONField()
-    
+
     dry_run_job = models.ForeignKey('job.Job', blank=True, null=True, on_delete=models.PROTECT, related_name='+')
     job = models.ForeignKey('job.Job', blank=True, null=True, on_delete=models.PROTECT, related_name='+')
 

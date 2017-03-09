@@ -32,7 +32,7 @@ class Scanner(object):
         """
 
         self.scan_id = None
-        self._batch_size = 1000 # Use a batch size of 1000 for scan
+        self._batch_size = 1000  # Use a batch size of 1000 for scan
         self._count = 0
         self._dry_run = False  # Used to only scan and skip ingest process
         self._file_handler = None  # The file handler configured for this scanner
@@ -94,11 +94,11 @@ class Scanner(object):
 
         # Initialize workspace scan via storage broker. Configuration determines if recursive workspace walk.
         files = self._scanned_workspace.list_files(recursive=self._recursive)
-        
+
         batched_files = []
         for file in files:
             batched_files.append(file)
-            
+
             # Process files every time a batch size is reached
             if len(batched_files) >= self._batch_size:
                 self._process_scanned(batched_files)
@@ -166,7 +166,7 @@ class Scanner(object):
         """
 
         ingests = []
-        
+
         for file_details in file_list:
             if not self._stop_received:
                 ingest = self._ingest_file(file_details.file, file_details.size)

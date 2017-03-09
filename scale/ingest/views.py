@@ -13,13 +13,12 @@ from rest_framework.views import APIView
 
 import util.rest as rest_util
 from ingest.models import Ingest, Scan, Strike
-from ingest.serializers import (IngestDetailsSerializer, IngestSerializer, IngestStatusSerializer,
-                                ScanSerializer, StrikeSerializer, ScanDetailsSerializer, StrikeDetailsSerializer)
 from ingest.scan.configuration.exceptions import InvalidScanConfiguration
 from ingest.scan.configuration.scan_configuration import ScanConfiguration
+from ingest.serializers import (IngestDetailsSerializer, IngestSerializer, IngestStatusSerializer,
+                                ScanSerializer, StrikeSerializer, ScanDetailsSerializer, StrikeDetailsSerializer)
 from ingest.strike.configuration.exceptions import InvalidStrikeConfiguration
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
-
 from util.rest import BadParameter
 
 logger = logging.getLogger(__name__)
@@ -49,7 +48,7 @@ class IngestsView(ListAPIView):
         file_name = rest_util.parse_string(request, 'file_name', required=False)
         order = rest_util.parse_string_list(request, 'order', required=False)
 
-        ingests = Ingest.objects.get_ingests(started=started, ended=ended, 
+        ingests = Ingest.objects.get_ingests(started=started, ended=ended,
                                              statuses=ingest_statuses,
                                              scan_ids=scan_ids,
                                              strike_ids=strike_ids,
@@ -143,6 +142,7 @@ class ScansProcessView(APIView):
 
         scan_url = reverse('scans_details_view', args=[scan.id], request=request)
         return Response(status=status.HTTP_201_CREATED, headers=dict(location=scan_url))
+
 
 class ScansView(ListCreateAPIView):
     """This view is the endpoint for retrieving the list of all Scan process."""
