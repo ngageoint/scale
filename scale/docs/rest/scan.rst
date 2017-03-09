@@ -61,6 +61,8 @@ These services allow a user to create, view, and manage Scan processes.
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .description       | String            | A longer description of the Scan process.                                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
+| .file_count        | Integer           | Count of files identified from last scan operation (either dry run or ingest). |
++--------------------+-------------------+--------------------------------------------------------------------------------+
 | .job               | JSON Object       | The job that is associated with the Scan process.                              |
 |                    |                   | (See :ref:`Job Details <rest_job_details>`)                                    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -247,7 +249,12 @@ These services allow a user to create, view, and manage Scan processes.
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | description        | String            | A longer description of the Scan process.                                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
+| file_count         | Integer           | Count of files identified from last scan operation (either dry run or ingest). |
++--------------------+-------------------+--------------------------------------------------------------------------------+
 | job                | JSON Object       | The job that is associated with the Scan process.                              |
+|                    |                   | (See :ref:`Job Details <rest_job_details>`)                                    |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| dry_run_job        | JSON Object       | The dry run job that is associated with the Scan process.                      |
 |                    |                   | (See :ref:`Job Details <rest_job_details>`)                                    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | created            | ISO-8601 Datetime | When the associated database model was initially created.                      |
@@ -265,62 +272,62 @@ These services allow a user to create, view, and manage Scan processes.
 |        "title": "My Scan Process",                                                                                      |
 |        "description": "This is my Scan process for detecting my favorite files!",                                       |
 |        "file_count": 50,                                                                                                |
-|         "job": {                                                                                                        |
-|             "id": 7,                                                                                                    |
-|             "job_type": {                                                                                               |
-|                 "id": 2,                                                                                                |
-|                 "name": "scale-scan",                                                                                   |
-|                 "version": "1.0",                                                                                       |
-|                 "title": "Scale Scan",                                                                                  |
-|                 "description": "Scans a workspace for existing files to ingest",                                        |
-|                 "category": "system",                                                                                   |
-|                 "author_name": null,                                                                                    |
-|                 "author_url": null,                                                                                     |
-|                 "is_system": true,                                                                                      |
-|                 "is_long_running": false,                                                                               |
-|                 "is_active": true,                                                                                      |
-|                 "is_operational": true,                                                                                 |
-|                 "is_paused": false,                                                                                     |
-|                 "icon_code": "f02a"                                                                                     |
-|             },                                                                                                          |
-|             "job_type_rev": {                                                                                           |
-|                 "id": 2                                                                                                 |
-|             },                                                                                                          |
-|             "event": {                                                                                                  |
-|                 "id": 1                                                                                                 |
-|             },                                                                                                          |
-|             "status": "RUNNING",                                                                                        |
-|             "priority": 5,                                                                                              |
-|             "num_exes": 1                                                                                               |
-|         },                                                                                                              |
-|         "dry_run_job": {                                                                                                |
-|             "id": 8,                                                                                                    |
-|             "job_type": {                                                                                               |
-|                 "id": 2,                                                                                                |
-|                 "name": "scale-scan",                                                                                   |
-|                 "version": "1.0",                                                                                       |
-|                 "title": "Scale Scan",                                                                                  |
-|                 "description": "Scans a workspace for existing files to ingest",                                        |
-|                 "category": "system",                                                                                   |
-|                 "author_name": null,                                                                                    |
-|                 "author_url": null,                                                                                     |
-|                 "is_system": true,                                                                                      |
-|                 "is_long_running": false,                                                                               |
-|                 "is_active": true,                                                                                      |
-|                 "is_operational": true,                                                                                 |
-|                 "is_paused": false,                                                                                     |
-|                 "icon_code": "f02a"                                                                                     |
-|             },                                                                                                          |
-|             "job_type_rev": {                                                                                           |
+|        "job": {                                                                                                         |
+|            "id": 7,                                                                                                     |
+|            "job_type": {                                                                                                |
+|                "id": 2,                                                                                                 |
+|                "name": "scale-scan",                                                                                    |
+|                "version": "1.0",                                                                                        |
+|                "title": "Scale Scan",                                                                                   |
+|                "description": "Scans a workspace for existing files to ingest",                                         |
+|                "category": "system",                                                                                    |
+|                "author_name": null,                                                                                     |
+|                "author_url": null,                                                                                      |
+|                "is_system": true,                                                                                       |
+|                "is_long_running": false,                                                                                |
+|                "is_active": true,                                                                                       |
+|                "is_operational": true,                                                                                  |
+|                "is_paused": false,                                                                                      |
+|                "icon_code": "f02a"                                                                                      |
+|            },                                                                                                           |
+|            "job_type_rev": {                                                                                            |
 |                "id": 2                                                                                                  |
-|             },                                                                                                          |
-|             "event": {                                                                                                  |
+|            },                                                                                                           |
+|            "event": {                                                                                                   |
 |                "id": 1                                                                                                  |
-|             },                                                                                                          |
-|             "status": "COMPLETED",                                                                                      |
-|             "priority": 5,                                                                                              |
-|             "num_exes": 1                                                                                               |
-|         }                                                                                                               |
+|            },                                                                                                           |
+|            "status": "RUNNING",                                                                                         |
+|            "priority": 5,                                                                                               |
+|            "num_exes": 1                                                                                                |
+|        },                                                                                                               |
+|        "dry_run_job": {                                                                                                 |
+|            "id": 8,                                                                                                     |
+|            "job_type": {                                                                                                |
+|                "id": 2,                                                                                                 |
+|                "name": "scale-scan",                                                                                    |
+|                "version": "1.0",                                                                                        |
+|                "title": "Scale Scan",                                                                                   |
+|                "description": "Scans a workspace for existing files to ingest",                                         |
+|                "category": "system",                                                                                    |
+|                "author_name": null,                                                                                     |
+|                "author_url": null,                                                                                      |
+|                "is_system": true,                                                                                       |
+|                "is_long_running": false,                                                                                |
+|                "is_active": true,                                                                                       |
+|                "is_operational": true,                                                                                  |
+|                "is_paused": false,                                                                                      |
+|                "icon_code": "f02a"                                                                                      |
+|            },                                                                                                           |
+|            "job_type_rev": {                                                                                            |
+|               "id": 2                                                                                                   |
+|            },                                                                                                           |
+|            "event": {                                                                                                   |
+|               "id": 1                                                                                                   |
+|            },                                                                                                           |
+|            "status": "COMPLETED",                                                                                       |
+|            "priority": 5,                                                                                               |
+|            "num_exes": 1                                                                                                |
+|        }                                                                                                                |
 |        "configuration": {                                                                                               |
 |            "version": "1.0",                                                                                            |
 |            "workspace": "my-workspace",                                                                                 |
@@ -454,7 +461,9 @@ These services allow a user to create, view, and manage Scan processes.
 |        "name": "my-scan-process",                                                                                       |
 |        "title": "My Scan Process",                                                                                      |
 |        "description": "This is my Scan process for detecting my favorite files!",                                       |
-|        "job": {                                                                                                         |
+|        "file_count": 50,                                                                                                |
+|        "job": null,                                                                                                     |
+|        "dry_run_job": {                                                                                                 |
 |            "id": 7,                                                                                                     |
 |            "job_type": {                                                                                                |
 |                "id": 2,                                                                                                 |
@@ -478,7 +487,7 @@ These services allow a user to create, view, and manage Scan processes.
 |            "event": {                                                                                                   |
 |                "id": 1                                                                                                  |
 |            },                                                                                                           |
-|            "status": "RUNNING",                                                                                         |
+|            "status": "COMPLETED",                                                                                       |
 |            "priority": 10,                                                                                              |
 |            "num_exes": 1                                                                                                |
 |        },                                                                                                               |
