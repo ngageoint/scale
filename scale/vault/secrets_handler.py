@@ -19,9 +19,11 @@ class SecretsHandler(object):
         """
         
         self.secrets_error_codes = {
+            301: 'Status Code 301 - Too many "/" separators in URL.',
             400: 'Status Code 400 - Invalid request, missing or invalid data.',
             403: 'Status Code 403 - Forbidden, authentication details are incorrect or no access to feature.',
             404: 'Status Code 404 - Invalid path, secret or backend not found.',
+            405: 'Status Code 405 - Unsupported operation.',
             409: 'Status Code 409 - Secret or secret store already exists.',
             429: 'Status Code 429 - Rate limit exceeded.',
             500: 'Status Code 500 - Internal server error.',
@@ -191,16 +193,16 @@ class SecretsHandler(object):
         """
 
         url = self.secrets_url + '/sys/mounts/scale'
+        headers = {
+            "Content-Type": "application/json",
+            "X-Vault-Token": self.secrets_token
+        }
         data = json.dumps({
             'type': 'generic',
             'description': 'Secrets store for all secrets used by Scale'
         })
-        create_mount = self._make_request('POST', url, data=data)
 
-        if create_mount.status_code == 403:
-            raise InvalidSecretsAuthorization('Permission was denied when getting a secret')
-        elif create_mount.status_code not in [200, 400]:
-            raise InvalidSecretsRequest('Invalid request return: ' + self.secrets_error_codes[r.status_code])
+        create_mount = self._make_request('POST', url, headers=headers, data=data)
 
     def _dcos_authenticate(self):
         """Authenticate with DC/OS Vault backend and expect a status code 200 returned.
@@ -265,4 +267,4 @@ class SecretsHandler(object):
 
         url = self.secrets_url + '/v1/sys/health'
         request_auth = self._make_request('GET', url)
-        self.secrets_url += '/v1/'
+        self.secrets_url += '/v1'
