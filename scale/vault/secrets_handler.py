@@ -54,7 +54,7 @@ class SecretsHandler(object):
         url = self.secrets_url
 
         if self.dcos_token:
-            url = ''.join([url, 'secret/default/scale/job-type/', job_name])
+            url = ''.join([url, '/secret/default/scale/job-type/', job_name])
             data = json.dumps({'uid': self.service_account, 'token': self.dcos_token})
             get_secret = self._make_request('GET', url, data=data)
             
@@ -65,7 +65,7 @@ class SecretsHandler(object):
                 raise InvalidSecretsValue('The DCOS secrets value could not be converted to JSON.')
         
         else:
-            url = url + 'secret/scale/job-type/' + job_name
+            url = url + '/secret/scale/job-type/' + job_name
             headers = {
                 'Content-Type': 'application/json',
                 'X-Vault-Token': self.secrets_token
@@ -87,7 +87,7 @@ class SecretsHandler(object):
         url = self.secrets_url
 
         if self.dcos_token:
-            url += 'secret/default/scale/job-type?list=true'
+            url += '/secret/default/scale/job-type?list=true'
             data = json.dumps({'uid': self.service_account, 'token': self.dcos_token})
             list_jobs = self._make_request('GET', url, data=data)
             
@@ -95,7 +95,7 @@ class SecretsHandler(object):
             all_job_types = response['array']
 
         else:
-            url += 'secret/scale/job-type'
+            url += '/secret/scale/job-type'
             headers = {
                 'Content-Type': 'application/json',
                 'X-Vault-Token': self.secrets_token
@@ -107,11 +107,11 @@ class SecretsHandler(object):
 
         return all_job_types
 
-    def set_job_type_secrets(self, secret_path, secret_json):
+    def set_job_type_secrets(self, job_name, secret_json):
         """write job-type secrets to the secrets backend
 
-        :param secret_path: path within the secrets backend that the secret will be stored.
-        :type secret_path: str
+        :param job_name: name of the job that the screts belong to.
+        :type job_name: str
         :param secret_json: dict with name:value pairs for all secrets associated with the job
         :type secret_json: dict
         :return:
@@ -121,7 +121,7 @@ class SecretsHandler(object):
         secret_values = json.dumps(secret_json)
 
         if self.dcos_token:
-            url = ''.join([url, 'secret/default/scale/job-type', secret_path])
+            url = ''.join([url, '/secret/default/scale/job-type/', job_name])
             data = json.dumps({
                 'uid': self.service_account,
                 'token': self.dcos_token,
@@ -131,7 +131,7 @@ class SecretsHandler(object):
             set_secret = self._make_request('PUT', url, data=data)
 
         else:
-            url = ''.join([url, 'secret/scale/job-type', secret_path])
+            url = ''.join([url, '/secret/scale/job-type/', job_name])
             headers = {
                 'Content-Type': 'application/json',
                 'X-Vault-Token': self.secrets_token
@@ -204,6 +204,14 @@ class SecretsHandler(object):
 
         create_mount = self._make_request('POST', url, headers=headers, data=data)
 
+        # A store needs at least one secret in it for other functions to work...
+        backends = ['/job-type/placeholder', '/internal/placeholder', '/storage/placeholder']
+        data = json.dumps({'empty': 'secret'})
+
+        for folder in backends:
+            url = self.secrets_url + '/secret/scale' + folder
+            set_secret = self._make_request('PUT', url, headers, data)
+
     def _dcos_authenticate(self):
         """Authenticate with DC/OS Vault backend and expect a status code 200 returned.
         """
@@ -220,7 +228,7 @@ class SecretsHandler(object):
 
         request_auth = self._make_request('GET', url, data=data)
 
-        self.secrets_url += '/secrets/v1/'
+        self.secrets_url += '/secrets/v1'
         access_token = [k + '=' + v for k, v in request_auth.json().items()]
         
         return access_token
