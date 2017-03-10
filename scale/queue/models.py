@@ -5,7 +5,7 @@ import abc
 import logging
 
 import django.utils.timezone as timezone
-import djorm_pgjson.fields
+import django.contrib.postgres.fields
 from django.db import models, transaction
 
 from error.models import Error
@@ -755,7 +755,7 @@ class Queue(models.Model):
     :type disk_total_required: :class:`django.db.models.FloatField`
 
     :keyword configuration: JSON description describing the configuration for how the job should be run
-    :type configuration: :class:`djorm_pgjson.fields.JSONField`
+    :type configuration: :class:`django.contrib.postgres.fields.JSONField`
 
     :keyword created: When the queue model was created
     :type created: :class:`django.db.models.DateTimeField`
@@ -777,7 +777,7 @@ class Queue(models.Model):
     disk_out_required = models.FloatField()
     disk_total_required = models.FloatField()
 
-    configuration = djorm_pgjson.fields.JSONField()
+    configuration = django.contrib.postgres.fields.JSONField()
 
     created = models.DateTimeField(auto_now_add=True)
     queued = models.DateTimeField()

@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.db.models import Q
 from django.db.models.aggregates import Sum
-import djorm_pgjson
+import django.contrib.postgres.fields
 
 from job.models import JobType
 from job.models import JobExecution
@@ -69,7 +69,7 @@ class SharedResource(models.Model):
     title = models.CharField(blank=True, max_length=100, null=True)
     description = models.CharField(max_length=250, blank=True, null=True)
     limit = models.FloatField(null=True)
-    json_config = djorm_pgjson.fields.JSONField(null=True)
+    json_config = django.contrib.postgres.fields.JSONField(null=True)
 
     is_global = models.BooleanField(default=True)
     nodes = models.ManyToManyField(Node)

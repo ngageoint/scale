@@ -9,7 +9,7 @@ import rest_framework.renderers as renderers
 import rest_framework.serializers as serializers
 import rest_framework.status as status
 from django.conf import settings
-from django.conf.urls import include, patterns, url
+from django.conf.urls import include, url
 from rest_framework.exceptions import APIException
 from rest_framework.settings import api_settings
 
@@ -168,11 +168,11 @@ def get_url(path):
 
 
 def get_versioned_urls(apps):
-    """Generates a list of URL patterns for applications with REST APIs
+    """Generates a list of URLs for applications with REST APIs
 
     :param apps: A list of application names to register.
     :type apps: [string]
-    :returns: A list of URL patterns for REST APIs with version prefixes.
+    :returns: A list of URLs for REST APIs with version prefixes.
     :rtype: [:class:`django.core.urlresolvers.RegexURLPattern`]
     """
     urls = []
@@ -185,13 +185,13 @@ def get_versioned_urls(apps):
     if not allowed_versions:
         return urls
 
-    # Generate a URL pattern for each endpoint with a version prefix
+    # Generate a URL for each endpoint with a version prefix
     for version in allowed_versions:
         app_urls = []
         for app in apps:
             app_urls.append(url('', include(app + '.urls')))
-        app_patterns = patterns('', *app_urls)
-        urls.append((r'^' + version + '/', include(app_patterns, namespace=version)))
+        
+        urls.append((r'^' + version + '/', include(app_urls, namespace=version)))
     return urls
 
 

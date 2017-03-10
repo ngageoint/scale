@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 import copy
 
 import django.utils.timezone as timezone
-import djorm_pgjson.fields
+import django.contrib.postgres.fields
 from django.db import models, transaction
 
 from job.models import Job, JobType
@@ -499,7 +499,7 @@ class Recipe(models.Model):
     :type event: :class:`django.db.models.ForeignKey`
 
     :keyword data: JSON description defining the data for this recipe
-    :type data: :class:`djorm_pgjson.fields.JSONField`
+    :type data: :class:`django.contrib.postgres.fields.JSONField`
 
     :keyword is_superseded: Whether this recipe has been superseded and is obsolete. This may be true while
         superseded_by_recipe (the reverse relationship of superseded_recipe) is null, indicating that this recipe is
@@ -526,7 +526,7 @@ class Recipe(models.Model):
     recipe_type_rev = models.ForeignKey('recipe.RecipeTypeRevision', on_delete=models.PROTECT)
     event = models.ForeignKey('trigger.TriggerEvent', on_delete=models.PROTECT)
 
-    data = djorm_pgjson.fields.JSONField()
+    data = django.contrib.postgres.fields.JSONField()
 
     is_superseded = models.BooleanField(default=False)
     root_superseded_recipe = models.ForeignKey('recipe.Recipe', related_name='superseded_by_recipes', blank=True,
@@ -896,7 +896,7 @@ class RecipeType(models.Model):
     :keyword is_active: Whether the recipe type is active (false once recipe type is archived)
     :type is_active: :class:`django.db.models.BooleanField`
     :keyword definition: JSON definition for running a recipe of this type
-    :type definition: :class:`djorm_pgjson.fields.JSONField`
+    :type definition: :class:`django.contrib.postgres.fields.JSONField`
     :keyword revision_num: The current revision number of the definition, starts at one
     :type revision_num: :class:`django.db.models.IntegerField`
     :keyword trigger_rule: The rule to trigger new recipes of this type
@@ -916,7 +916,7 @@ class RecipeType(models.Model):
     description = models.CharField(blank=True, max_length=500, null=True)
 
     is_active = models.BooleanField(default=True)
-    definition = djorm_pgjson.fields.JSONField()
+    definition = django.contrib.postgres.fields.JSONField()
     revision_num = models.IntegerField(default=1)
     trigger_rule = models.ForeignKey('trigger.TriggerRule', blank=True, null=True, on_delete=models.PROTECT)
 
@@ -984,14 +984,14 @@ class RecipeTypeRevision(models.Model):
     :keyword revision_num: The number for this revision, starting at one
     :type revision_num: :class:`django.db.models.IntegerField`
     :keyword definition: The JSON definition for this revision of the recipe type
-    :type definition: :class:`djorm_pgjson.fields.JSONField`
+    :type definition: :class:`django.contrib.postgres.fields.JSONField`
     :keyword created: When this revision was created
     :type created: :class:`django.db.models.DateTimeField`
     """
 
     recipe_type = models.ForeignKey('recipe.RecipeType', on_delete=models.PROTECT)
     revision_num = models.IntegerField()
-    definition = djorm_pgjson.fields.JSONField()
+    definition = django.contrib.postgres.fields.JSONField()
     created = models.DateTimeField(auto_now_add=True)
 
     objects = RecipeTypeRevisionManager()
