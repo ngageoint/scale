@@ -61,7 +61,7 @@ def create_strike(name=None, title=None, description=None, configuration=None, j
     return Strike.objects.create(name=name, title=title, description=description, configuration=configuration, job=job)
 
 
-def create_scan(name=None, title=None, description=None, configuration=None, job=None, dry_run_job=None):
+def create_scan(name=None, title=None, description=None, configuration=None):
     if not name:
         global NAME_COUNTER
         name = 'test-scan-%i' % NAME_COUNTER
@@ -79,4 +79,4 @@ def create_scan(name=None, title=None, description=None, configuration=None, job
         }
 
     return Scan.objects.create(name=name, title=title, description=description,
-                               configuration=configuration, job=job, dry_run_job=dry_run_job)
+                               configuration=configuration)
