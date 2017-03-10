@@ -221,20 +221,23 @@ class JobManager(models.Manager):
         """
 
         # Attempt to fetch the requested job
-        job = Job.objects.select_related('job_type', 'job_type_rev', 'event', 'event__rule', 'error',
-                                         'root_superseded_job', 'root_superseded_job__job_type', 'superseded_job',
-                                         'superseded_job__job_type', 'superseded_by_job',
+        job = Job.objects.select_related('job_type', 'job_type_rev', 'job_type_rev__job_type', 'event', 'event__rule',
+                                         'error', 'root_superseded_job', 'root_superseded_job__job_type',
+                                         'superseded_job', 'superseded_job__job_type', 'superseded_by_job',
                                          'superseded_by_job__job_type').get(pk=job_id)
 
         # Attempt to get related job executions
-        job.job_exes = JobExecution.objects.filter(job=job).order_by('-created')
+        job_exes = JobExecution.objects.filter(job=job).select_related('job', 'node', 'error')
+        job.job_exes = job_exes.defer('job__data', 'job__configuration', 'job__results').order_by('-created')
 
         # Attempt to get related recipe
         # Use a localized import to make higher level application dependencies optional
         try:
             from recipe.models import RecipeJob
             recipe_jobs = RecipeJob.objects.filter(job=job).order_by('recipe__last_modified')
-            recipe_jobs = recipe_jobs.select_related('recipe', 'recipe__recipe_type')
+            recipe_jobs = recipe_jobs.select_related('recipe', 'recipe__recipe_type', 'recipe__recipe_type_rev',
+                                                     'recipe__recipe_type_rev__recipe_type', 'recipe__event',
+                                                     'recipe__event__rule')
             job.recipes = [recipe_job.recipe for recipe_job in recipe_jobs]
         except:
             job.recipes = []
@@ -242,12 +245,24 @@ class JobManager(models.Manager):
         # Fetch all the associated input files
         input_file_ids = job.get_job_data().get_input_file_ids()
         input_files = ScaleFile.objects.filter(id__in=input_file_ids)
-        input_files = input_files.select_related('workspace').defer('workspace__json_config')
+        input_files = input_files.select_related('workspace', 'job_type', 'job', 'job_exe')
+        input_files = input_files.defer('workspace__json_config', 'job__data', 'job__configuration', 'job__results',
+                                        'job_exe__environment', 'job_exe__configuration', 'job_exe__job_metrics',
+                                        'job_exe__stdout', 'job_exe__stderr', 'job_exe__results',
+                                        'job_exe__results_manifest', 'job_type__interface', 'job_type__docker_params',
+                                        'job_type__configuration', 'job_type__error_mapping')
+        input_files = input_files.prefetch_related('countries')
         input_files = input_files.order_by('id').distinct('id')
 
         # Attempt to get related products
         output_files = ScaleFile.objects.filter(job=job)
-        output_files = output_files.select_related('workspace').defer('workspace__json_config')
+        output_files = output_files.select_related('workspace', 'job_type', 'job', 'job_exe')
+        output_files = output_files.defer('workspace__json_config', 'job__data', 'job__configuration', 'job__results',
+                                          'job_exe__environment', 'job_exe__configuration', 'job_exe__job_metrics',
+                                          'job_exe__stdout', 'job_exe__stderr', 'job_exe__results',
+                                          'job_exe__results_manifest', 'job_type__interface', 'job_type__docker_params',
+                                          'job_type__configuration', 'job_type__error_mapping')
+        output_files = output_files.prefetch_related('countries')
         output_files = output_files.order_by('id').distinct('id')
 
         # Merge job interface definitions with mapped values
