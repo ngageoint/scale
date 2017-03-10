@@ -17,7 +17,7 @@ class SecretsHandler(object):
         """Creates a secrets handler object.  The backend is initially tested to ensure it exists and Scale can
         authenticate properly with it.
         """
-
+        
         self.secrets_error_codes = {
             400: 'Status Code 400 - Invalid request, missing or invalid data.',
             403: 'Status Code 403 - Forbidden, authentication details are incorrect or no access to feature.',
@@ -144,17 +144,7 @@ class SecretsHandler(object):
         url = self.secrets_url
 
         if self.dcos_token:
-            url += '/store/scale'
-            data = json.dumps({
-                'uid': self.service_account, 'token': self.dcos_token
-            })
-
-            check_mount = self._make_request('GET', url, data=data, catch_error=False)
-
-            if check_mount.status_code == 403:
-                raise InvalidSecretsAuthorization('Permission was denied when getting a secret')
-            elif check_mount.status_code == 404:
-                self._create_dcos_store()
+            pass
 
         else:
             url += '/sys/mounts'
@@ -173,28 +163,28 @@ class SecretsHandler(object):
             elif check_mount.status_code == 404:
                 self._create_dcos_store()
 
-    def _create_dcos_store(self):
-        """Create a new store within the DC/OS Vault backend that will be used for all Scale secrets.
+    # def _create_dcos_store(self):
+    #     """Create a new store within the DC/OS Vault backend that will be used for all Scale secrets.
 
-        **As of 9FEB2017 DC/OS does not support additional backends.**
-        """
+    #     **As of 9FEB2017 DC/OS does not support additional backends.**
+    #     """
 
-        url = self.secrets_url + '/store/scale'
-        data = json.dumps({
-            'uid': self.service_account,
-            'token': self.dcos_token,
-            'name': 'Scale Secrets Store',
-            'description': 'Secrets store for all secrets used by Scale',
-            'driver': 'vault',
-            'initialized': True,
-            'sealed': False
-        })
-        create_mount = self._make_request('GET', url, data=data, catch_error=False)
+    #     url = self.secrets_url + '/store/scale'
+    #     data = json.dumps({
+    #         'uid': self.service_account,
+    #         'token': self.dcos_token,
+    #         'name': 'Scale Secrets Store',
+    #         'description': 'Secrets store for all secrets used by Scale',
+    #         'driver': 'vault',
+    #         'initialized': True,
+    #         'sealed': False
+    #     })
+    #     create_mount = self._make_request('POST', url, data=data, catch_error=False)
 
-        if create_mount.status_code == 403:
-            raise InvalidSecretsAuthorization('Permission was denied when getting a secret')
-        elif create_mount.status_code not in [201, 409]:
-            raise InvalidSecretsRequest('Invalid request return: ' + self.secrets_error_codes[r.status_code])
+    #     if create_mount.status_code == 403:
+    #         raise InvalidSecretsAuthorization('Permission was denied when getting a secret')
+    #     elif create_mount.status_code not in [201, 409]:
+    #         raise InvalidSecretsRequest('Invalid request return: ' + self.secrets_error_codes[r.status_code])
 
     def _create_vault_store(self):
         """Create a new store within the Vault backend that will be used for all Scale secrets.
@@ -205,7 +195,7 @@ class SecretsHandler(object):
             'type': 'generic',
             'description': 'Secrets store for all secrets used by Scale'
         })
-        create_mount = self._make_request('GET', url, data=data)
+        create_mount = self._make_request('POST', url, data=data)
 
         if create_mount.status_code == 403:
             raise InvalidSecretsAuthorization('Permission was denied when getting a secret')
