@@ -46,11 +46,11 @@ ELASTICSEARCH_URLS = None
 # Placeholder for Elasticsearch object. Needed for unit tests.
 ELASTICSEARCH = None
 
-# Base URL of vault or DCOS:vault service, or None to disable secrets
+# Base URL of vault or DCOS secrets store, or None to disable secrets
 SECRETS_URL = None
-# Public token if DCOS:vault or privleged token for vault authentication
+# Public token if DCOS secrets store, or privleged token for vault
 SECRETS_TOKEN = None
-# DCOS service account name, or None if not DCOS:vault
+# DCOS service account name, or None if not DCOS secrets store
 DCOS_SERVICE_ACCOUNT = None
 
 # Quick-start development settings - unsuitable for production

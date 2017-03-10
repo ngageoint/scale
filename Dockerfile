@@ -15,6 +15,7 @@ EXPOSE 80
 # DCOS_OAUTH_TOKEN authentication for Marathon deployments when DCOS OAuth is enabled
 # DCOS_PACKAGE_FRAMEWORK_NAME used to inject a configurable framework name allowing for multiple scale frameworks per cluster
 # DCOS_PASS authentication for Marathon deployments when using DCOS enterprise
+# DCOS_SERVICE_ACCOUNT a DCOS account name with read/update/create/delete access to the secrets store
 # DCOS_USER authentication for Marathon deployments when using DCOS enterprise
 # DEPLOY_WEBSERVER to start the web server container
 # ENABLE_BOOTSTRAP true to initialize database and bootstrap supporting containers, should only be set on scheduler in DCOS
@@ -36,6 +37,8 @@ EXPOSE 80
 # SCALE_WEBSERVER_CPU
 # SCALE_WEBSERVER_MEMORY
 # SCALE_ZK_URL
+# SECRETS_URL used for linking Scale to a secrets storage service (works with Vault and DCOS Secrets Store)
+# SECRETS_TOKEN used for authenticating Scale agaist Vault or DCOS Secrets Store
 
 # build arg to set the version qualifier. This should be blank for a
 # release build. Otherwise it is typically a build number or git hash.
