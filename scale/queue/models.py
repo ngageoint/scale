@@ -249,13 +249,14 @@ class QueueManager(models.Manager):
     _processors = []
 
     def get_queue(self):
-        """Returns the list of queue models sorted according to their scheduling priority
+        """Returns the list of queue models sorted according to their priority first, and then using LIFO (last in,
+        first out) second
 
         :returns: The list of queue models
         :rtype: list[:class:`queue.models.Queue`]
         """
 
-        return Queue.objects.order_by('priority', 'queued').iterator()
+        return self.order_by('priority', '-queued').iterator()
 
     def get_queue_status(self):
         """Returns the current status of the queue with statistics broken down by job type.
