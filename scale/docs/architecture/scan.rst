@@ -62,8 +62,8 @@ A valid Scan configuration is a JSON document with the following structure:
 
 **scanner**: JSON object
 
-    The *scanner* field is a required object that specifies the type and configuration of the scanner that will watch
-    *workspace* for new files.
+    The *scanner* field is a required object that specifies the type and configuration of the scanner that will scan
+    *workspace* for files.
 
     **type**: JSON string
 
