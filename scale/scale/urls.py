@@ -1,6 +1,6 @@
 """Combines all of the URLs for the Scale RESTful services"""
 
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 
 import util.rest as rest_util
 
@@ -28,11 +28,9 @@ REST_API_APPS = [
 # Generate URLs for all REST APIs with version prefix
 versioned_urls = rest_util.get_versioned_urls(REST_API_APPS)
 
-urlpatterns = patterns(
-    '',
-
+urlpatterns = [
     # Map all the paths required by the admin applications
     url(r'^admin/', include(admin.site.urls)),
 
     *versioned_urls
-)
+]
