@@ -10,6 +10,14 @@ class InvalidScannerConfiguration(InvalidScanConfiguration):
     pass
 
 
+class ScanIngestJobAlreadyLaunched(APIException):
+    """Exception indicating that a scanner has already spawned an ingest scan job
+    """
+    status_code = 409
+    default_detail = 'Ingest Scan already launched'
+    default_code = 'conflict'
+
+
 class ScannerInterruptRequested(Exception):
     """Exception indicating that a scanner run was interrupted
     """

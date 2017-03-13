@@ -266,11 +266,7 @@ class ScansValidationView(APIView):
         :returns: the HTTP response to send back to the user
         """
 
-        name = rest_util.parse_string(request, 'name')
         configuration = rest_util.parse_dict(request, 'configuration')
-
-        rest_util.parse_string(request, 'title', required=False)
-        rest_util.parse_string(request, 'description', required=False)
 
         # Validate the Scan configuration
         try:

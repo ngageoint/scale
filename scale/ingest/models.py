@@ -11,6 +11,7 @@ from django.db import models, transaction
 from django.utils.timezone import now
 
 from ingest.scan.configuration.scan_configuration import ScanConfiguration
+from ingest.scan.scanners.exceptions import ScanIngestJobAlreadyLaunched
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
 from job.configuration.configuration.job_configuration import JobConfiguration, MODE_RW
 from job.configuration.data.job_data import JobData
@@ -653,6 +654,9 @@ class ScanManager(models.Manager):
         """
 
         scan = Scan.objects.get(pk=scan_id)
+        
+        if scan.job:
+            raise ScanIngestJobAlreadyLaunched
 
         # Validate the configuration, no exception is success
         if configuration:
@@ -692,8 +696,9 @@ class ScanManager(models.Manager):
         """
 
         # Fetch a list of scans
-        scans = Scan.objects.select_related('job', 'job__job_type').defer('configuration')
-        scans = scans.select_related('dry_run_job', 'dry_run_job__job_type').defer('configuration')
+        scans = Scan.objects.select_related('job', 'job__job_type')
+                            .select_related('dry_run_job', 'dry_run_job__job_type')
+                            .defer('configuration')
 
         # Apply time range filtering
         if started:
@@ -753,8 +758,11 @@ class ScanManager(models.Manager):
             event = TriggerEvent.objects.create_trigger_event('DRY_RUN_SCAN_CREATED', None, event_description, now())
             scan.dry_run_job = Queue.objects.queue_new_job(scan_type, job_data, event)
         else:
-            event = TriggerEvent.objects.create_trigger_event('SCAN_CREATED', None, event_description, now())
-            scan.job = Queue.objects.queue_new_job(scan_type, job_data, event)
+            if scan.job:
+                raise ScanIngestJobAlreadyLaunched
+            else:
+                event = TriggerEvent.objects.create_trigger_event('SCAN_CREATED', None, event_description, now())
+                scan.job = Queue.objects.queue_new_job(scan_type, job_data, event)
 
         scan.save()
 
