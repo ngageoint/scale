@@ -17,12 +17,11 @@ logger = logging.getLogger(__name__)
 class Command(BaseCommand):
     """Command that uploads a local file to the storage system."""
 
-    option_list = BaseCommand.option_list + (
-        make_option('-w', '--workspace', action='store', type='str',
-                    help='The name of the workspace used to store the file'),
-    )
-
     help = 'Uploads a local file to the storage system'
+
+    def add_arguments(self, parser):
+        parser.add_argument('-w', '--workspace', action='store', type='str',
+                            help='The name of the workspace used to store the file')
 
     def handle(self, local_path, remote_path, **options):
         """See :meth:`django.core.management.base.BaseCommand.handle`.

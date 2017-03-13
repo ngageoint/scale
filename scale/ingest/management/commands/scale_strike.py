@@ -17,11 +17,11 @@ class Command(BaseCommand):
     """Command that executes the Strike processor
     """
 
-    option_list = BaseCommand.option_list + (
-        make_option('-i', '--strike-id', action='store', type='int', help=('ID of the Strike process to run')),
-    )
-
     help = 'Executes the Strike processor to monitor and process incoming files for ingest'
+
+    def add_arguments(self, parser):
+        parser.add_argument('-i', '--strike-id', action='store', type='int',
+                            help=('ID of the Strike process to run'))
 
     def __init__(self):
         """Constructor

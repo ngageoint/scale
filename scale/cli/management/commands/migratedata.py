@@ -23,21 +23,15 @@ class Command(BaseCommand):
 
     help = 'Migrate existing data into scale'
 
-    option_list = BaseCommand.option_list + (
-        make_option("-n", action="store_true", dest="no_commit",
-                    help="Don't actually modify the database, just print new records"),
-        make_option("-w", "--workspace", action="store", type="string",
-                    help="Workspace name or ID to ingest."),
-        make_option("-p", "--workspace-path", action="store", type="string",
-                    help="Path in the workspace to ingest."),
-        make_option("-l", "--local-path", action="store", type="string",
-                    help="If specified, use this as the workspace and workspace path instead of using the workspace mount."),
-        make_option("-d", "--data-type", action="append", type="string", default=[], help="Data type tag"),
-        make_option("-i", "--include", action="append", type="string",
-                    help="Include glob"),
-        make_option("-e", "--exclude", action="append", type="string", default=[],
-                    help="Exclude glob")
-    )
+    def add_arguments(self, parser):
+        parser.add_argument("-n", action="store_true", dest="no_commit", help="Don't actually modify the database, just print new records")
+        parser.add_argument("-w", "--workspace", action="store", type="string", help="Workspace name or ID to ingest.")
+        parser.add_argument("-p", "--workspace-path", action="store", type="string", help="Path in the workspace to ingest.")
+        parser.add_argument("-l", "--local-path", action="store", type="string",
+                            help="If specified, use this as the workspace and workspace path instead of using the workspace mount.")
+        parser.add_argument("-d", "--data-type", action="append", type="string", default=[], help="Data type tag")
+        parser.add_argument("-i", "--include", action="append", type="string", help="Include glob")
+        parser.add_argument("-e", "--exclude", action="append", type="string", default=[], help="Exclude glob")
 
     # input dir, target workspace
 
