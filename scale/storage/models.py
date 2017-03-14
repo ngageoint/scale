@@ -401,7 +401,7 @@ class ScaleFile(models.Model):
     data_ended = models.DateTimeField(blank=True, null=True, db_index=True)
     geometry = models.GeometryField('Geometry', blank=True, null=True, srid=4326)
     center_point = models.PointField(blank=True, null=True, srid=4326)
-    meta_data = django.contrib.postgres.fields.JSONField()
+    meta_data = django.contrib.postgres.fields.JSONField(null=True)
     countries = models.ManyToManyField(CountryData)
 
     # Source file fields
@@ -764,7 +764,7 @@ class Workspace(models.Model):
     base_url = models.URLField(blank=True, null=True)
     is_active = models.BooleanField(default=True)
 
-    json_config = django.contrib.postgres.fields.JSONField()
+    json_config = django.contrib.postgres.fields.JSONField(null=True)
     is_move_enabled = models.BooleanField(default=True)
 
     used_size = models.BigIntegerField(blank=True, null=True)

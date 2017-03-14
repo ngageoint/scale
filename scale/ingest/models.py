@@ -833,7 +833,7 @@ class Scan(models.Model):
     title = models.CharField(blank=True, max_length=50, null=True)
     description = models.TextField(blank=True, null=True)
 
-    configuration = django.contrib.postgres.fields.JSONField()
+    configuration = django.contrib.postgres.fields.JSONField(null=True)
 
     dry_run_job = models.ForeignKey('job.Job', blank=True, null=True, on_delete=models.PROTECT, related_name='+')
     job = models.ForeignKey('job.Job', blank=True, null=True, on_delete=models.PROTECT, related_name='+')
@@ -1028,7 +1028,7 @@ class Strike(models.Model):
     title = models.CharField(blank=True, max_length=50, null=True)
     description = models.TextField(blank=True, null=True)
 
-    configuration = django.contrib.postgres.fields.JSONField()
+    configuration = django.contrib.postgres.fields.JSONField(null=True)
     job = models.ForeignKey('job.Job', blank=True, null=True, on_delete=models.PROTECT)
 
     created = models.DateTimeField(auto_now_add=True)

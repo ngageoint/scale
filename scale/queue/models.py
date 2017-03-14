@@ -765,7 +765,7 @@ class Queue(models.Model):
     :type last_modified: :class:`django.db.models.DateTimeField`
     """
 
-    job_exe = models.ForeignKey('job.JobExecution', primary_key=True, on_delete=models.PROTECT)
+    job_exe = models.OneToOneField('job.JobExecution', primary_key=True, on_delete=models.PROTECT)
     job = models.ForeignKey('job.Job', on_delete=models.PROTECT)
     job_type = models.ForeignKey('job.JobType', on_delete=models.PROTECT)
 
@@ -777,7 +777,7 @@ class Queue(models.Model):
     disk_out_required = models.FloatField()
     disk_total_required = models.FloatField()
 
-    configuration = django.contrib.postgres.fields.JSONField()
+    configuration = django.contrib.postgres.fields.JSONField(null=True)
 
     created = models.DateTimeField(auto_now_add=True)
     queued = models.DateTimeField()

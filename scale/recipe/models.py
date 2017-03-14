@@ -526,7 +526,7 @@ class Recipe(models.Model):
     recipe_type_rev = models.ForeignKey('recipe.RecipeTypeRevision', on_delete=models.PROTECT)
     event = models.ForeignKey('trigger.TriggerEvent', on_delete=models.PROTECT)
 
-    data = django.contrib.postgres.fields.JSONField()
+    data = django.contrib.postgres.fields.JSONField(null=True)
 
     is_superseded = models.BooleanField(default=False)
     root_superseded_recipe = models.ForeignKey('recipe.Recipe', related_name='superseded_by_recipes', blank=True,
@@ -916,7 +916,7 @@ class RecipeType(models.Model):
     description = models.CharField(blank=True, max_length=500, null=True)
 
     is_active = models.BooleanField(default=True)
-    definition = django.contrib.postgres.fields.JSONField()
+    definition = django.contrib.postgres.fields.JSONField(null=True)
     revision_num = models.IntegerField(default=1)
     trigger_rule = models.ForeignKey('trigger.TriggerRule', blank=True, null=True, on_delete=models.PROTECT)
 
@@ -991,7 +991,7 @@ class RecipeTypeRevision(models.Model):
 
     recipe_type = models.ForeignKey('recipe.RecipeType', on_delete=models.PROTECT)
     revision_num = models.IntegerField()
-    definition = django.contrib.postgres.fields.JSONField()
+    definition = django.contrib.postgres.fields.JSONField(null=True)
     created = models.DateTimeField(auto_now_add=True)
 
     objects = RecipeTypeRevisionManager()
