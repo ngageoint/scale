@@ -41,15 +41,15 @@ class SecretsManager(object):
 
         updated_secrets = {}
         try:
-            self.sh = SecretsHandler()
-            jobs_with_secrets = self.sh.list_job_types()
+            sh = SecretsHandler()
+            jobs_with_secrets = sh.list_job_types()
         except (InvalidSecretsAuthorization, InvalidSecretsRequest, InvalidSecretsToken) as e:
             logger.exception('Secrets Error: %s', e.message)
             return
         
         for job in jobs_with_secrets:
             try:
-                job_secrets = self.sh.get_job_type_secrets(job)
+                job_secrets = sh.get_job_type_secrets(job)
                 updated_secrets[job] = job_secrets
             except (InvalidSecretsAuthorization, InvalidSecretsRequest, InvalidSecretsValue) as e:
                 logger.exception('Secrets Error: %s', e.message)

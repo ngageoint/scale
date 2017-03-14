@@ -135,7 +135,7 @@ class SecretsHandler(object):
                 'description': 'Secrets for Scale job ' + job_name,
                 'value': secret_values
             })
-            set_secret = self._make_request('PUT', url, headers, data)
+            self._make_request('PUT', url, headers, data)
 
         else:
             url = ''.join([url, '/secret/scale/job-type/', job_name])
@@ -144,7 +144,7 @@ class SecretsHandler(object):
                 'X-Vault-Token': self.secrets_token
             }
             data = secret_values
-            set_secret = self._make_request('PUT', url, headers, data)
+            self._make_request('PUT', url, headers, data)
 
     def _check_secrets_backend(self):
         """Validates that Scale can transact with the secrets backend properly.
@@ -158,7 +158,7 @@ class SecretsHandler(object):
                 'Content-Type': 'application/json',
                 'Authorization': self.dcos_token
             }
-            check_mount = self._make_request('GET', url, headers=headers)
+            self._make_request('GET', url, headers=headers)
 
         else:
             url += '/sys/mounts'
@@ -184,7 +184,7 @@ class SecretsHandler(object):
             'type': 'generic',
             'description': 'Secrets store for all secrets used by Scale'
         })
-        create_mount = self._make_request('POST', url, headers=headers, data=data)
+        self._make_request('POST', url, headers=headers, data=data)
 
         # A store needs at least one secret in it for other functions to work...
         backends = ['/job-type/placeholder', '/internal/placeholder', '/storage/placeholder']
@@ -192,7 +192,7 @@ class SecretsHandler(object):
 
         for folder in backends:
             url = self.secrets_url + '/secret/scale' + folder
-            set_secret = self._make_request('PUT', url, headers, data)
+            self._make_request('PUT', url, headers, data)
 
     def _dcos_authenticate(self):
         """Authenticate with DC/OS Vault backend and expect a status code 200 returned.
@@ -213,7 +213,7 @@ class SecretsHandler(object):
         
         return access_token
 
-    def _make_request(self, method, url, headers=None, data=None, catch_error=True):
+    def _make_request(self, method, url, headers=None, data=None):
         """Make a request to the secrets backend with the provided variables
 
         :param method: string that determines GET or POST request type
@@ -221,11 +221,9 @@ class SecretsHandler(object):
         :param url: string containing the url for the request
         :type url: str
         :param headers: headers to attach to the request
-        :type headers: json
+        :type headers: dict
         :param data: data to attach to the request
         :type data: json
-        :param data: flag to catch error before return
-        :type data: bool
 
         :return: an object containing information from the request
         :rtype: requests.request
@@ -241,7 +239,7 @@ class SecretsHandler(object):
 
         r = requests.request(method=method, url=url, headers=headers, data=data)
         
-        if catch_error and r.status_code in self.secrets_error_codes:
+        if r.status_code in self.secrets_error_codes:
             if r.status_code == 403:
                 raise InvalidSecretsAuthorization('Permission was denied when getting a secret')
             else:
@@ -254,5 +252,5 @@ class SecretsHandler(object):
         """
 
         url = self.secrets_url + '/v1/sys/health'
-        request_auth = self._make_request('GET', url)
+        self._make_request('GET', url)
         self.secrets_url += '/v1'
