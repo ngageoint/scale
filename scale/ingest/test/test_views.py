@@ -8,6 +8,7 @@ import django.utils.timezone as timezone
 from django.test import TestCase
 from rest_framework import status
 
+import job.test.utils as job_utils
 import ingest.test.utils as ingest_test_utils
 import storage.test.utils as storage_test_utils
 import util.rest as rest_util
@@ -425,6 +426,18 @@ class TestScanDetailsView(TestCase):
         scan = Scan.objects.get(pk=self.scan.id)
         self.assertEqual(scan.title, 'Title EDIT')
         self.assertEqual(scan.description, 'Description EDIT')
+        
+    def test_edit_not_found(self):
+        """Tests editing non-existent Scan process"""
+
+        json_data = {
+            'title': 'Title EDIT',
+            'description': 'Description EDIT',
+        }
+
+        url = rest_util.get_url('/scans/100/')
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
     def test_edit_config(self):
         """Tests editing the configuration of a Scan process"""
@@ -457,6 +470,22 @@ class TestScanDetailsView(TestCase):
         scan = Scan.objects.get(pk=self.scan.id)
         self.assertEqual(scan.title, self.scan.title)
         self.assertDictEqual(scan.configuration, config)
+        
+    def test_edit_config_conflict(self):
+        """Tests editing the configuration of a Scan process already launched"""
+
+        json_data = {
+            'configuration': {},
+        }
+
+        self.scan.job = job_utils.create_job()
+        self.scan.save()
+        url = rest_util.get_url('/scans/%d/' % self.scan.id)
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_409_CONFLICT, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(result['detail'], 'Ingest Scan already launched')
 
     def test_edit_bad_config(self):
         """Tests attempting to edit a Scan process using an invalid configuration"""
@@ -565,6 +594,93 @@ class TestScansValidationView(TestCase):
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+
+class TestScanProcessView(TestCase):
+    fixtures = ['ingest_job_types.json']
+    
+    def setUp(self):
+        django.setup()
+
+        self.workspace = storage_test_utils.create_workspace(name='raw')
+        self.scan = ingest_test_utils.create_scan()
+
+    def test_not_found(self):
+        """Tests a Scan process launch where the id of Scan is missing."""
+
+        url = rest_util.get_url('/scans/100/process/')
+        response = self.client.generic('POST', url, json.dumps({ 'ingest': False }), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+
+    def test_dry_run_process(self):
+        """Tests successfully calling the Scan process view for a dry run Scan."""
+
+        url = rest_util.get_url('/scans/%s/process/' % self.scan.id)
+        response = self.client.generic('POST', url, json.dumps({ 'ingest': False }), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        
+        result = json.loads(response.content)
+        self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
+        self.assertIsNotNone(result['dry_run_job'])
+
+    def test_ingest_process(self):
+        """Tests successfully calling the Scan process view for an ingest Scan."""
+
+        url = rest_util.get_url('/scans/%s/process/' % self.scan.id)
+        response = self.client.generic('POST', url, json.dumps({ 'ingest': True }), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        result = json.loads(response.content)
+        self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
+        self.assertIsNotNone(result['job'])
+
+    def test_dry_run_process_conflict(self):
+        """Tests error response when calling the Scan process view for a dry run Scan when already processed."""
+        
+        self.scan.job = job_utils.create_job()
+        self.scan.save()
+
+        url = rest_util.get_url('/scans/%s/process/' % self.scan.id)
+        response = self.client.generic('POST', url, json.dumps({ 'ingest': False }), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_409_CONFLICT, response.content)
+
+    def test_ingest_process_conflict(self):
+        """Tests error response when calling the Scan process view for an ingest Scan when already processed."""
+
+        self.scan.job = job_utils.create_job()
+        self.scan.save()
+
+        url = rest_util.get_url('/scans/%s/process/' % self.scan.id)
+        response = self.client.generic('POST', url, json.dumps({ 'ingest': True }), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_409_CONFLICT, response.content)
+
+    def test_dry_run_process_reprocess(self):
+        """Tests successfully calling the Scan process view for a 2nd dry run Scan."""
+        
+        self.scan.dry_run_job = job_utils.create_job()
+        old_job_id = self.scan.dry_run_job.id
+
+        url = rest_util.get_url('/scans/%s/process/' % self.scan.id)
+        response = self.client.generic('POST', url, json.dumps({ 'ingest': False }), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        result = json.loads(response.content)
+        self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
+        self.assertIsNotNone(result['dry_run_job'])
+        self.assertNotEqual(result['dry_run_job']['id'], old_job_id)
+
+    def test_ingest_after_dry_run(self):
+        """Tests successfully calling the Scan process view for an ingest Scan. following dry run"""
+
+        self.scan.dry_run_job = job_utils.create_job()
+
+        url = rest_util.get_url('/scans/%s/process/' % self.scan.id)
+        response = self.client.generic('POST', url, json.dumps({ 'ingest': True }), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        result = json.loads(response.content)
+        self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
+        self.assertIsNotNone(result['job'])
 
 
 class TestStrikesView(TestCase):

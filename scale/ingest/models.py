@@ -754,18 +754,18 @@ class ScanManager(models.Manager):
         job_data.add_property_input('Dry Run', str(dry_run))
         event_description = {'scan_id': scan.id}
 
+        if scan.job:
+            raise ScanIngestJobAlreadyLaunched
+
         if dry_run:
             event = TriggerEvent.objects.create_trigger_event('DRY_RUN_SCAN_CREATED', None, event_description, now())
             scan.dry_run_job = Queue.objects.queue_new_job(scan_type, job_data, event)
         else:
-            if scan.job:
-                raise ScanIngestJobAlreadyLaunched
-            else:
-                event = TriggerEvent.objects.create_trigger_event('SCAN_CREATED', None, event_description, now())
-                scan.job = Queue.objects.queue_new_job(scan_type, job_data, event)
+            event = TriggerEvent.objects.create_trigger_event('SCAN_CREATED', None, event_description, now())
+            scan.job = Queue.objects.queue_new_job(scan_type, job_data, event)
 
         scan.save()
-
+ 
         return scan
 
 

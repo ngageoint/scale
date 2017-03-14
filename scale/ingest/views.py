@@ -121,9 +121,10 @@ class IngestsStatusView(ListAPIView):
         return self.get_paginated_response(serializer.data)
 
 
-class ScansProcessView(APIView):
+class ScansProcessView(GenericAPIView):
     """This view is the endpoint for launching a scan execution to ingest"""
     queryset = Scan.objects.all()
+    serializer_class = ScanDetailsSerializer
 
     def post(self, request, scan_id=None):
         """Launches a scan to ingest from an existing scan model instance
@@ -138,10 +139,14 @@ class ScansProcessView(APIView):
 
         ingest = rest_util.parse_bool(request, 'ingest', default_value=False)
 
-        scan = Scan.objects.queue_scan(scan_id, dry_run=not ingest)
+        try:
+            scan = Scan.objects.queue_scan(scan_id, dry_run=not ingest)
+        except Scan.DoesNotExist:
+            raise Http404
 
+        serializer = self.get_serializer(scan)
         scan_url = reverse('scans_details_view', args=[scan.id], request=request)
-        return Response(status=status.HTTP_201_CREATED, headers=dict(location=scan_url))
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=dict(location=scan_url))
 
 
 class ScansView(ListCreateAPIView):
@@ -189,12 +194,6 @@ class ScansView(ListCreateAPIView):
             scan = Scan.objects.create_scan(name, title, description, configuration)
         except InvalidScanConfiguration as ex:
             raise BadParameter('Scan configuration invalid: %s' % unicode(ex))
-
-        # Fetch the full scan process with details
-        try:
-            scan = Scan.objects.get_details(scan.id)
-        except Scan.DoesNotExist:
-            raise Http404
 
         serializer = ScanDetailsSerializer(scan)
         scan_url = reverse('scans_details_view', args=[scan.id], request=request)
