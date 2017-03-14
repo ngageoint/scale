@@ -40,62 +40,72 @@ UB3V/SWf7Wqp9vDEbUtgzIn9y4l5cIjS/J2IKkYARg==
 
         django.setup()
         
-    def mocked_request_200():
-        r_return = MagicMock()
-        r_return.status_code = 200
-        r_return.content = json.dumps({
-            "scale/": {
-                "config": {
-                    "default_lease_ttl": 0,
-                    "max_lease_ttl": 0
-                },
-                "description": "scale secrets storage",
-                "type": "generic",
+    def mocked_validate(*args):
+        class MockResponse:
+            def __init__(self, json_data, status_code):
+                self.json_data = json_data
+                self.status_code = status_code
+    
+            def json(self):
+                return self.json_data
+                
+            def content(self):
+                return self.json_data
+    
+        if not args: 
+            return MockResponse({}, 403)
+        
+        elif args[0] == 'vault':
+            r_return = MagicMock()
+            r_return.status_code = 200
+            r_return.content = json.dumps({
+                "scale/": {
+                    "config": {
+                        "default_lease_ttl": 0,
+                        "max_lease_ttl": 0
+                    },
+                    "description": "scale secrets storage",
+                    "type": "generic",
+                }
+            })
+            
+            return r_return
+        
+        elif args[0] == 'dcos':
+            status_code = 200
+            content = {
+                "token": "some_good_token"
             }
-        })
+            return MockResponse(content, status_code)
         
-        return r_return
-        
-    def mocked_request_403():
-        r_return = MagicMock()
-        r_return.status_code = 403
-        return r_return
-        
-    @patch('vault.secrets_handler.SecretsHandler._make_request', return_value=mocked_request_200())    
+        return MockResponse({}, 404)
+
+    @patch('requests.request', return_value=mocked_validate('dcos'))    
     def test_dcos_authenticate_good_return(self, mock_request):
         with self.settings(SECRETS_TOKEN=self.dcos_token,
-                           DCOS_SERVICE_ACCOUNT='some_account_name',
-                           SECRETS_URL='HTTP://127.0.0.1:8200'):
+                          DCOS_SERVICE_ACCOUNT='some_account_name',
+                          SECRETS_URL='HTTP://127.0.0.1:8200'):
             auth_test = SecretsHandler()
-            
-    @patch('vault.secrets_handler.SecretsHandler._make_request', return_value=mocked_request_200())    
+
+    @patch('requests.request', return_value=mocked_validate('dcos'))    
     def test_dcos_authenticate_bad_token(self, mock_request):
         with self.settings(SECRETS_TOKEN='some_bad_token',
-                           DCOS_SERVICE_ACCOUNT='some_account_name',
-                           SECRETS_URL='HTTP://127.0.0.1:8200'):
+                          DCOS_SERVICE_ACCOUNT='some_account_name',
+                          SECRETS_URL='HTTP://127.0.0.1:8200'):
             self.assertRaises(InvalidSecretsToken, SecretsHandler)
-            
-            
-    @patch('vault.secrets_handler.SecretsHandler._make_request', return_value=mocked_request_403())    
-    def test_dcos_authenticate_bad_permission(self, mock_request):
-        with self.settings(SECRETS_TOKEN=self.dcos_token,
-                           DCOS_SERVICE_ACCOUNT='some_account_name',
-                           SECRETS_URL='HTTP://127.0.0.1:8200'):
-            self.assertRaises(InvalidSecretsAuthorization, SecretsHandler)
-        
-            
-    @patch('vault.secrets_handler.SecretsHandler._make_request', return_value=mocked_request_200())    
+
+    @patch('requests.request', return_value=mocked_validate('vault'))    
     def test_vault_authenticate_good_return(self, mock_request):
         with self.settings(SECRETS_TOKEN='some_master_token',
-                           DCOS_SERVICE_ACCOUNT=None,
-                           SECRETS_URL='HTTP://127.0.0.1:8200'):
+                          DCOS_SERVICE_ACCOUNT=None,
+                          SECRETS_URL='HTTP://127.0.0.1:8200'):
             auth_test = SecretsHandler()
-            
-    @patch('vault.secrets_handler.SecretsHandler._make_request', return_value=mocked_request_403())    
+
+    @patch('requests.request', return_value=mocked_validate())    
     def test_vault_authenticate_bad_permission(self, mock_request):
         with self.settings(SECRETS_TOKEN='some_master_token',
-                           DCOS_SERVICE_ACCOUNT=None,
-                           SECRETS_URL='HTTP://127.0.0.1:8200'):
+                          DCOS_SERVICE_ACCOUNT=None,
+                          SECRETS_URL='HTTP://127.0.0.1:8200'):
             self.assertRaises(InvalidSecretsAuthorization, SecretsHandler)
             
             
@@ -107,7 +117,7 @@ class VaultSecretsValueValidation(TestCase):
         
         self.vault_setup()
         django.setup()
-        
+
     def mocked_get_secret(*args):
         class MockResponse:
             def __init__(self, json_data, status_code):
@@ -140,7 +150,7 @@ class VaultSecretsValueValidation(TestCase):
             return MockResponse(content, status_code)
         
         return MockResponse({}, 404)
-        
+
     def mocked_request_setup():
         r_return = MagicMock()
         r_return.status_code = 200
@@ -156,12 +166,12 @@ class VaultSecretsValueValidation(TestCase):
         })
         
         return r_return
-    
+
     @patch('requests.request', return_value=mocked_request_setup())    
     def vault_setup(self, mock_request):
         with self.settings(SECRETS_TOKEN='some_master_token',
-                           DCOS_SERVICE_ACCOUNT=None,
-                           SECRETS_URL='HTTP://127.0.0.1:8200'):
+                          DCOS_SERVICE_ACCOUNT=None,
+                          SECRETS_URL='HTTP://127.0.0.1:8200'):
 
             self.vault_backend = SecretsHandler()
 
@@ -169,7 +179,7 @@ class VaultSecretsValueValidation(TestCase):
     def test_vault_get_secret(self, mock_request):
         test_secret = self.vault_backend.get_job_type_secrets(self.secret_test_path)
         self.assertEqual(test_secret, {"test_val_name": "vault_backend_secret", "foo": "bar"})
-        
+
     @patch('requests.request', return_value=mocked_get_secret())    
     def test_vault_get_bad_secret(self, mock_request):
         self.assertRaises(InvalidSecretsAuthorization, 
@@ -250,8 +260,8 @@ UB3V/SWf7Wqp9vDEbUtgzIn9y4l5cIjS/J2IKkYARg==
     @patch('requests.request', return_value=mocked_get_secret('auth'))    
     def dcos_setup(self, mock_request):
         with self.settings(SECRETS_TOKEN=self.dcos_token,
-                           DCOS_SERVICE_ACCOUNT='some_account_name',
-                           SECRETS_URL='HTTP://127.0.0.1:8200'):
+                          DCOS_SERVICE_ACCOUNT='some_account_name',
+                          SECRETS_URL='HTTP://127.0.0.1:8200'):
             self.dcos_backend = SecretsHandler()
         
     @patch('requests.request', return_value=mocked_get_secret('secret'))    
