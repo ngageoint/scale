@@ -653,7 +653,7 @@ class ScanManager(models.Manager):
             invalid.
         """
 
-        scan = Scan.objects.get(pk=scan_id)
+        scan = Scan.objects.select_for_update().get(pk=scan_id)
         
         if scan.job:
             raise ScanIngestJobAlreadyLaunched
@@ -746,7 +746,7 @@ class ScanManager(models.Manager):
         :rtype: :class:`ingest.models.Scan`
         """
 
-        scan = Scan.objects.get(pk=scan_id)
+        scan = Scan.objects.select_for_update().get(pk=scan_id)
         scan_type = self.get_scan_job_type()
 
         job_data = JobData()
