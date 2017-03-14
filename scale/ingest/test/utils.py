@@ -79,11 +79,6 @@ def create_scan(name=None, title=None, description=None, configuration=None, job
             'scanner': {'type': 'dir'}, 'recursive': True,
             'files_to_ingest': [{'filename_regex': '.*'}]
         }
-    if not job:
-        job = job_utils.create_job()
-
-    if not dry_run_job:
-        dry_run_job = job_utils.create_job()
 
     return Scan.objects.create(name=name, title=title, description=description,
                                configuration=configuration, job=job, dry_run_job=dry_run_job)

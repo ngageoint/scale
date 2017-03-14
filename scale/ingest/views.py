@@ -273,7 +273,7 @@ class ScansValidationView(APIView):
             config = ScanConfiguration(configuration)
             warnings = config.validate()
         except InvalidScanConfiguration as ex:
-            logger.exception('Unable to validate new Scan process: %s', name)
+            logger.exception('Unable to validate Scan configuration.')
             raise BadParameter(unicode(ex))
 
         results = [{'id': w.key, 'details': w.details} for w in warnings]

@@ -1,5 +1,7 @@
 """Defines the exceptions related to Scan scanners"""
 
+from rest_framework.exceptions import APIException
+
 from ingest.scan.configuration.exceptions import InvalidScanConfiguration
 
 

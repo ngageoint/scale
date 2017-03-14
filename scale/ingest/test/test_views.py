@@ -399,7 +399,8 @@ class TestScanDetailsView(TestCase):
         self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
         self.assertEqual(result['id'], self.scan.id)
         self.assertEqual(result['name'], self.scan.name)
-        self.assertIsNotNone(result['job'])
+        self.assertIsNone(result['job'])
+        self.assertIsNone(result['dry_run_job'])
         self.assertIsNotNone(result['configuration'])
 
     def test_edit_simple(self):

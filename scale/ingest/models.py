@@ -696,8 +696,8 @@ class ScanManager(models.Manager):
         """
 
         # Fetch a list of scans
-        scans = Scan.objects.select_related('job', 'job__job_type')
-                            .select_related('dry_run_job', 'dry_run_job__job_type')
+        scans = Scan.objects.select_related('job', 'job__job_type') \
+                            .select_related('dry_run_job', 'dry_run_job__job_type') \
                             .defer('configuration')
 
         # Apply time range filtering
