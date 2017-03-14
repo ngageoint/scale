@@ -157,16 +157,16 @@ class FileAncestryLink(models.Model):
     descendant = models.ForeignKey('storage.ScaleFile', blank=True, null=True, on_delete=models.PROTECT,
                                    related_name='ancestors')
 
-    job_exe = models.ForeignKey('job.JobExecution', on_delete=models.PROTECT, related_name='file_links')
-    job = models.ForeignKey('job.Job', on_delete=models.PROTECT, related_name='file_links')
+    job_exe = models.ForeignKey('job.JobExecution', on_delete=models.PROTECT, related_name='job_exe_file_links')
+    job = models.ForeignKey('job.Job', on_delete=models.PROTECT, related_name='job_file_links')
     recipe = models.ForeignKey('recipe.Recipe', blank=True, on_delete=models.PROTECT, null=True,
-                               related_name='file_links')
+                               related_name='recipe_file_links')
     batch = models.ForeignKey('batch.Batch', blank=True, on_delete=models.PROTECT, null=True)
 
     ancestor_job = models.ForeignKey('job.Job', blank=True, on_delete=models.PROTECT,
-                                     related_name='ancestor_file_links', null=True)
+                                     related_name='ancestor_job_file_links', null=True)
     ancestor_job_exe = models.ForeignKey('job.JobExecution', blank=True, on_delete=models.PROTECT,
-                                         related_name='ancestor_file_links', null=True)
+                                         related_name='ancestor_job_exe_file_links', null=True)
 
     created = models.DateTimeField(auto_now_add=True)
 
@@ -214,7 +214,12 @@ class ProductFileManager(models.GeoManager):
 
         # Fetch a list of product files
         products = ScaleFile.objects.filter(file_type='PRODUCT', has_been_published=True)
-        products = products.select_related('workspace', 'job_type', 'job', 'job_exe').defer('workspace__json_config')
+        products = products.select_related('workspace', 'job_type', 'job', 'job_exe')
+        products = products.defer('workspace__json_config', 'job__data', 'job__configuration', 'job__results',
+                                  'job_exe__environment', 'job_exe__configuration', 'job_exe__job_metrics',
+                                  'job_exe__stdout', 'job_exe__stderr', 'job_exe__results', 'job_exe__results_manifest',
+                                  'job_type__interface', 'job_type__docker_params', 'job_type__configuration',
+                                  'job_type__error_mapping')
         products = products.prefetch_related('countries')
 
         # Apply time range filtering

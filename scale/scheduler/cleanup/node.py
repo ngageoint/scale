@@ -41,7 +41,8 @@ class NodeCleanup(object):
         """
 
         for job_exe in job_exes:
-            del self._job_exes[job_exe.id]
+            if job_exe.id in self._job_exes:
+                del self._job_exes[job_exe.id]
 
     def create_next_task(self, agent_id, hostname, is_initial_cleanup_completed):
         """Creates and returns the next cleanup task that needs to be run, possibly None
@@ -72,3 +73,12 @@ class NodeCleanup(object):
                     break
 
         return CleanupTask(scheduler_mgr.framework_id, agent_id, cleanup_job_exes)
+
+    def get_num_job_exes(self):
+        """Returns the number of job executions waiting to be cleaned up
+
+        :returns: The number of job executions waiting to be cleaned up
+        :rtype: int
+        """
+
+        return len(self._job_exes.values())

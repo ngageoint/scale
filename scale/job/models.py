@@ -113,9 +113,11 @@ class JobManager(models.Manager):
 
         return job
 
-    def get_jobs(self, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None, job_type_names=None,
-                 job_type_categories=None, error_categories=None, include_superseded=False, order=None):
-        """Returns a list of jobs within the given time range.
+    def filter_jobs(self, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None, job_type_names=None,
+                    job_type_categories=None, error_categories=None, include_superseded=False, order=None):
+        """Returns a query for job models that filters on the given fields. The returned query includes the related
+        job_type, job_type_rev, event, and error fields, except for the job_type.interface and job_type_rev.interface
+        fields.
 
         :param started: Query jobs updated after this amount of time.
         :type started: :class:`datetime.datetime`
@@ -137,8 +139,8 @@ class JobManager(models.Manager):
         :type include_superseded: bool
         :param order: A list of fields to control the sort order.
         :type order: [string]
-        :returns: The list of jobs that match the time range.
-        :rtype: [:class:`job.models.Job`]
+        :returns: The job query
+        :rtype: :class:`django.db.models.QuerySet`
         """
 
         # Fetch a list of jobs
@@ -174,6 +176,39 @@ class JobManager(models.Manager):
             jobs = jobs.order_by('last_modified')
         return jobs
 
+    def get_jobs(self, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None, job_type_names=None,
+                 job_type_categories=None, error_categories=None, include_superseded=False, order=None):
+        """Returns a list of jobs within the given time range.
+
+        :param started: Query jobs updated after this amount of time.
+        :type started: :class:`datetime.datetime`
+        :param ended: Query jobs updated before this amount of time.
+        :type ended: :class:`datetime.datetime`
+        :param statuses: Query jobs with the a specific execution status.
+        :type statuses: [string]
+        :param job_ids: Query jobs associated with the identifier.
+        :type job_ids: [int]
+        :param job_type_ids: Query jobs of the type associated with the identifier.
+        :type job_type_ids: [int]
+        :param job_type_names: Query jobs of the type associated with the name.
+        :type job_type_names: [string]
+        :param job_type_categories: Query jobs of the type associated with the category.
+        :type job_type_categories: [string]
+        :param error_categories: Query jobs that failed due to errors associated with the category.
+        :type error_categories: [string]
+        :param include_superseded: Whether to include jobs that are superseded.
+        :type include_superseded: bool
+        :param order: A list of fields to control the sort order.
+        :type order: [string]
+        :returns: The list of jobs that match the time range.
+        :rtype: [:class:`job.models.Job`]
+        """
+
+        return self.filter_jobs(started=started, ended=ended, statuses=statuses, job_ids=job_ids,
+                                job_type_ids=job_type_ids, job_type_names=job_type_names,
+                                job_type_categories=job_type_categories, error_categories=error_categories,
+                                include_superseded=include_superseded, order=order)
+
     def get_details(self, job_id):
         """Gets additional details for the given job model based on related model attributes.
 
@@ -186,20 +221,23 @@ class JobManager(models.Manager):
         """
 
         # Attempt to fetch the requested job
-        job = Job.objects.select_related('job_type', 'job_type_rev', 'event', 'event__rule', 'error',
-                                         'root_superseded_job', 'root_superseded_job__job_type', 'superseded_job',
-                                         'superseded_job__job_type', 'superseded_by_job',
+        job = Job.objects.select_related('job_type', 'job_type_rev', 'job_type_rev__job_type', 'event', 'event__rule',
+                                         'error', 'root_superseded_job', 'root_superseded_job__job_type',
+                                         'superseded_job', 'superseded_job__job_type', 'superseded_by_job',
                                          'superseded_by_job__job_type').get(pk=job_id)
 
         # Attempt to get related job executions
-        job.job_exes = JobExecution.objects.filter(job=job).order_by('-created')
+        job_exes = JobExecution.objects.filter(job=job).select_related('job', 'node', 'error')
+        job.job_exes = job_exes.defer('job__data', 'job__configuration', 'job__results').order_by('-created')
 
         # Attempt to get related recipe
         # Use a localized import to make higher level application dependencies optional
         try:
             from recipe.models import RecipeJob
             recipe_jobs = RecipeJob.objects.filter(job=job).order_by('recipe__last_modified')
-            recipe_jobs = recipe_jobs.select_related('recipe', 'recipe__recipe_type')
+            recipe_jobs = recipe_jobs.select_related('recipe', 'recipe__recipe_type', 'recipe__recipe_type_rev',
+                                                     'recipe__recipe_type_rev__recipe_type', 'recipe__event',
+                                                     'recipe__event__rule')
             job.recipes = [recipe_job.recipe for recipe_job in recipe_jobs]
         except:
             job.recipes = []
@@ -207,12 +245,24 @@ class JobManager(models.Manager):
         # Fetch all the associated input files
         input_file_ids = job.get_job_data().get_input_file_ids()
         input_files = ScaleFile.objects.filter(id__in=input_file_ids)
-        input_files = input_files.select_related('workspace').defer('workspace__json_config')
+        input_files = input_files.select_related('workspace', 'job_type', 'job', 'job_exe')
+        input_files = input_files.defer('workspace__json_config', 'job__data', 'job__configuration', 'job__results',
+                                        'job_exe__environment', 'job_exe__configuration', 'job_exe__job_metrics',
+                                        'job_exe__stdout', 'job_exe__stderr', 'job_exe__results',
+                                        'job_exe__results_manifest', 'job_type__interface', 'job_type__docker_params',
+                                        'job_type__configuration', 'job_type__error_mapping')
+        input_files = input_files.prefetch_related('countries')
         input_files = input_files.order_by('id').distinct('id')
 
         # Attempt to get related products
         output_files = ScaleFile.objects.filter(job=job)
-        output_files = output_files.select_related('workspace').defer('workspace__json_config')
+        output_files = output_files.select_related('workspace', 'job_type', 'job', 'job_exe')
+        output_files = output_files.defer('workspace__json_config', 'job__data', 'job__configuration', 'job__results',
+                                          'job_exe__environment', 'job_exe__configuration', 'job_exe__job_metrics',
+                                          'job_exe__stdout', 'job_exe__stderr', 'job_exe__results',
+                                          'job_exe__results_manifest', 'job_type__interface', 'job_type__docker_params',
+                                          'job_type__configuration', 'job_type__error_mapping')
+        output_files = output_files.prefetch_related('countries')
         output_files = output_files.order_by('id').distinct('id')
 
         # Merge job interface definitions with mapped values

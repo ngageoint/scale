@@ -13,7 +13,9 @@ from batch.exceptions import BatchError
 from job.configuration.data.job_data import JobData
 from job.models import JobType
 from queue.models import Queue
+from recipe.configuration.data.recipe_data import RecipeData
 from recipe.models import Recipe, RecipeJob
+from storage.models import ScaleFile, Workspace
 from trigger.models import TriggerEvent
 
 logger = logging.getLogger(__name__)
@@ -138,19 +140,26 @@ class BatchManager(models.Manager):
         """
 
         # Fetch the requested batch for processing
-        batch = Batch.objects.get(pk=batch_id)
+        batch = Batch.objects.select_related('recipe_type', 'recipe_type__trigger_rule').get(pk=batch_id)
         if batch.status == 'CREATED':
             raise BatchError('Batch already completed: %i', batch_id)
         batch_definition = batch.get_batch_definition()
 
         # Fetch all the recipes of the requested type that are not already superseded
         old_recipes = self.get_matched_recipes(batch.recipe_type, batch_definition)
-        total = old_recipes.count()
-        batch.total_count = total
-        batch.save()
 
-        # Schedule all the new recipes/jobs and create corresponding batch models
-        logger.info('Scheduling batch recipes: %i', total)
+        # Fetch all the old files that were never triggered for the recipe type
+        old_files = self.get_matched_files(batch.recipe_type, batch_definition)
+
+        # Estimate the batch size
+        old_recipes_count = old_recipes.count()
+        old_files_count = old_files.count()
+        if old_recipes_count + old_files_count > batch.total_count:
+            batch.total_count = old_recipes_count + old_files_count
+            batch.save()
+
+        # Schedule new recipes and create batch models for old recipes
+        logger.info('Scheduling new batch recipes for old recipes: %i', old_recipes_count)
         for old_recipe in old_recipes.iterator():
             try:
                 self._process_recipe(batch, old_recipe)
@@ -158,13 +167,64 @@ class BatchManager(models.Manager):
                 logger.exception('Unable to supersede batch recipe: %i', old_recipe.id)
                 batch.failed_count += 1
                 batch.save()
-        logger.info('Created: %i, Failed: %i', batch.created_count, batch.failed_count)
+
+        # Determine what trigger rule should be applied
+        trigger_config = None
+        if batch_definition.trigger_rule:
+            trigger_config = batch.recipe_type.trigger_rule.get_configuration()
+        elif batch_definition.trigger_config:
+            trigger_config = batch_definition.trigger_config
+
+        # Schedule new recipes and create batch models for old files
+        logger.info('Scheduling new batch recipes for old files: %i', old_recipes_count)
+        for old_file in old_files.iterator():
+            try:
+                self._process_trigger(batch, trigger_config, old_file)
+            except:
+                logger.exception('Unable to trigger batch file: %i', old_file.id)
+                batch.failed_count += 1
+                batch.save()
 
         # Update the final batch state
         # Recompute the total to catch models that may have matched after the count query
+        logger.info('Created: %i, Failed: %i', batch.created_count, batch.failed_count)
         batch.status = 'CREATED'
         batch.total_count = batch.created_count + batch.failed_count
         batch.save()
+
+    def get_matched_files(self, recipe_type, definition):
+        """Gets all the input files that were never triggered against the given batch criteria.
+
+        :param recipe_type: The type of recipes that should be re-processed
+        :type recipe_type: :class:`recipe.models.RecipeType`
+        :param definition: The definition for running a batch
+        :type definition: :class:`batch.configuration.definition.batch_definition.BatchDefinition`
+        :returns: A list of files that match the batch definition and were never run before.
+        :rtype: [:class:`storage.models.ScaleFile`]
+        """
+
+        # Check whether old files should be triggered
+        if not definition.trigger_rule and not definition.trigger_config:
+            return ScaleFile.objects.none()
+
+        # Fetch all the files that were not already processed by the recipe type
+        old_files = ScaleFile.objects.exclude(recipefile__recipe__recipe_type=recipe_type)
+
+        # Optionally filter by date range
+        if definition.date_range_type == 'created':
+            if definition.started:
+                old_files = old_files.filter(created__gte=definition.started)
+            if definition.ended:
+                old_files = old_files.filter(created__lte=definition.ended)
+        elif definition.date_range_type == 'data':
+            # The filters must include OR operators since the file data started/ended fields can be null
+            if definition.started:
+                old_files = old_files.filter(Q(data_started__gte=definition.started) |
+                                             Q(data_ended__gte=definition.started))
+            if definition.ended:
+                old_files = old_files.filter(Q(data_started__lte=definition.ended) |
+                                             Q(data_ended__lte=definition.ended))
+        return old_files
 
     def get_matched_recipes(self, recipe_type, definition):
         """Gets all the recipes that might be affected by the given batch criteria.
@@ -201,7 +261,76 @@ class BatchManager(models.Manager):
         return old_recipes
 
     @transaction.atomic
-    def _process_recipe(self, batch, old_recipe):
+    def _process_recipe(self, batch, superseded_recipe):
+        """Processes the given recipe within the context of a particular batch request.
+
+        When the superseded recipe is re-processed, a corresponding batch recipe model and its batch jobs are created in
+        an atomic transaction to support resuming the batch command when it is interrupted prematurely.
+
+        :param batch: The batch that defines the recipes to schedule
+        :type batch: :class:`batch.models.Batch`
+        :param superseded_recipe: The old recipe that was superseded
+        :type superseded_recipe: :class:`recipe.models.Recipe`
+        """
+
+        # Check whether the batch recipe already exists
+        if BatchRecipe.objects.filter(batch=batch, superseded_recipe=superseded_recipe).exists():
+            return
+
+        # Create the new recipe and its associated jobs
+        batch_definition = batch.get_batch_definition()
+        handler = Recipe.objects.reprocess_recipe(superseded_recipe.id, batch_definition.job_names,
+                                                  batch_definition.all_jobs, batch_definition.priority)
+
+        # Fetch all the recipe jobs that were just superseded
+        old_recipe_jobs = RecipeJob.objects.select_related('job').filter(recipe=superseded_recipe,
+                                                                         job__is_superseded=True)
+        superseded_jobs = {rj.job_name: rj.job for rj in old_recipe_jobs}
+
+        # Create all the batch models for the new recipe and jobs
+        self._create_batch_models(batch, handler, superseded_recipe, superseded_jobs)
+
+    @transaction.atomic
+    def _process_trigger(self, batch, trigger_config, input_file):
+        """Processes the given input file within the context of a particular batch request.
+
+        Each batch recipe and its batch jobs are created in an atomic transaction to support resuming the batch command
+        when it is interrupted prematurely.
+
+        :param batch: The batch that defines the recipes to schedule
+        :type batch: :class:`batch.models.Batch`
+        :param trigger_config: The trigger rule configuration to use when evaluating source files.
+        :type trigger_config: :class:`batch.configuration.definition.batch_definition.BatchTriggerConfiguration`
+        :param input_file: The input file that should trigger a new batch recipe
+        :type input_file: :class:`storage.models.ScaleFile`
+        """
+
+        # Check whether the source file matches the trigger condition
+        if hasattr(trigger_config, 'get_condition'):
+            condition = trigger_config.get_condition()
+            if not condition.is_condition_met(input_file):
+                return
+
+        # Build recipe data to pass input file parameters to new recipes
+        recipe_data = RecipeData({})
+        if hasattr(trigger_config, 'get_input_data_name'):
+            recipe_data.add_file_input(trigger_config.get_input_data_name(), input_file.id)
+        if hasattr(trigger_config, 'get_workspace_name'):
+            workspace = Workspace.objects.get(name=trigger_config.get_workspace_name())
+            recipe_data.set_workspace_id(workspace.id)
+
+        description = {
+            'version': '1.0',
+            'file_id': input_file.id,
+            'file_name': input_file.file_name,
+        }
+        event = TriggerEvent.objects.create_trigger_event('BATCH', None, description, timezone.now())
+        handler = Queue.objects.queue_new_recipe(batch.recipe_type, recipe_data, event)
+
+        # Create all the batch models for the new recipe and jobs
+        self._create_batch_models(batch, handler)
+
+    def _create_batch_models(self, batch, handler, superseded_recipe=None, superseded_jobs=None):
         """Creates all the batch-specific models to track the new jobs that were queued.
 
         Each batch recipe and its batch jobs are created in an atomic transaction to support resuming the batch command
@@ -209,22 +338,11 @@ class BatchManager(models.Manager):
 
         :param batch: The batch that defines the recipes to schedule
         :type batch: :class:`batch.models.Batch`
-        :param old_recipe: The old recipe that was superseded
-        :type old_recipe: :class:`recipe.models.Recipe`
+        :param superseded_recipe: The old recipe that was superseded
+        :type superseded_recipe: :class:`recipe.models.Recipe`
+        :param superseded_jobs: Represents the job models (stored by job name) of the old recipe to supersede
+        :type superseded_jobs: {string: :class:`job.models.Job`}
         """
-
-        # Check whether the batch recipe already exists
-        if BatchRecipe.objects.filter(batch=batch, superseded_recipe=old_recipe).exists():
-            return
-
-        # Create the new recipe and its associated jobs
-        batch_definition = batch.get_batch_definition()
-        handler = Recipe.objects.reprocess_recipe(old_recipe.id, batch_definition.job_names, batch_definition.all_jobs,
-                                                  batch_definition.priority)
-
-        # Fetch all the recipe jobs that were just superseded
-        old_recipe_jobs = RecipeJob.objects.select_related('job').filter(recipe=old_recipe, job__is_superseded=True)
-        superseded_jobs = {rj.job_name: rj.job for rj in old_recipe_jobs}
 
         # Create a batch job for each new recipe job
         batch_jobs = []
@@ -236,7 +354,7 @@ class BatchManager(models.Manager):
             batch_job.created = now
 
             # Associate it to a superseded job when possible
-            if new_recipe_job.job_name in superseded_jobs:
+            if superseded_jobs and new_recipe_job.job_name in superseded_jobs:
                 batch_job.superseded_job = superseded_jobs[new_recipe_job.job_name]
             batch_jobs.append(batch_job)
         BatchJob.objects.bulk_create(batch_jobs)
@@ -245,7 +363,7 @@ class BatchManager(models.Manager):
         batch_recipe = BatchRecipe()
         batch_recipe.batch = batch
         batch_recipe.recipe = handler.recipe
-        batch_recipe.superseded_recipe = old_recipe
+        batch_recipe.superseded_recipe = superseded_recipe
         batch_recipe.save()
 
         # Update the overall batch status
