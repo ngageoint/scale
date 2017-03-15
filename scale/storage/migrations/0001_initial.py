@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import djorm_pgjson.fields
+import util.deprecation
 import django.db.models.deletion
 import django.contrib.gis.db.models.fields
 
@@ -53,7 +53,7 @@ class Migration(migrations.Migration):
                 ('data_ended', models.DateTimeField(null=True, blank=True)),
                 ('geometry', django.contrib.gis.db.models.fields.GeometryField(srid=4326, null=True, verbose_name='Geometry', blank=True)),
                 ('center_point', django.contrib.gis.db.models.fields.PointField(srid=4326, null=True, blank=True)),
-                ('meta_data', djorm_pgjson.fields.JSONField(default={}, null=True, blank=True)),
+                ('meta_data', util.deprecation.JSONStringField(default={}, null=True, blank=True)),
                 ('countries', models.ManyToManyField(to='storage.CountryData')),
             ],
             options={
@@ -70,7 +70,7 @@ class Migration(migrations.Migration):
                 ('description', models.CharField(max_length=500, blank=True)),
                 ('base_url', models.URLField(null=True, blank=True)),
                 ('is_active', models.BooleanField(default=True)),
-                ('json_config', djorm_pgjson.fields.JSONField(default={}, null=True, blank=True)),
+                ('json_config', util.deprecation.JSONStringField(default={}, null=True, blank=True)),
                 ('used_size', models.BigIntegerField(null=True, blank=True)),
                 ('total_size', models.BigIntegerField(null=True, blank=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),

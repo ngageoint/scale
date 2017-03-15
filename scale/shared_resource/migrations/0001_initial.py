@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import djorm_pgjson.fields
+import util.deprecation
 
 
 class Migration(migrations.Migration):
@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
                 ('title', models.CharField(max_length=100, null=True, blank=True)),
                 ('description', models.CharField(max_length=250, null=True, blank=True)),
                 ('limit', models.FloatField(null=True)),
-                ('json_config', djorm_pgjson.fields.JSONField(default={}, null=True, blank=True)),
+                ('json_config', util.deprecation.JSONStringField(default={}, null=True, blank=True)),
                 ('is_global', models.BooleanField(default=True)),
                 ('nodes', models.ManyToManyField(to='node.Node')),
             ],
