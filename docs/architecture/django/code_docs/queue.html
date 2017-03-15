@@ -729,7 +729,8 @@ job</li>
 <dl class="method">
 <dt id="queue.models.QueueManager.get_queue">
 <code class="descname">get_queue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.get_queue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the list of queue models sorted according to their scheduling priority</p>
+<dd><p>Returns the list of queue models sorted according to their priority first, and then using LIFO (last in,
+first out) second</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
