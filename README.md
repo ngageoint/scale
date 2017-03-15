@@ -51,6 +51,7 @@ Alternatively, your own local_settings.py can be volume mounted into `/opt/scale
 | DCOS_OAUTH_TOKEN            | None                            | Authentication token for DCOS bootstrap    |
 | DCOS_PACKAGE_FRAMEWORK_NAME | None                            | Unique name for Scale cluster framework    |
 | DCOS_PASS                   | None                            | Password for DCOS bootstrap                |
+| DCOS_SERVICE_ACCOUNT        | None                            | DCOS account name with access to secrets   |
 | DCOS_USER                   | None                            | Privileged username for DCOS bootstrap     |
 | DEPLOY_WEBSERVER            | 'true'                          | Should UI and API be installed?            |
 | ENABLE_BOOTSTRAP            | 'true'                          | Bootstrap Scale support containers         |
@@ -70,6 +71,8 @@ Alternatively, your own local_settings.py can be volume mounted into `/opt/scale
 | SCALE_WEBSERVER_CPU         | 1                               | UI/API CPU allocation during bootstrap     |
 | SCALE_WEBSERVER_MEMORY      | 2048                            | UI/API memory allocation during bootstrap  |
 | SCALE_ZK_URL                | None                            | Scale master location                      |
+| SECRETS_TOKEN               | None                            | API endpoint for a secrets service         |
+| SECRETS_URL                 | None                            | Authentication token for secrets service   |
 
 Quick Start
 ===========
