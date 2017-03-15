@@ -50,6 +50,7 @@ Services
    recipe
    recipe_type
    scale_file
+   scan
    scheduler
    source_file
    strike

@@ -102,6 +102,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../logs.html">ElasticSearch Logs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../scan.html">Scan</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
@@ -250,6 +251,8 @@
 <li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations.0008_auto_20170127_1332">ingest.migrations.0008_auto_20170127_1332 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations.0009_scan">ingest.migrations.0009_scan module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations.0010_auto_20170206_1646">ingest.migrations.0010_auto_20170206_1646 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations.0011_auto_20170302_2130">ingest.migrations.0011_auto_20170302_2130 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations.0012_scan_file_count">ingest.migrations.0012_scan_file_count module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -458,6 +461,7 @@
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>file_name</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The name of the file</li>
 <li><strong>strike</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The Strike process that created this ingest</li>
+<li><strong>scan</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The Scan process that created this ingest</li>
 <li><strong>status</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The status of the file ingest process</li>
 <li><strong>transfer_started</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the transfer to the workspace started</li>
 <li><strong>transfer_ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the transfer to the workspace ended</li>
@@ -742,7 +746,7 @@ spaces.</p>
 
 <dl class="method">
 <dt id="ingest.models.IngestManager.get_ingests">
-<code class="descname">get_ingests</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>statuses=None</em>, <em>strike_ids=None</em>, <em>file_name=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.IngestManager.get_ingests" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_ingests</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>statuses=None</em>, <em>scan_ids=None</em>, <em>strike_ids=None</em>, <em>file_name=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.IngestManager.get_ingests" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of ingests within the given time range.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -752,6 +756,7 @@ spaces.</p>
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query ingests updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query ingests updated before this amount of time.</li>
 <li><strong>statuses</strong> (<em>[string]</em>) &#8211; Query ingests with the a specific process status.</li>
+<li><strong>scan_ids</strong> (<em>list[string]</em>) &#8211; Query ingests created by a specific scan processor.</li>
 <li><strong>strike_ids</strong> (<em>list[string]</em>) &#8211; Query ingests created by a specific strike processor.</li>
 <li><strong>file_name</strong> (<em>string</em>) &#8211; Query ingests with the a specific file name.</li>
 <li><strong>order</strong> (<em>list[string]</em>) &#8211; A list of fields to control the sort order.</li>
@@ -841,7 +846,7 @@ spaces.</p>
 
 <dl class="class">
 <dt id="ingest.models.IngestStatus">
-<em class="property">class </em><code class="descclassname">ingest.models.</code><code class="descname">IngestStatus</code><span class="sig-paren">(</span><em>strike</em>, <em>most_recent=None</em>, <em>files=0</em>, <em>size=0</em>, <em>values=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.IngestStatus" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">ingest.models.</code><code class="descname">IngestStatus</code><span class="sig-paren">(</span><em>strike=None</em>, <em>most_recent=None</em>, <em>files=0</em>, <em>size=0</em>, <em>values=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.IngestStatus" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Represents ingest status values for a strike process.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -876,7 +881,9 @@ in a workspace for ingest</p>
 <li><strong>title</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The human-readable name of this Scan process</li>
 <li><strong>description</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; An optional description of this Scan process</li>
 <li><strong>configuration</strong> (<code class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></code>) &#8211; JSON configuration for this Scan process</li>
-<li><strong>job</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The job that is performing the Scan process</li>
+<li><strong>dry_run_job</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The job that is performing the Scan process as dry run</li>
+<li><strong>job</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The job that is performing the Scan process with ingests</li>
+<li><strong>file_count</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BigIntegerField</span></code>) &#8211; Number of files identified by last execution of Scan</li>
 <li><strong>created</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the Scan process was created</li>
 <li><strong>last_modified</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the Scan process was last modified</li>
 </ul>
@@ -901,6 +908,11 @@ in a workspace for ingest</p>
 <code class="descclassname">Scan.</code><code class="descname">configuration</code><a class="headerlink" href="#ingest.models.Scan.configuration" title="Permalink to this definition">¶</a></dt>
 <dd><p>A placeholder class that provides a way to set the attribute on the model.</p>
 </dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Scan.dry_run_job">
+<code class="descclassname">Scan.</code><code class="descname">dry_run_job</code><a class="headerlink" href="#ingest.models.Scan.dry_run_job" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="ingest.models.Scan.get_next_by_created">
@@ -979,9 +991,8 @@ in a workspace for ingest</p>
 <dl class="method">
 <dt id="ingest.models.ScanManager.create_scan">
 <code class="descname">create_scan</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.ScanManager.create_scan" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a new Scan process with the given configuration and returns the new Scan model. The Scan model
-will be saved in the database and the job to run the Scan process will be placed on the queue. All changes to
-the database will occur in an atomic transaction.</p>
+<dd><p>Creates a new Scan process with the given configuration and returns 
+the new Scan model. All changes to the database will occur in an atomic transaction.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1088,6 +1099,32 @@ transaction. An argument of None for a field indicates that the field should not
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#ingest.models.Scan" title="ingest.models.Scan"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.Scan</span></code></a>]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.models.ScanManager.queue_scan">
+<code class="descname">queue_scan</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.ScanManager.queue_scan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves a Scan model and uses metadata to place a job to run the
+Scan process on the queue. All changes to the database will occur in an
+atomic transaction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>scan_id</strong> (<em>int</em>) &#8211; The unique identifier of the Scan process.</li>
+<li><strong>dry_run</strong> (<em>bool</em>) &#8211; Whether the scan will execute as a dry run</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The new Scan process</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#ingest.models.Scan" title="ingest.models.Scan"><code class="xref py py-class docutils literal"><span class="pre">ingest.models.Scan</span></code></a></p>
 </td>
 </tr>
 </tbody>
@@ -1423,6 +1460,34 @@ transaction. An argument of None for a field indicates that the field should not
 </dd></dl>
 
 <dl class="class">
+<dt id="ingest.serializers.ScanBaseSerializer">
+<em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">ScanBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.ScanBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
+<p>Converts scan model fields to REST output</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.serializers.ScanDetailsSerializer">
+<em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">ScanDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.ScanDetailsSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ingest.serializers.ScanSerializer" title="ingest.serializers.ScanSerializer"><code class="xref py py-class docutils literal"><span class="pre">ingest.serializers.ScanSerializer</span></code></a></p>
+<p>Converts scan model fields to REST output</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.serializers.ScanSerializer">
+<em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">ScanSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.ScanSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#ingest.serializers.ScanBaseSerializer" title="ingest.serializers.ScanBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">ingest.serializers.ScanBaseSerializer</span></code></a></p>
+<p>Converts scan model fields to REST output</p>
+<dl class="class">
+<dt id="ingest.serializers.ScanSerializer.JobBaseSerializer">
+<em class="property">class </em><code class="descname">JobBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.ScanSerializer.JobBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
+<p>Converts job model fields to REST output.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="ingest.serializers.StrikeBaseSerializer">
 <em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">StrikeBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.StrikeBaseSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
@@ -1569,6 +1634,198 @@ transaction. An argument of None for a field indicates that the field should not
 <dt id="ingest.views.IngestsView.serializer_class">
 <code class="descname">serializer_class</code><a class="headerlink" href="#ingest.views.IngestsView.serializer_class" title="Permalink to this definition">¶</a></dt>
 <dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">IngestSerializer</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.views.ScansDetailsView">
+<em class="property">class </em><code class="descclassname">ingest.views.</code><code class="descname">ScansDetailsView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.ScansDetailsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></code></p>
+<p>This view is the endpoint for retrieving/updating details of a Scan process.</p>
+<dl class="method">
+<dt id="ingest.views.ScansDetailsView.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>request</em>, <em>scan_id</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.ScansDetailsView.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the details for a Scan process and return them in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
+<li><strong>scan_id</strong> (<em>int encoded as a str</em>) &#8211; The ID of the Scan process</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.views.ScansDetailsView.patch">
+<code class="descname">patch</code><span class="sig-paren">(</span><em>request</em>, <em>scan_id</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.ScansDetailsView.patch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Edits an existing Scan process and returns the updated details</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
+<li><strong>scan_id</strong> (<em>int encoded as a str</em>) &#8211; The ID of the Scan process</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.views.ScansDetailsView.queryset">
+<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#ingest.views.ScansDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.views.ScansDetailsView.serializer_class">
+<code class="descname">serializer_class</code><a class="headerlink" href="#ingest.views.ScansDetailsView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">ScanDetailsSerializer</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.views.ScansProcessView">
+<em class="property">class </em><code class="descclassname">ingest.views.</code><code class="descname">ScansProcessView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.ScansProcessView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></code></p>
+<p>This view is the endpoint for launching a scan execution to ingest</p>
+<dl class="method">
+<dt id="ingest.views.ScansProcessView.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em>, <em>scan_id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.ScansProcessView.post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Launches a scan to ingest from an existing scan model instance</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP POST request</li>
+<li><strong>scan_id</strong> (<em>int</em>) &#8211; ID for Scan record to pull configuration from</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.views.ScansProcessView.queryset">
+<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#ingest.views.ScansProcessView.queryset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.views.ScansProcessView.serializer_class">
+<code class="descname">serializer_class</code><a class="headerlink" href="#ingest.views.ScansProcessView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">ScanDetailsSerializer</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.views.ScansValidationView">
+<em class="property">class </em><code class="descclassname">ingest.views.</code><code class="descname">ScansValidationView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.ScansValidationView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.views.APIView</span></code></p>
+<p>This view is the endpoint for validating a new Scan process before attempting to actually create it</p>
+<dl class="method">
+<dt id="ingest.views.ScansValidationView.post">
+<code class="descname">post</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.ScansValidationView.post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates a new Scan process and returns any warnings discovered</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP POST request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.views.ScansValidationView.queryset">
+<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#ingest.views.ScansValidationView.queryset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.views.ScansView">
+<em class="property">class </em><code class="descclassname">ingest.views.</code><code class="descname">ScansView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.ScansView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListCreateAPIView</span></code></p>
+<p>This view is the endpoint for retrieving the list of all Scan process.</p>
+<dl class="method">
+<dt id="ingest.views.ScansView.create">
+<code class="descname">create</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.ScansView.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new Scan process and returns a link to the detail URL</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP POST request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.views.ScansView.list">
+<code class="descname">list</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.views.ScansView.list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the list of all Scan process and returns it in JSON form</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.views.ScansView.queryset">
+<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#ingest.views.ScansView.queryset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.views.ScansView.serializer_class">
+<code class="descname">serializer_class</code><a class="headerlink" href="#ingest.views.ScansView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">ScanSerializer</span></code></p>
 </dd></dl>
 
 </dd></dl>

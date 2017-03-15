@@ -102,6 +102,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../logs.html">ElasticSearch Logs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../scan.html">Scan</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
@@ -336,30 +337,6 @@
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="ingest.test.scan.scanners.test_s3_scanner.TestScanner.test_callback_dry_run">
-<code class="descname">test_callback_dry_run</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.scan.scanners.test_s3_scanner.TestScanner.test_callback_dry_run" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling S3Scanner._callback() during dry run</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.test.scan.scanners.test_s3_scanner.TestScanner.test_callback_interrupted">
-<code class="descname">test_callback_interrupted</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.scan.scanners.test_s3_scanner.TestScanner.test_callback_interrupted" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling S3Scanner._callback() with interruption</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.test.scan.scanners.test_s3_scanner.TestScanner.test_callback_no_ingests">
-<code class="descname">test_callback_no_ingests</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.scan.scanners.test_s3_scanner.TestScanner.test_callback_no_ingests" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling S3Scanner._callback() with no ingests</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="ingest.test.scan.scanners.test_s3_scanner.TestScanner.test_callback_successfully">
-<code class="descname">test_callback_successfully</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.scan.scanners.test_s3_scanner.TestScanner.test_callback_successfully" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling S3Scanner._callback() successfully</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="ingest.test.scan.scanners.test_s3_scanner.TestScanner.test_deduplicate_ingest_list_no_existing">
 <code class="descname">test_deduplicate_ingest_list_no_existing</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.scan.scanners.test_s3_scanner.TestScanner.test_deduplicate_ingest_list_no_existing" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling S3Scanner._deduplicate_ingest_list() without existing</p>
@@ -375,6 +352,30 @@
 <dt id="ingest.test.scan.scanners.test_s3_scanner.TestScanner.test_deduplicate_ingest_list_with_existing_no_other_dups">
 <code class="descname">test_deduplicate_ingest_list_with_existing_no_other_dups</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.scan.scanners.test_s3_scanner.TestScanner.test_deduplicate_ingest_list_with_existing_no_other_dups" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling S3Scanner._deduplicate_ingest_list() with existing and no other dups</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.scan.scanners.test_s3_scanner.TestScanner.test_process_scanned_dry_run">
+<code class="descname">test_process_scanned_dry_run</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.scan.scanners.test_s3_scanner.TestScanner.test_process_scanned_dry_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling S3Scanner._process_scanned() during dry run</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.scan.scanners.test_s3_scanner.TestScanner.test_process_scanned_interrupted">
+<code class="descname">test_process_scanned_interrupted</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.scan.scanners.test_s3_scanner.TestScanner.test_process_scanned_interrupted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling S3Scanner._process_scanned() with interruption</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.scan.scanners.test_s3_scanner.TestScanner.test_process_scanned_no_ingests">
+<code class="descname">test_process_scanned_no_ingests</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.scan.scanners.test_s3_scanner.TestScanner.test_process_scanned_no_ingests" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling S3Scanner._process_scanned() with no ingests</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.scan.scanners.test_s3_scanner.TestScanner.test_process_scanned_successfully">
+<code class="descname">test_process_scanned_successfully</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.scan.scanners.test_s3_scanner.TestScanner.test_process_scanned_successfully" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling S3Scanner._process_scanned() successfully</p>
 </dd></dl>
 
 <dl class="method">

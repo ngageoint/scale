@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Strike &mdash; Scale 4.3.0-snapshot documentation</title>
+  <title>Scan &mdash; Scale 4.3.0-snapshot documentation</title>
   
 
   
@@ -36,8 +36,8 @@
   
     <link rel="top" title="Scale 4.3.0-snapshot documentation" href="../index.html"/>
         <link rel="up" title="Architecture" href="index.html"/>
-        <link rel="next" title="Triggers" href="triggers.html"/>
-        <link rel="prev" title="Scan" href="scan.html"/> 
+        <link rel="next" title="Strike" href="strike.html"/>
+        <link rel="prev" title="Import/Export" href="port.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -102,13 +102,13 @@
 <li class="toctree-l2"><a class="reference internal" href="jobs/index.html">Jobs and Recipes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="logs.html">ElasticSearch Logs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="port.html">Import/Export</a></li>
-<li class="toctree-l2"><a class="reference internal" href="scan.html">Scan</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Strike</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#strike-configuration-specification-version-2-0">Strike Configuration Specification Version 2.0</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#directory-watching-monitor">Directory Watching Monitor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#s3-monitor">S3 Monitor</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Scan</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#scan-configuration-specification-version-1-0">Scan Configuration Specification Version 1.0</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#directory-scanner">Directory Scanner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#s3-scanner">S3 Scanner</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="strike.html">Strike</a></li>
 <li class="toctree-l2"><a class="reference internal" href="triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="workspaces.html">Workspaces</a></li>
 <li class="toctree-l2"><a class="reference internal" href="django/index.html">Django/Code Base</a></li>
@@ -163,13 +163,13 @@
         
           <li><a href="index.html">Architecture</a> &raquo;</li>
         
-      <li>Strike</li>
+      <li>Scan</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/architecture/strike.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/architecture/scan.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -182,24 +182,29 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="strike">
-<span id="architecture-strike"></span><h1>Strike<a class="headerlink" href="#strike" title="Permalink to this headline">¶</a></h1>
-<p>Strike is the name of Scale&#8217;s system job that monitors and handles incoming source data files that are ingested into
-Scale. A Strike job monitors a given workspace for new files. Scale administrators will want to create a Strike job for
-each data feed that will be processed by Scale.</p>
-<p>When a new file is copied into the monitored workspace, its file name is checked against a number of rules using regular
-expressions configured for that Strike job. When the first rule that matches the new file&#8217;s name is reached, that rule&#8217;s
-other fields indicate how Strike should handle the file, such as tagging it with data type tags or moving the file to a
+  <div class="section" id="scan">
+<span id="architecture-scan"></span><h1>Scan<a class="headerlink" href="#scan" title="Permalink to this headline">¶</a></h1>
+<p>Scan is the name of Scale&#8217;s system job that scans for pre-existing source data files and ingests them into
+Scale. A Scan job scans a given workspace for pre-existing files. Scale administrators would commonly use the Scan job
+to bulk ingest data from a workspace prior to wiring it up for Strike processing.</p>
+<p>When a file is identified within the workspace being scanned, its file name is checked against a number of rules using regular
+expressions configured for that Scan job. When the first rule that matches the new file&#8217;s name is reached, that rule&#8217;s
+other fields indicate how Scan should handle the file, such as tagging it with data type tags or moving the file to a
 new location in a different workspace.</p>
-<div class="section" id="strike-configuration-specification-version-2-0">
-<span id="architecture-strike-spec"></span><h2>Strike Configuration Specification Version 2.0<a class="headerlink" href="#strike-configuration-specification-version-2-0" title="Permalink to this headline">¶</a></h2>
-<p>A valid Strike configuration is a JSON document with the following structure:</p>
+<p>Scanning may be performed in two stages: dry run and ingest. When scanning is performed as a dry run, no ingest jobs will
+result, but a file count will be stored in the Scan model. This can be valuable if it is desirable to identify the files
+or count that will be matched prior to launching the actual ingest operations. There is no requirement to perform a dry
+run first.</p>
+<div class="section" id="scan-configuration-specification-version-1-0">
+<span id="architecture-scan-spec"></span><h2>Scan Configuration Specification Version 1.0<a class="headerlink" href="#scan-configuration-specification-version-1-0" title="Permalink to this headline">¶</a></h2>
+<p>A valid Scan configuration is a JSON document with the following structure:</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
     <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
-    <span class="s2">&quot;monitor&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;scanner&quot;</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="nx">STRING</span>
     <span class="p">},</span>
+    <span class="s2">&quot;recursive&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
     <span class="s2">&quot;files_to_ingest&quot;</span><span class="o">:</span> <span class="p">[</span>
         <span class="p">{</span>
             <span class="s2">&quot;filename_regex&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
@@ -219,41 +224,45 @@ new location in a different workspace.</p>
 <div>The <em>version</em> is an optional string value that defines the version of the configuration used. This allows updates to
 be made to the specification while maintaining backwards compatibility by allowing Scale to recognize an older
 version and convert it to the current version. The default value for <em>version</em> if it is not included is the latest
-version, which is currently 2.0. It is recommended, though not required, that you include the <em>version</em> so that
-future changes to the specification will still accept your Strike configuration.</div></blockquote>
+version, which is currently 1.0. It is recommended, though not required, that you include the <em>version</em> so that
+future changes to the specification will still accept your Scan configuration.</div></blockquote>
 <p><strong>workspace</strong>: JSON string</p>
 <blockquote>
-<div>The <em>workspace</em> field is a required string that specifies the name of the workspace that is being monitored. The
-type of the workspace (its broker type) will determine which types of monitor can be used.</div></blockquote>
-<p><strong>monitor</strong>: JSON object</p>
+<div>The <em>workspace</em> field is a required string that specifies the name of the workspace that is being scanned. The
+type of the workspace (its broker type) will determine which types of scanner can be used.</div></blockquote>
+<p><strong>scanner</strong>: JSON object</p>
 <blockquote>
-<div><p>The <em>monitor</em> field is a required object that specifies the type and configuration of the monitor that will watch
-<em>workspace</em> for new files.</p>
+<div><p>The <em>scanner</em> field is a required object that specifies the type and configuration of the scanner that will scan
+<em>workspace</em> for files.</p>
 <p><strong>type</strong>: JSON string</p>
 <blockquote>
-<div><p>The <em>type</em> is a required string that specifies the type of the monitor to use. The other fields that configure
-the monitor are based upon the type of the monitor in the <em>type</em> field. Certain monitor types may only be used
-on workspaces with corresponding broker types. The valid monitor types are:</p>
-<p><strong>dir-watcher</strong></p>
+<div><p>The <em>type</em> is a required string that specifies the type of the scanner to use. The other fields that configure
+the scanner are based upon the type of the scanner in the <em>type</em> field. Certain scanner types may only be used
+on workspaces with corresponding broker types. The valid scanner types are:</p>
+<p><strong>dir</strong></p>
 <blockquote>
-<div>A &#8220;dir-watcher&#8221; monitor watches a file directory for incoming files. This monitor may only be used with a
+<div>A &#8220;dir&#8221; scanner identifies files within a directory. This scanner may only be used with a
 <em>host</em> workspace.</div></blockquote>
 <p><strong>s3</strong></p>
 <blockquote>
-<div>An &#8220;s3&#8221; monitor utilizes an Amazon Web Services (AWS) Simple Queue Service (SQS) to receive AWS S3 file
-notification events. This monitor may only be used with an <em>s3</em> workspace.</div></blockquote>
-<p>Additional <em>monitor</em> fields may be required depending on the type of monitor selected. See below for more
-information on each monitor type.</p>
+<div>An &#8220;s3&#8221; scanner identifies objects within an Amazon Web Services (AWS) Simple Storage Service (S3) bucket.
+This scanner may only be used with an <em>s3</em> workspace.</div></blockquote>
+<p>Additional <em>scanner</em> fields may be required depending on the type of scanner selected. See below for more
+information on each scanner type.</p>
 </div></blockquote>
 </div></blockquote>
+<p><strong>recursive</strong>: JSON boolean</p>
+<blockquote>
+<div>The <em>recursive</em> field is an optional boolean that indicates whether a scanner should be limited to the root of a workspace
+or traverse the entire tree. If ommitted, the default is true for full tree recursion.</div></blockquote>
 <p><strong>files_to_ingest</strong>: JSON array</p>
 <blockquote>
 <div><p>The <em>files_to_ingest</em> field is a list of JSON objects that define the rules for how to handle files that appear in
-the monitored workspace. The array must contain at least one item. Each JSON object has the following fields:</p>
+the scanned workspace. The array must contain at least one item. Each JSON object has the following fields:</p>
 <p><strong>filename_regex</strong>: JSON string</p>
 <blockquote>
 <div>The <em>filename_regex</em> field is a required string that defines a regular expression to check against the names of
-new files in the monitored workspace. When a new file appears in the workspace, the file&#8217;s name is checked
+new files in the scanned workspace. When a new file appears in the workspace, the file&#8217;s name is checked
 against each expression in order of the <em>files_to_ingest</em> array. If an expression matches the new file name in
 the workspace, that file is ingested according to the other fields in the JSON object and all subsequent rules
 in the list are ignored (first rule matched is applied).</div></blockquote>
@@ -265,37 +274,33 @@ an empty array.</div></blockquote>
 <p><strong>new_workspace</strong>: JSON string</p>
 <blockquote>
 <div>The <em>new_workspace</em> field optionally specifies the name of a new workspace to which the file should be copied.
-This allows the ingest process to move files to a different workspace after they appear in the monitored
+This allows the ingest process to move files to a different workspace after they appear in the scanned
 workspace.</div></blockquote>
 <p><strong>new_file_path</strong>: JSON string</p>
 <blockquote>
 <div>The <em>new_file_path</em> field is an optional string that specifies a new relative path for storing new files. If
 <em>new_workspace</em> is also specified, the file is moved to the new workspace at this new path location (instead of
 using the current path the new file originally came in on). If <em>new_workspace</em> is not specified, the file is
-moved to this new path location within the original monitored workspace. In either of these cases, three
+moved to this new path location within the original scanned workspace. In either of these cases, three
 additional and dynamically named directories, for the current year, month, and day, will be appended to the
 <em>new_file_path</em> value automatically by the Scale system (i.e. workspace_path/YYYY/MM/DD).</div></blockquote>
 </div></blockquote>
 </div>
-<div class="section" id="directory-watching-monitor">
-<h2>Directory Watching Monitor<a class="headerlink" href="#directory-watching-monitor" title="Permalink to this headline">¶</a></h2>
-<p>The directory watching monitor uses a workspace that mounts a host directory into the container and watches that
-directory for new files. Therefore this monitor only works with a host workspace. When a new file appears in the mounted
-host directory, its file name is checked for the trailing file name suffix specified in the <em>transfer_suffix</em>
-configuration field. While the file name contains the suffix, the monitor will continue tracking the size of the file
-and how long it takes to copy the file into the directory. Whenever the file copy is complete, the process copying the
-file should rename the file and remove the <em>transfer_suffix</em>. Once the monitor sees the renamed file, it will apply the
-<em>files_to_ingest</em> rules against it. The monitor will create two sub-directories in the host directory, <em>deferred</em> and
-<em>ingesting</em>.  If a copied file does not match any of the ingest rules, it is moved to the <em>deferred</em> directory. If the
-file matches an ingest rule, it is moved to <em>ingesting</em> and an ingest job is created to ingest it.</p>
-<p>Example directory watching monitor configuration:</p>
+<div class="section" id="directory-scanner">
+<h2>Directory Scanner<a class="headerlink" href="#directory-scanner" title="Permalink to this headline">¶</a></h2>
+<p>The directory scanner uses a workspace that mounts a host directory into the container and scans that
+directory for files. Therefore this scanner only works with a host workspace. For each file detected in the mounted
+host directory, its file name is checked for the trailing file name suffix specified in the optional <em>transfer_suffix</em>
+configuration field. If the file name contains the suffix, the scanner will skip that file.</p>
+<p>Example directory watching scanner configuration:</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
     <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="s2">&quot;my-host-workspace&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;monitor&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;scanner&quot;</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;dir-watcher&quot;</span><span class="p">,</span>
         <span class="s2">&quot;transfer_suffix&quot;</span><span class="o">:</span> <span class="s2">&quot;_tmp&quot;</span>
     <span class="p">},</span>
+    <span class="s2">&quot;recursive&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
     <span class="s2">&quot;files_to_ingest&quot;</span><span class="o">:</span> <span class="p">[</span>
         <span class="p">{</span>
             <span class="s2">&quot;filename_regex&quot;</span><span class="o">:</span> <span class="s2">&quot;*.h5&quot;</span><span class="p">,</span>
@@ -310,31 +315,24 @@ file matches an ingest rule, it is moved to <em>ingesting</em> and an ingest job
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>The directory watching monitor requires one additional field in its configuration:</p>
+<p>The directory watching scanner requires one additional field in its configuration:</p>
 <p><strong>transfer_suffix</strong>: JSON string</p>
 <blockquote>
-<div>The <em>transfer_suffix</em> field is a required string that defines a suffix that is used on the file names (by the
-system or process that is transferring files into the directory) to indicate that the files are still transferring
-and have not yet finished being copied into the monitored directory.</div></blockquote>
+<div>The <em>transfer_suffix</em> field is an optional string that defines a suffix that is used on the file names to indicate
+that files are still transferring and have not yet finished being copied into the scanned directory.</div></blockquote>
 </div>
-<div class="section" id="s3-monitor">
-<h2>S3 Monitor<a class="headerlink" href="#s3-monitor" title="Permalink to this headline">¶</a></h2>
-<p>The S3 monitor polls an AWS SQS queue for object creation notifications that describe new source data files available in
-an AWS S3 bucket (so this monitor only works with an S3 workspace). After the monitor finds a new file in the S3 bucket,
-it applies the file against the configured Strike rules.</p>
-<p>Example S3 monitor configuration:</p>
+<div class="section" id="s3-scanner">
+<h2>S3 Scanner<a class="headerlink" href="#s3-scanner" title="Permalink to this headline">¶</a></h2>
+<p>The S3 scanner identifies objects within an Amazon Web Services (AWS) Simple Storage Service (S3) backed workspace.
+After the scanner finds a new object in the S3 bucket, it applies the configured Scan rules.</p>
+<p>Example S3 scanner configuration:</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="s2">&quot;my-host-workspace&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;monitor&quot;</span><span class="o">:</span> <span class="p">{</span>
-        <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;s3&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;sqs_name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-sqs&quot;</span>
-        <span class="s2">&quot;credentials&quot;</span><span class="o">:</span> <span class="p">{</span>
-            <span class="s2">&quot;access_key_id&quot;</span><span class="o">:</span> <span class="s2">&quot;AKIAIOSFODNN7EXAMPLE&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;secret_access_key&quot;</span><span class="o">:</span> <span class="s2">&quot;wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY&quot;</span>
-        <span class="p">},</span>
-        <span class="s2">&quot;region_name&quot;</span><span class="o">:</span> <span class="s2">&quot;us-east-1&quot;</span>
+    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="s2">&quot;my-s3-workspace&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;scanner&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;s3&quot;</span>
     <span class="p">},</span>
+    <span class="s2">&quot;recursive&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
     <span class="s2">&quot;files_to_ingest&quot;</span><span class="o">:</span> <span class="p">[</span>
         <span class="p">{</span>
             <span class="s2">&quot;filename_regex&quot;</span><span class="o">:</span> <span class="s2">&quot;*.h5&quot;</span><span class="p">,</span>
@@ -349,31 +347,8 @@ it applies the file against the configured Strike rules.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>The S3 monitor has the following additional fields in its configuration:</p>
-<p><strong>sqs_name</strong>: JSON string</p>
-<blockquote>
-<div>The <em>sqs_name</em> field is a required string that defines the name of the SQS queue that should be polled for object
-creation notifications that describe new files in the S3 bucket.</div></blockquote>
-<p><strong>credentials</strong>: JSON object</p>
-<blockquote>
-<div><p>The <em>credentials</em> is a JSON object that provides the necessary information to access the bucket. This attribute
-should be omitted when using IAM role-based security. If it is included for key-based security, then both
-sub-attributes must be included. An IAM account should be created and granted the appropriate permissions to the
-bucket before attempting to use it here.</p>
-<p><strong>access_key_id</strong>: JSON string</p>
-<blockquote>
-<div>The <em>access_key_id</em> is a unique identifier for the user account in IAM that will be used as a proxy for read and
-write operations within Scale.</div></blockquote>
-<p><strong>secret_access_key</strong>: JSON string</p>
-<blockquote>
-<div>The <em>secret_access_key</em> is a generated token that the system can use to prove it should be able to make requests
-on behalf of the associated IAM account without requiring the actual password used by that account.</div></blockquote>
-</div></blockquote>
-<p><strong>region_name</strong>: JSON string</p>
-<blockquote>
-<div>The <em>region_name</em> is an optional string that specifies the AWS region where the SQS Queue is located. This is not
-always required, as environment variables or configuration files could set the default region, but it is a highly
-recommended setting for explicitly indicating the SQS region.</div></blockquote>
+<p>The S3 scanner derives all its configuration from the associated workspace and
+presently does not need any additional configuration.</p>
 </div>
 </div>
 
@@ -387,10 +362,10 @@ recommended setting for explicitly indicating the SQS region.</div></blockquote>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="triggers.html" class="btn btn-neutral float-right" title="Triggers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="strike.html" class="btn btn-neutral float-right" title="Strike" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="scan.html" class="btn btn-neutral" title="Scan" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="port.html" class="btn btn-neutral" title="Import/Export" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

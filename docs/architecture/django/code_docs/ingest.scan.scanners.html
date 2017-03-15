@@ -102,6 +102,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../logs.html">ElasticSearch Logs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../scan.html">Scan</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
@@ -250,6 +251,28 @@
 <em class="property">exception </em><code class="descclassname">ingest.scan.scanners.exceptions.</code><code class="descname">InvalidScannerConfiguration</code><a class="headerlink" href="#ingest.scan.scanners.exceptions.InvalidScannerConfiguration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="ingest.scan.configuration.html#ingest.scan.configuration.exceptions.InvalidScanConfiguration" title="ingest.scan.configuration.exceptions.InvalidScanConfiguration"><code class="xref py py-class docutils literal"><span class="pre">ingest.scan.configuration.exceptions.InvalidScanConfiguration</span></code></a></p>
 <p>Exception indicating that a scanner configuration was invalid</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="ingest.scan.scanners.exceptions.ScanIngestJobAlreadyLaunched">
+<em class="property">exception </em><code class="descclassname">ingest.scan.scanners.exceptions.</code><code class="descname">ScanIngestJobAlreadyLaunched</code><span class="sig-paren">(</span><em>detail=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.scan.scanners.exceptions.ScanIngestJobAlreadyLaunched" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.exceptions.APIException</span></code></p>
+<p>Exception indicating that a scanner has already spawned an ingest scan job</p>
+<dl class="attribute">
+<dt id="ingest.scan.scanners.exceptions.ScanIngestJobAlreadyLaunched.default_code">
+<code class="descname">default_code</code><em class="property"> = 'conflict'</em><a class="headerlink" href="#ingest.scan.scanners.exceptions.ScanIngestJobAlreadyLaunched.default_code" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.scan.scanners.exceptions.ScanIngestJobAlreadyLaunched.default_detail">
+<code class="descname">default_detail</code><em class="property"> = 'Ingest Scan already launched'</em><a class="headerlink" href="#ingest.scan.scanners.exceptions.ScanIngestJobAlreadyLaunched.default_detail" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.scan.scanners.exceptions.ScanIngestJobAlreadyLaunched.status_code">
+<code class="descname">status_code</code><em class="property"> = 409</em><a class="headerlink" href="#ingest.scan.scanners.exceptions.ScanIngestJobAlreadyLaunched.status_code" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="exception">

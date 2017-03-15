@@ -12,6 +12,7 @@ Architecture
    jobs/index
    logs
    port
+   scan
    strike
    triggers
    workspaces

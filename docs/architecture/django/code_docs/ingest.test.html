@@ -102,6 +102,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../logs.html">ElasticSearch Logs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../scan.html">Scan</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
@@ -525,6 +526,228 @@
 </dd></dl>
 
 <dl class="class">
+<dt id="ingest.test.test_views.TestScanCreateView">
+<em class="property">class </em><code class="descclassname">ingest.test.test_views.</code><code class="descname">TestScanCreateView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScanCreateView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="attribute">
+<dt id="ingest.test.test_views.TestScanCreateView.fixtures">
+<code class="descname">fixtures</code><em class="property"> = [u'ingest_job_types.json']</em><a class="headerlink" href="#ingest.test.test_views.TestScanCreateView.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScanCreateView.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScanCreateView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScanCreateView.test_configuration_bad_type">
+<code class="descname">test_configuration_bad_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScanCreateView.test_configuration_bad_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the create Scan view with configuration that is not a dict.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScanCreateView.test_invalid_configuration">
+<code class="descname">test_invalid_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScanCreateView.test_invalid_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the create Scan view with invalid configuration.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScanCreateView.test_missing_configuration">
+<code class="descname">test_missing_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScanCreateView.test_missing_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the create Scan view with missing configuration.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScanCreateView.test_successful">
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScanCreateView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the create Scan view successfully.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.test.test_views.TestScanDetailsView">
+<em class="property">class </em><code class="descclassname">ingest.test.test_views.</code><code class="descname">TestScanDetailsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScanDetailsView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="ingest.test.test_views.TestScanDetailsView.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScanDetailsView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScanDetailsView.test_edit_bad_config">
+<code class="descname">test_edit_bad_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScanDetailsView.test_edit_bad_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests attempting to edit a Scan process using an invalid configuration</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScanDetailsView.test_edit_config">
+<code class="descname">test_edit_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScanDetailsView.test_edit_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests editing the configuration of a Scan process</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScanDetailsView.test_edit_config_conflict">
+<code class="descname">test_edit_config_conflict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScanDetailsView.test_edit_config_conflict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests editing the configuration of a Scan process already launched</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScanDetailsView.test_edit_not_found">
+<code class="descname">test_edit_not_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScanDetailsView.test_edit_not_found" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests editing non-existent Scan process</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScanDetailsView.test_edit_simple">
+<code class="descname">test_edit_simple</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScanDetailsView.test_edit_simple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests editing only the basic attributes of a Scan process</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScanDetailsView.test_not_found">
+<code class="descname">test_not_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScanDetailsView.test_not_found" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the get Scan process details view with a model id that does not exist.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScanDetailsView.test_successful">
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScanDetailsView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the get Scan process details view.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.test.test_views.TestScanProcessView">
+<em class="property">class </em><code class="descclassname">ingest.test.test_views.</code><code class="descname">TestScanProcessView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScanProcessView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="attribute">
+<dt id="ingest.test.test_views.TestScanProcessView.fixtures">
+<code class="descname">fixtures</code><em class="property"> = [u'ingest_job_types.json']</em><a class="headerlink" href="#ingest.test.test_views.TestScanProcessView.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScanProcessView.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScanProcessView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScanProcessView.test_dry_run_process">
+<code class="descname">test_dry_run_process</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScanProcessView.test_dry_run_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the Scan process view for a dry run Scan.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScanProcessView.test_dry_run_process_conflict">
+<code class="descname">test_dry_run_process_conflict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScanProcessView.test_dry_run_process_conflict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests error response when calling the Scan process view for a dry run Scan when already processed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScanProcessView.test_dry_run_process_reprocess">
+<code class="descname">test_dry_run_process_reprocess</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScanProcessView.test_dry_run_process_reprocess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the Scan process view for a 2nd dry run Scan.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScanProcessView.test_ingest_after_dry_run">
+<code class="descname">test_ingest_after_dry_run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScanProcessView.test_ingest_after_dry_run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the Scan process view for an ingest Scan. following dry run</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScanProcessView.test_ingest_process">
+<code class="descname">test_ingest_process</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScanProcessView.test_ingest_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the Scan process view for an ingest Scan.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScanProcessView.test_ingest_process_conflict">
+<code class="descname">test_ingest_process_conflict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScanProcessView.test_ingest_process_conflict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests error response when calling the Scan process view for an ingest Scan when already processed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScanProcessView.test_not_found">
+<code class="descname">test_not_found</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScanProcessView.test_not_found" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests a Scan process launch where the id of Scan is missing.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.test.test_views.TestScansValidationView">
+<em class="property">class </em><code class="descclassname">ingest.test.test_views.</code><code class="descname">TestScansValidationView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScansValidationView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<p>Tests related to the Scan process validation endpoint</p>
+<dl class="method">
+<dt id="ingest.test.test_views.TestScansValidationView.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScansValidationView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScansValidationView.test_configuration_bad_type">
+<code class="descname">test_configuration_bad_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScansValidationView.test_configuration_bad_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new Scan process with configuration that is not a dict.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScansValidationView.test_invalid_configuration">
+<code class="descname">test_invalid_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScansValidationView.test_invalid_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new Scan process with invalid configuration.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScansValidationView.test_missing_configuration">
+<code class="descname">test_missing_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScansValidationView.test_missing_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new Scan process with missing configuration.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScansValidationView.test_successful">
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScansValidationView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new Scan process.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ingest.test.test_views.TestScansView">
+<em class="property">class </em><code class="descclassname">ingest.test.test_views.</code><code class="descname">TestScansView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScansView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="ingest.test.test_views.TestScansView.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScansView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScansView.test_name">
+<code class="descname">test_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScansView.test_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the scans view filtered by Scan name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScansView.test_reverse_sorting">
+<code class="descname">test_reverse_sorting</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScansView.test_reverse_sorting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests custom sorting in reverse.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScansView.test_sorting">
+<code class="descname">test_sorting</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScansView.test_sorting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests custom sorting.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScansView.test_successful">
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScansView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling the get all scans view.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="ingest.test.test_views.TestStrikeCreateView">
 <em class="property">class </em><code class="descclassname">ingest.test.test_views.</code><code class="descname">TestStrikeCreateView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikeCreateView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
@@ -683,6 +906,11 @@
 <dl class="function">
 <dt id="ingest.test.utils.create_ingest">
 <code class="descclassname">ingest.test.utils.</code><code class="descname">create_ingest</code><span class="sig-paren">(</span><em>file_name=u'test.txt'</em>, <em>status=u'TRANSFERRING'</em>, <em>transfer_started=None</em>, <em>transfer_ended=None</em>, <em>ingest_started=None</em>, <em>ingest_ended=None</em>, <em>data_started=None</em>, <em>data_ended=None</em>, <em>workspace=None</em>, <em>strike=None</em>, <em>source_file=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.utils.create_ingest" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="ingest.test.utils.create_scan">
+<code class="descclassname">ingest.test.utils.</code><code class="descname">create_scan</code><span class="sig-paren">(</span><em>name=None</em>, <em>title=None</em>, <em>description=None</em>, <em>configuration=None</em>, <em>job=None</em>, <em>dry_run_job=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.utils.create_scan" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">

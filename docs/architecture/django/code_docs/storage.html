@@ -102,6 +102,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../logs.html">ElasticSearch Logs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../scan.html">Scan</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
@@ -1161,25 +1162,17 @@ at workspace_volume_path or an exception will be raised.</p>
 
 <dl class="method">
 <dt id="storage.models.Workspace.list_files">
-<code class="descclassname">Workspace.</code><code class="descname">list_files</code><span class="sig-paren">(</span><em>recursive</em>, <em>callback</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.list_files" title="Permalink to this definition">¶</a></dt>
-<dd><p>Lists files within a workspace, with optional full tree recursion. Callback support will enable updates
-to caller without waiting for entire workspace to be traversed. If callbacks are used an empty list will be
-returned at the completion of call.</p>
+<code class="descclassname">Workspace.</code><code class="descname">list_files</code><span class="sig-paren">(</span><em>recursive</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.list_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lists files within a workspace, with optional full tree recursion.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>recursive</strong> (<em>boolean</em>) &#8211; Flag to indicate whether file searching should be done recursively</li>
-<li><strong>callback</strong> (<em>function([storage.brokers.broker.FileDetails])</em>) &#8211; Method that will be called on completion of each batch return. Max of 1000 files per call.</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>recursive</strong> (<em>boolean</em>) &#8211; Flag to indicate whether file searching should be done recursively</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">List of files matching given expression. Empty if all delivered via callback.</p>
-</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Generator of files matching given expression</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[storage.brokers.broker.FileDetails]</p>
-</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Generator[<a class="reference internal" href="storage.brokers.html#storage.brokers.broker.FileDetails" title="storage.brokers.broker.FileDetails"><code class="xref py py-class docutils literal"><span class="pre">storage.brokers.broker.FileDetails</span></code></a>]</td>
 </tr>
 </tbody>
 </table>

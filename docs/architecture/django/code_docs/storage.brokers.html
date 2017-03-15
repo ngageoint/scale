@@ -102,6 +102,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../logs.html">ElasticSearch Logs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../scan.html">Scan</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
@@ -332,15 +333,16 @@ None if this broker does not use a container volume</li>
 
 <dl class="method">
 <dt id="storage.brokers.broker.Broker.list_files">
-<code class="descname">list_files</code><span class="sig-paren">(</span><em>volume_path</em>, <em>recursive</em>, <em>callback</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.broker.Broker.list_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">list_files</code><span class="sig-paren">(</span><em>volume_path</em>, <em>recursive</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.broker.Broker.list_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>List the files under the given file system paths.</p>
 <p>If this broker uses a container volume, volume_path will contain the absolute local container location where
 that volume file system is mounted. If this broker does not use a container volume, None will be given for
 volume_path.</p>
-<p>As a result of the time that may be required for the full result set to be returned, it is recommended that the
-provided callback support be used to receive objects as they are retrieved (up to 1000 in a batch). The callback
-method must accept one list parameter. This list will contain elements of type storage.brokers.broker.FileDetails.
-If the callback method is called without exception, no objects will be returned upon completion of list_files call.</p>
+<p>Retrieval of objects is provided by the boto3 paginator over 
+list_objects. This allows for simple paging support with unbounded
+object counts. As a result of the time that may be required for the full
+result set to be returned, the results are returned via a generator. 
+This generator will contain objects of type <cite>storage.brokers.broker.FileDetails</cite>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -349,14 +351,13 @@ If the callback method is called without exception, no objects will be returned 
 <li><strong>volume_path</strong> (<em>string</em>) &#8211; Absolute path to the local container location onto which the volume file system was mounted,
 None if this broker does not use a container volume</li>
 <li><strong>recursive</strong> (<em>boolean</em>) &#8211; Flag to indicate whether file searching should be done recursively</li>
-<li><strong>callback</strong> (<em>function([storage.brokers.broker.FileDetails])</em>) &#8211; Method that will be called on completion of each batch return. Max of 1000 files per call.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">List of files matching given expression. Empty if all delivered via callback.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Generator of files matching given expression</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[storage.brokers.broker.FileDetails]</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Generator[<a class="reference internal" href="#storage.brokers.broker.FileDetails" title="storage.brokers.broker.FileDetails"><code class="xref py py-class docutils literal"><span class="pre">storage.brokers.broker.FileDetails</span></code></a>]</p>
 </td>
 </tr>
 </tbody>
@@ -654,7 +655,7 @@ None.</p>
 
 <dl class="method">
 <dt id="storage.brokers.host_broker.HostBroker.list_files">
-<code class="descname">list_files</code><span class="sig-paren">(</span><em>volume_path</em>, <em>recursive</em>, <em>callback</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.host_broker.HostBroker.list_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">list_files</code><span class="sig-paren">(</span><em>volume_path</em>, <em>recursive</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.host_broker.HostBroker.list_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.list_files" title="storage.brokers.broker.Broker.list_files"><code class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.list_files()</span></code></a></p>
 </dd></dl>
 
@@ -761,7 +762,7 @@ mount an NFS volume into the task container</p>
 
 <dl class="method">
 <dt id="storage.brokers.s3_broker.S3Broker.list_files">
-<code class="descname">list_files</code><span class="sig-paren">(</span><em>volume_path</em>, <em>recursive</em>, <em>callback</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.s3_broker.S3Broker.list_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">list_files</code><span class="sig-paren">(</span><em>volume_path</em>, <em>recursive</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.brokers.s3_broker.S3Broker.list_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>See <a class="reference internal" href="#storage.brokers.broker.Broker.list_files" title="storage.brokers.broker.Broker.list_files"><code class="xref py py-meth docutils literal"><span class="pre">storage.brokers.broker.Broker.list_files()</span></code></a></p>
 </dd></dl>
 

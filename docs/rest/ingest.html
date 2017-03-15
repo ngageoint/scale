@@ -115,6 +115,7 @@
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">Recipe Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe_type.html">Recipe Types Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scale_file.html">Scale File Services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scan.html">Scan Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">Scheduler Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source_file.html">Source File Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="strike.html">Strike Services</a></li>
@@ -253,109 +254,115 @@ Choices: [TRANSFERRING, TRANSFERRED, DEFERRED, INGESTING, INGESTED,
 ERRORED, DUPLICATE].
 Duplicate it to filter by multiple values.</td>
 </tr>
-<tr class="row-odd"><td>strike_id</td>
+<tr class="row-odd"><td>scan_id</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Return only ingests created by a given scan process identifier.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-even"><td>strike_id</td>
 <td>Integer</td>
 <td>Optional</td>
 <td>Return only ingests created by a given strike process identifier.
 Duplicate it to filter by multiple values.</td>
 </tr>
-<tr class="row-even"><td>file_name</td>
+<tr class="row-odd"><td>file_name</td>
 <td>String</td>
 <td>Optional</td>
 <td>Return only ingests with a specific file name.</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
 </tr>
-<tr class="row-even"><td><strong>Status</strong></td>
+<tr class="row-odd"><td><strong>Status</strong></td>
 <td colspan="3">200 OK</td>
 </tr>
-<tr class="row-odd"><td><strong>Content Type</strong></td>
+<tr class="row-even"><td><strong>Content Type</strong></td>
 <td colspan="3"><em>application/json</em></td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-odd"><td>count</td>
+<tr class="row-even"><td>count</td>
 <td>Integer</td>
 <td colspan="2">The total number of results that match the query parameters.</td>
 </tr>
-<tr class="row-even"><td>next</td>
+<tr class="row-odd"><td>next</td>
 <td>URL</td>
 <td colspan="2">A URL to the next page of results.</td>
 </tr>
-<tr class="row-odd"><td>previous</td>
+<tr class="row-even"><td>previous</td>
 <td>URL</td>
 <td colspan="2">A URL to the previous page of results.</td>
 </tr>
-<tr class="row-even"><td>results</td>
+<tr class="row-odd"><td>results</td>
 <td>Array</td>
 <td colspan="2">List of result JSON objects that match the query parameters.</td>
 </tr>
-<tr class="row-odd"><td>.id</td>
+<tr class="row-even"><td>.id</td>
 <td>Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API call.
 (See <a class="reference internal" href="#rest-ingest-details"><span>Ingest Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td>.file_name</td>
+<tr class="row-odd"><td>.file_name</td>
 <td>String</td>
 <td colspan="2">The name of the file being ingested.</td>
 </tr>
-<tr class="row-odd"><td>.strike</td>
+<tr class="row-even"><td>.strike</td>
 <td>JSON Object</td>
 <td colspan="2">The strike process that triggered the ingest.
 (See <a class="reference internal" href="strike.html#rest-strike-details"><span>Strike Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td>.status</td>
+<tr class="row-odd"><td>.status</td>
 <td>String</td>
 <td colspan="2">The current status of the ingest.
 Choices: [TRANSFERRING, TRANSFERRED, DEFERRED, INGESTING, INGESTED, ERRORED,
 DUPLICATE].</td>
 </tr>
-<tr class="row-odd"><td>.bytes_transferred</td>
+<tr class="row-even"><td>.bytes_transferred</td>
 <td>Integer</td>
 <td colspan="2">The total number of bytes transferred so far.</td>
 </tr>
-<tr class="row-even"><td>.transfer_started</td>
+<tr class="row-odd"><td>.transfer_started</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the transfer was started.</td>
 </tr>
-<tr class="row-odd"><td>.transfer_ended</td>
+<tr class="row-even"><td>.transfer_ended</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the transfer ended.</td>
 </tr>
-<tr class="row-even"><td>.media_type</td>
+<tr class="row-odd"><td>.media_type</td>
 <td>String</td>
 <td colspan="2">The IANA media type of the file.</td>
 </tr>
-<tr class="row-odd"><td>.file_size</td>
+<tr class="row-even"><td>.file_size</td>
 <td>Integer</td>
 <td colspan="2">The size of the file in bytes.</td>
 </tr>
-<tr class="row-even"><td>.data_type</td>
+<tr class="row-odd"><td>.data_type</td>
 <td>Array</td>
 <td colspan="2">A list of string data type &#8220;tags&#8221; for the file.</td>
 </tr>
-<tr class="row-odd"><td>.ingest_started</td>
+<tr class="row-even"><td>.ingest_started</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the ingest was started.</td>
 </tr>
-<tr class="row-even"><td>.ingest_ended</td>
+<tr class="row-odd"><td>.ingest_ended</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the ingest ended.</td>
 </tr>
-<tr class="row-odd"><td>.source_file</td>
+<tr class="row-even"><td>.source_file</td>
 <td>JSON Object</td>
 <td colspan="2">A reference to the source file that was stored by this ingest.
 (See <a class="reference internal" href="source_file.html#rest-source-file-details"><span>Source File Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td>.created</td>
+<tr class="row-odd"><td>.created</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was initially created.</td>
 </tr>
-<tr class="row-odd"><td>.last_modified</td>
+<tr class="row-even"><td>.last_modified</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was last saved.</td>
 </tr>
-<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">42</span><span class="p">,</span>
     <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
     <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
