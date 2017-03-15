@@ -490,7 +490,7 @@
 
             if (vm.metricsTotal) {
                 vm.metricsTotal = formatYValues(vm.metricsTotal);
-                vm.chartTitle = '<span class="label label-success">' + vm.metricsTotal.toLocaleString() + '</span> ' + vm.chartData[0].query.selectedMetrics[0].title + ' for ' + moment.utc(vm.inputStartDate).format('DD MMM YYYY') + ' - ' + moment.utc(vm.inputEndDate).format('DD MMM YYYY');
+                vm.chartTitle = '<div class="label label-success">' + vm.metricsTotal.toLocaleString() + '</div> ' + vm.chartData[0].query.selectedMetrics[0].title + ' for ' + moment.utc(vm.inputStartDate).format('DD MMM YYYY') + ' - ' + moment.utc(vm.inputEndDate).format('DD MMM YYYY');
             } else {
                 vm.chartTitle = vm.chartData[0].query.selectedMetrics[0].title + ' ' + moment.utc(vm.inputStartDate).format('DD MMM YYYY') + ' - ' + moment.utc(vm.inputEndDate).format('DD MMM YYYY');
             }

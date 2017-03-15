@@ -62,11 +62,13 @@
 
                 var duration = moment.duration(diff);
 
-                durationStr = duration.days() > 0 ? durationStr + padWithZero(duration.days(), 2) + 'd, ' : durationStr;
+                durationStr = duration.years() > 0 ? durationStr + padWithZero(duration.years(), 2) + 'Y, ' : durationStr;
+                durationStr = duration.months() > 0 ? durationStr + padWithZero(duration.months(), 2) + 'M, ' : durationStr;
+                durationStr = duration.days() > 0 ? durationStr + padWithZero(duration.days(), 2) + 'D, ' : durationStr;
                 durationStr = duration.hours() > 0 ? durationStr + padWithZero(duration.hours(), 2) + 'h, ' : durationStr;
                 durationStr = duration.minutes() > 0 ? durationStr + padWithZero(duration.minutes(), 2) + 'm, ' : durationStr;
                 durationStr = durationStr + padWithZero(duration.seconds(), 2) + 's';
-                
+
                 return durationStr;
             },
             getDayString: function(dayNumber){
