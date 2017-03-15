@@ -1,5 +1,7 @@
 """Defines the exceptions related to Scan scanners"""
 
+from rest_framework.exceptions import APIException
+
 from ingest.scan.configuration.exceptions import InvalidScanConfiguration
 
 
@@ -8,6 +10,14 @@ class InvalidScannerConfiguration(InvalidScanConfiguration):
     """
 
     pass
+
+
+class ScanIngestJobAlreadyLaunched(APIException):
+    """Exception indicating that a scanner has already spawned an ingest scan job
+    """
+    status_code = 409
+    default_detail = 'Ingest Scan already launched'
+    default_code = 'conflict'
 
 
 class ScannerInterruptRequested(Exception):

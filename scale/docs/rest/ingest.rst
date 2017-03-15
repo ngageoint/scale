@@ -40,6 +40,9 @@ These services provide access to information about ingested files processed by t
 |                    |                   |          | ERRORED, DUPLICATE].                                                |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
+| scan_id            | Integer           | Optional | Return only ingests created by a given scan process identifier.     |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
 | strike_id          | Integer           | Optional | Return only ingests created by a given strike process identifier.   |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+

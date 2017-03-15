@@ -6,7 +6,7 @@ import django.utils.timezone as timezone
 import job.test.utils as job_utils
 import source.test.utils as source_test_utils
 import storage.test.utils as storage_test_utils
-from ingest.models import Ingest, Strike
+from ingest.models import Ingest, Scan, Strike
 
 NAME_COUNTER = 1
 
@@ -61,3 +61,24 @@ def create_strike(name=None, title=None, description=None, configuration=None, j
         job = job_utils.create_job()
 
     return Strike.objects.create(name=name, title=title, description=description, configuration=configuration, job=job)
+
+
+def create_scan(name=None, title=None, description=None, configuration=None, job=None, dry_run_job=None):
+    if not name:
+        global NAME_COUNTER
+        name = 'test-scan-%i' % NAME_COUNTER
+        NAME_COUNTER = NAME_COUNTER + 1
+    if not title:
+        title = 'Test Scan'
+    if not description:
+        description = 'Test description'
+    if not configuration:
+        workspace = storage_test_utils.create_workspace()
+        configuration = {
+            'version': '1.0', 'workspace': workspace.name,
+            'scanner': {'type': 'dir'}, 'recursive': True,
+            'files_to_ingest': [{'filename_regex': '.*'}]
+        }
+
+    return Scan.objects.create(name=name, title=title, description=description,
+                               configuration=configuration, job=job, dry_run_job=dry_run_job)
