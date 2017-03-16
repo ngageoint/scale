@@ -67,10 +67,10 @@ RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
          gdal-python \
          geos \
          httpd \
-         libffi \
+         libffi-devel \
          mod_wsgi \
          nfs-utils \
-         openssl \
+         openssl-devel \
          postgresql \
          protobuf \
          python-pip \
@@ -81,8 +81,6 @@ RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
          make \
  && yum install -y \
          gcc \
-         libffi-devel \
-         openssl-devel \
          python-devel \
  # Shim in any environment specific configuration from script
  && sh /tmp/env-shim.sh \
