@@ -272,9 +272,10 @@
             console.log(value)
         });
 
-        var formatYValues = function (data) {
+        var formatYValues = function (data, noPadding) {
+            noPadding = noPadding || false;
             if (yUnits[0] === 'seconds') {
-                return scaleService.calculateDuration(moment.utc().startOf('d'), moment.utc().startOf('d').add(data, 's'));
+                return scaleService.calculateDuration(moment.utc().startOf('d'), moment.utc().startOf('d').add(data, 's'), noPadding);
             } else if (yUnits[0] === 'bytes') {
                 return scaleService.calculateFileSizeFromBytes(data, 1);
             }
@@ -489,7 +490,7 @@
             }
 
             if (vm.metricsTotal) {
-                vm.metricsTotal = formatYValues(vm.metricsTotal);
+                vm.metricsTotal = formatYValues(vm.metricsTotal, true);
                 vm.chartTitle = '<div class="label label-success">' + vm.metricsTotal.toLocaleString() + '</div> ' + vm.chartData[0].query.selectedMetrics[0].title + ' for ' + moment.utc(vm.inputStartDate).format('DD MMM YYYY') + ' - ' + moment.utc(vm.inputEndDate).format('DD MMM YYYY');
             } else {
                 vm.chartTitle = vm.chartData[0].query.selectedMetrics[0].title + ' ' + moment.utc(vm.inputStartDate).format('DD MMM YYYY') + ' - ' + moment.utc(vm.inputEndDate).format('DD MMM YYYY');
