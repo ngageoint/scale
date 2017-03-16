@@ -1,0 +1,45 @@
+vault package
+=============
+
+Subpackages
+-----------
+
+.. toctree::
+
+    vault.test
+
+Submodules
+----------
+
+vault.apps module
+-----------------
+
+.. automodule:: vault.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+vault.exceptions module
+-----------------------
+
+.. automodule:: vault.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+vault.secrets_handler module
+----------------------------
+
+.. automodule:: vault.secrets_handler
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: vault
+    :members:
+    :undoc-members:
+    :show-inheritance:

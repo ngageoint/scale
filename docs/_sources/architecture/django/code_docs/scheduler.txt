@@ -16,6 +16,7 @@ Subpackages
     scheduler.task
     scheduler.test
     scheduler.threads
+    scheduler.vault
 
 Submodules
 ----------

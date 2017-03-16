@@ -1,0 +1,351 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>vault.test package &mdash; Scale 4.3.0-snapshot documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Scale 4.3.0-snapshot documentation" href="../../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../../../_static/scale3-transparent-128.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                4.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rest/index.html">REST API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Scale</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>vault.test package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/architecture/django/code_docs/vault.test.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="vault-test-package">
+<h1>vault.test package<a class="headerlink" href="#vault-test-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-vault.test.test_secrets_handler">
+<span id="vault-test-test-secrets-handler-module"></span><h2>vault.test.test_secrets_handler module<a class="headerlink" href="#module-vault.test.test_secrets_handler" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="vault.test.test_secrets_handler.DCOSSecretsValueValidation">
+<em class="property">class </em><code class="descclassname">vault.test.test_secrets_handler.</code><code class="descname">DCOSSecretsValueValidation</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#vault.test.test_secrets_handler.DCOSSecretsValueValidation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<p>Tests setting and recieving secrets</p>
+<dl class="method">
+<dt id="vault.test.test_secrets_handler.DCOSSecretsValueValidation.dcos_setup">
+<code class="descname">dcos_setup</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#vault.test.test_secrets_handler.DCOSSecretsValueValidation.dcos_setup" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vault.test.test_secrets_handler.DCOSSecretsValueValidation.mocked_get_secret">
+<code class="descname">mocked_get_secret</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#vault.test.test_secrets_handler.DCOSSecretsValueValidation.mocked_get_secret" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vault.test.test_secrets_handler.DCOSSecretsValueValidation.mocked_request_setup">
+<code class="descname">mocked_request_setup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#vault.test.test_secrets_handler.DCOSSecretsValueValidation.mocked_request_setup" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vault.test.test_secrets_handler.DCOSSecretsValueValidation.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#vault.test.test_secrets_handler.DCOSSecretsValueValidation.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vault.test.test_secrets_handler.DCOSSecretsValueValidation.test_dcos_get_bad_secret">
+<code class="descname">test_dcos_get_bad_secret</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#vault.test.test_secrets_handler.DCOSSecretsValueValidation.test_dcos_get_bad_secret" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vault.test.test_secrets_handler.DCOSSecretsValueValidation.test_dcos_get_secret">
+<code class="descname">test_dcos_get_secret</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#vault.test.test_secrets_handler.DCOSSecretsValueValidation.test_dcos_get_secret" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vault.test.test_secrets_handler.SecretsBackendValidation">
+<em class="property">class </em><code class="descclassname">vault.test.test_secrets_handler.</code><code class="descname">SecretsBackendValidation</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#vault.test.test_secrets_handler.SecretsBackendValidation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<p>Tests performing requests to the secrets backend</p>
+<dl class="method">
+<dt id="vault.test.test_secrets_handler.SecretsBackendValidation.mocked_validate">
+<code class="descname">mocked_validate</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#vault.test.test_secrets_handler.SecretsBackendValidation.mocked_validate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vault.test.test_secrets_handler.SecretsBackendValidation.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#vault.test.test_secrets_handler.SecretsBackendValidation.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vault.test.test_secrets_handler.SecretsBackendValidation.test_dcos_authenticate_bad_token">
+<code class="descname">test_dcos_authenticate_bad_token</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#vault.test.test_secrets_handler.SecretsBackendValidation.test_dcos_authenticate_bad_token" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vault.test.test_secrets_handler.SecretsBackendValidation.test_dcos_authenticate_good_return">
+<code class="descname">test_dcos_authenticate_good_return</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#vault.test.test_secrets_handler.SecretsBackendValidation.test_dcos_authenticate_good_return" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vault.test.test_secrets_handler.SecretsBackendValidation.test_vault_authenticate_bad_permission">
+<code class="descname">test_vault_authenticate_bad_permission</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#vault.test.test_secrets_handler.SecretsBackendValidation.test_vault_authenticate_bad_permission" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vault.test.test_secrets_handler.SecretsBackendValidation.test_vault_authenticate_good_return">
+<code class="descname">test_vault_authenticate_good_return</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#vault.test.test_secrets_handler.SecretsBackendValidation.test_vault_authenticate_good_return" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="vault.test.test_secrets_handler.VaultSecretsValueValidation">
+<em class="property">class </em><code class="descclassname">vault.test.test_secrets_handler.</code><code class="descname">VaultSecretsValueValidation</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#vault.test.test_secrets_handler.VaultSecretsValueValidation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<p>Tests setting and recieving secrets</p>
+<dl class="method">
+<dt id="vault.test.test_secrets_handler.VaultSecretsValueValidation.mocked_get_secret">
+<code class="descname">mocked_get_secret</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#vault.test.test_secrets_handler.VaultSecretsValueValidation.mocked_get_secret" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vault.test.test_secrets_handler.VaultSecretsValueValidation.mocked_request_setup">
+<code class="descname">mocked_request_setup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#vault.test.test_secrets_handler.VaultSecretsValueValidation.mocked_request_setup" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vault.test.test_secrets_handler.VaultSecretsValueValidation.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#vault.test.test_secrets_handler.VaultSecretsValueValidation.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vault.test.test_secrets_handler.VaultSecretsValueValidation.test_vault_get_bad_secret">
+<code class="descname">test_vault_get_bad_secret</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#vault.test.test_secrets_handler.VaultSecretsValueValidation.test_vault_get_bad_secret" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vault.test.test_secrets_handler.VaultSecretsValueValidation.test_vault_get_secret">
+<code class="descname">test_vault_get_secret</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#vault.test.test_secrets_handler.VaultSecretsValueValidation.test_vault_get_secret" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vault.test.test_secrets_handler.VaultSecretsValueValidation.vault_setup">
+<code class="descname">vault_setup</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#vault.test.test_secrets_handler.VaultSecretsValueValidation.vault_setup" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-vault.test">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-vault.test" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'4.3.0-snapshot',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: ''
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

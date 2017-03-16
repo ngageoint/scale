@@ -1,0 +1,373 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>vault package &mdash; Scale 4.3.0-snapshot documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Scale 4.3.0-snapshot documentation" href="../../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../../../_static/scale3-transparent-128.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                4.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rest/index.html">REST API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Scale</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>vault package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/architecture/django/code_docs/vault.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="vault-package">
+<h1>vault package<a class="headerlink" href="#vault-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="vault.test.html">vault.test package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="vault.test.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vault.test.html#module-vault.test.test_secrets_handler">vault.test.test_secrets_handler module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vault.test.html#module-vault.test">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-vault.apps">
+<span id="vault-apps-module"></span><h2>vault.apps module<a class="headerlink" href="#module-vault.apps" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="vault.apps.VaultConfig">
+<em class="property">class </em><code class="descclassname">vault.apps.</code><code class="descname">VaultConfig</code><span class="sig-paren">(</span><em>app_name</em>, <em>app_module</em><span class="sig-paren">)</span><a class="headerlink" href="#vault.apps.VaultConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.apps.config.AppConfig</span></code></p>
+<p>Configuration for the vault app</p>
+<dl class="attribute">
+<dt id="vault.apps.VaultConfig.label">
+<code class="descname">label</code><em class="property"> = u'vault'</em><a class="headerlink" href="#vault.apps.VaultConfig.label" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="vault.apps.VaultConfig.name">
+<code class="descname">name</code><em class="property"> = u'vault'</em><a class="headerlink" href="#vault.apps.VaultConfig.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="vault.apps.VaultConfig.verbose_name">
+<code class="descname">verbose_name</code><em class="property"> = u'Vault'</em><a class="headerlink" href="#vault.apps.VaultConfig.verbose_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-vault.exceptions">
+<span id="vault-exceptions-module"></span><h2>vault.exceptions module<a class="headerlink" href="#module-vault.exceptions" title="Permalink to this headline">¶</a></h2>
+<p>Defines exceptions that can occur when conduction secrets transactions</p>
+<dl class="exception">
+<dt id="vault.exceptions.InvalidSecretsAuthorization">
+<em class="property">exception </em><code class="descclassname">vault.exceptions.</code><code class="descname">InvalidSecretsAuthorization</code><a class="headerlink" href="#vault.exceptions.InvalidSecretsAuthorization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Exception indicating that the provided credentials to a secrets request was invalid</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="vault.exceptions.InvalidSecretsRequest">
+<em class="property">exception </em><code class="descclassname">vault.exceptions.</code><code class="descname">InvalidSecretsRequest</code><a class="headerlink" href="#vault.exceptions.InvalidSecretsRequest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Exception indicating that the secrets request was invalid</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="vault.exceptions.InvalidSecretsToken">
+<em class="property">exception </em><code class="descclassname">vault.exceptions.</code><code class="descname">InvalidSecretsToken</code><a class="headerlink" href="#vault.exceptions.InvalidSecretsToken" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Exception indicating that the secrets token was invalid</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="vault.exceptions.InvalidSecretsValue">
+<em class="property">exception </em><code class="descclassname">vault.exceptions.</code><code class="descname">InvalidSecretsValue</code><a class="headerlink" href="#vault.exceptions.InvalidSecretsValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Exception indicating that the secrets value was invalid</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-vault.secrets_handler">
+<span id="vault-secrets-handler-module"></span><h2>vault.secrets_handler module<a class="headerlink" href="#module-vault.secrets_handler" title="Permalink to this headline">¶</a></h2>
+<p>Handles secret getters and setters for Scale</p>
+<dl class="class">
+<dt id="vault.secrets_handler.SecretsHandler">
+<em class="property">class </em><code class="descclassname">vault.secrets_handler.</code><code class="descname">SecretsHandler</code><a class="headerlink" href="#vault.secrets_handler.SecretsHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents a secrets handler for setting and retrieving secrets</p>
+<dl class="method">
+<dt id="vault.secrets_handler.SecretsHandler.get_job_type_secrets">
+<code class="descname">get_job_type_secrets</code><span class="sig-paren">(</span><em>job_name</em><span class="sig-paren">)</span><a class="headerlink" href="#vault.secrets_handler.SecretsHandler.get_job_type_secrets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the secrets located at the job_name within the backend</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_name</strong> (<em>str</em>) &#8211; path within the secrets backend that the secret is stored</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">secret_values</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="vault.secrets_handler.SecretsHandler.list_job_types">
+<code class="descname">list_job_types</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#vault.secrets_handler.SecretsHandler.list_job_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the names of all job types that have secrets</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">all_job_types</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="vault.secrets_handler.SecretsHandler.set_job_type_secrets">
+<code class="descname">set_job_type_secrets</code><span class="sig-paren">(</span><em>job_name</em>, <em>secret_json</em><span class="sig-paren">)</span><a class="headerlink" href="#vault.secrets_handler.SecretsHandler.set_job_type_secrets" title="Permalink to this definition">¶</a></dt>
+<dd><p>write job-type secrets to the secrets backend</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>job_name</strong> (<em>str</em>) &#8211; name of the job that the screts belong to.</li>
+<li><strong>secret_json</strong> (<em>dict</em>) &#8211; dict with name:value pairs for all secrets associated with the job</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-vault">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-vault" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'4.3.0-snapshot',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: ''
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>batch.management.commands package &mdash; Scale 4.3.0-snapshot documentation</title>
+  <title>scheduler.vault package &mdash; Scale 4.3.0-snapshot documentation</title>
   
 
   
@@ -35,9 +35,9 @@
 
   
     <link rel="top" title="Scale 4.3.0-snapshot documentation" href="../../../index.html"/>
-        <link rel="up" title="batch.management package" href="batch.management.html"/>
-        <link rel="next" title="batch.migrations package" href="batch.migrations.html"/>
-        <link rel="prev" title="batch.management package" href="batch.management.html"/> 
+        <link rel="up" title="scheduler package" href="scheduler.html"/>
+        <link rel="next" title="shared_resource package" href="shared_resource.html"/>
+        <link rel="prev" title="scheduler.threads package" href="scheduler.threads.html"/> 
 
   
   <script src="../../../_static/js/modernizr.min.js"></script>
@@ -107,18 +107,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
-<li class="toctree-l3 current"><a class="reference internal" href="batch.html">batch package</a><ul class="current">
-<li class="toctree-l4 current"><a class="reference internal" href="batch.html#subpackages">Subpackages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="batch.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="batch.html#module-batch.apps">batch.apps module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="batch.html#module-batch.exceptions">batch.exceptions module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="batch.html#module-batch.models">batch.models module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="batch.html#module-batch.serializers">batch.serializers module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="batch.html#module-batch.urls">batch.urls module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="batch.html#module-batch.views">batch.views module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="batch.html#module-batch">Module contents</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="batch.html">batch package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
@@ -130,7 +119,21 @@
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="scheduler.html">scheduler package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="scheduler.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.admin">scheduler.admin module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.apps">scheduler.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.cluster_utils">scheduler.cluster_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.initialize">scheduler.initialize module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.models">scheduler.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.scale_scheduler">scheduler.scale_scheduler module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.serializers">scheduler.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.urls">scheduler.urls module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.views">scheduler.views module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler">Module contents</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
@@ -192,17 +195,15 @@
         
           <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
         
-          <li><a href="batch.html">batch package</a> &raquo;</li>
+          <li><a href="scheduler.html">scheduler package</a> &raquo;</li>
         
-          <li><a href="batch.management.html">batch.management package</a> &raquo;</li>
-        
-      <li>batch.management.commands package</li>
+      <li>scheduler.vault package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/batch.management.commands.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/scheduler.vault.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -215,41 +216,54 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="batch-management-commands-package">
-<h1>batch.management.commands package<a class="headerlink" href="#batch-management-commands-package" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="scheduler-vault-package">
+<h1>scheduler.vault package<a class="headerlink" href="#scheduler-vault-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-batch.management.commands.scale_batch_creator">
-<span id="batch-management-commands-scale-batch-creator-module"></span><h2>batch.management.commands.scale_batch_creator module<a class="headerlink" href="#module-batch.management.commands.scale_batch_creator" title="Permalink to this headline">¶</a></h2>
-<p>Defines the command line method for creating a Scale batch</p>
+<div class="section" id="module-scheduler.vault.manager">
+<span id="scheduler-vault-manager-module"></span><h2>scheduler.vault.manager module<a class="headerlink" href="#module-scheduler.vault.manager" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class that manages caching task secrets to memory</p>
 <dl class="class">
-<dt id="batch.management.commands.scale_batch_creator.Command">
-<em class="property">class </em><code class="descclassname">batch.management.commands.scale_batch_creator.</code><code class="descname">Command</code><a class="headerlink" href="#batch.management.commands.scale_batch_creator.Command" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.management.base.BaseCommand</span></code></p>
-<p>Command that creates a Scale batch</p>
+<dt id="scheduler.vault.manager.SecretsManager">
+<em class="property">class </em><code class="descclassname">scheduler.vault.manager.</code><code class="descname">SecretsManager</code><a class="headerlink" href="#scheduler.vault.manager.SecretsManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This class pulls secrets from the secrets backend and caches them. This class is thread-safe.</p>
 <dl class="method">
-<dt id="batch.management.commands.scale_batch_creator.Command.handle">
-<code class="descname">handle</code><span class="sig-paren">(</span><em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.management.commands.scale_batch_creator.Command.handle" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <code class="xref py py-meth docutils literal"><span class="pre">django.core.management.base.BaseCommand.handle()</span></code>.</p>
-<p>This method starts the Scale batch creation process.</p>
+<dt id="scheduler.vault.manager.SecretsManager.retrieve_job_type_secrets">
+<code class="descname">retrieve_job_type_secrets</code><span class="sig-paren">(</span><em>job_name</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.vault.manager.SecretsManager.retrieve_job_type_secrets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the secret values from the cache pertaining to the provided job</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>job_name</strong> &#8211; the name of the job</li>
+<li><strong>type</strong> &#8211; string</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">job type secrets</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="batch.management.commands.scale_batch_creator.Command.help">
-<code class="descname">help</code><em class="property"> = u'Creates a new batch of jobs and recipes to be processed on the cluster'</em><a class="headerlink" href="#batch.management.commands.scale_batch_creator.Command.help" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="batch.management.commands.scale_batch_creator.Command.option_list">
-<code class="descname">option_list</code><em class="property"> = (&lt;Option at 0x2ad885c77488: -v/--verbosity&gt;, &lt;Option at 0x2ad885c775a8: --settings&gt;, &lt;Option at 0x2ad885c775f0: --pythonpath&gt;, &lt;Option at 0x2ad885c77638: --traceback&gt;, &lt;Option at 0x2ad885c776c8: --no-color&gt;, &lt;Option at 0x2ad8974b8830: -i/--batch-id&gt;)</em><a class="headerlink" href="#batch.management.commands.scale_batch_creator.Command.option_list" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dl class="method">
+<dt id="scheduler.vault.manager.SecretsManager.sync_with_backend">
+<code class="descname">sync_with_backend</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.vault.manager.SecretsManager.sync_with_backend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gather all job type secrets that are stored in the secrets backend.</p>
+</dd></dl>
 
 </dd></dl>
 
 </div>
-<div class="section" id="module-batch.management.commands">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-batch.management.commands" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-scheduler.vault">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-scheduler.vault" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -263,10 +277,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="batch.migrations.html" class="btn btn-neutral float-right" title="batch.migrations package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="shared_resource.html" class="btn btn-neutral float-right" title="shared_resource package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="batch.management.html" class="btn btn-neutral" title="batch.management package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="scheduler.threads.html" class="btn btn-neutral" title="scheduler.threads package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
