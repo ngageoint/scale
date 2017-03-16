@@ -5,6 +5,7 @@ import logging
 import math
 import time
 
+from django.conf import settings
 from django.db import DatabaseError
 from django.utils.timezone import now
 from mesos.interface import mesos_pb2
@@ -15,6 +16,7 @@ from scheduler.node.manager import node_mgr
 from scheduler.sync.job_type_manager import job_type_mgr
 from scheduler.sync.scheduler_manager import scheduler_mgr
 from scheduler.sync.workspace_manager import workspace_mgr
+from scheduler.vault.manager import secrets_mgr
 
 
 logger = logging.getLogger(__name__)
@@ -100,6 +102,9 @@ class DatabaseSyncThread(object):
         node_mgr.sync_with_database(mesos_master.hostname, mesos_master.port)
 
         self._sync_running_job_executions()
+        
+        if settings.SECRETS_URL:
+            secrets_mgr.sync_with_backend()
 
     def _sync_running_job_executions(self):
         """Syncs job executions that are currently running by handling any canceled executions

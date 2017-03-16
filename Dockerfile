@@ -15,6 +15,7 @@ EXPOSE 80
 # DCOS_OAUTH_TOKEN authentication for Marathon deployments when DCOS OAuth is enabled
 # DCOS_PACKAGE_FRAMEWORK_NAME used to inject a configurable framework name allowing for multiple scale frameworks per cluster
 # DCOS_PASS authentication for Marathon deployments when using DCOS enterprise
+# DCOS_SERVICE_ACCOUNT a DCOS account name with read/update/create/delete access to the secrets store
 # DCOS_USER authentication for Marathon deployments when using DCOS enterprise
 # DEPLOY_WEBSERVER to start the web server container
 # ENABLE_BOOTSTRAP true to initialize database and bootstrap supporting containers, should only be set on scheduler in DCOS
@@ -36,6 +37,8 @@ EXPOSE 80
 # SCALE_WEBSERVER_CPU
 # SCALE_WEBSERVER_MEMORY
 # SCALE_ZK_URL
+# SECRETS_URL used for linking Scale to a secrets storage service (works with Vault and DCOS Secrets Store)
+# SECRETS_TOKEN used for authenticating Scale against Vault or DCOS Secrets Store
 
 # build arg to set the version qualifier. This should be blank for a
 # release build. Otherwise it is typically a build number or git hash.
@@ -64,8 +67,10 @@ RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
          gdal-python \
          geos \
          httpd \
+         libffi-devel \
          mod_wsgi \
          nfs-utils \
+         openssl-devel \
          postgresql \
          protobuf \
          python-pip \
@@ -74,6 +79,9 @@ RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
          systemd-container-EOL \
          unzip \
          make \
+ && yum install -y \
+         gcc \
+         python-devel \
  # Shim in any environment specific configuration from script
  && sh /tmp/env-shim.sh \
  && pip install marathon==0.8.7 mesos.interface==0.25.0 protobuf==2.5.0 requests \
@@ -91,6 +99,7 @@ RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
 		/etc/httpd/conf/httpd.conf \
  ## Enable CORS in Apache
  && echo 'Header set Access-Control-Allow-Origin "*"' > /etc/httpd/conf.d/cors.conf \
+ && yum -y history undo last \
  && yum clean all
 
 # install the source code and config files
