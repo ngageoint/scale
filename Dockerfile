@@ -38,7 +38,7 @@ EXPOSE 80
 # SCALE_WEBSERVER_MEMORY
 # SCALE_ZK_URL
 # SECRETS_URL used for linking Scale to a secrets storage service (works with Vault and DCOS Secrets Store)
-# SECRETS_TOKEN used for authenticating Scale agaist Vault or DCOS Secrets Store
+# SECRETS_TOKEN used for authenticating Scale against Vault or DCOS Secrets Store
 
 # build arg to set the version qualifier. This should be blank for a
 # release build. Otherwise it is typically a build number or git hash.
