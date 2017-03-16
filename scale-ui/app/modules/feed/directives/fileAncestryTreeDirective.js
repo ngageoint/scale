@@ -8,20 +8,18 @@
 
         $scope.$watchCollection('vm.source', function() {
             draw();
-            //console.log(vm.source);
         });
 
-        function formatFileName(filename){
+        function formatFileName(filename) {
             var maxlen = 25;
             var newfname = filename;
-            if(filename.length > 30){
+            if (filename.length > 30) {
                 var ext = filename.substring(filename.lastIndexOf('.')+1);
-                var firstpart = filename.substring(0, filename.lastIndexOf('.'));
                 var firstpartLen = maxlen - ext.length;
-                var newfname = filename.substring(0,firstpartLen-1) + '...' + ext;
+                newfname = filename.substring(0,firstpartLen-1) + '...' + ext;
             }
             return newfname;
-        };
+        }
 
         function getNodeHtml(file) {
             var iconHtml = scaleService.getMediaTypeHtml(file.media_type);
@@ -33,9 +31,9 @@
             html += "</div>";
 
             return html;
-        };
+        }
 
-        function getJobNodeHtml(jobtype, jobid){
+        function getJobNodeHtml(jobtype, jobid) {
             var html = "<div>";
             html += "<span class='status'></span><span class='job-name'><a href='#/jobs/job/" + jobid + "'>" + jobtype.name + "</a></span>";
             html += "</div>";
@@ -44,19 +42,15 @@
         }
 
         function draw() {
-            if(vm.source && vm.source !== undefined){
-                var svg = d3.select("svg");
-                var inner = svg.select("g");
+            if (vm.source && vm.source !== undefined) {
+                var svg = d3.select('svg');
+                var inner = svg.select('g');
 
                 // Set up zoom support
                 var zoom = d3.behavior.zoom()
-                    .on("zoom", function() {
-                        // don't zoom on WheelEvent or MouseEvent, just window sizing
-                        console.log('zoomed');
-                        if(d3.event.sourceEvent === null){
-                            inner.attr("transform", "translate(" + d3.event.translate + ")" +
-                                "scale(" + d3.event.scale + ")");
-                        }
+                    .on('zoom', function() {
+                        inner.attr('transform', 'translate(' + d3.event.translate + ')' +
+                            'scale(' + d3.event.scale + ')');
                 });
                 svg.call(zoom);
 
@@ -66,7 +60,7 @@
                 g.setGraph({
                     nodesep: 30,
                     ranksep: 70,
-                    rankdir: "LR",
+                    rankdir: 'LR',
                     marginx: 20,
                     marginy: 0
                 });
@@ -74,7 +68,7 @@
                 //Starting node
                 var html = getNodeHtml(vm.source);
                 g.setNode('file-' + vm.source.id, {
-                    labelType: "html",
+                    labelType: 'html',
                     label: html,
                     rx: 10,
                     ry: 10,
@@ -89,7 +83,7 @@
                     var jobNodeHtml = getJobNodeHtml(prod.job_type, prod.job.id);
                     // Add node for the job
                     g.setNode('job-' + prod.job.id, {
-                        labelType: "html",
+                        labelType: 'html',
                         label: jobNodeHtml,
                         rx: 10,
                         ry: 10,
@@ -98,15 +92,15 @@
                         height: 20
                     });
                     g.setEdge('file-'+vm.source.id, 'job-'+prod.job.id, {
-                        //labelType: "html",
-                        //label: "<a href='#/jobs/job/" + prod.job.id + "'>" + prod.job_type.name + "</a>"
+                        //labelType: 'html',
+                        //label: '<a href='#/jobs/job/' + prod.job.id + ''>' + prod.job_type.name + '</a>'
                         //width: 40
                     });
 
 
                     var html = getNodeHtml(prod);
                     g.setNode('file-' + prod.id, {
-                        labelType: "html",
+                        labelType: 'html',
                         label: html,
                         rx: 10,
                         ry: 10,
@@ -115,14 +109,12 @@
                         height: 20
                     });
                     g.setEdge('job-'+prod.job.id, 'file-'+prod.id, {
-                        //labelType: "html",
-                        //label: "<a href='#/jobs/job/" + prod.job.id + "'>" + prod.job_type.name + "</a>"
+                        //labelType: 'html',
+                        //label: '<a href='#/jobs/job/' + prod.job.id + ''>' + prod.job_type.name + '</a>'
                         //width: 40
                     });
 
                 }
-
-                var render = new dagreD3.render();
 
                 // Run the renderer. This is what draws the final graph.
                 render(inner, g);
@@ -137,7 +129,7 @@
                 console.log(vbx[3]);
 
                 // If graph is shorter than container, shrink the container height
-                if( gheight < vbx[3] ){
+                if ( gheight < vbx[3] ) {
                     svg.attr('viewBox', vbx[0] + ' ' + vbx[1] + ' ' + vbx[2] + ' ' + gheight*1.1);
                 }
 
@@ -151,19 +143,6 @@
 
                 // set appropriate class for job nodes
                 $('.job-name').closest('.node').children('rect').attr('class', 'job'); //.addClass('job');
-
-                // clear zoom handler and mousewheel events
-                // so they don't interfere with scrolling
-                zoom.on('zoom', null);
-                svg.on("mousedown.zoom", null)
-                    .on("mousewheel.zoom", null)
-                    .on("mousemove.zoom", null)
-                    .on("DOMMouseScroll.zoom", null)
-                    .on("dblclick.zoom", null)
-                    .on("touchstart.zoom", null)
-                    .on("touchmove.zoom", null)
-                    .on("touchend.zoom", null)
-                    .on("wheel.zoom", null);
             }
 
         }
@@ -173,7 +152,7 @@
     }).directive('scaleFileAncestryTree', function () {
         'use strict';
         /**
-         * Usage: <scale-file-ancestry-tree source="source" />
+         * Usage: <scale-file-ancestry-tree source='source' />
          */
         return {
             controller: 'scaleFileAncestryTreeController',
