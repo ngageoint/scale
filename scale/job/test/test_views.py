@@ -9,7 +9,6 @@ import django.utils.timezone as timezone
 from django.test import TestCase, TransactionTestCase
 from mock import patch
 from rest_framework import status
-from rest_framework.test import APIClient
 
 import error.test.utils as error_test_utils
 import job.test.utils as job_test_utils
@@ -1796,11 +1795,9 @@ class TestJobExecutionSpecificLogView(TestCase):
     def setUp(self):
         django.setup()
 
-        self.test_client = APIClient()
-
     def test_bad_job_exe_id(self):
         url = rest_util.get_url('/job-executions/999999/logs/combined/')
-        response = self.test_client.get(url)
+        response = self.client.generic('GET', url)
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
@@ -1814,7 +1811,7 @@ class TestJobExecutionSpecificLogView(TestCase):
         mock_get_logs.return_value.get_log_json.side_effect = new_get_log_json
 
         url = rest_util.get_url('/job-executions/999999/logs/combined/?format=json')
-        response = self.test_client.get(url)
+        response = self.client.generic('GET', url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         self.assertEqual(response.accepted_media_type, 'application/json')
@@ -1846,7 +1843,7 @@ class TestJobExecutionSpecificLogView(TestCase):
         mock_get_logs.return_value.get_log_text.side_effect = new_get_log_text
 
         url = rest_util.get_url('/job-executions/999999/logs/combined/?format=html')
-        response = self.test_client.get(url)
+        response = self.client.generic('GET', url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         self.assertEqual(response.accepted_media_type, 'text/html')
@@ -1861,7 +1858,7 @@ class TestJobExecutionSpecificLogView(TestCase):
         mock_get_logs.return_value.get_log_json.side_effect = new_get_log_json
 
         url = rest_util.get_url('/job-executions/999999/logs/combined/?format=json')
-        response = self.test_client.get(url)
+        response = self.client.generic('GET', url)
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
 
@@ -1876,7 +1873,7 @@ class TestJobExecutionSpecificLogView(TestCase):
         mock_get_logs.return_value.get_log_text.side_effect = new_get_log_text
 
         url = rest_util.get_url('/job-executions/999999/logs/stdout/?format=html')
-        response = self.test_client.get(url)
+        response = self.client.generic('GET', url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         self.assertEqual(response.accepted_media_type, 'text/html')
@@ -1892,7 +1889,7 @@ class TestJobExecutionSpecificLogView(TestCase):
         mock_get_logs.return_value.get_log_text.side_effect = new_get_log_text
 
         url = rest_util.get_url('/job-executions/999999/logs/stderr/?format=html')
-        response = self.test_client.get(url)
+        response = self.client.generic('GET', url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         self.assertEqual(response.accepted_media_type, 'text/html')
@@ -1909,7 +1906,7 @@ class TestJobExecutionSpecificLogView(TestCase):
         mock_get_logs.return_value.get_log_json.side_effect = new_get_log_json
 
         url = rest_util.get_url('/job-executions/999999/logs/combined/?started=2016-01-01T00:00:00Z&format=json')
-        response = self.test_client.get(url)
+        response = self.client.generic('GET', url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         self.assertEqual(response.accepted_media_type, 'application/json')
