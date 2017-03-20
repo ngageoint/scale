@@ -10,7 +10,7 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 from job.configuration.data.exceptions import InvalidData, InvalidConnection
-from job.configuration.interface import job_interface_1_3 as previous_interface
+from job.configuration.interface import job_interface_1_2 as previous_interface
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition, MissingSetting
 from job.configuration.interface.scale_file import ScaleFileDescription
 from job.configuration.results.exceptions import InvalidResultsManifest
@@ -21,7 +21,7 @@ from scheduler.vault.manager import secrets_mgr
 
 logger = logging.getLogger(__name__)
 
-SCHEMA_VERSION = '1.4'
+SCHEMA_VERSION = '1.3'
 
 JOB_INTERFACE_SCHEMA = {
     'type': 'object',
@@ -29,7 +29,7 @@ JOB_INTERFACE_SCHEMA = {
     'additionalProperties': False,
     'properties': {
         'version': {
-            'description': 'Version of the job_interface schema',
+            'description': 'version of the job_interface schema',
             "default": SCHEMA_VERSION,
             "type": "string"
         },
@@ -48,15 +48,8 @@ JOB_INTERFACE_SCHEMA = {
                 '$ref': '#/definitions/env_var',
             },
         },
-        'mounts': {
-            'description': 'Expected data directories mounted into the job container',
-            'type': 'array',
-            'items': {
-                '$ref': '#/definitions/mount',
-            },
-        },
         'settings': {
-            'description': 'Job settings that will be in command arguments or environment variables',
+            'description': 'Job settings that will be in command call',
             'type': 'array',
             'items': {
                 '$ref': '#/definitions/setting',
@@ -91,22 +84,6 @@ JOB_INTERFACE_SCHEMA = {
                     'type': 'string',
                 },
                 'value': {
-                    'type': 'string',
-                },
-            },
-        },
-        'mount': {
-            'type': 'object',
-            'required': ['name', 'path'],
-            'additionalProperties': False,
-            'properties': {
-                'name': {
-                    'type': 'string',
-                },
-                'required': {
-                    'type': 'boolean',
-                },
-                'path': {
                     'type': 'string',
                 },
             },
@@ -225,14 +202,14 @@ class JobInterface(object):
             raise InvalidInterfaceDefinition(validation_error)
 
         self._populate_default_values()
+        self._populate_settings_defaults()
+        self._populate_env_vars_defaults()
 
         self._check_env_var_uniqueness()
         self._check_param_name_uniqueness()
         self._check_setting_name_uniqueness()
-        self._check_mount_name_uniqueness()
 
         self._validate_command_arguments()
-        self._validate_mount_paths()
         self._create_validation_dicts()
 
     def add_output_to_connection(self, output_name, job_conn, input_name):
@@ -629,16 +606,6 @@ class JobInterface(object):
                 retrieve_files_dict[input_name] = (is_multiple, input_path, partial)
         return retrieve_files_dict
 
-    def _check_mount_name_uniqueness(self):
-        """Ensures all the mount names are unique, and throws a
-        :class:`job.configuration.interface.exceptions.InvalidInterfaceDefinition` if they are not unique
-        """
-
-        for mount in self.definition['mounts']:
-            if mount['name'] in self._param_names:
-                raise InvalidInterfaceDefinition('Mount names must be unique')
-            self._param_names.add(mount['name'])
-
     def _check_setting_name_uniqueness(self):
         """Ensures all the settings names are unique, and throws a
         :class:`job.configuration.interface.exceptions.InvalidInterfaceDefinition` if they are not unique
@@ -744,21 +711,21 @@ class JobInterface(object):
         secret_settings = {}
 
         # Isolate the job_type settings and convert to list
-        config_settings = config_settings['job_task']['settings']
+        config_settings =  config_settings['job_task']['settings']
         config_settings_dict = {setting['name']: setting['value'] for setting in config_settings}
 
         for setting in settings:
             setting_name = setting['name']
             setting_is_secret = setting['secret']
-
+            
             if setting_is_secret:
                 job_type_name = job_type.get_job_type_name()
                 job_type_ver = job_type.get_job_type_version()
                 job_index = '-'.join([job_type_name, job_type_ver])
-
+                
                 if not secret_settings:
                     secret_settings = secrets_mgr.retrieve_job_type_secrets(job_index)
-
+                
                 if setting_name in secret_settings.keys():
                     settings_value = secret_settings[setting_name]
                     job_configuration.add_job_task_setting(setting_name, '*****')
@@ -777,32 +744,16 @@ class JobInterface(object):
         """Goes through the definition and fills in any missing default values"""
         if 'version' not in self.definition:
             self.definition['version'] = SCHEMA_VERSION
-        if 'env_vars' not in self.definition:
-            self.definition['env_vars'] = []
-        if 'mounts' not in self.definition:
-            self.definition['mounts'] = []
-        if 'settings' not in self.definition:
-            self.definition['settings'] = []
         if 'input_data' not in self.definition:
             self.definition['input_data'] = []
-        if 'output_data' not in self.definition:
-            self.definition['output_data'] = []
         if 'shared_resources' not in self.definition:
             self.definition['shared_resources'] = []
+        if 'output_data' not in self.definition:
+            self.definition['output_data'] = []
 
-        self._populate_env_vars_defaults()
-        self._populate_mounts_defaults()
-        self._populate_settings_defaults()
         self._populate_input_data_defaults()
-        self._populate_output_data_defaults()
         self._populate_resource_defaults()
-
-    def _populate_mounts_defaults(self):
-        """Populates the default values for any missing mounts values"""
-
-        for mount in self.definition['mounts']:
-            if 'required' not in mount:
-                mount['required'] = True
+        self._populate_output_data_defaults()
 
     def _populate_settings_defaults(self):
         """populates the default values for any missing settings values"""
@@ -836,6 +787,41 @@ class JobInterface(object):
                 input_data['media_types'] = []
             if input_data['type'] in ['file', 'files'] and 'partial' not in input_data:
                 input_data['partial'] = False
+
+    def _populate_output_data_defaults(self):
+        """populates the default values for any missing output_data values"""
+        for output_data in self.definition['output_data']:
+            if 'required' not in output_data:
+                output_data['required'] = True
+
+    def _populate_resource_defaults(self):
+        """populates the default values for any missing shared_resource values"""
+        for shared_resource in self.definition['shared_resources']:
+            if 'required' not in shared_resource:
+                shared_resource['required'] = True
+
+    def _populate_default_values(self):
+        """Goes through the definition and fills in any missing default values"""
+        if 'version' not in self.definition:
+            self.definition['version'] = SCHEMA_VERSION
+        if 'input_data' not in self.definition:
+            self.definition['input_data'] = []
+        if 'shared_resources' not in self.definition:
+            self.definition['shared_resources'] = []
+        if 'output_data' not in self.definition:
+            self.definition['output_data'] = []
+
+        self._populate_input_data_defaults()
+        self._populate_resource_defaults()
+        self._populate_output_data_defaults()
+
+    def _populate_input_data_defaults(self):
+        """populates the default values for any missing input_data values"""
+        for input_data in self.definition['input_data']:
+            if 'required' not in input_data:
+                input_data['required'] = True
+            if input_data['type'] in ['file', 'files'] and 'media_types' not in input_data:
+                input_data['media_types'] = []
 
     def _populate_output_data_defaults(self):
         """populates the default values for any missing output_data values"""
@@ -951,17 +937,15 @@ class JobInterface(object):
                 found_match = True
 
             if not found_match:
-                msg = 'The %s parameter was not found in any inputs, shared_resources, or settings' % param
+                msg = 'The %s parameter was not found in any inputs, shared_resources, or system variables' % param
                 raise InvalidInterfaceDefinition(msg)
 
-    def _validate_mount_paths(self):
-        """Ensures that all mount paths are valid
-
-        :raises :class:`job.configuration.data.exceptions.InvalidInterfaceDefinition`: If a mount path is invalid
+    def _check_env_var_uniqueness(self):
+        """Ensures all the enviornmental variable names are unique, and throws a
+        :class:`job.configuration.interface.exceptions.InvalidInterfaceDefinition` if they are not unique
         """
 
-        for mount in self.definition['mounts']:
-            name = mount['name']
-            path = mount['path']
-            if not os.path.isabs(path):
-                raise InvalidInterfaceDefinition('%s mount must have an absolute path' % name)
+        env_vars = [env_var['name'] for env_var in self.definition['env_vars']]
+
+        if len(env_vars) != len(set(env_vars)):
+            raise InvalidInterfaceDefinition('Environment variable names must be unique')
