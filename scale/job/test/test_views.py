@@ -1827,7 +1827,7 @@ class TestJobExecutionSpecificLogView(TestCase):
         mock_get_logs.return_value.get_log_text.side_effect = new_get_log_text
 
         url = rest_util.get_url('/job-executions/999999/logs/combined/?format=txt')
-        response = self.test_client.get(url)
+        response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         self.assertEqual(response.accepted_media_type, 'text/plain')

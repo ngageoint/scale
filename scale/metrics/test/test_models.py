@@ -595,7 +595,7 @@ class TestMetricsJobType(TestCase):
         """Tests getting the metrics plot data with filters."""
         job_type = job_test_utils.create_job_type()
         metrics_test_utils.create_job_type(job_type=job_type, occurred=datetime.date(2015, 1, 1), completed_count=1)
-        metrics_test_utils.create_job_type(job_type=job_type, occurred=datetime.date(2015, 1, 20, tzinfo=utc), completed_count=1)
+        metrics_test_utils.create_job_type(job_type=job_type, occurred=datetime.date(2015, 1, 20), completed_count=1)
         metrics_test_utils.create_job_type(occurred=datetime.date(2015, 1, 1), completed_count=1)
 
         plot_data = MetricsJobType.objects.get_plot_data(started=datetime.date(2015, 1, 1),
