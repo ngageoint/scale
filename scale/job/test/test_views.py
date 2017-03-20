@@ -5,8 +5,8 @@ import json
 import time
 
 import django
-import django.utils.timezone as timezone
 from django.test import TestCase, TransactionTestCase
+from django.utils.timezone import utc, now
 from mock import patch
 from rest_framework import status
 
@@ -1388,11 +1388,11 @@ class TestJobTypesStatusView(TestCase):
 
     def test_running(self):
         """Tests getting running jobs regardless of time filters."""
-        old_timestamp = datetime.datetime(2015, 1, 1, tzinfo=timezone.utc)
+        old_timestamp = datetime.datetime(2015, 1, 1, tzinfo=utc)
         job_test_utils.create_job(job_type=self.job_type1, status='COMPLETED', last_status_change=old_timestamp)
         job_test_utils.create_job(job_type=self.job_type1, status='RUNNING', last_status_change=old_timestamp)
 
-        new_timestamp = datetime.datetime(2015, 1, 10, tzinfo=timezone.utc)
+        new_timestamp = datetime.datetime(2015, 1, 10, tzinfo=utc)
         job_test_utils.create_job(job_type=self.job_type1, status='COMPLETED', last_status_change=new_timestamp)
         job_test_utils.create_job(job_type=self.job_type1, status='RUNNING', last_status_change=new_timestamp)
 
@@ -1507,14 +1507,14 @@ class TestJobsWithExecutionView(TransactionTestCase):
 
         self.job_1a = job_test_utils.create_job(job_type=self.job_type_1, status='COMPLETED')
         job_test_utils.create_job_exe(job=self.job_1a, status='FAILED',
-                                      created=timezone.now() - datetime.timedelta(hours=3))
+                                      created=now() - datetime.timedelta(hours=3))
         time.sleep(.01)
         job_test_utils.create_job_exe(job=self.job_1a, status='FAILED',
-                                      created=timezone.now() - datetime.timedelta(hours=2))
+                                      created=now() - datetime.timedelta(hours=2))
         time.sleep(.01)
         job_test_utils.create_job_exe(job=self.job_1a, status='COMPLETED',
-                                      created=timezone.now() - datetime.timedelta(hours=1),
-                                      last_modified=timezone.now() - datetime.timedelta(hours=1))
+                                      created=now() - datetime.timedelta(hours=1),
+                                      last_modified=now() - datetime.timedelta(hours=1))
         time.sleep(.01)
         self.last_run_1a = job_test_utils.create_job_exe(job=self.job_1a, status='RUNNING')
 
@@ -1525,15 +1525,15 @@ class TestJobsWithExecutionView(TransactionTestCase):
         self.job_2a = job_test_utils.create_job(job_type=self.job_type_2, status='RUNNING')
         time.sleep(.01)
         job_test_utils.create_job_exe(job=self.job_2a, status='FAILED',
-                                      created=timezone.now() - datetime.timedelta(hours=3),
-                                      last_modified=timezone.now() - datetime.timedelta(hours=2))
+                                      created=now() - datetime.timedelta(hours=3),
+                                      last_modified=now() - datetime.timedelta(hours=2))
         time.sleep(.01)
         job_test_utils.create_job_exe(job=self.job_2a, status='FAILED',
-                                      created=timezone.now() - datetime.timedelta(hours=2),
-                                      last_modified=timezone.now() - datetime.timedelta(hours=1))
+                                      created=now() - datetime.timedelta(hours=2),
+                                      last_modified=now() - datetime.timedelta(hours=1))
         time.sleep(.01)
         job_test_utils.create_job_exe(job=self.job_2a, status='COMPLETED',
-                                      created=timezone.now() - datetime.timedelta(hours=1))
+                                      created=now() - datetime.timedelta(hours=1))
         time.sleep(.01)
         self.last_run_2a = job_test_utils.create_job_exe(job=self.job_2a, status='RUNNING')
 
@@ -1660,24 +1660,24 @@ class TestJobExecutionsView(TransactionTestCase):
 
         self.job_1 = job_test_utils.create_job(job_type=self.job_type_1, status='COMPLETED')
         self.job_exe_1a = job_test_utils.create_job_exe(job=self.job_1, status='FAILED',
-                                                        created=timezone.now() - datetime.timedelta(hours=3))
+                                                        created=now() - datetime.timedelta(hours=3))
         self.job_exe_1b = job_test_utils.create_job_exe(job=self.job_1, status='FAILED',
-                                                        created=timezone.now() - datetime.timedelta(hours=2))
+                                                        created=now() - datetime.timedelta(hours=2))
         self.job_exe_1c = job_test_utils.create_job_exe(job=self.job_1, status='FAILED',
-                                                        created=timezone.now() - datetime.timedelta(hours=1),
-                                                        last_modified=timezone.now() - datetime.timedelta(hours=1))
+                                                        created=now() - datetime.timedelta(hours=1),
+                                                        last_modified=now() - datetime.timedelta(hours=1))
         self.last_exe_1 = job_test_utils.create_job_exe(job=self.job_1, status='RUNNING')
 
         self.job_2 = job_test_utils.create_job(job_type=self.job_type_1, status='FAILED')
         self.last_exe_2 = job_test_utils.create_job_exe(job=self.job_2, status='FAILED')
 
         job_3 = job_test_utils.create_job(job_type=self.job_type_2, status='RUNNING')
-        job_test_utils.create_job_exe(job=job_3, status='FAILED', created=timezone.now() - datetime.timedelta(hours=3),
-                                      last_modified=timezone.now() - datetime.timedelta(hours=2))
-        job_test_utils.create_job_exe(job=job_3, status='FAILED', created=timezone.now() - datetime.timedelta(hours=2),
-                                      last_modified=timezone.now() - datetime.timedelta(hours=1))
+        job_test_utils.create_job_exe(job=job_3, status='FAILED', created=now() - datetime.timedelta(hours=3),
+                                      last_modified=now() - datetime.timedelta(hours=2))
+        job_test_utils.create_job_exe(job=job_3, status='FAILED', created=now() - datetime.timedelta(hours=2),
+                                      last_modified=now() - datetime.timedelta(hours=1))
         job_test_utils.create_job_exe(job=job_3, status='COMPLETED',
-                                      created=timezone.now() - datetime.timedelta(hours=1))
+                                      created=now() - datetime.timedelta(hours=1))
         job_test_utils.create_job_exe(job=job_3, status='RUNNING')
 
         job_4 = job_test_utils.create_job(job_type=self.job_type_2, status='COMPLETED')
@@ -1745,8 +1745,8 @@ class TestJobExecutionsView(TransactionTestCase):
             self.assertTrue(job_exe_id in job_1_exe_list)
 
     def test_no_tz(self):
-        start_date_time = timezone.now() - datetime.timedelta(hours=1)
-        end_date_time = timezone.now()
+        start_date_time = now() - datetime.timedelta(hours=1)
+        end_date_time = now()
         url = rest_util.get_url('/job-executions/?started={0}&ended={1}'.format(start_date_time.isoformat(),
                                                                                 end_date_time.isoformat()))
         response = self.client.generic('GET', url)
@@ -1807,7 +1807,7 @@ class TestJobExecutionSpecificLogView(TestCase):
             self.assertTrue(include_stdout)
             self.assertTrue(include_stderr)
             self.assertIsNone(since)
-            return {}, timezone.now()
+            return {}, now()
         mock_get_logs.return_value.get_log_json.side_effect = new_get_log_json
 
         url = rest_util.get_url('/job-executions/999999/logs/combined/?format=json')
@@ -1823,7 +1823,7 @@ class TestJobExecutionSpecificLogView(TestCase):
             self.assertTrue(include_stderr)
             self.assertIsNone(since)
             self.assertFalse(html)
-            return 'hello', timezone.now()
+            return 'hello', now()
         mock_get_logs.return_value.get_log_text.side_effect = new_get_log_text
 
         url = rest_util.get_url('/job-executions/999999/logs/combined/?format=txt')
@@ -1839,7 +1839,7 @@ class TestJobExecutionSpecificLogView(TestCase):
             self.assertTrue(include_stderr)
             self.assertIsNone(since)
             self.assertTrue(html)
-            return '<html>hello</html>', timezone.now()
+            return '<html>hello</html>', now()
         mock_get_logs.return_value.get_log_text.side_effect = new_get_log_text
 
         url = rest_util.get_url('/job-executions/999999/logs/combined/?format=html')
@@ -1854,7 +1854,7 @@ class TestJobExecutionSpecificLogView(TestCase):
             self.assertTrue(include_stdout)
             self.assertTrue(include_stderr)
             self.assertIsNone(since)
-            return None, timezone.now()
+            return None, now()
         mock_get_logs.return_value.get_log_json.side_effect = new_get_log_json
 
         url = rest_util.get_url('/job-executions/999999/logs/combined/?format=json')
@@ -1869,7 +1869,7 @@ class TestJobExecutionSpecificLogView(TestCase):
             self.assertFalse(include_stderr)
             self.assertIsNone(since)
             self.assertTrue(html)
-            return '<html>hello</html>', timezone.now()
+            return '<html>hello</html>', now()
         mock_get_logs.return_value.get_log_text.side_effect = new_get_log_text
 
         url = rest_util.get_url('/job-executions/999999/logs/stdout/?format=html')
@@ -1885,7 +1885,7 @@ class TestJobExecutionSpecificLogView(TestCase):
             self.assertTrue(include_stderr)
             self.assertIsNone(since)
             self.assertTrue(html)
-            return '<html>hello</html>', timezone.now()
+            return '<html>hello</html>', now()
         mock_get_logs.return_value.get_log_text.side_effect = new_get_log_text
 
         url = rest_util.get_url('/job-executions/999999/logs/stderr/?format=html')
@@ -1896,13 +1896,13 @@ class TestJobExecutionSpecificLogView(TestCase):
 
     @patch('job.views.JobExecution.objects.get_logs')
     def test_combined_log_json_with_time(self, mock_get_logs):
-        started = datetime.datetime(2016, 1, 1, tzinfo=timezone.utc)
+        started = datetime.datetime(2016, 1, 1, tzinfo=utc)
 
         def new_get_log_json(include_stdout, include_stderr, since):
             self.assertTrue(include_stdout)
             self.assertTrue(include_stderr)
             self.assertEqual(since, started)
-            return {}, timezone.now()
+            return {}, now()
         mock_get_logs.return_value.get_log_json.side_effect = new_get_log_json
 
         url = rest_util.get_url('/job-executions/999999/logs/combined/?started=2016-01-01T00:00:00Z&format=json')

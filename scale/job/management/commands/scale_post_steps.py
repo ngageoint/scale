@@ -26,7 +26,7 @@ class Command(BaseCommand):
     help = 'Performs the post-job steps for a job execution'
 
     def add_arguments(self, parser):
-        parser.add_argument('-i', '--job-exe-id', action='store', type='int',
+        parser.add_argument('-i', '--job-exe-id', action='store', type=int,
                             help='The ID of the job execution')
 
     def handle(self, **options):

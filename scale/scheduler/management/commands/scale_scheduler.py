@@ -36,7 +36,7 @@ class Command(BaseCommand):
     help = 'Launches the Scale scheduler'
 
     def add_arguments(self, parser):
-        parser.add_argument('-m', '--master', action='store', type='str',
+        parser.add_argument('-m', '--master', action='store',
                             default=settings.MESOS_MASTER,
                             help='The master to connect to')
 

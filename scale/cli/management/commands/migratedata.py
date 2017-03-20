@@ -25,13 +25,13 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument("-n", action="store_true", dest="no_commit", help="Don't actually modify the database, just print new records")
-        parser.add_argument("-w", "--workspace", action="store", type="string", help="Workspace name or ID to ingest.")
-        parser.add_argument("-p", "--workspace-path", action="store", type="string", help="Path in the workspace to ingest.")
-        parser.add_argument("-l", "--local-path", action="store", type="string",
+        parser.add_argument("-w", "--workspace", action="store", help="Workspace name or ID to ingest.")
+        parser.add_argument("-p", "--workspace-path", action="store", help="Path in the workspace to ingest.")
+        parser.add_argument("-l", "--local-path", action="store",
                             help="If specified, use this as the workspace and workspace path instead of using the workspace mount.")
-        parser.add_argument("-d", "--data-type", action="append", type="string", default=[], help="Data type tag")
-        parser.add_argument("-i", "--include", action="append", type="string", help="Include glob")
-        parser.add_argument("-e", "--exclude", action="append", type="string", default=[], help="Exclude glob")
+        parser.add_argument("-d", "--data-type", action="append", default=[], help="Data type tag")
+        parser.add_argument("-i", "--include", action="append", help="Include glob")
+        parser.add_argument("-e", "--exclude", action="append", default=[], help="Exclude glob")
 
     # input dir, target workspace
 

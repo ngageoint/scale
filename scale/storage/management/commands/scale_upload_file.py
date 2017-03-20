@@ -20,7 +20,7 @@ class Command(BaseCommand):
     help = 'Uploads a local file to the storage system'
 
     def add_arguments(self, parser):
-        parser.add_argument('-w', '--workspace', action='store', type='str',
+        parser.add_argument('-w', '--workspace', action='store',
                             help='The name of the workspace used to store the file')
 
     def handle(self, local_path, remote_path, **options):

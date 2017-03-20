@@ -20,7 +20,7 @@ class Command(BaseCommand):
     help = 'Perform the ingest process on an ingest model'
     
     def add_arguments(self, parser):
-        parser.add_argument('-i', '--ingest-id', action='store', type='int',
+        parser.add_argument('-i', '--ingest-id', action='store', type=int,
                             help='ID of the ingest model')
 
     def handle(self, **options):

@@ -28,12 +28,11 @@ class Command(BaseCommand):
     help = 'Executes the Scan processor to make a single pass over a workspace for ingest'
 
     def add_arguments(self, parser):
-        parser.add_argument('-i', '--scan-id', action='store', type='int',
+        parser.add_argument('-i', '--scan-id', action='store', type=int,
                             help='ID of the Scan process to run')
         # TODO: Using string instead of bool to accomodate job_data limitations.
         # This should be refactored when seed integration is done.
-        parser.add_argument('-d', '--dry-run', action="store", type='string',
-                            default='False',
+        parser.add_argument('-d', '--dry-run', action="store", default='False',
                             help='Perform a dry-run of scan, skipping ingest')
         parser.add_argument('-l', '--local', action="store_true", default=False,
                             help='Perform a patch on workspace for local testing')

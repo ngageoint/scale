@@ -4,6 +4,7 @@ import datetime
 
 import django
 from django.test import TransactionTestCase
+from django.utils.timezone import utc
 
 import batch.test.utils as batch_test_utils
 import job.test.utils as job_test_utils
@@ -237,13 +238,13 @@ class TestBatchManager(TransactionTestCase):
         """Tests calling BatchManager.schedule_recipes() for a batch with a created date range restriction"""
         recipe1 = Recipe.objects.create_recipe(recipe_type=self.recipe_type, data=RecipeData(self.data),
                                                event=self.event).recipe
-        Recipe.objects.filter(pk=recipe1.id).update(created=datetime.datetime(2016, 1, 1))
+        Recipe.objects.filter(pk=recipe1.id).update(created=datetime.datetime(2016, 1, 1, tzinfo=utc))
         recipe2 = Recipe.objects.create_recipe(recipe_type=self.recipe_type, data=RecipeData(self.data),
                                                event=self.event).recipe
-        Recipe.objects.filter(pk=recipe2.id).update(created=datetime.datetime(2016, 2, 1))
+        Recipe.objects.filter(pk=recipe2.id).update(created=datetime.datetime(2016, 2, 1, tzinfo=utc))
         recipe3 = Recipe.objects.create_recipe(recipe_type=self.recipe_type, data=RecipeData(self.data),
                                                event=self.event).recipe
-        Recipe.objects.filter(pk=recipe3.id).update(created=datetime.datetime(2016, 3, 1))
+        Recipe.objects.filter(pk=recipe3.id).update(created=datetime.datetime(2016, 3, 1, tzinfo=utc))
 
         recipe_test_utils.edit_recipe_type(self.recipe_type, self.definition_2)
 
@@ -291,7 +292,7 @@ class TestBatchManager(TransactionTestCase):
     def test_schedule_date_range_data_started(self):
         """Tests calling BatchManager.schedule_recipes() for a batch with a data started date range restriction"""
         file1 = storage_test_utils.create_file()
-        file1.data_started = datetime.datetime(2016, 1, 1)
+        file1.data_started = datetime.datetime(2016, 1, 1, tzinfo=utc)
         file1.save()
         data1 = {
             'version': '1.0',
@@ -304,7 +305,7 @@ class TestBatchManager(TransactionTestCase):
         Recipe.objects.create_recipe(recipe_type=self.recipe_type, data=RecipeData(data1), event=self.event)
 
         file2 = storage_test_utils.create_file()
-        file2.data_started = datetime.datetime(2016, 2, 1)
+        file2.data_started = datetime.datetime(2016, 2, 1, tzinfo=utc)
         file2.save()
         data2 = {
             'version': '1.0',
@@ -341,8 +342,8 @@ class TestBatchManager(TransactionTestCase):
     def test_schedule_date_range_data_ended(self):
         """Tests calling BatchManager.schedule_recipes() for a batch with a data ended date range restriction"""
         file1 = storage_test_utils.create_file()
-        file1.data_started = datetime.datetime(2016, 1, 1)
-        file1.data_ended = datetime.datetime(2016, 1, 10)
+        file1.data_started = datetime.datetime(2016, 1, 1, tzinfo=utc)
+        file1.data_ended = datetime.datetime(2016, 1, 10, tzinfo=utc)
         file1.save()
         data1 = {
             'version': '1.0',
@@ -356,8 +357,8 @@ class TestBatchManager(TransactionTestCase):
                                                event=self.event).recipe
 
         file2 = storage_test_utils.create_file()
-        file2.data_started = datetime.datetime(2016, 2, 1)
-        file2.data_ended = datetime.datetime(2016, 2, 10)
+        file2.data_started = datetime.datetime(2016, 2, 1, tzinfo=utc)
+        file2.data_ended = datetime.datetime(2016, 2, 10, tzinfo=utc)
         file2.save()
         data2 = {
             'version': '1.0',
@@ -393,7 +394,7 @@ class TestBatchManager(TransactionTestCase):
     def test_schedule_date_range_data_full(self):
         """Tests calling BatchManager.schedule_recipes() for a batch with a data date range restriction"""
         file1 = storage_test_utils.create_file()
-        file1.data_started = datetime.datetime(2016, 1, 1)
+        file1.data_started = datetime.datetime(2016, 1, 1, tzinfo=utc)
         file1.save()
         data1 = {
             'version': '1.0',
@@ -406,8 +407,8 @@ class TestBatchManager(TransactionTestCase):
         Recipe.objects.create_recipe(recipe_type=self.recipe_type, data=RecipeData(data1), event=self.event)
 
         file2 = storage_test_utils.create_file()
-        file2.data_started = datetime.datetime(2016, 2, 1)
-        file2.data_ended = datetime.datetime(2016, 2, 10)
+        file2.data_started = datetime.datetime(2016, 2, 1, tzinfo=utc)
+        file2.data_ended = datetime.datetime(2016, 2, 10, tzinfo=utc)
         file2.save()
         data2 = {
             'version': '1.0',
@@ -421,7 +422,7 @@ class TestBatchManager(TransactionTestCase):
                                                event=self.event).recipe
 
         file3 = storage_test_utils.create_file()
-        file3.data_ended = datetime.datetime(2016, 3, 1)
+        file3.data_ended = datetime.datetime(2016, 3, 1, tzinfo=utc)
         file3.save()
         data3 = {
             'version': '1.0',

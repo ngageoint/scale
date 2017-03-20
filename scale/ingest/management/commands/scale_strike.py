@@ -20,7 +20,7 @@ class Command(BaseCommand):
     help = 'Executes the Strike processor to monitor and process incoming files for ingest'
 
     def add_arguments(self, parser):
-        parser.add_argument('-i', '--strike-id', action='store', type='int',
+        parser.add_argument('-i', '--strike-id', action='store', type=int,
                             help=('ID of the Strike process to run'))
 
     def __init__(self):

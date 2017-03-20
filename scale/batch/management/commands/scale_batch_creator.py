@@ -18,7 +18,7 @@ class Command(BaseCommand):
     help = 'Creates a new batch of jobs and recipes to be processed on the cluster'
     
     def add_arguments(self, parser):
-        parser.add_argument('-i', '--batch-id', action='store', type='int',
+        parser.add_argument('-i', '--batch-id', action='store', type=int,
                             help='The ID of the batch to create')
 
     def handle(self, **options):
