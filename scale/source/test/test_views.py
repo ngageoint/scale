@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import json
 
 import django
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
 from rest_framework import status
 
 import error.test.utils as error_test_utils
@@ -242,6 +242,7 @@ class TestSourceDetailsViewV4(TestCase):
                 self.assertIn(product['id'], [self.product1.id, self.product2.id])
 
 
+<<<<<<< HEAD
 class TestSourceIngestsView(TestCase):
     fixtures = ['ingest_job_types.json']
 
@@ -304,7 +305,7 @@ class TestSourceIngestsView(TestCase):
         self.assertEqual(result['results'][0]['strike']['id'], self.ingest1.strike.id)
 
 
-class TestSourceJobsView(TestCase):
+class TestSourceJobsView(TransactionTestCase):
 
     def setUp(self):
         django.setup()

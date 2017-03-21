@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import datetime
 
 import django
-from django.test import TestCase
+from django.test import TransactionTestCase
 from django.utils.timezone import utc
 from mock import call, patch
 
@@ -11,7 +11,7 @@ import job.test.utils as job_test_utils
 from metrics.daily_metrics import DailyMetricsProcessor
 
 
-class TestDailyMetricsProcessor(TestCase):
+class TestDailyMetricsProcessor(TransactionTestCase):
     """Tests the DailyMetricsProcessor clock event class."""
 
     def setUp(self):

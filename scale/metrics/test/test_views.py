@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import json
 
 import django
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
 from rest_framework import status
 
 import job.test.utils as job_test_utils
@@ -32,7 +32,7 @@ class TestMetricsView(TestCase):
                 self.assertFalse('choices' in entry)
 
 
-class TestMetricDetailsView(TestCase):
+class TestMetricDetailsView(TransactionTestCase):
 
     def setUp(self):
         django.setup()
@@ -53,7 +53,7 @@ class TestMetricDetailsView(TestCase):
         self.assertEqual(len(result['choices']), 1)
 
 
-class TestMetricPlotView(TestCase):
+class TestMetricPlotView(TransactionTestCase):
 
     def setUp(self):
         django.setup()

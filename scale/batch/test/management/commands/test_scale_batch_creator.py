@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 
 import django
-from django.test import TestCase
+from django.test import TransactionTestCase
 from mock import patch
 
 from batch.management.commands.scale_batch_creator import Command as BatchCommand
@@ -9,7 +9,7 @@ from batch.test import utils as batch_test_utils
 from recipe.test import utils as recipe_test_utils
 
 
-class TestBatchCreator(TestCase):
+class TestBatchCreator(TransactionTestCase):
 
     fixtures = ['batch_job_types.json']
 

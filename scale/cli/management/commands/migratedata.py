@@ -6,7 +6,8 @@ import tempfile
 from datetime import datetime
 from django.core.management.base import BaseCommand
 from django.db import transaction
-from optparse import make_option
+from django.utils import timezone
+
 from ingest.serializers import IngestDetailsSerializer
 from ingest.models import Ingest
 from ingest.triggers.ingest_trigger_handler import IngestTriggerHandler
@@ -77,7 +78,7 @@ class Command(BaseCommand):
             ingest.file_path = os.path.join(workspace_path, os.path.relpath(filename, local_path))
             ingest.transfer_started = datetime.utcfromtimestamp(os.path.getatime(filename))
             ingest.file_size = ingest.bytes_transferred = os.path.getsize(filename)
-            ingest.transfer_ended = datetime.utcnow()
+            ingest.transfer_ended = timezone.now()
             ingest.media_type = get_media_type(filename)
             ingest.workspace = workspace
             for data_type in data_types:
@@ -98,7 +99,7 @@ class Command(BaseCommand):
                 ingest = Ingest.objects.get(id=ingest_records[filename])
                 logging.info("Processing ingest %s" % ingest.file_name)
                 with transaction.atomic():
-                    ingest.ingest_started = datetime.utcnow()
+                    ingest.ingest_started = timezone.now()
                     sf = ingest.source_file = SourceFile.create()
                     sf.update_uuid(ingest.file_name)
                     for tag in ingest.get_data_type_tags():
@@ -114,7 +115,7 @@ class Command(BaseCommand):
                     sf.set_countries()
                     sf.save()
                     ingest.status = 'INGESTED'
-                    ingest.ingest_ended = datetime.utcnow()
+                    ingest.ingest_ended = timezone.now()
                     ingest.source_file = sf
                     ingest.save()
                     IngestTriggerHandler().process_ingested_source_file(ingest.source_file, ingest.ingest_ended)

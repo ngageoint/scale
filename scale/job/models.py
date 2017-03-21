@@ -6,12 +6,12 @@ import datetime
 import logging
 import math
 
-import django.utils.html
-import django.utils.timezone as timezone
 import django.contrib.postgres.fields
+import django.utils.html
 from django.conf import settings
 from django.db import models, transaction
 from django.db.models import Q
+from django.utils import timezone
 
 import job.execution.container as job_exe_container
 import util.parse
@@ -1527,7 +1527,7 @@ class JobExecution(models.Model):
         """
 
         if self.status == 'QUEUED':
-            return None, util.parse.datetime.datetime.utcnow()
+            return None, timezone.now()
 
         q = {
                 'size': 10000,
@@ -1542,7 +1542,7 @@ class JobExecution(models.Model):
                 '_source': ['@timestamp', 'scale_order_num', 'message', 'stream', 'scale_job_exe']
             }
         if not include_stdout and not include_stderr:
-            return None, util.parse.datetime.datetime.utcnow()
+            return None, timezone.now()
         elif include_stdout and not include_stderr:
             q['query']['bool']['must'].append({'term': {'stream.raw': 'stdout'}})
         elif include_stderr and not include_stdout:
@@ -1553,7 +1553,7 @@ class JobExecution(models.Model):
         hits = settings.ELASTICSEARCH.search(index='_all', body=q)
 
         if hits['hits']['total'] == 0:
-            return None, util.parse.datetime.datetime.utcnow()
+            return None, timezone.now()
         last_modified = max([util.parse.parse_datetime(h['_source']['@timestamp']) for h in hits['hits']['hits']])
         return hits, last_modified
 

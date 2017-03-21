@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 import django
 from django.db.utils import DatabaseError, OperationalError
 from django.utils.timezone import now
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
 from mock import patch
 
 from error.exceptions import ScaleDatabaseError, ScaleIOError, ScaleOperationalError
@@ -21,7 +21,7 @@ RESULTS_MANIFEST = ResultsManifest()
 RESULTS = (JOB_RESULTS, RESULTS_MANIFEST)
 
 
-class TestPostJobSteps(TestCase):
+class TestPostJobSteps(TransactionTestCase):
 
     def setUp(self):
         django.setup()

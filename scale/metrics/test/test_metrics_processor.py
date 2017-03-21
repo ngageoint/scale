@@ -1,13 +1,14 @@
 from __future__ import unicode_literals
 
+import shutil
+import sys
+import tempfile
+
 import django
 from django.conf import settings
 from django.test import TestCase
 from mock import patch
 from unittest.case import skipIf
-import shutil
-import sys
-import tempfile
 
 from metrics.metrics_processor import MetricsProcessor
 from node.models import Node

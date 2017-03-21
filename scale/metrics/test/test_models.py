@@ -75,7 +75,7 @@ class TestMetricsError(TestCase):
             post_completed=datetime.datetime(2015, 1, 1, 4, 40, 14, tzinfo=utc),
             ended=datetime.datetime(2015, 1, 1, 6, 0, 16, tzinfo=utc),
         )
-        job2 = job_test_utils.create_job(error=error, status='FAILED', ended=datetime.datetime(2015, 1, 1))
+        job2 = job_test_utils.create_job(error=error, status='FAILED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         job_test_utils.create_job_exe(
             job=job2, error=error, status=job2.status,
             queued=datetime.datetime(2015, 1, 1, tzinfo=utc),

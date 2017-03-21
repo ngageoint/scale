@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import os
 import django
 
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
 from django.utils.text import get_valid_filename
 from django.utils.timezone import now
 from mock import MagicMock, patch
@@ -35,7 +35,7 @@ class TestProductDataFileStoreGetWorkspaces(TestCase):
         self.assertDictEqual(results, {self.workspace_1.id: True, self.workspace_2.id: False})
 
 
-class TestProductDataFileStoreStoreFiles(TestCase):
+class TestProductDataFileStoreStoreFiles(TransactionTestCase):
 
     def setUp(self):
         django.setup()

@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 
 import django
-from django.test import TestCase
+from django.test import TransactionTestCase
 from django.utils.timezone import now
 
 import job.test.utils as job_test_utils
@@ -14,7 +14,7 @@ from queue.models import Queue
 from storage.models import ScaleFile
 
 
-class TestIngestTriggerHandlerProcessIngestedSourceFile(TestCase):
+class TestIngestTriggerHandlerProcessIngestedSourceFile(TransactionTestCase):
     def setUp(self):
         django.setup()
 
