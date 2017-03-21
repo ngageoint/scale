@@ -10,7 +10,7 @@ SECRET_KEY = 'my-secret-development-key'
 
 # Use the following lines to enable developer/debug mode.
 DEBUG = True
-TEMPLATE_DEBUG = DEBUG
+TEMPLATES[0]['OPTIONS']['debug'] = DEBUG
 
 # Set the external URL context here
 FORCE_SCRIPT_NAME = '/scale-dev/api'
