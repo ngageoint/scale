@@ -18,10 +18,11 @@ from job.configuration.results.results_manifest.results_manifest import ResultsM
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
 from scheduler.vault.manager import secrets_mgr
 
-
 logger = logging.getLogger(__name__)
 
 SCHEMA_VERSION = '1.4'
+MODE_RO = 'ro'
+MODE_RW = 'rw'
 
 JOB_INTERFACE_SCHEMA = {
     'type': 'object',
@@ -109,6 +110,10 @@ JOB_INTERFACE_SCHEMA = {
                 'path': {
                     'type': 'string',
                 },
+                'mode': {
+                    'type': 'string',
+                    'enum': [MODE_RO, MODE_RW],
+                }
             },
         },
         'setting': {
@@ -272,7 +277,7 @@ class JobInterface(object):
 
     @staticmethod
     def convert_interface(interface):
-        """Convert a previous Job interface schema to the 1.3 schema
+        """Convert a previous Job interface schema to the 1.4 schema
 
         :param interface: The previous interface
         :type interface: dict
@@ -803,6 +808,8 @@ class JobInterface(object):
         for mount in self.definition['mounts']:
             if 'required' not in mount:
                 mount['required'] = True
+            if 'mode' not in mount:
+                mount['mode'] = MODE_RO
 
     def _populate_settings_defaults(self):
         """populates the default values for any missing settings values"""
