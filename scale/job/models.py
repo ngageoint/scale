@@ -222,8 +222,7 @@ class JobManager(models.Manager):
         # Attempt to fetch the requested job
         job = Job.objects.select_related('job_type', 'job_type_rev', 'job_type_rev__job_type', 'event', 'event__rule',
                                          'error', 'root_superseded_job', 'root_superseded_job__job_type',
-                                         'superseded_job', 'superseded_job__job_type', 'superseded_by_job',
-                                         'superseded_by_job__job_type').get(pk=job_id)
+                                         'superseded_job', 'superseded_job__job_type').get(pk=job_id)
 
         # Attempt to get related job executions
         job_exes = JobExecution.objects.filter(job=job).select_related('job', 'node', 'error')
