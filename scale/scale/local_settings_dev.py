@@ -5,9 +5,6 @@
 # Include all the default settings.
 from settings import *
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'my-secret-development-key'
-
 # Use the following lines to enable developer/debug mode.
 DEBUG = True
 TEMPLATES[0]['OPTIONS']['debug'] = DEBUG

@@ -57,8 +57,17 @@ DCOS_SERVICE_ACCOUNT = None
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-INSECURE_DEFAULT_KEY = 'this-key-is-insecure'
+INSECURE_DEFAULT_KEY = 'this-key-is-insecure-and-should-never-be-used-in-production'
+
 SECRET_KEY = INSECURE_DEFAULT_KEY
+
+# Security settings for production
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = True
+X_FRAME_OPTIONS = 'DENY'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
