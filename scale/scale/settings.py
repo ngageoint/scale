@@ -97,7 +97,7 @@ INSTALLED_APPS = (
     'vault'
 )
 
-"""
+
 MIDDLEWARE = [
     'util.middleware.MultipleProxyMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -109,18 +109,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'util.middleware.ExceptionLoggingMiddleware',
 ]
-"""
-
-MIDDLEWARE_CLASSES = (
-    'util.middleware.MultipleProxyMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'util.middleware.ExceptionLoggingMiddleware',
-)
 
 TEMPLATES = [
     {
