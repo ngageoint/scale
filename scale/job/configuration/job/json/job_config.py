@@ -1,4 +1,4 @@
-"""Defines the interface for defining a default job configuration"""
+"""Defines the JSON schema for a job configuration"""
 from __future__ import unicode_literals
 
 import logging
@@ -6,16 +6,16 @@ import logging
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
-from job.configuration.interface.exceptions import InvalidJobTypeConfiguration
+from job.configuration.job.exceptions import InvalidJobConfiguration
 
 logger = logging.getLogger(__name__)
 
-JOB_TYPE_CONFIGURATION_SCHEMA = {
+JOB_CONFIG_SCHEMA = {
     'type': 'object',
     'additionalProperties': False,
     'properties': {
         'version': {
-            'description': 'version of the job_type_configuration schema',
+            'description': 'Version of the job configuration schema',
             'type': 'string',
             'pattern': '^.{0,50}$',
         },
@@ -29,8 +29,8 @@ JOB_TYPE_CONFIGURATION_SCHEMA = {
 }
 
 
-class JobTypeConfiguration(object):
-    """Represents the interface for defining a default job configuration"""
+class JobConfiguration(object):
+    """Represents the schema for a job configuration"""
 
     def __init__(self, definition=None):
         """Creates a configuration interface from the given definition.
@@ -49,15 +49,15 @@ class JobTypeConfiguration(object):
         self._default_setting_names = set()
 
         try:
-            validate(definition, JOB_TYPE_CONFIGURATION_SCHEMA)
+            validate(definition, JOB_CONFIG_SCHEMA)
         except ValidationError as validation_error:
-            raise InvalidJobTypeConfiguration(validation_error)
+            raise InvalidJobConfiguration(validation_error)
 
         self._populate_default_values()
         self._validate_default_settings()
 
         if self.definition['version'] != '1.0':
-            raise InvalidJobTypeConfiguration('%s is an unsupported version number' % self.definition['version'])
+            raise InvalidJobConfiguration('%s is an unsupported version number' % self.definition['version'])
 
     def get_dict(self):
         """Returns the internal dictionary that represents this error mapping
@@ -77,17 +77,17 @@ class JobTypeConfiguration(object):
 
         for setting_name, setting_value in self.definition['default_settings'].iteritems():
             if setting_name in self._default_setting_names:
-                raise InvalidJobTypeConfiguration('Duplicate setting name %s in default_settings' % setting_name)
+                raise InvalidJobConfiguration('Duplicate setting name %s in default_settings' % setting_name)
             self._default_setting_names.add(setting_name)
 
             if not setting_name:
-                raise InvalidJobTypeConfiguration('Blank setting name (value = %s) in default_settings' % setting_value)
+                raise InvalidJobConfiguration('Blank setting name (value = %s) in default_settings' % setting_value)
 
             if not setting_value:
-                raise InvalidJobTypeConfiguration('Blank setting value (name = %s) in default_settings' % setting_name)
+                raise InvalidJobConfiguration('Blank setting value (name = %s) in default_settings' % setting_name)
 
             if not isinstance(setting_value, basestring):
-                raise InvalidJobTypeConfiguration('Setting value (name = %s) is not a string' % setting_name)
+                raise InvalidJobConfiguration('Setting value (name = %s) is not a string' % setting_name)
 
     def _populate_default_values(self):
         """Goes through the definition and fills in any missing default values"""

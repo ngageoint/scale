@@ -6,10 +6,9 @@ import logging
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
-from job.configuration.configuration import job_configuration_1_0 as previous_version
-from job.configuration.configuration.job_parameter import TaskSetting
-from job.configuration.configuration.exceptions import InvalidJobConfiguration
-
+from job.configuration.execution.exceptions import InvalidExecutionConfiguration
+from job.configuration.execution.job_parameter import TaskSetting
+from job.configuration.execution.json import exe_config_1_0 as previous_version
 
 logger = logging.getLogger(__name__)
 
@@ -19,13 +18,13 @@ MODE_RO = 'ro'
 MODE_RW = 'rw'
 
 
-JOB_CONFIGURATION_SCHEMA = {
+EXE_CONFIG_SCHEMA = {
     'type': 'object',
     'required': ['job_task'],
     'additionalProperties': False,
     'properties': {
         'version': {
-            'description': 'Version of the job configuration schema',
+            'description': 'Version of the execution configuration schema',
             'type': 'string',
             'pattern': '^.{0,50}$',
         },
@@ -102,16 +101,17 @@ JOB_CONFIGURATION_SCHEMA = {
 }
 
 
-class JobConfiguration(previous_version.JobConfiguration):
+class ExecutionConfiguration(previous_version.ExecutionConfiguration):
     """Represents a job configuration
     """
 
     def __init__(self, configuration=None):
-        """Creates a job configuration from the given JSON dict
+        """Creates an execution configuration from the given JSON dict
 
         :param configuration: The JSON dictionary
         :type configuration: dict
-        :raises :class:`job.configuration.configuration.exceptions.InvalidJobConfiguration`: If the JSON is invalid
+        :raises :class:`job.configuration.execution.exceptions.InvalidExecutionConfiguration`: If the JSON is
+            invalid
         """
 
         if not configuration:
@@ -132,9 +132,9 @@ class JobConfiguration(previous_version.JobConfiguration):
             self.convert_configuration(configuration)
 
         try:
-            validate(configuration, JOB_CONFIGURATION_SCHEMA)
+            validate(configuration, EXE_CONFIG_SCHEMA)
         except ValidationError as validation_error:
-            raise InvalidJobConfiguration(validation_error)
+            raise InvalidExecutionConfiguration(validation_error)
 
         self._populate_default_values()
         self._populate_default_settings()
@@ -150,7 +150,7 @@ class JobConfiguration(previous_version.JobConfiguration):
         :return: converted configuration
         :rtype: dict
         """
-        previous = previous_version.JobConfiguration(configuration)
+        previous = previous_version.ExecutionConfiguration(configuration)
 
         converted = previous.get_dict()
 
@@ -204,7 +204,7 @@ class JobConfiguration(previous_version.JobConfiguration):
         """Returns the settings name/values needed for the job task
 
         :returns: The job task settings name/values
-        :rtype: [:class:`job.configuration.configuration.job_configuration.TaskSetting`]
+        :rtype: [:class:`job.configuration.execution.job_parameter.TaskSetting`]
         """
 
         params = self._configuration['job_task']['settings']
@@ -214,7 +214,7 @@ class JobConfiguration(previous_version.JobConfiguration):
         """Returns the settings name/values needed for the post task
 
         :returns: The post task settings name/values
-        :rtype: [:class:`job.configuration.configuration.job_configuration.TaskSetting`]
+        :rtype: [:class:`job.configuration.execution.job_parameter.TaskSetting`]
         """
 
         params = self._configuration['post_task']['settings']
@@ -224,7 +224,7 @@ class JobConfiguration(previous_version.JobConfiguration):
         """Returns the settings name/values needed for the pre task
 
         :returns: The pre task settings name/values
-        :rtype: [:class:`job.configuration.configuration.job_configuration.TaskSetting`]
+        :rtype: [:class:`job.configuration.execution.job_parameter.TaskSetting`]
         """
 
         params = self._configuration['pre_task']['settings']
@@ -246,24 +246,24 @@ class JobConfiguration(previous_version.JobConfiguration):
     def _validate_setting_names(self):
         """Ensures that no tasks have duplicate setting names
 
-        :raises :class:`job.configuration.configuration.exceptions.InvalidJobConfiguration`: If there is a duplicate
+        :raises :class:`job.configuration.execution.exceptions.InvalidExecutionConfiguration`: If there is a duplicate
             setting name
         """
 
         for setting_dict in self._configuration['pre_task']['settings']:
             name = setting_dict['name']
             if name in self._pre_task_setting_names:
-                raise InvalidJobConfiguration('Duplicate setting %s in pre task' % name)
+                raise InvalidExecutionConfiguration('Duplicate setting %s in pre task' % name)
             self._pre_task_setting_names.add(name)
         for setting_dict in self._configuration['job_task']['settings']:
             name = setting_dict['name']
             if name in self._job_task_setting_names:
-                raise InvalidJobConfiguration('Duplicate setting %s in job task' % name)
+                raise InvalidExecutionConfiguration('Duplicate setting %s in job task' % name)
             self._job_task_setting_names.add(name)
         for setting_dict in self._configuration['post_task']['settings']:
             name = setting_dict['name']
             if name in self._post_task_setting_names:
-                raise InvalidJobConfiguration('Duplicate setting %s in post task' % name)
+                raise InvalidExecutionConfiguration('Duplicate setting %s in post task' % name)
             self._post_task_setting_names.add(name)
 
     def populate_default_job_settings(self, job_exe):
@@ -275,9 +275,9 @@ class JobConfiguration(previous_version.JobConfiguration):
         :return:
         """
 
-        config_interface = job_exe.get_job_type_configuration().get_dict()
+        config_interface = job_exe.get_job_configuration().get_dict()
 
         if config_interface:
-            default_job_settings = config_interface['default_settings']
-            for setting_name, setting_value in default_job_settings.iteritems():
+            job_settings = config_interface['default_settings']
+            for setting_name, setting_value in job_settings.iteritems():
                 self.add_job_task_setting(setting_name, setting_value)

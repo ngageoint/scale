@@ -13,8 +13,8 @@ from django.utils.timezone import now
 from ingest.scan.configuration.scan_configuration import ScanConfiguration
 from ingest.scan.scanners.exceptions import ScanIngestJobAlreadyLaunched
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
-from job.configuration.configuration.job_configuration import JobConfiguration, MODE_RW
 from job.configuration.data.job_data import JobData
+from job.configuration.execution.json.exe_config import ExecutionConfiguration, MODE_RW
 from job.models import JobType
 from queue.models import Queue
 from storage.exceptions import InvalidDataTypeTag
@@ -273,12 +273,12 @@ class IngestManager(models.Manager):
             data = JobData()
             data.add_property_input('Ingest ID', str(ingest_id))
 
-            job_configuration = JobConfiguration()
+            exe_configuration = ExecutionConfiguration()
             if ingest.workspace:
-                job_configuration.add_job_task_workspace(ingest.workspace.name, MODE_RW)
+                exe_configuration.add_job_task_workspace(ingest.workspace.name, MODE_RW)
             if ingest.new_workspace:
-                job_configuration.add_job_task_workspace(ingest.new_workspace.name, MODE_RW)
-            ingest_job = Queue.objects.queue_new_job(ingest_job_type, data, event, job_configuration)
+                exe_configuration.add_job_task_workspace(ingest.new_workspace.name, MODE_RW)
+            ingest_job = Queue.objects.queue_new_job(ingest_job_type, data, event, exe_configuration)
 
             ingest.job = ingest_job
             ingest.status = 'QUEUED'

@@ -149,7 +149,7 @@ class Task(object):
         """Returns the Docker parameters used to run this task
 
         :returns: The Docker parameters
-        :rtype: [:class:`job.configuration.configuration.job_parameter.DockerParam`]
+        :rtype: [:class:`job.configuration.execution.job_parameter.DockerParam`]
         """
 
         return self._docker_params

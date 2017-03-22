@@ -6,7 +6,7 @@ from django.utils.timezone import now
 
 import job.test.utils as job_test_utils
 from error.exceptions import ScaleDatabaseError, ScaleIOError, ScaleOperationalError
-from job.configuration.interface.exceptions import MissingSetting
+from job.configuration.job.exceptions import MissingSetting
 from job.execution.tasks.pre_task import PreTask
 from job.tasks.update import TaskStatusUpdate
 

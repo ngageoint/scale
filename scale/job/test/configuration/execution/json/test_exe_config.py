@@ -4,12 +4,12 @@ import django
 from django.test import TestCase
 from mock import patch, MagicMock
 
-from job.configuration.configuration.exceptions import InvalidJobConfiguration
-from job.configuration.configuration.job_configuration import JobConfiguration
-from job.configuration.interface.job_type_configuration import JobTypeConfiguration
+from job.configuration.execution.exceptions import InvalidExecutionConfiguration
+from job.configuration.execution.json.exe_config import ExecutionConfiguration
+from job.configuration.job.json.job_config import JobConfiguration
 
 
-class TestJobConfiguration(TestCase):
+class TestExecutionConfiguration(TestCase):
 
     def setUp(self):
         django.setup()
@@ -18,26 +18,26 @@ class TestJobConfiguration(TestCase):
         """Tests the validation done in __init__"""
 
         # Try minimal acceptable configuration
-        JobConfiguration()
+        ExecutionConfiguration()
 
         # Duplicate workspace name in pre-task
         config = {'pre_task': {'workspaces': [{'name': 'name1', 'mode': 'ro'}, {'name': 'name1', 'mode': 'ro'}]},
                   'job_task': {'workspaces': []}}
-        self.assertRaises(InvalidJobConfiguration, JobConfiguration, config)
+        self.assertRaises(InvalidExecutionConfiguration, ExecutionConfiguration, config)
 
         # Duplicate workspace name in job-task
         config = {'job_task': {'workspaces': [{'name': 'name1', 'mode': 'ro'}, {'name': 'name1', 'mode': 'ro'}]}}
-        self.assertRaises(InvalidJobConfiguration, JobConfiguration, config)
+        self.assertRaises(InvalidExecutionConfiguration, ExecutionConfiguration, config)
 
         # Duplicate workspace name in post-task
         config = {'post_task': {'workspaces': [{'name': 'name1', 'mode': 'ro'}, {'name': 'name1', 'mode': 'ro'}]},
                   'job_task': {'workspaces': []}}
-        self.assertRaises(InvalidJobConfiguration, JobConfiguration, config)
+        self.assertRaises(InvalidExecutionConfiguration, ExecutionConfiguration, config)
 
     def test_populate_default_job_settings(self):
         """Tests the addition of default settings to the configuration."""
 
-        job_config = JobConfiguration()
+        job_config = ExecutionConfiguration()
 
         config_dict = {
             'version': '1.0',
@@ -48,7 +48,7 @@ class TestJobConfiguration(TestCase):
         }
 
         job_exe = MagicMock()
-        job_exe.get_job_type_configuration.return_value = JobTypeConfiguration(config_dict)
+        job_exe.get_job_configuration.return_value = JobConfiguration(config_dict)
 
         job_config.populate_default_job_settings(job_exe)
 
@@ -61,7 +61,7 @@ class TestJobConfiguration(TestCase):
         self.assertTrue(results_dict == config_dict['default_settings'])
 
 
-class TestJobConfigurationConvert(TestCase):
+class TestExecutionConfigurationConvert(TestCase):
     """Tests performing conversion from lower to higher minor versions of configuration schema."""
 
     def setUp(self):
@@ -77,10 +77,10 @@ class TestJobConfigurationConvert(TestCase):
 
         django.setup()
 
-    @patch('job.configuration.configuration.job_configuration_1_0.JobConfiguration.get_dict')
+    @patch('job.configuration.execution.json.exe_config_1_0.ExecutionConfiguration.get_dict')
     def test_successful(self, mock_get_dict):
-        """Tests calling JobConfiguration.update() successfully."""
+        """Tests calling ExecutionConfiguration.convert_configuration() successfully."""
         mock_get_dict.return_value = self.job_configuration_dict
-        job_configuration = JobConfiguration.convert_configuration(self.job_configuration_dict)
+        job_configuration = ExecutionConfiguration.convert_configuration(self.job_configuration_dict)
         self.assertEqual(job_configuration['version'], '1.1')
         self.assertFalse(job_configuration['job_task']['settings'])

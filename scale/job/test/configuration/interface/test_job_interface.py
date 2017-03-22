@@ -6,18 +6,18 @@ import django
 from django.test import TestCase
 from mock import patch, MagicMock, Mock
 
-import storage.test.utils as storage_test_utils
 import job.test.utils as job_test_utils
+import storage.test.utils as storage_test_utils
 from job.configuration.data.exceptions import InvalidConnection, InvalidData
 from job.configuration.data.job_connection import JobConnection
 from job.configuration.data.job_data import JobData
 from job.configuration.environment.job_environment import JobEnvironment
-from job.configuration.configuration.job_configuration import JobConfiguration
-from job.configuration.interface.exceptions import InvalidInterfaceDefinition, MissingSetting
+from job.configuration.execution.json.exe_config import ExecutionConfiguration
+from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.job_interface import JobInterface
+from job.configuration.job.exceptions import MissingSetting
 from job.configuration.results.exceptions import InvalidResultsManifest
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
-from scheduler.vault.manager import SecretsManager
 
 
 class TestJobInterfaceAddOutputToConnection(TestCase):
@@ -902,7 +902,7 @@ class TestJobInterfacePreSteps(TestCase):
         command_arguments = job_interface_dict['command_arguments']
         config_key_value = 'required_value'
         job_config_json = {'job_task': {'settings': [{'name': 'setting1', 'value': config_key_value}]}}
-        job_config = JobConfiguration(job_config_json)
+        job_config = ExecutionConfiguration(job_config_json)
 
         job_interface = JobInterface(job_interface_dict)
         job_exe = job_test_utils.create_job_exe(status='QUEUED', configuration=job_config.get_dict())
@@ -932,7 +932,7 @@ class TestJobInterfacePreSteps(TestCase):
         command_arguments = job_interface_dict['command_arguments']
         config_key_values = ['secret_val', 'required_value2']
         job_config_json = {'job_task': {'settings': [{'name': 'setting2', 'value': config_key_values[1]}]}}
-        job_config = JobConfiguration(job_config_json)
+        job_config = ExecutionConfiguration(job_config_json)
 
         job_interface = JobInterface(job_interface_dict)
         job_exe = job_test_utils.create_job_exe(status='QUEUED', configuration=job_config.get_dict())
@@ -957,7 +957,7 @@ class TestJobInterfacePreSteps(TestCase):
         command_arguments = job_interface_dict['command_arguments']
         config_key_value = 'required_value1'
         job_config_json = {'job_task': {'settings': [{'name': 'setting2', 'value': config_key_value}]}}
-        job_config = JobConfiguration(job_config_json)
+        job_config = ExecutionConfiguration(job_config_json)
 
         job_interface = JobInterface(job_interface_dict)
         job_exe = job_test_utils.create_job_exe(status='QUEUED', configuration=job_config.get_dict())
@@ -989,7 +989,7 @@ class TestJobInterfacePreSteps(TestCase):
 
         config_key_value = ['value1']
         job_config_json = {'job_task': {'settings': [{'name': 'setting1', 'value': config_key_value[0]}]}}
-        job_config = JobConfiguration(job_config_json)
+        job_config = ExecutionConfiguration(job_config_json)
 
         job_interface = JobInterface(job_interface_dict)
         job_exe = job_test_utils.create_job_exe(status='QUEUED', configuration=job_config.get_dict())
@@ -1029,7 +1029,7 @@ class TestJobInterfacePreSteps(TestCase):
         job_config_json = {'job_task': {'settings': [{'name': 'setting2', 'value': 'another_setting'}]}}
 
         job_interface = JobInterface(job_interface_dict)
-        job_config = JobConfiguration(job_config_json)
+        job_config = ExecutionConfiguration(job_config_json)
 
         job_type = MagicMock()
         job_exe = job_test_utils.create_job_exe(status='QUEUED', configuration=job_config.get_dict())
@@ -1065,7 +1065,7 @@ class TestJobInterfacePreSteps(TestCase):
         job_config_json = {'job_task': {'settings': [{'name': 'setting1', 'value': 'test_setting'}]}}
 
         job_interface = JobInterface(job_interface_dict)
-        job_config = JobConfiguration(job_config_json)
+        job_config = ExecutionConfiguration(job_config_json)
 
         job_exe = MagicMock()
         job_exe.command_arguments = ''
@@ -1091,7 +1091,7 @@ class TestJobInterfacePreSteps(TestCase):
         job_config_json = {'job_task': {'settings': [{'name': 'setting2', 'value': 'another_setting'}]}}
 
         job_interface = JobInterface(job_interface_dict)
-        job_config = JobConfiguration(job_config_json)
+        job_config = ExecutionConfiguration(job_config_json)
 
         job_exe = MagicMock()
         job_exe.command_arguments = 'test_setting'
