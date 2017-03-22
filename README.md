@@ -74,6 +74,20 @@ Alternatively, your own local_settings.py can be volume mounted into `/opt/scale
 | SECRETS_TOKEN               | None                            | API endpoint for a secrets service         |
 | SECRETS_URL                 | None                            | Authentication token for secrets service   |
 
+Scale Dependencies
+==================
+Scale requires several external components to run as intended. PostgreSQL is used to store all internal system state
+and must be accessible to both the scheduler and web server processes. Logstash along with Elasticsearch are used to
+collect and store all algorithm logs. The following versions of these services are required to support Scale:
+
+- PostgreSQL 9.4+
+- Logstash 2.4
+- Elasticsearch 2.4
+
+Note: We strongly recommend using managed services for both PostgreSQL (AWS RDS) and Elasticsearch (AWS Elasticsearch
+Service), if available to you. Use of these services in Docker containers should be avoided in all but development
+environments.
+
 Quick Start
 ===========
 While Scale can be entirely run on a pure Apache Mesos cluster, we strongly recommend using Data Center Operating System
