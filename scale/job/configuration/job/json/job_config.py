@@ -119,6 +119,15 @@ class JobConfiguration(object):
 
         return None
 
+    def get_settings(self):
+        """Returns the dict of all settings defined in this configuration
+
+        :returns: The dict of all settings defined in this configuration
+        :rtype: dict
+        """
+
+        return self._configuration['settings']
+
     def _convert_configuration(self):
         """Converts the configuration from a previous schema version
 
