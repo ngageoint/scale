@@ -213,7 +213,7 @@ class JobInterface(object):
         :param job_data: The job data
         :type job_data: :class:`job.configuration.data.job_data.JobData`
         :param job_environment: The job environment
-        :type job_environment: :class:`job.configuration.environment.job_environment.JobEnvironment`
+        :type job_environment: dict
         :param job_exe_id: The job execution ID
         :type job_exe_id: int
         """
@@ -366,7 +366,7 @@ class JobInterface(object):
         :param job_data: The job data
         :type job_data: :class:`job.configuration.data.job_data.JobData`
         :param job_environment: The job environment
-        :type job_environment: :class:`job.configuration.environment.job_environment.JobEnvironment`
+        :type job_environment: dict
         """
         retrieve_files_dict = self._create_retrieve_files_dict()
         job_data.setup_job_dir(retrieve_files_dict)

@@ -17,7 +17,6 @@ import job.execution.container as job_exe_container
 import util.parse
 from error.models import Error
 from job.configuration.data.job_data import JobData
-from job.configuration.environment.job_environment import JobEnvironment
 from job.configuration.execution.job_parameter import DockerParam
 from job.configuration.execution.json.exe_config import ExecutionConfiguration, MODE_RO, MODE_RW
 from job.configuration.interface.error_interface import ErrorInterface
@@ -1092,7 +1091,7 @@ class JobExecutionManager(models.Manager):
             job_exe.node_id = node_id
             docker_volumes = []
             job_exe.configure_docker_params(workspaces, docker_volumes)
-            job_exe.environment = JobEnvironment({}).get_dict()
+            job_exe.environment = {}
             job_exe.cpus_scheduled = resources.cpus
             job_exe.mem_scheduled = resources.mem
             job_exe.disk_in_scheduled = resources.disk_in
@@ -1438,10 +1437,10 @@ class JobExecution(models.Model):
         """Returns the environment data for this job
 
         :returns: The environment data for this job
-        :rtype: :class:`job.configuration.environment.job_environment.JobEnvironment`
+        :rtype: dict
         """
 
-        return JobEnvironment(self.environment)
+        return self.environment
 
     def get_job_interface(self):
         """Returns the job interface for executing this job

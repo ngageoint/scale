@@ -58,7 +58,7 @@ class TestExecutionConfiguration(TestCase):
         populated_setting_values = [x.values() for x in populated_settings]
         results_dict = {x[0]: x[1] for x in populated_setting_values}
 
-        self.assertTrue(results_dict == config_dict['default_settings'])
+        self.assertTrue(results_dict == config_dict['settings'])
 
 
 class TestExecutionConfigurationConvert(TestCase):

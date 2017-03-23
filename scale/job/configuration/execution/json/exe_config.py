@@ -278,6 +278,6 @@ class ExecutionConfiguration(previous_version.ExecutionConfiguration):
         config_interface = job_exe.get_job_configuration().get_dict()
 
         if config_interface:
-            job_settings = config_interface['default_settings']
+            job_settings = config_interface['settings']
             for setting_name, setting_value in job_settings.iteritems():
                 self.add_job_task_setting(setting_name, setting_value)

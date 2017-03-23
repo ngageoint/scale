@@ -11,7 +11,6 @@ import storage.test.utils as storage_test_utils
 from job.configuration.data.exceptions import InvalidConnection, InvalidData
 from job.configuration.data.job_connection import JobConnection
 from job.configuration.data.job_data import JobData
-from job.configuration.environment.job_environment import JobEnvironment
 from job.configuration.execution.json.exe_config import ExecutionConfiguration
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.job_interface import JobInterface
@@ -649,7 +648,7 @@ class TestJobInterfacePreSteps(TestCase):
 
         job_interface = JobInterface(job_interface_dict)
         job_data = JobData(job_data_dict)
-        job_environment = JobEnvironment(job_environment_dict)
+        job_environment = job_environment_dict
         job_exe_id = 1
 
         job_interface.perform_pre_steps(job_data, job_environment)
@@ -671,7 +670,7 @@ class TestJobInterfacePreSteps(TestCase):
 
         job_interface = JobInterface(job_interface_dict)
         job_data = JobData(job_data_dict)
-        job_environment = JobEnvironment(job_environment_dict)
+        job_environment = job_environment_dict
         job_exe_id = 1
 
         job_interface.perform_pre_steps(job_data, job_environment)
@@ -693,7 +692,7 @@ class TestJobInterfacePreSteps(TestCase):
 
         job_interface = JobInterface(job_interface_dict)
         job_data = JobData(job_data_dict)
-        job_environment = JobEnvironment(job_environment_dict)
+        job_environment = job_environment_dict
         job_exe_id = 1
 
         job_interface.perform_pre_steps(job_data, job_environment)
@@ -733,7 +732,7 @@ class TestJobInterfacePreSteps(TestCase):
 
         job_interface = JobInterface(job_interface_dict)
         job_data = JobData(job_data_dict)
-        job_environment = JobEnvironment(job_environment_dict)
+        job_environment = job_environment_dict
 
         job_interface.perform_pre_steps(job_data, job_environment)
         job_command_arguments = job_interface.fully_populate_command_argument(job_data, job_environment, job_exe_id)
@@ -767,7 +766,7 @@ class TestJobInterfacePreSteps(TestCase):
 
         job_interface = JobInterface(job_interface_dict)
         job_data = JobData(job_data_dict)
-        job_environment = JobEnvironment(job_environment_dict)
+        job_environment = job_environment_dict
         job_exe_id = 1
 
         job_interface.perform_pre_steps(job_data, job_environment)
@@ -782,7 +781,7 @@ class TestJobInterfacePreSteps(TestCase):
 
         job_interface = JobInterface(job_interface_dict)
         job_data = JobData(job_data_dict)
-        job_environment = JobEnvironment(job_environment_dict)
+        job_environment = job_environment_dict
         job_exe_id = 1
         job_output_dir = SCALE_JOB_EXE_OUTPUT_PATH
 
@@ -802,7 +801,7 @@ class TestJobInterfacePreSteps(TestCase):
 
         job_interface = JobInterface(job_interface_dict)
         job_data = JobData(job_data_dict)
-        job_environment = JobEnvironment(job_environment_dict)
+        job_environment = job_environment_dict
         job_exe_id = 1
 
         job_interface.perform_pre_steps(job_data, job_environment)
@@ -822,7 +821,7 @@ class TestJobInterfacePreSteps(TestCase):
 
         job_interface = JobInterface(job_interface_dict)
         job_data = JobData(job_data_dict)
-        job_environment = JobEnvironment(job_environment_dict)
+        job_environment = job_environment_dict
         job_exe_id = 1
 
         job_interface.perform_pre_steps(job_data, job_environment)
@@ -841,7 +840,7 @@ class TestJobInterfacePreSteps(TestCase):
 
         job_interface = JobInterface(job_interface_dict)
         job_data = JobData(job_data_dict)
-        job_environment = JobEnvironment(job_environment_dict)
+        job_environment = job_environment_dict
         job_exe_id = 1
 
         job_interface.perform_pre_steps(job_data, job_environment)
@@ -861,7 +860,7 @@ class TestJobInterfacePreSteps(TestCase):
 
         job_interface = JobInterface(job_interface_dict)
         job_data = JobData(job_data_dict)
-        job_environment = JobEnvironment(job_environment_dict)
+        job_environment = job_environment_dict
         job_exe_id = 1
 
         job_interface.perform_pre_steps(job_data, job_environment)

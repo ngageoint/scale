@@ -7,8 +7,11 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 from job.configuration.job.exceptions import InvalidJobConfiguration
+from job.configuration.job.json import job_config_1_0 as previous_interface
 
 logger = logging.getLogger(__name__)
+
+SCHEMA_VERSION = '2.0'
 
 JOB_CONFIG_SCHEMA = {
     'type': 'object',
@@ -17,12 +20,46 @@ JOB_CONFIG_SCHEMA = {
         'version': {
             'description': 'Version of the job configuration schema',
             'type': 'string',
+            'default': SCHEMA_VERSION,
             'pattern': '^.{0,50}$',
         },
-        'default_settings': {
+        'mounts': {
+            'description': 'Defines volumes to use for the job\'s mounts',
+            'type': 'object',
+            'item': {
+                '$ref': '#/definitions/mount',
+            },
+        },
+        'settings': {
+            'description': 'Defines values to use for the job\'s settings',
             'type': 'object',
             'item': {
                 'type': 'string',
+            },
+        },
+    },
+    'definitions': {
+        'mount': {
+            'type': 'object',
+            'required': ['type'],
+            'additionalProperties': False,
+            'properties': {
+                'type': {
+                    'type': 'string',
+                    'enum': ['host', 'volume'],
+                },
+                'host_path': {
+                    'type': 'string',
+                },
+                'driver': {
+                    'type': 'string',
+                },
+                'driver_opts': {
+                    'type': 'object',
+                    'item': {
+                        'type': 'string',
+                    },
+                },
             },
         },
     },
@@ -32,66 +69,96 @@ JOB_CONFIG_SCHEMA = {
 class JobConfiguration(object):
     """Represents the schema for a job configuration"""
 
-    def __init__(self, definition=None):
-        """Creates a configuration interface from the given definition.
+    def __init__(self, configuration=None):
+        """Creates a job configuration from the given dict
 
-        If the definition is invalid, a :class:`job.configuration.interface.exceptions.InvalidInterfaceDefinition`
-        exception will be thrown.
+        :param configuration: The configuration dict
+        :type configuration: dict
 
-        :param definition: The interface definition
-        :type definition: dict
+        :raises :class:`job.configuration.job.exceptions.InvalidJobConfiguration`: If the given configuration is invalid
         """
-        if definition is None:
-            definition = {}
 
-        self.definition = definition
+        if configuration is None:
+            configuration = {}
 
-        self._default_setting_names = set()
+        self._configuration = configuration
+
+        if 'version' not in self._configuration:
+            self._configuration['version'] = SCHEMA_VERSION
+        if self._configuration['version'] != SCHEMA_VERSION:
+            self._convert_configuration()
 
         try:
-            validate(definition, JOB_CONFIG_SCHEMA)
+            validate(configuration, JOB_CONFIG_SCHEMA)
         except ValidationError as validation_error:
             raise InvalidJobConfiguration(validation_error)
 
         self._populate_default_values()
-        self._validate_default_settings()
-
-        if self.definition['version'] != '1.0':
-            raise InvalidJobConfiguration('%s is an unsupported version number' % self.definition['version'])
+        self._validate_mounts()
+        self._validate_settings()
 
     def get_dict(self):
-        """Returns the internal dictionary that represents this error mapping
+        """Returns the internal dictionary representing this configuration
 
         :returns: The internal dictionary
         :rtype: dict
         """
 
-        return self.definition
+        return self._configuration
 
-    def _validate_default_settings(self):
-        """Ensures that no settings have duplicate names or blank values
+    def _convert_configuration(self):
+        """Converts the configuration from a previous schema version
 
-        :raises :class:`job.configuration.interface.exceptions.InvalidInterface`: If there is a duplicate name or blank
-            value/name. 
+        :raises :class:`job.configuration.job.exceptions.InvalidJobConfiguration`: If the given configuration is invalid
         """
 
-        for setting_name, setting_value in self.definition['default_settings'].iteritems():
-            if setting_name in self._default_setting_names:
-                raise InvalidJobConfiguration('Duplicate setting name %s in default_settings' % setting_name)
-            self._default_setting_names.add(setting_name)
+        # Validate/process the dict according to the previous version
+        self._configuration = previous_interface.JobConfiguration(self._configuration).get_dict()
 
+        self._configuration['version'] = SCHEMA_VERSION
+        self._configuration['settings'] = self._configuration['default_settings']
+        del self._configuration['default_settings']
+
+    def _populate_default_values(self):
+        """Populates any missing default values"""
+
+        if 'mounts' not in self._configuration:
+            self._configuration['mounts'] = {}
+        if 'settings' not in self._configuration:
+            self._configuration['settings'] = {}
+
+    def _validate_mounts(self):
+        """Ensures that the mounts are valid
+
+        :raises :class:`job.configuration.job.exceptions.InvalidJobConfiguration`: If the mounts are invalid
+        """
+
+        for name, mount in self._configuration['mounts'].iteritems():
+            if mount['type'] == 'host':
+                if 'host_path' not in mount:
+                    raise InvalidJobConfiguration('Host mount %s requires host_path' % name)
+                if 'driver' in mount:
+                    raise InvalidJobConfiguration('Host mount %s does not support driver' % name)
+                if 'driver_opts' in mount:
+                    raise InvalidJobConfiguration('Host mount %s does not support driver_opts' % name)
+            elif mount['type'] == 'volume':
+                if 'driver' not in mount:
+                    raise InvalidJobConfiguration('Volume mount %s requires driver' % name)
+                if 'host_path' in mount:
+                    raise InvalidJobConfiguration('Volume mount %s does not support host_path' % name)
+
+    def _validate_settings(self):
+        """Ensures that the settings are valid
+
+        :raises :class:`job.configuration.job.exceptions.InvalidJobConfiguration`: If the settings are invalid
+        """
+
+        for setting_name, setting_value in self._configuration['settings'].iteritems():
             if not setting_name:
-                raise InvalidJobConfiguration('Blank setting name (value = %s) in default_settings' % setting_value)
+                raise InvalidJobConfiguration('Blank setting name (value = %s)' % setting_value)
 
             if not setting_value:
-                raise InvalidJobConfiguration('Blank setting value (name = %s) in default_settings' % setting_name)
+                raise InvalidJobConfiguration('Blank setting value (name = %s)' % setting_name)
 
             if not isinstance(setting_value, basestring):
                 raise InvalidJobConfiguration('Setting value (name = %s) is not a string' % setting_name)
-
-    def _populate_default_values(self):
-        """Goes through the definition and fills in any missing default values"""
-        if 'version' not in self.definition:
-            self.definition['version'] = '1.0'
-        if 'default_settings' not in self.definition:
-            self.definition['default_settings'] = {}
