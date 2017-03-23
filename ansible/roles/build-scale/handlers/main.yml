@@ -1,8 +1,0 @@
----
-# build-scale/handlers/main.yml
-- name: push scale
-  command: sh -c 'docker tag -f scale:{{ scale_docker_version }} {{ docker_registry }}scale:{{ scale_docker_version }}; docker push {{ docker_registry }}scale:{{ scale_docker_version }}'
-
-- name: push landsat-base
-  command: sh -c 'docker tag -f landsat-base:{{ scale_docker_version }} {{ docker_registry }}landsat-base:{{ scale_docker_version }}; docker push {{ docker_registry }}landsat-base:{{ scale_docker_version }}'
-
