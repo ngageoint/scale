@@ -1,2 +1,0 @@
-# group_vars/mesos-masters
-mesos_quorum: 1
