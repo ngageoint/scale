@@ -26,14 +26,14 @@ JOB_CONFIG_SCHEMA = {
         'mounts': {
             'description': 'Defines volumes to use for the job\'s mounts',
             'type': 'object',
-            'item': {
-                '$ref': '#/definitions/mount',
+            'additionalProperties': {
+                '$ref': '#/definitions/mount'
             },
         },
         'settings': {
             'description': 'Defines values to use for the job\'s settings',
             'type': 'object',
-            'item': {
+            'additionalProperties': {
                 'type': 'string',
             },
         },
@@ -45,7 +45,6 @@ JOB_CONFIG_SCHEMA = {
             'additionalProperties': False,
             'properties': {
                 'type': {
-                    'type': 'string',
                     'enum': ['host', 'volume'],
                 },
                 'host_path': {
@@ -106,6 +105,20 @@ class JobConfiguration(object):
 
         return self._configuration
 
+    def get_setting_value(self, name):
+        """Returns the value of the given setting if defined in this configuration, otherwise returns None
+
+        :param name: The name of the setting
+        :type name: string
+        :returns: The value of the setting, possibly None
+        :rtype: string
+        """
+
+        if name in self._configuration['settings']:
+            return self._configuration['settings'][name]
+
+        return None
+
     def _convert_configuration(self):
         """Converts the configuration from a previous schema version
 
@@ -154,11 +167,5 @@ class JobConfiguration(object):
         """
 
         for setting_name, setting_value in self._configuration['settings'].iteritems():
-            if not setting_name:
-                raise InvalidJobConfiguration('Blank setting name (value = %s)' % setting_value)
-
             if not setting_value:
-                raise InvalidJobConfiguration('Blank setting value (name = %s)' % setting_name)
-
-            if not isinstance(setting_value, basestring):
-                raise InvalidJobConfiguration('Setting value (name = %s) is not a string' % setting_name)
+                raise InvalidJobConfiguration('Setting %s has blank value' % setting_name)
