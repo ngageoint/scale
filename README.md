@@ -79,9 +79,9 @@ Quick Start
 While Scale can be entirely run on a pure Apache Mesos cluster, we strongly recommend using Data Center Operation System
 (DC/OS). DC/OS provides service discovery, load-balancing and fail-over for Scale, as well as deployment scripts for
 nearly all imaginable target infrastructures. This stack allows Scale users to focus on use of the framework while
-minimizing effort spent of deployment and configuration.
+minimizing effort spent of deployment and configuration. A complete quick start guide can be found at:
 
-Our complete quick start guide can be found at: https://ngageoint.github.io/scale/quickstart.html
+https://ngageoint.github.io/scale/quickstart.html
 
 Algorithm Development
 =====================
@@ -89,6 +89,7 @@ Scale is designed to allow development of Recipes and Jobs for your domain witho
 complexities of cluster scheduling or data flow management. As long as your processing can be accomplished with
 discrete inputs on a Linux command line, it can be run in Scale. Simple examples of a complete processing chain can be
 found within the above quick start or you can refer to our in-depth documentation for step-by-step Scale integration:
+
 https://ngageoint.github.io/scale/docs/algorithm_integration/index.html
 
 Scale Development
@@ -109,8 +110,8 @@ generation are done using Travis CI. We require that any pull request fully pass
 Docker Hub builds are saved to `x.x.x-snapshot` image tags between releases and on releases tags are matched to release
 version.
 
-A new release can be cut using the generate-release.sh shell script as follows (where numbers refer to MAJOR MINOR PATCH
-versions respectively):
+A new release can be cut using the generate-release.sh shell script from a cloned Scale repository (where numbers refer
+to MAJOR MINOR PATCH versions respectively):
 
 ```bash
 ./generate-release.sh 4 0 0
