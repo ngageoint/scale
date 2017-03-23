@@ -458,10 +458,11 @@ class TestConfigurationViewImport(TestCase):
         workspace = storage_test_utils.create_workspace()
 
         interface = {
-            'version': '1.3',
+            'version': '1.4',
             'command': 'test_cmd',
             'command_arguments': 'test_arg',
             'env_vars': [],
+            'mounts': [],
             'settings': [],
             'input_data': [],
             'output_data': [],
@@ -589,10 +590,11 @@ class TestConfigurationViewImport(TestCase):
         job_type = job_test_utils.create_job_type()
 
         interface = {
-            'version': '1.3',
+            'version': '1.4',
             'command': 'test_cmd_edit',
             'command_arguments': 'test_arg_edit',
             'env_vars': [],
+            'mounts': [],
             'settings': [],
             'input_data': [],
             'output_data': [],
@@ -1445,10 +1447,11 @@ class TestConfigurationViewImport(TestCase):
         workspace = storage_test_utils.create_workspace()
 
         interface = {
-            'version': '1.3',
+            'version': '1.4',
             'command': 'test_cmd',
             'command_arguments': 'test_arg',
             'env_vars': [],
+            'mounts': [],
             'settings': [],
             'input_data': [],
             'output_data': [],
