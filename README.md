@@ -76,16 +76,16 @@ Alternatively, your own local_settings.py can be volume mounted into `/opt/scale
 
 Quick Start
 ===========
-While Scale can be entirely run on a pure Apache Mesos cluster, we strongly recommend using Data Center Operation System
+While Scale can be entirely run on a pure Apache Mesos cluster, we strongly recommend using Data Center Operating System
 (DC/OS). DC/OS provides service discovery, load-balancing and fail-over for Scale, as well as deployment scripts for
 nearly all imaginable target infrastructures. This stack allows Scale users to focus on use of the framework while
-minimizing effort spent of deployment and configuration. A complete quick start guide can be found at:
+minimizing effort spent on deployment and configuration. A complete quick start guide can be found at:
 
 https://ngageoint.github.io/scale/quickstart.html
 
 Algorithm Development
 =====================
-Scale is designed to allow development of Recipes and Jobs for your domain without having to concern yourself with the
+Scale is designed to allow development of recipes and jobs for your domain without having to concern yourself with the
 complexities of cluster scheduling or data flow management. As long as your processing can be accomplished with
 discrete inputs on a Linux command line, it can be run in Scale. Simple examples of a complete processing chain can be
 found within the above quick start or you can refer to our in-depth documentation for step-by-step Scale integration:
@@ -101,13 +101,13 @@ components of Scale:
 - Scheduler / Service APIs: https://github.com/ngageoint/scale/tree/master/scale
 - Scale Command Line Interface: https://github.com/ngageoint/scale/tree/master/scale-cli
 
-The links provide specific development environment setup instructions for each individual components.
+The links provide specific development environment setup instructions for each individual component.
 
 Build
 =====
 Scale is tested and built using a combination of Travis CI and Docker Hub. All unit test execution and documentation
 generation are done using Travis CI. We require that any pull request fully pass unit test checks prior to being merged.
-Docker Hub builds are saved to `x.x.x-snapshot` image tags between releases and on releases tags are matched to release
+Docker Hub builds are saved to `x.x.x-snapshot` image tags between releases and on release tags are matched to release
 version.
 
 A new release can be cut using the generate-release.sh shell script from a cloned Scale repository (where numbers refer
