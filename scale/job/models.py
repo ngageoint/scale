@@ -1319,8 +1319,11 @@ class JobExecution(models.Model):
         # Setup task logging
         configuration.configure_logging_docker_params(self)
 
-        # Populate job_configuration with default settings
+        # Populate configuration with default settings
         configuration.populate_default_job_settings(self)
+
+        # Populate configuration with mount volumes
+        configuration.populate_mounts(self)
 
         # Pass database connection details from scheduler as environment variables
         db = settings.DATABASES['default']

@@ -6,6 +6,7 @@ import logging
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
+from job.configuration.execution.volume import Volume
 from job.configuration.job.exceptions import InvalidJobConfiguration
 from job.configuration.job.json import job_config_1_0 as previous_interface
 
@@ -55,7 +56,7 @@ JOB_CONFIG_SCHEMA = {
                 },
                 'driver_opts': {
                     'type': 'object',
-                    'item': {
+                    'additionalProperties': {
                         'type': 'string',
                     },
                 },
@@ -105,6 +106,39 @@ class JobConfiguration(object):
 
         return self._configuration
 
+    def get_mount_volume(self, mount_name, volume_name, container_path, mode):
+        """Returns the volume that has been configured for the given mount name. If the given mount is not defined in
+        this configuration, None is returned.
+
+        :param mount_name: The name of the mount defined in the job type
+        :type mount_name: string
+        :param volume_name: The name of the volume
+        :type volume_name: string
+        :param container_path: The path within the container onto which the volume will be mounted
+        :type container_path: string
+        :param mode: Either 'ro' for read-only or 'rw' for read-write
+        :type mode: string
+        :returns: The volume that should be mounted into the job container, possibly None
+        :rtype: :class:`job.configuration.execution.volume.Volume`
+        """
+
+        if mount_name not in self._configuration['mounts']:
+            return None
+
+        volume = None
+        mount_config = self._configuration['mounts'][mount_name]
+        mount_type = mount_config['type']
+        if mount_type == 'host':
+            host_path = mount_config['host_path']
+            volume = Volume(container_path, mode, is_host=True, host_path=host_path)
+        elif mount_type == 'volume':
+            driver = mount_config['driver']
+            driver_opts = mount_config['driver_opts']
+            volume = Volume(container_path, mode, is_host=False, name=volume_name, driver=driver,
+                            driver_opts=driver_opts)
+
+        return volume
+
     def get_setting_value(self, name):
         """Returns the value of the given setting if defined in this configuration, otherwise returns None
 
@@ -118,15 +152,6 @@ class JobConfiguration(object):
             return self._configuration['settings'][name]
 
         return None
-
-    def get_settings(self):
-        """Returns the dict of all settings defined in this configuration
-
-        :returns: The dict of all settings defined in this configuration
-        :rtype: dict
-        """
-
-        return self._configuration['settings']
 
     def _convert_configuration(self):
         """Converts the configuration from a previous schema version
@@ -146,6 +171,10 @@ class JobConfiguration(object):
 
         if 'mounts' not in self._configuration:
             self._configuration['mounts'] = {}
+        for mount in self._configuration['mounts'].values():
+            if type == 'volume':
+                if 'driver_opts' not in mount:
+                    mount['driver_opts'] = {}
         if 'settings' not in self._configuration:
             self._configuration['settings'] = {}
 

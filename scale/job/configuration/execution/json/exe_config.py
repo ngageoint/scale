@@ -9,13 +9,13 @@ from jsonschema.exceptions import ValidationError
 from job.configuration.execution.exceptions import InvalidExecutionConfiguration
 from job.configuration.execution.job_parameter import TaskSetting
 from job.configuration.execution.json import exe_config_1_0 as previous_version
+from job.configuration.execution.volume import MODE_RO, MODE_RW
+from job.execution.container import get_mount_volume_name
 
 logger = logging.getLogger(__name__)
 
 
 SCHEMA_VERSION = '1.1'
-MODE_RO = 'ro'
-MODE_RW = 'rw'
 
 
 EXE_CONFIG_SCHEMA = {
@@ -273,6 +273,29 @@ class ExecutionConfiguration(previous_version.ExecutionConfiguration):
         :type job_exe: :class:`job.models.JobExecution`
         """
 
+        interface = job_exe.get_job_interface()
         job_config = job_exe.get_job_configuration()
-        for setting_name, setting_value in job_config.get_settings().iteritems():
-            self.add_job_task_setting(setting_name, setting_value)
+        for setting in interface.get_dict()['settings']:
+            if not setting['secret']:
+                setting_name = setting['name']
+                setting_value = job_config.get_setting_value(setting_name)
+                if setting_value:
+                    self.add_job_task_setting(setting_name, setting_value)
+
+    def populate_mounts(self, job_exe):
+        """Adds the mounts defined in the job type's interface and configuration to the execution configuration
+
+        :param job_exe: The job execution model with related job and job_type fields
+        :type job_exe: :class:`job.models.JobExecution`
+        """
+
+        interface = job_exe.get_job_interface()
+        job_config = job_exe.get_job_configuration()
+        for mount in interface.get_dict()['mounts']:
+            name = mount['name']
+            mode = mount['mode']
+            path = mount['path']
+            volume_name = get_mount_volume_name(job_exe, name)
+            volume = job_config.get_mount_volume(name, volume_name, path, mode)
+            if volume:
+                self.add_job_task_docker_params([volume.to_docker_param()])

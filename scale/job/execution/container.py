@@ -38,8 +38,24 @@ def get_job_exe_output_vol_name(job_exe):
     return '%s_output_data' % job_exe.get_cluster_id()
 
 
+def get_mount_volume_name(job_exe, mount_name):
+    """Returns the name of the mount's container volume for the given job execution
+
+    :param job_exe: The job execution model (must not be queued) with related job and job_type fields
+    :type job_exe: :class:`job.models.JobExecution`
+    :param mount_name: The name of the mount
+    :type mount_name: string
+    :returns: The mount's container volume name
+    :rtype: string
+
+    :raises Exception: If the job execution is still queued
+    """
+
+    return '%s_mount_%s' % (job_exe.get_cluster_id(), mount_name)
+
+
 def get_workspace_volume_name(job_exe, workspace):
-    """Returns the name of the workspace's container volume for the given job execution ID
+    """Returns the name of the workspace's container volume for the given job execution
 
     :param job_exe: The job execution model (must not be queued) with related job and job_type fields
     :type job_exe: :class:`job.models.JobExecution`
