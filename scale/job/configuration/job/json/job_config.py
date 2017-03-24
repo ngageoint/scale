@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import logging
+import os
 
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
@@ -188,6 +189,8 @@ class JobConfiguration(object):
             if mount['type'] == 'host':
                 if 'host_path' not in mount:
                     raise InvalidJobConfiguration('Host mount %s requires host_path' % name)
+                if not os.path.isabs(mount['host_path']):
+                    raise InvalidJobConfiguration('Host mount %s must use an absolute host_path' % name)
                 if 'driver' in mount:
                     raise InvalidJobConfiguration('Host mount %s does not support driver' % name)
                 if 'driver_opts' in mount:

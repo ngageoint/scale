@@ -37,6 +37,10 @@ class TestJobConfiguration(TestCase):
         config = {'mounts': {'mount_1': {'type': 'host'}}}
         self.assertRaises(InvalidJobConfiguration, JobConfiguration, config)
 
+        # Host mount with relative host path
+        config = {'mounts': {'mount_1': {'type': 'host', 'host_path': 'host/path'}}}
+        self.assertRaises(InvalidJobConfiguration, JobConfiguration, config)
+
         # Host mount with driver
         config = {'mounts': {'mount_1': {'type': 'host', 'host_path': '/host/path', 'driver': 'x-driver'}}}
         self.assertRaises(InvalidJobConfiguration, JobConfiguration, config)
