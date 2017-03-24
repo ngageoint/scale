@@ -6,10 +6,10 @@ import logging
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
-from job.configuration.execution.exceptions import InvalidExecutionConfiguration
-from job.configuration.execution.job_parameter import TaskSetting
-from job.configuration.execution.json import exe_config_1_0 as previous_version
-from job.configuration.execution.volume import MODE_RO, MODE_RW
+from job.configuration.exceptions import InvalidExecutionConfiguration
+from job.configuration.job_parameter import TaskSetting
+from job.configuration.json.execution import exe_config_1_0 as previous_version
+from job.configuration.volume import MODE_RO, MODE_RW
 from job.execution.container import get_mount_volume_name
 
 logger = logging.getLogger(__name__)
@@ -110,8 +110,7 @@ class ExecutionConfiguration(previous_version.ExecutionConfiguration):
 
         :param configuration: The JSON dictionary
         :type configuration: dict
-        :raises :class:`job.configuration.execution.exceptions.InvalidExecutionConfiguration`: If the JSON is
-            invalid
+        :raises :class:`job.configuration.exceptions.InvalidExecutionConfiguration`: If the JSON is invalid
         """
 
         if not configuration:
@@ -204,7 +203,7 @@ class ExecutionConfiguration(previous_version.ExecutionConfiguration):
         """Returns the settings name/values needed for the job task
 
         :returns: The job task settings name/values
-        :rtype: [:class:`job.configuration.execution.job_parameter.TaskSetting`]
+        :rtype: [:class:`job.configuration.job_parameter.TaskSetting`]
         """
 
         params = self._configuration['job_task']['settings']
@@ -214,7 +213,7 @@ class ExecutionConfiguration(previous_version.ExecutionConfiguration):
         """Returns the settings name/values needed for the post task
 
         :returns: The post task settings name/values
-        :rtype: [:class:`job.configuration.execution.job_parameter.TaskSetting`]
+        :rtype: [:class:`job.configuration.job_parameter.TaskSetting`]
         """
 
         params = self._configuration['post_task']['settings']
@@ -224,7 +223,7 @@ class ExecutionConfiguration(previous_version.ExecutionConfiguration):
         """Returns the settings name/values needed for the pre task
 
         :returns: The pre task settings name/values
-        :rtype: [:class:`job.configuration.execution.job_parameter.TaskSetting`]
+        :rtype: [:class:`job.configuration.job_parameter.TaskSetting`]
         """
 
         params = self._configuration['pre_task']['settings']
@@ -246,8 +245,8 @@ class ExecutionConfiguration(previous_version.ExecutionConfiguration):
     def _validate_setting_names(self):
         """Ensures that no tasks have duplicate setting names
 
-        :raises :class:`job.configuration.execution.exceptions.InvalidExecutionConfiguration`: If there is a duplicate
-            setting name
+        :raises :class:`job.configuration.exceptions.InvalidExecutionConfiguration`: If there is a duplicate setting
+            name
         """
 
         for setting_dict in self._configuration['pre_task']['settings']:

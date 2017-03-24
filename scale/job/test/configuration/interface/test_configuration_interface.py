@@ -3,8 +3,8 @@ from __future__ import unicode_literals
 import django
 from django.test import TestCase
 
-from job.configuration.job.exceptions import InvalidJobConfiguration
-from job.configuration.job.json.job_config import JobConfiguration
+from job.configuration.exceptions import InvalidJobConfiguration
+from job.configuration.json.job.job_config import JobConfiguration
 
 
 class TestJobConfiguration(TestCase):

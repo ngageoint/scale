@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     ]
 
     def populate_job_configuration(apps, schema_editor):
-        from job.configuration.execution.json.exe_config import ExecutionConfiguration, MODE_RO, MODE_RW
+        from job.configuration.json.execution.exe_config import ExecutionConfiguration, MODE_RO, MODE_RW
         from job.configuration.data.job_data import JobData
         # Go through all of the job models that have job data and populate their configuration
         Job = apps.get_model('job', 'Job')

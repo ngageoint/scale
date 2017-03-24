@@ -1,7 +1,7 @@
 """Defines a Docker volume that will be mounted into a container"""
 from __future__ import unicode_literals
 
-from job.configuration.execution.job_parameter import DockerParam
+from job.configuration.job_parameter import DockerParam
 
 MODE_RO = 'ro'
 MODE_RW = 'rw'
@@ -42,7 +42,7 @@ class Volume(object):
         """Returns a Docker parameter that will perform the mount of this volume
 
         :returns: The Docker parameter that will mount this volume
-        :rtype: :class:`job.configuration.execution.job_parameter.DockerParam`
+        :rtype: :class:`job.configuration.job_parameter.DockerParam`
         """
 
         # TODO: this currently only supports creating a volume for the first time

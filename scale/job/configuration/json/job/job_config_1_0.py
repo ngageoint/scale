@@ -6,7 +6,7 @@ import logging
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
-from job.configuration.job.exceptions import InvalidJobConfiguration
+from job.configuration.exceptions import InvalidJobConfiguration
 
 logger = logging.getLogger(__name__)
 

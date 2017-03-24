@@ -7,8 +7,8 @@ from django.conf import settings
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
-from job.configuration.execution.exceptions import InvalidExecutionConfiguration
-from job.configuration.execution.job_parameter import DockerParam, TaskWorkspace
+from job.configuration.exceptions import InvalidExecutionConfiguration
+from job.configuration.job_parameter import DockerParam, TaskWorkspace
 from job.execution.container import get_workspace_volume_name
 from storage.container import get_workspace_volume_path
 
@@ -94,8 +94,7 @@ class ExecutionConfiguration(object):
 
         :param configuration: The JSON dictionary
         :type configuration: dict
-        :raises :class:`job.configuration.execution.exceptions.InvalidExecutionConfiguration`: If the JSON is
-            invalid
+        :raises :class:`job.configuration.exceptions.InvalidExecutionConfiguration`: If the JSON is invalid
         """
 
         if not configuration:
@@ -121,7 +120,7 @@ class ExecutionConfiguration(object):
         """Adds the given Docker parameters to this job's job task
 
         :param params: The Docker parameters to add
-        :type params: [:class:`job.configuration.execution.job_parameter.DockerParam`]
+        :type params: [:class:`job.configuration.job_parameter.DockerParam`]
         """
 
         for param in params:
@@ -131,7 +130,7 @@ class ExecutionConfiguration(object):
         """Adds the given Docker parameters to this job's post task
 
         :param params: The Docker parameters to add
-        :type params: [:class:`job.configuration.execution.job_parameter.DockerParam`]
+        :type params: [:class:`job.configuration.job_parameter.DockerParam`]
         """
 
         for param in params:
@@ -141,7 +140,7 @@ class ExecutionConfiguration(object):
         """Adds the given Docker parameters to this job's pre task
 
         :param params: The Docker parameters to add
-        :type params: [:class:`job.configuration.execution.job_parameter.DockerParam`]
+        :type params: [:class:`job.configuration.job_parameter.DockerParam`]
         """
 
         for param in params:
@@ -279,7 +278,7 @@ class ExecutionConfiguration(object):
         """Returns the Docker parameters needed for the job task
 
         :returns: The job task Docker parameters
-        :rtype: [:class:`job.configuration.execution.job_parameter.DockerParam`]
+        :rtype: [:class:`job.configuration.job_parameter.DockerParam`]
         """
 
         params = self._configuration['job_task']['docker_params']
@@ -289,7 +288,7 @@ class ExecutionConfiguration(object):
         """Returns the Docker parameters needed for the post task
 
         :returns: The post task Docker parameters
-        :rtype: [:class:`job.configuration.execution.job_parameter.DockerParam`]
+        :rtype: [:class:`job.configuration.job_parameter.DockerParam`]
         """
 
         params = self._configuration['post_task']['docker_params']
@@ -299,7 +298,7 @@ class ExecutionConfiguration(object):
         """Returns the Docker parameters needed for the pre task
 
         :returns: The pre task Docker parameters
-        :rtype: [:class:`job.configuration.execution.job_parameter.DockerParam`]
+        :rtype: [:class:`job.configuration.job_parameter.DockerParam`]
         """
 
         params = self._configuration['pre_task']['docker_params']
@@ -309,7 +308,7 @@ class ExecutionConfiguration(object):
         """Returns the workspaces needed for the job task
 
         :returns: The job task workspaces
-        :rtype: [:class:`job.configuration.execution.job_parameter.TaskWorkspace`]
+        :rtype: [:class:`job.configuration.job_parameter.TaskWorkspace`]
         """
 
         workspaces = self._configuration['job_task']['workspaces']
@@ -319,7 +318,7 @@ class ExecutionConfiguration(object):
         """Returns the workspaces needed for the post task
 
         :returns: The post task workspaces
-        :rtype: [:class:`job.configuration.execution.job_parameter.TaskWorkspace`]
+        :rtype: [:class:`job.configuration.job_parameter.TaskWorkspace`]
         """
 
         workspaces = self._configuration['post_task']['workspaces']
@@ -329,7 +328,7 @@ class ExecutionConfiguration(object):
         """Returns the workspaces needed for the pre task
 
         :returns: The pre task workspaces
-        :rtype: [:class:`job.configuration.execution.job_parameter.TaskWorkspace`]
+        :rtype: [:class:`job.configuration.job_parameter.TaskWorkspace`]
         """
 
         workspaces = self._configuration['pre_task']['workspaces']
@@ -350,7 +349,7 @@ class ExecutionConfiguration(object):
         :param job_exe: The job execution model (must not be queued) with related job and job_type fields
         :type job_exe: :class:`job.models.JobExecution`
         :param task_workspaces: List of the task workspaces
-        :type task_workspaces: [:class:`job.configuration.execution.job_parameter.TaskWorkspace`]
+        :type task_workspaces: [:class:`job.configuration.job_parameter.TaskWorkspace`]
         :param workspaces: A dict of all workspaces stored by name
         :type workspaces: {string: :class:`storage.models.Workspace`}
         :param volume_create: Indicates if new volumes need to be created for these workspaces
@@ -358,7 +357,7 @@ class ExecutionConfiguration(object):
         :param docker_volumes: A list to add Docker volume names to
         :type docker_volumes: [string]
         :returns: The Docker parameters needed by the given workspaces
-        :rtype: [:class:`job.configuration.execution.job_parameter.DockerParam`]
+        :rtype: [:class:`job.configuration.job_parameter.DockerParam`]
 
         :raises Exception: If the job execution is still queued
         """
@@ -416,7 +415,7 @@ class ExecutionConfiguration(object):
     def _validate_workspace_names(self):
         """Ensures that no tasks have duplicate workspace names
 
-        :raises :class:`job.configuration.execution.exceptions.InvalidExecutionConfiguration`: If there is a duplicate
+        :raises :class:`job.configuration.exceptions.InvalidExecutionConfiguration`: If there is a duplicate
             workspace name
         """
 

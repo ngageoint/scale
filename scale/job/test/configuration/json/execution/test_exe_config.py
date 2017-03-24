@@ -4,10 +4,10 @@ import django
 from django.test import TestCase
 from mock import patch, MagicMock
 
-from job.configuration.execution.exceptions import InvalidExecutionConfiguration
-from job.configuration.execution.json.exe_config import ExecutionConfiguration
+from job.configuration.exceptions import InvalidExecutionConfiguration
 from job.configuration.interface.job_interface import JobInterface
-from job.configuration.job.json.job_config import JobConfiguration
+from job.configuration.json.execution.exe_config import ExecutionConfiguration
+from job.configuration.json.job.job_config import JobConfiguration
 
 
 class TestExecutionConfiguration(TestCase):
@@ -121,7 +121,7 @@ class TestExecutionConfigurationConvert(TestCase):
 
         django.setup()
 
-    @patch('job.configuration.execution.json.exe_config_1_0.ExecutionConfiguration.get_dict')
+    @patch('job.configuration.json.execution.exe_config.ExecutionConfiguration.get_dict')
     def test_successful(self, mock_get_dict):
         """Tests calling ExecutionConfiguration.convert_configuration() successfully."""
         mock_get_dict.return_value = self.job_configuration_dict

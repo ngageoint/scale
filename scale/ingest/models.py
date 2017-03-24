@@ -14,7 +14,7 @@ from ingest.scan.configuration.scan_configuration import ScanConfiguration
 from ingest.scan.scanners.exceptions import ScanIngestJobAlreadyLaunched
 from ingest.strike.configuration.strike_configuration import StrikeConfiguration
 from job.configuration.data.job_data import JobData
-from job.configuration.execution.json.exe_config import ExecutionConfiguration, MODE_RW
+from job.configuration.json.execution.exe_config import ExecutionConfiguration, MODE_RW
 from job.models import JobType
 from queue.models import Queue
 from storage.exceptions import InvalidDataTypeTag

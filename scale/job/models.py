@@ -17,11 +17,11 @@ import job.execution.container as job_exe_container
 import util.parse
 from error.models import Error
 from job.configuration.data.job_data import JobData
-from job.configuration.execution.job_parameter import DockerParam
-from job.configuration.execution.json.exe_config import ExecutionConfiguration, MODE_RO, MODE_RW
 from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.job_interface import JobInterface
-from job.configuration.job.json.job_config import JobConfiguration
+from job.configuration.job_parameter import DockerParam
+from job.configuration.json.execution.exe_config import ExecutionConfiguration, MODE_RO, MODE_RW
+from job.configuration.json.job.job_config import JobConfiguration
 from job.configuration.results.job_results import JobResults
 from job.exceptions import InvalidJobField
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
@@ -746,7 +746,7 @@ class Job(models.Model):
         """Returns the execution configuration for this job
 
         :returns: The execution configuration for this job
-        :rtype: :class:`job.configuration.execution.json.exe_config.ExecutionConfiguration`
+        :rtype: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         """
 
         return ExecutionConfiguration(self.configuration)
@@ -1422,7 +1422,7 @@ class JobExecution(models.Model):
         """Returns the default job configuration for this job type
 
         :returns: The default job configuration for this job type
-        :rtype: :class:`job.configuration.job.json.job_config.JobConfiguration`
+        :rtype: :class:`job.configuration.json.job.job_config.JobConfiguration`
         """
 
         return self.job.job_type.get_job_configuration()
@@ -1431,7 +1431,7 @@ class JobExecution(models.Model):
         """Returns the execution configuration for this job
 
         :returns: The execution configuration for this job
-        :rtype: :class:`job.configuration.execution.json.exe_config.ExecutionConfiguration`
+        :rtype: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         """
 
         return ExecutionConfiguration(self.configuration)
@@ -2368,7 +2368,7 @@ class JobType(models.Model):
         """Returns default job configuration for this job type
 
         :returns: The default job configuration for this job type
-        :rtype: :class:`job.configuration.job.json.job_config.JobConfiguration`
+        :rtype: :class:`job.configuration.json.job.job_config.JobConfiguration`
         """
 
         return JobConfiguration(self.configuration)

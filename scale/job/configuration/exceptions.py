@@ -1,7 +1,14 @@
-"""Defines exceptions that can occur when interacting with a job configuration"""
+"""Defines exceptions that can occur when interacting with configuration"""
 from __future__ import unicode_literals
 
 from error.exceptions import ScaleError
+
+
+class InvalidExecutionConfiguration(Exception):
+    """Exception indicating that the provided execution configuration JSON was invalid
+    """
+
+    pass
 
 
 class InvalidJobConfiguration(Exception):

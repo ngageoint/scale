@@ -5,7 +5,7 @@ import django.utils.timezone as timezone
 
 import trigger.test.utils as trigger_test_utils
 from job.configuration.data.exceptions import InvalidConnection
-from job.configuration.execution.json.exe_config import ExecutionConfiguration
+from job.configuration.json.execution.exe_config import ExecutionConfiguration
 from job.models import Job, JobExecution, JobType, JobTypeRevision, TaskUpdate
 from job.tasks.update import TaskStatusUpdate
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration

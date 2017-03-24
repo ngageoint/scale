@@ -7,9 +7,9 @@ import os
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
-from job.configuration.execution.volume import Volume
-from job.configuration.job.exceptions import InvalidJobConfiguration
-from job.configuration.job.json import job_config_1_0 as previous_interface
+from job.configuration.exceptions import InvalidJobConfiguration
+from job.configuration.json.job import job_config_1_0 as previous_interface
+from job.configuration.volume import Volume
 
 logger = logging.getLogger(__name__)
 
@@ -76,7 +76,7 @@ class JobConfiguration(object):
         :param configuration: The configuration dict
         :type configuration: dict
 
-        :raises :class:`job.configuration.job.exceptions.InvalidJobConfiguration`: If the given configuration is invalid
+        :raises :class:`job.configuration.exceptions.InvalidJobConfiguration`: If the given configuration is invalid
         """
 
         if configuration is None:
@@ -120,7 +120,7 @@ class JobConfiguration(object):
         :param mode: Either 'ro' for read-only or 'rw' for read-write
         :type mode: string
         :returns: The volume that should be mounted into the job container, possibly None
-        :rtype: :class:`job.configuration.execution.volume.Volume`
+        :rtype: :class:`job.configuration.volume.Volume`
         """
 
         if mount_name not in self._configuration['mounts']:
@@ -157,7 +157,7 @@ class JobConfiguration(object):
     def _convert_configuration(self):
         """Converts the configuration from a previous schema version
 
-        :raises :class:`job.configuration.job.exceptions.InvalidJobConfiguration`: If the given configuration is invalid
+        :raises :class:`job.configuration.exceptions.InvalidJobConfiguration`: If the given configuration is invalid
         """
 
         # Validate/process the dict according to the previous version
@@ -182,7 +182,7 @@ class JobConfiguration(object):
     def _validate_mounts(self):
         """Ensures that the mounts are valid
 
-        :raises :class:`job.configuration.job.exceptions.InvalidJobConfiguration`: If the mounts are invalid
+        :raises :class:`job.configuration.exceptions.InvalidJobConfiguration`: If the mounts are invalid
         """
 
         for name, mount in self._configuration['mounts'].iteritems():
@@ -204,7 +204,7 @@ class JobConfiguration(object):
     def _validate_settings(self):
         """Ensures that the settings are valid
 
-        :raises :class:`job.configuration.job.exceptions.InvalidJobConfiguration`: If the settings are invalid
+        :raises :class:`job.configuration.exceptions.InvalidJobConfiguration`: If the settings are invalid
         """
 
         for setting_name, setting_value in self._configuration['settings'].iteritems():

@@ -16,10 +16,10 @@ import trigger.test.utils as trigger_test_utils
 from error.models import Error
 from job.configuration.data.exceptions import InvalidConnection
 from job.configuration.data.job_data import JobData
-from job.configuration.execution.job_parameter import DockerParam
-from job.configuration.execution.json.exe_config import ExecutionConfiguration, MODE_RO, MODE_RW
 from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.job_interface import JobInterface
+from job.configuration.job_parameter import DockerParam
+from job.configuration.json.execution.exe_config import ExecutionConfiguration, MODE_RO, MODE_RW
 from job.execution import container
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
 from job.models import Job, JobExecution, JobType, JobTypeRevision
