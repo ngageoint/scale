@@ -105,11 +105,11 @@ JOB_INTERFACE_SCHEMA = {
                 'name': {
                     'type': 'string',
                 },
-                'required': {
-                    'type': 'boolean',
-                },
                 'path': {
                     'type': 'string',
+                },
+                'required': {
+                    'type': 'boolean',
                 },
                 'mode': {
                     'type': 'string',
@@ -210,6 +210,7 @@ class JobInterface(object):
         :type definition: dict
         """
         self.definition = definition
+        self._mount_names = set()
         self._param_names = set()
 
         # Tuples used for validation with other classes
@@ -669,9 +670,9 @@ class JobInterface(object):
         """
 
         for mount in self.definition['mounts']:
-            if mount['name'] in self._param_names:
+            if mount['name'] in self._mount_names:
                 raise InvalidInterfaceDefinition('Mount names must be unique')
-            self._param_names.add(mount['name'])
+            self._mount_names.add(mount['name'])
 
     def _check_setting_name_uniqueness(self):
         """Ensures all the settings names are unique, and throws a

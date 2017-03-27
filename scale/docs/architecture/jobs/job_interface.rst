@@ -2,7 +2,7 @@
 .. _architecture_jobs_interface:
 
 Job Interface
-===============================================================================
+=============
 
 The job interface is a JSON document that defines the interface for executing
 the job's algorithm. It will describe the algorithm's inputs and outputs, as
@@ -79,8 +79,8 @@ Specification below.
 
 .. _architecture_jobs_interface_spec:
 
-Job Interface Specification Version 1.2
--------------------------------------------------------------------------------
+Job Interface Specification Version 1.4
+---------------------------------------
 
 A valid job interface is a JSON document with the following structure:
 
@@ -91,16 +91,25 @@ A valid job interface is a JSON document with the following structure:
       "command": STRING,
       "command_arguments": STRING,
       "env_vars": [
-        {
-          "name": STRING,
-          "value": STRING
-        }
+         {
+            "name": STRING,
+            "value": STRING
+         }
+      ],
+      "mounts": [
+         {
+            "name": STRING,
+            "path": STRING,
+            "required": true|false,
+            "mode": STRING
+         }
       ],
       "settings": [
-        {
-          'name': STRING,
-          'required': true|false
-        }
+         {
+            "name": STRING,
+            "required": true|false,
+            "secret": true|false
+         }
       ],
       "input_data": [
          {
@@ -154,7 +163,7 @@ A valid job interface is a JSON document with the following structure:
     that future changes to the specification will still accept the recipe definition.
 
     Scale must recognize the version number as valid for the recipe to work. Valid job interface versions are ``"1.0"``,
-    ``"1.1"``, and ``"1.2"``.
+    ``"1.1"``, ``"1.2"``, ``"1.3"`` and ``"1.4"``.
 
 **command**: JSON string
 
@@ -167,13 +176,12 @@ A valid job interface is a JSON document with the following structure:
     *command* when it is executed. Although required, *command_arguments* may be an empty string (i.e. ""). Scale will
     perform string substitution on special values denoted by the pattern *${...}*. You can indicate that an input should
     be passed on the command line by using *${INPUT NAME}*. The value that is substituted depends on the type of the
-    input. You can indicate that a setting should be passed on the command line by using *${SETTING NAME}*. If you need the
-    command line argument to be passed with a flag, you can use the following pattern: *${FLAG:INPUT NAME}*. There is also
-    a special substitution value
-    *${job_output_dir}*, which will be replaced with the absolute file system path of the output directory where the
-    algorithm may write its output files. The algorithm should produce a results manifest named "results_manifest.json".
-    The format for the results manifest can be found here: :ref:`algorithm_integration_results_manifest`. Any output
-    files must be registered in the results manifest.
+    input. You can indicate that a setting should be passed on the command line by using *${SETTING NAME}*. If you need
+    the command line argument to be passed with a flag, you can use the following pattern: *${FLAG:INPUT NAME}*. There
+    is also a special substitution value *${job_output_dir}*, which will be replaced with the absolute file system path
+    of the output directory where the algorithm may write its output files. The algorithm should produce a results
+    manifest named "results_manifest.json". The format for the results manifest can be found here:
+    :ref:`algorithm_integration_results_manifest`. Any output files must be registered in the results manifest.
 
 **env_vars**: JSON array
 
@@ -192,22 +200,54 @@ A valid job interface is a JSON document with the following structure:
         The *value* is a required string that defines the value of the environment variable to be set. Scale will apply
         the same string substitution as it does with *command_arguments*.
 
+**mounts**: JSON array
+
+    The *mounts* field is an optional list of JSON objects that define the directories that the algorithm needs mounted
+    into its container. If not provided, *mounts* defaults to an empty list.  The JSON object that represents each mount
+    has the following fields:
+
+    **name**: JSON string
+
+        The *name* is a required string that defines the unique name of the mount (used for reference).
+
+    **path**: JSON string
+
+        The *path* field is required and specifies the path within the running container onto which the needed directory
+        should be mounted. The algorithm will look in this path when it's running to access the needed mounted
+        directory. This path must be an absolute file system path.
+
+    **required**: JSON boolean
+
+        The *required* field is optional and indicates if the mount is required for the algorithm to run successfully.
+        If not provided, the *required* field defaults to *true*.
+
+    **mode**: JSON string
+
+        The *mode* is an optional string describing in what mode the directory will be mounted. There are two valid
+        values: "ro" for read-only mode and "rw" for read-write mode. If not provided, the *mode* field defaults to "ro"
+        .
+
 **settings**: JSON array
 
-    The *settings* field is an optional list of JSON objects that define the alogrithm settings that will be substituted
-    into the *command_arguments* and *env_vars* for the alogrithm. If not provided, *settings* defaults to
+    The *settings* field is an optional list of JSON objects that define the algorithm settings that will be substituted
+    into the *command_arguments* and *env_vars* for the algorithm. If not provided, *settings* defaults to
     an empty list.  The JSON object that represents each setting has the following fields:
 
     **name**: JSON string
 
-        The *name* is a required string that defines the name of the setting. The name of every setting, input, and output
-        in the interface must be unique. This name must only be composed of less than 256 of the following characters:
-        alphanumeric, " ", "_", and "-".
+        The *name* is a required string that defines the name of the setting. The name of every setting, input, and
+        output in the interface must be unique. This name must only be composed of less than 256 of the following
+        characters: alphanumeric, " ", "_", and "-".
 
     **required**: JSON boolean
 
-        The *required* field is optional and indicates if the input is required for the algorithm to run successfully.
+        The *required* field is optional and indicates if the setting is required for the algorithm to run successfully.
         If not provided, the *required* field defaults to *true*.
+
+    **secret**: JSON boolean
+
+        The *secret* field is optional and indicates if the setting will contain a secret value that needs to be
+        securely stored and transmitted (e.g. password). If not provided, the *secret* field defaults to *false*.
 
 **input_data**: JSON array
 
@@ -296,9 +336,9 @@ A valid job interface is a JSON document with the following structure:
 
     **name**: JSON string
 
-        The *name* is a required string that defines the name of the output. The name of every setting, input, and output
-        in the interface must be unique. This name must only be composed of less than 256 of the following characters:
-        alphanumeric, " ", "_", and "-".
+        The *name* is a required string that defines the name of the output. The name of every setting, input, and
+        output in the interface must be unique. This name must only be composed of less than 256 of the following
+        characters: alphanumeric, " ", "_", and "-".
 
     **required**: JSON boolean
 
