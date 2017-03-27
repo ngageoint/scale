@@ -13,7 +13,7 @@ from job.configuration.data.exceptions import InvalidData, InvalidConnection
 from job.configuration.interface import job_interface_1_3 as previous_interface
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.scale_file import ScaleFileDescription
-from job.configuration.exceptions import MissingSetting
+from job.configuration.exceptions import MissingMount, MissingSetting
 from job.configuration.results.exceptions import InvalidResultsManifest
 from job.configuration.results.results_manifest.results_manifest import ResultsManifest
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
@@ -572,6 +572,34 @@ class JobInterface(object):
         warnings.extend(job_data.validate_properties(self._property_validation_dict))
         warnings.extend(job_data.validate_output_files(self._output_file_validation_list))
         return warnings
+
+    def validate_populated_mounts(self, job_configuration):
+        """Ensures that all required mounts are defined in the job_configuration
+
+        :param job_configuration: The job configuration
+        :type job_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        """
+
+        # TODO: this currently checks mount container paths to detect if required mounts have been provided to this
+        # execution. After the execution configuration gets refactored (with mount configurations added) we can directly
+        # check the mount names included
+        interface_mounts = self.definition['mounts']
+
+        for mount in interface_mounts:
+            mount_name = mount['name']
+            container_path = mount['path']
+            mount_is_required = mount['required']
+
+            if mount_is_required:
+                mount_is_provided = False
+                for docker_param in job_configuration.get_job_task_docker_params():
+                    if docker_param.flag == 'volume':
+                        param_path = docker_param.value.split(':')[1]
+                        if container_path == param_path:
+                            mount_is_provided = True
+                            break
+                if not mount_is_provided:
+                    raise MissingMount('Required mount %s was not provided' % mount_name)
 
     def validate_populated_settings(self, job_configuration):
         """Ensures that all required settings are defined in the job_configuration

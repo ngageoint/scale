@@ -13,7 +13,7 @@ from job.configuration.data.job_connection import JobConnection
 from job.configuration.data.job_data import JobData
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.job_interface import JobInterface
-from job.configuration.exceptions import MissingSetting
+from job.configuration.exceptions import MissingMount, MissingSetting
 from job.configuration.json.execution.exe_config import ExecutionConfiguration
 from job.configuration.results.exceptions import InvalidResultsManifest
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
@@ -998,6 +998,49 @@ class TestJobInterfacePreSteps(TestCase):
         env_vars_value2 = env_vars_arguments[1]['value']
         self.assertEqual(env_vars_value1, config_key_value[0], 'expected a different command from pre_steps')
         self.assertEqual(env_vars_value2, '', 'expected a different command from pre_steps')
+
+    def test_validate_populated_mounts_all_provided(self):
+        """Tests the validation of required mounts when all required mounts are provided"""
+
+        job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
+
+        job_interface_dict['version'] = '1.4'
+        job_interface_dict['mounts'] = [{'name': 'mount_1', 'required': True, 'path': '/path/1', 'mode': 'ro'},
+                                        {'name': 'mount_2', 'required': False, 'path': '/path/2', 'mode': 'rw'}]
+        # The only required mount is provided
+        job_config_json = {'mounts': {'mount_1': {'type': 'host', 'host_path': '/host/path'}}}
+
+        job_type = job_test_utils.create_job_type(interface=job_interface_dict)
+        job_type.configuration = job_config_json
+        job_type.save()
+        job_exe = job_test_utils.create_job_exe(job_type=job_type)
+        exe_configuration = ExecutionConfiguration()
+        exe_configuration.populate_mounts(job_exe)
+
+        job_interface = JobInterface(job_interface_dict)
+        # No exception means success
+        job_interface.validate_populated_mounts(exe_configuration)
+
+    def test_validate_populated_mounts_missing_required(self):
+        """Tests the validation of required mounts when a required mount is missing"""
+
+        job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
+
+        job_interface_dict['version'] = '1.4'
+        job_interface_dict['mounts'] = [{'name': 'mount_1', 'required': True, 'path': '/path/1', 'mode': 'ro'},
+                                        {'name': 'mount_2', 'required': True, 'path': '/path/2', 'mode': 'rw'}]
+        # The second mount is required, but not provided
+        job_config_json = {'mounts': {'mount_1': {'type': 'host', 'host_path': '/host/path'}}}
+
+        job_type = job_test_utils.create_job_type(interface=job_interface_dict)
+        job_type.configuration = job_config_json
+        job_type.save()
+        job_exe = job_test_utils.create_job_exe(job_type=job_type)
+        exe_configuration = ExecutionConfiguration()
+        exe_configuration.populate_mounts(job_exe)
+
+        job_interface = JobInterface(job_interface_dict)
+        self.assertRaises(MissingMount, job_interface.validate_populated_mounts, exe_configuration)
 
     @patch('scheduler.vault.manager.SecretsManager.retrieve_job_type_secrets')
     def test_validate_populated_settings(self, mock_secrets_mgr):

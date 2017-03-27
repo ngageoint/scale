@@ -18,6 +18,27 @@ class InvalidJobConfiguration(Exception):
     pass
 
 
+class MissingMount(ScaleError):
+    """Error class indicating that a required mount volume is missing
+    """
+
+    def __init__(self, name):
+        """Constructor
+
+        :param name: The name of the missing mount
+        :type name: string
+        """
+
+        super(MissingMount, self).__init__(10, 'missing-mount')
+        self.name = name
+
+    def get_log_message(self):
+        """See :meth:`error.exceptions.ScaleError.get_log_message`
+        """
+
+        return 'Required mount %s was not provided' % self.name
+
+
 class MissingSetting(ScaleError):
     """Error class indicating that a required setting value is missing
     """
