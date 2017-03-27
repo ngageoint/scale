@@ -159,7 +159,7 @@ A valid job interface is a JSON document with the following structure:
     The *version* is an optional string value that defines the version of the definition specification used. This allows
     updates to be made to the specification while maintaining backwards compatibility by allowing Scale to recognize an
     older version and convert it to the current version. The default value for *version* if it is not included is the
-    latest version, which is currently 1.2. It is recommended, though not required, that you include the *version* so
+    latest version, which is currently 1.4. It is recommended, though not required, that you include the *version* so
     that future changes to the specification will still accept the recipe definition.
 
     Scale must recognize the version number as valid for the recipe to work. Valid job interface versions are ``"1.0"``,
