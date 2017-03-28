@@ -28,6 +28,7 @@
 			"max_tries": 3,
 			"cpus_required": 0.5,
 			"mem_required": 1024.0,
+			"shared_mem_required": 0.0,
 			"disk_out_const_required": 0.0,
 			"disk_out_mult_required": 0.0,
 			"created": "2015-06-01T00:00:00.0Z",

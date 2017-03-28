@@ -37,6 +37,7 @@ class JobTypeSerializer(JobTypeBaseSerializer):
     max_tries = serializers.IntegerField()
     cpus_required = serializers.FloatField()
     mem_required = serializers.FloatField()
+    shared_mem_required = serializers.FloatField()
     disk_out_const_required = serializers.FloatField()
     disk_out_mult_required = serializers.FloatField()
 

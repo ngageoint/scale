@@ -115,6 +115,9 @@ These services provide access to information about job types.
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .mem_required            | Decimal           | The amount of RAM in MiB needed for a job of this type.                  |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
+| .shared_mem_required     | Decimal           | The amount of shared memory (/dev/shm) in MiB needed for a job of this   |
+|                          |                   | type.                                                                    |
++--------------------------+-------------------+--------------------------------------------------------------------------+
 | .disk_out_const_required | Decimal           | A constant amount of disk space in MiB required for job output.          |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .disk_out_mult_required  | Decimal           | A multiplier (2x = 2.0) applied to the size of the input files to        |
@@ -160,6 +163,7 @@ These services provide access to information about job types.
 |                "max_tries": 0,                                                                                          |
 |                "cpus_required": 0.5,                                                                                    |
 |                "mem_required": 64.0,                                                                                    |
+|                "shared_mem_required": 0.0,                                                                              |
 |                "disk_out_const_required": 64.0,                                                                         |
 |                "disk_out_mult_required": 0.0,                                                                           |
 |                "created": "2015-03-11T00:00:00Z",                                                                       |
@@ -225,6 +229,9 @@ These services provide access to information about job types.
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | mem_required            | Decimal           | Optional | The amount of RAM in MiB needed for a job of this type.        |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
+| shared_mem_required     | Decimal           | Optional | The amount of shared memory (/dev/shm) in MiB needed for a job |
+|                         |                   |          | of this type.                                                  |
++-------------------------+-------------------+----------+----------------------------------------------------------------+
 | disk_out_const_required | Decimal           | Optional | A constant amount of disk space in MiB required for job output.|
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | disk_out_mult_required  | Decimal           | Optional | A multiplier (2x = 2.0) applied to the size of input files to  |
@@ -261,6 +268,7 @@ These services provide access to information about job types.
 |        "max_tries": 0,                                                                                                  |
 |        "cpus_required": 0.5,                                                                                            |
 |        "mem_required": 64.0,                                                                                            |
+|        "shared_mem_required": 0.0,                                                                                      |
 |        "disk_out_const_required": 64.0,                                                                                 |
 |        "disk_out_mult_required": 0.0,                                                                                   |
 |        "interface": {                                                                                                   |
@@ -340,6 +348,7 @@ These services provide access to information about job types.
 |        "max_tries": 0,                                                                                                  |
 |        "cpus_required": 0.5,                                                                                            |
 |        "mem_required": 64.0,                                                                                            |
+|        "shared_mem_required": 0.0,                                                                                      |
 |        "disk_out_const_required": 64.0,                                                                                 |
 |        "disk_out_mult_required": 0.0,                                                                                   |
 |        "created": "2015-03-11T00:00:00Z",                                                                               |
@@ -408,6 +417,9 @@ These services provide access to information about job types.
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | mem_required            | Decimal           | Optional | The amount of RAM in MiB needed for a job of this type.        |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
+| shared_mem_required     | Decimal           | Optional | The amount of shared memory (/dev/shm) in MiB needed for a job |
+|                         |                   |          | of this type.                                                  |
++-------------------------+-------------------+----------+----------------------------------------------------------------+
 | disk_out_const_required | Decimal           | Optional | A constant amount of disk space in MiB required for job output.|
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | disk_out_mult_required  | Decimal           | Optional | A multiplier (2x = 2.0) applied to the size of input files to  |
@@ -444,6 +456,7 @@ These services provide access to information about job types.
 |        "max_tries": 0,                                                                                                  |
 |        "cpus_required": 0.5,                                                                                            |
 |        "mem_required": 64.0,                                                                                            |
+|        "shared_mem_required": 0.0,                                                                                      |
 |        "disk_out_const_required": 64.0,                                                                                 |
 |        "disk_out_mult_required": 0.0,                                                                                   |
 |        "interface": {                                                                                                   |
@@ -577,6 +590,9 @@ These services provide access to information about job types.
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | mem_required             | Decimal           | The amount of RAM in MiB needed for a job of this type.                  |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
+| shared_mem_required      | Decimal           | The amount of shared memory (/dev/shm) in MiB needed for a job of this   |
+|                          |                   | type.                                                                    |
++--------------------------+-------------------+--------------------------------------------------------------------------+
 | disk_out_const_required  | Decimal           | A constant amount of disk space in MiB required for job output.          |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | disk_out_mult_required   | Decimal           | A multiplier (2x = 2.0) applied to the size of the input files to        |
@@ -660,6 +676,7 @@ These services provide access to information about job types.
 |        "max_tries": 0,                                                                                                  |
 |        "cpus_required": 0.5,                                                                                            |
 |        "mem_required": 64.0,                                                                                            |
+|        "shared_mem_required": 0.0,                                                                                      |
 |        "disk_out_const_required": 64.0,                                                                                 |
 |        "disk_out_mult_required": 0.0,                                                                                   |
 |        "created": "2015-03-11T00:00:00Z",                                                                               |
@@ -766,6 +783,9 @@ These services provide access to information about job types.
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | mem_required            | Decimal           | Optional | The amount of RAM in MiB needed for a job of this type.        |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
+| shared_mem_required     | Decimal           | Optional | The amount of shared memory (/dev/shm) in MiB needed for a job |
+|                         |                   |          | of this type.                                                  |
++-------------------------+-------------------+----------+----------------------------------------------------------------+
 | disk_out_const_required | Decimal           | Optional | A constant amount of disk space in MiB required for job output.|
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | disk_out_mult_required  | Decimal           | Optional | A multiplier (2x = 2.0) applied to the size of input files to  |
@@ -801,6 +821,7 @@ These services provide access to information about job types.
 |        "max_tries": 0,                                                                                                  |
 |        "cpus_required": 0.5,                                                                                            |
 |        "mem_required": 64.0,                                                                                            |
+|        "shared_mem_required": 0.0,                                                                                      |
 |        "disk_out_const_required": 64.0,                                                                                 |
 |        "disk_out_mult_required": 0.0,                                                                                   |
 |        "interface": {                                                                                                   |
@@ -878,6 +899,7 @@ These services provide access to information about job types.
 |        "max_tries": 0,                                                                                                  |
 |        "cpus_required": 0.5,                                                                                            |
 |        "mem_required": 64.0,                                                                                            |
+|        "shared_mem_required": 0.0,                                                                                      |
 |        "disk_out_const_required": 64.0,                                                                                 |
 |        "disk_out_mult_required": 0.0,                                                                                   |
 |        "created": "2015-03-11T00:00:00Z",                                                                               |
