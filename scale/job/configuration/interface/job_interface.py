@@ -491,14 +491,14 @@ class JobInterface(object):
 
         return command_arguments
 
-    def populate_command_argument_settings(self, command_arguments, job_configuration, job_type):
+    def populate_command_argument_settings(self, command_arguments, exe_configuration, job_type):
         """Return the command arguments string,
-        populated with the settings from the job_configuration.
+        populated with the settings from the exe_configuration.
 
         :param command_arguments: The command_arguments that you want to perform the replacement on
         :type command_arguments: string
-        :param job_configuration: The job configuration
-        :type job_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :param exe_configuration: The execution configuration
+        :type exe_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         :param job_type: The job type definition 
         :type job_type: :class:`job.models.JobType`
         :return: command arguments with the settings populated
@@ -508,18 +508,18 @@ class JobInterface(object):
         interface_settings = self.definition['settings']
 
         param_replacements = self._get_settings_values(interface_settings,
-                                                       job_configuration,
+                                                       exe_configuration,
                                                        job_type)
 
         command_arguments = self._replace_command_parameters(command_arguments, param_replacements)
 
         return command_arguments
 
-    def populate_env_vars_arguments(self, job_configuration, job_type):
+    def populate_env_vars_arguments(self, exe_configuration, job_type):
         """Populates the environment variables with the requested values.
 
-        :param job_configuration: The job configuration
-        :type job_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :param exe_configuration: The execution configuration
+        :type exe_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         :param job_type: The job type definition 
         :type job_type: :class:`job.models.JobType`
 
@@ -531,7 +531,7 @@ class JobInterface(object):
         interface_settings = self.definition['settings']
 
         param_replacements = self._get_settings_values(interface_settings,
-                                                       job_configuration,
+                                                       exe_configuration,
                                                        job_type)
         env_vars = self._replace_env_var_parameters(env_vars, param_replacements)
 
@@ -574,11 +574,11 @@ class JobInterface(object):
         warnings.extend(job_data.validate_output_files(self._output_file_validation_list))
         return warnings
 
-    def validate_populated_mounts(self, job_configuration):
-        """Ensures that all required mounts are defined in the job_configuration
+    def validate_populated_mounts(self, exe_configuration):
+        """Ensures that all required mounts are defined in the execution configuration
 
-        :param job_configuration: The job configuration
-        :type job_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :param exe_configuration: The execution configuration
+        :type exe_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         """
 
         # TODO: this currently checks mount container paths to detect if required mounts have been provided to this
@@ -593,7 +593,7 @@ class JobInterface(object):
 
             if mount_is_required:
                 mount_is_provided = False
-                for docker_param in job_configuration.get_job_task_docker_params():
+                for docker_param in exe_configuration.get_job_task_docker_params():
                     if docker_param.flag == 'volume':
                         param_path = docker_param.value.split(':')[1]
                         if container_path == param_path:
@@ -602,15 +602,15 @@ class JobInterface(object):
                 if not mount_is_provided:
                     raise MissingMount('Required mount %s was not provided' % mount_name)
 
-    def validate_populated_settings(self, job_configuration):
-        """Ensures that all required settings are defined in the job_configuration
+    def validate_populated_settings(self, exe_configuration):
+        """Ensures that all required settings are defined in the execution configuration
 
-        :param job_configuration: The job configuration
-        :type job_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :param exe_configuration: The execution configuration
+        :type exe_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         """
 
         interface_settings = self.definition['settings']
-        config_setting_names = [setting.name for setting in job_configuration.get_job_task_settings()]
+        config_setting_names = [setting.name for setting in exe_configuration.get_job_task_settings()]
 
         for setting in interface_settings:
             setting_name = setting['name']
@@ -764,17 +764,17 @@ class JobInterface(object):
             if data_item_name == output_data['name']:
                 return output_data
 
-    def _get_settings_values(self, settings, job_configuration, job_type):
+    def _get_settings_values(self, settings, exe_configuration, job_type):
         """
-        :param settings: The job configuration
+        :param settings: The settings
         :type settings: JSON
-        :param job_configuration: The job configuration
-        :type job_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :param exe_configuration: The execution configuration
+        :type exe_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         :return: settings name and the value to replace it with
         :rtype: dict
         """
 
-        config_settings = job_configuration.get_dict()
+        config_settings = exe_configuration.get_dict()
         param_replacements = {}
         secret_settings = {}
 
@@ -796,7 +796,7 @@ class JobInterface(object):
 
                 if setting_name in secret_settings.keys():
                     settings_value = secret_settings[setting_name]
-                    job_configuration.add_job_task_setting(setting_name, '*****')
+                    exe_configuration.add_job_task_setting(setting_name, '*****')
                     param_replacements[setting_name] = settings_value
                 else:
                     param_replacements[setting_name] = ''
