@@ -36,7 +36,7 @@
   
     <link rel="top" title="Scale 4.3.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="job.test.configuration package" href="job.test.configuration.html"/>
-        <link rel="next" title="job.test.configuration.results package" href="job.test.configuration.results.html"/>
+        <link rel="next" title="job.test.configuration.json package" href="job.test.configuration.json.html"/>
         <link rel="prev" title="job.test.configuration.data package" href="job.test.configuration.data.html"/> 
 
   
@@ -139,6 +139,7 @@
 <li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vault.html">vault package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="manage.html">manage module</a></li>
 </ul>
 </li>
@@ -228,17 +229,17 @@
 <div class="section" id="module-job.test.configuration.interface.test_configuration_interface">
 <span id="job-test-configuration-interface-test-configuration-interface-module"></span><h2>job.test.configuration.interface.test_configuration_interface module<a class="headerlink" href="#module-job.test.configuration.interface.test_configuration_interface" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="job.test.configuration.interface.test_configuration_interface.TestJobTypeConfiguration">
-<em class="property">class </em><code class="descclassname">job.test.configuration.interface.test_configuration_interface.</code><code class="descname">TestJobTypeConfiguration</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_configuration_interface.TestJobTypeConfiguration" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.configuration.interface.test_configuration_interface.TestJobConfiguration">
+<em class="property">class </em><code class="descclassname">job.test.configuration.interface.test_configuration_interface.</code><code class="descname">TestJobConfiguration</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_configuration_interface.TestJobConfiguration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
 <dl class="method">
-<dt id="job.test.configuration.interface.test_configuration_interface.TestJobTypeConfiguration.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_configuration_interface.TestJobTypeConfiguration.setUp" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.configuration.interface.test_configuration_interface.TestJobConfiguration.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_configuration_interface.TestJobConfiguration.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="job.test.configuration.interface.test_configuration_interface.TestJobTypeConfiguration.test_init_validation">
-<code class="descname">test_init_validation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_configuration_interface.TestJobTypeConfiguration.test_init_validation" title="Permalink to this definition">¶</a></dt>
+<dt id="job.test.configuration.interface.test_configuration_interface.TestJobConfiguration.test_init_validation">
+<code class="descname">test_init_validation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_configuration_interface.TestJobConfiguration.test_init_validation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests the validation done in __init__</p>
 </dd></dl>
 
@@ -518,6 +519,18 @@
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps.test_validate_populated_mounts_all_provided">
+<code class="descname">test_validate_populated_mounts_all_provided</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps.test_validate_populated_mounts_all_provided" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests the validation of required mounts when all required mounts are provided</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps.test_validate_populated_mounts_missing_required">
+<code class="descname">test_validate_populated_mounts_missing_required</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps.test_validate_populated_mounts_missing_required" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests the validation of required mounts when a required mount is missing</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps.test_validate_populated_settings">
 <code class="descname">test_validate_populated_settings</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.interface.test_job_interface.TestJobInterfacePreSteps.test_validate_populated_settings" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests the validation of required settings defined in the job_interface</p>
@@ -710,7 +723,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="job.test.configuration.results.html" class="btn btn-neutral float-right" title="job.test.configuration.results package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="job.test.configuration.json.html" class="btn btn-neutral float-right" title="job.test.configuration.json package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="job.test.configuration.data.html" class="btn btn-neutral" title="job.test.configuration.data package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

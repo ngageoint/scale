@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>job.configuration.environment package &mdash; Scale 4.3.0-snapshot documentation</title>
+  <title>job.test.configuration.json package &mdash; Scale 4.3.0-snapshot documentation</title>
   
 
   
@@ -35,9 +35,9 @@
 
   
     <link rel="top" title="Scale 4.3.0-snapshot documentation" href="../../../index.html"/>
-        <link rel="up" title="job.configuration package" href="job.configuration.html"/>
-        <link rel="next" title="job.configuration.interface package" href="job.configuration.interface.html"/>
-        <link rel="prev" title="job.configuration.data package" href="job.configuration.data.html"/> 
+        <link rel="up" title="job.test.configuration package" href="job.test.configuration.html"/>
+        <link rel="next" title="job.test.configuration.json.execution package" href="job.test.configuration.json.execution.html"/>
+        <link rel="prev" title="job.test.configuration.interface package" href="job.test.configuration.interface.html"/> 
 
   
   <script src="../../../_static/js/modernizr.min.js"></script>
@@ -139,6 +139,7 @@
 <li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vault.html">vault package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="manage.html">manage module</a></li>
 </ul>
 </li>
@@ -197,15 +198,17 @@
         
           <li><a href="job.html">job package</a> &raquo;</li>
         
-          <li><a href="job.configuration.html">job.configuration package</a> &raquo;</li>
+          <li><a href="job.test.html">job.test package</a> &raquo;</li>
         
-      <li>job.configuration.environment package</li>
+          <li><a href="job.test.configuration.html">job.test.configuration package</a> &raquo;</li>
+        
+      <li>job.test.configuration.json package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/job.configuration.environment.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/job.test.configuration.json.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -218,41 +221,29 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="job-configuration-environment-package">
-<h1>job.configuration.environment package<a class="headerlink" href="#job-configuration-environment-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="job-test-configuration-json-package">
+<h1>job.test.configuration.json package<a class="headerlink" href="#job-test-configuration-json-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="job.test.configuration.json.execution.html">job.test.configuration.json.execution package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="job.test.configuration.json.execution.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.test.configuration.json.execution.html#module-job.test.configuration.json.execution.test_exe_config">job.test.configuration.json.execution.test_exe_config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.test.configuration.json.execution.html#module-job.test.configuration.json.execution">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="job.test.configuration.json.job.html">job.test.configuration.json.job package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="job.test.configuration.json.job.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.test.configuration.json.job.html#module-job.test.configuration.json.job.test_job_config">job.test.configuration.json.job.test_job_config module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.test.configuration.json.job.html#module-job.test.configuration.json.job">Module contents</a></li>
+</ul>
+</li>
+</ul>
 </div>
-<div class="section" id="module-job.configuration.environment.job_environment">
-<span id="job-configuration-environment-job-environment-module"></span><h2>job.configuration.environment.job_environment module<a class="headerlink" href="#module-job.configuration.environment.job_environment" title="Permalink to this headline">¶</a></h2>
-<p>Defines the shared resources for a given job execution</p>
-<dl class="class">
-<dt id="job.configuration.environment.job_environment.JobEnvironment">
-<em class="property">class </em><code class="descclassname">job.configuration.environment.job_environment.</code><code class="descname">JobEnvironment</code><span class="sig-paren">(</span><em>json_env</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.environment.job_environment.JobEnvironment" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Represents the shared resources available for a given job execution.  If the environment is invalid, a
-<code class="xref py py-class docutils literal"><span class="pre">job.configuration.environment.exceptions.InvalidJobEnvirnoment</span></code> exception will be thrown.</p>
-<dl class="method">
-<dt id="job.configuration.environment.job_environment.JobEnvironment.get_dict">
-<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.environment.job_environment.JobEnvironment.get_dict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the internal dictionary that represents this job environment</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The dictionary representing the environment</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
 </div>
-<div class="section" id="module-job.configuration.environment">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-job.configuration.environment" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-job.test.configuration.json">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-job.test.configuration.json" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -266,10 +257,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="job.configuration.interface.html" class="btn btn-neutral float-right" title="job.configuration.interface package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="job.test.configuration.json.execution.html" class="btn btn-neutral float-right" title="job.test.configuration.json.execution package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="job.configuration.data.html" class="btn btn-neutral" title="job.configuration.data package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="job.test.configuration.interface.html" class="btn btn-neutral" title="job.test.configuration.interface package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

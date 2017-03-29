@@ -29,4 +29,5 @@ system. Source code documentation for every app is provided below:
    code_docs/storage
    code_docs/trigger
    code_docs/util
+   code_docs/vault
    code_docs/manage

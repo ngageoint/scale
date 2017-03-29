@@ -6,9 +6,9 @@ Subpackages
 
 .. toctree::
 
-    job.test.configuration.configuration
     job.test.configuration.data
     job.test.configuration.interface
+    job.test.configuration.json
     job.test.configuration.results
 
 Module contents

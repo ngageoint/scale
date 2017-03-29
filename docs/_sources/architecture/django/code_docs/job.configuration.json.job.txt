@@ -1,0 +1,30 @@
+job.configuration.json.job package
+==================================
+
+Submodules
+----------
+
+job.configuration.json.job.job_config module
+--------------------------------------------
+
+.. automodule:: job.configuration.json.job.job_config
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job.configuration.json.job.job_config_1_0 module
+------------------------------------------------
+
+.. automodule:: job.configuration.json.job.job_config_1_0
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: job.configuration.json.job
+    :members:
+    :undoc-members:
+    :show-inheritance:

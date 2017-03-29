@@ -4,13 +4,29 @@
 Job Configuration
 ========================================================================================================================
 
-The job configuration is a JSON document that defines the environment and configuration on which a specific job
-execution will run. This configuration includes information such as Docker parameters required by the job execution's
-container. This JSON schema is used internally by the Scale system and is not exposed through the REST API.
+The job configuration is a JSON document that provides a user-defined configuration for running a job.
+
+**Example job configuration:**
+
+.. code-block:: javascript
+
+  {
+     "version": "2.0",
+     "mounts": {
+        "dted": {"type": "host", "host_path": "/path/to/dted"}
+     },
+     "settings": {
+        "DB_HOST": "scale"
+     }
+  }
+
+In this example a host mount is defined to provide a needed directory for the job's algorithm (called "dted" in the
+job's interface). *DB_HOST* is the name for a setting that will be added to the job_task of the
+:ref:`architecture_jobs_exe_configuration` as a setting when a job is scheduled, along with the value that follows.
 
 .. _architecture_jobs_job_configuration_spec:
 
-Job Configuration Specification Version 1.1
+Job Configuration Specification Version 2.0
 ------------------------------------------------------------------------------------------------------------------------
 
 A valid job configuration is a JSON document with the following structure:
@@ -19,21 +35,9 @@ A valid job configuration is a JSON document with the following structure:
 
    {
       "version": STRING,
-      "pre_task": {
-         "docker_params": [{"flag": STRING, "value": STRING}],
-         "settings": [{"name": STRING, "value": STRING}],
-         "workspaces": [{"name": STRING, "mode": STRING}]
-      },
-      "job_task": {
-         "docker_params": [{"flag": STRING, "value": STRING}],
-         "settings": [{"name": STRING, "value": STRING}],
-         "workspaces": [{"name": STRING, "mode": STRING}]
-      },
-      "post_task": {
-         "docker_params": [{"flag": STRING, "value": STRING}],
-         "settings": [{"name": STRING, "value": STRING}],
-         "workspaces": [{"name": STRING, "mode": STRING}]
-      }
+      "mounts": {STRING: {"type": "host", "host_path": STRING},
+                 STRING: {"type": "volume", "driver": STRING, "driver_opts": {STRING: STRING}}},
+      "settings": {STRING: STRING}
    }
 
 **version**: JSON string
@@ -41,67 +45,86 @@ A valid job configuration is a JSON document with the following structure:
     The *version* is an optional string value that defines the version of the configuration specification used. This
     allows updates to be made to the specification while maintaining backwards compatibility by allowing Scale to
     recognize an older version and convert it to the current version. The default value for *version* if it is not
-    included is the latest version, which is currently 1.1.
+    included is the latest version, which is currently 2.0.
 
-    Scale must recognize the version number as valid for the job to work. Valid job configuration versions are
-    ``"1.0"`` and ``"1.1"``.
+    Scale must recognize the version number as valid for the job type to work. Currently, the only valid job
+    configuration versions are ``"1.0"`` and ``"2.0"``.
 
-**pre_task**: JSON object
+**mounts**: JSON object
 
-    The *pre_task* is a JSON object that defines the workspaces and Docker parameters to use for the pre task. It has
-    the following fields:
+    The *mounts* field is a JSON object that contains the mount names and their configuration as key/value pairs. Each
+    mount configuration is its own JSON object with the following fields:
 
-    **docker_params**: JSON array
+    **type**: JSON string
 
-        The *docker_params* field is a required list of JSON objects that define the parameters to pass to Docker. Each
-        JSON object has the following fields:
+        The *type* is a required string that specifies the type of mount to use. The other fields that configure
+        the mount are based upon the *type* field. The valid mount types are:
 
-        **flag**: JSON string
+        **host**
 
-            The *flag* is a required string describing the command line flag (long form) to use for passing the
-            parameter without the preceding dashes (e.g. use "volume" for passing "--volume=...").
+            A "host" mount mounts a local directory from the host into the job's container. Usually this local directory
+            is a shared file system that has been mounted onto the host.
 
-        **value**: JSON string
+        **volume**
 
-            The *value* is a required string describing the value to pass to the parameter on the Docker command line.
+            A "volume" mount uses a created Docker volume to mount into the job's container, typically specifying a
+            driver that provides access to some type of shared network file system.
 
-    **settings**: JSON array
+        Additional mount fields may be required depending on the type of mount selected. See below for more
+        information on each mount type.
 
-        The *settings* field is an optional list of JSON objects that define the settings to pass to the pre task
-        portion of a job. Each JSON object has the following fields:
+**settings**: JSON object
 
-        **name**: JSON string
+    The *settings* is a JSON object that contains the setting names and their values as key/value pairs.
 
-            The *name* is a required string describing the name of the setting. The name is used to identify the setting
-            within command line arguments or environment variables that should receive the setting's value.
+Host Mount
+------------------------------------------------------------------------------------------------------------------------
 
-        **value**: JSON string
+The host mount mounts a local directory from the host into the job's container. This local directory should be a shared
+file system that has been mounted onto all hosts in the cluster. All hosts must have the same shared file system mounted
+at the same location for this mount to work properly.
 
-            The *value* is a required string describing the value to pass to the setting.
+**Security**
 
-    **workspaces**: JSON array
+There are potential security risks involved with mounting a host directory into a Docker container. Please consult the
+Docker documentation for more information.
 
-        The *workspaces* field is a required list of JSON objects that define the workspaces used by the task. Each JSON
-        object has the following fields:
+Example host mount configuration:
 
-        **name**: JSON string
+.. code-block:: javascript
 
-            The *name* is a required string defining the unique name of the workspace.
+   {
+      "version": "2.0",
+      "mounts": {"my-mount": {"type": "host", "host_path": "/the/host/path"}}
+   }
 
-        **mode**: JSON string
+The host mount requires one additional field in its configuration:
 
-            The *mode* is a required string describing in what mode the workspace will be used. There are two valid
-            values: "ro" for read-only mode and "rw" for read-write mode.
+**host_path**: JSON string
 
-**job_task**: JSON object
+    The *host_path* is a required string that specifies the absolute path of the host's local directory that should be
+    mounted into the job's container.
 
-    The *job_task* is a JSON object that defines the workspaces and Docker parameters to use for the job task (which
-    performs the primary job/algorithm). It is identical in structure to *pre_task*.
+Volume Mount
+------------------------------------------------------------------------------------------------------------------------
 
-    The *job_task* *settings* values will be inserted into the job's *command_arguments* string if a matching settings
-    *name* appears in the *command_arguments*.
+The volume mount creates a new named Docker volume and mounts it into the job's container.
 
-**post_task**: JSON object
+Example volume mount configuration:
 
-    The *post_task* is a JSON object that defines the workspaces and Docker parameters to use for the post task. It is
-    identical in structure to *pre_task*.
+.. code-block:: javascript
+
+   {
+      "version": "2.0",
+      "mounts": {"my-mount": {"type": "volume", "driver": "my-driver", "driver_opts": {"foo": "bar"}}}
+   }
+
+The volume mount uses these additional fields in its configuration:
+
+**driver**: JSON string
+
+    The *driver* is an optional string that specifies the Docker volume driver to use.
+
+**driver_opts**: JSON object
+
+    The *driver_opts* is an optional object that specifies the Docker driver options to use as key/value pairs.

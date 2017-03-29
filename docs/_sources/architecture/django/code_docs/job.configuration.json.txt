@@ -1,0 +1,18 @@
+job.configuration.json package
+==============================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    job.configuration.json.execution
+    job.configuration.json.job
+
+Module contents
+---------------
+
+.. automodule:: job.configuration.json
+    :members:
+    :undoc-members:
+    :show-inheritance:

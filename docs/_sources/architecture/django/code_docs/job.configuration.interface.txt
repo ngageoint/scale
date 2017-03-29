@@ -52,10 +52,10 @@ job.configuration.interface.job_interface_1_2 module
     :undoc-members:
     :show-inheritance:
 
-job.configuration.interface.job_type_configuration module
----------------------------------------------------------
+job.configuration.interface.job_interface_1_3 module
+----------------------------------------------------
 
-.. automodule:: job.configuration.interface.job_type_configuration
+.. automodule:: job.configuration.interface.job_interface_1_3
     :members:
     :undoc-members:
     :show-inheritance:

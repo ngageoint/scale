@@ -137,6 +137,7 @@
 <li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vault.html">vault package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="manage.html">manage module</a></li>
 </ul>
 </li>
@@ -830,7 +831,7 @@ job_exe, and queue models are saved in the database in an atomic transaction.</p
 <li><strong>job_type</strong> (<a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>) &#8211; The type of the new job to create and queue</li>
 <li><strong>data</strong> (<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.JobData" title="job.configuration.data.job_data.JobData"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.JobData</span></code></a>) &#8211; The job data to run on</li>
 <li><strong>event</strong> (<a class="reference internal" href="trigger.html#trigger.models.TriggerEvent" title="trigger.models.TriggerEvent"><code class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerEvent</span></code></a>) &#8211; The event that triggered the creation of this job</li>
-<li><strong>configuration</strong> (<a class="reference internal" href="job.configuration.configuration.html#job.configuration.configuration.job_configuration.JobConfiguration" title="job.configuration.configuration.job_configuration.JobConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.configuration.job_configuration.JobConfiguration</span></code></a>) &#8211; The optional initial job configuration</li>
+<li><strong>configuration</strong> (<a class="reference internal" href="job.configuration.json.execution.html#job.configuration.json.execution.exe_config.ExecutionConfiguration" title="job.configuration.json.execution.exe_config.ExecutionConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.json.execution.exe_config.ExecutionConfiguration</span></code></a>) &#8211; The optional initial execution configuration</li>
 </ul>
 </td>
 </tr>

@@ -13,8 +13,8 @@ jobs that allow jobs to depend upon one another and for files produced by one jo
    batch_definition
    error_interface
    job_interface
-   job_type_configuration
-   job_data
    job_configuration
+   job_data
+   exe_configuration
    recipe_definition
    recipe_data

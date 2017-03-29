@@ -1,0 +1,22 @@
+job.test.configuration.json.job package
+=======================================
+
+Submodules
+----------
+
+job.test.configuration.json.job.test_job_config module
+------------------------------------------------------
+
+.. automodule:: job.test.configuration.json.job.test_job_config
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: job.test.configuration.json.job
+    :members:
+    :undoc-members:
+    :show-inheritance:

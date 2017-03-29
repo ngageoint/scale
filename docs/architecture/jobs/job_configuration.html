@@ -36,8 +36,8 @@
   
     <link rel="top" title="Scale 4.3.0-snapshot documentation" href="../../index.html"/>
         <link rel="up" title="Jobs and Recipes" href="index.html"/>
-        <link rel="next" title="Recipe Definition" href="recipe_definition.html"/>
-        <link rel="prev" title="Job Data" href="job_data.html"/> 
+        <link rel="next" title="Job Data" href="job_data.html"/>
+        <link rel="prev" title="Job Interface" href="job_interface.html"/> 
 
   
   <script src="../../_static/js/modernizr.min.js"></script>
@@ -103,12 +103,14 @@
 <li class="toctree-l3"><a class="reference internal" href="batch_definition.html">Batch Definition</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error_interface.html">Errors Interface</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job_interface.html">Job Interface</a></li>
-<li class="toctree-l3"><a class="reference internal" href="job_type_configuration.html">Job Type Configuration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="job_data.html">Job Data</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="">Job Configuration</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#job-configuration-specification-version-1-1">Job Configuration Specification Version 1.1</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#job-configuration-specification-version-2-0">Job Configuration Specification Version 2.0</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#host-mount">Host Mount</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#volume-mount">Volume Mount</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="job_data.html">Job Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="exe_configuration.html">Execution Configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe_definition.html">Recipe Definition</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe_data.html">Recipe Data</a></li>
 </ul>
@@ -194,29 +196,30 @@
             
   <div class="section" id="job-configuration">
 <span id="architecture-jobs-job-configuration"></span><h1>Job Configuration<a class="headerlink" href="#job-configuration" title="Permalink to this headline">¶</a></h1>
-<p>The job configuration is a JSON document that defines the environment and configuration on which a specific job
-execution will run. This configuration includes information such as Docker parameters required by the job execution&#8217;s
-container. This JSON schema is used internally by the Scale system and is not exposed through the REST API.</p>
-<div class="section" id="job-configuration-specification-version-1-1">
-<span id="architecture-jobs-job-configuration-spec"></span><h2>Job Configuration Specification Version 1.1<a class="headerlink" href="#job-configuration-specification-version-1-1" title="Permalink to this headline">¶</a></h2>
+<p>The job configuration is a JSON document that provides a user-defined configuration for running a job.</p>
+<p><strong>Example job configuration:</strong></p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;mounts&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;dted&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;host&quot;</span><span class="p">,</span> <span class="s2">&quot;host_path&quot;</span><span class="o">:</span> <span class="s2">&quot;/path/to/dted&quot;</span><span class="p">}</span>
+   <span class="p">},</span>
+   <span class="s2">&quot;settings&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;DB_HOST&quot;</span><span class="o">:</span> <span class="s2">&quot;scale&quot;</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In this example a host mount is defined to provide a needed directory for the job&#8217;s algorithm (called &#8220;dted&#8221; in the
+job&#8217;s interface). <em>DB_HOST</em> is the name for a setting that will be added to the job_task of the
+<a class="reference internal" href="exe_configuration.html#architecture-jobs-exe-configuration"><span>Execution Configuration</span></a> as a setting when a job is scheduled, along with the value that follows.</p>
+<div class="section" id="job-configuration-specification-version-2-0">
+<span id="architecture-jobs-job-configuration-spec"></span><h2>Job Configuration Specification Version 2.0<a class="headerlink" href="#job-configuration-specification-version-2-0" title="Permalink to this headline">¶</a></h2>
 <p>A valid job configuration is a JSON document with the following structure:</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
-   <span class="s2">&quot;pre_task&quot;</span><span class="o">:</span> <span class="p">{</span>
-      <span class="s2">&quot;docker_params&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;flag&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">}],</span>
-      <span class="s2">&quot;settings&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">}],</span>
-      <span class="s2">&quot;workspaces&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span> <span class="s2">&quot;mode&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">}]</span>
-   <span class="p">},</span>
-   <span class="s2">&quot;job_task&quot;</span><span class="o">:</span> <span class="p">{</span>
-      <span class="s2">&quot;docker_params&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;flag&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">}],</span>
-      <span class="s2">&quot;settings&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">}],</span>
-      <span class="s2">&quot;workspaces&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span> <span class="s2">&quot;mode&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">}]</span>
-   <span class="p">},</span>
-   <span class="s2">&quot;post_task&quot;</span><span class="o">:</span> <span class="p">{</span>
-      <span class="s2">&quot;docker_params&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;flag&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">}],</span>
-      <span class="s2">&quot;settings&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">}],</span>
-      <span class="s2">&quot;workspaces&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span> <span class="s2">&quot;mode&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">}]</span>
-   <span class="p">}</span>
+   <span class="s2">&quot;mounts&quot;</span><span class="o">:</span> <span class="p">{</span><span class="nx">STRING</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;host&quot;</span><span class="p">,</span> <span class="s2">&quot;host_path&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">},</span>
+              <span class="nx">STRING</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;volume&quot;</span><span class="p">,</span> <span class="s2">&quot;driver&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span> <span class="s2">&quot;driver_opts&quot;</span><span class="o">:</span> <span class="p">{</span><span class="nx">STRING</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">}}},</span>
+   <span class="s2">&quot;settings&quot;</span><span class="o">:</span> <span class="p">{</span><span class="nx">STRING</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -225,62 +228,72 @@ container. This JSON schema is used internally by the Scale system and is not ex
 <div><p>The <em>version</em> is an optional string value that defines the version of the configuration specification used. This
 allows updates to be made to the specification while maintaining backwards compatibility by allowing Scale to
 recognize an older version and convert it to the current version. The default value for <em>version</em> if it is not
-included is the latest version, which is currently 1.1.</p>
-<p>Scale must recognize the version number as valid for the job to work. Valid job configuration versions are
-<code class="docutils literal"><span class="pre">&quot;1.0&quot;</span></code> and <code class="docutils literal"><span class="pre">&quot;1.1&quot;</span></code>.</p>
+included is the latest version, which is currently 2.0.</p>
+<p>Scale must recognize the version number as valid for the job type to work. Currently, the only valid job
+configuration versions are <code class="docutils literal"><span class="pre">&quot;1.0&quot;</span></code> and <code class="docutils literal"><span class="pre">&quot;2.0&quot;</span></code>.</p>
 </div></blockquote>
-<p><strong>pre_task</strong>: JSON object</p>
+<p><strong>mounts</strong>: JSON object</p>
 <blockquote>
-<div><p>The <em>pre_task</em> is a JSON object that defines the workspaces and Docker parameters to use for the pre task. It has
-the following fields:</p>
-<p><strong>docker_params</strong>: JSON array</p>
+<div><p>The <em>mounts</em> field is a JSON object that contains the mount names and their configuration as key/value pairs. Each
+mount configuration is its own JSON object with the following fields:</p>
+<p><strong>type</strong>: JSON string</p>
 <blockquote>
-<div><p>The <em>docker_params</em> field is a required list of JSON objects that define the parameters to pass to Docker. Each
-JSON object has the following fields:</p>
-<p><strong>flag</strong>: JSON string</p>
+<div><p>The <em>type</em> is a required string that specifies the type of mount to use. The other fields that configure
+the mount are based upon the <em>type</em> field. The valid mount types are:</p>
+<p><strong>host</strong></p>
 <blockquote>
-<div>The <em>flag</em> is a required string describing the command line flag (long form) to use for passing the
-parameter without the preceding dashes (e.g. use &#8220;volume&#8221; for passing &#8220;&#8211;volume=...&#8221;).</div></blockquote>
-<p><strong>value</strong>: JSON string</p>
+<div>A &#8220;host&#8221; mount mounts a local directory from the host into the job&#8217;s container. Usually this local directory
+is a shared file system that has been mounted onto the host.</div></blockquote>
+<p><strong>volume</strong></p>
 <blockquote>
-<div>The <em>value</em> is a required string describing the value to pass to the parameter on the Docker command line.</div></blockquote>
-</div></blockquote>
-<p><strong>settings</strong>: JSON array</p>
-<blockquote>
-<div><p>The <em>settings</em> field is an optional list of JSON objects that define the settings to pass to the pre task
-portion of a job. Each JSON object has the following fields:</p>
-<p><strong>name</strong>: JSON string</p>
-<blockquote>
-<div>The <em>name</em> is a required string describing the name of the setting. The name is used to identify the setting
-within command line arguments or environment variables that should receive the setting&#8217;s value.</div></blockquote>
-<p><strong>value</strong>: JSON string</p>
-<blockquote>
-<div>The <em>value</em> is a required string describing the value to pass to the setting.</div></blockquote>
-</div></blockquote>
-<p><strong>workspaces</strong>: JSON array</p>
-<blockquote>
-<div><p>The <em>workspaces</em> field is a required list of JSON objects that define the workspaces used by the task. Each JSON
-object has the following fields:</p>
-<p><strong>name</strong>: JSON string</p>
-<blockquote>
-<div>The <em>name</em> is a required string defining the unique name of the workspace.</div></blockquote>
-<p><strong>mode</strong>: JSON string</p>
-<blockquote>
-<div>The <em>mode</em> is a required string describing in what mode the workspace will be used. There are two valid
-values: &#8220;ro&#8221; for read-only mode and &#8220;rw&#8221; for read-write mode.</div></blockquote>
+<div>A &#8220;volume&#8221; mount uses a created Docker volume to mount into the job&#8217;s container, typically specifying a
+driver that provides access to some type of shared network file system.</div></blockquote>
+<p>Additional mount fields may be required depending on the type of mount selected. See below for more
+information on each mount type.</p>
 </div></blockquote>
 </div></blockquote>
-<p><strong>job_task</strong>: JSON object</p>
+<p><strong>settings</strong>: JSON object</p>
 <blockquote>
-<div><p>The <em>job_task</em> is a JSON object that defines the workspaces and Docker parameters to use for the job task (which
-performs the primary job/algorithm). It is identical in structure to <em>pre_task</em>.</p>
-<p>The <em>job_task</em> <em>settings</em> values will be inserted into the job&#8217;s <em>command_arguments</em> string if a matching settings
-<em>name</em> appears in the <em>command_arguments</em>.</p>
-</div></blockquote>
-<p><strong>post_task</strong>: JSON object</p>
+<div>The <em>settings</em> is a JSON object that contains the setting names and their values as key/value pairs.</div></blockquote>
+</div>
+<div class="section" id="host-mount">
+<h2>Host Mount<a class="headerlink" href="#host-mount" title="Permalink to this headline">¶</a></h2>
+<p>The host mount mounts a local directory from the host into the job&#8217;s container. This local directory should be a shared
+file system that has been mounted onto all hosts in the cluster. All hosts must have the same shared file system mounted
+at the same location for this mount to work properly.</p>
+<p><strong>Security</strong></p>
+<p>There are potential security risks involved with mounting a host directory into a Docker container. Please consult the
+Docker documentation for more information.</p>
+<p>Example host mount configuration:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;mounts&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;my-mount&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;host&quot;</span><span class="p">,</span> <span class="s2">&quot;host_path&quot;</span><span class="o">:</span> <span class="s2">&quot;/the/host/path&quot;</span><span class="p">}}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The host mount requires one additional field in its configuration:</p>
+<p><strong>host_path</strong>: JSON string</p>
 <blockquote>
-<div>The <em>post_task</em> is a JSON object that defines the workspaces and Docker parameters to use for the post task. It is
-identical in structure to <em>pre_task</em>.</div></blockquote>
+<div>The <em>host_path</em> is a required string that specifies the absolute path of the host&#8217;s local directory that should be
+mounted into the job&#8217;s container.</div></blockquote>
+</div>
+<div class="section" id="volume-mount">
+<h2>Volume Mount<a class="headerlink" href="#volume-mount" title="Permalink to this headline">¶</a></h2>
+<p>The volume mount creates a new named Docker volume and mounts it into the job&#8217;s container.</p>
+<p>Example volume mount configuration:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;mounts&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;my-mount&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;volume&quot;</span><span class="p">,</span> <span class="s2">&quot;driver&quot;</span><span class="o">:</span> <span class="s2">&quot;my-driver&quot;</span><span class="p">,</span> <span class="s2">&quot;driver_opts&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;foo&quot;</span><span class="o">:</span> <span class="s2">&quot;bar&quot;</span><span class="p">}}}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The volume mount uses these additional fields in its configuration:</p>
+<p><strong>driver</strong>: JSON string</p>
+<blockquote>
+<div>The <em>driver</em> is an optional string that specifies the Docker volume driver to use.</div></blockquote>
+<p><strong>driver_opts</strong>: JSON object</p>
+<blockquote>
+<div>The <em>driver_opts</em> is an optional object that specifies the Docker driver options to use as key/value pairs.</div></blockquote>
 </div>
 </div>
 
@@ -294,10 +307,10 @@ identical in structure to <em>pre_task</em>.</div></blockquote>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="recipe_definition.html" class="btn btn-neutral float-right" title="Recipe Definition" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="job_data.html" class="btn btn-neutral float-right" title="Job Data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="job_data.html" class="btn btn-neutral" title="Job Data" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="job_interface.html" class="btn btn-neutral" title="Job Interface" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
