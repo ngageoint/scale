@@ -1057,49 +1057,55 @@ class JobExecutionManager(models.Manager):
             if job_exe.status == 'QUEUED':
                 job_ids.append(job_exe.job_id)
 
-        # Lock corresponding jobs and update them to RUNNING
+        # Lock corresponding jobs
         jobs = {}
-        locked_jobs = Job.objects.get_locked_jobs(job_ids)
-        Job.objects.update_status(locked_jobs, 'RUNNING', started)
-        for job in locked_jobs:
+        for job in Job.objects.get_locked_jobs(job_ids):
             jobs[job.id] = job
 
         # Update each job execution
         job_exes = []
+        jobs_to_running = []
         for job_execution in job_executions:
-            job_exe = job_execution[0]
-            node_id = job_execution[1]
-            resources = job_execution[2]
+            try:
+                job_exe = job_execution[0]
+                node_id = job_execution[1]
+                resources = job_execution[2]
 
-            if job_exe.status != 'QUEUED':
-                continue
-            if node_id is None:
-                raise Exception('Cannot schedule job execution %i without node ID' % job_exe.id)
-            if resources is None:
-                raise Exception('Cannot schedule job execution %i without resources' % job_exe.id)
+                if job_exe.status != 'QUEUED':
+                    continue
+                if node_id is None:
+                    raise Exception('Cannot schedule job execution %i without node ID' % job_exe.id)
+                if resources is None:
+                    raise Exception('Cannot schedule job execution %i without resources' % job_exe.id)
 
-            # Add configuration values for the settings to the command line.
-            interface = job_exe.get_job_interface()
-            job_exe.command_arguments = interface.populate_command_argument_settings(job_exe.command_arguments,
+                # Add configuration values for the settings to the command line.
+                interface = job_exe.get_job_interface()
+                job_exe.command_arguments = interface.populate_command_argument_settings(job_exe.command_arguments,
                                                                                 job_exe.get_execution_configuration(),
                                                                                 job_exe.job.job_type)
 
-            job_exe.job = jobs[job_exe.job_id]
-            job_exe.set_cluster_id(framework_id)
-            job_exe.status = 'RUNNING'
-            job_exe.started = started
-            job_exe.node_id = node_id
-            docker_volumes = []
-            job_exe.configure_docker_params(workspaces, docker_volumes)
-            job_exe.environment = {}
-            job_exe.cpus_scheduled = resources.cpus
-            job_exe.mem_scheduled = resources.mem
-            job_exe.disk_in_scheduled = resources.disk_in
-            job_exe.disk_out_scheduled = resources.disk_out
-            job_exe.disk_total_scheduled = resources.disk_total
-            job_exe.save()
-            job_exe.docker_volumes = docker_volumes
-            job_exes.append(job_exe)
+                job_exe.job = jobs[job_exe.job_id]
+                job_exe.set_cluster_id(framework_id)
+                job_exe.status = 'RUNNING'
+                job_exe.started = started
+                job_exe.node_id = node_id
+                docker_volumes = []
+                job_exe.configure_docker_params(workspaces, docker_volumes)
+                job_exe.environment = {}
+                job_exe.cpus_scheduled = resources.cpus
+                job_exe.mem_scheduled = resources.mem
+                job_exe.disk_in_scheduled = resources.disk_in
+                job_exe.disk_out_scheduled = resources.disk_out
+                job_exe.disk_total_scheduled = resources.disk_total
+                job_exe.save()
+                job_exe.docker_volumes = docker_volumes
+                job_exes.append(job_exe)
+                jobs_to_running.append(job_exe.job)
+            except Exception:
+                logger.exception('Critical error trying to schedule job_exe %d' % job_execution[0].id)
+
+        # Set jobs of successfully scheduled executions to RUNNING
+        Job.objects.update_status(jobs_to_running, 'RUNNING', started)
 
         return job_exes
 

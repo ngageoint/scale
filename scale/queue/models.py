@@ -664,11 +664,13 @@ class QueueManager(models.Manager):
 
         # Schedule job executions
         scheduled_job_exes = []
+        job_exe_ids_scheduled = []
         for job_exe in JobExecution.objects.schedule_job_executions(framework_id, executions_to_schedule, workspaces):
             scheduled_job_exes.append(RunningJobExecution(job_exe))
+            job_exe_ids_scheduled.append(job_exe.id)
 
-        # Clear the job executions from the queue
-        Queue.objects.filter(job_exe_id__in=job_exe_ids).delete()
+        # Clear the scheduled job executions from the queue
+        Queue.objects.filter(job_exe_id__in=job_exe_ids_scheduled).delete()
 
         return scheduled_job_exes
 

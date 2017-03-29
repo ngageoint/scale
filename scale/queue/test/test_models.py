@@ -10,6 +10,7 @@ from mock import MagicMock
 import job.test.utils as job_test_utils
 import node.test.utils as node_test_utils
 import product.test.utils as product_test_utils
+import queue.test.utils as queue_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import source.test.utils as source_test_utils
@@ -688,7 +689,8 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         # Complete both the old and new job 2 and check that only the new recipe completes
         job_exe_2 = JobExecution.objects.get(job_id=recipe_job_2.job_id)
         queued_job_exe_2 = QueuedJobExecution(Queue.objects.get(job_exe_id=job_exe_2.id))
-        queued_job_exe_2.accepted(node.id, JobResources(cpus=10, mem=1000, disk_in=1000, disk_out=1000, disk_total=2000))
+        queued_job_exe_2.accepted(node.id, JobResources(cpus=10, mem=1000, disk_in=1000, disk_out=1000,
+                                                        disk_total=2000))
         Queue.objects.schedule_job_executions('123', [queued_job_exe_2], {})
         Queue.objects.handle_job_completion(job_exe_2.id, now(), [])
         new_job_exe_2 = JobExecution.objects.get(job_id=new_recipe_job_2.job_id)
@@ -839,3 +841,48 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
         self.assertEqual(job_b_2.status, 'BLOCKED')
         job_b_3 = Job.objects.get(id=self.job_b_3.id)
         self.assertEqual(job_b_3.status, 'BLOCKED')
+
+
+class TestQueueManagerScheduleJobExecutions(TransactionTestCase):
+
+    def setUp(self):
+        django.setup()
+
+        self.node = node_test_utils.create_node()
+        self.job_type_1 = job_test_utils.create_job_type()
+        # job_exe_2 has an invalid JSON and will not schedule correctly
+        self.job_type_2 = job_test_utils.create_job_type(configuration={'INVALID': 'SCHEMA'})
+        self.queue_1 = queue_test_utils.create_queue(job_type=self.job_type_1)
+        self.queue_2 = queue_test_utils.create_queue(job_type=self.job_type_2)
+        self.job_exe_1 = self.queue_1.job_exe
+        self.job_exe_2 = self.queue_2.job_exe
+
+    def test_successful(self):
+        """Tests calling QueueManager.schedule_job_executions() successfully."""
+
+        queued_job_exe_1 = QueuedJobExecution(self.queue_1)
+        queued_job_exe_1.accepted(self.node.id, JobResources(cpus=self.queue_1.cpus_required,
+                                                             mem=self.queue_1.mem_required,
+                                                             disk_in=self.queue_1.disk_in_required,
+                                                             disk_out=self.queue_1.disk_out_required,
+                                                             disk_total=self.queue_1.disk_total_required))
+        queued_job_exe_2 = QueuedJobExecution(self.queue_2)
+        queued_job_exe_2.accepted(self.node.id, JobResources(cpus=self.queue_2.cpus_required,
+                                                             mem=self.queue_2.mem_required,
+                                                             disk_in=self.queue_2.disk_in_required,
+                                                             disk_out=self.queue_2.disk_out_required,
+                                                             disk_total=self.queue_2.disk_total_required))
+
+        scheduled_job_exes = Queue.objects.schedule_job_executions('framework-123',
+                                                                   [queued_job_exe_1, queued_job_exe_2], {})
+        # Only job_exe_1 should have scheduled since job_exe_2 has an invalid job type configuration JSON
+        self.assertEqual(len(scheduled_job_exes), 1)
+        self.assertEqual(scheduled_job_exes[0].id, self.job_exe_1.id)
+        # job_exe_1 should be RUNNING
+        self.assertEqual(Queue.objects.filter(job_exe_id=self.job_exe_1.id).count(), 0)
+        self.assertEqual(JobExecution.objects.get(id=self.job_exe_1.id).status, 'RUNNING')
+        self.assertEqual(Job.objects.get(id=self.job_exe_1.job_id).status, 'RUNNING')
+        # job_exe_2 should be QUEUED
+        self.assertEqual(Queue.objects.filter(job_exe_id=self.job_exe_2.id).count(), 1)
+        self.assertEqual(JobExecution.objects.get(id=self.job_exe_2.id).status, 'QUEUED')
+        self.assertEqual(Job.objects.get(id=self.job_exe_2.job_id).status, 'QUEUED')
