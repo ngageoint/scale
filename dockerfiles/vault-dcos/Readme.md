@@ -21,7 +21,7 @@ Save the following JSON as `vault.json`:
       "network": "BRIDGE",
       "portMappings": [{
         "containerPort": 8200,
-        "hostPort": 8282,
+        "hostPort": 0,
         "protocol": "tcp",
         "labels": {
           "VIP_0": "scale-vault:8200"
@@ -53,7 +53,7 @@ $ dcos marathon app add vault.json
 ### Step 2: Initialize the vault
 SSH into one of the DC/OS cluster nodes, and initialize the vault with the following:
 ```
-$ docker run -e "VAULT_SKIP_VERIFY=true" -e "VAULT_ADDR=vault.marathon.l4lb.thisdcos.directory:8200" --entrypoint=vault -t geoint/scale-vault init
+$ docker run -e "VAULT_SKIP_VERIFY=true" -e "VAULT_ADDR=https://vault.marathon.l4lb.thisdcos.directory:8200" --entrypoint=vault -t geoint/scale-vault init
 Key 1: 62b6e5c157446c05c067bb41fadf931fd8f422f4af2a4c0ee056acbd5a89d3ed01
 Key 2: a065dbfd663c5a619bfdc74ebce68051f9e7004d19c67bc6726daf49e209d4ea02
 Key 3: 91e97d22436508a67905e535f636bb3e4550a8ad77b9f69da43717baa4012b5b03
@@ -83,7 +83,7 @@ High-Availability Enabled: true
 ### Step 3: Unseal your vault
 Repeat the following command 3 times, pasting a separate key each time:
 ```
-$ docker run -i -e "VAULT_SKIP_VERIFY=true" -e "VAULT_ADDR=vault.marathon.l4lb.thisdcos.directory:8200" --entrypoint=vault -t geoint/scale-vault unseal
+$ docker run -i -e "VAULT_SKIP_VERIFY=true" -e "VAULT_ADDR=https://vault.marathon.l4lb.thisdcos.directory:8200" --entrypoint=vault -t geoint/scale-vault unseal
 Key (will be hidden):
 Sealed: true
 Key Shares: 5
@@ -96,7 +96,7 @@ Once it says `Sealed: false`, your vault is unsealed.
 ### Step 4: Start using your vault!
 Run an interactive shell to test your vault:
 ```
-$ docker run -i -e "VAULT_SKIP_VERIFY=true" -e "VAULT_ADDR=vault.marathon.l4lb.thisdcos.directory:8200" --entrypoint=/bin/sh -t geoint/scale-vault
+$ docker run -i -e "VAULT_SKIP_VERIFY=true" -e "VAULT_ADDR=https://vault.marathon.l4lb.thisdcos.directory:8200" --entrypoint=/bin/sh -t geoint/scale-vault
 $ vault auth 11aaf733-f280-fbaf-251d-69b9606bf4fa # use root token from init
 Successfully authenticated!
 token: 11aaf733-f280-fbaf-251d-69b9606bf4fa
