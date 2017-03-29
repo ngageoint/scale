@@ -293,7 +293,9 @@ mounted into the job&#8217;s container.</div></blockquote>
 <div>The <em>driver</em> is an optional string that specifies the Docker volume driver to use.</div></blockquote>
 <p><strong>driver_opts</strong>: JSON object</p>
 <blockquote>
-<div>The <em>driver_opts</em> is an optional object that specifies the Docker driver options to use as key/value pairs.</div></blockquote>
+<div>The <em>driver_opts</em> is an optional object that specifies the Docker driver options to use as key/value pairs.
+<strong>Note:</strong> The <em>driver_opts</em> object is NOT stored and transmitted securely, so do not include driver options that
+require secure storage and authorized access (such as passwords).</div></blockquote>
 </div>
 </div>
 

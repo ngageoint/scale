@@ -368,6 +368,7 @@
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0020_auto_20161110_1517">job.migrations.0020_auto_20161110_1517 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0021_auto_20161115_1524">job.migrations.0021_auto_20161115_1524 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0022_jobtype_configuration">job.migrations.0022_jobtype_configuration module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0023_jobtype_shared_mem_required">job.migrations.0023_jobtype_shared_mem_required module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -2205,6 +2206,7 @@ See the mesos prototype file for further information.</li>
 <li><strong>max_tries</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The maximum number of times to try executing a job in case of errors (minimum one)</li>
 <li><strong>cpus_required</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; The number of CPUs required for a job of this type</li>
 <li><strong>mem_required</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; The amount of RAM in MiB required for a job of this type</li>
+<li><strong>shared_mem_required</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; The amount of shared memory (/dev/shm) in MiB required for a job of this type</li>
 <li><strong>disk_out_const_required</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; A constant amount of disk space in MiB required for job output (temp work and
 products) for a job of this type</li>
 <li><strong>disk_out_mult_required</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; A multiplier (2x = 2.0) applied to the size of the input files to determine

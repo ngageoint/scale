@@ -128,3 +128,5 @@ The volume mount uses these additional fields in its configuration:
 **driver_opts**: JSON object
 
     The *driver_opts* is an optional object that specifies the Docker driver options to use as key/value pairs.
+    **Note:** The *driver_opts* object is NOT stored and transmitted securely, so do not include driver options that
+    require secure storage and authorized access (such as passwords).

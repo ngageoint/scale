@@ -520,7 +520,7 @@
 
 <dl class="attribute">
 <dt id="job.migrations.0016_auto_20160421_1553.Migration.operations">
-<code class="descname">operations</code><em class="property"> = [&lt;RunPython &lt;function populate_job_configuration at 0x2b976fe950c8&gt;&gt;]</em><a class="headerlink" href="#job.migrations.0016_auto_20160421_1553.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<code class="descname">operations</code><em class="property"> = [&lt;RunPython &lt;function populate_job_configuration at 0x2b9186c990c8&gt;&gt;]</em><a class="headerlink" href="#job.migrations.0016_auto_20160421_1553.Migration.operations" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -640,6 +640,25 @@
 <dl class="attribute">
 <dt id="job.migrations.0022_jobtype_configuration.Migration.operations">
 <code class="descname">operations</code><em class="property"> = [&lt;AddField  field=&lt;djorm_pgjson.fields.JSONField&gt;, preserve_default=True, name=u'configuration', model_name=u'jobtype'&gt;]</em><a class="headerlink" href="#job.migrations.0022_jobtype_configuration.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.migrations.0023_jobtype_shared_mem_required">
+<span id="job-migrations-0023-jobtype-shared-mem-required-module"></span><h2>job.migrations.0023_jobtype_shared_mem_required module<a class="headerlink" href="#module-job.migrations.0023_jobtype_shared_mem_required" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="job.migrations.0023_jobtype_shared_mem_required.Migration">
+<em class="property">class </em><code class="descclassname">job.migrations.0023_jobtype_shared_mem_required.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#job.migrations.0023_jobtype_shared_mem_required.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="job.migrations.0023_jobtype_shared_mem_required.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'job', u'0022_jobtype_configuration')]</em><a class="headerlink" href="#job.migrations.0023_jobtype_shared_mem_required.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.migrations.0023_jobtype_shared_mem_required.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;AddField  field=&lt;django.db.models.fields.FloatField&gt;, preserve_default=True, name=u'shared_mem_required', model_name=u'jobtype'&gt;]</em><a class="headerlink" href="#job.migrations.0023_jobtype_shared_mem_required.Migration.operations" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

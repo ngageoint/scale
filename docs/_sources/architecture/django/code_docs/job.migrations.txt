@@ -180,6 +180,14 @@ job.migrations.0022_jobtype_configuration module
     :undoc-members:
     :show-inheritance:
 
+job.migrations.0023_jobtype_shared_mem_required module
+------------------------------------------------------
+
+.. automodule:: job.migrations.0023_jobtype_shared_mem_required
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
