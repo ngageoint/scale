@@ -1316,6 +1316,11 @@ class JobExecution(models.Model):
 
         configuration = self.get_execution_configuration()
 
+        # Set up shared memory
+        shared_mem = self.job.job_type.shared_mem_required
+        if shared_mem > 0:
+            configuration.add_job_task_docker_params([DockerParam('shm-size', '%sm' % shared_mem)])
+
         # Setup task logging
         configuration.configure_logging_docker_params(self)
 
@@ -2280,6 +2285,8 @@ class JobType(models.Model):
     :type cpus_required: :class:`django.db.models.FloatField`
     :keyword mem_required: The amount of RAM in MiB required for a job of this type
     :type mem_required: :class:`django.db.models.FloatField`
+    :keyword shared_mem_required: The amount of shared memory (/dev/shm) in MiB required for a job of this type
+    :type shared_mem_required: :class:`django.db.models.FloatField`
     :keyword disk_out_const_required: A constant amount of disk space in MiB required for job output (temp work and
         products) for a job of this type
     :type disk_out_const_required: :class:`django.db.models.FloatField`
@@ -2337,6 +2344,7 @@ class JobType(models.Model):
     max_tries = models.IntegerField(default=3)
     cpus_required = models.FloatField(default=1.0)
     mem_required = models.FloatField(default=64.0)
+    shared_mem_required = models.FloatField(default=0.0)
     disk_out_const_required = models.FloatField(default=64.0)
     disk_out_mult_required = models.FloatField(default=0.0)
 

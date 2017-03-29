@@ -507,6 +507,7 @@ class TestConfigurationViewImport(TestCase):
                     'max_tries': 1,
                     'cpus_required': 2.0,
                     'mem_required': 1024.0,
+                    'shared_mem_required': 3.0,
                     'disk_out_const_required': 1024.0,
                     'disk_out_mult_required': 1.0,
                     'interface': interface,
@@ -546,6 +547,7 @@ class TestConfigurationViewImport(TestCase):
         self.assertEqual(result.max_tries, 1)
         self.assertEqual(result.cpus_required, 2.0)
         self.assertEqual(result.mem_required, 1024.0)
+        self.assertEqual(result.shared_mem_required, 3.0)
         self.assertEqual(result.disk_out_const_required, 1024.0)
         self.assertEqual(result.disk_out_mult_required, 1.0)
 

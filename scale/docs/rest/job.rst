@@ -343,6 +343,7 @@ These services provide access to information about "all", "currently running" an
 |            "max_tries": 1,                                                                                              |
 |            "cpus_required": 0.5,                                                                                        |
 |            "mem_required": 128.0,                                                                                       |
+|            "shared_mem_required": 0.0,                                                                                  |
 |            "disk_out_const_required": 0.0,                                                                              |
 |            "disk_out_mult_required": 0.0,                                                                               |
 |            "created": "2015-06-01T00:00:00Z",                                                                           |
