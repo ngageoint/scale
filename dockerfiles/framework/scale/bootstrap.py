@@ -41,7 +41,8 @@ def run(client):
     db_port = os.getenv('SCALE_DB_PORT', '')
     if not len(db_host):
         app_name = '%s-db' % FRAMEWORK_NAME
-        db_port = deploy_database(client, app_name)
+        deploy_database(client, app_name)
+        db_port = 5432
         db_host = "%s.marathon.l4lb.thisdcos.directory" % app_name
         print("DB_HOST=%s" % db_host)
         print("DB_PORT=%s" % db_port)
