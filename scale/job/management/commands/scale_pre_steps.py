@@ -41,7 +41,8 @@ class Command(BaseCommand):
             job_exe = self._get_job_exe(job_exe_id)
 
             job_interface = job_exe.get_job_interface()
-            job_configuration = job_exe.get_job_configuration()
+            job_configuration = job_exe.get_execution_configuration()
+            job_interface.validate_populated_mounts(job_configuration)
             job_interface.validate_populated_settings(job_configuration)
             job_data = job_exe.job.get_job_data()
             job_environment = job_exe.get_job_environment()

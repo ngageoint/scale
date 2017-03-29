@@ -16,13 +16,12 @@ from django.db.models import Q
 import job.execution.container as job_exe_container
 import util.parse
 from error.models import Error
-from job.configuration.configuration.job_configuration import JobConfiguration, MODE_RO, MODE_RW
-from job.configuration.configuration.job_parameter import DockerParam
 from job.configuration.data.job_data import JobData
-from job.configuration.environment.job_environment import JobEnvironment
 from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.job_interface import JobInterface
-from job.configuration.interface.job_type_configuration import JobTypeConfiguration
+from job.configuration.job_parameter import DockerParam
+from job.configuration.json.execution.exe_config import ExecutionConfiguration, MODE_RO, MODE_RW
+from job.configuration.json.job.job_config import JobConfiguration
 from job.configuration.results.job_results import JobResults
 from job.exceptions import InvalidJobField
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
@@ -449,7 +448,7 @@ class JobManager(models.Manager):
         disk_out_required = max(output_size_mb, MIN_DISK)
 
         # Configure workspaces needed for the job
-        configuration = job.get_job_configuration()
+        configuration = job.get_execution_configuration()
         for name in input_workspaces:
             configuration.add_job_task_workspace(name, MODE_RO)
         if not job.job_type.is_system:
@@ -743,14 +742,14 @@ class Job(models.Model):
 
         return JobData(self.data)
 
-    def get_job_configuration(self):
-        """Returns the configuration for this job
+    def get_execution_configuration(self):
+        """Returns the execution configuration for this job
 
-        :returns: The configuration for this job
-        :rtype: :class:`job.configuration.configuration.job_configuration.JobConfiguration`
+        :returns: The execution configuration for this job
+        :rtype: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         """
 
-        return JobConfiguration(self.configuration)
+        return ExecutionConfiguration(self.configuration)
 
     def get_job_interface(self):
         """Returns the interface for this job
@@ -1082,8 +1081,8 @@ class JobExecutionManager(models.Manager):
             # Add configuration values for the settings to the command line.
             interface = job_exe.get_job_interface()
             job_exe.command_arguments = interface.populate_command_argument_settings(job_exe.command_arguments,
-                                                                                     job_exe.get_job_configuration(),
-                                                                                     job_exe.job.job_type)
+                                                                                job_exe.get_execution_configuration(),
+                                                                                job_exe.job.job_type)
 
             job_exe.job = jobs[job_exe.job_id]
             job_exe.set_cluster_id(framework_id)
@@ -1092,7 +1091,7 @@ class JobExecutionManager(models.Manager):
             job_exe.node_id = node_id
             docker_volumes = []
             job_exe.configure_docker_params(workspaces, docker_volumes)
-            job_exe.environment = JobEnvironment({}).get_dict()
+            job_exe.environment = {}
             job_exe.cpus_scheduled = resources.cpus
             job_exe.mem_scheduled = resources.mem
             job_exe.disk_in_scheduled = resources.disk_in
@@ -1315,13 +1314,16 @@ class JobExecution(models.Model):
         :raises Exception: If the job execution is still queued
         """
 
-        configuration = self.get_job_configuration()
+        configuration = self.get_execution_configuration()
 
         # Setup task logging
         configuration.configure_logging_docker_params(self)
 
-        # Populate job_configuration with default settings
+        # Populate configuration with default settings
         configuration.populate_default_job_settings(self)
+
+        # Populate configuration with mount volumes
+        configuration.populate_mounts(self)
 
         # Pass database connection details from scheduler as environment variables
         db = settings.DATABASES['default']
@@ -1416,32 +1418,32 @@ class JobExecution(models.Model):
 
         return self.job.job_type.get_error_interface()
 
-    def get_job_type_configuration(self):
-        """Returns the configuration interface for this job execution
-
-        :returns: The configuration interface for this job execution
-        :rtype: :class:`job.configuration.interface.job_configuration.JobTypeConfiguration`
-        """
-
-        return self.job.job_type.get_job_type_configuration()
-
     def get_job_configuration(self):
-        """Returns the configuration for this job
+        """Returns the default job configuration for this job type
 
-        :returns: The configuration for this job
-        :rtype: :class:`job.configuration.configuration.job_configuration.JobConfiguration`
+        :returns: The default job configuration for this job type
+        :rtype: :class:`job.configuration.json.job.job_config.JobConfiguration`
         """
 
-        return JobConfiguration(self.configuration)
+        return self.job.job_type.get_job_configuration()
+
+    def get_execution_configuration(self):
+        """Returns the execution configuration for this job
+
+        :returns: The execution configuration for this job
+        :rtype: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        """
+
+        return ExecutionConfiguration(self.configuration)
 
     def get_job_environment(self):
         """Returns the environment data for this job
 
         :returns: The environment data for this job
-        :rtype: :class:`job.configuration.environment.job_environment.JobEnvironment`
+        :rtype: dict
         """
 
-        return JobEnvironment(self.environment)
+        return self.environment
 
     def get_job_interface(self):
         """Returns the job interface for executing this job
@@ -2263,7 +2265,7 @@ class JobType(models.Model):
     :keyword trigger_rule: The rule to trigger new jobs of this type
     :type trigger_rule: :class:`django.db.models.ForeignKey`
 
-    :keyword configuration: JSON array which will be passed as-is to the job configuration
+    :keyword configuration: JSON describing the default job configuration for jobs of this type
     :type configuration: :class:`djorm_pgjson.fields.JSONField`
 
     :keyword priority: The priority of the job type (lower number is higher priority)
@@ -2362,10 +2364,14 @@ class JobType(models.Model):
 
         return ErrorInterface(self.error_mapping)
 
-    def get_job_type_configuration(self):
-        """Returns the interface for the default configuration"""
+    def get_job_configuration(self):
+        """Returns default job configuration for this job type
 
-        return JobTypeConfiguration(self.configuration)
+        :returns: The default job configuration for this job type
+        :rtype: :class:`job.configuration.json.job.job_config.JobConfiguration`
+        """
+
+        return JobConfiguration(self.configuration)
 
     def natural_key(self):
         """Django method to define the natural key for a job type as the

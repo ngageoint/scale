@@ -9,9 +9,9 @@ import djorm_pgjson.fields
 from django.db import models, transaction
 
 from error.models import Error
-from job.configuration.configuration.job_configuration import JobConfiguration
 from job.configuration.data.exceptions import InvalidData
 from job.configuration.data.job_data import JobData
+from job.configuration.json.execution.exe_config import ExecutionConfiguration
 from job.execution.job_exe import RunningJobExecution
 from job.models import Job, JobType
 from job.models import JobExecution
@@ -439,8 +439,8 @@ class QueueManager(models.Manager):
         :type data: :class:`job.configuration.data.job_data.JobData`
         :param event: The event that triggered the creation of this job
         :type event: :class:`trigger.models.TriggerEvent`
-        :param configuration: The optional initial job configuration
-        :type configuration: :class:`job.configuration.configuration.job_configuration.JobConfiguration`
+        :param configuration: The optional initial execution configuration
+        :type configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         :returns: The new queued job
         :rtype: :class:`job.models.Job`
 
@@ -449,7 +449,7 @@ class QueueManager(models.Manager):
 
         job = Job.objects.create_job(job_type, event)
         if not configuration:
-            configuration = JobConfiguration()
+            configuration = ExecutionConfiguration()
         job.configuration = configuration.get_dict()
         job.save()
 

@@ -14,12 +14,12 @@ import node.test.utils as node_test_utils
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
 from error.models import Error
-from job.configuration.configuration.job_configuration import JobConfiguration, MODE_RO, MODE_RW
-from job.configuration.configuration.job_parameter import DockerParam
 from job.configuration.data.exceptions import InvalidConnection
 from job.configuration.data.job_data import JobData
 from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.job_interface import JobInterface
+from job.configuration.job_parameter import DockerParam
+from job.configuration.json.execution.exe_config import ExecutionConfiguration, MODE_RO, MODE_RW
 from job.execution import container
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
 from job.models import Job, JobExecution, JobType, JobTypeRevision
@@ -121,7 +121,7 @@ class TestJobManager(TransactionTestCase):
 
         # Check that the correct workspaces are configured for the job
         # Make sure both workspaces will be used for the pre-task in read-only mode
-        pre_task_workspaces = job.get_job_configuration().get_pre_task_workspaces()
+        pre_task_workspaces = job.get_execution_configuration().get_pre_task_workspaces()
         self.assertEqual(len(pre_task_workspaces), 2)
         name_set = set()
         for workspace in pre_task_workspaces:
@@ -129,7 +129,7 @@ class TestJobManager(TransactionTestCase):
             self.assertEqual(workspace.mode, MODE_RO)
         self.assertSetEqual(name_set, {workspace_1.name, workspace_2.name})
         # Make sure both workspaces will be used for the job-task in read-only mode
-        job_task_workspaces = job.get_job_configuration().get_job_task_workspaces()
+        job_task_workspaces = job.get_execution_configuration().get_job_task_workspaces()
         self.assertEqual(len(job_task_workspaces), 2)
         name_set = set()
         for workspace in job_task_workspaces:
@@ -137,7 +137,7 @@ class TestJobManager(TransactionTestCase):
             self.assertEqual(workspace.mode, MODE_RO)
         self.assertSetEqual(name_set, {workspace_1.name, workspace_2.name})
         # Make sure all input and output workspaces will be used for the post-task and they are in read-write mode
-        post_task_workspaces = job.get_job_configuration().get_post_task_workspaces()
+        post_task_workspaces = job.get_execution_configuration().get_post_task_workspaces()
         self.assertEqual(len(post_task_workspaces), 3)
         name_set = set()
         for workspace in post_task_workspaces:
@@ -460,7 +460,7 @@ class TestJobExecutionManager(TransactionTestCase):
         broker for input
         """
         workspace = storage_test_utils.create_workspace(json_config={'broker': {'type': 'host', 'host_path': '/scale'}})
-        configuration = JobConfiguration()
+        configuration = ExecutionConfiguration()
         configuration.add_pre_task_workspace(workspace.name, MODE_RO)
         configuration.add_job_task_workspace(workspace.name, MODE_RO)
         job_exe = job_test_utils.create_job_exe(status='QUEUED', configuration=configuration.get_dict())
@@ -493,21 +493,21 @@ class TestJobExecutionManager(TransactionTestCase):
         job_exe_post_task_params = list(env_vars)
         job_exe_post_task_params.extend([DockerParam('volume', output_data_volume_ro)])
 
-        params = job_exes[0].get_job_configuration().get_pre_task_docker_params()
+        params = job_exes[0].get_execution_configuration().get_pre_task_docker_params()
         self.assertEqual(len(params), len(job_exe_pre_task_params))
         for i in range(len(params)):
             param = params[i]
             expected_param = job_exe_pre_task_params[i]
             self.assertEqual(param.flag, expected_param.flag)
             self.assertEqual(param.value, expected_param.value)
-        params = job_exes[0].get_job_configuration().get_job_task_docker_params()
+        params = job_exes[0].get_execution_configuration().get_job_task_docker_params()
         self.assertEqual(len(params), len(job_exe_job_task_params))
         for i in range(len(params)):
             param = params[i]
             expected_param = job_exe_job_task_params[i]
             self.assertEqual(param.flag, expected_param.flag)
             self.assertEqual(param.value, expected_param.value)
-        params = job_exes[0].get_job_configuration().get_post_task_docker_params()
+        params = job_exes[0].get_execution_configuration().get_post_task_docker_params()
         self.assertEqual(len(params), len(job_exe_post_task_params))
         for i in range(len(params)):
             param = params[i]
@@ -523,7 +523,7 @@ class TestJobExecutionManager(TransactionTestCase):
                                                                                   'nfs_path': 'scale_1:/scale'}})
         workspace_2 = storage_test_utils.create_workspace(json_config={'broker': {'type': 'nfs',
                                                                                   'nfs_path': 'scale_2:/scale'}})
-        configuration = JobConfiguration()
+        configuration = ExecutionConfiguration()
         configuration.add_pre_task_workspace(workspace_1.name, MODE_RO)
         configuration.add_job_task_workspace(workspace_1.name, MODE_RO)
         configuration.add_post_task_workspace(workspace_1.name, MODE_RW)
@@ -571,21 +571,21 @@ class TestJobExecutionManager(TransactionTestCase):
                                          DockerParam('volume', workspace_volume_1_rw),
                                          DockerParam('volume', workspace_volume_2_create)])
 
-        params = job_exes[0].get_job_configuration().get_pre_task_docker_params()
+        params = job_exes[0].get_execution_configuration().get_pre_task_docker_params()
         self.assertEqual(len(params), len(job_exe_pre_task_params))
         for i in range(len(params)):
             param = params[i]
             expected_param = job_exe_pre_task_params[i]
             self.assertEqual(param.flag, expected_param.flag)
             self.assertEqual(param.value, expected_param.value)
-        params = job_exes[0].get_job_configuration().get_job_task_docker_params()
+        params = job_exes[0].get_execution_configuration().get_job_task_docker_params()
         self.assertEqual(len(params), len(job_exe_job_task_params))
         for i in range(len(params)):
             param = params[i]
             expected_param = job_exe_job_task_params[i]
             self.assertEqual(param.flag, expected_param.flag)
             self.assertEqual(param.value, expected_param.value)
-        params = job_exes[0].get_job_configuration().get_post_task_docker_params()
+        params = job_exes[0].get_execution_configuration().get_post_task_docker_params()
         self.assertEqual(len(params), len(job_exe_post_task_params))
         for i in range(len(params)):
             param = params[i]
@@ -600,7 +600,7 @@ class TestJobExecutionManager(TransactionTestCase):
         job_type = JobType.objects.get_by_natural_key('scale-ingest', '1.0')
         job = job_test_utils.create_job(job_type=job_type, status='QUEUED')
 
-        configuration = JobConfiguration()
+        configuration = ExecutionConfiguration()
         configuration.add_job_task_workspace(workspace.name, MODE_RW)
         job_exe = job_test_utils.create_job_exe(status='QUEUED', job=job, configuration=configuration.get_dict())
 
@@ -623,15 +623,15 @@ class TestJobExecutionManager(TransactionTestCase):
                                    DockerParam('env', 'SCALE_DB_PORT=' + db['PORT']),
                                    DockerParam('volume', workspace_volume_create)]
 
-        self.assertEqual(len(job_exes[0].get_job_configuration().get_pre_task_docker_params()), 0)
-        params = job_exes[0].get_job_configuration().get_job_task_docker_params()
+        self.assertEqual(len(job_exes[0].get_execution_configuration().get_pre_task_docker_params()), 0)
+        params = job_exes[0].get_execution_configuration().get_job_task_docker_params()
         self.assertEqual(len(params), len(job_exe_job_task_params))
         for i in range(len(params)):
             param = params[i]
             expected_param = job_exe_job_task_params[i]
             self.assertEqual(param.flag, expected_param.flag)
             self.assertEqual(param.value, expected_param.value)
-        self.assertEqual(len(job_exes[0].get_job_configuration().get_post_task_docker_params()), 0)
+        self.assertEqual(len(job_exes[0].get_execution_configuration().get_post_task_docker_params()), 0)
 
 
 class TestJobTypeManagerCreateJobType(TransactionTestCase):

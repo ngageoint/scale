@@ -6,7 +6,8 @@ import json
 import requests
 
 from django.conf import settings
-from vault.exceptions import InvalidSecretsAuthorization, InvalidSecretsRequest, InvalidSecretsToken, InvalidSecretsValue
+from vault.exceptions import InvalidSecretsAuthorization, InvalidSecretsRequest, InvalidSecretsToken, \
+    InvalidSecretsValue
 
 
 class SecretsHandler(object):
@@ -84,7 +85,7 @@ class SecretsHandler(object):
         """Gets the names of all job types that have secrets 
 
         :return: all_job_types
-        :rtype: list
+        :rtype: [string]
         """
 
         url = self.secrets_url

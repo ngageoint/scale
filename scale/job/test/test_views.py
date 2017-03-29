@@ -878,10 +878,11 @@ class TestJobTypeDetailsView(TestCase):
         django.setup()
 
         self.interface = {
-            'version': '1.3',
+            'version': '1.4',
             'command': 'test_cmd',
             'command_arguments': 'test_arg',
             'env_vars': [],
+            'mounts': [],
             'settings': [],
             'input_data': [],
             'output_data': [],

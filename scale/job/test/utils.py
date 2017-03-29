@@ -4,8 +4,8 @@ from __future__ import unicode_literals
 import django.utils.timezone as timezone
 
 import trigger.test.utils as trigger_test_utils
-from job.configuration.configuration.job_configuration import JobConfiguration
 from job.configuration.data.exceptions import InvalidConnection
+from job.configuration.json.execution.exe_config import ExecutionConfiguration
 from job.models import Job, JobExecution, JobType, JobTypeRevision, TaskUpdate
 from job.tasks.update import TaskStatusUpdate
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
@@ -135,7 +135,7 @@ def create_job_exe(job_type=None, job=None, status='RUNNING', configuration=None
     if not job:
         job = create_job(job_type=job_type)
     if not configuration:
-        configuration = JobConfiguration().get_dict()
+        configuration = ExecutionConfiguration().get_dict()
     if not timeout:
         timeout = job.timeout
     if not node:
@@ -183,10 +183,11 @@ def create_job_type(name=None, version=None, category=None, interface=None, prio
 
     if not interface:
         interface = {
-            'version': '1.3',
+            'version': '1.4',
             'command': 'test_cmd',
             'command_arguments': 'test_arg',
             'env_vars': [],
+            'mounts': [],
             'settings': [],
             'input_data': [],
             'output_data': [],
