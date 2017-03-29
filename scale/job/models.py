@@ -1316,6 +1316,11 @@ class JobExecution(models.Model):
 
         configuration = self.get_execution_configuration()
 
+        # Set up shared memory
+        shared_mem = self.job.job_type.shared_mem_required
+        if shared_mem > 0:
+            configuration.add_job_task_docker_params([DockerParam('shm-size', '%sm' % shared_mem)])
+
         # Setup task logging
         configuration.configure_logging_docker_params(self)
 
