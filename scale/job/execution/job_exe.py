@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 import logging
 import threading
-from datetime import datetime, timedelta
 
 from django.db import transaction
 from django.utils.timezone import now
