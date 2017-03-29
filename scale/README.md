@@ -1,5 +1,61 @@
-This README describes how to develop on the Scale project after you have
-imported it into Eclipse PyDev on a Windows machine.
+# Scale Scheduler / Services API
+
+This document describes how to develop on the scheduler and services API portion of the Scale project. The scheduler and
+services are written in Python 2.7 using the Django framework - Python 3 support is coming. For unit testing a
+PostgreSQL 9.3+ database with PostGIS extensions must be accessible to your environment. The following sections detail
+the steps to set up your development environment for various platforms. Linux or MacOS are the preferred platforms for
+local development as you will have a much simpler configuration path for Scale build time dependencies.
+
+## Cloud9
+
+Cloud9 comes with built in support for PostGres / PostGIS databases, making development of Scale both portable and
+quick to start using a hosted Cloud 9 environment.
+
+The basics steps to get started are:
+
+1. Browse to https://c9.io/new (signup will be required if you don't have existing account).
+1. Ensure Hosted workspace is selected.
+1. Select private (one free with new account) or public based on your preference.
+1. Enter the Scale Git address to clone: https://github.com/ngageoint/scale.git
+1. Select Django template and Create workspace
+
+Once the workspace has initialized you should see the Cloud9 IDE in your browser. In the terminal enter the following
+commands to initialize for development:
+
+```bash
+# Change to Python code directory
+cd scale
+
+# Initialize database and install Scale Python packages.
+sudo cloud9-init.sh
+
+# Run unit tests
+python manage.py test
+```
+
+## Linux
+
+Prerequisites:
+- Root access on CentOS7 / RHEL7 Linux OS
+- Running Docker 1.10+ daemon
+
+From a fresh clone of Scale run the following commands to initialize your environment:
+
+```bash
+# Change to Python code directory
+cd scale
+
+# Initialize database and install Scale Python packages.
+sudo cent7-init.sh
+
+# Run unit tests
+python manage.py test
+```
+
+## MacOS
+
+## Windows
+
 
 ***** Activate your virtualenv *****
 Whenever you want to do something on the command line with your virtualenv you
