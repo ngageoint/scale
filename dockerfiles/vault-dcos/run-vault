@@ -1,0 +1,31 @@
+#!/bin/sh
+
+if [ -z "$VAULT_TLS_KEY" -a -z "$VAULT_TLS_CERT" ]; then
+  openssl genrsa -out /tmp/server-key.pem 2048
+  openssl req -new -key /tmp/server-key.pem -out /tmp/server-csr.pem \
+    -subj /CN=*/
+  openssl x509 -req -in /tmp/server-csr.pem -out /tmp/server-cert.pem \
+    -signkey /tmp/server-key.pem -days 3650
+else
+  echo "Writing TLS key from VAULT_TLS_KEY"
+  echo "${VAULT_TLS_KEY}" > /tmp/server-key.pem
+  echo "Writing TLS cert from VAULT_TLS_CERT"
+  echo "${VAULT_TLS_CERT}" > /tmp/server-cert.pem
+fi
+
+if [ ! -z "$VAULT_CONFIG_HCL" ]; then
+  echo $VAULT_CONFIG_HCL > config.hcl
+
+  echo "Wrote vault config.hcl:"
+  cat config.hcl
+  echo
+fi
+if [ ! -z "$VAULT_CONFIG_JSON" ]; then
+  echo $VAULT_CONFIG_JSON > config.json
+
+  echo "Wrote vault config.json:"
+  cat config.json
+  echo
+fi
+
+exec vault $*
