@@ -174,6 +174,8 @@ def deploy_webserver(client, app_name, es_urls, db_host, db_port):
             "DCOS_SERVICE_PORT_INDEX": "0",
             "HAPROXY_0_VHOST": vhost,
             "HAPROXY_0_BACKEND_HTTP_OPTIONS": "http-request set-header X-HAPROXY 1\n"
+                                              "rspadd Access-Control-Allow-Methods:\\ GET,\\ POST,\\ PUT,\\ PATCH,\\ OPTIONS,\\ DELETE\n"
+                                              "rspadd Access-Control-Allow-Headers:\\ Origin,\\ X-Requested-With,\\ Content-Type,\\ Accept,\\ Authorization\n"
         },
         'healthChecks': [
             {
