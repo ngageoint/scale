@@ -17,8 +17,16 @@ Save the following JSON as `vault.json`:
     "type": "DOCKER",
     "docker": {
       "image": "geoint/scale-vault",
-      "network": "HOST",
-      "forcePullImage": true
+      "forcePullImage": true,
+      "network": "BRIDGE",
+      "portMappings": [{
+        "containerPort": 8200,
+        "hostPort": 8282,
+        "protocol": "tcp",
+        "labels": {
+          "VIP_0": "scale-vault:8200"
+        }
+      }]
     }
   },
   "healthChecks": [{
