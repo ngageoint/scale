@@ -71,7 +71,7 @@ your Vault will remain permanently sealed.
 ```
 After, check to make sure it was properly initialized:
 ```
-$ docker run -e "VAULT_SKIP_VERIFY=true" -e "VAULT_ADDR=vault.marathon.l4lb.thisdcos.directory:8200" --entrypoint=vault -t geoint/scale-vault status
+$ docker run -e "VAULT_SKIP_VERIFY=true" -e "VAULT_ADDR=https://vault.marathon.l4lb.thisdcos.directory:8200" --entrypoint=vault -t geoint/scale-vault status
 Sealed: true
 Key Shares: 5
 Key Threshold: 3

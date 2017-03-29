@@ -7,7 +7,7 @@ listener "tcp" {
 backend "zookeeper" {
   address = "master.mesos:2181"
   path = "vault"
-  advertise_addr = "vault.marathon.l4lb.thisdcos.directory:8200"
+  advertise_addr = "https://vault.marathon.l4lb.thisdcos.directory:8200"
 }
 
 disable_mlock = true
