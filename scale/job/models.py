@@ -1374,7 +1374,10 @@ class JobExecution(models.Model):
         # Configure Scan workspace based on current configuration
         if self.job.job_type.name == 'scale-scan':
             from ingest.models import Scan
-            scan = Scan.objects.get(job_id=self.job_id)
+            try:
+                scan = Scan.objects.get(job_id=self.job_id)
+            except Scan.DoesNotExist:
+                scan = Scan.objects.get(dry_run_job_id=self.job_id)
             workspace_name = scan.get_scan_configuration().get_workspace()
             configuration.add_job_task_workspace(workspace_name, MODE_RW)
 
