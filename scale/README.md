@@ -6,6 +6,15 @@ PostgreSQL 9.3+ database with PostGIS extensions must be accessible to your envi
 the steps to set up your development environment for various platforms. Linux or MacOS are the preferred platforms for
 local development as you will have a much simpler configuration path for Scale build time dependencies.
 
+# Prerequisites
+
+Scale development requires a local Postgres database with PostGIS extensions installed. The easiest way to get started
+on most platforms is with a Docker container and all the bootstrap configurations described, except Cloud9, use this
+method. The following are the baseline prerequisites for Scale development:
+
+- Running Docker Community Edition 1.10+ Engine (use Docker for Windows or Mac on those platforms)
+- Python 2.7.x
+
 ## Cloud9
 
 Cloud9 comes with built in support for PostGres / PostGIS databases, making development of Scale both portable and
@@ -35,10 +44,8 @@ python manage.py test
 
 ## Linux
 
-Prerequisites:
+Platform specific prerequisites:
 - Root access on CentOS7 / RHEL7 Linux OS
-- Git client
-- Running Docker Engine 1.10.x daemon
 
 From a fresh clone of Scale run the following commands to initialize your environment:
 
