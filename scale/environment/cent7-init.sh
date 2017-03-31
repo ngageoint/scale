@@ -14,7 +14,7 @@ docker run -d --restart=always -p ${SCALE_DB_PORT}:5432 --name scale-postgis \
 # Install all python dependencies (gotta pin setuptools due to errors during pycparser install)
 yum install -y epel-release
 yum install -y bzip2 unzip subversion-libs gcc make \
-    gdal-python geos libffi-devel openssl-devel postgresql protobuf python-virtualenv python-pip python-devel
+    gdal-python geos libffi-devel openssl-devel postgresql python-virtualenv python-pip python-devel libpqxx-devel
 
 pip install -U virtualenv pip
 
