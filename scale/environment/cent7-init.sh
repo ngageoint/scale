@@ -1,20 +1,32 @@
 #!/usr/bin/env bash
 
+export SCALE_DB_HOST=localhost
+export SCALE_DB_PORT=55432
+export SCALE_DB_USER=postgres
+export SCALE_DB_PASS=scale-postgres
+
 # Clean up old Postgres and install 9.4 version
-docker run -d --restart=always -p 55432:5432 --name scale-postgis -e POSTGRES_PASSWORD=scale-postgres mdillon/postgis:9.4-alpine
+docker run -d --restart=always -p ${SCALE_DB_PORT}:5432 --name scale-postgis \
+    -e POSTGRES_PASSWORD=${SCALE_DB_PASS} mdillon/postgis:9.4-alpine
+systemctl enable docker
 
 # Install all python dependencies (gotta pin setuptools due to errors during pycparser install)
-sudo apt-get install build-essential libssl-dev libffi-dev python-dev
-sudo pip install -U pip
-sudo pip install setuptools==33.1.1
-sudo pip install -r pip/build_linux.txt
+yum install -y bzip2 unzip subversion-libs gcc make \
+    gdal-python geos libffi-devel openssl-devel postgresql protobuf python-virtualenv python-pip python-devel
+
+pip install -U virtualenv
 
 cat << EOF > database-commands.sql
 CREATE USER scale PASSWORD 'scale' SUPERUSER;
 CREATE DATABASE scale OWNER=scale;
 EOF
-sudo su postgres -c "psql -f database-commands.sql"
-sudo su postgres -c "psql scale -c 'CREATE EXTENSION postgis'"
+
+# Create pgpass file for authentication to postgres user and initialize scale DB within Docker
+echo "${SCALE_DB_HOST}:${SCALE_DB_PORT}:*:${SCALE_DB_USER}:${SCALE_DB_PASS}" >> ~/.pgpass
+chmod 0600 ~/.pgpass
+
+psql -U ${SCALE_DB_USER} -h ${SCALE_DB_HOST} -w -p ${SCALE_DB_PORT} -f database-commands.sql
+psql -U ${SCALE_DB_USER} -h ${SCALE_DB_HOST} -w -p ${SCALE_DB_PORT} -c "CREATE EXTENSION postgis;"
 
 cp scale/local_settings_dev.py scale/local_settings.py
 cat << EOF >> scale/local_settings.py
@@ -28,12 +40,8 @@ DATABASES = {
         'USER': 'scale',
         'PASSWORD': 'scale',
         'HOST': 'localhost',
-        'PORT': '5432',
+        'PORT': '${SCALE_DB_PORT}',
         'TEST': {'NAME': 'test_scale'},
     },
 }
 EOF
-
-# Load up database with schema migrations to date and fixtures
-python manage.py migrate
-python manage.py load_all_data

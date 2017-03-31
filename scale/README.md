@@ -37,7 +37,8 @@ python manage.py test
 
 Prerequisites:
 - Root access on CentOS7 / RHEL7 Linux OS
-- Running Docker 1.10+ daemon
+- Git client
+- Running Docker Engine 1.10.x daemon
 
 From a fresh clone of Scale run the following commands to initialize your environment:
 
@@ -45,8 +46,16 @@ From a fresh clone of Scale run the following commands to initialize your enviro
 # Change to Python code directory
 cd scale
 
-# Initialize database and install Scale Python packages.
-sudo cent7-init.sh
+# Initialize database and install native dependencies.
+sudo environment/cent7-init.sh
+
+# Initialize virtual environment
+virtualenv environment/scale
+source environment/scale/bin/activate
+
+# Load up database with schema migrations to date and fixtures
+python manage.py migrate
+python manage.py load_all_data
 
 # Run unit tests
 python manage.py test
