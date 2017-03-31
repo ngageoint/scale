@@ -263,7 +263,7 @@ class ExecutionConfiguration(object):
 
         if settings.LOGGING_ADDRESS is not None:
             log_driver = DockerParam('log-driver', 'syslog')
-            # Must explicitly specify RFC3164 to ensure compatability with logstash in Docker 1.11+
+            # Must explicitly specify RFC3164 to ensure compatibility with logstash in Docker 1.11+
             syslog_format = DockerParam('log-opt', 'syslog-format=rfc3164')
             log_address = DockerParam('log-opt', 'syslog-address=%s' % settings.LOGGING_ADDRESS)
             if not job_exe.is_system:
