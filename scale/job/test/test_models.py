@@ -380,7 +380,7 @@ class TestJobExecution(TestCase):
         """Tests running JobExecution.configure_docker_params() with shared memory"""
 
         job_type = job_test_utils.create_job_type()
-        job_type.shared_mem_required = 1024
+        job_type.shared_mem_required = 1024.0
         job_type.save()
         job_exe = job_test_utils.create_job_exe(job_type=job_type)
         job_exe.configure_docker_params({}, [])
