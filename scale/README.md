@@ -175,7 +175,28 @@ source environment/scale/bin/activate
 
 #### MacOS
 
-TODO: Provide initialization instructions for MacOS
+Platform specific prerequisites:
+- Homebrew
+- Docker for Mac 1.17 installed and running
+
+From a fresh clone of Scale run the following commands to initialize your environment:
+
+```bash
+# Change to Python code directory
+cd scale
+
+# Initialize database and install native dependencies.
+sh environment/mac-init.sh
+
+# Activate virtualenv
+source environment/scale/bin/activate
+```
+Going forward, anytime you need to develop Scale, just activate your virtualenv and you're ready:
+
+```bash
+# Activate virtualenv
+source environment/scale/bin/activate
+```
 
 #### Windows (10+ only)
 
