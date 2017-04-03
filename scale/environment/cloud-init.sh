@@ -11,18 +11,18 @@ sed 's^local   all             all                                     peer^loca
 service postgresql start
 
 # Install all python dependencies (gotta pin setuptools due to errors during pycparser install)
-sudo apt-get install build-essential libssl-dev libffi-dev python-dev
-sudo pip install -U pip
-sudo pip install setuptools==33.1.1
-sudo pip install -r pip/requirements.txt
+apt-get install -y build-essential libssl-dev libffi-dev python-dev
+pip install -U pip
+pip install setuptools==33.1.1
+pip install -r pip/requirements.txt
 
 cat << EOF > database-commands.sql
 CREATE USER scale PASSWORD 'scale' SUPERUSER;
 CREATE DATABASE scale OWNER=scale;
 EOF
-sudo su postgres -c "psql -f database-commands.sql"
+su postgres -c "psql -f database-commands.sql"
 rm database-commands.sql
-sudo su postgres -c "psql scale -c 'CREATE EXTENSION postgis'"
+su postgres -c "psql scale -c 'CREATE EXTENSION postgis'"
 
 cp scale/local_settings_dev.py scale/local_settings.py
 cat << EOF >> scale/local_settings.py
@@ -45,3 +45,6 @@ EOF
 # Load up database with schema migrations to date and fixtures
 python manage.py migrate
 python manage.py load_all_data
+
+# Clean up logs to eliminate permission issues
+rm -fr ../scale/logs

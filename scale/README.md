@@ -119,35 +119,24 @@ method. The following are the baseline prerequisites for Scale development:
 The core Scale team uses JetBrains PyCharm or Cloud9 IDE for development. These are in no way required but are
 our preferred choices.
 
-#### Cloud9
+#### Cloud IDEs
 
-Cloud9 comes with built in support for Postgres / PostGIS databases, making development of Scale both portable and
-quick to start using a hosted Cloud 9 environment.
-
-The basics steps to get started are:
-
-1. Browse to https://c9.io/new (signup will be required if you don't have existing account).
-1. Ensure Hosted workspace is selected.
-1. Select private (one free with new account) or public based on your preference.
-1. Enter the Scale Git address to clone: https://github.com/ngageoint/scale.git
-1. Select Django template and Create workspace
-
-Once the workspace has initialized you should see the Cloud9 IDE in your browser. In the terminal enter the following
-commands to initialize for development:
+Cloud9 and Codeanywhere comes with built in support for Postgres / PostGIS databases, making development of Scale both
+portable and quick to start using a hosted cloud environment. Cloud9 requires a credit card, even for free use, while
+CodeAnywhere can be used without providing any payment information. Both providers provide a hosted workspace option
+that are built with Ubuntu containers and our init script should get you up and running quickly. Once your workspace has
+initialized, open the terminal and enter the following commands to initialize for development:
 
 ```bash
 # Change to Python code directory
 cd scale
 
 # Initialize database and install Scale Python packages.
-sudo sh cloud9-init.sh
-
-# Run unit tests
-python manage.py test
-
-# Launch web server
-python manage.py runserver 0.0.0.0:8080
+sudo sh cloud-init.sh
 ```
+
+Virtual environments have not been used for cloud IDE providers as workspaces are already sandboxed eliminating the need
+to isolate dependencies per project.
 
 #### Linux
 
