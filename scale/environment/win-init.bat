@@ -3,10 +3,15 @@ set SCALE_DB_PASS=scale-postgres
 
 REM Launch a database for Scale testing
 docker run -d --restart=always -p %SCALE_DB_PORT%:5432 --name scale-postgis -e POSTGRES_PASSWORD=%SCALE_DB_PASS% mdillon/postgis:9.4-alpine
-sleep 5
-docker exec -it scale-postgis psql -c "CREATE USER scale PASSWORD 'scale' SUPERUSER;"
-docker exec -it scale-postgis psql -c "CREATE DATABASE scale OWNER=scale;"
-docker exec -it scale-postgis psql -c  scale -c "CREATE EXTENSION postgis;"
+sleep 10
+
+# Configure database
+echo "CREATE USER scale PASSWORD 'scale' SUPERUSER;" >> database-commands.sql
+echo "CREATE DATABASE scale OWNER=scale;" >> database-commands.sql
+docker cp database-commands.sql scale-postgis:/database-commands.sql
+del database-commands.sql
+docker exec -it scale-postgis su postgres -c 'psql -f /database-commands.sql'
+docker exec -it scale-postgis su postgres -c 'psql scale -c "CREATE EXTENSION postgis;"'
 
 REM Set default connection string for database
 copy scale/local_settings_dev.py scale/local_settings.py

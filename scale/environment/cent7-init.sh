@@ -8,9 +8,18 @@ systemctl enable docker
 systemctl start docker
 docker run -d --restart=always -p ${SCALE_DB_PORT}:5432 --name scale-postgis \
     -e POSTGRES_PASSWORD=${SCALE_DB_PASS} mdillon/postgis:9.4-alpine
-docker exec -it scale-postgis psql -c "CREATE USER scale PASSWORD 'scale' SUPERUSER;"
-docker exec -it scale-postgis psql -c "CREATE DATABASE scale OWNER=scale;"
-docker exec -it scale-postgis psql -c  scale -c "CREATE EXTENSION postgis;"
+echo Giving Postgres a moment to start up before initializing...
+sleep 10
+
+# Configure database
+cat << EOF > database-commands.sql
+CREATE USER scale PASSWORD 'scale' SUPERUSER;
+CREATE DATABASE scale OWNER=scale;
+EOF
+docker cp database-commands.sql scale-postgis:/database-commands.sql
+rm database-commands.sql
+docker exec -it scale-postgis su postgres -c 'psql -f /database-commands.sql'
+docker exec -it scale-postgis su postgres -c 'psql scale -c "CREATE EXTENSION postgis;"'
 
 # Install all python dependencies (gotta pin setuptools due to errors during pycparser install)
 yum install -y epel-release

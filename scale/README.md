@@ -121,7 +121,7 @@ our preferred choices.
 
 #### Cloud9
 
-Cloud9 comes with built in support for PostGres / PostGIS databases, making development of Scale both portable and
+Cloud9 comes with built in support for Postgres / PostGIS databases, making development of Scale both portable and
 quick to start using a hosted Cloud 9 environment.
 
 The basics steps to get started are:
