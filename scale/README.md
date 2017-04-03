@@ -10,8 +10,8 @@ will have a much simpler configuration path for Scale build time dependencies.
 
 Isolation of development dependencies is done via virtualenv. This is a standard way to ensure system and project
 dependencies are separated for Python development. The configuration of virtualenv for your chosen development platform
-is detailed in the Platform Development section below. Whenever you start a development session, you should activate
-your virtualenv:
+is detailed in the [Development Platforms](#development-platforms) section below. Whenever you start a development
+session, you should activate your virtualenv:
 
 ```bash
 source environment/scale/bin/activate
@@ -107,7 +107,7 @@ ordering below), `import FOO` statements precede `from FOO import BAR` statement
 1. Any necessary updates are made to the documentation
 1. All documentation is generated successfully with no warnings
 
-### Development Platforms - Environment Bootstraps
+### Development Platforms
 
 Scale development requires a local Postgres database with PostGIS extensions installed. The easiest way to get started
 on most platforms is with a Docker container and all the bootstrap configurations described, except Cloud9, use this
@@ -182,7 +182,8 @@ TODO: Provide initialization instructions for MacOS
 Platform specific prerequisites:
 - Python 2.7 installed and included in PATH
 - Virtualenv installed and included in PATH
-- OSGeo4W install of GDAL, GEOS and PROJ included in PATH (https://docs.djangoproject.com/en/1.10/ref/contrib/gis/install/#modify-windows-environment)
+- OSGeo4W install of GDAL, GEOS and PROJ included in PATH
+(https://docs.djangoproject.com/en/1.10/ref/contrib/gis/install/#modify-windows-environment)
 - Docker for Windows 1.17 installed and included in PATH
 
 From a fresh clone of Scale run the following commands to initialize your environment:
