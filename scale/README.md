@@ -1,31 +1,35 @@
 # Scale Scheduler / Services API
 
 This document describes how to develop on the scheduler and services API portion of the Scale project. The scheduler and
-services are written in Python 2.7 using the Django framework - Python 3 support is coming. For unit testing a
-PostgreSQL 9.3+ database with PostGIS extensions must be accessible to your environment. The following sections detail
-the steps to set up your development environment for various platforms. Linux or MacOS are the preferred platforms for
-local development as you will have a much simpler configuration path for Scale build time dependencies.
+services are written in Python 2.7 using the Django framework - Python 3 support is coming. A PostgreSQL 9.3+ database
+with PostGIS extensions must be accessible to your environment. The following sections detail the steps to set up your
+development environment for various platforms. Linux or MacOS are the preferred platforms for local development as you
+will have a much simpler configuration path for Scale build time dependencies.
 
 ## Development
 
-We welcome community contributions to the Scale project, and the following guidelines will help with making maintainable
-Pull Requests (PRs). Before PRs are accepted, your code must meet all conditions of the "Definition of Done."
+Isolation of development dependencies is done via virtualenv. This is a standard way to ensure system and project
+dependencies are separated for Python development. The configuration of virtualenv for your chosen development platform
+is detailed in the Platform Development section below. Whenever you start a development session, you should activate
+your virtualenv:
 
-1. Proper heading in all files
-2. Properly organized imports in all files
-	Organized first in three separate sections separated by a new line:
-		a. Standard Python imports (math, logging, etc)
-		b. Python library imports (Django, etc)
-		c. Scale code imports
-	and then in each section make sure the "import FOO" statements precede the
-	"from FOO import BAR" statements and finally ordered alphabetically.
-3. Add or update necessary unit tests for code updates.
-4. All unit tests run successfully and there are no deprecation warnings (ignore
-   warnings for dependencies.)
-5. No Pep8 warnings in code
-6. All Python files have appropriate docstring information filled out.
-7. Any necessary updates are made to the documentation.
-8. All documentation is generated successfully with no warnings
+```bash
+source environment/scale/bin/activate
+```
+
+When you are done, you can either run the following command or just close the terminal window:
+
+```bash
+deactivate
+```
+
+### Project Settings
+
+All Scale configuration settings are stored following Django convention within `scale/settings.py`. These settings may
+be overridden for development purposes in `scale/local_settings.py` or `scale/local_settings_docker.py` for deployment
+within Docker. One of the first required steps when beginning development is to make a copy of
+`scale/local_settings_dev.py` to `scale/local_settings.py` and updating with your environment specific settings -
+primarily database connection settings.
 
 ### Migrations
 
@@ -47,7 +51,63 @@ command will generate the migration files (ensure you commit these files):
 python manage.py makemigrations
 ```
 
-### Software Prerequisites
+### Web Server
+
+In order to use the Django web server in development, you may launch by running the following from the terminal:
+
+```bash
+python manage.py runserver 0.0.0.0:8080
+```
+
+Port 8080 is recommend as it will be consistently supported across all platforms. Cloud9 imposes restrictions on the
+ports that can be exposed to the internet.
+
+### Unit Tests
+
+Scale makes extensive use of unit tests as a first line of defense against software regressions. All new features must
+be covered by unit tests that exercise both success and failure cases. The entire unit test suite may be executed by
+running the following from the terminal:
+
+```bash
+python manage.py test
+```
+
+Individual Django apps within the Scale project may also be tested individually (using `job` app for example):
+
+```bash
+python manage.py test job
+```
+
+### Documentation
+
+Scale uses Sphinx for project and REST API documentation. With `docs` as your current working directory, the following
+commands run from the terminal will generate the documentation:
+
+```bash
+make code_docs
+make html
+```
+
+### Definition of Done
+
+We welcome community contributions to the Scale project, and the following guidelines will help with making Pull
+Requests (PRs) that ensure the projects long term maintainability. Before PRs are accepted, your code must meet all
+conditions of the "Definition of Done."
+
+1. Proper heading in all files
+2. Properly organized imports in all files (`import FOO` statements precede	`from FOO import BAR` and finally ordered
+alphabetically), organized first in three separate sections separated by a new line:
+    a. Standard Python imports (math, logging, etc)
+	b. Python library imports (Django, etc)
+	c. Scale code imports
+3. Add or update necessary unit tests for code updates.
+4. All unit tests run successfully and there are no deprecation warnings (ignore warnings for dependencies.)
+5. No Pep8 warnings in code
+6. All Python files have appropriate docstring information filled out.
+7. Any necessary updates are made to the documentation.
+8. All documentation is generated successfully with no warnings
+
+### Development Platforms - Environment Bootstraps
 
 Scale development requires a local Postgres database with PostGIS extensions installed. The easiest way to get started
 on most platforms is with a Docker container and all the bootstrap configurations described, except Cloud9, use this
@@ -59,7 +119,7 @@ method. The following are the baseline prerequisites for Scale development:
 The core Scale team uses JetBrains PyCharm or Cloud9 IDE for development. These are in no way required but are
 our preferred choices.
 
-### Cloud9
+#### Cloud9
 
 Cloud9 comes with built in support for PostGres / PostGIS databases, making development of Scale both portable and
 quick to start using a hosted Cloud 9 environment.
@@ -89,7 +149,7 @@ python manage.py test
 python manage.py runserver 0.0.0.0:8080
 ```
 
-### Linux
+#### Linux
 
 Platform specific prerequisites:
 - Root access on CentOS7 / RHEL7 Linux OS
@@ -105,7 +165,7 @@ sudo sh environment/cent7-init.sh
 
 # Initialize virtual environment
 virtualenv environment/scale
-environment/scale/bin/pip install -r pip/build_linux.txt
+environment/scale/bin/pip install -r pip/requirements.txt
 
 # Load up database with schema migrations to date and fixtures
 environment/scale/bin/python manage.py migrate
@@ -116,53 +176,35 @@ Going forward, anytime you need to develop Scale, just activate your virtualenv 
 ```bash
 # Activate virtualenv
 source environment/scale/bin/activate
-
-# Run unit tests
-python manage.py test
-
-# Launch web server
-python manage.py runserver 0.0.0.0:8080
 ```
 
-## MacOS
+#### MacOS
 
 TODO: Provide initialization instructions for MacOS
 
-## Windows
+#### Windows (10+ only)
 
-TODO: Provide initialization instructions for Windows
+Platform specific prerequisites:
+- Python 2.7 installed and included in PATH
+- Virtualenv installed and included in PATH
+- OSGeo4W install of GDAL, GEOS and PROJ included in PATH (https://docs.djangoproject.com/en/1.10/ref/contrib/gis/install/#modify-windows-environment)
+- Docker for Windows 1.17 installed and included in PATH
+
+From a fresh clone of Scale run the following commands to initialize your environment:
+
+```bat
+REM Change to Python code directory
+cd scale
+
+REM Initialize database and configure Scale to point to it.
+environment\win-init.sh
+```
+
+Going forward, anytime you need to develop Scale, just activate your virtualenv and you're ready:
+
+```bat
+REM Activate virtualenv
+environment\scale\bin\activate.bat
+```
 
 
-***** Install Python libraries *****
-First activate your virtualenv. Then perform a pip install for your Python
-environment using pip\dev_win.txt. You will need to separately install the
-libraries with native code (these are commented out in pip\dev_win.txt.)
-
-***** Set up local settings *****
-Make a copy of local_settings_SAMPLE_DEV.py and rename it to local_settings.py.
-Make any additional changes needed (such as database configuration) for your
-development environment.
-
-***** Start Scale Server *****
-Launch the "Start Scale Server" run configuration to start the Scale server.
-
-***** Make Migrations *****
-Migrations are the mechanism by which Django 1.7 tracks changes to the database
-models. Whenever you make changes to any database models, BEFORE you commit the
-changes to Git, make sure you perform a Django makemigrations command. This
-will encapsulate the model changes in migration files that can be used to
-update the database and keep everybody in sync. To create the migration files,
-launch the "Make DB Migrations" run configuration.
-
-***** Unit Tests *****
-Launch the "Run Tests" run configuration to perform the entire unit testing
-suite. The results will also indicate if there are any code deprecation
-warnings. Make sure that all tests pass before merging any code into the master
-branch and also ensure that there are no deprecation warnings.
-
-***** Generate Documentation *****
-To generate the documentation, first activate your virtualenv. Then change
-directory to /docs and run the following commands on the command line:
-
-make code_docs
-make html

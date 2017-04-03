@@ -14,7 +14,7 @@ service postgresql start
 sudo apt-get install build-essential libssl-dev libffi-dev python-dev
 sudo pip install -U pip
 sudo pip install setuptools==33.1.1
-sudo pip install -r pip/build_linux.txt
+sudo pip install -r pip/requirements.txt
 
 cat << EOF > database-commands.sql
 CREATE USER scale PASSWORD 'scale' SUPERUSER;
