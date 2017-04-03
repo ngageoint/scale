@@ -286,6 +286,18 @@
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="queue.test.test_models.TestQueueManager.test_get_queue_fifo">
+<code class="descname">test_get_queue_fifo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManager.test_get_queue_fifo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling QueueManager.get_queue() in FIFO mode</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="queue.test.test_models.TestQueueManager.test_get_queue_lifo">
+<code class="descname">test_get_queue_lifo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManager.test_get_queue_lifo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling QueueManager.get_queue() in LIFO mode</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="queue.test.test_models.TestQueueManager.test_handle_job_failure">
 <code class="descname">test_handle_job_failure</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManager.test_handle_job_failure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling QueueManager.handle_job_failure() when the job fails</p>
@@ -710,7 +722,7 @@ retried</p>
 
 <dl class="function">
 <dt id="queue.test.utils.create_queue">
-<code class="descclassname">queue.test.utils.</code><code class="descname">create_queue</code><span class="sig-paren">(</span><em>job_type=None</em>, <em>priority=1</em>, <em>cpus_required=1.0</em>, <em>mem_required=512.0</em>, <em>disk_in_required=200.0</em>, <em>disk_out_required=100.0</em>, <em>disk_total_required=300.0</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.utils.create_queue" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">queue.test.utils.</code><code class="descname">create_queue</code><span class="sig-paren">(</span><em>job_type=None</em>, <em>priority=1</em>, <em>cpus_required=1.0</em>, <em>mem_required=512.0</em>, <em>disk_in_required=200.0</em>, <em>disk_out_required=100.0</em>, <em>disk_total_required=300.0</em>, <em>queued=datetime.datetime(2017</em>, <em>4</em>, <em>3</em>, <em>20</em>, <em>48</em>, <em>8</em>, <em>217137</em>, <em>tzinfo=&lt;UTC&gt;)</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.utils.create_queue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a queue model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -724,6 +736,7 @@ retried</p>
 <li><strong>disk_in_required</strong> (<em>float</em>) &#8211; The input disk space required in MiB</li>
 <li><strong>disk_out_required</strong> (<em>float</em>) &#8211; The output disk space required in MiB</li>
 <li><strong>disk_total_required</strong> (<em>float</em>) &#8211; The total disk space required in MiB</li>
+<li><strong>queued</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The time the execution was queued</li>
 </ul>
 </td>
 </tr>

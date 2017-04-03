@@ -248,6 +248,7 @@
 <li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0002_auto_20151007_1352">scheduler.migrations.0002_auto_20151007_1352 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0003_auto_20160201_0846">scheduler.migrations.0003_auto_20160201_0846 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0004_auto_20170209_1616">scheduler.migrations.0004_auto_20170209_1616 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0005_scheduler_queue_mode">scheduler.migrations.0005_scheduler_queue_mode module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -442,6 +443,16 @@ cluster-wide state related to scheduling in mesos.</p>
 <em class="property">exception </em><code class="descclassname">Scheduler.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#scheduler.models.Scheduler.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
 </dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.models.Scheduler.QUEUE_MODES">
+<code class="descclassname">Scheduler.</code><code class="descname">QUEUE_MODES</code><em class="property"> = ((u'FIFO', u'FIFO'), (u'LIFO', u'LIFO'))</em><a class="headerlink" href="#scheduler.models.Scheduler.QUEUE_MODES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="scheduler.models.Scheduler.get_queue_mode_display">
+<code class="descclassname">Scheduler.</code><code class="descname">get_queue_mode_display</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.models.Scheduler.get_queue_mode_display" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="attribute">
 <dt id="scheduler.models.Scheduler.objects">

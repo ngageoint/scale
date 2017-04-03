@@ -729,16 +729,18 @@ job</li>
 <p>Provides additional methods for managing the queue</p>
 <dl class="method">
 <dt id="queue.models.QueueManager.get_queue">
-<code class="descname">get_queue</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.get_queue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the list of queue models sorted according to their priority first, and then using LIFO (last in,
-first out) second</p>
+<code class="descname">get_queue</code><span class="sig-paren">(</span><em>order_mode</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.QueueManager.get_queue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the list of queue models sorted according to their priority first, and then according to the provided
+mode</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of queue models</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>order_mode</strong> (<em>string</em>) &#8211; The mode determining how to order the queue (FIFO or LIFO)</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="#queue.models.Queue" title="queue.models.Queue"><code class="xref py py-class docutils literal"><span class="pre">queue.models.Queue</span></code></a>]</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of queue models</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list[<a class="reference internal" href="#queue.models.Queue" title="queue.models.Queue"><code class="xref py py-class docutils literal"><span class="pre">queue.models.Queue</span></code></a>]</td>
 </tr>
 </tbody>
 </table>
