@@ -97,9 +97,9 @@ conditions of the "Definition of Done."
 1. Proper heading in all files
 1. Properly organized imports in all files, organized first in three separate sections separated by a new line (section
 ordering below), `import FOO` statements precede `from FOO import BAR` statements and finally ordered alphabetically
-  1. Standard Python imports (math, logging, etc)
-  1. Python library imports (Django, etc)
-  1. Scale code imports
+    1. Standard Python imports (math, logging, etc)
+    1. Python library imports (Django, etc)
+    1. Scale code imports
 1. Add or update necessary unit tests for code updates
 1. All unit tests run successfully and there are no deprecation warnings (ignore warnings for dependencies)
 1. No Pep8 warnings in code
