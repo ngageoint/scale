@@ -20,6 +20,8 @@ from trigger.models import TriggerEvent
 
 logger = logging.getLogger(__name__)
 
+QUEUE_ORDER_FIFO = 'FIFO'
+QUEUE_ORDER_LIFO = 'LIFO'
 
 # IMPORTANT NOTE: Locking order
 # Always adhere to the following model order for obtaining row locks via select_for_update() in order to prevent
@@ -248,15 +250,21 @@ class QueueManager(models.Manager):
     # List of queue event processor class definitions
     _processors = []
 
-    def get_queue(self):
-        """Returns the list of queue models sorted according to their priority first, and then using LIFO (last in,
-        first out) second
+    def get_queue(self, order_mode):
+        """Returns the list of queue models sorted according to their priority first, and then according to the provided
+        mode
 
+        :param order_mode: The mode determining how to order the queue (FIFO or LIFO)
+        :type order_mode: string
         :returns: The list of queue models
         :rtype: list[:class:`queue.models.Queue`]
         """
 
-        return self.order_by('priority', '-queued').iterator()
+        if order_mode == QUEUE_ORDER_FIFO:
+            return self.order_by('priority', 'queued').iterator()
+        elif order_mode == QUEUE_ORDER_LIFO:
+            return self.order_by('priority', '-queued').iterator()
+        return self.order_by('priority').iterator()
 
     def get_queue_status(self):
         """Returns the current status of the queue with statistics broken down by job type.
