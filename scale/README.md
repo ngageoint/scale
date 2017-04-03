@@ -163,13 +163,8 @@ cd scale
 # Initialize database and install native dependencies.
 sudo sh environment/cent7-init.sh
 
-# Initialize virtual environment
-virtualenv environment/scale
-environment/scale/bin/pip install -r pip/requirements.txt
-
-# Load up database with schema migrations to date and fixtures
-environment/scale/bin/python manage.py migrate
-environment/scale/bin/python manage.py load_all_data
+# Activate virtualenv
+source environment/scale/bin/activate
 ```
 Going forward, anytime you need to develop Scale, just activate your virtualenv and you're ready:
 
@@ -198,6 +193,9 @@ cd scale
 
 REM Initialize database and configure Scale to point to it.
 environment\win-init.sh
+
+REM Activate virtualenv
+environment\scale\bin\activate.bat
 ```
 
 Going forward, anytime you need to develop Scale, just activate your virtualenv and you're ready:

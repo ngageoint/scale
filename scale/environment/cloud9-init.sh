@@ -21,6 +21,7 @@ CREATE USER scale PASSWORD 'scale' SUPERUSER;
 CREATE DATABASE scale OWNER=scale;
 EOF
 sudo su postgres -c "psql -f database-commands.sql"
+rm database-commands.sql
 sudo su postgres -c "psql scale -c 'CREATE EXTENSION postgis'"
 
 cp scale/local_settings_dev.py scale/local_settings.py
