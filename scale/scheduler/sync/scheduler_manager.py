@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import threading
 
+from queue.models import QUEUE_ORDER_FIFO
 from scheduler.models import Scheduler
 
 
@@ -50,6 +51,18 @@ class SchedulerManager(object):
             if not self._scheduler:
                 return True
             return self._scheduler.is_paused
+
+    def queue_mode(self):
+        """Returns the current mode for ordering the queue
+
+        :returns: The queue mode
+        :rtype: string
+        """
+
+        with self._lock:
+            if not self._scheduler:
+                return QUEUE_ORDER_FIFO
+            return self._scheduler.queue_mode
 
     def sync_with_database(self):
         """Syncs with the database to retrieve an updated scheduler model

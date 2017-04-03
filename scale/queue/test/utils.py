@@ -24,7 +24,7 @@ def create_job_load(job_type=None, measured=None, pending_count=0, queued_count=
 
 
 def create_queue(job_type=None, priority=1, cpus_required=1.0, mem_required=512.0, disk_in_required=200.0,
-                 disk_out_required=100.0, disk_total_required=300.0):
+                 disk_out_required=100.0, disk_total_required=300.0, queued=timezone.now()):
     """Creates a queue model for unit testing
 
     :param job_type: The job type
@@ -41,6 +41,8 @@ def create_queue(job_type=None, priority=1, cpus_required=1.0, mem_required=512.
     :type disk_out_required: float
     :param disk_total_required: The total disk space required in MiB
     :type disk_total_required: float
+    :param queued: The time the execution was queued
+    :type queued: :class:`datetime.datetime`
     """
 
     job = job_test_utils.create_job(job_type=job_type, status='QUEUED')
@@ -49,4 +51,4 @@ def create_queue(job_type=None, priority=1, cpus_required=1.0, mem_required=512.
     return Queue.objects.create(job_exe=job_exe, job=job, job_type=job.job_type, priority=priority,
                                 cpus_required=cpus_required, mem_required=mem_required,
                                 disk_in_required=disk_in_required, disk_out_required=disk_out_required,
-                                disk_total_required=disk_total_required, queued=timezone.now())
+                                disk_total_required=disk_total_required, queued=queued)
