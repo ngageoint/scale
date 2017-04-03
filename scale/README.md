@@ -123,7 +123,7 @@ our preferred choices.
 
 Cloud9 and Codeanywhere comes with built in support for Postgres / PostGIS databases, making development of Scale both
 portable and quick to start using a hosted cloud environment. Cloud9 requires a credit card, even for free use, while
-CodeAnywhere can be used without providing any payment information. Both providers provide a hosted workspace option
+Codeanywhere can be used without providing any payment information. Both providers provide a hosted workspace option
 that are built with Ubuntu containers and our init script should get you up and running quickly. Once your workspace has
 initialized, open the terminal and enter the following commands to initialize for development:
 
@@ -132,7 +132,7 @@ initialized, open the terminal and enter the following commands to initialize fo
 cd scale
 
 # Initialize database and install Scale Python packages.
-sudo sh cloud-init.sh
+sudo sh environment/cloud-init.sh
 ```
 
 Virtual environments have not been used for cloud IDE providers as workspaces are already sandboxed eliminating the need
