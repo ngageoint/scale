@@ -13,11 +13,9 @@ NAME_COUNTER = 1
 
 def create_ingest(file_name='test.txt', status='TRANSFERRING', transfer_started=None, transfer_ended=None,
                   ingest_started=None, ingest_ended=None, data_started=None, data_ended=None, workspace=None,
-                  strike=None, source_file=None):
+                  strike=None, scan=None, source_file=None):
     if not workspace:
         workspace = storage_test_utils.create_workspace()
-    if not strike:
-        strike = create_strike()
     if not source_file:
         source_file = source_test_utils.create_source(file_name=file_name, data_started=data_started,
                                                       data_ended=data_ended, workspace=workspace)
@@ -39,7 +37,7 @@ def create_ingest(file_name='test.txt', status='TRANSFERRING', transfer_started=
                                  bytes_transferred=source_file.file_size, transfer_started=transfer_started,
                                  transfer_ended=transfer_ended, media_type='text/plain', ingest_started=ingest_started,
                                  ingest_ended=ingest_ended, data_started=source_file.data_started,
-                                 data_ended=source_file.data_ended, workspace=workspace, strike=strike,
+                                 data_ended=source_file.data_ended, workspace=workspace, strike=strike, scan=scan,
                                  source_file=source_file)
 
 
