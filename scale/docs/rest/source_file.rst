@@ -149,11 +149,17 @@ These services provide access to information about source files that Scale has i
 | Returns a specific source file and all its related model information including ingests and derived products. Associated |
 | products that are superseded are excluded by default.                                                                   |
 +-------------------------------------------------------------------------------------------------------------------------+
+| **DEPRECATED**                                                                                                          |
+|                This table describes the current v4 version of the source file details API, which is now deprecated.     |
+|                The new v5 version of this API does not include the *ingests* and *products* arrays in the response.     |
+|                The new v5 version also does not support the use of *file_name* in the URL (only source ID supported).   |
++-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /sources/{id}/                                                                                                  |
 |         Where {id} is the unique identifier of an existing model.                                                       |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /sources/{file_name}/                                                                                           |
 |         Where {file_name} is the unique name of a source file associated with an existing model.                        |
+|         *DEPRECATED*: removed in v5                                                                                     |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Query Parameters**                                                                                                    |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
@@ -210,10 +216,10 @@ These services provide access to information about source files that Scale has i
 | parsed             | ISO-8601 Datetime | When the source file was originally parsed by Scale.                           |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | ingests            | Array             | A list of records that represent each attempt to parse and ingest the file.    |
-|                    |                   | (See :ref:`Ingest Details <rest_ingest_details>`)                              |
+|                    |                   | (See :ref:`Ingest Details <rest_ingest_details>`) (*DEPRECATED*, gone in v5)   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | products           | Array             | A list of all product files derived from this source file during jobs.         |
-|                    |                   | (See :ref:`Product Details <rest_product_details>`)                            |
+|                    |                   | (See :ref:`Product Details <rest_product_details>`) (*DEPRECATED*, gone in v5) |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
