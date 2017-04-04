@@ -122,6 +122,39 @@ class TestSourceDetailsView(TestCase):
 
         self.source = source_test_utils.create_source()
 
+    def test_id(self):
+        """Tests successfully calling the source files view by id"""
+
+        # TODO: this can change to rest_util.get_url() once v5 is default instead of v4
+        url = '/v5/sources/%i/' % self.source.id
+        #  url = rest_util.get_url('/sources/%i/' % self.source.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(result['id'], self.source.id)
+        self.assertEqual(result['file_name'], self.source.file_name)
+        self.assertFalse('ingests' in result)
+        self.assertFalse('products' in result)
+
+    def test_missing(self):
+        """Tests calling the source files view with an invalid id"""
+
+        # TODO: this can change to rest_util.get_url() once v5 is default instead of v4
+        url = '/v5/sources/12345/'
+        #  url = rest_util.get_url('/sources/12345/')
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+
+
+# TODO: change URLs to hard-coded v4 strings once v5 is default instead of v4
+class TestSourceDetailsViewV4(TestCase):
+
+    def setUp(self):
+        django.setup()
+
+        self.source = source_test_utils.create_source()
+
         try:
             import ingest.test.utils as ingest_test_utils
             self.ingest = ingest_test_utils.create_ingest(source_file=self.source)

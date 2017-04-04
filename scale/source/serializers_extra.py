@@ -4,7 +4,8 @@ import rest_framework.serializers as serializers
 from source.serializers import SourceFileSerializer
 
 
-class SourceFileDetailsSerializer(SourceFileSerializer):
+# TODO: remove when REST API v4 is removed
+class SourceFileDetailsSerializerV4(SourceFileSerializer):
     """Converts source file model fields to REST output"""
     is_parsed = serializers.BooleanField()
     parsed = serializers.DateTimeField()

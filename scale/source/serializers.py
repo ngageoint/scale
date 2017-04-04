@@ -16,6 +16,11 @@ class SourceFileSerializer(SourceFileBaseSerializer):
     pass
 
 
+class SourceFileDetailsSerializer(SourceFileSerializer):
+    """Converts source file model fields to REST output"""
+    pass
+
+
 class SourceFileUpdateField(fields.Field):
     """Field for displaying the update information for a source file"""
 

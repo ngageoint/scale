@@ -179,8 +179,22 @@ class SourceFileManager(models.GeoManager):
 
         return sources
 
-    def get_details(self, source_id, include_superseded=False):
-        """Gets additional details for the given source model based on related model attributes.
+    def get_details(self, source_id):
+        """Gets additional details for the given source model
+
+        :param source_id: The unique identifier of the source (file ID)
+        :type source_id: int
+        :returns: The source model with details
+        :rtype: :class:`storage.models.ScaleFile`
+
+        :raises :class:`storage.models.ScaleFile.DoesNotExist`: If the file does not exist
+        """
+
+        return ScaleFile.objects.all().select_related('workspace').get(pk=source_id, file_type='SOURCE')
+
+    # TODO: remove when REST API v4 is removed
+    def get_details_v4(self, source_id, include_superseded=False):
+        """Gets additional details for the given source model based on related model attributes (v4 version).
 
         :param source_id: The unique identifier of the source.
         :type source_id: int
