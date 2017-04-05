@@ -45,20 +45,46 @@
                         </div>
                         <div class="form-group">
                             <label for="bDateRangeStarted">Date Range Started</label>
-                            <div class="input-group">
-                                <span class="input-group-addon" id="from-input" ng-click="vm.openDateRangeStartedPopup($event)">
-                                    <i class="fa fa-calendar"></i>
-                                </span>
-                                <input id="bDateRangeStarted" type="text" class="form-control" aria-describedby="bDateRangeStarted" uib-datepicker-popup="yyyy-MM-dd" ng-model="vm.batch.definition.date_range.started" ng-model-options="vm.dateModelOptions" is-open="vm.dateRangeStartedPopup.opened" close-text="Close" datepicker-append-to-body="true" ng-click="vm.openDateRangeStartedPopup($event)" />
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div class="input-group">
+                                        <span class="input-group-addon" id="from-input" ng-click="vm.openDateRangeStartedPopup($event)">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                        <input id="bDateRangeStarted" type="text" class="form-control" aria-describedby="bDateRangeStarted" uib-datepicker-popup="yyyy-MM-dd" ng-model="vm.batch.definition.date_range.started" ng-model-options="vm.dateModelOptions" ng-change="vm.setTime('started')" is-open="vm.dateRangeStartedPopup.opened" close-text="Close" datepicker-append-to-body="true" ng-click="vm.openDateRangeStartedPopup($event)" />
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <div class="timepicker">
+                                        <input type="tel" class="form-control" ng-model="vm.startTime.hour" ng-change="vm.changeTime('startTime', 'hour')" ng-keydown="vm.keydown($event, 'hour', 'startTime')" ng-disabled="!vm.batch.definition.date_range.started" />
+                                        <span>:</span>
+                                        <input type="tel" class="form-control" ng-model="vm.startTime.minute" ng-change="vm.changeTime('startTime', 'minute')" ng-keydown="vm.keydown($event, 'minute', 'startTime')" ng-disabled="!vm.batch.definition.date_range.started" />
+                                        <span>:</span>
+                                        <input type="tel" class="form-control" ng-model="vm.startTime.second" ng-change="vm.changeTime('startTime', 'second')" ng-keydown="vm.keydown($event, 'second', 'startTime')" ng-disabled="!vm.batch.definition.date_range.started" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="bDateRangeEnded">Date Range Ended</label>
-                            <div class="input-group">
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <div class="input-group">
                                 <span class="input-group-addon" id="to-input" ng-click="vm.openDateRangeEndedPopup($event)">
                                     <i class="fa fa-calendar"></i>
                                 </span>
-                                <input id="bDateRangeEnded" type="text" class="form-control" aria-describedby="bDateRangeEnded" uib-datepicker-popup="yyyy-MM-dd" ng-model="vm.batch.definition.date_range.ended" ng-model-options="vm.dateModelOptions" is-open="vm.dateRangeEndedPopup.opened" close-text="Close" datepicker-append-to-body="true" ng-click="vm.openDateRangeEndedPopup($event)" />
+                                        <input id="bDateRangeEnded" type="text" class="form-control" aria-describedby="bDateRangeEnded" uib-datepicker-popup="yyyy-MM-dd" ng-model="vm.batch.definition.date_range.ended" ng-model-options="vm.dateModelOptions" ng-change="vm.setTime('ended')" is-open="vm.dateRangeEndedPopup.opened" close-text="Close" datepicker-append-to-body="true" ng-click="vm.openDateRangeEndedPopup($event)" />
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <div class="timepicker">
+                                        <input type="tel" class="form-control" ng-model="vm.endTime.hour" ng-change="vm.changeTime('endTime', 'hour')" ng-keydown="vm.keydown($event, 'hour', 'endTime')" ng-disabled="!vm.batch.definition.date_range.ended" />
+                                        <span>:</span>
+                                        <input type="tel" class="form-control" ng-model="vm.endTime.minute" ng-change="vm.changeTime('endTime', 'minute')" ng-keydown="vm.keydown($event, 'minute', 'endTime')" ng-disabled="!vm.batch.definition.date_range.ended" />
+                                        <span>:</span>
+                                        <input type="tel" class="form-control" ng-model="vm.endTime.second" ng-change="vm.changeTime('endTime', 'second')" ng-keydown="vm.keydown($event, 'second', 'endTime')" ng-disabled="!vm.batch.definition.date_range.ended" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

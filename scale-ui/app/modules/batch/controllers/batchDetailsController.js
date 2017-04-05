@@ -17,6 +17,16 @@
         vm.selectedRecipeType = {};
         vm.jobTypes = [];
         vm.selectedJobTypes = [];
+        vm.startTime = {
+            hour: null,
+            minute: null,
+            second: null
+        };
+        vm.endTime = {
+            hour: null,
+            minute: null,
+            second: null
+        };
         vm.dateModelOptions = {
             timezone: '+000'
         };
@@ -50,6 +60,80 @@
             });
             warningsHtml += '<button type="button" class="btn btn-default btn-xs clear">Hide</button>';
             return warningsHtml;
+        };
+
+        vm.setTime = function (type) {
+            if (type === 'started') {
+                vm.startTime = {
+                    hour: ('0' + moment.utc(vm.batch.definition.date_range[type]).hour()).slice(-2),
+                    minute: ('0' + moment.utc(vm.batch.definition.date_range[type]).minute()).slice(-2),
+                    second: ('0' + moment.utc(vm.batch.definition.date_range[type]).second()).slice(-2)
+                };
+            } else {
+                vm.endTime = {
+                    hour: ('0' + moment.utc(vm.batch.definition.date_range[type]).hour()).slice(-2),
+                    minute: ('0' + moment.utc(vm.batch.definition.date_range[type]).minute()).slice(-2),
+                    second: ('0' + moment.utc(vm.batch.definition.date_range[type]).second()).slice(-2)
+                };
+            }
+        };
+
+        vm.changeTime = function (type, unit) {
+            if (vm.batch.definition.date_range) {
+                if (vm[type][unit].length > 2) {
+                    vm[type][unit] = ('0' + vm[type].hour).slice(-2);
+                }
+                if (!isNaN(vm[type][unit])) {
+                    if (vm[type].hour > 23 || vm[type].hour < 0) {
+                        vm[type].hour = vm[type].hour > 23 ? 23 : 0;
+                    }
+                    if (vm[type].minute > 59 || vm[type].minute < 0) {
+                        vm[type].minute = vm[type].minute > 59 ? 59 : 0;
+                    }
+                    if (vm[type].second > 59 || vm[type].second < 0) {
+                        vm[type].second = vm[type].second > 59 ? 59 : 0;
+                    }
+                    var timeSet = type === 'startTime' ? moment.utc(vm.batch.definition.date_range.started.toISOString()) : moment.utc(vm.batch.definition.date_range.ended.toISOString());
+                    timeSet.set({
+                        'hour': ('0' + vm[type].hour).slice(-2),
+                        'minute': ('0' + vm[type].minute).slice(-2),
+                        'second': ('0' + vm[type].second).slice(-2)
+                    });
+                    if (type === 'startTime') {
+                        vm.batch.definition.date_range.started = timeSet.toDate();
+                        console.log('start time: ' + vm.batch.definition.date_range.started.toISOString());
+                    } else if (type === 'endTime') {
+                        vm.batch.definition.date_range.ended = timeSet.toDate();
+                        console.log('end time: ' + vm.batch.definition.date_range.ended.toISOString());
+                    }
+                }
+            }
+        };
+
+        vm.keydown = function ($event, unit, type) {
+            var max = 0;
+            if (unit === 'hour') {
+                max = 23;
+            } else if (unit === 'minute' || unit === 'second') {
+                max = 60;
+            }
+            if ($event.keyCode === 38) {
+                // up arrow
+                if (isNaN(vm[type][unit])) {
+                    vm[type][unit] = ('0' + 0).slice(-2);
+                }
+                vm[type][unit] < max ? vm[type][unit]++ : vm[type][unit];
+                vm[type][unit] = ('0' + vm[type][unit]).slice(-2);
+                vm.changeTime(type, unit);
+            } else if ($event.keyCode === 40) {
+                // down arrow
+                if (isNaN(vm[type][unit])) {
+                    vm[type][unit] = ('0' + 0).slice(-2);
+                }
+                vm[type][unit] > 0 ? vm[type][unit]-- : vm[type][unit];
+                vm[type][unit] = ('0' + vm[type][unit]).slice(-2);
+                vm.changeTime(type, unit);
+            }
         };
 
         vm.validateBatch = function () {
@@ -135,5 +219,18 @@
         };
 
         initialize();
+
+        $scope.$watch('vm.batch.definition.date_range.started', function (newValue, oldValue) {
+            if (angular.equals(newValue, oldValue)) {
+                return;
+            }
+            if (!newValue) {
+                vm.startTime = {
+                    hour: null,
+                    minute: null,
+                    second: null
+                };
+            }
+        });
     });
 })();
