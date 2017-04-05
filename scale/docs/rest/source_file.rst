@@ -149,11 +149,17 @@ These services provide access to information about source files that Scale has i
 | Returns a specific source file and all its related model information including ingests and derived products. Associated |
 | products that are superseded are excluded by default.                                                                   |
 +-------------------------------------------------------------------------------------------------------------------------+
+| **DEPRECATED**                                                                                                          |
+|                This table describes the current v4 version of the source file details API, which is now deprecated.     |
+|                The new v5 version of this API does not include the *ingests* and *products* arrays in the response.     |
+|                The new v5 version also does not support the use of *file_name* in the URL (only source ID supported).   |
++-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /sources/{id}/                                                                                                  |
 |         Where {id} is the unique identifier of an existing model.                                                       |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /sources/{file_name}/                                                                                           |
 |         Where {file_name} is the unique name of a source file associated with an existing model.                        |
+|         *DEPRECATED*: removed in v5                                                                                     |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Query Parameters**                                                                                                    |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
@@ -210,10 +216,10 @@ These services provide access to information about source files that Scale has i
 | parsed             | ISO-8601 Datetime | When the source file was originally parsed by Scale.                           |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | ingests            | Array             | A list of records that represent each attempt to parse and ingest the file.    |
-|                    |                   | (See :ref:`Ingest Details <rest_ingest_details>`)                              |
+|                    |                   | (See :ref:`Ingest Details <rest_ingest_details>`) (*DEPRECATED*, gone in v5)   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | products           | Array             | A list of all product files derived from this source file during jobs.         |
-|                    |                   | (See :ref:`Product Details <rest_product_details>`)                            |
+|                    |                   | (See :ref:`Product Details <rest_product_details>`) (*DEPRECATED*, gone in v5) |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
@@ -321,6 +327,212 @@ These services provide access to information about source files that Scale has i
 |        ]                                                                                                                |
 |    }                                                                                                                    |
 +-------------------------------------------------------------------------------------------------------------------------+
+
+.. _rest_source_file_ingests:
+
++-------------------------------------------------------------------------------------------------------------------------+
+| **Source File Ingest List**                                                                                             |
++=========================================================================================================================+
+| Returns a list of all ingests related to the source file with the given ID.                                             |
++-------------------------------------------------------------------------------------------------------------------------+
+| **GET** /sources/{id}/ingests/                                                                                          |
+|         Where {id} is the unique identifier of an existing source file                                                  |
++-------------------------------------------------------------------------------------------------------------------------+
+| **Query Parameters**                                                                                                    |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| page               | Integer           | Optional | The page of the results to return. Defaults to 1.                   |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| page_size          | Integer           | Optional | The size of the page to use for pagination of results.              |
+|                    |                   |          | Defaults to 100, and can be anywhere from 1-1000.                   |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| started            | ISO-8601 Datetime | Optional | The start of the time range to query.                               |
+|                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
+|                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| ended              | ISO-8601 Datetime | Optional | End of the time range to query, defaults to the current time.       |
+|                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
+|                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| order              | String            | Optional | One or more fields to use when ordering the results.                |
+|                    |                   |          | Duplicate it to multi-sort, (ex: order=status&order=created).       |
+|                    |                   |          | Nested objects require a delimiter (ex: order=source_file__created).|
+|                    |                   |          | Prefix fields with a dash to reverse the sort, (ex: order=-status). |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| status             | String            | Optional | Return only ingests with a status matching this string.             |
+|                    |                   |          | Choices: [TRANSFERRING, TRANSFERRED, DEFERRED, INGESTING, INGESTED, |
+|                    |                   |          | ERRORED, DUPLICATE].                                                |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| scan_id            | Integer           | Optional | Return only ingests created by a given scan process identifier.     |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| strike_id          | Integer           | Optional | Return only ingests created by a given strike process identifier.   |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| **Successful Response**                                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Status**         | 200 OK                                                                                             |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**   | *application/json*                                                                                 |
++--------------------+----------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| count              | Integer           | The total number of results that match the query parameters.                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| next               | URL               | A URL to the next page of results.                                             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| previous           | URL               | A URL to the previous page of results.                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| results            | Array             | List of result JSON objects that match the query parameters.                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .id                | Integer           | The unique identifier of the model. Can be passed to the details API call.     |
+|                    |                   | (See :ref:`Ingest Details <rest_ingest_details>`)                              |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .file_name         | String            | The name of the file being ingested.                                           |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .scan              | JSON Object       | The scan process that triggered the ingest.                                    |
+|                    |                   | (See :ref:`Scan Details <rest_scan_details>`)                                  |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .strike            | JSON Object       | The strike process that triggered the ingest.                                  |
+|                    |                   | (See :ref:`Strike Details <rest_strike_details>`)                              |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .status            | String            | The current status of the ingest.                                              |
+|                    |                   | Choices: [TRANSFERRING, TRANSFERRED, DEFERRED, INGESTING, INGESTED, ERRORED,   |
+|                    |                   | DUPLICATE].                                                                    |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .bytes_transferred | Integer           | The total number of bytes transferred so far.                                  |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .transfer_started  | ISO-8601 Datetime | When the transfer was started.                                                 |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .transfer_ended    | ISO-8601 Datetime | When the transfer ended.                                                       |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .media_type        | String            | The IANA media type of the file.                                               |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .file_size         | Integer           | The size of the file in bytes.                                                 |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .data_type         | Array             | A list of string data type "tags" for the file.                                |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .file_path         | String            | The relative path of the file in the workspace.                                |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .workspace         | JSON Object       | The workspace storing the file.                                                |
+|                    |                   | (See :ref:`Workspace Details <rest_workspace_details>`)                        |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .new_file_path     | String            | The relative path for where the file should be moved as part of ingesting.     |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .new_workspace     | JSON Object       | The new workspace to move the file into as part of ingesting.                  |
+|                    |                   | (See :ref:`Workspace Details <rest_workspace_details>`)                        |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .job               | JSON Object       | The ID of the ingest job.                                                      |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .ingest_started    | ISO-8601 Datetime | When the ingest was started.                                                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .ingest_ended      | ISO-8601 Datetime | When the ingest ended.                                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .source_file       | JSON Object       | A reference to the source file that was stored by this ingest.                 |
+|                    |                   | (See :ref:`Source File Details <rest_source_file_details>`)                    |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .data_started      | ISO-8601 Datetime | The start time of the source data being ingested.                              |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .data_ended        | ISO-8601 Datetime | The end time of the source data being ingested.                                |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .created           | ISO-8601 Datetime | When the associated database model was initially created.                      |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .last_modified     | ISO-8601 Datetime | When the associated database model was last saved.                             |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .. code-block:: javascript                                                                                              |
+|                                                                                                                         |
+|    {                                                                                                                    |
+|        "count": 42,                                                                                                     |
+|        "next": null,                                                                                                    |
+|        "previous": null,                                                                                                |
+|        "results": [                                                                                                     |
+|            {                                                                                                            |
+|                "id": 14,                                                                                                |
+|                "file_name": "file_name.txt",                                                                            |
+|                "scan": null,                                                                                            |
+|                "strike": {                                                                                              |
+|                    "id": 1,                                                                                             |
+|                    "name": "my-strike",                                                                                 |
+|                    "title": "My Strike Processor",                                                                      |
+|                    "description": "This Strike process handles the data feed",                                          |
+|                    "job": {                                                                                             |
+|                        "id": 2                                                                                          |
+|                    }                                                                                                    |
+|                },                                                                                                       |
+|                "status": "INGESTED",                                                                                    |
+|                "bytes_transferred": 1234,                                                                               |
+|                "transfer_started": "2015-09-10T14:48:08.920Z",                                                          |
+|                "transfer_ended": "2015-09-10T14:48:08.956Z",                                                            |
+|                "media_type": "text/plain",                                                                              |
+|                "file_size": 1234,                                                                                       |
+|                "data_type": [],                                                                                         |
+|                "file_path": "the/current/path/file_name.txt",                                                           |
+|                "workspace": {                                                                                           |
+|                    "id": 1,                                                                                             |
+|                    "name": "my-workspace",                                                                              |
+|                    "title": "My Workspace",                                                                             |
+|                    "description": "My Workspace",                                                                       |
+|                    "base_url": "http://host.com/wk",                                                                    |
+|                    "is_active": true,                                                                                   |
+|                    "used_size": 0,                                                                                      |
+|                    "total_size": 0,                                                                                     |
+|                    "created": "2015-10-05T21:26:04.855Z",                                                               |
+|                    "archived": null,                                                                                    |
+|                    "last_modified": "2015-10-05T21:26:04.855Z"                                                          |
+|                },                                                                                                       |
+|                "new_file_path": "the/new/path/file_name.txt",                                                           |
+|                "new_workspace": {                                                                                       |
+|                    "id": 1,                                                                                             |
+|                    "name": "my-new-workspace",                                                                          |
+|                    "title": "My New Workspace",                                                                         |
+|                    "description": "My New Workspace",                                                                   |
+|                    "base_url": "http://host.com/new-wk",                                                                |
+|                    "is_active": true,                                                                                   |
+|                    "used_size": 0,                                                                                      |
+|                    "total_size": 0,                                                                                     |
+|                    "created": "2015-10-05T21:26:04.855Z",                                                               |
+|                    "archived": null,                                                                                    |
+|                    "last_modified": "2015-10-05T21:26:04.855Z"                                                          |
+|                },                                                                                                       |
+|                "job": {                                                                                                 |
+|                    "id": 1234                                                                                           |
+|                },                                                                                                       |
+|                "ingest_started": "2015-09-10T15:24:53.503Z",                                                            |
+|                "ingest_ended": "2015-09-10T15:24:53.987Z",                                                              |
+|                "source_file": {                                                                                         |
+|                    "id": 1,                                                                                             |
+|                    "workspace": {                                                                                       |
+|                        "id": 1,                                                                                         |
+|                        "name": "Raw Source"                                                                             |
+|                    },                                                                                                   |
+|                    "file_name": "file_name.txt",                                                                        |
+|                    "media_type": "text/plain",                                                                          |
+|                    "file_size": 1234,                                                                                   |
+|                    "data_type": [],                                                                                     |
+|                    "is_deleted": false,                                                                                 |
+|                    "uuid": "c8928d9183fc99122948e7840ec9a0fd",                                                          |
+|                    "url": "http://host.com/file_name.txt",                                                              |
+|                    "created": "2015-09-10T15:24:53.962Z",                                                               |
+|                    "deleted": null,                                                                                     |
+|                    "data_started": "2015-09-10T14:36:56Z",                                                              |
+|                    "data_ended": "2015-09-10T14:37:01Z",                                                                |
+|                    "geometry": null,                                                                                    |
+|                    "center_point": null,                                                                                |
+|                    "meta_data": {...},                                                                                  |
+|                    "last_modified": "2015-09-10T15:25:03.797Z",                                                         |
+|                    "is_parsed": true,                                                                                   |
+|                    "parsed": "2015-09-10T15:25:03.796Z"                                                                 |
+|                },                                                                                                       |
+|                "data_started": "2015-09-10T15:24:53.503Z",                                                              |
+|                "data_ended": "2015-09-10T15:24:53.987Z",                                                                |
+|                "created": "2015-09-10T15:24:47.412Z",                                                                   |
+|                "last_modified": "2015-09-10T15:24:53.987Z"                                                              |
+|            },                                                                                                           |
+|           ...                                                                                                           |
+|        ]                                                                                                                |
+|    }                                                                                                                    |
++-------------------------------------------------------------------------------------------------------------------------+
+
 
 .. _rest_source_file_jobs:
 

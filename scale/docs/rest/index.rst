@@ -14,7 +14,7 @@ describe the services available for each component of Scale.
 API Versions
 ------------
 :Latest Version: ``v4``
-:Other Versions: ``v3``
+:Other Versions: ``v3, v5``
 
 The Scale API uses a versioning scheme based on a prefix in the URL path. Any time a breaking change is made to the API
 a new version prefix will be included so that users can opt-in to the changes over time. In the short-term, the system
