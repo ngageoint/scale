@@ -124,8 +124,11 @@ class IngestManager(models.Manager):
         """
 
         # Fetch a list of ingests
-        ingests = self.select_related('strike', 'scan', 'source_file', 'source_file__workspace')
-        ingests = ingests.defer('strike__configuration', 'scan__configuration', 'source_file__workspace__json_config')
+        ingests = self.select_related('strike', 'scan', 'workspace', 'new_workspace', 'job')
+        ingests = ingests.select_related('source_file', 'source_file__workspace')
+        ingests = ingests.defer('strike__configuration', 'scan__configuration', 'workspace__json_config')
+        ingests = ingests.defer('new_workspace__json_config', 'job__data', 'job__configuration', 'job__results')
+        ingests = ingests.defer('source_file__workspace__json_config')
 
         # Apply time range filtering
         if started:
@@ -216,8 +219,9 @@ class IngestManager(models.Manager):
         """
 
         # Attempt to fetch the requested ingest
-        ingest = Ingest.objects.all().select_related('strike', 'strike__job', 'strike__job__job_type',
-                                                     'source_file', 'source_file__workspace')
+        ingest = Ingest.objects.select_related('scan', 'scan__job', 'scan__dry_run_job', 'strike', 'strike__job',
+                                               'strike__job__job_type', 'workspace', 'new_workspace', 'job',
+                                               'source_file', 'source_file__workspace')
         ingest = ingest.defer('source_file__workspace__json_config')
         ingest = ingest.get(pk=ingest_id)
 
@@ -480,8 +484,8 @@ class Ingest(models.Model):
     )
 
     file_name = models.CharField(max_length=250, db_index=True)
-    strike = models.ForeignKey('ingest.Strike', on_delete=models.PROTECT, null=True)
     scan = models.ForeignKey('ingest.Scan', on_delete=models.PROTECT, null=True)
+    strike = models.ForeignKey('ingest.Strike', on_delete=models.PROTECT, null=True)
     status = models.CharField(choices=INGEST_STATUSES, default='TRANSFERRING', max_length=50, db_index=True)
 
     bytes_transferred = models.BigIntegerField(blank=True, null=True)

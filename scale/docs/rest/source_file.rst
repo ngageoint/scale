@@ -390,6 +390,9 @@ These services provide access to information about source files that Scale has i
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .file_name         | String            | The name of the file being ingested.                                           |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
+| .scan              | JSON Object       | The scan process that triggered the ingest.                                    |
+|                    |                   | (See :ref:`Scan Details <rest_scan_details>`)                                  |
++--------------------+-------------------+--------------------------------------------------------------------------------+
 | .strike            | JSON Object       | The strike process that triggered the ingest.                                  |
 |                    |                   | (See :ref:`Strike Details <rest_strike_details>`)                              |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -409,12 +412,28 @@ These services provide access to information about source files that Scale has i
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .data_type         | Array             | A list of string data type "tags" for the file.                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
+| .file_path         | String            | The relative path of the file in the workspace.                                |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .workspace         | JSON Object       | The workspace storing the file.                                                |
+|                    |                   | (See :ref:`Workspace Details <rest_workspace_details>`)                        |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .new_file_path     | String            | The relative path for where the file should be moved as part of ingesting.     |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .new_workspace     | JSON Object       | The new workspace to move the file into as part of ingesting.                  |
+|                    |                   | (See :ref:`Workspace Details <rest_workspace_details>`)                        |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .job               | JSON Object       | The ID of the ingest job.                                                      |
++--------------------+-------------------+--------------------------------------------------------------------------------+
 | .ingest_started    | ISO-8601 Datetime | When the ingest was started.                                                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .ingest_ended      | ISO-8601 Datetime | When the ingest ended.                                                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .source_file       | JSON Object       | A reference to the source file that was stored by this ingest.                 |
 |                    |                   | (See :ref:`Source File Details <rest_source_file_details>`)                    |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .data_started      | ISO-8601 Datetime | The start time of the source data being ingested.                              |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .data_ended        | ISO-8601 Datetime | The end time of the source data being ingested.                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .created           | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -430,6 +449,7 @@ These services provide access to information about source files that Scale has i
 |            {                                                                                                            |
 |                "id": 14,                                                                                                |
 |                "file_name": "file_name.txt",                                                                            |
+|                "scan": null,                                                                                            |
 |                "strike": {                                                                                              |
 |                    "id": 1,                                                                                             |
 |                    "name": "my-strike",                                                                                 |
@@ -446,6 +466,37 @@ These services provide access to information about source files that Scale has i
 |                "media_type": "text/plain",                                                                              |
 |                "file_size": 1234,                                                                                       |
 |                "data_type": [],                                                                                         |
+|                "file_path": "the/current/path/file_name.txt",                                                           |
+|                "workspace": {                                                                                           |
+|                    "id": 1,                                                                                             |
+|                    "name": "my-workspace",                                                                              |
+|                    "title": "My Workspace",                                                                             |
+|                    "description": "My Workspace",                                                                       |
+|                    "base_url": "http://host.com/wk",                                                                    |
+|                    "is_active": true,                                                                                   |
+|                    "used_size": 0,                                                                                      |
+|                    "total_size": 0,                                                                                     |
+|                    "created": "2015-10-05T21:26:04.855Z",                                                               |
+|                    "archived": null,                                                                                    |
+|                    "last_modified": "2015-10-05T21:26:04.855Z"                                                          |
+|                },                                                                                                       |
+|                "new_file_path": "the/new/path/file_name.txt",                                                           |
+|                "new_workspace": {                                                                                       |
+|                    "id": 1,                                                                                             |
+|                    "name": "my-new-workspace",                                                                          |
+|                    "title": "My New Workspace",                                                                         |
+|                    "description": "My New Workspace",                                                                   |
+|                    "base_url": "http://host.com/new-wk",                                                                |
+|                    "is_active": true,                                                                                   |
+|                    "used_size": 0,                                                                                      |
+|                    "total_size": 0,                                                                                     |
+|                    "created": "2015-10-05T21:26:04.855Z",                                                               |
+|                    "archived": null,                                                                                    |
+|                    "last_modified": "2015-10-05T21:26:04.855Z"                                                          |
+|                },                                                                                                       |
+|                "job": {                                                                                                 |
+|                    "id": 1234                                                                                           |
+|                },                                                                                                       |
 |                "ingest_started": "2015-09-10T15:24:53.503Z",                                                            |
 |                "ingest_ended": "2015-09-10T15:24:53.987Z",                                                              |
 |                "source_file": {                                                                                         |
@@ -472,6 +523,8 @@ These services provide access to information about source files that Scale has i
 |                    "is_parsed": true,                                                                                   |
 |                    "parsed": "2015-09-10T15:25:03.796Z"                                                                 |
 |                },                                                                                                       |
+|                "data_started": "2015-09-10T15:24:53.503Z",                                                              |
+|                "data_ended": "2015-09-10T15:24:53.987Z",                                                                |
 |                "created": "2015-09-10T15:24:47.412Z",                                                                   |
 |                "last_modified": "2015-09-10T15:24:53.987Z"                                                              |
 |            },                                                                                                           |
@@ -479,6 +532,7 @@ These services provide access to information about source files that Scale has i
 |        ]                                                                                                                |
 |    }                                                                                                                    |
 +-------------------------------------------------------------------------------------------------------------------------+
+
 
 .. _rest_source_file_jobs:
 
