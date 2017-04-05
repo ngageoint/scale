@@ -250,7 +250,9 @@ class TestSourceIngestsView(TestCase):
 
         self.source_file = source_test_utils.create_source()
         from ingest.test import utils as ingest_test_utils
-        self.ingest1 = ingest_test_utils.create_ingest(source_file=self.source_file, status='QUEUED')
+        self.strike = ingest_test_utils.create_strike()
+        self.ingest1 = ingest_test_utils.create_ingest(source_file=self.source_file, status='QUEUED',
+                                                       strike=self.strike)
         self.ingest2 = ingest_test_utils.create_ingest(source_file=self.source_file, status='INGESTED')
 
     def test_invalid_source_id(self):
