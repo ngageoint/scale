@@ -23,8 +23,10 @@ class TestIngestsView(TestCase):
     def setUp(self):
         django.setup()
 
-        self.ingest1 = ingest_test_utils.create_ingest(file_name='test1.txt', status='QUEUED')
-        self.ingest2 = ingest_test_utils.create_ingest(file_name='test2.txt', status='INGESTED')
+        self.ingest1 = ingest_test_utils.create_ingest(strike=ingest_test_utils.create_strike(), file_name='test1.txt',
+                                                       status='QUEUED')
+        self.ingest2 = ingest_test_utils.create_ingest(strike=ingest_test_utils.create_strike(), file_name='test2.txt',
+                                                       status='INGESTED')
 
     def test_successful(self):
         """Tests successfully calling the ingests view."""

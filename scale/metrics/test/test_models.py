@@ -177,15 +177,30 @@ class TestMetricsIngest(TestCase):
         ingest_test_utils.create_ingest(status='ERRORED')
         ingest_test_utils.create_ingest(status='DUPLICATE')
 
-        ingest_test_utils.create_ingest(status='DEFERRED', ingest_ended=datetime.datetime(2015, 1, 1))
-        ingest_test_utils.create_ingest(status='INGESTED', ingest_ended=datetime.datetime(2015, 1, 1))
-        ingest_test_utils.create_ingest(status='ERRORED', ingest_ended=datetime.datetime(2015, 1, 1))
-        ingest_test_utils.create_ingest(status='DUPLICATE', ingest_ended=datetime.datetime(2015, 1, 1))
+        ingest_test_utils.create_ingest(strike=ingest_test_utils.create_strike(), status='DEFERRED',
+                                        ingest_ended=datetime.datetime(2015, 1, 1))
+        ingest_test_utils.create_ingest(strike=ingest_test_utils.create_strike(), status='INGESTED',
+                                        ingest_ended=datetime.datetime(2015, 1, 1))
+        ingest_test_utils.create_ingest(strike=ingest_test_utils.create_strike(), status='ERRORED',
+                                        ingest_ended=datetime.datetime(2015, 1, 1))
+        ingest_test_utils.create_ingest(strike=ingest_test_utils.create_strike(), status='DUPLICATE',
+                                        ingest_ended=datetime.datetime(2015, 1, 1))
 
         MetricsIngest.objects.calculate(datetime.date(2015, 1, 1))
         entries = MetricsIngest.objects.filter(occurred=datetime.date(2015, 1, 1))
 
         self.assertEqual(len(entries), 4)
+
+    def test_calculate_strike_is_none(self):
+        """Tests generating metrics for a date that has ingests with None in Strike field (Scan parent ingest)."""
+        scan = ingest_test_utils.create_scan()
+        ingest_test_utils.create_ingest(scan=scan, status='INGESTED',
+                                        ingest_ended=datetime.datetime(2015, 1, 1))
+
+        MetricsIngest.objects.calculate(datetime.date(2015, 1, 1))
+        entries = MetricsIngest.objects.filter(occurred=datetime.date(2015, 1, 1))
+
+        self.assertEqual(len(entries), 0)
 
     def test_calculate_repeated(self):
         """Tests regenerating metrics for a date that already has metrics."""

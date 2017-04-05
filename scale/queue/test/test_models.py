@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+import datetime
 import time
 
 import django
@@ -21,7 +22,7 @@ from job.configuration.results.results_manifest.results_manifest import ResultsM
 from job.models import Job, JobExecution
 from job.resources import JobResources
 from queue.job_exe import QueuedJobExecution
-from queue.models import JobLoad, Queue, QueueEventProcessor
+from queue.models import JobLoad, Queue, QueueEventProcessor, QUEUE_ORDER_FIFO, QUEUE_ORDER_LIFO
 from recipe.configuration.data.recipe_data import RecipeData
 from recipe.configuration.definition.recipe_definition import RecipeDefinition
 from recipe.handlers.graph_delta import RecipeGraphDelta
@@ -111,6 +112,40 @@ class TestQueueManager(TransactionTestCase):
         django.setup()
 
         CACHED_BUILTIN_ERRORS.clear()  # Clear error cache since the error models keep getting rolled back
+
+    def test_get_queue_fifo(self):
+        """Tests calling QueueManager.get_queue() in FIFO mode"""
+
+        time_1 = now()
+        time_2 = time_1 + datetime.timedelta(seconds=1)
+        queue_1 = queue_test_utils.create_queue(priority=100, queued=time_1)
+        queue_2 = queue_test_utils.create_queue(priority=100, queued=time_2)
+
+        # Call method to test
+        first = True
+        for queue in Queue.objects.get_queue(QUEUE_ORDER_FIFO):
+            if first:
+                self.assertEqual(queue.job_exe_id, queue_1.job_exe_id)
+                first = False
+            else:
+                self.assertEqual(queue.job_exe_id, queue_2.job_exe_id)
+
+    def test_get_queue_lifo(self):
+        """Tests calling QueueManager.get_queue() in LIFO mode"""
+
+        time_1 = now()
+        time_2 = time_1 + datetime.timedelta(seconds=1)
+        queue_1 = queue_test_utils.create_queue(priority=100, queued=time_1)
+        queue_2 = queue_test_utils.create_queue(priority=100, queued=time_2)
+
+        # Call method to test
+        first = True
+        for queue in Queue.objects.get_queue(QUEUE_ORDER_LIFO):
+            if first:
+                self.assertEqual(queue.job_exe_id, queue_2.job_exe_id)
+                first = False
+            else:
+                self.assertEqual(queue.job_exe_id, queue_1.job_exe_id)
 
     def test_handle_job_failure(self):
         """Tests calling QueueManager.handle_job_failure() when the job fails"""
