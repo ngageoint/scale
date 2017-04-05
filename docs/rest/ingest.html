@@ -306,40 +306,67 @@ Duplicate it to filter by multiple values.</td>
 <td>String</td>
 <td colspan="2">The name of the file being ingested.</td>
 </tr>
-<tr class="row-even"><td>.strike</td>
+<tr class="row-even"><td>.scan</td>
+<td>JSON Object</td>
+<td colspan="2">The scan process that triggered the ingest.
+(See <a class="reference internal" href="scan.html#rest-scan-details"><span>Scan Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.strike</td>
 <td>JSON Object</td>
 <td colspan="2">The strike process that triggered the ingest.
 (See <a class="reference internal" href="strike.html#rest-strike-details"><span>Strike Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>.status</td>
+<tr class="row-even"><td>.status</td>
 <td>String</td>
 <td colspan="2">The current status of the ingest.
 Choices: [TRANSFERRING, TRANSFERRED, DEFERRED, INGESTING, INGESTED, ERRORED,
 DUPLICATE].</td>
 </tr>
-<tr class="row-even"><td>.bytes_transferred</td>
+<tr class="row-odd"><td>.bytes_transferred</td>
 <td>Integer</td>
 <td colspan="2">The total number of bytes transferred so far.</td>
 </tr>
-<tr class="row-odd"><td>.transfer_started</td>
+<tr class="row-even"><td>.transfer_started</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the transfer was started.</td>
 </tr>
-<tr class="row-even"><td>.transfer_ended</td>
+<tr class="row-odd"><td>.transfer_ended</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the transfer ended.</td>
 </tr>
-<tr class="row-odd"><td>.media_type</td>
+<tr class="row-even"><td>.media_type</td>
 <td>String</td>
 <td colspan="2">The IANA media type of the file.</td>
 </tr>
-<tr class="row-even"><td>.file_size</td>
+<tr class="row-odd"><td>.file_size</td>
 <td>Integer</td>
 <td colspan="2">The size of the file in bytes.</td>
 </tr>
-<tr class="row-odd"><td>.data_type</td>
+<tr class="row-even"><td>.data_type</td>
 <td>Array</td>
 <td colspan="2">A list of string data type &#8220;tags&#8221; for the file.</td>
+</tr>
+<tr class="row-odd"><td>.file_path</td>
+<td>String</td>
+<td colspan="2">The relative path of the file in the workspace.</td>
+</tr>
+<tr class="row-even"><td>.workspace</td>
+<td>JSON Object</td>
+<td colspan="2">The workspace storing the file.
+(See <a class="reference internal" href="workspace.html#rest-workspace-details"><span>Workspace Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.new_file_path</td>
+<td>String</td>
+<td colspan="2">The relative path for where the file should be moved as part of ingesting.</td>
+</tr>
+<tr class="row-even"><td>.new_workspace</td>
+<td>JSON Object</td>
+<td colspan="2">The new workspace to move the file into as part of ingesting.
+(See <a class="reference internal" href="workspace.html#rest-workspace-details"><span>Workspace Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.job</td>
+<td>JSON Object</td>
+<td colspan="2">The ID of the ingest job.</td>
 </tr>
 <tr class="row-even"><td>.ingest_started</td>
 <td>ISO-8601 Datetime</td>
@@ -353,6 +380,14 @@ DUPLICATE].</td>
 <td>JSON Object</td>
 <td colspan="2">A reference to the source file that was stored by this ingest.
 (See <a class="reference internal" href="source_file.html#rest-source-file-details"><span>Source File Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.data_started</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">The start time of the source data being ingested.</td>
+</tr>
+<tr class="row-even"><td>.data_ended</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">The end time of the source data being ingested.</td>
 </tr>
 <tr class="row-odd"><td>.created</td>
 <td>ISO-8601 Datetime</td>
@@ -370,6 +405,7 @@ DUPLICATE].</td>
         <span class="p">{</span>
             <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span>
             <span class="s2">&quot;file_name&quot;</span><span class="o">:</span> <span class="s2">&quot;file_name.txt&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;scan&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
             <span class="s2">&quot;strike&quot;</span><span class="o">:</span> <span class="p">{</span>
                 <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
                 <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-strike&quot;</span><span class="p">,</span>
@@ -386,6 +422,37 @@ DUPLICATE].</td>
             <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span>
             <span class="s2">&quot;file_size&quot;</span><span class="o">:</span> <span class="mi">1234</span><span class="p">,</span>
             <span class="s2">&quot;data_type&quot;</span><span class="o">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;file_path&quot;</span><span class="o">:</span> <span class="s2">&quot;the/current/path/file_name.txt&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-workspace&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Workspace&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;My Workspace&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;base_url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/wk&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;used_size&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;total_size&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-10-05T21:26:04.855Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;archived&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-10-05T21:26:04.855Z&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;new_file_path&quot;</span><span class="o">:</span> <span class="s2">&quot;the/new/path/file_name.txt&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;new_workspace&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-new-workspace&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My New Workspace&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;My New Workspace&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;base_url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/new-wk&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="s2">&quot;used_size&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;total_size&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-10-05T21:26:04.855Z&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;archived&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+                <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-10-05T21:26:04.855Z&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;job&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1234</span>
+            <span class="p">},</span>
             <span class="s2">&quot;ingest_started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:53.503Z&quot;</span><span class="p">,</span>
             <span class="s2">&quot;ingest_ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:53.987Z&quot;</span><span class="p">,</span>
             <span class="s2">&quot;source_file&quot;</span><span class="o">:</span> <span class="p">{</span>
@@ -412,6 +479,8 @@ DUPLICATE].</td>
                 <span class="s2">&quot;is_parsed&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
                 <span class="s2">&quot;parsed&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:25:03.796Z&quot;</span>
             <span class="p">},</span>
+            <span class="s2">&quot;data_started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:53.503Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;data_ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:53.987Z&quot;</span><span class="p">,</span>
             <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:47.412Z&quot;</span><span class="p">,</span>
             <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:53.987Z&quot;</span>
         <span class="p">},</span>
@@ -459,81 +528,126 @@ DUPLICATE].</td>
 </tr>
 <tr class="row-even"><td colspan="3"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-odd"><td>id</td>
+<tr class="row-odd"><td>count</td>
 <td>Integer</td>
-<td>The unique identifier of the model.</td>
+<td>The total number of results that match the query parameters.</td>
 </tr>
-<tr class="row-even"><td>file_name</td>
+<tr class="row-even"><td>next</td>
+<td>URL</td>
+<td>A URL to the next page of results.</td>
+</tr>
+<tr class="row-odd"><td>previous</td>
+<td>URL</td>
+<td>A URL to the previous page of results.</td>
+</tr>
+<tr class="row-even"><td>results</td>
+<td>Array</td>
+<td>List of result JSON objects that match the query parameters.</td>
+</tr>
+<tr class="row-odd"><td>.id</td>
+<td>Integer</td>
+<td>The unique identifier of the model. Can be passed to the details API call.
+(See <a class="reference internal" href="#rest-ingest-details"><span>Ingest Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td>.file_name</td>
 <td>String</td>
 <td>The name of the file being ingested.</td>
 </tr>
-<tr class="row-odd"><td>strike</td>
+<tr class="row-odd"><td>.scan</td>
+<td>JSON Object</td>
+<td>The scan process that triggered the ingest.
+(See <a class="reference internal" href="scan.html#rest-scan-details"><span>Scan Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td>.strike</td>
 <td>JSON Object</td>
 <td>The strike process that triggered the ingest.
 (See <a class="reference internal" href="strike.html#rest-strike-details"><span>Strike Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td>status</td>
+<tr class="row-odd"><td>.status</td>
 <td>String</td>
 <td>The current status of the ingest.
 Choices: [TRANSFERRING, TRANSFERRED, DEFERRED, INGESTING, INGESTED, ERRORED,
 DUPLICATE].</td>
 </tr>
-<tr class="row-odd"><td>bytes_transferred</td>
+<tr class="row-even"><td>.bytes_transferred</td>
 <td>Integer</td>
 <td>The total number of bytes transferred so far.</td>
 </tr>
-<tr class="row-even"><td>transfer_started</td>
+<tr class="row-odd"><td>.transfer_started</td>
 <td>ISO-8601 Datetime</td>
 <td>When the transfer was started.</td>
 </tr>
-<tr class="row-odd"><td>transfer_ended</td>
+<tr class="row-even"><td>.transfer_ended</td>
 <td>ISO-8601 Datetime</td>
 <td>When the transfer ended.</td>
 </tr>
-<tr class="row-even"><td>media_type</td>
+<tr class="row-odd"><td>.media_type</td>
 <td>String</td>
 <td>The IANA media type of the file.</td>
 </tr>
-<tr class="row-odd"><td>file_size</td>
+<tr class="row-even"><td>.file_size</td>
 <td>Integer</td>
 <td>The size of the file in bytes.</td>
 </tr>
-<tr class="row-even"><td>data_type</td>
+<tr class="row-odd"><td>.data_type</td>
 <td>Array</td>
 <td>A list of string data type &#8220;tags&#8221; for the file.</td>
 </tr>
-<tr class="row-odd"><td>ingest_started</td>
+<tr class="row-even"><td>.file_path</td>
+<td>String</td>
+<td>The relative path of the file in the workspace.</td>
+</tr>
+<tr class="row-odd"><td>.workspace</td>
+<td>JSON Object</td>
+<td>The workspace storing the file.
+(See <a class="reference internal" href="workspace.html#rest-workspace-details"><span>Workspace Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td>.new_file_path</td>
+<td>String</td>
+<td>The relative path for where the file should be moved as part of ingesting.</td>
+</tr>
+<tr class="row-odd"><td>.new_workspace</td>
+<td>JSON Object</td>
+<td>The new workspace to move the file into as part of ingesting.
+(See <a class="reference internal" href="workspace.html#rest-workspace-details"><span>Workspace Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td>.job</td>
+<td>JSON Object</td>
+<td>The ID of the ingest job.</td>
+</tr>
+<tr class="row-odd"><td>.ingest_started</td>
 <td>ISO-8601 Datetime</td>
 <td>When the ingest was started.</td>
 </tr>
-<tr class="row-even"><td>ingest_ended</td>
+<tr class="row-even"><td>.ingest_ended</td>
 <td>ISO-8601 Datetime</td>
 <td>When the ingest ended.</td>
 </tr>
-<tr class="row-odd"><td>source_file</td>
+<tr class="row-odd"><td>.source_file</td>
 <td>JSON Object</td>
 <td>A reference to the source file that was stored by this ingest.
 (See <a class="reference internal" href="source_file.html#rest-source-file-details"><span>Source File Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td>created</td>
+<tr class="row-even"><td>.data_started</td>
+<td>ISO-8601 Datetime</td>
+<td>The start time of the source data being ingested.</td>
+</tr>
+<tr class="row-odd"><td>.data_ended</td>
+<td>ISO-8601 Datetime</td>
+<td>The end time of the source data being ingested.</td>
+</tr>
+<tr class="row-even"><td>.created</td>
 <td>ISO-8601 Datetime</td>
 <td>When the associated database model was initially created.</td>
 </tr>
-<tr class="row-odd"><td>last_modified</td>
+<tr class="row-odd"><td>.last_modified</td>
 <td>ISO-8601 Datetime</td>
 <td>When the associated database model was last saved.</td>
-</tr>
-<tr class="row-even"><td>file_path</td>
-<td>String</td>
-<td>The relative path for where the file is stored in the workspace.</td>
-</tr>
-<tr class="row-odd"><td>new_file_path</td>
-<td>String</td>
-<td>The relative path for where the file should be moved as part of ingesting.</td>
 </tr>
 <tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span>
     <span class="s2">&quot;file_name&quot;</span><span class="o">:</span> <span class="s2">&quot;file_name.txt&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;scan&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
     <span class="s2">&quot;strike&quot;</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
         <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-strike&quot;</span><span class="p">,</span>
@@ -592,6 +706,49 @@ DUPLICATE].</td>
     <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span>
     <span class="s2">&quot;file_size&quot;</span><span class="o">:</span> <span class="mi">1234</span><span class="p">,</span>
     <span class="s2">&quot;data_type&quot;</span><span class="o">:</span> <span class="p">[],</span>
+    <span class="s2">&quot;file_path&quot;</span><span class="o">:</span> <span class="s2">&quot;the/current/path/file_name.txt&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-workspace&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Workspace&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;My Workspace&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;base_url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/wk&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="s2">&quot;used_size&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;total_size&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-10-05T21:26:04.855Z&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;archived&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-10-05T21:26:04.855Z&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;json_config&quot;</span><span class="o">:</span> <span class="p">{</span>
+             <span class="s2">&quot;broker&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;host&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;host_path&quot;</span><span class="o">:</span> <span class="s2">&quot;/host/path&quot;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;new_file_path&quot;</span><span class="o">:</span> <span class="s2">&quot;the/new/path/file_name.txt&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;new_workspace&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-new-workspace&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My New Workspace&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;My New Workspace&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;base_url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/new-wk&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="s2">&quot;used_size&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;total_size&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-10-05T21:26:04.855Z&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;archived&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-10-05T21:26:04.855Z&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;json_config&quot;</span><span class="o">:</span> <span class="p">{</span>
+             <span class="s2">&quot;broker&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;host&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;host_path&quot;</span><span class="o">:</span> <span class="s2">&quot;/host/path&quot;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;job&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1234</span>
+    <span class="p">},</span>
     <span class="s2">&quot;ingest_started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:53.503Z&quot;</span><span class="p">,</span>
     <span class="s2">&quot;ingest_ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:53.987Z&quot;</span><span class="p">,</span>
     <span class="s2">&quot;source_file&quot;</span><span class="o">:</span> <span class="p">{</span>
@@ -618,10 +775,10 @@ DUPLICATE].</td>
         <span class="s2">&quot;is_parsed&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
         <span class="s2">&quot;parsed&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:25:03.796Z&quot;</span>
     <span class="p">},</span>
+    <span class="s2">&quot;data_started&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:53.503Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;data_ended&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:53.987Z&quot;</span><span class="p">,</span>
     <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:47.412Z&quot;</span><span class="p">,</span>
     <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-10T15:24:53.987Z&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;file_path&quot;</span><span class="o">:</span> <span class="s2">&quot;path/file_name.txt&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;new_file_path&quot;</span><span class="o">:</span> <span class="s2">&quot;new/path/file_name.txt&quot;</span>
 <span class="p">}</span>
 </pre></div>
 </div>

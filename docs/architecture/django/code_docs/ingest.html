@@ -712,6 +712,38 @@ spaces.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="ingest.models.IngestManager.filter_ingests">
+<code class="descname">filter_ingests</code><span class="sig-paren">(</span><em>source_file_id=None</em>, <em>started=None</em>, <em>ended=None</em>, <em>statuses=None</em>, <em>scan_ids=None</em>, <em>strike_ids=None</em>, <em>file_name=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.IngestManager.filter_ingests" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a query for ingest models that filters on the given fields. The returned query includes the related
+strike, scan, source_file, and source_file.workspace fields, except for the strike.configuration,
+scan.configuration, and source_file.workspace.json_config fields.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>source_file_id</strong> (<em>int</em>) &#8211; Query ingests for this source file ID.</li>
+<li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query ingests updated after this amount of time.</li>
+<li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query ingests updated before this amount of time.</li>
+<li><strong>statuses</strong> (<em>[string]</em>) &#8211; Query ingests with the a specific process status.</li>
+<li><strong>scan_ids</strong> (<em>[string]</em>) &#8211; Query ingests created by a specific scan processor.</li>
+<li><strong>strike_ids</strong> (<em>[string]</em>) &#8211; Query ingests created by a specific strike processor.</li>
+<li><strong>file_name</strong> (<em>string</em>) &#8211; Query ingests with a specific file name.</li>
+<li><strong>order</strong> (<em>[string]</em>) &#8211; A list of fields to control the sort order.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The ingest query</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><code class="xref py py-class docutils literal"><span class="pre">django.db.models.QuerySet</span></code></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="ingest.models.IngestManager.get_details">
 <code class="descname">get_details</code><span class="sig-paren">(</span><em>ingest_id</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.IngestManager.get_details" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets additional details for the given ingest model based on related model attributes.</p>
@@ -1381,55 +1413,13 @@ transaction. An argument of None for a field indicates that the field should not
 <em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">IngestBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.IngestBaseSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts ingest model fields to REST output</p>
-<dl class="class">
-<dt id="ingest.serializers.IngestBaseSerializer.DataTypeField">
-<em class="property">class </em><code class="descname">DataTypeField</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.IngestBaseSerializer.DataTypeField" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.fields.CharField</span></code></p>
-<p>Field for displaying the list of data type tags for a Scale file</p>
-<dl class="method">
-<dt id="ingest.serializers.IngestBaseSerializer.DataTypeField.to_representation">
-<code class="descname">to_representation</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.IngestBaseSerializer.DataTypeField.to_representation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts the model field to a list of data type tags</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<em>str</em>) &#8211; the comma-separated data types for the Scale file</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of str</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the list of data type tags</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="ingest.serializers.IngestBaseSerializer.DataTypeField.type_label">
-<code class="descname">type_label</code><em class="property"> = u'datatype'</em><a class="headerlink" href="#ingest.serializers.IngestBaseSerializer.DataTypeField.type_label" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="ingest.serializers.IngestBaseSerializer.DataTypeField.type_name">
-<code class="descname">type_name</code><em class="property"> = u'DataTypeField'</em><a class="headerlink" href="#ingest.serializers.IngestBaseSerializer.DataTypeField.type_name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
 <dt id="ingest.serializers.IngestDetailsSerializer">
 <em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">IngestDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.IngestDetailsSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#ingest.serializers.IngestBaseSerializer" title="ingest.serializers.IngestBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">ingest.serializers.IngestBaseSerializer</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#ingest.serializers.IngestSerializer" title="ingest.serializers.IngestSerializer"><code class="xref py py-class docutils literal"><span class="pre">ingest.serializers.IngestSerializer</span></code></a></p>
 <p>Converts ingest model fields to REST output</p>
-<dl class="class">
-<dt id="ingest.serializers.IngestDetailsSerializer.SourceFileSerializer">
-<em class="property">class </em><code class="descname">SourceFileSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.IngestDetailsSerializer.SourceFileSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="source.html#source.serializers.SourceFileBaseSerializer" title="source.serializers.SourceFileBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">source.serializers.SourceFileBaseSerializer</span></code></a></p>
-<p>Converts source file model fields to REST output</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
@@ -1437,13 +1427,6 @@ transaction. An argument of None for a field indicates that the field should not
 <em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">IngestSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.IngestSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ingest.serializers.IngestBaseSerializer" title="ingest.serializers.IngestBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">ingest.serializers.IngestBaseSerializer</span></code></a></p>
 <p>Converts ingest model fields to REST output</p>
-<dl class="class">
-<dt id="ingest.serializers.IngestSerializer.SourceFileBaseSerializer">
-<em class="property">class </em><code class="descname">SourceFileBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.IngestSerializer.SourceFileBaseSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="storage.html#storage.serializers.ScaleFileBaseSerializer" title="storage.serializers.ScaleFileBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">storage.serializers.ScaleFileBaseSerializer</span></code></a></p>
-<p>Converts source file model fields to REST output</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
@@ -1479,13 +1462,6 @@ transaction. An argument of None for a field indicates that the field should not
 <em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">ScanSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.ScanSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ingest.serializers.ScanBaseSerializer" title="ingest.serializers.ScanBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">ingest.serializers.ScanBaseSerializer</span></code></a></p>
 <p>Converts scan model fields to REST output</p>
-<dl class="class">
-<dt id="ingest.serializers.ScanSerializer.JobBaseSerializer">
-<em class="property">class </em><code class="descname">JobBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.ScanSerializer.JobBaseSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
-<p>Converts job model fields to REST output.</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="class">
@@ -1507,13 +1483,6 @@ transaction. An argument of None for a field indicates that the field should not
 <em class="property">class </em><code class="descclassname">ingest.serializers.</code><code class="descname">StrikeSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.StrikeSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ingest.serializers.StrikeBaseSerializer" title="ingest.serializers.StrikeBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">ingest.serializers.StrikeBaseSerializer</span></code></a></p>
 <p>Converts strike model fields to REST output</p>
-<dl class="class">
-<dt id="ingest.serializers.StrikeSerializer.JobBaseSerializer">
-<em class="property">class </em><code class="descname">JobBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.serializers.StrikeSerializer.JobBaseSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
-<p>Converts job model fields to REST output.</p>
-</dd></dl>
-
 </dd></dl>
 
 </div>

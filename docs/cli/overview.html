@@ -185,11 +185,11 @@ commands relevant to that functional group. Similar functions across multiple gr
 <h2>Configuration Environment<a class="headerlink" href="#configuration-environment" title="Permalink to this headline">¶</a></h2>
 <p>The cli needs to know how to locate your scale system. The usual way to specify this is with a scale config file or
 the <cite>SCALE_URL</cite> environment variable. This can be overwritten with the <cite>&#8211;url</cite> argument. This should point to the API
-endpoint for the scale instance. For example: <cite>http://localhost/api/v3</cite></p>
+endpoint for the scale instance. For example: <cite>http://localhost/api/v4</cite></p>
 <p>A scale config file resides at <cite>$HOME/.scaleconfig</cite> and is a YAML file containing configuration defaults for various
 options. An example scale config file looks like:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span>---
-url: http://scalemaster/api/v3
+url: http://scalemaster/api/v4
 registry: scaleregistry.localnet.prv:5000
 </pre></div>
 </div>

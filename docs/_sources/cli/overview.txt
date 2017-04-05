@@ -17,13 +17,13 @@ Configuration Environment
 -------------------------
 The cli needs to know how to locate your scale system. The usual way to specify this is with a scale config file or
 the `SCALE_URL` environment variable. This can be overwritten with the `--url` argument. This should point to the API
-endpoint for the scale instance. For example: `http://localhost/api/v3`
+endpoint for the scale instance. For example: `http://localhost/api/v4`
 
 A scale config file resides at `$HOME/.scaleconfig` and is a YAML file containing configuration defaults for various
 options. An example scale config file looks like::
 
     ---
-    url: http://scalemaster/api/v3
+    url: http://scalemaster/api/v4
     registry: scaleregistry.localnet.prv:5000
 
 
