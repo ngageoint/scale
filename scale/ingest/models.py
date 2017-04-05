@@ -97,6 +97,60 @@ class IngestManager(models.Manager):
 
         return ingest
 
+    def filter_ingests(self, source_file_id=None, started=None, ended=None, statuses=None, scan_ids=None,
+                       strike_ids=None, file_name=None, order=None):
+        """Returns a query for ingest models that filters on the given fields. The returned query includes the related
+        strike, scan, source_file, and source_file.workspace fields, except for the strike.configuration,
+        scan.configuration, and source_file.workspace.json_config fields.
+
+        :param source_file_id: Query ingests for this source file ID.
+        :type source_file_id: int
+        :param started: Query ingests updated after this amount of time.
+        :type started: :class:`datetime.datetime`
+        :param ended: Query ingests updated before this amount of time.
+        :type ended: :class:`datetime.datetime`
+        :param statuses: Query ingests with the a specific process status.
+        :type statuses: [string]
+        :param scan_ids: Query ingests created by a specific scan processor.
+        :type scan_ids: [string]
+        :param strike_ids: Query ingests created by a specific strike processor.
+        :type strike_ids: [string]
+        :param file_name: Query ingests with a specific file name.
+        :type file_name: string
+        :param order: A list of fields to control the sort order.
+        :type order: [string]
+        :returns: The ingest query
+        :rtype: :class:`django.db.models.QuerySet`
+        """
+
+        # Fetch a list of ingests
+        ingests = self.select_related('strike', 'scan', 'source_file', 'source_file__workspace')
+        ingests = ingests.defer('strike__configuration', 'scan__configuration', 'source_file__workspace__json_config')
+
+        # Apply time range filtering
+        if started:
+            ingests = ingests.filter(last_modified__gte=started)
+        if ended:
+            ingests = ingests.filter(last_modified__lte=ended)
+
+        if source_file_id:
+            ingests = ingests.filter(source_file_id=source_file_id)
+        if statuses:
+            ingests = ingests.filter(status__in=statuses)
+        if scan_ids:
+            ingests = ingests.filter(scan_id__in=scan_ids)
+        if strike_ids:
+            ingests = ingests.filter(strike_id__in=strike_ids)
+        if file_name:
+            ingests = ingests.filter(file_name=file_name)
+
+        # Apply sorting
+        if order:
+            ingests = ingests.order_by(*order)
+        else:
+            ingests = ingests.order_by('last_modified')
+        return ingests
+
     def get_ingest_job_type(self):
         """Returns the Scale Ingest job type
 
@@ -128,32 +182,8 @@ class IngestManager(models.Manager):
         :rtype: list[:class:`ingest.models.Ingest`]
         """
 
-        # Fetch a list of ingests
-        ingests = Ingest.objects.all()
-        ingests = ingests.select_related('strike', 'scan', 'source_file', 'source_file__workspace')
-        ingests = ingests.defer('strike__configuration', 'scan__configuration', 'source_file__workspace__json_config')
-
-        # Apply time range filtering
-        if started:
-            ingests = ingests.filter(last_modified__gte=started)
-        if ended:
-            ingests = ingests.filter(last_modified__lte=ended)
-
-        if statuses:
-            ingests = ingests.filter(status__in=statuses)
-        if scan_ids:
-            ingests = ingests.filter(scan_id__in=scan_ids)
-        if strike_ids:
-            ingests = ingests.filter(strike_id__in=strike_ids)
-        if file_name:
-            ingests = ingests.filter(file_name=file_name)
-
-        # Apply sorting
-        if order:
-            ingests = ingests.order_by(*order)
-        else:
-            ingests = ingests.order_by('last_modified')
-        return ingests
+        return self.filter_ingests(started=started, ended=ended, statuses=statuses, scan_ids=scan_ids,
+                                   strike_ids=strike_ids, file_name=file_name, order=order)
 
     def get_ingests_by_scan(self, scan_id, file_names=None):
         """Returns a list of ingests associated with a scan and optionally files

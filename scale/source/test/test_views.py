@@ -242,6 +242,66 @@ class TestSourceDetailsViewV4(TestCase):
                 self.assertIn(product['id'], [self.product1.id, self.product2.id])
 
 
+class TestSourceIngestsView(TestCase):
+    fixtures = ['ingest_job_types.json']
+
+    def setUp(self):
+        django.setup()
+
+        self.source_file = source_test_utils.create_source()
+        from ingest.test import utils as ingest_test_utils
+        self.ingest1 = ingest_test_utils.create_ingest(source_file=self.source_file, status='QUEUED')
+        self.ingest2 = ingest_test_utils.create_ingest(source_file=self.source_file, status='INGESTED')
+
+    def test_invalid_source_id(self):
+        """Tests calling the source ingests view when the source ID is invalid."""
+
+        url = rest_util.get_url('/sources/12345678/ingests/')
+        response = self.client.generic('GET', url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+
+    def test_successful(self):
+        """Tests successfully calling the source ingests view."""
+
+        url = rest_util.get_url('/sources/%s/ingests/' % self.source_file.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 2)
+        for entry in result['results']:
+            if entry['id'] == self.ingest1.id:
+                expected = self.ingest1
+            elif entry['id'] == self.ingest2.id:
+                expected = self.ingest2
+            else:
+                self.fail('Found unexpected result: %s' % entry['id'])
+            self.assertEqual(entry['status'], expected.status)
+
+    def test_status(self):
+        """Tests successfully calling the source ingests view filtered by status."""
+
+        url = rest_util.get_url('/sources/%s/ingests/?status=%s' % (self.source_file.id, self.ingest1.status))
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['status'], self.ingest1.status)
+
+    def test_strike_id(self):
+        """Tests successfully calling the source ingests view filtered by strike processor."""
+
+        url = rest_util.get_url('/sources/%s/ingests/?strike_id=%d' % (self.source_file.id, self.ingest1.strike.id))
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['strike']['id'], self.ingest1.strike.id)
+
+
 class TestSourceJobsView(TestCase):
 
     def setUp(self):

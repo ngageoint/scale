@@ -8,6 +8,8 @@ from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.response import Response
 
 import util.rest as rest_util
+from ingest.models import Ingest
+from ingest.serializers import IngestSerializer
 from job.models import Job
 from job.serializers import JobSerializer
 from product.serializers import ProductFileSerializer
@@ -115,6 +117,45 @@ class SourceDetailsView(RetrieveAPIView):
 
         serializer = self.get_serializer(source)
         return Response(serializer.data)
+
+
+class SourceIngestsView(ListAPIView):
+    """This view is the endpoint for retrieving a list of all ingests related to a source file."""
+    queryset = Ingest.objects.all()
+    serializer_class = IngestSerializer
+
+    def list(self, request, source_id=None):
+        """Retrieves the ingests for a given source file ID and returns them in JSON form
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param source_id: The id of the source
+        :type source_id: int encoded as a string
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        try:
+            ScaleFile.objects.get(id=source_id, file_type='SOURCE')
+        except ScaleFile.DoesNotExist:
+            raise Http404
+
+        started = rest_util.parse_timestamp(request, 'started', required=False)
+        ended = rest_util.parse_timestamp(request, 'ended', required=False)
+        rest_util.check_time_range(started, ended)
+
+        ingest_statuses = rest_util.parse_string_list(request, 'status', required=False)
+        strike_ids = rest_util.parse_int_list(request, 'strike_id', required=False)
+        scan_ids = rest_util.parse_int_list(request, 'scan_id', required=False)
+        order = rest_util.parse_string_list(request, 'order', required=False)
+
+        ingests = SourceFile.objects.get_source_ingests(source_id, started=started, ended=ended,
+                                                        statuses=ingest_statuses, scan_ids=scan_ids,
+                                                        strike_ids=strike_ids, order=order)
+
+        page = self.paginate_queryset(ingests)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
 
 class SourceJobsView(ListAPIView):
