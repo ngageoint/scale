@@ -65,8 +65,8 @@
             {
                 field: 'created_count',
                 enableFiltering: false,
-                displayName: 'Failure Rate',
-                cellTemplate: 'failureRate.html'
+                displayName: 'Job Creation Rate',
+                cellTemplate: 'completedRate.html'
             },
             {
                 field: 'created',
@@ -81,11 +81,6 @@
                 cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.last_modified_formatted }}</div>'
             }
         ];
-
-        vm.failRateStyle = function (error, total) {
-            var percentage = ((error / total) * 100).toFixed(0);
-            return percentage > 0 ? 'width: ' + percentage + '%' : 'display: none';
-        };
 
         vm.getBatches = function () {
             batchService.getBatches(vm.batchesParams).then(function (data) {
@@ -148,8 +143,8 @@
             }
         };
 
-        vm.failRateStyle = function (error, total) {
-            var percentage = ((error / total) * 100).toFixed(0);
+        vm.completedRateStyle = function (created, total) {
+            var percentage = ((created / total) * 100).toFixed(0);
             return percentage > 0 ? 'width: ' + percentage + '%' : 'display: none';
         };
 

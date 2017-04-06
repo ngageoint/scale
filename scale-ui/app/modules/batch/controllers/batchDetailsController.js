@@ -210,6 +210,7 @@
                 return;
             }
             if (newValue) {
+                vm.jobTypes = [];
                 var recipeJobs = _.map(newValue.definition.jobs, 'job_type.name');
                 _.forEach(recipeJobs, function (job) {
                     vm.jobTypes.push({
