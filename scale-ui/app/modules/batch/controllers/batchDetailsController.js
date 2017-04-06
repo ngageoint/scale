@@ -62,6 +62,10 @@
             return warningsHtml;
         };
 
+        vm.getDateRange = function () {
+            return moment.utc(vm.batch.definition.date_range.started).format(scaleConfig.dateFormats.day_second_utc) + ' &ndash; ' +  moment.utc(vm.batch.definition.date_range.ended).format(scaleConfig.dateFormats.day_second_utc);
+        };
+
         vm.setTime = function (type) {
             if (type === 'started') {
                 vm.startTime = {
