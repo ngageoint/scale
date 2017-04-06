@@ -181,20 +181,6 @@
             });
         };
 
-        var getJobTypes = function () {
-            jobTypeService.getJobTypesOnce().then(function (data) {
-                _.forEach(data.results, function (result) {
-                    vm.jobTypes.push({
-                        label: result.title,
-                        title: result.title,
-                        value: result.name
-                    });
-                });
-            }).catch(function (e) {
-                console.log('Error retrieving job types: ' + e);
-            });
-        };
-
         var getBatch = function () {
             batchService.getBatchById($routeParams.id).then(function (data) {
                 vm.loading = false;
@@ -209,8 +195,7 @@
 
             if (vm.mode === 'create') {
                 getRecipeTypes()
-                    .then(getJobTypes)
-                    .finally(function () {
+                    .then(function () {
                         vm.loading = false;
                     });
             } else if (vm.mode === 'details') {
@@ -220,12 +205,43 @@
 
         initialize();
 
+        $scope.$watchCollection('vm.batch.recipe_type', function (newValue, oldValue) {
+            if (angular.equals(newValue, oldValue)) {
+                return;
+            }
+            if (newValue) {
+                var recipeJobs = _.map(newValue.definition.jobs, 'job_type.name');
+                _.forEach(recipeJobs, function (job) {
+                    vm.jobTypes.push({
+                        label: job,
+                        title: job,
+                        value: job
+                    });
+                });
+            } else {
+                vm.jobTypes = [];
+            }
+        });
+
         $scope.$watch('vm.batch.definition.date_range.started', function (newValue, oldValue) {
             if (angular.equals(newValue, oldValue)) {
                 return;
             }
             if (!newValue) {
                 vm.startTime = {
+                    hour: null,
+                    minute: null,
+                    second: null
+                };
+            }
+        });
+
+        $scope.$watch('vm.batch.definition.date_range.ended', function (newValue, oldValue) {
+            if (angular.equals(newValue, oldValue)) {
+                return;
+            }
+            if (!newValue) {
+                vm.endTime = {
                     hour: null,
                     minute: null,
                     second: null
