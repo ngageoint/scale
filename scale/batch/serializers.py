@@ -36,7 +36,7 @@ class BatchSerializer(BatchBaseSerializer):
     last_modified = serializers.DateTimeField()
 
 
-class BatchDetailsSerializer(BatchBaseSerializer):
+class BatchDetailsSerializer(BatchSerializer):
     """Converts batch model fields to REST output."""
     from job.serializers import JobSerializer
     from recipe.serializers import RecipeTypeSerializer
