@@ -188,6 +188,8 @@ class NodeManager(object):
                     if node.should_be_removed():
                         del self._agent_ids[node.agent_id]
                         del self._nodes[node_model.hostname]
+                else:
+                    logger.error('Node %s appears to have been removed from the database', node_model.hostname)
             # Update online flag for nodes with new agent IDs
             for new_agent_id in new_agent_ids:
                 hostname = self._agent_ids[new_agent_id]
