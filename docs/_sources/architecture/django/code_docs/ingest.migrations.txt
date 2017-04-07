@@ -100,6 +100,14 @@ ingest.migrations.0012_scan_file_count module
     :undoc-members:
     :show-inheritance:
 
+ingest.migrations.0013_auto_20170406_1517 module
+------------------------------------------------
+
+.. automodule:: ingest.migrations.0013_auto_20170406_1517
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

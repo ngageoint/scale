@@ -254,6 +254,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations.0010_auto_20170206_1646">ingest.migrations.0010_auto_20170206_1646 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations.0011_auto_20170302_2130">ingest.migrations.0011_auto_20170302_2130 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations.0012_scan_file_count">ingest.migrations.0012_scan_file_count module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations.0013_auto_20170406_1517">ingest.migrations.0013_auto_20170406_1517 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -912,7 +913,7 @@ in a workspace for ingest</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>name</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The identifying name of this Scan process</li>
 <li><strong>title</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The human-readable name of this Scan process</li>
-<li><strong>description</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; An optional description of this Scan process</li>
+<li><strong>description</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.TextField</span></code>) &#8211; An optional description of this Scan process</li>
 <li><strong>configuration</strong> (<code class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></code>) &#8211; JSON configuration for this Scan process</li>
 <li><strong>dry_run_job</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The job that is performing the Scan process as dry run</li>
 <li><strong>job</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The job that is performing the Scan process with ingests</li>
@@ -1178,7 +1179,7 @@ atomic transaction.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>name</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The identifying name of this Strike process</li>
 <li><strong>title</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The human-readable name of this Strike process</li>
-<li><strong>description</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; An optional description of this Strike process</li>
+<li><strong>description</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.TextField</span></code>) &#8211; An optional description of this Strike process</li>
 <li><strong>configuration</strong> (<code class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></code>) &#8211; JSON configuration for this Strike process</li>
 <li><strong>job</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The job that is performing the Strike process</li>
 <li><strong>created</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the Strike process was created</li>
