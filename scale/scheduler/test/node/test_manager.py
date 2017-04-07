@@ -11,6 +11,7 @@ from job.tasks.pull_task import PullTask
 from job.tasks.update import TaskStatusUpdate
 from job.test import utils as job_test_utils
 from mesos_api.api import SlaveInfo
+from node.models import Node
 from node.test import utils as node_test_utils
 from scheduler.cleanup.manager import CleanupManager
 from scheduler.node.manager import NodeManager
@@ -176,6 +177,37 @@ class TestNodeManager(TestCase):
         node_2 = manager.get_node(self.node_agent_3)
         self.assertEqual(node_2.hostname, 'host_2')
         self.assertTrue(node_2._is_online)
+
+    @patch('scheduler.node.manager.api.get_slaves')
+    def test_change_agent_id_with_inactive_node(self, mock_get_slaves):
+        """Tests the NodeManager where a registered node changes its agent ID, and the node is inactive"""
+
+        mock_get_slaves.return_value = self.slave_infos
+
+        manager = NodeManager()
+        manager.register_agent_ids([self.node_agent_1, self.node_agent_2])
+        manager.sync_with_database('master_host', 5050)
+
+        # Node 2 is now inactive
+        Node.objects.filter(id=manager.get_node(self.node_agent_2).id).update(is_active=False)
+        manager.sync_with_database('master_host', 5050)
+
+        mock_get_slaves.return_value = self.slave_infos_updated
+        manager.lost_node(self.node_agent_2)
+        manager.register_agent_ids([self.node_agent_3])
+        manager.sync_with_database('master_host', 5050)
+
+        # Make sure two nodes are registered, one for agent 1 and one for agent 3, and both are online
+        nodes = manager.get_nodes()
+        self.assertEqual(len(nodes), 2)
+        node_1 = manager.get_node(self.node_agent_1)
+        self.assertEqual(node_1.hostname, self.node_1.hostname)
+        self.assertTrue(node_1._is_online)
+        self.assertIsNone(manager.get_node(self.node_agent_2))
+        node_2 = manager.get_node(self.node_agent_3)
+        self.assertEqual(node_2.hostname, 'host_2')
+        self.assertTrue(node_2._is_online)
+        self.assertFalse(node_2._is_active)
 
     @patch('scheduler.node.manager.api.get_slaves')
     def test_get_pull_tasks(self, mock_get_slaves):

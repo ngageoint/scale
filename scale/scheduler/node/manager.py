@@ -176,7 +176,9 @@ class NodeManager(object):
             # Update nodes with new agent IDs
             for hostname, slave_info in nodes_with_new_agent_id.items():
                 old_agent_id = self._nodes[hostname].agent_id
-                self._nodes[hostname].update_from_mesos(agent_id=slave_info.slave_id, port=slave_info.port)
+                # For is_online, check if new agent ID is still in set or gone (i.e. removed by lost_node())
+                self._nodes[hostname].update_from_mesos(agent_id=slave_info.slave_id, port=slave_info.port,
+                                                        is_online=(slave_info.slave_id in self._new_agent_ids))
                 del self._agent_ids[old_agent_id]
                 self._agent_ids[slave_info.slave_id] = hostname
                 logger.info('Node %s registered with new agent ID %s', hostname, slave_info.slave_id)
@@ -190,11 +192,6 @@ class NodeManager(object):
                         del self._nodes[node_model.hostname]
                 else:
                     logger.error('Node %s appears to have been removed from the database', node_model.hostname)
-            # Update online flag for nodes with new agent IDs
-            for new_agent_id in new_agent_ids:
-                hostname = self._agent_ids[new_agent_id]
-                # Check if new agent ID is still in set or gone (i.e. removed by lost_node())
-                self._nodes[hostname].update_from_mesos(is_online=(new_agent_id in self._new_agent_ids))
             self._new_agent_ids -= new_agent_ids  # Batch of new agent IDs has been processed
 
 
