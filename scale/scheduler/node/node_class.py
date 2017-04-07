@@ -210,6 +210,16 @@ class Node(object):
 
         return self._state not in [Node.INACTIVE, Node.OFFLINE]
 
+    def should_be_removed(self):
+        """Indicates whether this node should be removed from the scheduler. If the node is no longer active and is also
+        no longer online, there's no reason for the scheduler to continue to track it.
+
+        :returns: True if this node should be removed from the scheduler
+        :rtype: bool
+        """
+
+        return not self._is_active and not self._is_online
+
     def update_from_mesos(self, agent_id=None, port=None, is_online=None):
         """Updates this node's data from Mesos
 

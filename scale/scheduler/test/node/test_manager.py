@@ -45,6 +45,76 @@ class TestNodeManager(TestCase):
         self.assertEqual(len(nodes), 2)
 
     @patch('scheduler.node.manager.api.get_slaves')
+    def test_sync_node_model(self, mock_get_slaves):
+        """Tests doing a successful database update when a node model has been updated in the database"""
+
+        mock_get_slaves.return_value = self.slave_infos
+
+        # Initial sync
+        manager = NodeManager()
+        manager.register_agent_ids([self.node_agent_1, self.node_agent_2])
+        manager.sync_with_database('master_host', 5050)
+
+        # Database model changes to inactive
+        self.node_1.is_active = False
+        self.node_1.save()
+
+        # Sync with database
+        manager.sync_with_database('master_host', 5050)
+
+        found_node_1 = False
+        for node in manager.get_nodes():
+            if node.hostname == self.node_1.hostname:
+                found_node_1 = True
+                self.assertFalse(node.is_active)
+        self.assertTrue(found_node_1)
+
+    @patch('scheduler.node.manager.api.get_slaves')
+    def test_sync_and_remove_node_model(self, mock_get_slaves):
+        """Tests doing a successful database update when a node model should be removed from the scheduler"""
+
+        mock_get_slaves.return_value = self.slave_infos
+
+        # Initial sync
+        manager = NodeManager()
+        manager.register_agent_ids([self.node_agent_1, self.node_agent_2])
+        manager.sync_with_database('master_host', 5050)
+
+        # Database model changes to inactive
+        self.node_1.is_active = False
+        self.node_1.save()
+
+        # Node is lost
+        manager.lost_node(self.node_agent_1)
+
+        # Sync with database
+        manager.sync_with_database('master_host', 5050)
+
+        # Make sure node 1 is gone
+        found_node_1 = False
+        for node in manager.get_nodes():
+            if node.hostname == self.node_1.hostname:
+                found_node_1 = True
+        self.assertFalse(found_node_1)
+
+    @patch('scheduler.node.manager.api.get_slaves')
+    def test_sync_with_renamed_node(self, mock_get_slaves):
+        """Tests doing a successful database update when a node model has its hostname changed in the database"""
+
+        mock_get_slaves.return_value = self.slave_infos
+
+        # Initial sync
+        manager = NodeManager()
+        manager.register_agent_ids([self.node_agent_1, self.node_agent_2])
+        manager.sync_with_database('master_host', 5050)
+
+        self.node_1.hostname = 'new_host_1'
+        self.node_1.save()
+
+        # No exception is success
+        manager.sync_with_database('master_host', 5050)
+
+    @patch('scheduler.node.manager.api.get_slaves')
     def test_lost_known_node(self, mock_get_slaves):
         """Tests the NodeManager where a known node was lost"""
 

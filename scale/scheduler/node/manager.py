@@ -182,7 +182,14 @@ class NodeManager(object):
                 logger.info('Node %s registered with new agent ID %s', hostname, slave_info.slave_id)
             # Update nodes from database models
             for node_model in existing_node_models:
-                self._nodes[node_model.hostname].update_from_model(node_model)
+                if node_model.hostname in self._nodes:
+                    node = self._nodes[node_model.hostname]
+                    node.update_from_model(node_model)
+                    if node.should_be_removed():
+                        del self._agent_ids[node.agent_id]
+                        del self._nodes[node_model.hostname]
+                else:
+                    logger.error('Node %s appears to have been removed from the database', node_model.hostname)
             # Update online flag for nodes with new agent IDs
             for new_agent_id in new_agent_ids:
                 hostname = self._agent_ids[new_agent_id]
