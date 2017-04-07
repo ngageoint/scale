@@ -67,8 +67,9 @@ class HostBroker(Broker):
 
         for file_name in self._dir_walker(volume_path, recursive):
             if os.path.isfile(file_name):
-                yield FileDetails(file_name, os.path.getsize(file_name))
-                
+                # Strip down to a workspace relative path to the file, not an absolute path
+                relative_file_name = os.path.relpath(file_name, volume_path)
+                yield FileDetails(relative_file_name, os.path.getsize(file_name))
 
     @staticmethod
     def _dir_walker(path, recursive):
@@ -88,7 +89,6 @@ class HostBroker(Broker):
         else:
             for result in os.listdir(path):
                 yield os.path.join(path, result)
-
 
     def load_configuration(self, config):
         """See :meth:`storage.brokers.broker.Broker.load_configuration`
