@@ -812,7 +812,7 @@ class Scan(models.Model):
     :keyword title: The human-readable name of this Scan process
     :type title: :class:`django.db.models.CharField`
     :keyword description: An optional description of this Scan process
-    :type description: :class:`django.db.models.CharField`
+    :type description: :class:`django.db.models.TextField`
 
     :keyword configuration: JSON configuration for this Scan process
     :type configuration: :class:`djorm_pgjson.fields.JSONField`
@@ -831,7 +831,7 @@ class Scan(models.Model):
 
     name = models.CharField(max_length=50, unique=True)
     title = models.CharField(blank=True, max_length=50, null=True)
-    description = models.CharField(blank=True, max_length=500)
+    description = models.TextField(blank=True, null=True)
 
     configuration = djorm_pgjson.fields.JSONField()
 
@@ -1011,7 +1011,7 @@ class Strike(models.Model):
     :keyword title: The human-readable name of this Strike process
     :type title: :class:`django.db.models.CharField`
     :keyword description: An optional description of this Strike process
-    :type description: :class:`django.db.models.CharField`
+    :type description: :class:`django.db.models.TextField`
 
     :keyword configuration: JSON configuration for this Strike process
     :type configuration: :class:`djorm_pgjson.fields.JSONField`
@@ -1026,7 +1026,7 @@ class Strike(models.Model):
 
     name = models.CharField(max_length=50, unique=True)
     title = models.CharField(blank=True, max_length=50, null=True)
-    description = models.CharField(blank=True, max_length=500)
+    description = models.TextField(blank=True, null=True)
 
     configuration = djorm_pgjson.fields.JSONField()
     job = models.ForeignKey('job.Job', blank=True, null=True, on_delete=models.PROTECT)
