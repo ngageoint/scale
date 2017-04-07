@@ -187,6 +187,23 @@ class TestHostBrokerListFiles(TestCase):
         files = self.broker.list_files(self.root_path, True)
         
         self.assertEqual(len(list(files)), 10)
+        
+    @patch('os.path.getsize', lambda x: 0)
+    @patch('os.path.isfile', lambda x: True)
+    @patch('storage.brokers.host_broker.HostBroker._dir_walker')
+    def test_recursive_successfully_strip_path(self, walk):
+        """Tests calling HostBroker.list_files() with files across multi-level 
+        directory tree verifying the host volume path is removed"""
+        
+        walk.return_value = [os.path.join(self.root_path, str(x), str(uuid.uuid4())) for x in range(10)]
+
+        files = self.broker.list_files(self.root_path, True)
+        
+        file_list = list(files)
+        for file_details in file_list:
+            self.assertNotIn(self.root_path, file_details.file)
+        
+        self.assertEqual(len(file_list), 10)
 
 
 class TestHostBrokerLoadConfiguration(TestCase):
