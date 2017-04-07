@@ -23,20 +23,20 @@
 <div class="row">
     <div class="col-xs-12">
         <div class="grid-container">
-            <div ui-grid="vm.gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns class="scale-grid job-type-error-rates-grid"></div>
+            <div ui-grid="vm.gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns class="scale-grid batches-grid"></div>
         </div>
         <ais-grid-pagination></ais-grid-pagination>
     </div>
 </div>
 
-<script type="text/ng-template" id="failureRate.html">
+<script type="text/ng-template" id="completedRate.html">
     <div class="ui-grid-cell-contents">
-        <span ng-show="row.entity.total_count > 0" class="fail-rate-container">
-            <span class="fail-rate" style="{{ grid.appScope.vm.failRateStyle(row.entity.error_count, row.entity.total_count) }}"></span>
+        <span ng-show="row.entity.total_count > 0" class="completed-rate-container">
+            <span class="completed-rate" style="{{ grid.appScope.vm.completedRateStyle(row.entity.created_count, row.entity.total_count) }}"></span>
         </span>
-        <span ng-show="row.entity.total_count > 0" class="percentage">{{ ((row.entity.error_count / row.entity.total_count) * 100).toFixed(0) }}%</span>
-        <span ng-show="row.entity.total_count === 0" class="fail-rate-container">
-            <span class="fail-rate" style="display: none"></span>
+        <span ng-show="row.entity.total_count > 0" class="percentage">{{ ((row.entity.created_count / row.entity.total_count) * 100).toFixed(0) }}%</span>
+        <span ng-show="row.entity.total_count === 0" class="completed-rate-container">
+            <span class="completed-rate" style="display: none"></span>
         </span>
         <span ng-show="row.entity.total_count === 0" class="percentage">0%</span>
     </div>

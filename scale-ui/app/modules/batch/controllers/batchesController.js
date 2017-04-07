@@ -10,9 +10,9 @@
         vm.batchesParams = stateService.getBatchesParams();
 
         vm.stateService = stateService;
-        vm.subnavLinks = scaleConfig.subnavLinks.batch;
         vm.loading = true;
         vm.readonly = true;
+        vm.subnavLinks = scaleConfig.subnavLinks.batchReadonly;
         vm.recipeTypeValues = [recipeTypeViewAll];
         vm.selectedRecipeType = vm.batchesParams.recipe_type_id ? vm.batchesParams.recipe_type_id : recipeTypeViewAll;
         vm.batchStatusValues = scaleConfig.batchStatus;
@@ -65,8 +65,8 @@
             {
                 field: 'created_count',
                 enableFiltering: false,
-                displayName: 'Failure Rate',
-                cellTemplate: 'failureRate.html'
+                displayName: 'Job Creation Rate',
+                cellTemplate: 'completedRate.html'
             },
             {
                 field: 'created',
@@ -82,18 +82,13 @@
             }
         ];
 
-        vm.failRateStyle = function (error, total) {
-            var percentage = ((error / total) * 100).toFixed(0);
-            return percentage > 0 ? 'width: ' + percentage + '%' : 'display: none';
-        };
-
         vm.getBatches = function () {
             batchService.getBatches(vm.batchesParams).then(function (data) {
                 vm.loading = false;
-                vm.gridOptions.totalItems = data.count;
-                vm.gridOptions.minRowsToShow = data.results.length;
-                vm.gridOptions.virtualizationThreshold = data.results.length;
-                vm.gridOptions.data = Batch.transformer(data.results);
+                vm.gridOptions.totalItems = data.count ? data.count : 0;
+                vm.gridOptions.minRowsToShow = data.results ? data.results.length : 0;
+                vm.gridOptions.virtualizationThreshold = data.results ? data.results.length : 0;
+                vm.gridOptions.data = data.results ? Batch.transformer(data.results) : [];
             }).catch(function (e) {
                 console.log('Error retrieving batches: ' + e);
                 vm.loading = false;
@@ -148,8 +143,8 @@
             }
         };
 
-        vm.failRateStyle = function (error, total) {
-            var percentage = ((error / total) * 100).toFixed(0);
+        vm.completedRateStyle = function (created, total) {
+            var percentage = ((created / total) * 100).toFixed(0);
             return percentage > 0 ? 'width: ' + percentage + '%' : 'display: none';
         };
 
@@ -182,6 +177,7 @@
             vm.updateColDefs();
             var user = userService.getUserCreds();
             vm.readonly = !(user && user.is_admin);
+            vm.subnavLinks = vm.readonly ? scaleConfig.subnavLinks.batchReadonly : scaleConfig.subnavLinks.batch;
             vm.getRecipeTypes()
                 .then(vm.getBatches);
             navService.updateLocation('batch');
