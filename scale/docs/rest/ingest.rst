@@ -40,6 +40,9 @@ These services provide access to information about ingested files processed by t
 |                    |                   |          | ERRORED, DUPLICATE].                                                |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
+| scan_id            | Integer           | Optional | Return only ingests created by a given scan process identifier.     |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
 | strike_id          | Integer           | Optional | Return only ingests created by a given strike process identifier.   |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
@@ -66,6 +69,9 @@ These services provide access to information about ingested files processed by t
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .file_name         | String            | The name of the file being ingested.                                           |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
+| .scan              | JSON Object       | The scan process that triggered the ingest.                                    |
+|                    |                   | (See :ref:`Scan Details <rest_scan_details>`)                                  |
++--------------------+-------------------+--------------------------------------------------------------------------------+
 | .strike            | JSON Object       | The strike process that triggered the ingest.                                  |
 |                    |                   | (See :ref:`Strike Details <rest_strike_details>`)                              |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -85,12 +91,28 @@ These services provide access to information about ingested files processed by t
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .data_type         | Array             | A list of string data type "tags" for the file.                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
+| .file_path         | String            | The relative path of the file in the workspace.                                |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .workspace         | JSON Object       | The workspace storing the file.                                                |
+|                    |                   | (See :ref:`Workspace Details <rest_workspace_details>`)                        |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .new_file_path     | String            | The relative path for where the file should be moved as part of ingesting.     |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .new_workspace     | JSON Object       | The new workspace to move the file into as part of ingesting.                  |
+|                    |                   | (See :ref:`Workspace Details <rest_workspace_details>`)                        |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .job               | JSON Object       | The ID of the ingest job.                                                      |
++--------------------+-------------------+--------------------------------------------------------------------------------+
 | .ingest_started    | ISO-8601 Datetime | When the ingest was started.                                                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .ingest_ended      | ISO-8601 Datetime | When the ingest ended.                                                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .source_file       | JSON Object       | A reference to the source file that was stored by this ingest.                 |
 |                    |                   | (See :ref:`Source File Details <rest_source_file_details>`)                    |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .data_started      | ISO-8601 Datetime | The start time of the source data being ingested.                              |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .data_ended        | ISO-8601 Datetime | The end time of the source data being ingested.                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .created           | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -106,6 +128,7 @@ These services provide access to information about ingested files processed by t
 |            {                                                                                                            |
 |                "id": 14,                                                                                                |
 |                "file_name": "file_name.txt",                                                                            |
+|                "scan": null,                                                                                            |
 |                "strike": {                                                                                              |
 |                    "id": 1,                                                                                             |
 |                    "name": "my-strike",                                                                                 |
@@ -122,6 +145,37 @@ These services provide access to information about ingested files processed by t
 |                "media_type": "text/plain",                                                                              |
 |                "file_size": 1234,                                                                                       |
 |                "data_type": [],                                                                                         |
+|                "file_path": "the/current/path/file_name.txt",                                                           |
+|                "workspace": {                                                                                           |
+|                    "id": 1,                                                                                             |
+|                    "name": "my-workspace",                                                                              |
+|                    "title": "My Workspace",                                                                             |
+|                    "description": "My Workspace",                                                                       |
+|                    "base_url": "http://host.com/wk",                                                                    |
+|                    "is_active": true,                                                                                   |
+|                    "used_size": 0,                                                                                      |
+|                    "total_size": 0,                                                                                     |
+|                    "created": "2015-10-05T21:26:04.855Z",                                                               |
+|                    "archived": null,                                                                                    |
+|                    "last_modified": "2015-10-05T21:26:04.855Z"                                                          |
+|                },                                                                                                       |
+|                "new_file_path": "the/new/path/file_name.txt",                                                           |
+|                "new_workspace": {                                                                                       |
+|                    "id": 1,                                                                                             |
+|                    "name": "my-new-workspace",                                                                          |
+|                    "title": "My New Workspace",                                                                         |
+|                    "description": "My New Workspace",                                                                   |
+|                    "base_url": "http://host.com/new-wk",                                                                |
+|                    "is_active": true,                                                                                   |
+|                    "used_size": 0,                                                                                      |
+|                    "total_size": 0,                                                                                     |
+|                    "created": "2015-10-05T21:26:04.855Z",                                                               |
+|                    "archived": null,                                                                                    |
+|                    "last_modified": "2015-10-05T21:26:04.855Z"                                                          |
+|                },                                                                                                       |
+|                "job": {                                                                                                 |
+|                    "id": 1234                                                                                           |
+|                },                                                                                                       |
 |                "ingest_started": "2015-09-10T15:24:53.503Z",                                                            |
 |                "ingest_ended": "2015-09-10T15:24:53.987Z",                                                              |
 |                "source_file": {                                                                                         |
@@ -148,6 +202,8 @@ These services provide access to information about ingested files processed by t
 |                    "is_parsed": true,                                                                                   |
 |                    "parsed": "2015-09-10T15:25:03.796Z"                                                                 |
 |                },                                                                                                       |
+|                "data_started": "2015-09-10T15:24:53.503Z",                                                              |
+|                "data_ended": "2015-09-10T15:24:53.987Z",                                                                |
 |                "created": "2015-09-10T15:24:47.412Z",                                                                   |
 |                "last_modified": "2015-09-10T15:24:53.987Z"                                                              |
 |            },                                                                                                           |
@@ -177,49 +233,74 @@ These services provide access to information about ingested files processed by t
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| id                 | Integer           | The unique identifier of the model.                                            |
+| count              | Integer           | The total number of results that match the query parameters.                   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| file_name          | String            | The name of the file being ingested.                                           |
+| next               | URL               | A URL to the next page of results.                                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| strike             | JSON Object       | The strike process that triggered the ingest.                                  |
+| previous           | URL               | A URL to the previous page of results.                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| results            | Array             | List of result JSON objects that match the query parameters.                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .id                | Integer           | The unique identifier of the model. Can be passed to the details API call.     |
+|                    |                   | (See :ref:`Ingest Details <rest_ingest_details>`)                              |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .file_name         | String            | The name of the file being ingested.                                           |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .scan              | JSON Object       | The scan process that triggered the ingest.                                    |
+|                    |                   | (See :ref:`Scan Details <rest_scan_details>`)                                  |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .strike            | JSON Object       | The strike process that triggered the ingest.                                  |
 |                    |                   | (See :ref:`Strike Details <rest_strike_details>`)                              |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| status             | String            | The current status of the ingest.                                              |
+| .status            | String            | The current status of the ingest.                                              |
 |                    |                   | Choices: [TRANSFERRING, TRANSFERRED, DEFERRED, INGESTING, INGESTED, ERRORED,   |
 |                    |                   | DUPLICATE].                                                                    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| bytes_transferred  | Integer           | The total number of bytes transferred so far.                                  |
+| .bytes_transferred | Integer           | The total number of bytes transferred so far.                                  |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| transfer_started   | ISO-8601 Datetime | When the transfer was started.                                                 |
+| .transfer_started  | ISO-8601 Datetime | When the transfer was started.                                                 |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| transfer_ended     | ISO-8601 Datetime | When the transfer ended.                                                       |
+| .transfer_ended    | ISO-8601 Datetime | When the transfer ended.                                                       |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| media_type         | String            | The IANA media type of the file.                                               |
+| .media_type        | String            | The IANA media type of the file.                                               |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| file_size          | Integer           | The size of the file in bytes.                                                 |
+| .file_size         | Integer           | The size of the file in bytes.                                                 |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| data_type          | Array             | A list of string data type "tags" for the file.                                |
+| .data_type         | Array             | A list of string data type "tags" for the file.                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| ingest_started     | ISO-8601 Datetime | When the ingest was started.                                                   |
+| .file_path         | String            | The relative path of the file in the workspace.                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| ingest_ended       | ISO-8601 Datetime | When the ingest ended.                                                         |
+| .workspace         | JSON Object       | The workspace storing the file.                                                |
+|                    |                   | (See :ref:`Workspace Details <rest_workspace_details>`)                        |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| source_file        | JSON Object       | A reference to the source file that was stored by this ingest.                 |
+| .new_file_path     | String            | The relative path for where the file should be moved as part of ingesting.     |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .new_workspace     | JSON Object       | The new workspace to move the file into as part of ingesting.                  |
+|                    |                   | (See :ref:`Workspace Details <rest_workspace_details>`)                        |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .job               | JSON Object       | The ID of the ingest job.                                                      |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .ingest_started    | ISO-8601 Datetime | When the ingest was started.                                                   |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .ingest_ended      | ISO-8601 Datetime | When the ingest ended.                                                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .source_file       | JSON Object       | A reference to the source file that was stored by this ingest.                 |
 |                    |                   | (See :ref:`Source File Details <rest_source_file_details>`)                    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| created            | ISO-8601 Datetime | When the associated database model was initially created.                      |
+| .data_started      | ISO-8601 Datetime | The start time of the source data being ingested.                              |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                             |
+| .data_ended        | ISO-8601 Datetime | The end time of the source data being ingested.                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| file_path          | String            | The relative path for where the file is stored in the workspace.               |
+| .created           | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| new_file_path      | String            | The relative path for where the file should be moved as part of ingesting.     |
+| .last_modified     | ISO-8601 Datetime | When the associated database model was last saved.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
 |    {                                                                                                                    |
 |        "id": 14,                                                                                                        |
 |        "file_name": "file_name.txt",                                                                                    |
+|        "scan": null,                                                                                                    |
 |        "strike": {                                                                                                      |
 |            "id": 1,                                                                                                     |
 |            "name": "my-strike",                                                                                         |
@@ -278,6 +359,49 @@ These services provide access to information about ingested files processed by t
 |        "media_type": "text/plain",                                                                                      |
 |        "file_size": 1234,                                                                                               |
 |        "data_type": [],                                                                                                 |
+|        "file_path": "the/current/path/file_name.txt",                                                                   |
+|        "workspace": {                                                                                                   |
+|            "id": 1,                                                                                                     |
+|            "name": "my-workspace",                                                                                      |
+|            "title": "My Workspace",                                                                                     |
+|            "description": "My Workspace",                                                                               |
+|            "base_url": "http://host.com/wk",                                                                            |
+|            "is_active": true,                                                                                           |
+|            "used_size": 0,                                                                                              |
+|            "total_size": 0,                                                                                             |
+|            "created": "2015-10-05T21:26:04.855Z",                                                                       |
+|            "archived": null,                                                                                            |
+|            "last_modified": "2015-10-05T21:26:04.855Z",                                                                 |
+|            "json_config": {                                                                                             |
+|                 "broker": {                                                                                             |
+|                    "type": "host",                                                                                      |
+|                    "host_path": "/host/path"                                                                            |
+|                }                                                                                                        |
+|            }                                                                                                            |
+|        },                                                                                                               |
+|        "new_file_path": "the/new/path/file_name.txt",                                                                   |
+|        "new_workspace": {                                                                                               |
+|            "id": 1,                                                                                                     |
+|            "name": "my-new-workspace",                                                                                  |
+|            "title": "My New Workspace",                                                                                 |
+|            "description": "My New Workspace",                                                                           |
+|            "base_url": "http://host.com/new-wk",                                                                        |
+|            "is_active": true,                                                                                           |
+|            "used_size": 0,                                                                                              |
+|            "total_size": 0,                                                                                             |
+|            "created": "2015-10-05T21:26:04.855Z",                                                                       |
+|            "archived": null,                                                                                            |
+|            "last_modified": "2015-10-05T21:26:04.855Z",                                                                 |
+|            "json_config": {                                                                                             |
+|                 "broker": {                                                                                             |
+|                    "type": "host",                                                                                      |
+|                    "host_path": "/host/path"                                                                            |
+|                }                                                                                                        |
+|            }                                                                                                            |
+|        },                                                                                                               |
+|        "job": {                                                                                                         |
+|            "id": 1234                                                                                                   |
+|        },                                                                                                               |
 |        "ingest_started": "2015-09-10T15:24:53.503Z",                                                                    |
 |        "ingest_ended": "2015-09-10T15:24:53.987Z",                                                                      |
 |        "source_file": {                                                                                                 |
@@ -304,10 +428,10 @@ These services provide access to information about ingested files processed by t
 |            "is_parsed": true,                                                                                           |
 |            "parsed": "2015-09-10T15:25:03.796Z"                                                                         |
 |        },                                                                                                               |
+|        "data_started": "2015-09-10T15:24:53.503Z",                                                                      |
+|        "data_ended": "2015-09-10T15:24:53.987Z",                                                                        |
 |        "created": "2015-09-10T15:24:47.412Z",                                                                           |
 |        "last_modified": "2015-09-10T15:24:53.987Z",                                                                     |
-|        "file_path": "path/file_name.txt",                                                                               |
-|        "new_file_path": "new/path/file_name.txt"                                                                        |
 |    }                                                                                                                    |
 +-------------------------------------------------------------------------------------------------------------------------+
 

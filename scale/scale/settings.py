@@ -46,6 +46,13 @@ ELASTICSEARCH_URLS = None
 # Placeholder for Elasticsearch object. Needed for unit tests.
 ELASTICSEARCH = None
 
+# Base URL of vault or DCOS secrets store, or None to disable secrets
+SECRETS_URL = None
+# Public token if DCOS secrets store, or privleged token for vault
+SECRETS_TOKEN = None
+# DCOS service account name, or None if not DCOS secrets store
+DCOS_SERVICE_ACCOUNT = None
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
@@ -89,6 +96,7 @@ INSTALLED_APPS = (
     'port',
     'cli',
     'batch',
+    'vault'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -112,7 +120,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer',
         'rest_framework.renderers.AdminRenderer',
     ),
-    'ALLOWED_VERSIONS': ('v3', 'v4',),
+    'ALLOWED_VERSIONS': ('v3', 'v4', 'v5'),
     'DEFAULT_VERSION': 'v4',
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
 }

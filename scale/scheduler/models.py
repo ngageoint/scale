@@ -6,7 +6,7 @@ import mesos_api.api as mesos_api
 from django.db import models, transaction
 from mesos_api.api import MesosError
 
-from queue.models import Queue
+from queue.models import Queue, QUEUE_ORDER_FIFO, QUEUE_ORDER_LIFO
 
 logger = logging.getLogger(__name__)
 
@@ -137,7 +137,13 @@ class Scheduler(models.Model):
     :type master_port: :class:`django.db.models.IntegerField`
     """
 
+    QUEUE_MODES = (
+        (QUEUE_ORDER_FIFO, QUEUE_ORDER_FIFO),
+        (QUEUE_ORDER_LIFO, QUEUE_ORDER_LIFO),
+    )
+
     is_paused = models.BooleanField(default=False)
+    queue_mode = models.CharField(choices=QUEUE_MODES, default=QUEUE_ORDER_FIFO, max_length=50)
     master_hostname = models.CharField(max_length=250, default='localhost')
     master_port = models.IntegerField(default=5050)
 

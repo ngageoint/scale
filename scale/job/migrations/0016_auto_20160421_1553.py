@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import models, migrations
+from django.db import migrations
 
 
 class Migration(migrations.Migration):
@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     ]
 
     def populate_job_configuration(apps, schema_editor):
-        from job.configuration.configuration.job_configuration import JobConfiguration, MODE_RO, MODE_RW
+        from job.configuration.json.execution.exe_config import ExecutionConfiguration, MODE_RO, MODE_RW
         from job.configuration.data.job_data import JobData
         # Go through all of the job models that have job data and populate their configuration
         Job = apps.get_model('job', 'Job')
@@ -42,7 +42,7 @@ class Migration(migrations.Migration):
                 for input_file in input_files:
                     input_workspaces.add(input_file.workspace.name)
 
-                configuration = JobConfiguration()
+                configuration = ExecutionConfiguration()
                 for name in input_workspaces:
                     configuration.add_job_task_workspace(name, MODE_RO)
                 if not job.job_type.is_system:

@@ -243,6 +243,9 @@
             "batch": [
                 { "path": "batch", "label": "Batches" },
                 { "path": "batch/0", "label": "Create Batch" }
+            ],
+            "batchReadonly": [
+                { "path": "batch", "label": "Batches" }
             ]
         },
         "headerOffset": 165,

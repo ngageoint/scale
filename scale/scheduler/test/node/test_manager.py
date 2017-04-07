@@ -11,6 +11,7 @@ from job.tasks.pull_task import PullTask
 from job.tasks.update import TaskStatusUpdate
 from job.test import utils as job_test_utils
 from mesos_api.api import SlaveInfo
+from node.models import Node
 from node.test import utils as node_test_utils
 from scheduler.cleanup.manager import CleanupManager
 from scheduler.node.manager import NodeManager
@@ -43,6 +44,76 @@ class TestNodeManager(TestCase):
 
         nodes = manager.get_nodes()
         self.assertEqual(len(nodes), 2)
+
+    @patch('scheduler.node.manager.api.get_slaves')
+    def test_sync_node_model(self, mock_get_slaves):
+        """Tests doing a successful database update when a node model has been updated in the database"""
+
+        mock_get_slaves.return_value = self.slave_infos
+
+        # Initial sync
+        manager = NodeManager()
+        manager.register_agent_ids([self.node_agent_1, self.node_agent_2])
+        manager.sync_with_database('master_host', 5050)
+
+        # Database model changes to inactive
+        self.node_1.is_active = False
+        self.node_1.save()
+
+        # Sync with database
+        manager.sync_with_database('master_host', 5050)
+
+        found_node_1 = False
+        for node in manager.get_nodes():
+            if node.hostname == self.node_1.hostname:
+                found_node_1 = True
+                self.assertFalse(node.is_active)
+        self.assertTrue(found_node_1)
+
+    @patch('scheduler.node.manager.api.get_slaves')
+    def test_sync_and_remove_node_model(self, mock_get_slaves):
+        """Tests doing a successful database update when a node model should be removed from the scheduler"""
+
+        mock_get_slaves.return_value = self.slave_infos
+
+        # Initial sync
+        manager = NodeManager()
+        manager.register_agent_ids([self.node_agent_1, self.node_agent_2])
+        manager.sync_with_database('master_host', 5050)
+
+        # Database model changes to inactive
+        self.node_1.is_active = False
+        self.node_1.save()
+
+        # Node is lost
+        manager.lost_node(self.node_agent_1)
+
+        # Sync with database
+        manager.sync_with_database('master_host', 5050)
+
+        # Make sure node 1 is gone
+        found_node_1 = False
+        for node in manager.get_nodes():
+            if node.hostname == self.node_1.hostname:
+                found_node_1 = True
+        self.assertFalse(found_node_1)
+
+    @patch('scheduler.node.manager.api.get_slaves')
+    def test_sync_with_renamed_node(self, mock_get_slaves):
+        """Tests doing a successful database update when a node model has its hostname changed in the database"""
+
+        mock_get_slaves.return_value = self.slave_infos
+
+        # Initial sync
+        manager = NodeManager()
+        manager.register_agent_ids([self.node_agent_1, self.node_agent_2])
+        manager.sync_with_database('master_host', 5050)
+
+        self.node_1.hostname = 'new_host_1'
+        self.node_1.save()
+
+        # No exception is success
+        manager.sync_with_database('master_host', 5050)
 
     @patch('scheduler.node.manager.api.get_slaves')
     def test_lost_known_node(self, mock_get_slaves):
@@ -106,6 +177,37 @@ class TestNodeManager(TestCase):
         node_2 = manager.get_node(self.node_agent_3)
         self.assertEqual(node_2.hostname, 'host_2')
         self.assertTrue(node_2._is_online)
+
+    @patch('scheduler.node.manager.api.get_slaves')
+    def test_change_agent_id_with_inactive_node(self, mock_get_slaves):
+        """Tests the NodeManager where a registered node changes its agent ID, and the node is inactive"""
+
+        mock_get_slaves.return_value = self.slave_infos
+
+        manager = NodeManager()
+        manager.register_agent_ids([self.node_agent_1, self.node_agent_2])
+        manager.sync_with_database('master_host', 5050)
+
+        # Node 2 is now inactive
+        Node.objects.filter(id=manager.get_node(self.node_agent_2).id).update(is_active=False)
+        manager.sync_with_database('master_host', 5050)
+
+        mock_get_slaves.return_value = self.slave_infos_updated
+        manager.lost_node(self.node_agent_2)
+        manager.register_agent_ids([self.node_agent_3])
+        manager.sync_with_database('master_host', 5050)
+
+        # Make sure two nodes are registered, one for agent 1 and one for agent 3, and both are online
+        nodes = manager.get_nodes()
+        self.assertEqual(len(nodes), 2)
+        node_1 = manager.get_node(self.node_agent_1)
+        self.assertEqual(node_1.hostname, self.node_1.hostname)
+        self.assertTrue(node_1._is_online)
+        self.assertIsNone(manager.get_node(self.node_agent_2))
+        node_2 = manager.get_node(self.node_agent_3)
+        self.assertEqual(node_2.hostname, 'host_2')
+        self.assertTrue(node_2._is_online)
+        self.assertFalse(node_2._is_active)
 
     @patch('scheduler.node.manager.api.get_slaves')
     def test_get_pull_tasks(self, mock_get_slaves):

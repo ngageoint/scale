@@ -190,7 +190,7 @@ class MetricsIngestManager(models.Manager):
 
         # Fetch all the ingests relevant for metrics
         ingests = Ingest.objects.filter(status__in=['DEFERRED', 'INGESTED', 'ERRORED', 'DUPLICATE'],
-                                        ingest_ended__gte=started, ingest_ended__lte=ended)
+                                        ingest_ended__gte=started, ingest_ended__lte=ended, strike__isnull=False)
         ingests = ingests.select_related('strike').defer('strike__configuration')
 
         # Calculate the overall counts based on ingest status

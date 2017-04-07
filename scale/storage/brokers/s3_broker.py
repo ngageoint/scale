@@ -71,12 +71,12 @@ class S3Broker(Broker):
 
                     self._download_file(s3_object, file_download.file, file_download.local_path)
 
-    def list_files(self, volume_path, recursive, callback):
+    def list_files(self, volume_path, recursive):
         """See :meth:`storage.brokers.broker.Broker.list_files`
         """
 
         with S3Client(self._credentials, self._region_name) as client:
-            return client.list_objects(self._bucket_name, recursive, volume_path, callback)
+            return client.list_objects(self._bucket_name, recursive, volume_path)
 
     def load_configuration(self, config):
         """See :meth:`storage.brokers.broker.Broker.load_configuration`"""

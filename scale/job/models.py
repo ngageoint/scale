@@ -16,13 +16,12 @@ from django.db.models import Q
 import job.execution.container as job_exe_container
 import util.parse
 from error.models import Error
-from job.configuration.configuration.job_configuration import JobConfiguration, MODE_RO, MODE_RW
-from job.configuration.configuration.job_parameter import DockerParam
 from job.configuration.data.job_data import JobData
-from job.configuration.environment.job_environment import JobEnvironment
 from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.job_interface import JobInterface
-from job.configuration.interface.job_type_configuration import JobTypeConfiguration
+from job.configuration.job_parameter import DockerParam
+from job.configuration.json.execution.exe_config import ExecutionConfiguration, MODE_RO, MODE_RW
+from job.configuration.json.job.job_config import JobConfiguration
 from job.configuration.results.job_results import JobResults
 from job.exceptions import InvalidJobField
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
@@ -449,7 +448,7 @@ class JobManager(models.Manager):
         disk_out_required = max(output_size_mb, MIN_DISK)
 
         # Configure workspaces needed for the job
-        configuration = job.get_job_configuration()
+        configuration = job.get_execution_configuration()
         for name in input_workspaces:
             configuration.add_job_task_workspace(name, MODE_RO)
         if not job.job_type.is_system:
@@ -743,14 +742,14 @@ class Job(models.Model):
 
         return JobData(self.data)
 
-    def get_job_configuration(self):
-        """Returns the configuration for this job
+    def get_execution_configuration(self):
+        """Returns the execution configuration for this job
 
-        :returns: The configuration for this job
-        :rtype: :class:`job.configuration.configuration.job_configuration.JobConfiguration`
+        :returns: The execution configuration for this job
+        :rtype: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         """
 
-        return JobConfiguration(self.configuration)
+        return ExecutionConfiguration(self.configuration)
 
     def get_job_interface(self):
         """Returns the interface for this job
@@ -1058,48 +1057,55 @@ class JobExecutionManager(models.Manager):
             if job_exe.status == 'QUEUED':
                 job_ids.append(job_exe.job_id)
 
-        # Lock corresponding jobs and update them to RUNNING
+        # Lock corresponding jobs
         jobs = {}
-        locked_jobs = Job.objects.get_locked_jobs(job_ids)
-        Job.objects.update_status(locked_jobs, 'RUNNING', started)
-        for job in locked_jobs:
+        for job in Job.objects.get_locked_jobs(job_ids):
             jobs[job.id] = job
 
         # Update each job execution
         job_exes = []
+        jobs_to_running = []
         for job_execution in job_executions:
-            job_exe = job_execution[0]
-            node_id = job_execution[1]
-            resources = job_execution[2]
+            try:
+                job_exe = job_execution[0]
+                node_id = job_execution[1]
+                resources = job_execution[2]
 
-            if job_exe.status != 'QUEUED':
-                continue
-            if node_id is None:
-                raise Exception('Cannot schedule job execution %i without node ID' % job_exe.id)
-            if resources is None:
-                raise Exception('Cannot schedule job execution %i without resources' % job_exe.id)
+                if job_exe.status != 'QUEUED':
+                    continue
+                if node_id is None:
+                    raise Exception('Cannot schedule job execution %i without node ID' % job_exe.id)
+                if resources is None:
+                    raise Exception('Cannot schedule job execution %i without resources' % job_exe.id)
 
-            # Add configuration values for the settings to the command line.
-            interface = job_exe.get_job_interface()
-            job_exe.command_arguments = interface.populate_command_argument_settings(job_exe.command_arguments,
-                                                                                     job_exe.get_job_configuration())
+                # Add configuration values for the settings to the command line.
+                interface = job_exe.get_job_interface()
+                job_exe.command_arguments = interface.populate_command_argument_settings(job_exe.command_arguments,
+                                                                                job_exe.get_execution_configuration(),
+                                                                                job_exe.job.job_type)
 
-            job_exe.job = jobs[job_exe.job_id]
-            job_exe.set_cluster_id(framework_id)
-            job_exe.status = 'RUNNING'
-            job_exe.started = started
-            job_exe.node_id = node_id
-            docker_volumes = []
-            job_exe.configure_docker_params(workspaces, docker_volumes)
-            job_exe.environment = JobEnvironment({}).get_dict()
-            job_exe.cpus_scheduled = resources.cpus
-            job_exe.mem_scheduled = resources.mem
-            job_exe.disk_in_scheduled = resources.disk_in
-            job_exe.disk_out_scheduled = resources.disk_out
-            job_exe.disk_total_scheduled = resources.disk_total
-            job_exe.save()
-            job_exe.docker_volumes = docker_volumes
-            job_exes.append(job_exe)
+                job_exe.job = jobs[job_exe.job_id]
+                job_exe.set_cluster_id(framework_id)
+                job_exe.status = 'RUNNING'
+                job_exe.started = started
+                job_exe.node_id = node_id
+                docker_volumes = []
+                job_exe.configure_docker_params(workspaces, docker_volumes)
+                job_exe.environment = {}
+                job_exe.cpus_scheduled = resources.cpus
+                job_exe.mem_scheduled = resources.mem
+                job_exe.disk_in_scheduled = resources.disk_in
+                job_exe.disk_out_scheduled = resources.disk_out
+                job_exe.disk_total_scheduled = resources.disk_total
+                job_exe.save()
+                job_exe.docker_volumes = docker_volumes
+                job_exes.append(job_exe)
+                jobs_to_running.append(job_exe.job)
+            except Exception:
+                logger.exception('Critical error trying to schedule job_exe %d' % job_execution[0].id)
+
+        # Set jobs of successfully scheduled executions to RUNNING
+        Job.objects.update_status(jobs_to_running, 'RUNNING', started)
 
         return job_exes
 
@@ -1314,13 +1320,21 @@ class JobExecution(models.Model):
         :raises Exception: If the job execution is still queued
         """
 
-        configuration = self.get_job_configuration()
+        configuration = self.get_execution_configuration()
+
+        # Set up shared memory
+        shared_mem = self.job.job_type.shared_mem_required
+        if shared_mem > 0:
+            configuration.add_job_task_docker_params([DockerParam('shm-size', '%dm' % int(math.ceil(shared_mem)))])
 
         # Setup task logging
         configuration.configure_logging_docker_params(self)
 
-        # Populate job_configuration with default settings
+        # Populate configuration with default settings
         configuration.populate_default_job_settings(self)
+
+        # Populate configuration with mount volumes
+        configuration.populate_mounts(self)
 
         # Pass database connection details from scheduler as environment variables
         db = settings.DATABASES['default']
@@ -1357,6 +1371,16 @@ class JobExecution(models.Model):
             workspace_name = strike.get_strike_configuration().get_workspace()
             configuration.add_job_task_workspace(workspace_name, MODE_RW)
 
+        # Configure Scan workspace based on current configuration
+        if self.job.job_type.name == 'scale-scan':
+            from ingest.models import Scan
+            try:
+                scan = Scan.objects.get(job_id=self.job_id)
+            except Scan.DoesNotExist:
+                scan = Scan.objects.get(dry_run_job_id=self.job_id)
+            workspace_name = scan.get_scan_configuration().get_workspace()
+            configuration.add_job_task_workspace(workspace_name, MODE_RW)
+
         # Configure any Docker parameters needed for workspaces
         configuration.configure_workspace_docker_params(self, workspaces, docker_volumes)
 
@@ -1367,7 +1391,7 @@ class JobExecution(models.Model):
         
         # Add job environment variable as docker parameters
         interface = self.get_job_interface()
-        env_vars = interface.populate_env_vars_arguments(configuration)
+        env_vars = interface.populate_env_vars_arguments(configuration, self.job.job_type)
 
         for env_var in env_vars:
             env_var_name = env_var['name']
@@ -1415,32 +1439,32 @@ class JobExecution(models.Model):
 
         return self.job.job_type.get_error_interface()
 
-    def get_job_type_configuration(self):
-        """Returns the configuration interface for this job execution
-
-        :returns: The configuration interface for this job execution
-        :rtype: :class:`job.configuration.interface.job_configuration.JobTypeConfiguration`
-        """
-
-        return self.job.job_type.get_job_type_configuration()
-
     def get_job_configuration(self):
-        """Returns the configuration for this job
+        """Returns the default job configuration for this job type
 
-        :returns: The configuration for this job
-        :rtype: :class:`job.configuration.configuration.job_configuration.JobConfiguration`
+        :returns: The default job configuration for this job type
+        :rtype: :class:`job.configuration.json.job.job_config.JobConfiguration`
         """
 
-        return JobConfiguration(self.configuration)
+        return self.job.job_type.get_job_configuration()
+
+    def get_execution_configuration(self):
+        """Returns the execution configuration for this job
+
+        :returns: The execution configuration for this job
+        :rtype: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        """
+
+        return ExecutionConfiguration(self.configuration)
 
     def get_job_environment(self):
         """Returns the environment data for this job
 
         :returns: The environment data for this job
-        :rtype: :class:`job.configuration.environment.job_environment.JobEnvironment`
+        :rtype: dict
         """
 
-        return JobEnvironment(self.environment)
+        return self.environment
 
     def get_job_interface(self):
         """Returns the job interface for executing this job
@@ -1480,6 +1504,15 @@ class JobExecution(models.Model):
         """
 
         return self.job.job_type.name
+        
+    def get_job_type_version(self):
+        """Returns the version of this job's type
+
+        :returns: The version of this job's type
+        :rtype: string
+        """
+
+        return self.job.job_type.version
 
     def get_log_json(self, include_stdout=True, include_stderr=True, since=None):
         """Get log data from elasticsearch as a dict (from the raw JSON).
@@ -2253,7 +2286,7 @@ class JobType(models.Model):
     :keyword trigger_rule: The rule to trigger new jobs of this type
     :type trigger_rule: :class:`django.db.models.ForeignKey`
 
-    :keyword configuration: JSON array which will be passed as-is to the job configuration
+    :keyword configuration: JSON describing the default job configuration for jobs of this type
     :type configuration: :class:`djorm_pgjson.fields.JSONField`
 
     :keyword priority: The priority of the job type (lower number is higher priority)
@@ -2268,6 +2301,8 @@ class JobType(models.Model):
     :type cpus_required: :class:`django.db.models.FloatField`
     :keyword mem_required: The amount of RAM in MiB required for a job of this type
     :type mem_required: :class:`django.db.models.FloatField`
+    :keyword shared_mem_required: The amount of shared memory (/dev/shm) in MiB required for a job of this type
+    :type shared_mem_required: :class:`django.db.models.FloatField`
     :keyword disk_out_const_required: A constant amount of disk space in MiB required for job output (temp work and
         products) for a job of this type
     :type disk_out_const_required: :class:`django.db.models.FloatField`
@@ -2325,6 +2360,7 @@ class JobType(models.Model):
     max_tries = models.IntegerField(default=3)
     cpus_required = models.FloatField(default=1.0)
     mem_required = models.FloatField(default=64.0)
+    shared_mem_required = models.FloatField(default=0.0)
     disk_out_const_required = models.FloatField(default=64.0)
     disk_out_mult_required = models.FloatField(default=0.0)
 
@@ -2352,10 +2388,14 @@ class JobType(models.Model):
 
         return ErrorInterface(self.error_mapping)
 
-    def get_job_type_configuration(self):
-        """Returns the interface for the default configuration"""
+    def get_job_configuration(self):
+        """Returns default job configuration for this job type
 
-        return JobTypeConfiguration(self.configuration)
+        :returns: The default job configuration for this job type
+        :rtype: :class:`job.configuration.json.job.job_config.JobConfiguration`
+        """
+
+        return JobConfiguration(self.configuration)
 
     def natural_key(self):
         """Django method to define the natural key for a job type as the

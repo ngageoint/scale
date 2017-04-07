@@ -197,6 +197,13 @@
             });
         };
 
+        vm.filterByFilename = function (keyEvent) {
+            if (!keyEvent || (keyEvent && keyEvent.which === 13)) {
+                vm.ingestsParams.file_name = vm.searchText;
+                vm.filterResults();
+            }
+        };
+
         vm.initialize = function () {
             stateService.setIngestsParams(vm.ingestsParams);
             vm.updateColDefs();
@@ -240,13 +247,6 @@
                 vm.ingestsParams.ended = value.toISOString();
                 vm.filterResults();
             }
-        });
-
-        $scope.$watch('vm.searchText', function (value) {
-           if (!vm.loading){
-               vm.ingestsParams.file_name = value;
-               vm.filterResults();
-           }
         });
 
         $scope.$watchCollection('vm.stateService.getIngestsColDefs()', function (newValue, oldValue) {

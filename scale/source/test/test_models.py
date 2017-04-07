@@ -39,6 +39,17 @@ class TestSourceFileManager(TestCase):
         self.started = now()
         self.ended = self.started + datetime.timedelta(days=1)
 
+    def test_get_source_ingests(self):
+        """Tests calling get_source_ingests()"""
+
+        from ingest.test import utils as ingest_test_utils
+        ingest_1 = ingest_test_utils.create_ingest(source_file=self.src_file, status='INGESTED')
+        ingest_test_utils.create_ingest(source_file=self.src_file, status='DUPLICATE')
+
+        ingests = SourceFile.objects.get_source_ingests(self.src_file.id, statuses=['INGESTED'])
+        self.assertEqual(len(ingests), 1)
+        self.assertEqual(ingests[0].id, ingest_1.id)
+
     def test_get_source_jobs(self):
         """Tests calling get_source_jobs()"""
 

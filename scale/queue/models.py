@@ -9,9 +9,9 @@ import djorm_pgjson.fields
 from django.db import models, transaction
 
 from error.models import Error
-from job.configuration.configuration.job_configuration import JobConfiguration
 from job.configuration.data.exceptions import InvalidData
 from job.configuration.data.job_data import JobData
+from job.configuration.json.execution.exe_config import ExecutionConfiguration
 from job.execution.job_exe import RunningJobExecution
 from job.models import Job, JobType
 from job.models import JobExecution
@@ -20,6 +20,8 @@ from trigger.models import TriggerEvent
 
 logger = logging.getLogger(__name__)
 
+QUEUE_ORDER_FIFO = 'FIFO'
+QUEUE_ORDER_LIFO = 'LIFO'
 
 # IMPORTANT NOTE: Locking order
 # Always adhere to the following model order for obtaining row locks via select_for_update() in order to prevent
@@ -248,14 +250,21 @@ class QueueManager(models.Manager):
     # List of queue event processor class definitions
     _processors = []
 
-    def get_queue(self):
-        """Returns the list of queue models sorted according to their scheduling priority
+    def get_queue(self, order_mode):
+        """Returns the list of queue models sorted according to their priority first, and then according to the provided
+        mode
 
+        :param order_mode: The mode determining how to order the queue (FIFO or LIFO)
+        :type order_mode: string
         :returns: The list of queue models
         :rtype: list[:class:`queue.models.Queue`]
         """
 
-        return Queue.objects.order_by('priority', 'queued').iterator()
+        if order_mode == QUEUE_ORDER_FIFO:
+            return self.order_by('priority', 'queued').iterator()
+        elif order_mode == QUEUE_ORDER_LIFO:
+            return self.order_by('priority', '-queued').iterator()
+        return self.order_by('priority').iterator()
 
     def get_queue_status(self):
         """Returns the current status of the queue with statistics broken down by job type.
@@ -438,8 +447,8 @@ class QueueManager(models.Manager):
         :type data: :class:`job.configuration.data.job_data.JobData`
         :param event: The event that triggered the creation of this job
         :type event: :class:`trigger.models.TriggerEvent`
-        :param configuration: The optional initial job configuration
-        :type configuration: :class:`job.configuration.configuration.job_configuration.JobConfiguration`
+        :param configuration: The optional initial execution configuration
+        :type configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         :returns: The new queued job
         :rtype: :class:`job.models.Job`
 
@@ -448,7 +457,7 @@ class QueueManager(models.Manager):
 
         job = Job.objects.create_job(job_type, event)
         if not configuration:
-            configuration = JobConfiguration()
+            configuration = ExecutionConfiguration()
         job.configuration = configuration.get_dict()
         job.save()
 
@@ -663,11 +672,13 @@ class QueueManager(models.Manager):
 
         # Schedule job executions
         scheduled_job_exes = []
+        job_exe_ids_scheduled = []
         for job_exe in JobExecution.objects.schedule_job_executions(framework_id, executions_to_schedule, workspaces):
             scheduled_job_exes.append(RunningJobExecution(job_exe))
+            job_exe_ids_scheduled.append(job_exe.id)
 
-        # Clear the job executions from the queue
-        Queue.objects.filter(job_exe_id__in=job_exe_ids).delete()
+        # Clear the scheduled job executions from the queue
+        Queue.objects.filter(job_exe_id__in=job_exe_ids_scheduled).delete()
 
         return scheduled_job_exes
 
