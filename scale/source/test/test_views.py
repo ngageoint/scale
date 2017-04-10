@@ -242,7 +242,6 @@ class TestSourceDetailsViewV4(TestCase):
                 self.assertIn(product['id'], [self.product1.id, self.product2.id])
 
 
-<<<<<<< HEAD
 class TestSourceIngestsView(TestCase):
     fixtures = ['ingest_job_types.json']
 

@@ -341,8 +341,7 @@ class RecipeManager(models.Manager):
         recipe = Recipe.objects.select_related(
             'recipe_type', 'recipe_type_rev', 'event', 'event__rule', 'root_superseded_recipe',
             'root_superseded_recipe__recipe_type', 'superseded_recipe', 'superseded_recipe__recipe_type',
-            # TODO: Re-add superseded_by_recipe fields when Django 1.11 upgrade is available
-            #'superseded_by_recipe', 'superseded_by_recipe__recipe_type'
+            'superseded_by_recipe', 'superseded_by_recipe__recipe_type'
         ).get(pk=recipe_id)
 
         # Update the recipe with source file models

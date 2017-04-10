@@ -195,7 +195,7 @@ class TestMetricsIngest(TestCase):
         """Tests generating metrics for a date that has ingests with None in Strike field (Scan parent ingest)."""
         scan = ingest_test_utils.create_scan()
         ingest_test_utils.create_ingest(scan=scan, status='INGESTED',
-                                        ingest_ended=datetime.datetime(2015, 1, 1))
+                                        ingest_ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
 
         MetricsIngest.objects.calculate(datetime.date(2015, 1, 1))
         entries = MetricsIngest.objects.filter(occurred=datetime.date(2015, 1, 1))

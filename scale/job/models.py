@@ -223,8 +223,7 @@ class JobManager(models.Manager):
         job = Job.objects.select_related(
             'job_type', 'job_type_rev', 'job_type_rev__job_type', 'event', 'event__rule', 'error',
             'root_superseded_job', 'root_superseded_job__job_type', 'superseded_job', 'superseded_job__job_type',
-            # TODO: Re-add superseded_by_recipe fields when Django 1.11 upgrade is available
-            #'superseded_by_job', 'superseded_by_job__job_type'
+            'superseded_by_job', 'superseded_by_job__job_type'
         ).get(pk=job_id)
 
         # Attempt to get related job executions
@@ -2288,7 +2287,6 @@ class JobType(models.Model):
     :keyword trigger_rule: The rule to trigger new jobs of this type
     :type trigger_rule: :class:`django.db.models.ForeignKey`
     :keyword configuration: JSON describing the default job configuration for jobs of this type
-    :type configuration: :class:`djorm_pgjson.fields.JSONField`
     :type configuration: :class:`django.contrib.postgres.fields.JSONField`
 
     :keyword priority: The priority of the job type (lower number is higher priority)
