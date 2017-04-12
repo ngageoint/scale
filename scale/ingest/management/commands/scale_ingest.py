@@ -23,7 +23,7 @@ class Command(BaseCommand):
         parser.add_argument('-i', '--ingest-id', action='store', type=int,
                             help='ID of the ingest model')
 
-    def handle(self, **options):
+    def handle(self, *args, **options):
         """See :meth:`django.core.management.base.BaseCommand.handle`.
 
         This method starts the ingest process.

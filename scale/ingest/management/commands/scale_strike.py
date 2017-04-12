@@ -32,7 +32,7 @@ class Command(BaseCommand):
         self._strike_id = None
         self._monitor = None
 
-    def handle(self, **options):
+    def handle(self, *args, **options):
         """See :meth:`django.core.management.base.BaseCommand.handle`.
 
         This method starts the Strike processor.

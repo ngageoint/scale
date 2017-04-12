@@ -45,7 +45,7 @@ class Command(BaseCommand):
 
         self._scanner = None
 
-    def handle(self, **options):
+    def handle(self, *args, **options):
         """See :meth:`django.core.management.base.BaseCommand.handle`.
 
         This method starts the Scan processor.

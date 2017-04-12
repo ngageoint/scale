@@ -20,15 +20,20 @@ class Command(BaseCommand):
     help = 'Uploads a local file to the storage system'
 
     def add_arguments(self, parser):
+        parser.add_argument('file_id', type=int,
+                            help='ID of the ScaleFile object to delete.')
+        parser.add_argument('remote_path', help='Path to the remote target location.')
         parser.add_argument('-w', '--workspace', action='store',
                             help='The name of the workspace used to store the file')
 
-    def handle(self, local_path, remote_path, **options):
+    def handle(self, *args, **options):
         """See :meth:`django.core.management.base.BaseCommand.handle`.
 
         This method starts the file upload process.
         """
 
+        file_id = options.get('file_id')
+        remote_path = options.get('remote_path')
         workspace_name = options.get('workspace')
 
         logger.info('Command starting: scale_upload_file')

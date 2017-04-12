@@ -28,7 +28,7 @@ class Command(BaseCommand):
         parser.add_argument('-i', '--job-exe-id', action='store', type=int,
                             help='The ID of the job execution')
 
-    def handle(self, **options):
+    def handle(self, *args, **options):
         """See :meth:`django.core.management.base.BaseCommand.handle`.
 
         This method starts the command.

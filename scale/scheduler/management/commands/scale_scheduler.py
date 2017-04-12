@@ -40,7 +40,7 @@ class Command(BaseCommand):
                             default=settings.MESOS_MASTER,
                             help='The master to connect to')
 
-    def handle(self, **options):
+    def handle(self, *args, **options):
         """See :meth:`django.core.management.base.BaseCommand.handle`.
 
         This method starts the scheduler.

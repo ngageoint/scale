@@ -15,14 +15,20 @@ class Command(BaseCommand):
     """Command that deletes a stored file from the remote file system."""
 
     help = 'Deletes a stored file from the remote file system'
+    
+    def add_arguments(self, parser):
+        parser.add_argument('file_id', type=int,
+                            help='ID of the ScaleFile object to delete.')
 
-    def handle(self, file_id, **options):
+    def handle(self, *args, **options):
         """See :meth:`django.core.management.base.BaseCommand.handle`.
 
         This method starts the file delete process.
         """
 
         logger.info('Command starting: scale_delete_file')
+
+        file_id = options.get('file_id')
 
         # Attempt to fetch the file model
         try:

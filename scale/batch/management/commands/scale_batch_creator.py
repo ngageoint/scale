@@ -21,7 +21,7 @@ class Command(BaseCommand):
         parser.add_argument('-i', '--batch-id', action='store', type=int,
                             help='The ID of the batch to create')
 
-    def handle(self, **options):
+    def handle(self, *args, **options):
         """See :meth:`django.core.management.base.BaseCommand.handle`.
 
         This method starts the Scale batch creation process.

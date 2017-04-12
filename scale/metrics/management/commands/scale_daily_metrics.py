@@ -19,11 +19,17 @@ class Command(BaseCommand):
 
     help = 'Executes the Scale daily metrics to continuously calculate performance statistics for each day'
 
-    def handle(self, day, **options):
+
+    def add_arguments(self, parser):
+        parser.add_argument('day', help='The ISO 8601 date to compute metrics for.')
+
+    def handle(self, *args, **options):
         """See :meth:`django.core.management.base.BaseCommand.handle`.
 
         This method starts the Scale daily metrics.
         """
+
+        day = options.get('day')
 
         logger.info('Command starting: scale_daily_metrics')
         logger.info(' - Day: %s', day)
