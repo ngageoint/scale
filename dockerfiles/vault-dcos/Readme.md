@@ -30,13 +30,16 @@ Save the following JSON as `vault.json`:
     }
   },
   "healthChecks": [{
-      "protocol": "TCP",
-      "portIndex": 0,
+      "protocol": "COMMAND",
+      "command": {
+        "value": "curl -X GET -s -k https://localhost:8200/v1/sys/health/dev/null"
+      },
+      "gracePeriodSeconds": 20,
+      "intervalSeconds": 30,
       "timeoutSeconds": 10,
-      "gracePeriodSeconds": 10,
-      "intervalSeconds": 2,
-      "maxConsecutiveFailures": 10
-  }]
+      "maxConsecutiveFailures": 6,
+      "ignoreHttp1xx": false
+    }]
 }
 ```
 Now launch on Marathon:
