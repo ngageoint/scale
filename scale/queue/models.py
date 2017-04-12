@@ -777,7 +777,7 @@ class Queue(models.Model):
     disk_out_required = models.FloatField()
     disk_total_required = models.FloatField()
 
-    configuration = django.contrib.postgres.fields.JSONField(null=True)
+    configuration = django.contrib.postgres.fields.JSONField(default=dict)
 
     created = models.DateTimeField(auto_now_add=True)
     queued = models.DateTimeField()

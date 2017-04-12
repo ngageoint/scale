@@ -25,7 +25,7 @@ class ConfigurationTriggerRuleSerializer(serializers.ModelSerializer):
     name = serializers.CharField(required=False)
     is_active = serializers.BooleanField(required=False)
 
-    configuration = serializers.JSONField()
+    configuration = serializers.JSONField(default=dict)
 
     class Meta:
         model = TriggerRule

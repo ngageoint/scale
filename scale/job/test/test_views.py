@@ -758,7 +758,7 @@ class TestJobTypesView(TestCase):
         results = json.loads(response.content)
         self.assertEqual(results['id'], job_type.id)
         self.assertIsNotNone(results['interface'])
-        self.assertIsNone(results['error_mapping'])
+        self.assertIsNotNone(results['error_mapping'])
         self.assertEqual(results['trigger_rule']['type'], 'PARSE')
 
     def test_create_missing_param(self):

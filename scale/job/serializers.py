@@ -60,8 +60,8 @@ class JobTypeDetailsSerializer(JobTypeSerializer):
     from error.serializers import ErrorSerializer
     from trigger.serializers import TriggerRuleDetailsSerializer
 
-    interface = serializers.JSONField()
-    error_mapping = serializers.JSONField()
+    interface = serializers.JSONField(default=dict)
+    error_mapping = serializers.JSONField(default=dict)
     errors = ErrorSerializer(many=True)
     trigger_rule = TriggerRuleDetailsSerializer()
 
@@ -109,7 +109,7 @@ class JobTypeRevisionBaseSerializer(ModelIdSerializer):
 
 class JobTypeRevisionSerializer(JobTypeRevisionBaseSerializer):
     """Converts job type revision model fields to REST output."""
-    interface = serializers.JSONField()
+    interface = serializers.JSONField(default=dict)
     created = serializers.DateTimeField()
 
 
@@ -236,8 +236,8 @@ class JobDetailsSerializer(JobSerializer):
     event = TriggerEventDetailsSerializer()
     error = ErrorSerializer()
 
-    data = serializers.JSONField()
-    results = serializers.JSONField()
+    data = serializers.JSONField(default=dict)
+    results = serializers.JSONField(default=dict)
 
     root_superseded_job = JobBaseSerializer()
     superseded_job = JobBaseSerializer()
@@ -296,16 +296,16 @@ class JobExecutionDetailsSerializer(JobExecutionSerializer):
     node = NodeSerializer()
     error = ErrorSerializer()
 
-    environment = serializers.JSONField()
+    environment = serializers.JSONField(default=dict)
     cpus_scheduled = serializers.FloatField()
     mem_scheduled = serializers.FloatField()
     disk_in_scheduled = serializers.FloatField()
     disk_out_scheduled = serializers.FloatField()
     disk_total_scheduled = serializers.FloatField()
 
-    results = serializers.JSONField()
+    results = serializers.JSONField(default=dict)
 
-    results_manifest = serializers.JSONField()
+    results_manifest = serializers.JSONField(default=dict)
 
 
 class JobExecutionLogSerializer(JobExecutionSerializer):

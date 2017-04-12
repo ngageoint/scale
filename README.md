@@ -80,9 +80,11 @@ Scale requires several external components to run as intended. PostgreSQL is use
 and must be accessible to both the scheduler and web server processes. Logstash along with Elasticsearch are used to
 collect and store all algorithm logs. The following versions of these services are required to support Scale:
 
-- PostgreSQL 9.4+
-- Logstash 2.4
 - Elasticsearch 2.4
+- Logstash 2.4
+- PostgreSQL 9.4+
+- PostGIS 2.0+
+
 
 Note: We strongly recommend using managed services for both PostgreSQL (AWS RDS) and Elasticsearch (AWS Elasticsearch
 Service), if available to you. Use of these services in Docker containers should be avoided in all but development

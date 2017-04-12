@@ -704,9 +704,9 @@ class Job(models.Model):
     event = models.ForeignKey('trigger.TriggerEvent', on_delete=models.PROTECT)
     error = models.ForeignKey('error.Error', blank=True, null=True, on_delete=models.PROTECT)
 
-    data = django.contrib.postgres.fields.JSONField(null=True)
-    configuration = django.contrib.postgres.fields.JSONField(null=True)
-    results = django.contrib.postgres.fields.JSONField(null=True)
+    data = django.contrib.postgres.fields.JSONField(default=dict)
+    configuration = django.contrib.postgres.fields.JSONField(default=dict)
+    results = django.contrib.postgres.fields.JSONField(default=dict)
 
     priority = models.IntegerField()
     timeout = models.IntegerField()
@@ -1254,12 +1254,12 @@ class JobExecution(models.Model):
 
     command_arguments = models.CharField(max_length=1000)
     timeout = models.IntegerField()
-    configuration = django.contrib.postgres.fields.JSONField(null=True)
+    configuration = django.contrib.postgres.fields.JSONField(default=dict)
 
     cluster_id = models.CharField(blank=True, max_length=100, null=True)
     node = models.ForeignKey('node.Node', blank=True, null=True, on_delete=models.PROTECT)
     # TODO: Remove this unused field. This will force changes through the REST API though, so coordinate with UI
-    environment = django.contrib.postgres.fields.JSONField(null=True)
+    environment = django.contrib.postgres.fields.JSONField(default=dict)
     cpus_scheduled = models.FloatField(blank=True, null=True)
     mem_scheduled = models.FloatField(blank=True, null=True)
     disk_in_scheduled = models.FloatField(blank=True, null=True)
@@ -1275,7 +1275,7 @@ class JobExecution(models.Model):
     job_started = models.DateTimeField(blank=True, null=True)
     job_completed = models.DateTimeField(blank=True, null=True)
     job_exit_code = models.IntegerField(blank=True, null=True)
-    job_metrics = django.contrib.postgres.fields.JSONField(null=True)
+    job_metrics = django.contrib.postgres.fields.JSONField(default=dict)
 
     post_started = models.DateTimeField(blank=True, null=True)
     post_completed = models.DateTimeField(blank=True, null=True)
@@ -1284,8 +1284,8 @@ class JobExecution(models.Model):
     stdout = models.TextField(blank=True, null=True) #deprecated
     stderr = models.TextField(blank=True, null=True) #deprecated
 
-    results_manifest = django.contrib.postgres.fields.JSONField(null=True)
-    results = django.contrib.postgres.fields.JSONField(null=True)
+    results_manifest = django.contrib.postgres.fields.JSONField(default=dict)
+    results = django.contrib.postgres.fields.JSONField(default=dict)
 
     created = models.DateTimeField(auto_now_add=True)
     queued = models.DateTimeField()
@@ -2346,13 +2346,13 @@ class JobType(models.Model):
     uses_docker = models.BooleanField(default=True)
     docker_privileged = models.BooleanField(default=False)
     docker_image = models.CharField(blank=True, null=True, max_length=500)
-    interface = django.contrib.postgres.fields.JSONField(null=True)
-    docker_params = django.contrib.postgres.fields.JSONField(null=True)
+    interface = django.contrib.postgres.fields.JSONField(default=dict)
+    docker_params = django.contrib.postgres.fields.JSONField(default=dict)
     revision_num = models.IntegerField(default=1)
-    error_mapping = django.contrib.postgres.fields.JSONField(null=True)
+    error_mapping = django.contrib.postgres.fields.JSONField(default=dict)
     trigger_rule = models.ForeignKey('trigger.TriggerRule', blank=True, null=True, on_delete=models.PROTECT)
 
-    configuration = django.contrib.postgres.fields.JSONField(null=True)
+    configuration = django.contrib.postgres.fields.JSONField(default=dict)
 
     priority = models.IntegerField(default=100)
     max_scheduled = models.IntegerField(blank=True, null=True)
@@ -2474,7 +2474,7 @@ class JobTypeRevision(models.Model):
 
     job_type = models.ForeignKey('job.JobType', on_delete=models.PROTECT)
     revision_num = models.IntegerField()
-    interface = django.contrib.postgres.fields.JSONField(null=True)
+    interface = django.contrib.postgres.fields.JSONField(default=dict)
     created = models.DateTimeField(auto_now_add=True)
 
     objects = JobTypeRevisionManager()

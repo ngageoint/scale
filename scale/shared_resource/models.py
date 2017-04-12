@@ -69,7 +69,7 @@ class SharedResource(models.Model):
     title = models.CharField(blank=True, max_length=100, null=True)
     description = models.CharField(max_length=250, blank=True, null=True)
     limit = models.FloatField(null=True)
-    json_config = django.contrib.postgres.fields.JSONField(null=True)
+    json_config = django.contrib.postgres.fields.JSONField(default=dict)
 
     is_global = models.BooleanField(default=True)
     nodes = models.ManyToManyField(Node)

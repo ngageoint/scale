@@ -59,7 +59,7 @@ class TriggerEvent(models.Model):
 
     type = models.CharField(db_index=True, max_length=50)
     rule = models.ForeignKey('trigger.TriggerRule', blank=True, null=True, on_delete=models.PROTECT)
-    description = django.contrib.postgres.fields.JSONField(null=True)
+    description = django.contrib.postgres.fields.JSONField(default=dict)
     occurred = models.DateTimeField(db_index=True)
 
     objects = TriggerEventManager()
@@ -157,7 +157,7 @@ class TriggerRule(models.Model):
     type = models.CharField(max_length=50, db_index=True)
     name = models.CharField(blank=True, max_length=50)
 
-    configuration = django.contrib.postgres.fields.JSONField(null=True)
+    configuration = django.contrib.postgres.fields.JSONField(default=dict)
     is_active = models.BooleanField(default=True, db_index=True)
 
     created = models.DateTimeField(auto_now_add=True)

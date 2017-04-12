@@ -417,7 +417,7 @@ class Batch(models.Model):
     event = models.ForeignKey('trigger.TriggerEvent', on_delete=models.PROTECT)
     creator_job = models.ForeignKey('job.Job', blank=True, null=True, on_delete=models.PROTECT)
 
-    definition = django.contrib.postgres.fields.JSONField(null=True)
+    definition = django.contrib.postgres.fields.JSONField(default=dict)
 
     created_count = models.IntegerField(default=0)
     failed_count = models.IntegerField(default=0)
