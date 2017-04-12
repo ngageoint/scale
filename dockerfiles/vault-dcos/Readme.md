@@ -8,7 +8,7 @@ This is an example of how to run [HashiCorp's Vault](https://github.com/hashicor
 Save the following JSON as `vault.json`:
 ```json
 {
-  "id": "vault",
+  "id": "scale-vault",
   "cpus": 1,
   "mem": 1000,
   "requirePorts":true,
