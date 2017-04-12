@@ -22,7 +22,7 @@
 			     "input_data": [ { "name": "Ingest ID", "type": "property" } ]
 			},
 			"revision_num": 2,
-            "error_mapping": null,
+            "error_mapping": {},
 			"priority": 10,
             "max_scheduled": 50,
 			"timeout": 3600,
@@ -91,7 +91,7 @@
                  "input_data": [ { "name": "Strike ID", "type": "property" } ]
             },
             "revision_num": 1,
-            "error_mapping": null,
+            "error_mapping": {},
             "priority": 5,
             "timeout": 0,
             "max_tries": 0,
@@ -144,7 +144,7 @@
                                  { "name": "Dry Run", "type": "property" } ]
             },
             "revision_num": 1,
-            "error_mapping": null,
+            "error_mapping": {},
             "priority": 5,
             "timeout": 0,
             "max_tries": 0,

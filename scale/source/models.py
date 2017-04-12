@@ -300,7 +300,8 @@ class SourceFileManager(models.GeoManager):
         if geom:
             src_file.geometry = geom
             src_file.center_point = geo_utils.get_center_point(geom)
-        src_file.meta_data = props
+        if props:
+            src_file.meta_data = props
         # src_file already exists so we don't need to save/set_countries/save, just a single save is fine
         src_file.set_countries()
         src_file.save()

@@ -16,17 +16,15 @@ logger = logging.getLogger(__name__)
 class Command(BaseCommand):
     """Command for listing files within a workspace."""
 
-    option_list = BaseCommand.option_list + (
-        make_option('-r', '--recursive', action='store_true', dest='recursive',
-                    default=False, help='Recursively process workspace tree.'),
-        make_option('-l', '--local', action='store_true', dest='local',
-                    default=False, help='Local patch for testing. Remote will match '
-                                        'host_path.'),
-        make_option('-w', '--workspace-id',
-                    help='Workspace ID to traverse.'),
-    )
-
     help = 'Lists files within a workspace.'
+
+    def add_arguments(self, parser):
+        parser.add_argument('-r', '--recursive', action='store_true', 
+                            dest='recursive', default=False,
+                            help='Recursively process workspace tree.')
+        parser.add_argument('-l', '--local', action='store_true', dest='local',
+                            default=False, help='Local patch for testing. Remote will match host_path.')
+        parser.add_argument('-w', '--workspace-id', help='Workspace ID to traverse.')
 
     def handle(self, *args, **options):
         """See :meth:`django.core.management.base.BaseCommand.handle`.

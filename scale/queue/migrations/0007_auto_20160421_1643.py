@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import djorm_pgjson.fields
+import util.deprecation
 import django.db.models.deletion
 
 
@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='queue',
             name='configuration',
-            field=djorm_pgjson.fields.JSONField(default={}, null=True, blank=True),
+            field=util.deprecation.JSONStringField(default={}, null=True, blank=True),
             preserve_default=True,
         ),
         migrations.AddField(

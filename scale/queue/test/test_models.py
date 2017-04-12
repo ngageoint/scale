@@ -645,8 +645,8 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         node = node_test_utils.create_node()
         handler = Queue.objects.queue_new_recipe(self.recipe_type, self.data, self.event)
         recipe = Recipe.objects.get(id=handler.recipe.id)
-        recipe_job_1 = RecipeJob.objects.select_related('job__job_exe').get(recipe_id=handler.recipe.id,
-                                                                            job_name='Job 1')
+        recipe_job_1 = RecipeJob.objects.select_related('job')
+        recipe_job_1 = recipe_job_1.get(recipe_id=handler.recipe.id, job_name='Job 1')
         job_exe_1 = JobExecution.objects.get(job_id=recipe_job_1.job_id)
         queued_job_exe = QueuedJobExecution(Queue.objects.get(job_exe_id=job_exe_1.id))
         queued_job_exe.accepted(node.id, JobResources(cpus=10, mem=1000, disk_in=1000, disk_out=1000, disk_total=2000))

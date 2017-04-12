@@ -179,11 +179,12 @@ class NodeManager(models.Manager):
             return [NodeStatus(node) for node in nodes]
 
         # Fetch a list of recent job executions
-        job_exes = JobExecution.objects.values('node_id', 'last_modified', 'status', 'error__category')
-        job_exes = job_exes.select_related('error')
+        job_exes = JobExecution.objects.select_related('error')
         job_exes = job_exes.filter(last_modified__gte=started)
         if ended:
             job_exes = job_exes.filter(last_modified__lte=ended)
+            
+        job_exes = job_exes.values('node_id', 'last_modified', 'status', 'error__category')
 
         # Build a mapping of node_id -> (status + error category) -> associated counts
         job_exes_dict = {}

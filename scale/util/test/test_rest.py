@@ -3,10 +3,10 @@ from __future__ import unicode_literals
 import datetime
 
 import django
-import django.utils.timezone as timezone
 import mock
 from django.http import QueryDict
 from django.test import TestCase
+from django.utils.timezone import utc
 from mock import MagicMock
 from rest_framework.request import Request
 
@@ -49,27 +49,27 @@ class TestRest(TestCase):
 
     def test_check_time_range(self):
         """Tests checking a time range is valid."""
-        self.assertTrue(rest_util.check_time_range(datetime.datetime(2015, 1, 1), datetime.datetime(2015, 1, 30)))
+        self.assertTrue(rest_util.check_time_range(datetime.datetime(2015, 1, 1, tzinfo=utc), datetime.datetime(2015, 1, 30, tzinfo=utc)))
 
     def test_check_time_range_partial(self):
         """Tests checking a partial time range is valid."""
-        self.assertTrue(rest_util.check_time_range(datetime.datetime(2015, 1, 1), None))
-        self.assertTrue(rest_util.check_time_range(None, datetime.datetime(2015, 1, 30)))
+        self.assertTrue(rest_util.check_time_range(datetime.datetime(2015, 1, 1, tzinfo=utc), None))
+        self.assertTrue(rest_util.check_time_range(None, datetime.datetime(2015, 1, 30, tzinfo=utc)))
 
     def test_check_time_range_equal(self):
         """Tests checking a time range that is invalid due to being equal."""
-        self.assertRaises(BadParameter, rest_util.check_time_range, datetime.datetime(2015, 1, 1),
-                          datetime.datetime(2015, 1, 1))
+        self.assertRaises(BadParameter, rest_util.check_time_range, datetime.datetime(2015, 1, 1, tzinfo=utc),
+                          datetime.datetime(2015, 1, 1, tzinfo=utc))
 
     def test_check_time_range_flipped(self):
         """Tests checking a time range that is invalid due to start being after end."""
-        self.assertRaises(BadParameter, rest_util.check_time_range, datetime.datetime(2015, 1, 30),
-                          datetime.datetime(2015, 1, 1))
+        self.assertRaises(BadParameter, rest_util.check_time_range, datetime.datetime(2015, 1, 30, tzinfo=utc),
+                          datetime.datetime(2015, 1, 1, tzinfo=utc))
 
     def test_check_time_range_duration(self):
         """Tests checking a time range that is invalid due to max duration exceeded."""
-        self.assertRaises(BadParameter, rest_util.check_time_range, datetime.datetime(2015, 1, 1),
-                          datetime.datetime(2015, 3, 1), datetime.timedelta(days=31))
+        self.assertRaises(BadParameter, rest_util.check_time_range, datetime.datetime(2015, 1, 1, tzinfo=utc),
+                          datetime.datetime(2015, 3, 1, tzinfo=utc), datetime.timedelta(days=31))
 
     def test_check_together_empty(self):
         """Tests checking multiple parameters together when none are given."""
@@ -617,7 +617,7 @@ class TestRest(TestCase):
         request.query_params.update({
             'test': '2015-01-01T00:00:00Z',
         })
-        self.assertEqual(rest_util.parse_datetime(request, 'test'), datetime.datetime(2015, 1, 1, tzinfo=timezone.utc))
+        self.assertEqual(rest_util.parse_datetime(request, 'test'), datetime.datetime(2015, 1, 1, tzinfo=utc))
 
     def test_parse_datetime_missing(self):
         """Tests parsing a required ISO datetime parameter that is missing."""
@@ -635,7 +635,7 @@ class TestRest(TestCase):
         request.query_params.update({
             'test': '2015-01-01T00:00:00Z',
         })
-        default_value = datetime.datetime(2015, 2, 10, tzinfo=timezone.utc)
+        default_value = datetime.datetime(2015, 2, 10, tzinfo=utc)
         self.assertEqual(rest_util.parse_datetime(request, 'test2', default_value), default_value)
 
     def test_parse_datetime_optional(self):
@@ -668,14 +668,14 @@ class TestRest(TestCase):
     @mock.patch('django.utils.timezone.now')
     def test_parse_timestamp_duration(self, mock_now):
         """Tests parsing a valid ISO duration."""
-        mock_now.return_value = datetime.datetime(2015, 1, 1, 10, tzinfo=timezone.utc)
+        mock_now.return_value = datetime.datetime(2015, 1, 1, 10, tzinfo=utc)
         request = MagicMock(Request)
         request.query_params = QueryDict('', mutable=True)
         request.query_params.update({
             'test': 'PT3H0M0S',
         })
         self.assertEqual(rest_util.parse_timestamp(request, 'test'),
-                         datetime.datetime(2015, 1, 1, 7, tzinfo=timezone.utc))
+                         datetime.datetime(2015, 1, 1, 7, tzinfo=utc))
 
     def test_parse_timestamp_datetime(self):
         """Tests parsing a valid ISO datetime."""
@@ -684,7 +684,7 @@ class TestRest(TestCase):
         request.query_params.update({
             'test': '2015-01-01T00:00:00Z',
         })
-        self.assertEqual(rest_util.parse_timestamp(request, 'test'), datetime.datetime(2015, 1, 1, tzinfo=timezone.utc))
+        self.assertEqual(rest_util.parse_timestamp(request, 'test'), datetime.datetime(2015, 1, 1, tzinfo=utc))
 
     def test_parse_dict(self):
         """Tests parsing a dictionary."""

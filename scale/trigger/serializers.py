@@ -20,7 +20,7 @@ class TriggerRuleSerializer(TriggerRuleBaseSerializer):
 
 class TriggerRuleDetailsSerializer(TriggerRuleBaseSerializer):
     """Converts trigger rule model fields to REST output."""
-    configuration = serializers.JSONField()
+    configuration = serializers.JSONField(default=dict)
 
 
 class TriggerEventBaseSerializer(ModelIdSerializer):
@@ -38,4 +38,4 @@ class TriggerEventSerializer(TriggerEventBaseSerializer):
 class TriggerEventDetailsSerializer(TriggerEventBaseSerializer):
     """Converts trigger event model fields to REST output."""
     rule = TriggerRuleDetailsSerializer()
-    description = serializers.JSONField()
+    description = serializers.JSONField(default=dict)

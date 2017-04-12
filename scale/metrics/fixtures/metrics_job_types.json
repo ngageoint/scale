@@ -22,7 +22,7 @@
 			     "input_data": [{ "name": "Day", "type": "property" }]
 			},
 			"revision_num": 1,
-            "error_mapping": null,
+            "error_mapping": {},
 			"priority": 20,
 			"timeout": 3600,
 			"max_tries": 3,

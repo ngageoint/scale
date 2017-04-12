@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import djorm_pgjson.fields
+import util.deprecation
 import django.db.models.deletion
 
 
@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
             name='Recipe',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('data', djorm_pgjson.fields.JSONField(default={}, null=True, blank=True)),
+                ('data', util.deprecation.JSONStringField(default={}, null=True, blank=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('completed', models.DateTimeField(null=True, blank=True)),
                 ('last_modified', models.DateTimeField(auto_now=True)),
@@ -50,7 +50,7 @@ class Migration(migrations.Migration):
                 ('title', models.CharField(max_length=50, null=True, blank=True)),
                 ('description', models.CharField(max_length=500, blank=True)),
                 ('is_active', models.BooleanField(default=True)),
-                ('definition', djorm_pgjson.fields.JSONField(default={}, null=True, blank=True)),
+                ('definition', util.deprecation.JSONStringField(default={}, null=True, blank=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('archived', models.DateTimeField(null=True, blank=True)),
                 ('last_modified', models.DateTimeField(auto_now=True)),

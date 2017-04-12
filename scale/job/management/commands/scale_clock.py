@@ -36,7 +36,7 @@ class Command(BaseCommand):
         # never killed, preventing duplicate clock processes running at the same time
         self.num_exes = None
 
-    def handle(self, **options):
+    def handle(self, *args, **options):
         """See :meth:`django.core.management.base.BaseCommand.handle`.
 
         This method starts the Scale clock.

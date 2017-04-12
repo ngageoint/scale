@@ -235,6 +235,6 @@ class TestSourceFileManagerSaveParseResults(TestCase):
         self.assertIsNotNone(src_file.parsed)
         self.assertIsNone(src_file.data_started)
         self.assertIsNone(src_file.data_ended)
-        self.assertIsNone(src_file.meta_data)
+        self.assertIsNotNone(src_file.meta_data)
         self.assertIsNotNone(src_file.geometry)
         self.assertIsNotNone(src_file.center_point)

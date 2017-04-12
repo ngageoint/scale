@@ -3,15 +3,15 @@ from __future__ import unicode_literals
 import datetime
 
 import django
-import django.utils.timezone as timezone
-from django.test import TestCase
+from django.test import TransactionTestCase
+from django.utils.timezone import utc
 from mock import call, patch
 
 import job.test.utils as job_test_utils
 from metrics.daily_metrics import DailyMetricsProcessor
 
 
-class TestDailyMetricsProcessor(TestCase):
+class TestDailyMetricsProcessor(TransactionTestCase):
     """Tests the DailyMetricsProcessor clock event class."""
 
     def setUp(self):
@@ -21,10 +21,10 @@ class TestDailyMetricsProcessor(TestCase):
         self.processor = DailyMetricsProcessor()
 
     @patch('metrics.daily_metrics.Queue')
-    @patch('metrics.daily_metrics.timezone.now', lambda: datetime.datetime(2015, 1, 10, tzinfo=timezone.utc))
+    @patch('metrics.daily_metrics.timezone.now', lambda: datetime.datetime(2015, 1, 10, tzinfo=utc))
     def test_process_event_first(self, mock_Queue):
         """Tests processing an event that was never triggered before."""
-        event = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 10, 12, tzinfo=timezone.utc))
+        event = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 10, 12, tzinfo=utc))
 
         self.processor.process_event(event, None)
 
@@ -35,11 +35,11 @@ class TestDailyMetricsProcessor(TestCase):
         self.assertEqual(event, call_args[2])
 
     @patch('metrics.daily_metrics.Queue')
-    @patch('metrics.daily_metrics.timezone.now', lambda: datetime.datetime(2015, 1, 10, tzinfo=timezone.utc))
+    @patch('metrics.daily_metrics.timezone.now', lambda: datetime.datetime(2015, 1, 10, tzinfo=utc))
     def test_process_event_last(self, mock_Queue):
         """Tests processing an event that was triggered before."""
-        event = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 10, 12, second=9, tzinfo=timezone.utc))
-        last = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 9, 12, second=10, tzinfo=timezone.utc))
+        event = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 10, 12, second=9, tzinfo=utc))
+        last = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 9, 12, second=10, tzinfo=utc))
 
         self.processor.process_event(event, last)
 
@@ -50,11 +50,11 @@ class TestDailyMetricsProcessor(TestCase):
         self.assertEqual(event, call_args[2])
 
     @patch('metrics.daily_metrics.Queue')
-    @patch('metrics.daily_metrics.timezone.now', lambda: datetime.datetime(2015, 1, 10, tzinfo=timezone.utc))
+    @patch('metrics.daily_metrics.timezone.now', lambda: datetime.datetime(2015, 1, 10, tzinfo=utc))
     def test_process_event_range(self, mock_Queue):
         """Tests processing an event that requires catching up for a range of previous days."""
-        event = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 10, 10, tzinfo=timezone.utc))
-        last = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 7, 12, tzinfo=timezone.utc))
+        event = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 10, 10, tzinfo=utc))
+        last = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 7, 12, tzinfo=utc))
 
         self.processor.process_event(event, last)
 
@@ -77,11 +77,11 @@ class TestDailyMetricsProcessor(TestCase):
         self.assertEqual(mock_Queue.objects.queue_new_job.call_count, 3)
 
     @patch('metrics.daily_metrics.Queue')
-    @patch('metrics.daily_metrics.timezone.now', lambda: datetime.datetime(2015, 1, 10, tzinfo=timezone.utc))
+    @patch('metrics.daily_metrics.timezone.now', lambda: datetime.datetime(2015, 1, 10, tzinfo=utc))
     def test_process_event_duplicate(self, mock_Queue):
         """Tests processing an event that was previously handled."""
-        event = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 10, 12, tzinfo=timezone.utc))
-        last = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 10, 10, tzinfo=timezone.utc))
+        event = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 10, 12, tzinfo=utc))
+        last = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 10, 10, tzinfo=utc))
 
         self.processor.process_event(event, last)
 

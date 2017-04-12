@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 
 import django
-from django.test import TestCase
+from django.test import TransactionTestCase
 
 import job.test.utils as job_test_utils
 import node.test.utils as node_test_utils
@@ -14,7 +14,7 @@ JOB_TYPE_1A_USAGE = 200
 JOB_TYPE_3_USAGE = 500
 
 
-class SharedResourceManagerTest(TestCase):
+class SharedResourceManagerTest(TransactionTestCase):
 
     def setUp(self):
         django.setup()

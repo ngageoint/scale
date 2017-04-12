@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import json
 
 import django
-from django.test.testcases import TestCase
+from django.test.testcases import TestCase, TransactionTestCase
 from rest_framework import status
 
 import error.test.utils as error_test_utils
@@ -17,7 +17,7 @@ from job.models import JobType
 from recipe.models import RecipeType
 
 
-class TestConfigurationViewExport(TestCase):
+class TestConfigurationViewExport(TransactionTestCase):
     """Tests related to the configuration export endpoint"""
 
     def setUp(self):
@@ -1860,7 +1860,7 @@ class TestConfigurationViewImport(TestCase):
         self.assertEqual(len(recipe_types), 1)
 
 
-class TestConfigurationDownloadView(TestCase):
+class TestConfigurationDownloadView(TransactionTestCase):
     """Tests related to the configuration export download endpoint"""
 
     def setUp(self):

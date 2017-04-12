@@ -9,7 +9,7 @@ import re
 import django.contrib.gis.db.models as models
 import django.contrib.gis.geos as geos
 import django.utils.timezone as timezone
-import djorm_pgjson.fields
+import django.contrib.postgres.fields
 from django.db import transaction
 
 import storage.geospatial_utils as geospatial_utils
@@ -342,7 +342,7 @@ class ScaleFile(models.Model):
     :keyword center_point: The center point of this file geometry
     :type center_point: :class:`django.contrib.gis.db.models.PointField`
     :keyword meta_data: JSON meta-data about this file
-    :type meta_data: :class:`djorm_pgjson.fields.JSONField`
+    :type meta_data: :class:`django.contrib.postgres.fields.JSONField`
     :keyword countries: List of countries represented in this file as indicated by the file's geometry.
     :type countries: :class:`django.db.models.ManyToManyField` of :class:`storage.models.CountryData`
 
@@ -401,7 +401,7 @@ class ScaleFile(models.Model):
     data_ended = models.DateTimeField(blank=True, null=True, db_index=True)
     geometry = models.GeometryField('Geometry', blank=True, null=True, srid=4326)
     center_point = models.PointField(blank=True, null=True, srid=4326)
-    meta_data = djorm_pgjson.fields.JSONField()
+    meta_data = django.contrib.postgres.fields.JSONField(default=dict)
     countries = models.ManyToManyField(CountryData)
 
     # Source file fields
@@ -741,7 +741,7 @@ class Workspace(models.Model):
     :type is_active: :class:`django.db.models.BooleanField`
 
     :keyword json_config: JSON configuration describing how to store/retrieve files for this workspace
-    :type json_config: :class:`djorm_pgjson.fields.JSONField`
+    :type json_config: :class:`django.contrib.postgres.fields.JSONField`
     :keyword is_move_enabled: Whether the workspace allows files to be moved within it
     :type is_move_enabled: :class:`django.db.models.BooleanField`
 
@@ -764,7 +764,7 @@ class Workspace(models.Model):
     base_url = models.URLField(blank=True, null=True)
     is_active = models.BooleanField(default=True)
 
-    json_config = djorm_pgjson.fields.JSONField()
+    json_config = django.contrib.postgres.fields.JSONField(default=dict)
     is_move_enabled = models.BooleanField(default=True)
 
     used_size = models.BigIntegerField(blank=True, null=True)

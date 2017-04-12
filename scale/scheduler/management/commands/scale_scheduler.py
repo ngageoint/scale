@@ -33,14 +33,14 @@ class Command(BaseCommand):
     """Command that launches the Scale scheduler
     """
 
-    option_list = BaseCommand.option_list + (
-        make_option('-m', '--master', action='store', type='str', default=settings.MESOS_MASTER,
-                    help=('The master to connect to')),
-    )
-
     help = 'Launches the Scale scheduler'
 
-    def handle(self, **options):
+    def add_arguments(self, parser):
+        parser.add_argument('-m', '--master', action='store',
+                            default=settings.MESOS_MASTER,
+                            help='The master to connect to')
+
+    def handle(self, *args, **options):
         """See :meth:`django.core.management.base.BaseCommand.handle`.
 
         This method starts the scheduler.

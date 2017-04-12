@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 import django.db.models.deletion
-import djorm_pgjson.fields
+import util.deprecation
 
 
 class Migration(migrations.Migration):
@@ -20,8 +20,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('status', models.CharField(default='BLOCKED', max_length=50, db_index=True, choices=[('BLOCKED', 'BLOCKED'), ('QUEUED', 'QUEUED'), ('RUNNING', 'RUNNING'), ('FAILED', 'FAILED'), ('COMPLETED', 'COMPLETED'), ('CANCELED', 'CANCELED')])),
-                ('data', djorm_pgjson.fields.JSONField(default={}, null=True, blank=True)),
-                ('results', djorm_pgjson.fields.JSONField(default={}, null=True, blank=True)),
+                ('data', util.deprecation.JSONStringField(default={}, null=True, blank=True)),
+                ('results', util.deprecation.JSONStringField(default={}, null=True, blank=True)),
                 ('priority', models.IntegerField()),
                 ('timeout', models.IntegerField()),
                 ('max_tries', models.IntegerField()),
@@ -51,7 +51,7 @@ class Migration(migrations.Migration):
                 ('status', models.CharField(default='QUEUED', max_length=50, db_index=True, choices=[('QUEUED', 'QUEUED'), ('RUNNING', 'RUNNING'), ('FAILED', 'FAILED'), ('COMPLETED', 'COMPLETED'), ('CANCELED', 'CANCELED')])),
                 ('command_arguments', models.CharField(max_length=1000)),
                 ('timeout', models.IntegerField()),
-                ('environment', djorm_pgjson.fields.JSONField(default={}, null=True, blank=True)),
+                ('environment', util.deprecation.JSONStringField(default={}, null=True, blank=True)),
                 ('cpus_scheduled', models.FloatField(null=True, blank=True)),
                 ('mem_scheduled', models.FloatField(null=True, blank=True)),
                 ('disk_in_scheduled', models.FloatField(null=True, blank=True)),
@@ -71,8 +71,8 @@ class Migration(migrations.Migration):
                 ('stderr', models.TextField(null=True, blank=True)),
                 ('current_stdout_url', models.URLField(max_length=600, null=True)),
                 ('current_stderr_url', models.URLField(max_length=600, null=True)),
-                ('results_manifest', djorm_pgjson.fields.JSONField(default={}, null=True, blank=True)),
-                ('results', djorm_pgjson.fields.JSONField(default={}, null=True, blank=True)),
+                ('results_manifest', util.deprecation.JSONStringField(default={}, null=True, blank=True)),
+                ('results', util.deprecation.JSONStringField(default={}, null=True, blank=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('queued', models.DateTimeField()),
                 ('started', models.DateTimeField(null=True, blank=True)),
@@ -109,8 +109,8 @@ class Migration(migrations.Migration):
                 ('uses_docker', models.BooleanField(default=True)),
                 ('docker_privileged', models.BooleanField(default=False)),
                 ('docker_image', models.CharField(max_length=500, null=True, blank=True)),
-                ('interface', djorm_pgjson.fields.JSONField(default={}, null=True, blank=True)),
-                ('error_mapping', djorm_pgjson.fields.JSONField(default={}, null=True, blank=True)),
+                ('interface', util.deprecation.JSONStringField(default={}, null=True, blank=True)),
+                ('error_mapping', util.deprecation.JSONStringField(default={}, null=True, blank=True)),
                 ('priority', models.IntegerField()),
                 ('timeout', models.IntegerField()),
                 ('max_tries', models.IntegerField()),

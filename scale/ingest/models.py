@@ -6,7 +6,7 @@ import logging
 import os
 
 import django.utils.timezone as timezone
-import djorm_pgjson.fields
+import django.contrib.postgres.fields
 from django.db import models, transaction
 from django.utils.timezone import now
 
@@ -815,7 +815,7 @@ class Scan(models.Model):
     :type description: :class:`django.db.models.TextField`
 
     :keyword configuration: JSON configuration for this Scan process
-    :type configuration: :class:`djorm_pgjson.fields.JSONField`
+    :type configuration: :class:`django.contrib.postgres.fields.JSONField`
     :keyword dry_run_job: The job that is performing the Scan process as dry run
     :type dry_run_job: :class:`django.db.models.ForeignKey`
     :keyword job: The job that is performing the Scan process with ingests
@@ -833,7 +833,7 @@ class Scan(models.Model):
     title = models.CharField(blank=True, max_length=50, null=True)
     description = models.TextField(blank=True, null=True)
 
-    configuration = djorm_pgjson.fields.JSONField()
+    configuration = django.contrib.postgres.fields.JSONField(default=dict)
 
     dry_run_job = models.ForeignKey('job.Job', blank=True, null=True, on_delete=models.PROTECT, related_name='+')
     job = models.ForeignKey('job.Job', blank=True, null=True, on_delete=models.PROTECT, related_name='+')
@@ -1014,7 +1014,7 @@ class Strike(models.Model):
     :type description: :class:`django.db.models.TextField`
 
     :keyword configuration: JSON configuration for this Strike process
-    :type configuration: :class:`djorm_pgjson.fields.JSONField`
+    :type configuration: :class:`django.contrib.postgres.fields.JSONField`
     :keyword job: The job that is performing the Strike process
     :type job: :class:`django.db.models.ForeignKey`
 
@@ -1028,7 +1028,7 @@ class Strike(models.Model):
     title = models.CharField(blank=True, max_length=50, null=True)
     description = models.TextField(blank=True, null=True)
 
-    configuration = djorm_pgjson.fields.JSONField()
+    configuration = django.contrib.postgres.fields.JSONField(default=dict)
     job = models.ForeignKey('job.Job', blank=True, null=True, on_delete=models.PROTECT)
 
     created = models.DateTimeField(auto_now_add=True)

@@ -4,6 +4,18 @@ import logging
 
 
 class ExceptionLoggingMiddleware(object):
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        """Straight pass-through middleware. Just used to capture view exceptions.
+
+        :param request:
+        :return:
+        """
+
+        return self.get_response(request)
+
     def process_exception(self, request, exception):
         """Logs exceptions during service calls."""
         logging.exception('Exception handling request for %s.' % request.path)
@@ -26,10 +38,15 @@ class MultipleProxyMiddleware(object):
         'HTTP_X_FORWARDED_SERVER',
     ]
 
-    def process_request(self, request):
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
         """Rewrite forwarded host headers to support multiple proxy servers."""
         for field in self.FORWARDED_FOR_FIELDS:
             if field in request.META:
                 if ',' in request.META[field]:
                     parts = request.META[field].split(',')
                     request.META[field] = parts[0].strip()
+
+        return self.get_response(request)

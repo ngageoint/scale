@@ -1,13 +1,11 @@
 """Defines the URLs for the RESTful job services"""
 from __future__ import unicode_literals
 
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 import job.views as views
 
-urlpatterns = patterns(
-    '',
-
+urlpatterns = [
     # Job type views
     url(r'^job-types/$', views.JobTypesView.as_view(), name='job_types_view'),
     url(r'^job-types/(\d+)/$', views.JobTypeDetailsView.as_view(), name='job_type_details_view'),
@@ -34,4 +32,4 @@ urlpatterns = patterns(
 
     # TODO: API_V3 Remove this URL
     url(r'^job-executions/(\d+)/logs/$', views.JobExecutionLogView.as_view(), name='job_execution_log_view'),
-)
+]

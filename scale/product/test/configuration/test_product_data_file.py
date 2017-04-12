@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import os
 import django
 
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
 from django.utils.text import get_valid_filename
 from django.utils.timezone import now
 from mock import MagicMock, patch
@@ -35,7 +35,7 @@ class TestProductDataFileStoreGetWorkspaces(TestCase):
         self.assertDictEqual(results, {self.workspace_1.id: True, self.workspace_2.id: False})
 
 
-class TestProductDataFileStoreStoreFiles(TestCase):
+class TestProductDataFileStoreStoreFiles(TransactionTestCase):
 
     def setUp(self):
         django.setup()
@@ -101,7 +101,7 @@ class TestProductDataFileStoreStoreFiles(TestCase):
 
         self.assertDictEqual(results, {local_path_1: long(1), local_path_2: long(2), local_path_3: long(3),
                                        local_path_4: long(4)})
-        mock_create_file_ancestry_links.assert_once_called_with(parent_ids, {1, 2, 3, 4}, self.job_exe)
+        mock_create_file_ancestry_links.assert_called_once_with(parent_ids, {1, 2, 3, 4}, self.job_exe)
 
     @patch('product.models.FileAncestryLink.objects.create_file_ancestry_links')
     @patch('product.models.ProductFile.objects.upload_files')

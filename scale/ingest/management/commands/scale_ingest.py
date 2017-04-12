@@ -17,13 +17,13 @@ class Command(BaseCommand):
     """Command that executes the ingest process for a given ingest model
     """
 
-    option_list = BaseCommand.option_list + (
-        make_option('-i', '--ingest-id', action='store', type='int', help='ID of the ingest model'),
-    )
-
     help = 'Perform the ingest process on an ingest model'
+    
+    def add_arguments(self, parser):
+        parser.add_argument('-i', '--ingest-id', action='store', type=int,
+                            help='ID of the ingest model')
 
-    def handle(self, **options):
+    def handle(self, *args, **options):
         """See :meth:`django.core.management.base.BaseCommand.handle`.
 
         This method starts the ingest process.

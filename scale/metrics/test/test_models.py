@@ -1,8 +1,8 @@
 import datetime
 
 import django
-import django.utils.timezone as timezone
 from django.test import TestCase
+from django.utils.timezone import utc
 
 import error.test.utils as error_test_utils
 import ingest.test.utils as ingest_test_utils
@@ -32,14 +32,14 @@ class TestMetricsError(TestCase):
         job_test_utils.create_job(status='COMPLETED')
 
         error1 = error_test_utils.create_error(is_builtin=True)
-        job1 = job_test_utils.create_job(error=error1, status='FAILED', ended=datetime.datetime(2015, 1, 1))
+        job1 = job_test_utils.create_job(error=error1, status='FAILED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         job_test_utils.create_job_exe(job=job1, error=error1, status=job1.status, ended=job1.ended)
 
         error2 = error_test_utils.create_error()
-        job2 = job_test_utils.create_job(error=error2, status='FAILED', ended=datetime.datetime(2015, 1, 1))
+        job2 = job_test_utils.create_job(error=error2, status='FAILED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         job_test_utils.create_job_exe(error=error2, status=job2.status, ended=job2.ended)
 
-        job3 = job_test_utils.create_job(status='COMPLETED', ended=datetime.datetime(2015, 1, 1))
+        job3 = job_test_utils.create_job(status='COMPLETED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         job_test_utils.create_job_exe(job=job3, status=job3.status, ended=job3.ended)
 
         MetricsError.objects.calculate(datetime.date(2015, 1, 1))
@@ -50,7 +50,7 @@ class TestMetricsError(TestCase):
     def test_calculate_repeated(self):
         """Tests regenerating metrics for a date that already has metrics."""
         error = error_test_utils.create_error(is_builtin=True)
-        job = job_test_utils.create_job(status='FAILED', error=error, ended=datetime.datetime(2015, 1, 1))
+        job = job_test_utils.create_job(status='FAILED', error=error, ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         job_test_utils.create_job_exe(job=job, error=error, status=job.status, ended=job.ended)
 
         MetricsError.objects.calculate(datetime.date(2015, 1, 1))
@@ -62,43 +62,43 @@ class TestMetricsError(TestCase):
     def test_calculate_stats(self):
         """Tests calculating individual statistics for a metrics entry."""
         error = error_test_utils.create_error(is_builtin=True)
-        job1 = job_test_utils.create_job(error=error, status='FAILED', ended=datetime.datetime(2015, 1, 1))
+        job1 = job_test_utils.create_job(error=error, status='FAILED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         job_test_utils.create_job_exe(
             job=job1, error=error, status=job1.status,
-            queued=datetime.datetime(2015, 1, 1, tzinfo=timezone.utc),
-            started=datetime.datetime(2015, 1, 1, 0, 10, 2, tzinfo=timezone.utc),
-            pre_started=datetime.datetime(2015, 1, 1, 0, 30, 4, tzinfo=timezone.utc),
-            pre_completed=datetime.datetime(2015, 1, 1, 1, 6, tzinfo=timezone.utc),
-            job_started=datetime.datetime(2015, 1, 1, 1, 40, 8, tzinfo=timezone.utc),
-            job_completed=datetime.datetime(2015, 1, 1, 2, 30, 10, tzinfo=timezone.utc),
-            post_started=datetime.datetime(2015, 1, 1, 3, 30, 12, tzinfo=timezone.utc),
-            post_completed=datetime.datetime(2015, 1, 1, 4, 40, 14, tzinfo=timezone.utc),
-            ended=datetime.datetime(2015, 1, 1, 6, 0, 16, tzinfo=timezone.utc),
+            queued=datetime.datetime(2015, 1, 1, tzinfo=utc),
+            started=datetime.datetime(2015, 1, 1, 0, 10, 2, tzinfo=utc),
+            pre_started=datetime.datetime(2015, 1, 1, 0, 30, 4, tzinfo=utc),
+            pre_completed=datetime.datetime(2015, 1, 1, 1, 6, tzinfo=utc),
+            job_started=datetime.datetime(2015, 1, 1, 1, 40, 8, tzinfo=utc),
+            job_completed=datetime.datetime(2015, 1, 1, 2, 30, 10, tzinfo=utc),
+            post_started=datetime.datetime(2015, 1, 1, 3, 30, 12, tzinfo=utc),
+            post_completed=datetime.datetime(2015, 1, 1, 4, 40, 14, tzinfo=utc),
+            ended=datetime.datetime(2015, 1, 1, 6, 0, 16, tzinfo=utc),
         )
-        job2 = job_test_utils.create_job(error=error, status='FAILED', ended=datetime.datetime(2015, 1, 1))
+        job2 = job_test_utils.create_job(error=error, status='FAILED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         job_test_utils.create_job_exe(
             job=job2, error=error, status=job2.status,
-            queued=datetime.datetime(2015, 1, 1, tzinfo=timezone.utc),
-            started=datetime.datetime(2015, 1, 1, 2, 10, 2, tzinfo=timezone.utc),
-            pre_started=datetime.datetime(2015, 1, 1, 4, 30, 4, tzinfo=timezone.utc),
-            pre_completed=datetime.datetime(2015, 1, 1, 6, 0, 8, tzinfo=timezone.utc),
-            job_started=datetime.datetime(2015, 1, 1, 8, 40, 14, tzinfo=timezone.utc),
-            job_completed=datetime.datetime(2015, 1, 1, 10, 30, 22, tzinfo=timezone.utc),
-            post_started=datetime.datetime(2015, 1, 1, 12, 30, 32, tzinfo=timezone.utc),
-            post_completed=datetime.datetime(2015, 1, 1, 14, 40, 44, tzinfo=timezone.utc),
-            ended=datetime.datetime(2015, 1, 1, 16, 0, 58, tzinfo=timezone.utc),
+            queued=datetime.datetime(2015, 1, 1, tzinfo=utc),
+            started=datetime.datetime(2015, 1, 1, 2, 10, 2, tzinfo=utc),
+            pre_started=datetime.datetime(2015, 1, 1, 4, 30, 4, tzinfo=utc),
+            pre_completed=datetime.datetime(2015, 1, 1, 6, 0, 8, tzinfo=utc),
+            job_started=datetime.datetime(2015, 1, 1, 8, 40, 14, tzinfo=utc),
+            job_completed=datetime.datetime(2015, 1, 1, 10, 30, 22, tzinfo=utc),
+            post_started=datetime.datetime(2015, 1, 1, 12, 30, 32, tzinfo=utc),
+            post_completed=datetime.datetime(2015, 1, 1, 14, 40, 44, tzinfo=utc),
+            ended=datetime.datetime(2015, 1, 1, 16, 0, 58, tzinfo=utc),
         )
 
         sys_error = error_test_utils.create_error(category='SYSTEM', is_builtin=True)
-        job3a = job_test_utils.create_job(error=sys_error, status='FAILED', ended=datetime.datetime(2015, 1, 1))
+        job3a = job_test_utils.create_job(error=sys_error, status='FAILED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         job_test_utils.create_job_exe(job=job3a, status=job3a.status, ended=job3a.ended, error=sys_error)
 
         data_error = error_test_utils.create_error(category='DATA', is_builtin=True)
-        job3b = job_test_utils.create_job(error=data_error, status='FAILED', ended=datetime.datetime(2015, 1, 1))
+        job3b = job_test_utils.create_job(error=data_error, status='FAILED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         job_test_utils.create_job_exe(job=job3b, status=job3b.status, ended=job3b.ended, error=data_error)
 
         algo_error = error_test_utils.create_error(category='ALGORITHM', is_builtin=True)
-        job3c = job_test_utils.create_job(error=algo_error, status='FAILED', ended=datetime.datetime(2015, 1, 1))
+        job3c = job_test_utils.create_job(error=algo_error, status='FAILED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         job_test_utils.create_job_exe(job=job3c, status=job3c.status, ended=job3c.ended, error=algo_error)
 
         MetricsError.objects.calculate(datetime.date(2015, 1, 1))
@@ -178,13 +178,13 @@ class TestMetricsIngest(TestCase):
         ingest_test_utils.create_ingest(status='DUPLICATE')
 
         ingest_test_utils.create_ingest(strike=ingest_test_utils.create_strike(), status='DEFERRED',
-                                        ingest_ended=datetime.datetime(2015, 1, 1))
+                                        ingest_ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         ingest_test_utils.create_ingest(strike=ingest_test_utils.create_strike(), status='INGESTED',
-                                        ingest_ended=datetime.datetime(2015, 1, 1))
+                                        ingest_ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         ingest_test_utils.create_ingest(strike=ingest_test_utils.create_strike(), status='ERRORED',
-                                        ingest_ended=datetime.datetime(2015, 1, 1))
+                                        ingest_ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         ingest_test_utils.create_ingest(strike=ingest_test_utils.create_strike(), status='DUPLICATE',
-                                        ingest_ended=datetime.datetime(2015, 1, 1))
+                                        ingest_ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
 
         MetricsIngest.objects.calculate(datetime.date(2015, 1, 1))
         entries = MetricsIngest.objects.filter(occurred=datetime.date(2015, 1, 1))
@@ -195,7 +195,7 @@ class TestMetricsIngest(TestCase):
         """Tests generating metrics for a date that has ingests with None in Strike field (Scan parent ingest)."""
         scan = ingest_test_utils.create_scan()
         ingest_test_utils.create_ingest(scan=scan, status='INGESTED',
-                                        ingest_ended=datetime.datetime(2015, 1, 1))
+                                        ingest_ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
 
         MetricsIngest.objects.calculate(datetime.date(2015, 1, 1))
         entries = MetricsIngest.objects.filter(occurred=datetime.date(2015, 1, 1))
@@ -205,7 +205,7 @@ class TestMetricsIngest(TestCase):
     def test_calculate_repeated(self):
         """Tests regenerating metrics for a date that already has metrics."""
         strike = ingest_test_utils.create_strike()
-        ingest_test_utils.create_ingest(strike=strike, status='INGESTED', ingest_ended=datetime.datetime(2015, 1, 1))
+        ingest_test_utils.create_ingest(strike=strike, status='INGESTED', ingest_ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
 
         MetricsIngest.objects.calculate(datetime.date(2015, 1, 1))
         MetricsIngest.objects.calculate(datetime.date(2015, 1, 1))
@@ -218,30 +218,30 @@ class TestMetricsIngest(TestCase):
         strike = ingest_test_utils.create_strike()
         source_file = source_test_utils.create_source(file_size=200)
         ingest_test_utils.create_ingest(strike=strike, source_file=source_file, status='INGESTED',
-                                        transfer_started=datetime.datetime(2015, 1, 1),
-                                        transfer_ended=datetime.datetime(2015, 1, 1, 0, 10),
-                                        ingest_started=datetime.datetime(2015, 1, 1),
-                                        ingest_ended=datetime.datetime(2015, 1, 1, 1))
+                                        transfer_started=datetime.datetime(2015, 1, 1, tzinfo=utc),
+                                        transfer_ended=datetime.datetime(2015, 1, 1, 0, 10, tzinfo=utc),
+                                        ingest_started=datetime.datetime(2015, 1, 1, tzinfo=utc),
+                                        ingest_ended=datetime.datetime(2015, 1, 1, 1, tzinfo=utc))
         ingest_test_utils.create_ingest(strike=strike, status='INGESTED',
-                                        transfer_started=datetime.datetime(2015, 1, 1),
-                                        transfer_ended=datetime.datetime(2015, 1, 1, 0, 20),
-                                        ingest_started=datetime.datetime(2015, 1, 1),
-                                        ingest_ended=datetime.datetime(2015, 1, 1, 2))
+                                        transfer_started=datetime.datetime(2015, 1, 1, tzinfo=utc),
+                                        transfer_ended=datetime.datetime(2015, 1, 1, 0, 20, tzinfo=utc),
+                                        ingest_started=datetime.datetime(2015, 1, 1, tzinfo=utc),
+                                        ingest_ended=datetime.datetime(2015, 1, 1, 2, tzinfo=utc))
         ingest_test_utils.create_ingest(strike=strike, status='ERRORED',
-                                        transfer_started=datetime.datetime(2015, 1, 1),
-                                        transfer_ended=datetime.datetime(2015, 1, 1, 0, 30),
-                                        ingest_started=datetime.datetime(2015, 1, 1),
-                                        ingest_ended=datetime.datetime(2015, 1, 1, 3))
+                                        transfer_started=datetime.datetime(2015, 1, 1, tzinfo=utc),
+                                        transfer_ended=datetime.datetime(2015, 1, 1, 0, 30, tzinfo=utc),
+                                        ingest_started=datetime.datetime(2015, 1, 1, tzinfo=utc),
+                                        ingest_ended=datetime.datetime(2015, 1, 1, 3, tzinfo=utc))
         ingest_test_utils.create_ingest(strike=strike, status='DEFERRED',
-                                        transfer_started=datetime.datetime(2015, 1, 1),
-                                        transfer_ended=datetime.datetime(2015, 1, 1, 0, 40),
-                                        ingest_started=datetime.datetime(2015, 1, 1),
-                                        ingest_ended=datetime.datetime(2015, 1, 1, 4))
+                                        transfer_started=datetime.datetime(2015, 1, 1, tzinfo=utc),
+                                        transfer_ended=datetime.datetime(2015, 1, 1, 0, 40, tzinfo=utc),
+                                        ingest_started=datetime.datetime(2015, 1, 1, tzinfo=utc),
+                                        ingest_ended=datetime.datetime(2015, 1, 1, 4, tzinfo=utc))
         ingest_test_utils.create_ingest(strike=strike, status='DUPLICATE',
-                                        transfer_started=datetime.datetime(2015, 1, 1),
-                                        transfer_ended=datetime.datetime(2015, 1, 1, 0, 50),
-                                        ingest_started=datetime.datetime(2015, 1, 1),
-                                        ingest_ended=datetime.datetime(2015, 1, 1, 5))
+                                        transfer_started=datetime.datetime(2015, 1, 1, tzinfo=utc),
+                                        transfer_ended=datetime.datetime(2015, 1, 1, 0, 50, tzinfo=utc),
+                                        ingest_started=datetime.datetime(2015, 1, 1, tzinfo=utc),
+                                        ingest_ended=datetime.datetime(2015, 1, 1, 5, tzinfo=utc))
 
         MetricsIngest.objects.calculate(datetime.date(2015, 1, 1))
 
@@ -275,12 +275,12 @@ class TestMetricsIngest(TestCase):
         """Tests individual statistics are null when information is unavailable."""
         strike = ingest_test_utils.create_strike()
         ingest1 = ingest_test_utils.create_ingest(strike=strike, status='ERRORED',
-                                                  ingest_ended=datetime.datetime(2015, 1, 1))
+                                                  ingest_ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         ingest1.file_size = None
         ingest1.save()
 
         ingest2 = ingest_test_utils.create_ingest(strike=strike, status='DUPLICATE',
-                                                  ingest_ended=datetime.datetime(2015, 1, 1))
+                                                  ingest_ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         ingest2.file_size = None
         ingest2.save()
 
@@ -339,9 +339,9 @@ class TestMetricsIngest(TestCase):
     def test_get_plot_data_filtered(self):
         """Tests getting the metrics plot data with filters."""
         strike = ingest_test_utils.create_strike()
-        metrics_test_utils.create_ingest(strike=strike, occurred=datetime.datetime(2015, 1, 1), ingested_count=1)
-        metrics_test_utils.create_ingest(strike=strike, occurred=datetime.datetime(2015, 1, 20), ingested_count=1)
-        metrics_test_utils.create_ingest(occurred=datetime.datetime(2015, 1, 1), ingested_count=1)
+        metrics_test_utils.create_ingest(strike=strike, occurred=datetime.datetime(2015, 1, 1, tzinfo=utc), ingested_count=1)
+        metrics_test_utils.create_ingest(strike=strike, occurred=datetime.datetime(2015, 1, 20, tzinfo=utc), ingested_count=1)
+        metrics_test_utils.create_ingest(occurred=datetime.datetime(2015, 1, 1, tzinfo=utc), ingested_count=1)
 
         plot_data = MetricsIngest.objects.get_plot_data(started=datetime.date(2015, 1, 1),
                                                         ended=datetime.date(2015, 1, 10),
@@ -373,16 +373,16 @@ class TestMetricsJobType(TestCase):
         job_test_utils.create_job(status='COMPLETED')
         job_test_utils.create_job(status='CANCELED')
 
-        job1 = job_test_utils.create_job(status='QUEUED', ended=datetime.datetime(2015, 1, 1))
+        job1 = job_test_utils.create_job(status='QUEUED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         job_test_utils.create_job_exe(job=job1, status=job1.status, ended=job1.ended)
-        job2 = job_test_utils.create_job(status='RUNNING', ended=datetime.datetime(2015, 1, 1))
+        job2 = job_test_utils.create_job(status='RUNNING', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         job_test_utils.create_job_exe(job=job2, status=job2.status, ended=job2.ended)
 
-        job3 = job_test_utils.create_job(status='FAILED', ended=datetime.datetime(2015, 1, 1))
+        job3 = job_test_utils.create_job(status='FAILED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         job_test_utils.create_job_exe(job=job3, status=job3.status, ended=job3.ended)
-        job4 = job_test_utils.create_job(status='COMPLETED', ended=datetime.datetime(2015, 1, 1))
+        job4 = job_test_utils.create_job(status='COMPLETED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         job_test_utils.create_job_exe(job=job4, status=job4.status, ended=job4.ended)
-        job5 = job_test_utils.create_job(status='CANCELED', ended=datetime.datetime(2015, 1, 1))
+        job5 = job_test_utils.create_job(status='CANCELED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         job_test_utils.create_job_exe(job=job5, status=job5.status, ended=job5.ended)
 
         MetricsJobType.objects.calculate(datetime.date(2015, 1, 1))
@@ -392,7 +392,7 @@ class TestMetricsJobType(TestCase):
 
     def test_calculate_repeated(self):
         """Tests regenerating metrics for a date that already has metrics."""
-        job = job_test_utils.create_job(status='COMPLETED', ended=datetime.datetime(2015, 1, 1))
+        job = job_test_utils.create_job(status='COMPLETED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         job_test_utils.create_job_exe(job=job, status=job.status, ended=job.ended)
 
         MetricsJobType.objects.calculate(datetime.date(2015, 1, 1))
@@ -404,49 +404,49 @@ class TestMetricsJobType(TestCase):
     def test_calculate_stats(self):
         """Tests calculating individual statistics for a metrics entry."""
         job_type = job_test_utils.create_job_type()
-        job1 = job_test_utils.create_job(job_type=job_type, status='COMPLETED', ended=datetime.datetime(2015, 1, 1))
+        job1 = job_test_utils.create_job(job_type=job_type, status='COMPLETED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         job_test_utils.create_job_exe(
             job=job1, status=job1.status,
-            queued=datetime.datetime(2015, 1, 1, tzinfo=timezone.utc),
-            started=datetime.datetime(2015, 1, 1, 0, 10, 2, tzinfo=timezone.utc),
-            pre_started=datetime.datetime(2015, 1, 1, 0, 30, 4, tzinfo=timezone.utc),
-            pre_completed=datetime.datetime(2015, 1, 1, 1, 6, tzinfo=timezone.utc),
-            job_started=datetime.datetime(2015, 1, 1, 1, 40, 8, tzinfo=timezone.utc),
-            job_completed=datetime.datetime(2015, 1, 1, 2, 30, 10, tzinfo=timezone.utc),
-            post_started=datetime.datetime(2015, 1, 1, 3, 30, 12, tzinfo=timezone.utc),
-            post_completed=datetime.datetime(2015, 1, 1, 4, 40, 14, tzinfo=timezone.utc),
-            ended=datetime.datetime(2015, 1, 1, 6, 0, 16, tzinfo=timezone.utc),
+            queued=datetime.datetime(2015, 1, 1, tzinfo=utc),
+            started=datetime.datetime(2015, 1, 1, 0, 10, 2, tzinfo=utc),
+            pre_started=datetime.datetime(2015, 1, 1, 0, 30, 4, tzinfo=utc),
+            pre_completed=datetime.datetime(2015, 1, 1, 1, 6, tzinfo=utc),
+            job_started=datetime.datetime(2015, 1, 1, 1, 40, 8, tzinfo=utc),
+            job_completed=datetime.datetime(2015, 1, 1, 2, 30, 10, tzinfo=utc),
+            post_started=datetime.datetime(2015, 1, 1, 3, 30, 12, tzinfo=utc),
+            post_completed=datetime.datetime(2015, 1, 1, 4, 40, 14, tzinfo=utc),
+            ended=datetime.datetime(2015, 1, 1, 6, 0, 16, tzinfo=utc),
         )
-        job2 = job_test_utils.create_job(job_type=job_type, status='COMPLETED', ended=datetime.datetime(2015, 1, 1))
+        job2 = job_test_utils.create_job(job_type=job_type, status='COMPLETED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         job_test_utils.create_job_exe(
             job=job2, status=job2.status,
-            queued=datetime.datetime(2015, 1, 1, tzinfo=timezone.utc),
-            started=datetime.datetime(2015, 1, 1, 2, 10, 2, tzinfo=timezone.utc),
-            pre_started=datetime.datetime(2015, 1, 1, 4, 30, 4, tzinfo=timezone.utc),
-            pre_completed=datetime.datetime(2015, 1, 1, 6, 0, 8, tzinfo=timezone.utc),
-            job_started=datetime.datetime(2015, 1, 1, 8, 40, 14, tzinfo=timezone.utc),
-            job_completed=datetime.datetime(2015, 1, 1, 10, 30, 22, tzinfo=timezone.utc),
-            post_started=datetime.datetime(2015, 1, 1, 12, 30, 32, tzinfo=timezone.utc),
-            post_completed=datetime.datetime(2015, 1, 1, 14, 40, 44, tzinfo=timezone.utc),
-            ended=datetime.datetime(2015, 1, 1, 16, 0, 58, tzinfo=timezone.utc),
+            queued=datetime.datetime(2015, 1, 1, tzinfo=utc),
+            started=datetime.datetime(2015, 1, 1, 2, 10, 2, tzinfo=utc),
+            pre_started=datetime.datetime(2015, 1, 1, 4, 30, 4, tzinfo=utc),
+            pre_completed=datetime.datetime(2015, 1, 1, 6, 0, 8, tzinfo=utc),
+            job_started=datetime.datetime(2015, 1, 1, 8, 40, 14, tzinfo=utc),
+            job_completed=datetime.datetime(2015, 1, 1, 10, 30, 22, tzinfo=utc),
+            post_started=datetime.datetime(2015, 1, 1, 12, 30, 32, tzinfo=utc),
+            post_completed=datetime.datetime(2015, 1, 1, 14, 40, 44, tzinfo=utc),
+            ended=datetime.datetime(2015, 1, 1, 16, 0, 58, tzinfo=utc),
         )
 
         sys_error = error_test_utils.create_error(category='SYSTEM')
-        job3a = job_test_utils.create_job(job_type=job_type, status='FAILED', ended=datetime.datetime(2015, 1, 1),
+        job3a = job_test_utils.create_job(job_type=job_type, status='FAILED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc),
                                           error=sys_error)
         job_test_utils.create_job_exe(job=job3a, status=job3a.status, ended=job3a.ended, error=sys_error)
 
         data_error = error_test_utils.create_error(category='DATA')
-        job3b = job_test_utils.create_job(job_type=job_type, status='FAILED', ended=datetime.datetime(2015, 1, 1),
+        job3b = job_test_utils.create_job(job_type=job_type, status='FAILED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc),
                                           error=data_error)
         job_test_utils.create_job_exe(job=job3b, status=job3b.status, ended=job3b.ended, error=data_error)
 
         algo_error = error_test_utils.create_error(category='ALGORITHM')
-        job3c = job_test_utils.create_job(job_type=job_type, status='FAILED', ended=datetime.datetime(2015, 1, 1),
+        job3c = job_test_utils.create_job(job_type=job_type, status='FAILED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc),
                                           error=algo_error)
         job_test_utils.create_job_exe(job=job3c, status=job3c.status, ended=job3c.ended, error=algo_error)
 
-        job4 = job_test_utils.create_job(job_type=job_type, status='CANCELED', ended=datetime.datetime(2015, 1, 1))
+        job4 = job_test_utils.create_job(job_type=job_type, status='CANCELED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         job_test_utils.create_job_exe(job=job4, status=job4.status, ended=job4.ended)
 
         MetricsJobType.objects.calculate(datetime.date(2015, 1, 1))
@@ -498,8 +498,8 @@ class TestMetricsJobType(TestCase):
     def test_calculate_stats_partial(self):
         """Tests individual statistics are null when information is unavailable."""
         job_type = job_test_utils.create_job_type()
-        job_test_utils.create_job(job_type=job_type, status='FAILED', ended=datetime.datetime(2015, 1, 1))
-        job_test_utils.create_job(job_type=job_type, status='CANCELED', ended=datetime.datetime(2015, 1, 1))
+        job_test_utils.create_job(job_type=job_type, status='FAILED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
+        job_test_utils.create_job(job_type=job_type, status='CANCELED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
 
         MetricsJobType.objects.calculate(datetime.date(2015, 1, 1))
 
@@ -550,12 +550,12 @@ class TestMetricsJobType(TestCase):
     def test_calculate_negative_times(self):
         """Tests calculating times when machine clocks are out of sync."""
         job_type = job_test_utils.create_job_type()
-        job = job_test_utils.create_job(job_type=job_type, status='COMPLETED', ended=datetime.datetime(2015, 1, 1))
+        job = job_test_utils.create_job(job_type=job_type, status='COMPLETED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
         job_test_utils.create_job_exe(
             job=job, status=job.status,
-            queued=datetime.datetime(2015, 1, 1, 1, 10, tzinfo=timezone.utc),
-            started=datetime.datetime(2015, 1, 1, 1, 5, tzinfo=timezone.utc),
-            ended=datetime.datetime(2015, 1, 1, tzinfo=timezone.utc),
+            queued=datetime.datetime(2015, 1, 1, 1, 10, tzinfo=utc),
+            started=datetime.datetime(2015, 1, 1, 1, 5, tzinfo=utc),
+            ended=datetime.datetime(2015, 1, 1, tzinfo=utc),
         )
 
         MetricsJobType.objects.calculate(datetime.date(2015, 1, 1))

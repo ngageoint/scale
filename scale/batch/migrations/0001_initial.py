@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import djorm_pgjson.fields
+import util.deprecation
 import django.db.models.deletion
 
 
@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                 ('title', models.CharField(max_length=50, null=True, blank=True)),
                 ('description', models.TextField(null=True, blank=True)),
                 ('status', models.CharField(default='SUBMITTED', max_length=50, db_index=True, choices=[('SUBMITTED', 'SUBMITTED'), ('CREATED', 'CREATED')])),
-                ('definition', djorm_pgjson.fields.JSONField(default={}, null=True, blank=True)),
+                ('definition', util.deprecation.JSONStringField(default={}, null=True, blank=True)),
                 ('created_count', models.IntegerField(default=0)),
                 ('failed_count', models.IntegerField(default=0)),
                 ('total_count', models.IntegerField(default=0)),

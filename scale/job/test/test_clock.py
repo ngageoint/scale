@@ -2,8 +2,8 @@ from __future__ import unicode_literals
 import datetime
 
 import django
-import django.utils.timezone as timezone
 from django.test import TestCase
+from django.utils.timezone import utc
 from mock import MagicMock, patch
 
 import job.clock as clock
@@ -71,11 +71,11 @@ class TestClock(TestCase):
     def test_check_rule_last_event(self, mock_check_schedule, mock_trigger_event):
         """Tests a valid rule checks the most recent matching event type."""
         rule = job_test_utils.create_clock_rule(name='test-name', schedule='PT1H0M0S')
-        job_test_utils.create_clock_event(rule=rule, occurred=datetime.datetime(2013, 1, 1, tzinfo=timezone.utc))
-        job_test_utils.create_clock_event(rule=rule, occurred=datetime.datetime(2012, 1, 1, tzinfo=timezone.utc))
-        last = job_test_utils.create_clock_event(rule=rule, occurred=datetime.datetime(2014, 1, 1, tzinfo=timezone.utc))
-        job_test_utils.create_clock_event(rule=rule, occurred=datetime.datetime(2011, 1, 1, tzinfo=timezone.utc))
-        job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 1, tzinfo=timezone.utc))
+        job_test_utils.create_clock_event(rule=rule, occurred=datetime.datetime(2013, 1, 1, tzinfo=utc))
+        job_test_utils.create_clock_event(rule=rule, occurred=datetime.datetime(2012, 1, 1, tzinfo=utc))
+        last = job_test_utils.create_clock_event(rule=rule, occurred=datetime.datetime(2014, 1, 1, tzinfo=utc))
+        job_test_utils.create_clock_event(rule=rule, occurred=datetime.datetime(2011, 1, 1, tzinfo=utc))
+        job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 1, tzinfo=utc))
 
         clock._check_rule(rule)
 
@@ -118,88 +118,88 @@ class TestClock(TestCase):
         rule3 = job_test_utils.create_clock_rule(schedule='1H0M0S')
         self.assertRaises(ClockEventError, clock._check_rule, rule1)
 
-    @patch('job.clock.timezone.now', lambda: datetime.datetime(2015, 1, 1, 1, 30, 30, tzinfo=timezone.utc))
+    @patch('job.clock.timezone.now', lambda: datetime.datetime(2015, 1, 1, 1, 30, 30, tzinfo=utc))
     def test_check_schedule_hour_first(self):
         """Tests checking an hourly schedule that was never triggered before and is due now."""
         self.assertTrue(clock._check_schedule(datetime.timedelta(hours=1), None))
 
-    @patch('job.clock.timezone.now', lambda: datetime.datetime(2015, 1, 1, 0, 30, 30, tzinfo=timezone.utc))
+    @patch('job.clock.timezone.now', lambda: datetime.datetime(2015, 1, 1, 0, 30, 30, tzinfo=utc))
     def test_check_schedule_hour_first_skip(self):
         """Tests checking an hourly schedule that was never triggered before and is not due."""
         self.assertFalse(clock._check_schedule(datetime.timedelta(hours=1), None))
 
-    @patch('job.clock.timezone.now', lambda: datetime.datetime(2015, 1, 1, 12, 30, 30, tzinfo=timezone.utc))
+    @patch('job.clock.timezone.now', lambda: datetime.datetime(2015, 1, 1, 12, 30, 30, tzinfo=utc))
     def test_check_schedule_hour_last(self):
         """Tests checking an hourly schedule that was triggered before and is due now."""
-        last = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 1, 11, tzinfo=timezone.utc))
+        last = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 1, 11, tzinfo=utc))
 
         self.assertTrue(clock._check_schedule(datetime.timedelta(hours=1), last))
 
-    @patch('job.clock.timezone.now', lambda: datetime.datetime(2015, 1, 1, 12, 30, 30, tzinfo=timezone.utc))
+    @patch('job.clock.timezone.now', lambda: datetime.datetime(2015, 1, 1, 12, 30, 30, tzinfo=utc))
     def test_check_schedule_hour_last_skip(self):
         """Tests checking an hourly schedule that was triggered before and is not due."""
-        last = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 1, 12, tzinfo=timezone.utc))
+        last = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 1, 12, tzinfo=utc))
 
         self.assertFalse(clock._check_schedule(datetime.timedelta(hours=1), last))
 
-    @patch('job.clock.timezone.now', lambda: datetime.datetime(2015, 1, 1, 10, 30, tzinfo=timezone.utc))
+    @patch('job.clock.timezone.now', lambda: datetime.datetime(2015, 1, 1, 10, 30, tzinfo=utc))
     def test_check_schedule_hour_exact(self):
         """Tests checking a schedule for once an hour."""
-        last = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 1, 9, tzinfo=timezone.utc))
+        last = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 1, 9, tzinfo=utc))
 
         self.assertTrue(clock._check_schedule(datetime.timedelta(hours=1), last))
 
-    @patch('job.clock.timezone.now', lambda: datetime.datetime(2015, 1, 1, 23, 30, tzinfo=timezone.utc))
+    @patch('job.clock.timezone.now', lambda: datetime.datetime(2015, 1, 1, 23, 30, tzinfo=utc))
     def test_check_schedule_hour_recover(self):
         """Tests checking a schedule to recover after being down for several hours."""
-        last = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 1, 5, tzinfo=timezone.utc))
+        last = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 1, 5, tzinfo=utc))
 
         self.assertTrue(clock._check_schedule(datetime.timedelta(hours=1), last))
 
-    @patch('job.clock.timezone.now', lambda: datetime.datetime(2015, 1, 10, 10, 30, tzinfo=timezone.utc))
+    @patch('job.clock.timezone.now', lambda: datetime.datetime(2015, 1, 10, 10, 30, tzinfo=utc))
     def test_check_schedule_hour_drift_min(self):
         """Tests checking a schedule for once an hour without slowly drifting away from the target time."""
-        last = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 10, 8, tzinfo=timezone.utc))
+        last = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 10, 8, tzinfo=utc))
 
         self.assertTrue(clock._check_schedule(datetime.timedelta(hours=1), last))
 
-    @patch('job.clock.timezone.now', lambda: datetime.datetime(2015, 1, 1, 12, 0, 30, tzinfo=timezone.utc))
+    @patch('job.clock.timezone.now', lambda: datetime.datetime(2015, 1, 1, 12, 0, 30, tzinfo=utc))
     def test_check_schedule_day_first(self):
         """Tests checking a daily schedule that was never triggered before and is due now."""
         self.assertTrue(clock._check_schedule(datetime.timedelta(hours=24), None))
 
-    @patch('job.clock.timezone.now', lambda: datetime.datetime(2015, 1, 10, 1, 0, 30, tzinfo=timezone.utc))
+    @patch('job.clock.timezone.now', lambda: datetime.datetime(2015, 1, 10, 1, 0, 30, tzinfo=utc))
     def test_check_schedule_day_last(self):
         """Tests checking a daily schedule that was triggered before and is due now."""
-        last = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 9, tzinfo=timezone.utc))
+        last = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 9, tzinfo=utc))
 
         self.assertTrue(clock._check_schedule(datetime.timedelta(hours=24), last))
 
-    @patch('job.clock.timezone.now', lambda: datetime.datetime(2015, 1, 10, 12, 30, 30, tzinfo=timezone.utc))
+    @patch('job.clock.timezone.now', lambda: datetime.datetime(2015, 1, 10, 12, 30, 30, tzinfo=utc))
     def test_check_schedule_day_last_skip(self):
         """Tests checking a daily schedule that was triggered before and is not due."""
-        last = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 10, tzinfo=timezone.utc))
+        last = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 10, tzinfo=utc))
 
         self.assertFalse(clock._check_schedule(datetime.timedelta(hours=24), last))
 
-    @patch('job.clock.timezone.now', lambda: datetime.datetime(2015, 1, 10, 0, 0, 30, tzinfo=timezone.utc))
+    @patch('job.clock.timezone.now', lambda: datetime.datetime(2015, 1, 10, 0, 0, 30, tzinfo=utc))
     def test_check_schedule_day_exact(self):
         """Tests checking a schedule for once a day."""
-        last = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 9, tzinfo=timezone.utc))
+        last = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 9, tzinfo=utc))
 
         self.assertTrue(clock._check_schedule(datetime.timedelta(hours=24), last))
 
-    @patch('job.clock.timezone.now', lambda: datetime.datetime(2015, 1, 10, 10, 0, 30, tzinfo=timezone.utc))
+    @patch('job.clock.timezone.now', lambda: datetime.datetime(2015, 1, 10, 10, 0, 30, tzinfo=utc))
     def test_check_schedule_day_recover(self):
         """Tests checking a schedule to recover after being down for several days."""
-        last = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 5, 0, 5, 50, tzinfo=timezone.utc))
+        last = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 5, 0, 5, 50, tzinfo=utc))
 
         self.assertTrue(clock._check_schedule(datetime.timedelta(hours=24), last))
 
-    @patch('job.clock.timezone.now', lambda: datetime.datetime(2015, 1, 10, 0, 0, 30, tzinfo=timezone.utc))
+    @patch('job.clock.timezone.now', lambda: datetime.datetime(2015, 1, 10, 0, 0, 30, tzinfo=utc))
     def test_check_schedule_day_drift(self):
         """Tests checking a schedule for once a day without slowly drifting away from the target time."""
-        last = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 9, 0, 45, 30, tzinfo=timezone.utc))
+        last = job_test_utils.create_clock_event(occurred=datetime.datetime(2015, 1, 9, 0, 45, 30, tzinfo=utc))
 
         self.assertTrue(clock._check_schedule(datetime.timedelta(hours=24), last))
 
@@ -216,7 +216,7 @@ class TestClock(TestCase):
     def test_trigger_event_last(self):
         """Tests triggering a new event after the rule has processed an event previously."""
         rule = job_test_utils.create_clock_rule(name='test-name', event_type='TEST_TYPE')
-        last = job_test_utils.create_clock_event(rule=rule, occurred=datetime.datetime(2015, 1, 1, tzinfo=timezone.utc))
+        last = job_test_utils.create_clock_event(rule=rule, occurred=datetime.datetime(2015, 1, 1, tzinfo=utc))
 
         clock._trigger_event(rule, last)
 
