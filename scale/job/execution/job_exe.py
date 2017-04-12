@@ -145,14 +145,12 @@ class RunningJobExecution(object):
 
     @retry_database_query
     def execution_timed_out(self, task, when):
-        """Fails this job execution for timing out and returns the current task
+        """Fails this job execution for timing out
 
         :param task: The task that timed out
         :type task: :class:`job.tasks.exe_task.JobExecutionTask`
         :param when: The time that the job execution timed out
         :type when: :class:`datetime.datetime`
-        :returns: The current task, possibly None
-        :rtype: :class:`job.tasks.base_task.Task`
         """
 
         if task.has_started:
@@ -164,10 +162,8 @@ class RunningJobExecution(object):
         Queue.objects.handle_job_failure(self._id, when, self._all_tasks, error)
 
         with self._lock:
-            task = self._current_task
             self._current_task = None
             self._remaining_tasks = []
-            return task
 
     def get_container_names(self):
         """Returns the list of container names for all tasks in this job execution

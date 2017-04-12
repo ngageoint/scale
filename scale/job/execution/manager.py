@@ -1,44 +1,43 @@
-"""Defines the class that managers the currently running job executions"""
+"""Defines the class that manages job executions"""
 from __future__ import unicode_literals
 
+import logging
 import threading
 
+from django.db import DatabaseError
 
-class RunningJobExecutionManager(object):
-    """This class manages all currently running job execution. This class is thread-safe."""
+from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
+from job.models import JobExecution
+
+logger = logging.getLogger(__name__)
+
+
+class JobExecutionManager(object):
+    """This class manages all running and finished job executions. This class is thread-safe."""
 
     def __init__(self):
         """Constructor
         """
 
-        self._job_exes = {}
+        self._running_job_exes = {}  # {ID: RunningJobExecution}
         self._lock = threading.Lock()
 
-    def add_job_exes(self, job_exes):
-        """Adds new running job executions to the manager
-
-        :param job_exes: A list of the running job executions to add
-        :type job_exes: [:class:`job.execution.job_exe.RunningJobExecution`]
-        """
-
-        with self._lock:
-            for job_exe in job_exes:
-                self._job_exes[job_exe.id] = job_exe
-
-    def get_all_job_exes(self):
-        """Returns all running job executions
+    def get_ready_job_exes(self):
+        """Returns all running job executions that are ready to execute their next task
 
         :returns: A list of running job executions
         :rtype: [:class:`job.execution.job_exe.RunningJobExecution`]
         """
 
-        result = []
+        ready_exes = []
         with self._lock:
-            for job_exe_id in self._job_exes:
-                result.append(self._job_exes[job_exe_id])
-        return result
+            for job_exe_id in self._running_job_exes:
+                job_exe = self._running_job_exes[job_exe_id]
+                if job_exe.is_next_task_ready():
+                    ready_exes.append(job_exe)
+        return ready_exes
 
-    def get_job_exe(self, job_exe_id):
+    def get_running_job_exe(self, job_exe_id):
         """Returns the running job execution with the given ID, or None if the job execution does not exist
 
         :param job_exe_id: The ID of the job execution to return
@@ -48,55 +47,109 @@ class RunningJobExecutionManager(object):
         """
 
         with self._lock:
-            try:
-                return self._job_exes[job_exe_id]
-            except KeyError:
-                return None
+            if job_exe_id in self._running_job_exes:
+                return self._running_job_exes[job_exe_id]
+            return None
 
-    def get_job_exes_on_node(self, node_id):
-        """Returns all running job executions that are on the given node
+    def get_running_job_exes(self):
+        """Returns all currently running job executions
 
-        :param node_id: The ID of the node
+        :returns: A list of running job executions
+        :rtype: [:class:`job.execution.job_exe.RunningJobExecution`]
+        """
+
+        running_job_exes = []
+        with self._lock:
+            for job_exe_id in self._running_job_exes:
+                running_job_exes.append(self._running_job_exes[job_exe_id])
+        return running_job_exes
+
+    def handle_task_timeout(self, task, when):
+        """Handles the timeout of the given task
+
+        :param task: The task
+        :type task: :class:`job.tasks.base_task.Task`
+        :param when: The time that the time out occurred
+        :type when: :class:`datetime.datetime`
+        """
+
+        if task.id.startswith(JOB_TASK_ID_PREFIX):
+            job_exe_id = JobExecution.get_job_exe_id(task.id)
+            with self._lock:
+                if job_exe_id in self._running_job_exes:
+                    job_exe = self._running_job_exes[job_exe_id]
+                    try:
+                        job_exe.execution_timed_out(task, when)
+                    except DatabaseError:
+                        logger.exception('Error failing timed out job execution %i', job_exe_id)
+                    # We do not remove timed out job executions at this point. We wait for the status update of the
+                    # killed task to come back so that job execution cleanup occurs after the task is dead.
+
+    def handle_task_update(self, task_update):
+        """Handles the given task update and returns the associated job execution if it has finished
+
+        :param task_update: The task update
+        :type task_update: :class:`job.tasks.update.TaskStatusUpdate`
+        :returns: The job execution if it has finished, None otherwise
+        :rtype: :class:`job.execution.job_exe.RunningJobExecution`
+        """
+
+        if task_update.task_id.startswith(JOB_TASK_ID_PREFIX):
+            job_exe_id = JobExecution.get_job_exe_id(task_update.task_id)
+            with self._lock:
+                if job_exe_id in self._running_job_exes:
+                    job_exe = self._running_job_exes[job_exe_id]
+                    job_exe.task_update(task_update)
+                    if job_exe.is_finished():
+                        self._handle_finished_job_exe(job_exe)
+                        return job_exe
+
+        return None
+
+    def lost_node(self, node_id, when):
+        """Informs the manager that the node with the given ID was lost and has gone offline
+
+        :param node_id: The ID of the lost node
         :type node_id: int
-        :returns: A list of running job executions
+        :param when: The time that the node was lost
+        :type when: :class:`datetime.datetime`
+        :returns: A list of the lost job executions that had been running on the node
         :rtype: [:class:`job.execution.job_exe.RunningJobExecution`]
         """
 
-        result = []
+        lost_exes = []
         with self._lock:
-            for job_exe_id in self._job_exes:
-                job_exe = self._job_exes[job_exe_id]
+            for job_exe_id in self._running_job_exes.keys():
+                job_exe = self._running_job_exes[job_exe_id]
                 if job_exe.node_id == node_id:
-                    result.append(self._job_exes[job_exe_id])
-        return result
+                    lost_exes.append(job_exe)
+                    try:
+                        job_exe.execution_lost(when)
+                    except DatabaseError:
+                        logger.exception('Error failing lost job execution: %s', job_exe.id)
+                    if job_exe.is_finished():
+                        self._handle_finished_job_exe(job_exe)
+        return lost_exes
 
-    def get_ready_job_exes(self):
-        """Returns all running job executions that are ready to execute their next task
+    def schedule_job_exes(self, job_exes):
+        """Adds newly scheduled running job executions to the manager
 
-        :returns: A list of running job executions
-        :rtype: [:class:`job.execution.job_exe.RunningJobExecution`]
-        """
-
-        result = []
-        with self._lock:
-            for job_exe_id in self._job_exes:
-                job_exe = self._job_exes[job_exe_id]
-                if job_exe.is_next_task_ready():
-                    result.append(self._job_exes[job_exe_id])
-        return result
-
-    def remove_job_exe(self, job_exe_id):
-        """Removes the running job execution with the given ID
-
-        :param job_exe_id: The ID of the job execution to remove
-        :type job_exe_id: int
+        :param job_exes: A list of the running job executions to add
+        :type job_exes: [:class:`job.execution.job_exe.RunningJobExecution`]
         """
 
         with self._lock:
-            try:
-                del self._job_exes[job_exe_id]
-            except KeyError:
-                pass
+            for job_exe in job_exes:
+                self._running_job_exes[job_exe.id] = job_exe
+
+    def _handle_finished_job_exe(self, job_exe):
+        """Handles the finished job execution. Caller must have obtained the manager lock.
+
+        :param job_exe: The finished job execution
+        :type job_exe: :class:`job.execution.job_exe.RunningJobExecution`
+        """
+
+        del self._running_job_exes[job_exe.id]
 
 
-running_job_mgr = RunningJobExecutionManager()
+job_exe_mgr = JobExecutionManager()

@@ -9,7 +9,7 @@ from django.db import OperationalError
 from django.utils.timezone import now
 from mesos.interface import mesos_pb2
 
-from job.execution.manager import running_job_mgr
+from job.execution.manager import job_exe_mgr
 from job.tasks.manager import task_mgr
 from mesos_api.tasks import create_mesos_task
 from queue.job_exe import QueuedJobExecution
@@ -144,7 +144,7 @@ class SchedulingThread(object):
         """Considers any tasks for currently running job executions that are ready for the next task to run
         """
 
-        for running_job_exe in running_job_mgr.get_ready_job_exes():
+        for running_job_exe in job_exe_mgr.get_ready_job_exes():
             offer_mgr.consider_next_task(running_job_exe)
 
     def _consider_node_tasks(self, when):
@@ -181,7 +181,7 @@ class SchedulingThread(object):
         for job_type in self._job_types.values():
             if job_type.max_scheduled:
                 self._job_type_limit_available[job_type.id] = job_type.max_scheduled
-        for running_job_exe in running_job_mgr.get_all_job_exes():
+        for running_job_exe in job_exe_mgr.get_running_job_exes():
             if running_job_exe.job_type_id in self._job_type_limit_available:
                 self._job_type_limit_available[running_job_exe.job_type_id] -= 1
 
@@ -224,7 +224,7 @@ class SchedulingThread(object):
             # Schedule queued job executions and start their first tasks
             workspaces = workspace_mgr.get_workspaces()
             scheduled_job_exes = self._schedule_queued_job_executions(queued_job_exes_to_schedule, workspaces)
-            running_job_mgr.add_job_exes(scheduled_job_exes)
+            job_exe_mgr.schedule_job_exes(scheduled_job_exes)
             for scheduled_job_exe in scheduled_job_exes:
                 task = scheduled_job_exe.start_next_task()
                 if task:

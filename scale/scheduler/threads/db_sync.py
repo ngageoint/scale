@@ -10,7 +10,7 @@ from django.db import DatabaseError
 from django.utils.timezone import now
 from mesos.interface import mesos_pb2
 
-from job.execution.manager import running_job_mgr
+from job.execution.manager import job_exe_mgr
 from job.models import JobExecution
 from scheduler.node.manager import node_mgr
 from scheduler.sync.job_type_manager import job_type_mgr
@@ -111,7 +111,7 @@ class DatabaseSyncThread(object):
         """
 
         running_job_exes = {}
-        for job_exe in running_job_mgr.get_all_job_exes():
+        for job_exe in job_exe_mgr.get_running_job_exes():
             running_job_exes[job_exe.id] = job_exe
 
         for job_exe_model in JobExecution.objects.filter(id__in=running_job_exes.keys()).iterator():

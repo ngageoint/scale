@@ -198,8 +198,7 @@ class TestRunningJobExecution(TestCase):
         when_timed_out = when_launched + timedelta(seconds=1)
         job_task = running_job_exe.start_next_task()
         self.task_mgr.launch_tasks([job_task], when_launched)
-        timed_out_task = running_job_exe.execution_timed_out(job_task, when_timed_out)
-        self.assertEqual(job_task.id, timed_out_task.id)
+        running_job_exe.execution_timed_out(job_task, when_timed_out)
         self.assertTrue(running_job_exe.is_finished())
         self.assertFalse(running_job_exe.is_next_task_ready())
 
@@ -223,8 +222,7 @@ class TestRunningJobExecution(TestCase):
         update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.RUNNING, pre_task_started)
         self.task_mgr.handle_task_update(update)
         running_job_exe.task_update(update)
-        timed_out_task = running_job_exe.execution_timed_out(task, when_timed_out)
-        self.assertEqual(task.id, timed_out_task.id)
+        running_job_exe.execution_timed_out(task, when_timed_out)
         self.assertTrue(running_job_exe.is_finished())
         self.assertFalse(running_job_exe.is_next_task_ready())
 
@@ -262,8 +260,7 @@ class TestRunningJobExecution(TestCase):
                                                           job_task_started)
         self.task_mgr.handle_task_update(update)
         running_job_exe.task_update(update)
-        timed_out_task = running_job_exe.execution_timed_out(job_task, when_timed_out)
-        self.assertEqual(job_task.id, timed_out_task.id)
+        running_job_exe.execution_timed_out(job_task, when_timed_out)
         self.assertTrue(running_job_exe.is_finished())
         self.assertFalse(running_job_exe.is_next_task_ready())
 
@@ -292,8 +289,7 @@ class TestRunningJobExecution(TestCase):
                                                           job_task_started)
         self.task_mgr.handle_task_update(update)
         running_job_exe.task_update(update)
-        timed_out_task = running_job_exe.execution_timed_out(job_task, when_timed_out)
-        self.assertEqual(job_task.id, timed_out_task.id)
+        running_job_exe.execution_timed_out(job_task, when_timed_out)
         self.assertTrue(running_job_exe.is_finished())
         self.assertFalse(running_job_exe.is_next_task_ready())
 
@@ -346,8 +342,7 @@ class TestRunningJobExecution(TestCase):
                                                           post_task_started)
         self.task_mgr.handle_task_update(update)
         running_job_exe.task_update(update)
-        timed_out_task = running_job_exe.execution_timed_out(post_task, when_timed_out)
-        self.assertEqual(post_task.id, timed_out_task.id)
+        running_job_exe.execution_timed_out(post_task, when_timed_out)
         self.assertTrue(running_job_exe.is_finished())
         self.assertFalse(running_job_exe.is_next_task_ready())
 

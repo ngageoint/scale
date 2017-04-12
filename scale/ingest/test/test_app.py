@@ -44,8 +44,7 @@ class TestIngestJobType(TestCase):
                                                           job_task_started)
         self.task_mgr.handle_task_update(update)
         running_job_exe.task_update(update)
-        timed_out_task = running_job_exe.execution_timed_out(job_task, when_timed_out)
-        self.assertEqual(job_task.id, timed_out_task.id)
+        running_job_exe.execution_timed_out(job_task, when_timed_out)
         self.assertTrue(running_job_exe.is_finished())
         self.assertFalse(running_job_exe.is_next_task_ready())
 
