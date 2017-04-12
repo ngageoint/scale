@@ -1,0 +1,72 @@
+batch package
+=============
+
+Subpackages
+-----------
+
+.. toctree::
+
+    batch.configuration
+    batch.management
+    batch.migrations
+    batch.test
+
+Submodules
+----------
+
+batch\.apps module
+------------------
+
+.. automodule:: batch.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+batch\.exceptions module
+------------------------
+
+.. automodule:: batch.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+batch\.models module
+--------------------
+
+.. automodule:: batch.models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+batch\.serializers module
+-------------------------
+
+.. automodule:: batch.serializers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+batch\.urls module
+------------------
+
+.. automodule:: batch.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+batch\.views module
+-------------------
+
+.. automodule:: batch.views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: batch
+    :members:
+    :undoc-members:
+    :show-inheritance:

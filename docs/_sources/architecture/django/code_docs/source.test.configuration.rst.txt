@@ -1,0 +1,22 @@
+source\.test\.configuration package
+===================================
+
+Submodules
+----------
+
+source\.test\.configuration\.test\_source\_data\_file module
+------------------------------------------------------------
+
+.. automodule:: source.test.configuration.test_source_data_file
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: source.test.configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:

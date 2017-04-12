@@ -1,0 +1,22 @@
+batch\.test\.management\.commands package
+=========================================
+
+Submodules
+----------
+
+batch\.test\.management\.commands\.test\_scale\_batch\_creator module
+---------------------------------------------------------------------
+
+.. automodule:: batch.test.management.commands.test_scale_batch_creator
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: batch.test.management.commands
+    :members:
+    :undoc-members:
+    :show-inheritance:

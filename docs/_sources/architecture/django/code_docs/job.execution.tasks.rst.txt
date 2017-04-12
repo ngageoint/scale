@@ -1,0 +1,54 @@
+job\.execution\.tasks package
+=============================
+
+Submodules
+----------
+
+job\.execution\.tasks\.cleanup\_task module
+-------------------------------------------
+
+.. automodule:: job.execution.tasks.cleanup_task
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.execution\.tasks\.exe\_task module
+---------------------------------------
+
+.. automodule:: job.execution.tasks.exe_task
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.execution\.tasks\.job\_task module
+---------------------------------------
+
+.. automodule:: job.execution.tasks.job_task
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.execution\.tasks\.post\_task module
+----------------------------------------
+
+.. automodule:: job.execution.tasks.post_task
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.execution\.tasks\.pre\_task module
+---------------------------------------
+
+.. automodule:: job.execution.tasks.pre_task
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: job.execution.tasks
+    :members:
+    :undoc-members:
+    :show-inheritance:

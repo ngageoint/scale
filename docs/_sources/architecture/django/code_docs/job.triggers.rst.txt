@@ -1,0 +1,17 @@
+job\.triggers package
+=====================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    job.triggers.configuration
+
+Module contents
+---------------
+
+.. automodule:: job.triggers
+    :members:
+    :undoc-members:
+    :show-inheritance:

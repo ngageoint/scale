@@ -1,0 +1,22 @@
+batch\.test\.configuration\.definition package
+==============================================
+
+Submodules
+----------
+
+batch\.test\.configuration\.definition\.test\_batch\_definition module
+----------------------------------------------------------------------
+
+.. automodule:: batch.test.configuration.definition.test_batch_definition
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: batch.test.configuration.definition
+    :members:
+    :undoc-members:
+    :show-inheritance:

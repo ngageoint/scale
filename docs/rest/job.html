@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../index.html"/>
         <link rel="up" title="REST API" href="index.html"/>
         <link rel="next" title="Job Execution Services" href="job_execution.html"/>
@@ -104,7 +107,7 @@
 <li class="toctree-l3"><a class="reference internal" href="batch.html">Batch Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">Error Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">Ingest Services</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Job Services</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Job Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job_execution.html">Job Execution Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job_type.html">Job Type Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">Metrics Services</a></li>
@@ -179,7 +182,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/rest/job.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/rest/job.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -319,18 +322,18 @@ Duplicate it to filter by multiple values.</td>
 <tr class="row-odd"><td colspan="2">.id</td>
 <td colspan="2">Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API call.
-(See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">.job_type</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The job type that is associated with the job.
-(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span>Job Type Details</span></a>)</td>
+(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="2">.job_type_rev</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The job type revision that is associated with the job.
 This represents the definition at the time the job was scheduled.
-(See <a class="reference internal" href="job_type.html#rest-job-type-rev-details"><span>Job Type Revision Details</span></a>)</td>
+(See <a class="reference internal" href="job_type.html#rest-job-type-rev-details"><span class="std std-ref">Job Type Revision Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">.event</td>
 <td colspan="2">JSON Object</td>
@@ -339,7 +342,7 @@ This represents the definition at the time the job was scheduled.
 <tr class="row-odd"><td colspan="2">.error</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The error that is associated with the job.
-(See <a class="reference internal" href="error.html#rest-error-details"><span>Error Details</span></a>)</td>
+(See <a class="reference internal" href="error.html#rest-error-details"><span class="std std-ref">Error Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">.status</td>
 <td colspan="2">String</td>
@@ -385,17 +388,17 @@ Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
 <tr class="row-even"><td colspan="2">.root_superseded_job</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The first job in the current chain of superseded jobs.
-(See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="2">.superseded_job</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The previous job in the chain that was superseded by this job.
-(See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">.superseded_by_job</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The next job in the chain that superseded this job.
-(See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="2">.delete_superseded</td>
 <td colspan="2">Boolean</td>
@@ -530,13 +533,13 @@ Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
 <tr class="row-odd"><td>job_type</td>
 <td>JSON Object</td>
 <td>The job type that is associated with the count.
-(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span>Job Type Details</span></a>)</td>
+(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>.job_type_rev</td>
 <td>JSON Object</td>
 <td>The job type revision that is associated with the job.
 This represents the definition at the time the job was scheduled.
-(See <a class="reference internal" href="job_type.html#rest-job-type-rev-details"><span>Job Type Revision Details</span></a>)</td>
+(See <a class="reference internal" href="job_type.html#rest-job-type-rev-details"><span class="std std-ref">Job Type Revision Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>event</td>
 <td>JSON Object</td>
@@ -545,7 +548,7 @@ This represents the definition at the time the job was scheduled.
 <tr class="row-even"><td>error</td>
 <td>JSON Object</td>
 <td>The error that is associated with the count.
-(See <a class="reference internal" href="error.html#rest-error-details"><span>Error Details</span></a>)</td>
+(See <a class="reference internal" href="error.html#rest-error-details"><span class="std std-ref">Error Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>status</td>
 <td>String</td>
@@ -590,17 +593,17 @@ This represents the definition at the time the job was scheduled.
 <tr class="row-odd"><td>root_superseded_job</td>
 <td>JSON Object</td>
 <td>The first job in the current chain of superseded jobs.
-(See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>superseded_job</td>
 <td>JSON Object</td>
 <td>The previous job in the chain that was superseded by this job.
-(See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>superseded_by_job</td>
 <td>JSON Object</td>
 <td>The next job in the chain that superseded this job.
-(See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>delete_superseded</td>
 <td>Boolean</td>
@@ -637,7 +640,7 @@ This represents the definition at the time the job was scheduled.
 <tr class="row-even"><td>data</td>
 <td>JSON Object</td>
 <td>An interface description for all the job input and output files.
-(See <a class="reference internal" href="../architecture/jobs/job_data.html#architecture-jobs-job-data-spec"><span>Job Data Specification Version 1.0</span></a>)</td>
+(See <a class="reference internal" href="../architecture/jobs/job_data.html#architecture-jobs-job-data-spec"><span class="std std-ref">Job Data Specification Version 1.0</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>results</td>
 <td>JSON Object</td>
@@ -646,12 +649,12 @@ This represents the definition at the time the job was scheduled.
 <tr class="row-even"><td>recipes</td>
 <td>Array</td>
 <td>A list of all recipes associated with the job.
-(See <a class="reference internal" href="recipe.html#rest-recipe-details"><span>Recipe Details</span></a>)</td>
+(See <a class="reference internal" href="recipe.html#rest-recipe-details"><span class="std std-ref">Recipe Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>job_exes</td>
 <td>Array</td>
 <td>A list of all job executions associated with the job.
-(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span>Job Execution Details</span></a>)</td>
+(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span class="std std-ref">Job Execution Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>inputs</td>
 <td>Array</td>
@@ -660,24 +663,24 @@ This represents the definition at the time the job was scheduled.
 <tr class="row-odd"><td>.name</td>
 <td>String</td>
 <td>The name of the input as defined by the job type interface.
-(See <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span>Job Interface Specification Version 1.4</span></a>)</td>
+(See <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span class="std std-ref">Job Interface Specification Version 1.4</span></a>)</td>
 </tr>
 <tr class="row-even"><td>.type</td>
 <td>String</td>
 <td>The type of the input as defined by the job type interface.
-(See <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span>Job Interface Specification Version 1.4</span></a>)</td>
+(See <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span class="std std-ref">Job Interface Specification Version 1.4</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.value</td>
 <td>Various</td>
 <td>The actual value of the input, which can vary depending on the type. Simple
 property inputs will include primitive values, whereas the file or files type
 will include a full JSON representation of a Scale file object.
-(See <a class="reference internal" href="scale_file.html#rest-scale-file-details"><span>Scale File Details</span></a>)</td>
+(See <a class="reference internal" href="scale_file.html#rest-scale-file-details"><span class="std std-ref">Scale File Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>input_files</td>
 <td>JSON Object</td>
 <td>A list of files that the job used as input.
-(See <a class="reference internal" href="scale_file.html#rest-scale-file-details"><span>Scale File Details</span></a>)
+(See <a class="reference internal" href="scale_file.html#rest-scale-file-details"><span class="std std-ref">Scale File Details</span></a>)
 Removed in v4, use the &#8220;inputs&#8221; attribute instead.</td>
 </tr>
 <tr class="row-odd"><td>outputs</td>
@@ -687,23 +690,23 @@ Removed in v4, use the &#8220;inputs&#8221; attribute instead.</td>
 <tr class="row-even"><td>.name</td>
 <td>String</td>
 <td>The name of the output as defined by the job type interface.
-(See <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span>Job Interface Specification Version 1.4</span></a>)</td>
+(See <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span class="std std-ref">Job Interface Specification Version 1.4</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.type</td>
 <td>String</td>
 <td>The type of the output as defined by the job type interface.
-(See <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span>Job Interface Specification Version 1.4</span></a>)</td>
+(See <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span class="std std-ref">Job Interface Specification Version 1.4</span></a>)</td>
 </tr>
 <tr class="row-even"><td>.value</td>
 <td>Various</td>
 <td>The actual value of the output, which can vary depending on the type. A file or
 files type will include a full JSON representation of a Product file object.
-(See <a class="reference internal" href="product.html#rest-product-details"><span>Product Details</span></a>)</td>
+(See <a class="reference internal" href="product.html#rest-product-details"><span class="std std-ref">Product Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>products</td>
 <td>JSON Object</td>
 <td>A list of files that the job produced as output.
-(See <a class="reference internal" href="scale_file.html#rest-scale-file-details"><span>Scale File Details</span></a>)
+(See <a class="reference internal" href="scale_file.html#rest-scale-file-details"><span class="std std-ref">Scale File Details</span></a>)
 Removed in v4, use the &#8220;outputs&#8221; attribute instead.</td>
 </tr>
 <tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
@@ -1132,18 +1135,18 @@ Duplicate it to filter by multiple values.</td>
 <tr class="row-odd"><td colspan="2">.id</td>
 <td colspan="2">Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API call.
-(See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">.job_type</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The job type that is associated with the job.
-(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span>Job Type Details</span></a>)</td>
+(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="2">.job_type_rev</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The job type revision that is associated with the job.
 This represents the definition at the time the job was scheduled.
-(See <a class="reference internal" href="job_type.html#rest-job-type-rev-details"><span>Job Type Revision Details</span></a>)</td>
+(See <a class="reference internal" href="job_type.html#rest-job-type-rev-details"><span class="std std-ref">Job Type Revision Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">.event</td>
 <td colspan="2">JSON Object</td>
@@ -1152,7 +1155,7 @@ This represents the definition at the time the job was scheduled.
 <tr class="row-odd"><td colspan="2">.error</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The error that is associated with the job.
-(See <a class="reference internal" href="error.html#rest-error-details"><span>Error Details</span></a>)</td>
+(See <a class="reference internal" href="error.html#rest-error-details"><span class="std std-ref">Error Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">.status</td>
 <td colspan="2">String</td>
@@ -1198,17 +1201,17 @@ Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
 <tr class="row-even"><td colspan="2">.root_superseded_job</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The first job in the current chain of superseded jobs.
-(See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="2">.superseded_job</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The previous job in the chain that was superseded by this job.
-(See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">.superseded_by_job</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The next job in the chain that superseded this job.
-(See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="2">.delete_superseded</td>
 <td colspan="2">Boolean</td>
@@ -1245,7 +1248,7 @@ Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
 <tr class="row-odd"><td colspan="2">.input_files</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">A list of files that the job used as input.
-(See <a class="reference internal" href="scale_file.html#rest-scale-file-details"><span>Scale File Details</span></a>)</td>
+(See <a class="reference internal" href="scale_file.html#rest-scale-file-details"><span class="std std-ref">Scale File Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">68</span><span class="p">,</span>
@@ -1454,12 +1457,12 @@ Duplicate it to filter by multiple values.</td>
 <tr class="row-even"><td colspan="2">.id</td>
 <td colspan="2">Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API call.
-(See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="2">.job_type</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The job type that is associated with the count.
-(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span>Job Type Details</span></a>)</td>
+(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">.event</td>
 <td colspan="2">JSON Object</td>
@@ -1468,7 +1471,7 @@ Duplicate it to filter by multiple values.</td>
 <tr class="row-odd"><td colspan="2">.error</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The error that is associated with the count.
-(See <a class="reference internal" href="error.html#rest-error-details"><span>Error Details</span></a>)</td>
+(See <a class="reference internal" href="error.html#rest-error-details"><span class="std std-ref">Error Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">.status</td>
 <td colspan="2">String</td>
@@ -1514,17 +1517,17 @@ Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
 <tr class="row-even"><td colspan="2">.root_superseded_job</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The first job in the current chain of superseded jobs.
-(See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="2">.superseded_job</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The previous job in the chain that was superseded by this job.
-(See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">.superseded_by_job</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The next job in the chain that superseded this job.
-(See <a class="reference internal" href="#rest-job-details"><span>Job Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="2">.delete_superseded</td>
 <td colspan="2">Boolean</td>
@@ -1561,7 +1564,7 @@ Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
 <tr class="row-odd"><td colspan="2">.latest_job_exe</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The most recent execution of the job.
-(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span>Job Execution Details</span></a>)</td>
+(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span class="std std-ref">Job Execution Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">68</span><span class="p">,</span>
@@ -1708,7 +1711,7 @@ Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../_static/jquery.js"></script>

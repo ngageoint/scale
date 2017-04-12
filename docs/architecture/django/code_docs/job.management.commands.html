@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="job.management package" href="job.management.html"/>
         <link rel="next" title="job.migrations package" href="job.migrations.html"/>
@@ -206,7 +209,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/job.management.commands.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/job.management.commands.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -234,7 +237,7 @@
 <p>Command that executes the Scale clock</p>
 <dl class="method">
 <dt id="job.management.commands.scale_clock.Command.handle">
-<code class="descname">handle</code><span class="sig-paren">(</span><em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#job.management.commands.scale_clock.Command.handle" title="Permalink to this definition">¶</a></dt>
+<code class="descname">handle</code><span class="sig-paren">(</span><em>*args</em>, <em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#job.management.commands.scale_clock.Command.handle" title="Permalink to this definition">¶</a></dt>
 <dd><p>See <code class="xref py py-meth docutils literal"><span class="pre">django.core.management.base.BaseCommand.handle()</span></code>.</p>
 <p>This method starts the Scale clock.</p>
 </dd></dl>
@@ -252,12 +255,17 @@
 <p>Defines the command that performs the post-job steps</p>
 <dl class="class">
 <dt id="job.management.commands.scale_post_steps.Command">
-<em class="property">class </em><code class="descclassname">job.management.commands.scale_post_steps.</code><code class="descname">Command</code><a class="headerlink" href="#job.management.commands.scale_post_steps.Command" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">job.management.commands.scale_post_steps.</code><code class="descname">Command</code><span class="sig-paren">(</span><em>stdout=None</em>, <em>stderr=None</em>, <em>no_color=False</em><span class="sig-paren">)</span><a class="headerlink" href="#job.management.commands.scale_post_steps.Command" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.management.base.BaseCommand</span></code></p>
 <p>Command that performs the post-job steps for a job execution</p>
 <dl class="method">
+<dt id="job.management.commands.scale_post_steps.Command.add_arguments">
+<code class="descname">add_arguments</code><span class="sig-paren">(</span><em>parser</em><span class="sig-paren">)</span><a class="headerlink" href="#job.management.commands.scale_post_steps.Command.add_arguments" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="job.management.commands.scale_post_steps.Command.handle">
-<code class="descname">handle</code><span class="sig-paren">(</span><em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#job.management.commands.scale_post_steps.Command.handle" title="Permalink to this definition">¶</a></dt>
+<code class="descname">handle</code><span class="sig-paren">(</span><em>*args</em>, <em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#job.management.commands.scale_post_steps.Command.handle" title="Permalink to this definition">¶</a></dt>
 <dd><p>See <code class="xref py py-meth docutils literal"><span class="pre">django.core.management.base.BaseCommand.handle()</span></code>.</p>
 <p>This method starts the command.</p>
 </dd></dl>
@@ -265,11 +273,6 @@
 <dl class="attribute">
 <dt id="job.management.commands.scale_post_steps.Command.help">
 <code class="descname">help</code><em class="property"> = u'Performs the post-job steps for a job execution'</em><a class="headerlink" href="#job.management.commands.scale_post_steps.Command.help" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="job.management.commands.scale_post_steps.Command.option_list">
-<code class="descname">option_list</code><em class="property"> = (&lt;Option at 0x2b8d122c4bd8: -v/--verbosity&gt;, &lt;Option at 0x2b8d122c4cf8: --settings&gt;, &lt;Option at 0x2b8d122c4d40: --pythonpath&gt;, &lt;Option at 0x2b8d122c4d88: --traceback&gt;, &lt;Option at 0x2b8d122c4e18: --no-color&gt;, &lt;Option at 0x2b8d2648bb48: -i/--job-exe-id&gt;)</em><a class="headerlink" href="#job.management.commands.scale_post_steps.Command.option_list" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -280,12 +283,17 @@
 <p>Defines the command that performs the pre-job steps</p>
 <dl class="class">
 <dt id="job.management.commands.scale_pre_steps.Command">
-<em class="property">class </em><code class="descclassname">job.management.commands.scale_pre_steps.</code><code class="descname">Command</code><a class="headerlink" href="#job.management.commands.scale_pre_steps.Command" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">job.management.commands.scale_pre_steps.</code><code class="descname">Command</code><span class="sig-paren">(</span><em>stdout=None</em>, <em>stderr=None</em>, <em>no_color=False</em><span class="sig-paren">)</span><a class="headerlink" href="#job.management.commands.scale_pre_steps.Command" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.management.base.BaseCommand</span></code></p>
 <p>Command that performs the pre-job steps for a job execution</p>
 <dl class="method">
+<dt id="job.management.commands.scale_pre_steps.Command.add_arguments">
+<code class="descname">add_arguments</code><span class="sig-paren">(</span><em>parser</em><span class="sig-paren">)</span><a class="headerlink" href="#job.management.commands.scale_pre_steps.Command.add_arguments" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="job.management.commands.scale_pre_steps.Command.handle">
-<code class="descname">handle</code><span class="sig-paren">(</span><em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#job.management.commands.scale_pre_steps.Command.handle" title="Permalink to this definition">¶</a></dt>
+<code class="descname">handle</code><span class="sig-paren">(</span><em>*args</em>, <em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#job.management.commands.scale_pre_steps.Command.handle" title="Permalink to this definition">¶</a></dt>
 <dd><p>See <code class="xref py py-meth docutils literal"><span class="pre">django.core.management.base.BaseCommand.handle()</span></code>.</p>
 <p>This method starts the command.</p>
 </dd></dl>
@@ -293,11 +301,6 @@
 <dl class="attribute">
 <dt id="job.management.commands.scale_pre_steps.Command.help">
 <code class="descname">help</code><em class="property"> = u'Performs the pre-job steps for a job execution'</em><a class="headerlink" href="#job.management.commands.scale_pre_steps.Command.help" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="job.management.commands.scale_pre_steps.Command.option_list">
-<code class="descname">option_list</code><em class="property"> = (&lt;Option at 0x2b8d122c4bd8: -v/--verbosity&gt;, &lt;Option at 0x2b8d122c4cf8: --settings&gt;, &lt;Option at 0x2b8d122c4d40: --pythonpath&gt;, &lt;Option at 0x2b8d122c4d88: --traceback&gt;, &lt;Option at 0x2b8d122c4e18: --no-color&gt;, &lt;Option at 0x2b8d264c0a70: -i/--job-exe-id&gt;)</em><a class="headerlink" href="#job.management.commands.scale_pre_steps.Command.option_list" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -356,7 +359,7 @@
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

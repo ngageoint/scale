@@ -1,0 +1,22 @@
+storage\.test\.configuration package
+====================================
+
+Submodules
+----------
+
+storage\.test\.configuration\.test\_workspace\_configuration module
+-------------------------------------------------------------------
+
+.. automodule:: storage.test.configuration.test_workspace_configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: storage.test.configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:

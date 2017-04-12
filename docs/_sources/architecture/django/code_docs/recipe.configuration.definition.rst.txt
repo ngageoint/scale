@@ -1,0 +1,30 @@
+recipe\.configuration\.definition package
+=========================================
+
+Submodules
+----------
+
+recipe\.configuration\.definition\.exceptions module
+----------------------------------------------------
+
+.. automodule:: recipe.configuration.definition.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+recipe\.configuration\.definition\.recipe\_definition module
+------------------------------------------------------------
+
+.. automodule:: recipe.configuration.definition.recipe_definition
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: recipe.configuration.definition
+    :members:
+    :undoc-members:
+    :show-inheritance:

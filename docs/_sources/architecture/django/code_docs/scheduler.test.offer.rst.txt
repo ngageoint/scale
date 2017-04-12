@@ -1,0 +1,30 @@
+scheduler\.test\.offer package
+==============================
+
+Submodules
+----------
+
+scheduler\.test\.offer\.test\_manager module
+--------------------------------------------
+
+.. automodule:: scheduler.test.offer.test_manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+scheduler\.test\.offer\.test\_node module
+-----------------------------------------
+
+.. automodule:: scheduler.test.offer.test_node
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: scheduler.test.offer
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,0 +1,206 @@
+job\.migrations package
+=======================
+
+Submodules
+----------
+
+job\.migrations\.0001\_initial module
+-------------------------------------
+
+.. automodule:: job.migrations.0001_initial
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.migrations\.0002\_jobexecution\_job\_metrics module
+--------------------------------------------------------
+
+.. automodule:: job.migrations.0002_jobexecution_job_metrics
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.migrations\.0003\_auto\_20151016\_0849 module
+--------------------------------------------------
+
+.. automodule:: job.migrations.0003_auto_20151016_0849
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.migrations\.0004\_auto\_20151020\_1059 module
+--------------------------------------------------
+
+.. automodule:: job.migrations.0004_auto_20151020_1059
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.migrations\.0005\_auto\_20151030\_1402 module
+--------------------------------------------------
+
+.. automodule:: job.migrations.0005_auto_20151030_1402
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.migrations\.0006\_auto\_20151106\_1608 module
+--------------------------------------------------
+
+.. automodule:: job.migrations.0006_auto_20151106_1608
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.migrations\.0007\_job\_job\_type\_rev module
+-------------------------------------------------
+
+.. automodule:: job.migrations.0007_job_job_type_rev
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.migrations\.0008\_jobtype\_trigger\_rule module
+----------------------------------------------------
+
+.. automodule:: job.migrations.0008_jobtype_trigger_rule
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.migrations\.0009\_jobtype\_revision\_num module
+----------------------------------------------------
+
+.. automodule:: job.migrations.0009_jobtype_revision_num
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.migrations\.0010\_auto\_20151208\_1503 module
+--------------------------------------------------
+
+.. automodule:: job.migrations.0010_auto_20151208_1503
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.migrations\.0011\_jobtype\_max\_scheduled module
+-----------------------------------------------------
+
+.. automodule:: job.migrations.0011_jobtype_max_scheduled
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.migrations\.0012\_auto\_20160310\_1318 module
+--------------------------------------------------
+
+.. automodule:: job.migrations.0012_auto_20160310_1318
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.migrations\.0013\_auto\_20160316\_1805 module
+--------------------------------------------------
+
+.. automodule:: job.migrations.0013_auto_20160316_1805
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.migrations\.0014\_auto\_20160317\_1208 module
+--------------------------------------------------
+
+.. automodule:: job.migrations.0014_auto_20160317_1208
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.migrations\.0015\_auto\_20160420\_1345 module
+--------------------------------------------------
+
+.. automodule:: job.migrations.0015_auto_20160420_1345
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.migrations\.0016\_auto\_20160421\_1553 module
+--------------------------------------------------
+
+.. automodule:: job.migrations.0016_auto_20160421_1553
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.migrations\.0017\_auto\_20160426\_1556 module
+--------------------------------------------------
+
+.. automodule:: job.migrations.0017_auto_20160426_1556
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.migrations\.0018\_auto\_20160804\_1402 module
+--------------------------------------------------
+
+.. automodule:: job.migrations.0018_auto_20160804_1402
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.migrations\.0019\_taskupdate module
+----------------------------------------
+
+.. automodule:: job.migrations.0019_taskupdate
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.migrations\.0020\_auto\_20161110\_1517 module
+--------------------------------------------------
+
+.. automodule:: job.migrations.0020_auto_20161110_1517
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.migrations\.0021\_auto\_20161115\_1524 module
+--------------------------------------------------
+
+.. automodule:: job.migrations.0021_auto_20161115_1524
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.migrations\.0022\_jobtype\_configuration module
+----------------------------------------------------
+
+.. automodule:: job.migrations.0022_jobtype_configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.migrations\.0023\_jobtype\_shared\_mem\_required module
+------------------------------------------------------------
+
+.. automodule:: job.migrations.0023_jobtype_shared_mem_required
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.migrations\.0024\_auto\_20170412\_1225 module
+--------------------------------------------------
+
+.. automodule:: job.migrations.0024_auto_20170412_1225
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: job.migrations
+    :members:
+    :undoc-members:
+    :show-inheritance:

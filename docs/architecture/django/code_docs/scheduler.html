@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="Django/Code Base" href="../index.html"/>
         <link rel="next" title="scheduler.cleanup package" href="scheduler.cleanup.html"/>
@@ -119,7 +122,7 @@
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">scheduler package</a><ul>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">scheduler package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-scheduler.admin">scheduler.admin module</a></li>
@@ -202,7 +205,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/scheduler.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/scheduler.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -440,24 +443,59 @@ cluster-wide state related to scheduling in mesos.</p>
 
 <dl class="exception">
 <dt id="scheduler.models.Scheduler.MultipleObjectsReturned">
-<em class="property">exception </em><code class="descclassname">Scheduler.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#scheduler.models.Scheduler.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#scheduler.models.Scheduler.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="scheduler.models.Scheduler.QUEUE_MODES">
-<code class="descclassname">Scheduler.</code><code class="descname">QUEUE_MODES</code><em class="property"> = ((u'FIFO', u'FIFO'), (u'LIFO', u'LIFO'))</em><a class="headerlink" href="#scheduler.models.Scheduler.QUEUE_MODES" title="Permalink to this definition">¶</a></dt>
+<code class="descname">QUEUE_MODES</code><em class="property"> = ((u'FIFO', u'FIFO'), (u'LIFO', u'LIFO'))</em><a class="headerlink" href="#scheduler.models.Scheduler.QUEUE_MODES" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="scheduler.models.Scheduler.get_queue_mode_display">
-<code class="descclassname">Scheduler.</code><code class="descname">get_queue_mode_display</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.models.Scheduler.get_queue_mode_display" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_queue_mode_display</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.models.Scheduler.get_queue_mode_display" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="scheduler.models.Scheduler.id">
+<code class="descname">id</code><a class="headerlink" href="#scheduler.models.Scheduler.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.models.Scheduler.is_paused">
+<code class="descname">is_paused</code><a class="headerlink" href="#scheduler.models.Scheduler.is_paused" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.models.Scheduler.master_hostname">
+<code class="descname">master_hostname</code><a class="headerlink" href="#scheduler.models.Scheduler.master_hostname" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.models.Scheduler.master_port">
+<code class="descname">master_port</code><a class="headerlink" href="#scheduler.models.Scheduler.master_port" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="scheduler.models.Scheduler.objects">
-<code class="descclassname">Scheduler.</code><code class="descname">objects</code><em class="property"> = &lt;scheduler.models.SchedulerManager object&gt;</em><a class="headerlink" href="#scheduler.models.Scheduler.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descname">objects</code><em class="property"> = &lt;scheduler.models.SchedulerManager object&gt;</em><a class="headerlink" href="#scheduler.models.Scheduler.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.models.Scheduler.queue_mode">
+<code class="descname">queue_mode</code><a class="headerlink" href="#scheduler.models.Scheduler.queue_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -768,7 +806,7 @@ fails during that time.</p>
 
 <dl class="attribute">
 <dt id="scheduler.views.SchedulerView.queryset">
-<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#scheduler.views.SchedulerView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#scheduler.views.SchedulerView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -888,7 +926,7 @@ fails during that time.</p>
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

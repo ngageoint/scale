@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../index.html"/>
         <link rel="up" title="REST API" href="index.html"/>
         <link rel="next" title="Scheduler Services" href="scheduler.html"/>
@@ -115,7 +118,7 @@
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">Recipe Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe_type.html">Recipe Types Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scale_file.html">Scale File Services</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Scan Services</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Scan Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">Scheduler Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source_file.html">Source File Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="strike.html">Strike Services</a></li>
@@ -179,7 +182,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/rest/scan.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/rest/scan.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -280,7 +283,7 @@ Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 <tr class="row-odd"><td>.id</td>
 <td>Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API.
-(See <a class="reference internal" href="#rest-scan-details"><span>Scan Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-scan-details"><span class="std std-ref">Scan Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>.name</td>
 <td>String</td>
@@ -301,12 +304,12 @@ Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 <tr class="row-even"><td>.job</td>
 <td>JSON Object</td>
 <td colspan="2">The job that is associated with the Scan process.
-(See <a class="reference internal" href="job.html#rest-job-details"><span>Job Details</span></a>)</td>
+(See <a class="reference internal" href="job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.dry_run_job</td>
 <td>JSON Object</td>
 <td colspan="2">The dry run job that is associated with the Scan process.
-(See <a class="reference internal" href="job.html#rest-job-details"><span>Job Details</span></a>)</td>
+(See <a class="reference internal" href="job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>.created</td>
 <td>ISO-8601 Datetime</td>
@@ -432,7 +435,7 @@ Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 <td>JSON Object</td>
 <td>Required</td>
 <td>JSON defining the Scan configuration.
-(See <a class="reference internal" href="../architecture/scan.html#architecture-scan-spec"><span>Scan Configuration Specification Version 1.0</span></a>)</td>
+(See <a class="reference internal" href="../architecture/scan.html#architecture-scan-spec"><span class="std std-ref">Scan Configuration Specification Version 1.0</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-scan-process&quot;</span><span class="p">,</span>
@@ -466,10 +469,10 @@ Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 </tr>
 <tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-even"><td>&nbsp;</td>
+<tr class="row-even"><td>&#160;</td>
 <td>JSON Object</td>
 <td colspan="2">All fields are the same as the Scan process details model.
-(See <a class="reference internal" href="#rest-scan-details"><span>Scan Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-scan-details"><span class="std std-ref">Scan Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -527,7 +530,7 @@ Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 <tr class="row-even"><td>id</td>
 <td>Integer</td>
 <td>The unique identifier of the model. Can be passed to the details API.
-(See <a class="reference internal" href="#rest-scan-details"><span>Scan Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-scan-details"><span class="std std-ref">Scan Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>name</td>
 <td>String</td>
@@ -548,12 +551,12 @@ Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 <tr class="row-odd"><td>job</td>
 <td>JSON Object</td>
 <td>The job that is associated with the Scan process.
-(See <a class="reference internal" href="job.html#rest-job-details"><span>Job Details</span></a>)</td>
+(See <a class="reference internal" href="job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>dry_run_job</td>
 <td>JSON Object</td>
 <td>The dry run job that is associated with the Scan process.
-(See <a class="reference internal" href="job.html#rest-job-details"><span>Job Details</span></a>)</td>
+(See <a class="reference internal" href="job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>created</td>
 <td>ISO-8601 Datetime</td>
@@ -566,7 +569,7 @@ Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 <tr class="row-odd"><td>configuration</td>
 <td>JSON Object</td>
 <td>JSON defining the Scan configuration.
-(See <a class="reference internal" href="../architecture/scan.html#architecture-scan-spec"><span>Scan Configuration Specification Version 1.0</span></a>)</td>
+(See <a class="reference internal" href="../architecture/scan.html#architecture-scan-spec"><span class="std std-ref">Scan Configuration Specification Version 1.0</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -673,7 +676,7 @@ Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 <td>JSON Object</td>
 <td colspan="2">Required</td>
 <td>JSON defining the Scan configuration.
-(See <a class="reference internal" href="../architecture/scan.html#architecture-scan-spec"><span>Scan Configuration Specification Version 1.0</span></a>)</td>
+(See <a class="reference internal" href="../architecture/scan.html#architecture-scan-spec"><span class="std std-ref">Scan Configuration Specification Version 1.0</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="5"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;configuration&quot;</span><span class="o">:</span> <span class="p">{</span>
@@ -765,7 +768,7 @@ triggering scan.</td>
 <td>JSON Object</td>
 <td>Optional</td>
 <td>JSON defining the Scan configuration.
-(See <a class="reference internal" href="../architecture/scan.html#architecture-scan-spec"><span>Scan Configuration Specification Version 1.0</span></a>)</td>
+(See <a class="reference internal" href="../architecture/scan.html#architecture-scan-spec"><span class="std std-ref">Scan Configuration Specification Version 1.0</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Scan Process&quot;</span><span class="p">,</span>
@@ -795,10 +798,10 @@ triggering scan.</td>
 </tr>
 <tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-even"><td>&nbsp;</td>
+<tr class="row-even"><td>&#160;</td>
 <td>JSON Object</td>
 <td colspan="2">All fields are the same as the Scan process details model.
-(See <a class="reference internal" href="#rest-scan-details"><span>Scan Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-scan-details"><span class="std std-ref">Scan Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -906,7 +909,7 @@ Defaults to false when unset.</td>
 <tr class="row-odd"><td>id</td>
 <td>Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API.
-(See <a class="reference internal" href="#rest-scan-details"><span>Scan Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-scan-details"><span class="std std-ref">Scan Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>name</td>
 <td>String</td>
@@ -927,12 +930,12 @@ Defaults to false when unset.</td>
 <tr class="row-even"><td>job</td>
 <td>JSON Object</td>
 <td colspan="2">The job that is associated with the Scan process.
-(See <a class="reference internal" href="job.html#rest-job-details"><span>Job Details</span></a>)</td>
+(See <a class="reference internal" href="job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>dry_run_job</td>
 <td>JSON Object</td>
 <td colspan="2">The dry run job that is associated with the Scan process.
-(See <a class="reference internal" href="job.html#rest-job-details"><span>Job Details</span></a>)</td>
+(See <a class="reference internal" href="job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>created</td>
 <td>ISO-8601 Datetime</td>
@@ -945,7 +948,7 @@ Defaults to false when unset.</td>
 <tr class="row-even"><td>configuration</td>
 <td>JSON Object</td>
 <td colspan="2">JSON defining the Scan configuration.
-(See <a class="reference internal" href="../architecture/scan.html#architecture-scan-spec"><span>Scan Configuration Specification Version 1.0</span></a>)</td>
+(See <a class="reference internal" href="../architecture/scan.html#architecture-scan-spec"><span class="std std-ref">Scan Configuration Specification Version 1.0</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -1076,7 +1079,7 @@ Defaults to false when unset.</td>
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../_static/jquery.js"></script>

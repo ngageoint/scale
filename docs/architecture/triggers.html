@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../index.html"/>
         <link rel="up" title="Architecture" href="index.html"/>
         <link rel="next" title="Workspaces" href="workspaces.html"/>
@@ -104,7 +107,7 @@
 <li class="toctree-l2"><a class="reference internal" href="port.html">Import/Export</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scan.html">Scan</a></li>
 <li class="toctree-l2"><a class="reference internal" href="strike.html">Strike</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Triggers</a><ul>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Triggers</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#ingest-triggers">Ingest Triggers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#ingest-trigger-configuration-specification-version-1-0">Ingest Trigger Configuration Specification Version 1.0</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#parse-triggers">Parse Triggers</a></li>
@@ -172,7 +175,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/architecture/triggers.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/architecture/triggers.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -279,7 +282,7 @@ store the products created by the triggered job/recipe.</div></blockquote>
 <div class="section" id="parse-triggers">
 <span id="architecture-triggers-parse"></span><h2>Parse Triggers<a class="headerlink" href="#parse-triggers" title="Permalink to this headline">¶</a></h2>
 <p>Parse triggers are triggers that can occur when a source file is parsed. This happens when a job completes with a
-<em>parse_results</em> section in its generated results manifest file, see <a class="reference internal" href="../algorithm_integration/results_manifest.html#algorithm-integration-results-manifest"><span>Results Manifest</span></a>. A
+<em>parse_results</em> section in its generated results manifest file, see <a class="reference internal" href="../algorithm_integration/results_manifest.html#algorithm-integration-results-manifest"><span class="std std-ref">Results Manifest</span></a>. A
 trigger event is generated for every source file parse and checked against all parse trigger rules.</p>
 <p><strong>Example parse trigger configuration:</strong></p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
@@ -473,7 +476,7 @@ though that is not a full hour later.</div></blockquote>
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../_static/jquery.js"></script>

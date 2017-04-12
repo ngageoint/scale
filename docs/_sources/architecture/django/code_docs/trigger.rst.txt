@@ -1,0 +1,55 @@
+trigger package
+===============
+
+Subpackages
+-----------
+
+.. toctree::
+
+    trigger.configuration
+    trigger.migrations
+    trigger.test
+
+Submodules
+----------
+
+trigger\.apps module
+--------------------
+
+.. automodule:: trigger.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+trigger\.handler module
+-----------------------
+
+.. automodule:: trigger.handler
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+trigger\.models module
+----------------------
+
+.. automodule:: trigger.models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+trigger\.serializers module
+---------------------------
+
+.. automodule:: trigger.serializers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: trigger
+    :members:
+    :undoc-members:
+    :show-inheritance:

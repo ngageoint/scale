@@ -1,0 +1,22 @@
+scheduler\.recon package
+========================
+
+Submodules
+----------
+
+scheduler\.recon\.manager module
+--------------------------------
+
+.. automodule:: scheduler.recon.manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: scheduler.recon
+    :members:
+    :undoc-members:
+    :show-inheritance:

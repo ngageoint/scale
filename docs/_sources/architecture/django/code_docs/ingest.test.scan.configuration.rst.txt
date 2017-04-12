@@ -1,0 +1,22 @@
+ingest\.test\.scan\.configuration package
+=========================================
+
+Submodules
+----------
+
+ingest\.test\.scan\.configuration\.test\_scan\_configuration module
+-------------------------------------------------------------------
+
+.. automodule:: ingest.test.scan.configuration.test_scan_configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: ingest.test.scan.configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:

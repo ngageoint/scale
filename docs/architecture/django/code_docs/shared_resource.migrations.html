@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="shared_resource package" href="shared_resource.html"/>
         <link rel="next" title="shared_resource.test package" href="shared_resource.test.html"/>
@@ -197,7 +200,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/shared_resource.migrations.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/shared_resource.migrations.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -228,7 +231,26 @@
 
 <dl class="attribute">
 <dt id="shared_resource.migrations.0001_initial.Migration.operations">
-<code class="descname">operations</code><em class="property"> = [&lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'name', &lt;django.db.models.fields.CharField&gt;), (u'title', &lt;django.db.models.fields.CharField&gt;), (u'description', &lt;django.db.models.fields.CharField&gt;), (u'limit', &lt;django.db.models.fields.FloatField&gt;), (u'json_config', &lt;djorm_pgjson.fields.JSONField&gt;), (u'is_global', &lt;django.db.models.fields.BooleanField&gt;), (u'nodes', &lt;django.db.models.fields.related.ManyToManyField&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={u'db_table': u'shared_resource'}, name=u'SharedResource'&gt;, &lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'usage', &lt;django.db.models.fields.FloatField&gt;), (u'job_type', &lt;django.db.models.fields.related.ForeignKey&gt;), (u'shared_resource', &lt;django.db.models.fields.related.ForeignKey&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={}, name=u'SharedResourceRequirement'&gt;]</em><a class="headerlink" href="#shared_resource.migrations.0001_initial.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<code class="descname">operations</code><em class="property"> = [&lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'name', &lt;django.db.models.fields.CharField&gt;), (u'title', &lt;django.db.models.fields.CharField&gt;), (u'description', &lt;django.db.models.fields.CharField&gt;), (u'limit', &lt;django.db.models.fields.FloatField&gt;), (u'json_config', &lt;util.deprecation.JSONStringField&gt;), (u'is_global', &lt;django.db.models.fields.BooleanField&gt;), (u'nodes', &lt;django.db.models.fields.related.ManyToManyField&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={u'db_table': u'shared_resource'}, name=u'SharedResource'&gt;, &lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'usage', &lt;django.db.models.fields.FloatField&gt;), (u'job_type', &lt;django.db.models.fields.related.ForeignKey&gt;), (u'shared_resource', &lt;django.db.models.fields.related.ForeignKey&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={}, name=u'SharedResourceRequirement'&gt;]</em><a class="headerlink" href="#shared_resource.migrations.0001_initial.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-shared_resource.migrations.0002_auto_20170412_1225">
+<span id="shared-resource-migrations-0002-auto-20170412-1225-module"></span><h2>shared_resource.migrations.0002_auto_20170412_1225 module<a class="headerlink" href="#module-shared_resource.migrations.0002_auto_20170412_1225" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="shared_resource.migrations.0002_auto_20170412_1225.Migration">
+<em class="property">class </em><code class="descclassname">shared_resource.migrations.0002_auto_20170412_1225.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#shared_resource.migrations.0002_auto_20170412_1225.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="shared_resource.migrations.0002_auto_20170412_1225.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'shared_resource', u'0001_initial')]</em><a class="headerlink" href="#shared_resource.migrations.0002_auto_20170412_1225.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="shared_resource.migrations.0002_auto_20170412_1225.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;AlterField  field=&lt;django.contrib.postgres.fields.jsonb.JSONField&gt;, name=u'json_config', model_name=u'sharedresource'&gt;]</em><a class="headerlink" href="#shared_resource.migrations.0002_auto_20170412_1225.Migration.operations" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -287,7 +309,7 @@
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

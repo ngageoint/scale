@@ -1,0 +1,62 @@
+storage\.brokers package
+========================
+
+Submodules
+----------
+
+storage\.brokers\.broker module
+-------------------------------
+
+.. automodule:: storage.brokers.broker
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+storage\.brokers\.exceptions module
+-----------------------------------
+
+.. automodule:: storage.brokers.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+storage\.brokers\.factory module
+--------------------------------
+
+.. automodule:: storage.brokers.factory
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+storage\.brokers\.host\_broker module
+-------------------------------------
+
+.. automodule:: storage.brokers.host_broker
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+storage\.brokers\.nfs\_broker module
+------------------------------------
+
+.. automodule:: storage.brokers.nfs_broker
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+storage\.brokers\.s3\_broker module
+-----------------------------------
+
+.. automodule:: storage.brokers.s3_broker
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: storage.brokers
+    :members:
+    :undoc-members:
+    :show-inheritance:

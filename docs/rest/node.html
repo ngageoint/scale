@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../index.html"/>
         <link rel="up" title="REST API" href="index.html"/>
         <link rel="next" title="Import/Export Services" href="port.html"/>
@@ -108,7 +111,7 @@
 <li class="toctree-l3"><a class="reference internal" href="job_execution.html">Job Execution Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job_type.html">Job Type Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">Metrics Services</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Node Services</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Node Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="port.html">Import/Export Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="product.html">Product Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">Queue Services</a></li>
@@ -179,7 +182,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/rest/node.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/rest/node.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -280,7 +283,7 @@ The default is False.</td>
 <tr class="row-odd"><td>.id</td>
 <td>Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API call.
-(See <a class="reference internal" href="#rest-node-details"><span>Node Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-node-details"><span class="std std-ref">Node Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>.hostname</td>
 <td>String</td>
@@ -387,7 +390,7 @@ Remaining tasks for a previously executing job will complete.</td>
 <tr class="row-even"><td>id</td>
 <td>Integer</td>
 <td>The unique identifier of the model. Can be passed to the details API call.
-(See <a class="reference internal" href="#rest-node-details"><span>Node Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-node-details"><span class="std std-ref">Node Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>hostname</td>
 <td>String</td>
@@ -497,7 +500,7 @@ database but mesos does not have a corresponding active slave.</td>
 <tr class="row-even"><td>.job_exes_running</td>
 <td>Array</td>
 <td>A list of job executions currently running on the node.
-(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span>Job Execution Details</span></a>)</td>
+(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span class="std std-ref">Job Execution Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
@@ -646,7 +649,7 @@ for execution. Remaining tasks for a previously executing job will complete.</td
 <tr class="row-odd"><td>id</td>
 <td>Integer</td>
 <td>The unique identifier of the model. Can be passed to the details API call.
-(See <a class="reference internal" href="#rest-node-details"><span>Node Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-node-details"><span class="std std-ref">Node Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>hostname</td>
 <td>String</td>
@@ -756,7 +759,7 @@ database but mesos does not have a corresponding active slave.</td>
 <tr class="row-odd"><td>.job_exes_running</td>
 <td>Array</td>
 <td>A list of job executions currently running on the node.
-(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span>Job Execution Details</span></a>)</td>
+(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span class="std std-ref">Job Execution Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
@@ -928,7 +931,7 @@ Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
 <tr class="row-odd"><td>.node</td>
 <td>JSON Object</td>
 <td colspan="2">The node that is associated with the statistics.
-(See <a class="reference internal" href="#rest-node-details"><span>Node Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-node-details"><span class="std std-ref">Node Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>.is_online</td>
 <td>Boolean</td>
@@ -957,7 +960,7 @@ Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
 <tr class="row-even"><td>.job_exes_running</td>
 <td>Array</td>
 <td colspan="2">A list of job executions currently running on the node.
-(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span>Job Execution Details</span></a>)</td>
+(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span class="std std-ref">Job Execution Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
 <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
@@ -1133,7 +1136,7 @@ Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../_static/jquery.js"></script>

@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="Django/Code Base" href="../index.html"/>
         <link rel="next" title="source.configuration package" href="source.configuration.html"/>
@@ -121,7 +124,7 @@
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">source package</a><ul>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">source package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-source.apps">source.apps module</a></li>
@@ -199,7 +202,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/source.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/source.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -337,18 +340,18 @@ functionality specific to source files.</p>
 
 <dl class="exception">
 <dt id="source.models.SourceFile.MultipleObjectsReturned">
-<em class="property">exception </em><code class="descclassname">SourceFile.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#source.models.SourceFile.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#source.models.SourceFile.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">storage.models.MultipleObjectsReturned</span></code></p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="source.models.SourceFile.VALID_TIME_FIELDS">
-<code class="descclassname">SourceFile.</code><code class="descname">VALID_TIME_FIELDS</code><em class="property"> = [u'data', u'last_modified']</em><a class="headerlink" href="#source.models.SourceFile.VALID_TIME_FIELDS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">VALID_TIME_FIELDS</code><em class="property"> = [u'data', u'last_modified']</em><a class="headerlink" href="#source.models.SourceFile.VALID_TIME_FIELDS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="classmethod">
 <dt id="source.models.SourceFile.create">
-<em class="property">classmethod </em><code class="descclassname">SourceFile.</code><code class="descname">create</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.models.SourceFile.create" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">create</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.models.SourceFile.create" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new source file</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -364,14 +367,14 @@ functionality specific to source files.</p>
 
 <dl class="attribute">
 <dt id="source.models.SourceFile.objects">
-<code class="descclassname">SourceFile.</code><code class="descname">objects</code><em class="property"> = &lt;source.models.SourceFileManager object&gt;</em><a class="headerlink" href="#source.models.SourceFile.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descname">objects</code><em class="property"> = &lt;source.models.SourceFileManager object&gt;</em><a class="headerlink" href="#source.models.SourceFile.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="source.models.SourceFileManager">
-<em class="property">class </em><code class="descclassname">source.models.</code><code class="descname">SourceFileManager</code><a class="headerlink" href="#source.models.SourceFileManager" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">source.models.</code><code class="descname">SourceFileManager</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#source.models.SourceFileManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.contrib.gis.db.models.manager.GeoManager</span></code></p>
 <p>Provides additional methods for handling source files</p>
 <dl class="method">
@@ -451,11 +454,11 @@ and source_file.workspace.json_config fields.</p>
 <li><strong>source_file_id</strong> (<em>int</em>) &#8211; The source file ID.</li>
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query ingests updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query ingests updated before this amount of time.</li>
-<li><strong>statuses</strong> (<em>[string]</em>) &#8211; Query ingests with the a specific process status.</li>
-<li><strong>scan_ids</strong> (<em>[string]</em>) &#8211; Query ingests created by a specific scan processor.</li>
-<li><strong>strike_ids</strong> (<em>[string]</em>) &#8211; Query ingests created by a specific strike processor.</li>
+<li><strong>statuses</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query ingests with the a specific process status.</li>
+<li><strong>scan_ids</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query ingests created by a specific scan processor.</li>
+<li><strong>strike_ids</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query ingests created by a specific strike processor.</li>
 <li><strong>file_name</strong> (<em>string</em>) &#8211; Query ingests with a specific file name.</li>
-<li><strong>order</strong> (<em>[string]</em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>order</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
 </tr>
@@ -483,14 +486,14 @@ job_type_rev.interface fields.</p>
 <li><strong>source_file_id</strong> (<em>int</em>) &#8211; The source file ID.</li>
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated before this amount of time.</li>
-<li><strong>statuses</strong> (<em>[string]</em>) &#8211; Query jobs with the a specific execution status.</li>
-<li><strong>job_ids</strong> (<em>[int]</em>) &#8211; Query jobs associated with the identifier.</li>
-<li><strong>job_type_ids</strong> (<em>[int]</em>) &#8211; Query jobs of the type associated with the identifier.</li>
-<li><strong>job_type_names</strong> (<em>[string]</em>) &#8211; Query jobs of the type associated with the name.</li>
-<li><strong>job_type_categories</strong> (<em>[string]</em>) &#8211; Query jobs of the type associated with the category.</li>
-<li><strong>error_categories</strong> (<em>[string]</em>) &#8211; Query jobs that failed due to errors associated with the category.</li>
+<li><strong>statuses</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query jobs with the a specific execution status.</li>
+<li><strong>job_ids</strong> (<em></em><em>[</em><em>int</em><em>]</em><em></em>) &#8211; Query jobs associated with the identifier.</li>
+<li><strong>job_type_ids</strong> (<em></em><em>[</em><em>int</em><em>]</em><em></em>) &#8211; Query jobs of the type associated with the identifier.</li>
+<li><strong>job_type_names</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query jobs of the type associated with the name.</li>
+<li><strong>job_type_categories</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query jobs of the type associated with the category.</li>
+<li><strong>error_categories</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query jobs that failed due to errors associated with the category.</li>
 <li><strong>include_superseded</strong> (<em>bool</em>) &#8211; Whether to include jobs that are superseded.</li>
-<li><strong>order</strong> (<em>[string]</em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>order</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
 </tr>
@@ -518,15 +521,15 @@ countries are set to be pre-fetched as part of the query.</p>
 <li><strong>source_file_id</strong> (<em>int</em>) &#8211; The source file ID.</li>
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query product files updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query product files updated before this amount of time.</li>
-<li><strong>batch_ids</strong> (<em>list[int]</em>) &#8211; Query product files produced by batches with the given identifiers.</li>
-<li><strong>job_type_ids</strong> (<em>list[int]</em>) &#8211; Query product files produced by jobs with the given type identifiers.</li>
-<li><strong>job_type_names</strong> (<em>list[str]</em>) &#8211; Query product files produced by jobs with the given type names.</li>
-<li><strong>job_type_categories</strong> (<em>list[str]</em>) &#8211; Query product files produced by jobs with the given type categories.</li>
+<li><strong>batch_ids</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em><em></em>) &#8211; Query product files produced by batches with the given identifiers.</li>
+<li><strong>job_type_ids</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em><em></em>) &#8211; Query product files produced by jobs with the given type identifiers.</li>
+<li><strong>job_type_names</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em><em></em>) &#8211; Query product files produced by jobs with the given type names.</li>
+<li><strong>job_type_categories</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em><em></em>) &#8211; Query product files produced by jobs with the given type categories.</li>
 <li><strong>is_operational</strong> (<em>bool</em>) &#8211; Query product files flagged as operational or R&amp;D only.</li>
 <li><strong>is_published</strong> (<em>bool</em>) &#8211; Query product files flagged as currently exposed for publication.</li>
 <li><strong>is_superseded</strong> (<em>bool</em>) &#8211; Query product files that have/have not been superseded.</li>
 <li><strong>file_name</strong> (<em>str</em>) &#8211; Query product files with the given file name.</li>
-<li><strong>order</strong> (<em>list[str]</em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>order</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em><em></em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
 </tr>
@@ -554,7 +557,7 @@ countries are set to be pre-fetched as part of the query.</p>
 <li><strong>time_field</strong> (<em>string</em>) &#8211; The time field to use for filtering.</li>
 <li><strong>is_parsed</strong> (<em>bool</em>) &#8211; Query source files flagged as successfully parsed.</li>
 <li><strong>file_name</strong> (<em>str</em>) &#8211; Query source files with the given file name.</li>
-<li><strong>order</strong> (<em>list[str]</em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>order</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em><em></em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
 </tr>
@@ -582,7 +585,7 @@ transaction.</p>
 <li><strong>geo_json</strong> (<em>dict</em>) &#8211; The associated geojson data, possibly None</li>
 <li><strong>data_started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code> or None) &#8211; The start time of the data contained in the source file, possibly None</li>
 <li><strong>data_ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code> or None) &#8211; The end time of the data contained in the source file, possibly None</li>
-<li><strong>data_types</strong> (<em>[string]</em>) &#8211; List of strings containing the data types tags for this source file.</li>
+<li><strong>data_types</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; List of strings containing the data types tags for this source file.</li>
 <li><strong>new_workspace_path</strong> (<em>str</em>) &#8211; New workspace path to move the source file to now that parse data is available. If
 None, the source file should not be moved.</li>
 </ul>
@@ -679,7 +682,7 @@ None, the source file should not be moved.</li>
 
 <dl class="class">
 <dt id="source.serializers_extra.SourceFileDetailsSerializerV4.ProductFileSerializer">
-<em class="property">class </em><code class="descclassname">SourceFileDetailsSerializerV4.</code><code class="descname">ProductFileSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#source.serializers_extra.SourceFileDetailsSerializerV4.ProductFileSerializer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">ProductFileSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#source.serializers_extra.SourceFileDetailsSerializerV4.ProductFileSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="product.html#product.serializers.ProductFileBaseSerializer" title="product.serializers.ProductFileBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">product.serializers.ProductFileBaseSerializer</span></code></a></p>
 <p>Converts product file model fields to REST output</p>
 <dl class="class">
@@ -693,7 +696,7 @@ None, the source file should not be moved.</li>
 
 <dl class="class">
 <dt id="source.serializers_extra.SourceFileDetailsSerializerV4.SourceFileDetailsProductFileSerializer">
-<em class="property">class </em><code class="descclassname">SourceFileDetailsSerializerV4.</code><code class="descname">SourceFileDetailsProductFileSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#source.serializers_extra.SourceFileDetailsSerializerV4.SourceFileDetailsProductFileSerializer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">SourceFileDetailsProductFileSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#source.serializers_extra.SourceFileDetailsSerializerV4.SourceFileDetailsProductFileSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="product.html#product.serializers.ProductFileSerializer" title="product.serializers.ProductFileSerializer"><code class="xref py py-class docutils literal"><span class="pre">product.serializers.ProductFileSerializer</span></code></a></p>
 </dd></dl>
 
@@ -720,7 +723,7 @@ None, the source file should not be moved.</li>
 
 <dl class="attribute">
 <dt id="source.views.SourceDetailsView.queryset">
-<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#source.views.SourceDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#source.views.SourceDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -806,7 +809,7 @@ None, the source file should not be moved.</li>
 
 <dl class="attribute">
 <dt id="source.views.SourceIngestsView.queryset">
-<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#source.views.SourceIngestsView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#source.views.SourceIngestsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -848,7 +851,7 @@ None, the source file should not be moved.</li>
 
 <dl class="attribute">
 <dt id="source.views.SourceJobsView.queryset">
-<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#source.views.SourceJobsView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#source.views.SourceJobsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -890,7 +893,7 @@ None, the source file should not be moved.</li>
 
 <dl class="attribute">
 <dt id="source.views.SourceProductsView.queryset">
-<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#source.views.SourceProductsView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#source.views.SourceProductsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -926,7 +929,7 @@ None, the source file should not be moved.</li>
 
 <dl class="attribute">
 <dt id="source.views.SourceUpdatesView.queryset">
-<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#source.views.SourceUpdatesView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#source.views.SourceUpdatesView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -962,7 +965,7 @@ None, the source file should not be moved.</li>
 
 <dl class="attribute">
 <dt id="source.views.SourcesView.queryset">
-<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#source.views.SourcesView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#source.views.SourcesView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1027,7 +1030,7 @@ None, the source file should not be moved.</li>
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

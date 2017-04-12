@@ -1,0 +1,86 @@
+queue\.migrations package
+=========================
+
+Submodules
+----------
+
+queue\.migrations\.0001\_initial module
+---------------------------------------
+
+.. automodule:: queue.migrations.0001_initial
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+queue\.migrations\.0002\_jobload module
+---------------------------------------
+
+.. automodule:: queue.migrations.0002_jobload
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+queue\.migrations\.0003\_auto\_20151023\_1104 module
+----------------------------------------------------
+
+.. automodule:: queue.migrations.0003_auto_20151023_1104
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+queue\.migrations\.0004\_remove\_queue\_is\_job\_type\_paused module
+--------------------------------------------------------------------
+
+.. automodule:: queue.migrations.0004_remove_queue_is_job_type_paused
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+queue\.migrations\.0005\_queue\_node\_required module
+-----------------------------------------------------
+
+.. automodule:: queue.migrations.0005_queue_node_required
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+queue\.migrations\.0006\_auto\_20160316\_1625 module
+----------------------------------------------------
+
+.. automodule:: queue.migrations.0006_auto_20160316_1625
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+queue\.migrations\.0007\_auto\_20160421\_1643 module
+----------------------------------------------------
+
+.. automodule:: queue.migrations.0007_auto_20160421_1643
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+queue\.migrations\.0008\_auto\_20160421\_1648 module
+----------------------------------------------------
+
+.. automodule:: queue.migrations.0008_auto_20160421_1648
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+queue\.migrations\.0009\_auto\_20170412\_1225 module
+----------------------------------------------------
+
+.. automodule:: queue.migrations.0009_auto_20170412_1225
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: queue.migrations
+    :members:
+    :undoc-members:
+    :show-inheritance:

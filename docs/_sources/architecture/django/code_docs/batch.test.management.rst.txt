@@ -1,0 +1,17 @@
+batch\.test\.management package
+===============================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    batch.test.management.commands
+
+Module contents
+---------------
+
+.. automodule:: batch.test.management
+    :members:
+    :undoc-members:
+    :show-inheritance:

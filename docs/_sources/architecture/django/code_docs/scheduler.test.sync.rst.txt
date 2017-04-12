@@ -1,0 +1,38 @@
+scheduler\.test\.sync package
+=============================
+
+Submodules
+----------
+
+scheduler\.test\.sync\.test\_job\_type\_manager module
+------------------------------------------------------
+
+.. automodule:: scheduler.test.sync.test_job_type_manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+scheduler\.test\.sync\.test\_scheduler\_manager module
+------------------------------------------------------
+
+.. automodule:: scheduler.test.sync.test_scheduler_manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+scheduler\.test\.sync\.test\_workspace\_manager module
+------------------------------------------------------
+
+.. automodule:: scheduler.test.sync.test_workspace_manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: scheduler.test.sync
+    :members:
+    :undoc-members:
+    :show-inheritance:

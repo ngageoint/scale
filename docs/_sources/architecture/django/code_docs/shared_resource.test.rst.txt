@@ -1,0 +1,30 @@
+shared\_resource\.test package
+==============================
+
+Submodules
+----------
+
+shared\_resource\.test\.test\_models module
+-------------------------------------------
+
+.. automodule:: shared_resource.test.test_models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+shared\_resource\.test\.utils module
+------------------------------------
+
+.. automodule:: shared_resource.test.utils
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: shared_resource.test
+    :members:
+    :undoc-members:
+    :show-inheritance:

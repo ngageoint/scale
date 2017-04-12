@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="Django/Code Base" href="../index.html"/>
         <link rel="next" title="node.migrations package" href="node.migrations.html"/>
@@ -114,7 +117,7 @@
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">node package</a><ul>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">node package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-node.admin">node.admin module</a></li>
@@ -200,7 +203,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/node.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/node.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -321,49 +324,164 @@
 
 <dl class="exception">
 <dt id="node.models.Node.MultipleObjectsReturned">
-<em class="property">exception </em><code class="descclassname">Node.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#node.models.Node.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#node.models.Node.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="node.models.Node.archived">
+<code class="descname">archived</code><a class="headerlink" href="#node.models.Node.archived" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="node.models.Node.created">
+<code class="descname">created</code><a class="headerlink" href="#node.models.Node.created" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="node.models.Node.get_next_by_created">
-<code class="descclassname">Node.</code><code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.Node.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.Node.get_next_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="node.models.Node.get_next_by_last_modified">
-<code class="descclassname">Node.</code><code class="descname">get_next_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.Node.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.Node.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="node.models.Node.get_previous_by_created">
-<code class="descclassname">Node.</code><code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.Node.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.Node.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="node.models.Node.get_previous_by_last_modified">
-<code class="descclassname">Node.</code><code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.Node.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.Node.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="node.models.Node.hostname">
+<code class="descname">hostname</code><a class="headerlink" href="#node.models.Node.hostname" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="node.models.Node.id">
+<code class="descname">id</code><a class="headerlink" href="#node.models.Node.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="node.models.Node.is_active">
+<code class="descname">is_active</code><a class="headerlink" href="#node.models.Node.is_active" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="node.models.Node.is_paused">
+<code class="descname">is_paused</code><a class="headerlink" href="#node.models.Node.is_paused" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="node.models.Node.is_paused_errors">
+<code class="descname">is_paused_errors</code><a class="headerlink" href="#node.models.Node.is_paused_errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="node.models.Node.jobexecution_set">
-<code class="descclassname">Node.</code><code class="descname">jobexecution_set</code><a class="headerlink" href="#node.models.Node.jobexecution_set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">jobexecution_set</code><a class="headerlink" href="#node.models.Node.jobexecution_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="node.models.Node.last_modified">
+<code class="descname">last_modified</code><a class="headerlink" href="#node.models.Node.last_modified" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="node.models.Node.last_offer">
+<code class="descname">last_offer</code><a class="headerlink" href="#node.models.Node.last_offer" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="node.models.Node.objects">
-<code class="descclassname">Node.</code><code class="descname">objects</code><em class="property"> = &lt;node.models.NodeManager object&gt;</em><a class="headerlink" href="#node.models.Node.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descname">objects</code><em class="property"> = &lt;node.models.NodeManager object&gt;</em><a class="headerlink" href="#node.models.Node.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="node.models.Node.pause_reason">
+<code class="descname">pause_reason</code><a class="headerlink" href="#node.models.Node.pause_reason" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="node.models.Node.port">
+<code class="descname">port</code><a class="headerlink" href="#node.models.Node.port" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="node.models.Node.queue_set">
-<code class="descclassname">Node.</code><code class="descname">queue_set</code><a class="headerlink" href="#node.models.Node.queue_set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">queue_set</code><a class="headerlink" href="#node.models.Node.queue_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="node.models.Node.sharedresource_set">
-<code class="descclassname">Node.</code><code class="descname">sharedresource_set</code><a class="headerlink" href="#node.models.Node.sharedresource_set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">sharedresource_set</code><a class="headerlink" href="#node.models.Node.sharedresource_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the forward and reverse sides of
+a many-to-many relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Pizza</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">toppings</span> <span class="o">=</span> <span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Topping</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;pizzas&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">pizza.toppings</span></code> and <code class="docutils literal"><span class="pre">topping.pizzas</span></code> are <code class="docutils literal"><span class="pre">ManyToManyDescriptor</span></code>
+instances.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="node.models.Node.slave_id">
+<code class="descname">slave_id</code><a class="headerlink" href="#node.models.Node.slave_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -402,7 +520,7 @@
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query nodes updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query nodes updated before this amount of time.</li>
-<li><strong>order</strong> (<em>list[str]</em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>order</strong> (<a class="reference internal" href="#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em><em></em>) &#8211; A list of fields to control the sort order.</li>
 <li><strong>include_inactive</strong> (<em>boolean</em>) &#8211; Should nodes marked as inactive be included?</li>
 </ul>
 </td>
@@ -588,7 +706,7 @@ populated for types of ERROR status values.</li>
 
 <dl class="class">
 <dt id="node.serializers_extra.NodeDetailsSerializer.JobExecutionSerializer.NodeBaseSerializer">
-<em class="property">class </em><code class="descclassname">NodeDetailsSerializer.JobExecutionSerializer.</code><code class="descname">NodeBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers_extra.NodeDetailsSerializer.JobExecutionSerializer.NodeBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">NodeBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers_extra.NodeDetailsSerializer.JobExecutionSerializer.NodeBaseSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts node model fields to REST output.</p>
 </dd></dl>
@@ -597,7 +715,7 @@ populated for types of ERROR status values.</li>
 
 <dl class="class">
 <dt id="node.serializers_extra.NodeDetailsSerializer.NodeStatusJobExecutionSerializer">
-<em class="property">class </em><code class="descclassname">NodeDetailsSerializer.</code><code class="descname">NodeStatusJobExecutionSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers_extra.NodeDetailsSerializer.NodeStatusJobExecutionSerializer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">NodeStatusJobExecutionSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers_extra.NodeDetailsSerializer.NodeStatusJobExecutionSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="job.html#job.serializers.JobExecutionSerializer" title="job.serializers.JobExecutionSerializer"><code class="xref py py-class docutils literal"><span class="pre">job.serializers.JobExecutionSerializer</span></code></a></p>
 <p>Converts job execution model fields to REST output</p>
 </dd></dl>
@@ -630,7 +748,7 @@ populated for types of ERROR status values.</li>
 
 <dl class="class">
 <dt id="node.serializers_extra.NodeStatusSerializer.JobExecutionSerializer.NodeBaseSerializer">
-<em class="property">class </em><code class="descclassname">NodeStatusSerializer.JobExecutionSerializer.</code><code class="descname">NodeBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers_extra.NodeStatusSerializer.JobExecutionSerializer.NodeBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">NodeBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers_extra.NodeStatusSerializer.JobExecutionSerializer.NodeBaseSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts node model fields to REST output.</p>
 </dd></dl>
@@ -639,7 +757,7 @@ populated for types of ERROR status values.</li>
 
 <dl class="class">
 <dt id="node.serializers_extra.NodeStatusSerializer.NodeStatusJobExecutionSerializer">
-<em class="property">class </em><code class="descclassname">NodeStatusSerializer.</code><code class="descname">NodeStatusJobExecutionSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers_extra.NodeStatusSerializer.NodeStatusJobExecutionSerializer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">NodeStatusJobExecutionSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers_extra.NodeStatusSerializer.NodeStatusJobExecutionSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="job.html#job.serializers.JobExecutionSerializer" title="job.serializers.JobExecutionSerializer"><code class="xref py py-class docutils literal"><span class="pre">job.serializers.JobExecutionSerializer</span></code></a></p>
 <p>Converts job execution model fields to REST output</p>
 </dd></dl>
@@ -709,7 +827,7 @@ populated for types of ERROR status values.</li>
 
 <dl class="attribute">
 <dt id="node.views.NodeDetailsView.queryset">
-<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#node.views.NodeDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#node.views.NodeDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -786,7 +904,7 @@ populated for types of ERROR status values.</li>
 
 <dl class="attribute">
 <dt id="node.views.NodesView.queryset">
-<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#node.views.NodesView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#node.views.NodesView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -851,7 +969,7 @@ populated for types of ERROR status values.</li>
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

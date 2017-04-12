@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="job.configuration package" href="job.configuration.html"/>
         <link rel="next" title="job.configuration.interface package" href="job.configuration.interface.html"/>
@@ -206,7 +209,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/job.configuration.data.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/job.configuration.data.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -290,7 +293,7 @@ configuration and store output data files.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>data_files</strong> (<em>dict of int -&gt; list of tuple(str, str)</em>) &#8211; Dict with workspace ID mapping to a list of tuples with absolute local file paths and media
+<li><strong>data_files</strong> (<em>dict of int -&gt; list of tuple</em><em>(</em><em>str</em><em>, </em><em>str</em><em>)</em><em></em>) &#8211; Dict with workspace ID mapping to a list of tuples with absolute local file paths and media
 type (media type is optionally None)</li>
 <li><strong>input_file_ids</strong> (<em>set of long</em>) &#8211; Set of input file IDs</li>
 <li><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>) &#8211; The job execution model (with related job and job_type fields) that is storing the files</li>
@@ -481,7 +484,7 @@ connect shared resources to resource instances in Scale, and details needed to s
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>input_name</strong> (<em>string</em>) &#8211; The files parameter name</li>
-<li><strong>file_ids</strong> (<em>[long]</em>) &#8211; The ID of the file</li>
+<li><strong>file_ids</strong> (<em></em><em>[</em><em>long</em><em>]</em><em></em>) &#8211; The ID of the file</li>
 </ul>
 </td>
 </tr>
@@ -599,7 +602,7 @@ property name, it will not be included in the returned dict.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>property_names</strong> (<em>[string]</em>) &#8211; List of property names</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>property_names</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; List of property names</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Dict with each property name mapping to its value</td>
 </tr>
@@ -618,7 +621,7 @@ parameters that do not appear in the data will not be returned in the results.</
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data_files</strong> (<em>{string: tuple(bool, string, bool)}</em>) &#8211; Dict with each file parameter name mapping to a bool indicating if the parameter accepts
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data_files</strong> (<em>{string: tuple</em><em>(</em><em>bool</em><em>, </em><em>string</em><em>, </em><em>bool</em><em>)</em><em>}</em>) &#8211; Dict with each file parameter name mapping to a bool indicating if the parameter accepts
 multiple files (True), an absolute directory path and bool indicating if job supports partial file
 download (True).</td>
 </tr>
@@ -656,7 +659,7 @@ None)</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data_files</strong> (<em>{string: tuple(bool, string)}</em>) &#8211; Dict with each file parameter name mapping to a bool indicating if the parameter accepts
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data_files</strong> (<em>{string: tuple</em><em>(</em><em>bool</em><em>, </em><em>string</em><em>)</em><em>}</em>) &#8211; Dict with each file parameter name mapping to a bool indicating if the parameter accepts
 multiple files (True) and an absolute directory path</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Dict with each file parameter name mapping to a list of absolute file paths of the written files</td>
@@ -676,7 +679,7 @@ multiple files (True) and an absolute directory path</td>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>data_files</strong> (<em>{string: tuple(string, string)} or [tuple(string, string)]</em>) &#8211; Dict with each file parameter name mapping to a tuple of absolute local file path and media
+<li><strong>data_files</strong> (<em>{string: tuple</em><em>(</em><em>string</em><em>, </em><em>string</em><em>)</em><em>}</em><em> or </em><em></em><em>[</em><em>tuple</em><em>(</em><em>string</em><em>, </em><em>string</em><em>)</em><em></em><em>]</em><em></em>) &#8211; Dict with each file parameter name mapping to a tuple of absolute local file path and media
 type (media type is optionally None) for a single file parameter and a list of tuples for a multiple file
 parameter</li>
 <li><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>) &#8211; The job execution model (with related job and job_type fields) that is storing the output data
@@ -722,7 +725,7 @@ files</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>files</strong> (<em>[string]</em>) &#8211; List of file parameter names</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>files</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; List of file parameter names</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
 </tr>
@@ -815,7 +818,7 @@ files</li>
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

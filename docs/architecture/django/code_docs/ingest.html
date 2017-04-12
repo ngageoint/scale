@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="Django/Code Base" href="../index.html"/>
         <link rel="next" title="ingest.handlers package" href="ingest.handlers.html"/>
@@ -110,7 +113,7 @@
 <li class="toctree-l3"><a class="reference internal" href="batch.html">batch package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">ingest package</a><ul>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ingest package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-ingest.apps">ingest.apps module</a></li>
@@ -199,7 +202,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/ingest.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/ingest.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -255,6 +258,7 @@
 <li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations.0011_auto_20170302_2130">ingest.migrations.0011_auto_20170302_2130 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations.0012_scan_file_count">ingest.migrations.0012_scan_file_count module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations.0013_auto_20170406_1517">ingest.migrations.0013_auto_20170406_1517 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations.0014_auto_20170412_1225">ingest.migrations.0014_auto_20170412_1225 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ingest.migrations.html#module-ingest.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -496,18 +500,18 @@
 
 <dl class="attribute">
 <dt id="ingest.models.Ingest.INGEST_STATUSES">
-<code class="descclassname">Ingest.</code><code class="descname">INGEST_STATUSES</code><em class="property"> = ((u'TRANSFERRING', u'TRANSFERRING'), (u'TRANSFERRED', u'TRANSFERRED'), (u'DEFERRED', u'DEFERRED'), (u'QUEUED', u'QUEUED'), (u'INGESTING', u'INGESTING'), (u'INGESTED', u'INGESTED'), (u'ERRORED', u'ERRORED'), (u'DUPLICATE', u'DUPLICATE'))</em><a class="headerlink" href="#ingest.models.Ingest.INGEST_STATUSES" title="Permalink to this definition">¶</a></dt>
+<code class="descname">INGEST_STATUSES</code><em class="property"> = ((u'TRANSFERRING', u'TRANSFERRING'), (u'TRANSFERRED', u'TRANSFERRED'), (u'DEFERRED', u'DEFERRED'), (u'QUEUED', u'QUEUED'), (u'INGESTING', u'INGESTING'), (u'INGESTED', u'INGESTED'), (u'ERRORED', u'ERRORED'), (u'DUPLICATE', u'DUPLICATE'))</em><a class="headerlink" href="#ingest.models.Ingest.INGEST_STATUSES" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="exception">
 <dt id="ingest.models.Ingest.MultipleObjectsReturned">
-<em class="property">exception </em><code class="descclassname">Ingest.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#ingest.models.Ingest.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#ingest.models.Ingest.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ingest.models.Ingest.add_data_type_tag">
-<code class="descclassname">Ingest.</code><code class="descname">add_data_type_tag</code><span class="sig-paren">(</span><em>tag</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Ingest.add_data_type_tag" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_data_type_tag</code><span class="sig-paren">(</span><em>tag</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Ingest.add_data_type_tag" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a new data type tag to the file. A valid tag contains only alphanumeric characters, underscores, and
 spaces.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -516,7 +520,7 @@ spaces.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tag</strong> (<em>string</em>) &#8211; The data type tag to add</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><strong>InvalidDataTypeTag</strong> &#8211; If the given tag is invalid</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="storage.html#storage.exceptions.InvalidDataTypeTag" title="storage.exceptions.InvalidDataTypeTag"><strong>InvalidDataTypeTag</strong></a> &#8211; If the given tag is invalid</td>
 </tr>
 </tbody>
 </table>
@@ -524,7 +528,7 @@ spaces.</p>
 
 <dl class="method">
 <dt id="ingest.models.Ingest.add_file">
-<code class="descclassname">Ingest.</code><code class="descname">add_file</code><span class="sig-paren">(</span><em>file_name</em>, <em>workspace</em>, <em>scan_id=None</em>, <em>strike_id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Ingest.add_file" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_file</code><span class="sig-paren">(</span><em>file_name</em>, <em>workspace</em>, <em>scan_id=None</em>, <em>strike_id=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Ingest.add_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add file source metadata to ingest record</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -542,9 +546,65 @@ spaces.</p>
 </table>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="ingest.models.Ingest.bytes_transferred">
+<code class="descname">bytes_transferred</code><a class="headerlink" href="#ingest.models.Ingest.bytes_transferred" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Ingest.created">
+<code class="descname">created</code><a class="headerlink" href="#ingest.models.Ingest.created" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Ingest.data_ended">
+<code class="descname">data_ended</code><a class="headerlink" href="#ingest.models.Ingest.data_ended" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Ingest.data_started">
+<code class="descname">data_started</code><a class="headerlink" href="#ingest.models.Ingest.data_started" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Ingest.data_type">
+<code class="descname">data_type</code><a class="headerlink" href="#ingest.models.Ingest.data_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Ingest.file_name">
+<code class="descname">file_name</code><a class="headerlink" href="#ingest.models.Ingest.file_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Ingest.file_path">
+<code class="descname">file_path</code><a class="headerlink" href="#ingest.models.Ingest.file_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Ingest.file_size">
+<code class="descname">file_size</code><a class="headerlink" href="#ingest.models.Ingest.file_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="ingest.models.Ingest.get_data_type_tags">
-<code class="descclassname">Ingest.</code><code class="descname">get_data_type_tags</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Ingest.get_data_type_tags" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_data_type_tags</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Ingest.get_data_type_tags" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the set of data type tags associated with this file</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -560,32 +620,53 @@ spaces.</p>
 
 <dl class="method">
 <dt id="ingest.models.Ingest.get_next_by_created">
-<code class="descclassname">Ingest.</code><code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Ingest.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Ingest.get_next_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ingest.models.Ingest.get_next_by_last_modified">
-<code class="descclassname">Ingest.</code><code class="descname">get_next_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Ingest.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Ingest.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ingest.models.Ingest.get_previous_by_created">
-<code class="descclassname">Ingest.</code><code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Ingest.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Ingest.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ingest.models.Ingest.get_previous_by_last_modified">
-<code class="descclassname">Ingest.</code><code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Ingest.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Ingest.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ingest.models.Ingest.get_status_display">
-<code class="descclassname">Ingest.</code><code class="descname">get_status_display</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Ingest.get_status_display" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_status_display</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Ingest.get_status_display" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Ingest.id">
+<code class="descname">id</code><a class="headerlink" href="#ingest.models.Ingest.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Ingest.ingest_ended">
+<code class="descname">ingest_ended</code><a class="headerlink" href="#ingest.models.Ingest.ingest_ended" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Ingest.ingest_started">
+<code class="descname">ingest_started</code><a class="headerlink" href="#ingest.models.Ingest.ingest_started" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ingest.models.Ingest.is_there_rule_match">
-<code class="descclassname">Ingest.</code><code class="descname">is_there_rule_match</code><span class="sig-paren">(</span><em>file_handler</em>, <em>workspaces</em>, <em>no_match_status=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Ingest.is_there_rule_match" title="Permalink to this definition">¶</a></dt>
+<code class="descname">is_there_rule_match</code><span class="sig-paren">(</span><em>file_handler</em>, <em>workspaces</em>, <em>no_match_status=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Ingest.is_there_rule_match" title="Permalink to this definition">¶</a></dt>
 <dd><p>Applies rules to an ingest record, determining if there is a match and updating as indicated in rule match</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -626,38 +707,170 @@ spaces.</p>
 
 <dl class="attribute">
 <dt id="ingest.models.Ingest.job">
-<code class="descclassname">Ingest.</code><code class="descname">job</code><a class="headerlink" href="#ingest.models.Ingest.job" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">job</code><a class="headerlink" href="#ingest.models.Ingest.job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Ingest.job_id">
+<code class="descname">job_id</code><a class="headerlink" href="#ingest.models.Ingest.job_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Ingest.last_modified">
+<code class="descname">last_modified</code><a class="headerlink" href="#ingest.models.Ingest.last_modified" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Ingest.media_type">
+<code class="descname">media_type</code><a class="headerlink" href="#ingest.models.Ingest.media_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Ingest.new_file_path">
+<code class="descname">new_file_path</code><a class="headerlink" href="#ingest.models.Ingest.new_file_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="ingest.models.Ingest.new_workspace">
-<code class="descclassname">Ingest.</code><code class="descname">new_workspace</code><a class="headerlink" href="#ingest.models.Ingest.new_workspace" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">new_workspace</code><a class="headerlink" href="#ingest.models.Ingest.new_workspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Ingest.new_workspace_id">
+<code class="descname">new_workspace_id</code><a class="headerlink" href="#ingest.models.Ingest.new_workspace_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="ingest.models.Ingest.objects">
-<code class="descclassname">Ingest.</code><code class="descname">objects</code><em class="property"> = &lt;ingest.models.IngestManager object&gt;</em><a class="headerlink" href="#ingest.models.Ingest.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descname">objects</code><em class="property"> = &lt;ingest.models.IngestManager object&gt;</em><a class="headerlink" href="#ingest.models.Ingest.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="ingest.models.Ingest.scan">
-<code class="descclassname">Ingest.</code><code class="descname">scan</code><a class="headerlink" href="#ingest.models.Ingest.scan" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">scan</code><a class="headerlink" href="#ingest.models.Ingest.scan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Ingest.scan_id">
+<code class="descname">scan_id</code><a class="headerlink" href="#ingest.models.Ingest.scan_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="ingest.models.Ingest.source_file">
-<code class="descclassname">Ingest.</code><code class="descname">source_file</code><a class="headerlink" href="#ingest.models.Ingest.source_file" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">source_file</code><a class="headerlink" href="#ingest.models.Ingest.source_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Ingest.source_file_id">
+<code class="descname">source_file_id</code><a class="headerlink" href="#ingest.models.Ingest.source_file_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Ingest.status">
+<code class="descname">status</code><a class="headerlink" href="#ingest.models.Ingest.status" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="ingest.models.Ingest.strike">
-<code class="descclassname">Ingest.</code><code class="descname">strike</code><a class="headerlink" href="#ingest.models.Ingest.strike" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">strike</code><a class="headerlink" href="#ingest.models.Ingest.strike" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Ingest.strike_id">
+<code class="descname">strike_id</code><a class="headerlink" href="#ingest.models.Ingest.strike_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Ingest.transfer_ended">
+<code class="descname">transfer_ended</code><a class="headerlink" href="#ingest.models.Ingest.transfer_ended" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Ingest.transfer_started">
+<code class="descname">transfer_started</code><a class="headerlink" href="#ingest.models.Ingest.transfer_started" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="ingest.models.Ingest.workspace">
-<code class="descclassname">Ingest.</code><code class="descname">workspace</code><a class="headerlink" href="#ingest.models.Ingest.workspace" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">workspace</code><a class="headerlink" href="#ingest.models.Ingest.workspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Ingest.workspace_id">
+<code class="descname">workspace_id</code><a class="headerlink" href="#ingest.models.Ingest.workspace_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -726,11 +939,11 @@ scan.configuration, and source_file.workspace.json_config fields.</p>
 <li><strong>source_file_id</strong> (<em>int</em>) &#8211; Query ingests for this source file ID.</li>
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query ingests updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query ingests updated before this amount of time.</li>
-<li><strong>statuses</strong> (<em>[string]</em>) &#8211; Query ingests with the a specific process status.</li>
-<li><strong>scan_ids</strong> (<em>[string]</em>) &#8211; Query ingests created by a specific scan processor.</li>
-<li><strong>strike_ids</strong> (<em>[string]</em>) &#8211; Query ingests created by a specific strike processor.</li>
+<li><strong>statuses</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query ingests with the a specific process status.</li>
+<li><strong>scan_ids</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query ingests created by a specific scan processor.</li>
+<li><strong>strike_ids</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query ingests created by a specific strike processor.</li>
 <li><strong>file_name</strong> (<em>string</em>) &#8211; Query ingests with a specific file name.</li>
-<li><strong>order</strong> (<em>[string]</em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>order</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
 </tr>
@@ -789,11 +1002,11 @@ scan.configuration, and source_file.workspace.json_config fields.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query ingests updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query ingests updated before this amount of time.</li>
-<li><strong>statuses</strong> (<em>[string]</em>) &#8211; Query ingests with the a specific process status.</li>
-<li><strong>scan_ids</strong> (<em>list[string]</em>) &#8211; Query ingests created by a specific scan processor.</li>
-<li><strong>strike_ids</strong> (<em>list[string]</em>) &#8211; Query ingests created by a specific strike processor.</li>
+<li><strong>statuses</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query ingests with the a specific process status.</li>
+<li><strong>scan_ids</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query ingests created by a specific scan processor.</li>
+<li><strong>strike_ids</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query ingests created by a specific strike processor.</li>
 <li><strong>file_name</strong> (<em>string</em>) &#8211; Query ingests with the a specific file name.</li>
-<li><strong>order</strong> (<em>list[string]</em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>order</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em><em></em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
 </tr>
@@ -816,8 +1029,8 @@ scan.configuration, and source_file.workspace.json_config fields.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>scan_id</strong> (<em>list[string]</em>) &#8211; Query ingests created by a specific scan processor.</li>
-<li><strong>file_names</strong> (<em>list[string]</em>) &#8211; Query ingests with the specific file names.</li>
+<li><strong>scan_id</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query ingests created by a specific scan processor.</li>
+<li><strong>file_names</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query ingests with the specific file names.</li>
 </ul>
 </td>
 </tr>
@@ -914,7 +1127,7 @@ in a workspace for ingest</p>
 <li><strong>name</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The identifying name of this Scan process</li>
 <li><strong>title</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The human-readable name of this Scan process</li>
 <li><strong>description</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.TextField</span></code>) &#8211; An optional description of this Scan process</li>
-<li><strong>configuration</strong> (<code class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></code>) &#8211; JSON configuration for this Scan process</li>
+<li><strong>configuration</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.contrib.postgres.fields.JSONField</span></code>) &#8211; JSON configuration for this Scan process</li>
 <li><strong>dry_run_job</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The job that is performing the Scan process as dry run</li>
 <li><strong>job</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The job that is performing the Scan process with ingests</li>
 <li><strong>file_count</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BigIntegerField</span></code>) &#8211; Number of files identified by last execution of Scan</li>
@@ -933,44 +1146,81 @@ in a workspace for ingest</p>
 
 <dl class="exception">
 <dt id="ingest.models.Scan.MultipleObjectsReturned">
-<em class="property">exception </em><code class="descclassname">Scan.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#ingest.models.Scan.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#ingest.models.Scan.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ingest.models.Scan.configuration">
-<code class="descclassname">Scan.</code><code class="descname">configuration</code><a class="headerlink" href="#ingest.models.Scan.configuration" title="Permalink to this definition">¶</a></dt>
-<dd><p>A placeholder class that provides a way to set the attribute on the model.</p>
+<code class="descname">configuration</code><a class="headerlink" href="#ingest.models.Scan.configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Scan.created">
+<code class="descname">created</code><a class="headerlink" href="#ingest.models.Scan.created" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Scan.description">
+<code class="descname">description</code><a class="headerlink" href="#ingest.models.Scan.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ingest.models.Scan.dry_run_job">
-<code class="descclassname">Scan.</code><code class="descname">dry_run_job</code><a class="headerlink" href="#ingest.models.Scan.dry_run_job" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">dry_run_job</code><a class="headerlink" href="#ingest.models.Scan.dry_run_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Scan.dry_run_job_id">
+<code class="descname">dry_run_job_id</code><a class="headerlink" href="#ingest.models.Scan.dry_run_job_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Scan.file_count">
+<code class="descname">file_count</code><a class="headerlink" href="#ingest.models.Scan.file_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ingest.models.Scan.get_next_by_created">
-<code class="descclassname">Scan.</code><code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Scan.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Scan.get_next_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ingest.models.Scan.get_next_by_last_modified">
-<code class="descclassname">Scan.</code><code class="descname">get_next_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Scan.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Scan.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ingest.models.Scan.get_previous_by_created">
-<code class="descclassname">Scan.</code><code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Scan.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Scan.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ingest.models.Scan.get_previous_by_last_modified">
-<code class="descclassname">Scan.</code><code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Scan.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Scan.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ingest.models.Scan.get_scan_configuration">
-<code class="descclassname">Scan.</code><code class="descname">get_scan_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Scan.get_scan_configuration" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_scan_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Scan.get_scan_configuration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the configuration for this Scan process</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -986,7 +1236,7 @@ in a workspace for ingest</p>
 
 <dl class="method">
 <dt id="ingest.models.Scan.get_scan_configuration_as_dict">
-<code class="descclassname">Scan.</code><code class="descname">get_scan_configuration_as_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Scan.get_scan_configuration_as_dict" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_scan_configuration_as_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Scan.get_scan_configuration_as_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the configuration for this Scan process as a dict</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1001,19 +1251,72 @@ in a workspace for ingest</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="ingest.models.Scan.id">
+<code class="descname">id</code><a class="headerlink" href="#ingest.models.Scan.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="ingest.models.Scan.ingest_set">
-<code class="descclassname">Scan.</code><code class="descname">ingest_set</code><a class="headerlink" href="#ingest.models.Scan.ingest_set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">ingest_set</code><a class="headerlink" href="#ingest.models.Scan.ingest_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="ingest.models.Scan.job">
-<code class="descclassname">Scan.</code><code class="descname">job</code><a class="headerlink" href="#ingest.models.Scan.job" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">job</code><a class="headerlink" href="#ingest.models.Scan.job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Scan.job_id">
+<code class="descname">job_id</code><a class="headerlink" href="#ingest.models.Scan.job_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Scan.last_modified">
+<code class="descname">last_modified</code><a class="headerlink" href="#ingest.models.Scan.last_modified" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Scan.name">
+<code class="descname">name</code><a class="headerlink" href="#ingest.models.Scan.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="ingest.models.Scan.objects">
-<code class="descclassname">Scan.</code><code class="descname">objects</code><em class="property"> = &lt;ingest.models.ScanManager object&gt;</em><a class="headerlink" href="#ingest.models.Scan.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descname">objects</code><em class="property"> = &lt;ingest.models.ScanManager object&gt;</em><a class="headerlink" href="#ingest.models.Scan.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Scan.title">
+<code class="descname">title</code><a class="headerlink" href="#ingest.models.Scan.title" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -1124,8 +1427,8 @@ transaction. An argument of None for a field indicates that the field should not
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query Scan processes updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query Scan processes updated before this amount of time.</li>
-<li><strong>names</strong> (<em>list[string]</em>) &#8211; Query Scan processes associated with the name.</li>
-<li><strong>order</strong> (<em>list[string]</em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>names</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query Scan processes associated with the name.</li>
+<li><strong>order</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em><em></em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
 </tr>
@@ -1180,7 +1483,7 @@ atomic transaction.</p>
 <li><strong>name</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The identifying name of this Strike process</li>
 <li><strong>title</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The human-readable name of this Strike process</li>
 <li><strong>description</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.TextField</span></code>) &#8211; An optional description of this Strike process</li>
-<li><strong>configuration</strong> (<code class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></code>) &#8211; JSON configuration for this Strike process</li>
+<li><strong>configuration</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.contrib.postgres.fields.JSONField</span></code>) &#8211; JSON configuration for this Strike process</li>
 <li><strong>job</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The job that is performing the Strike process</li>
 <li><strong>created</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the Strike process was created</li>
 <li><strong>last_modified</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the Strike process was last modified</li>
@@ -1197,39 +1500,54 @@ atomic transaction.</p>
 
 <dl class="exception">
 <dt id="ingest.models.Strike.MultipleObjectsReturned">
-<em class="property">exception </em><code class="descclassname">Strike.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#ingest.models.Strike.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#ingest.models.Strike.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="ingest.models.Strike.configuration">
-<code class="descclassname">Strike.</code><code class="descname">configuration</code><a class="headerlink" href="#ingest.models.Strike.configuration" title="Permalink to this definition">¶</a></dt>
-<dd><p>A placeholder class that provides a way to set the attribute on the model.</p>
+<code class="descname">configuration</code><a class="headerlink" href="#ingest.models.Strike.configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Strike.created">
+<code class="descname">created</code><a class="headerlink" href="#ingest.models.Strike.created" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Strike.description">
+<code class="descname">description</code><a class="headerlink" href="#ingest.models.Strike.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="ingest.models.Strike.get_next_by_created">
-<code class="descclassname">Strike.</code><code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Strike.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Strike.get_next_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ingest.models.Strike.get_next_by_last_modified">
-<code class="descclassname">Strike.</code><code class="descname">get_next_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Strike.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Strike.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ingest.models.Strike.get_previous_by_created">
-<code class="descclassname">Strike.</code><code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Strike.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Strike.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ingest.models.Strike.get_previous_by_last_modified">
-<code class="descclassname">Strike.</code><code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Strike.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Strike.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="ingest.models.Strike.get_strike_configuration">
-<code class="descclassname">Strike.</code><code class="descname">get_strike_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Strike.get_strike_configuration" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_strike_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Strike.get_strike_configuration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the configuration for this Strike process</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1245,7 +1563,7 @@ atomic transaction.</p>
 
 <dl class="method">
 <dt id="ingest.models.Strike.get_strike_configuration_as_dict">
-<code class="descclassname">Strike.</code><code class="descname">get_strike_configuration_as_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Strike.get_strike_configuration_as_dict" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_strike_configuration_as_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.models.Strike.get_strike_configuration_as_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the configuration for this Strike process as a dict</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1260,24 +1578,87 @@ atomic transaction.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="ingest.models.Strike.id">
+<code class="descname">id</code><a class="headerlink" href="#ingest.models.Strike.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="ingest.models.Strike.ingest_set">
-<code class="descclassname">Strike.</code><code class="descname">ingest_set</code><a class="headerlink" href="#ingest.models.Strike.ingest_set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">ingest_set</code><a class="headerlink" href="#ingest.models.Strike.ingest_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="ingest.models.Strike.job">
-<code class="descclassname">Strike.</code><code class="descname">job</code><a class="headerlink" href="#ingest.models.Strike.job" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">job</code><a class="headerlink" href="#ingest.models.Strike.job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Strike.job_id">
+<code class="descname">job_id</code><a class="headerlink" href="#ingest.models.Strike.job_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Strike.last_modified">
+<code class="descname">last_modified</code><a class="headerlink" href="#ingest.models.Strike.last_modified" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="ingest.models.Strike.metricsingest_set">
-<code class="descclassname">Strike.</code><code class="descname">metricsingest_set</code><a class="headerlink" href="#ingest.models.Strike.metricsingest_set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">metricsingest_set</code><a class="headerlink" href="#ingest.models.Strike.metricsingest_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Strike.name">
+<code class="descname">name</code><a class="headerlink" href="#ingest.models.Strike.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="ingest.models.Strike.objects">
-<code class="descclassname">Strike.</code><code class="descname">objects</code><em class="property"> = &lt;ingest.models.StrikeManager object&gt;</em><a class="headerlink" href="#ingest.models.Strike.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descname">objects</code><em class="property"> = &lt;ingest.models.StrikeManager object&gt;</em><a class="headerlink" href="#ingest.models.Strike.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="ingest.models.Strike.title">
+<code class="descname">title</code><a class="headerlink" href="#ingest.models.Strike.title" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -1388,8 +1769,8 @@ transaction. An argument of None for a field indicates that the field should not
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query Strike processes updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query Strike processes updated before this amount of time.</li>
-<li><strong>names</strong> (<em>list[string]</em>) &#8211; Query Strike processes associated with the name.</li>
-<li><strong>order</strong> (<em>list[string]</em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>names</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query Strike processes associated with the name.</li>
+<li><strong>order</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em><em></em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
 </tr>
@@ -1501,7 +1882,7 @@ transaction. An argument of None for a field indicates that the field should not
 <p>This view is the endpoint for retrieving/updating details of an ingest.</p>
 <dl class="attribute">
 <dt id="ingest.views.IngestDetailsView.queryset">
-<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#ingest.views.IngestDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#ingest.views.IngestDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -1562,7 +1943,7 @@ transaction. An argument of None for a field indicates that the field should not
 
 <dl class="attribute">
 <dt id="ingest.views.IngestsStatusView.queryset">
-<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#ingest.views.IngestsStatusView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#ingest.views.IngestsStatusView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1598,7 +1979,7 @@ transaction. An argument of None for a field indicates that the field should not
 
 <dl class="attribute">
 <dt id="ingest.views.IngestsView.queryset">
-<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#ingest.views.IngestsView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#ingest.views.IngestsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1664,7 +2045,7 @@ transaction. An argument of None for a field indicates that the field should not
 
 <dl class="attribute">
 <dt id="ingest.views.ScansDetailsView.queryset">
-<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#ingest.views.ScansDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#ingest.views.ScansDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1706,7 +2087,7 @@ transaction. An argument of None for a field indicates that the field should not
 
 <dl class="attribute">
 <dt id="ingest.views.ScansProcessView.queryset">
-<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#ingest.views.ScansProcessView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#ingest.views.ScansProcessView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1742,7 +2123,7 @@ transaction. An argument of None for a field indicates that the field should not
 
 <dl class="attribute">
 <dt id="ingest.views.ScansValidationView.queryset">
-<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#ingest.views.ScansValidationView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#ingest.views.ScansValidationView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1790,7 +2171,7 @@ transaction. An argument of None for a field indicates that the field should not
 
 <dl class="attribute">
 <dt id="ingest.views.ScansView.queryset">
-<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#ingest.views.ScansView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#ingest.views.ScansView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1856,7 +2237,7 @@ transaction. An argument of None for a field indicates that the field should not
 
 <dl class="attribute">
 <dt id="ingest.views.StrikeDetailsView.queryset">
-<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#ingest.views.StrikeDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#ingest.views.StrikeDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1892,7 +2273,7 @@ transaction. An argument of None for a field indicates that the field should not
 
 <dl class="attribute">
 <dt id="ingest.views.StrikesValidationView.queryset">
-<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#ingest.views.StrikesValidationView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#ingest.views.StrikesValidationView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1940,7 +2321,7 @@ transaction. An argument of None for a field indicates that the field should not
 
 <dl class="attribute">
 <dt id="ingest.views.StrikesView.queryset">
-<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#ingest.views.StrikesView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#ingest.views.StrikesView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -2006,7 +2387,7 @@ transaction. An argument of None for a field indicates that the field should not
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

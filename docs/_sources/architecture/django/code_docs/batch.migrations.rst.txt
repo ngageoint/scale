@@ -1,0 +1,30 @@
+batch\.migrations package
+=========================
+
+Submodules
+----------
+
+batch\.migrations\.0001\_initial module
+---------------------------------------
+
+.. automodule:: batch.migrations.0001_initial
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+batch\.migrations\.0002\_auto\_20170412\_1225 module
+----------------------------------------------------
+
+.. automodule:: batch.migrations.0002_auto_20170412_1225
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: batch.migrations
+    :members:
+    :undoc-members:
+    :show-inheritance:

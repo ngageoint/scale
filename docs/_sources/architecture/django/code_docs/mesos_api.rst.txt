@@ -1,0 +1,46 @@
+mesos\_api package
+==================
+
+Submodules
+----------
+
+mesos\_api\.api module
+----------------------
+
+.. automodule:: mesos_api.api
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+mesos\_api\.apps module
+-----------------------
+
+.. automodule:: mesos_api.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+mesos\_api\.tasks module
+------------------------
+
+.. automodule:: mesos_api.tasks
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+mesos\_api\.utils module
+------------------------
+
+.. automodule:: mesos_api.utils
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: mesos_api
+    :members:
+    :undoc-members:
+    :show-inheritance:

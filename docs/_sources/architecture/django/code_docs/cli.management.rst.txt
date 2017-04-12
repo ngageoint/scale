@@ -1,0 +1,17 @@
+cli\.management package
+=======================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    cli.management.commands
+
+Module contents
+---------------
+
+.. automodule:: cli.management
+    :members:
+    :undoc-members:
+    :show-inheritance:

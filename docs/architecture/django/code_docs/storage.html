@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="Django/Code Base" href="../index.html"/>
         <link rel="next" title="storage.brokers package" href="storage.brokers.html"/>
@@ -122,7 +125,7 @@
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">storage package</a><ul>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">storage package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-storage.apps">storage.apps module</a></li>
@@ -203,7 +206,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/storage.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/storage.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -265,6 +268,7 @@
 <li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0004_auto_20170127_1408">storage.migrations.0004_auto_20170127_1408 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0005_auto_20170127_1412">storage.migrations.0005_auto_20170127_1412 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0006_auto_20170127_1423">storage.migrations.0006_auto_20170127_1423 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations.0007_auto_20170412_1225">storage.migrations.0007_auto_20170412_1225 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.migrations.html#module-storage.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -527,54 +531,149 @@ the required volume mount was missing</p>
 
 <dl class="exception">
 <dt id="storage.models.CountryData.MultipleObjectsReturned">
-<em class="property">exception </em><code class="descclassname">CountryData.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#storage.models.CountryData.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#storage.models.CountryData.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="storage.models.CountryData.border">
-<code class="descclassname">CountryData.</code><code class="descname">border</code><a class="headerlink" href="#storage.models.CountryData.border" title="Permalink to this definition">¶</a></dt>
+<code class="descname">border</code><a class="headerlink" href="#storage.models.CountryData.border" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.CountryData.created">
+<code class="descname">created</code><a class="headerlink" href="#storage.models.CountryData.created" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.CountryData.deleted">
+<code class="descname">deleted</code><a class="headerlink" href="#storage.models.CountryData.deleted" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.CountryData.effective">
+<code class="descname">effective</code><a class="headerlink" href="#storage.models.CountryData.effective" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.CountryData.fips">
+<code class="descname">fips</code><a class="headerlink" href="#storage.models.CountryData.fips" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="storage.models.CountryData.get_next_by_created">
-<code class="descclassname">CountryData.</code><code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.CountryData.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.CountryData.get_next_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.models.CountryData.get_next_by_effective">
-<code class="descclassname">CountryData.</code><code class="descname">get_next_by_effective</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.CountryData.get_next_by_effective" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_by_effective</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.CountryData.get_next_by_effective" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.models.CountryData.get_next_by_last_modified">
-<code class="descclassname">CountryData.</code><code class="descname">get_next_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.CountryData.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.CountryData.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.models.CountryData.get_previous_by_created">
-<code class="descclassname">CountryData.</code><code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.CountryData.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.CountryData.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.models.CountryData.get_previous_by_effective">
-<code class="descclassname">CountryData.</code><code class="descname">get_previous_by_effective</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.CountryData.get_previous_by_effective" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_previous_by_effective</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.CountryData.get_previous_by_effective" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.models.CountryData.get_previous_by_last_modified">
-<code class="descclassname">CountryData.</code><code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.CountryData.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.CountryData.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="storage.models.CountryData.gmi">
+<code class="descname">gmi</code><a class="headerlink" href="#storage.models.CountryData.gmi" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.CountryData.id">
+<code class="descname">id</code><a class="headerlink" href="#storage.models.CountryData.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.CountryData.is_deleted">
+<code class="descname">is_deleted</code><a class="headerlink" href="#storage.models.CountryData.is_deleted" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.CountryData.iso2">
+<code class="descname">iso2</code><a class="headerlink" href="#storage.models.CountryData.iso2" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.CountryData.iso3">
+<code class="descname">iso3</code><a class="headerlink" href="#storage.models.CountryData.iso3" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.CountryData.iso_num">
+<code class="descname">iso_num</code><a class="headerlink" href="#storage.models.CountryData.iso_num" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.CountryData.last_modified">
+<code class="descname">last_modified</code><a class="headerlink" href="#storage.models.CountryData.last_modified" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.CountryData.name">
+<code class="descname">name</code><a class="headerlink" href="#storage.models.CountryData.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="storage.models.CountryData.objects">
-<code class="descclassname">CountryData.</code><code class="descname">objects</code><em class="property"> = &lt;storage.models.CountryDataManager object&gt;</em><a class="headerlink" href="#storage.models.CountryData.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descname">objects</code><em class="property"> = &lt;storage.models.CountryDataManager object&gt;</em><a class="headerlink" href="#storage.models.CountryData.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="storage.models.CountryData.scalefile_set">
-<code class="descclassname">CountryData.</code><code class="descname">scalefile_set</code><a class="headerlink" href="#storage.models.CountryData.scalefile_set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">scalefile_set</code><a class="headerlink" href="#storage.models.CountryData.scalefile_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the forward and reverse sides of
+a many-to-many relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Pizza</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">toppings</span> <span class="o">=</span> <span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Topping</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;pizzas&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">pizza.toppings</span></code> and <code class="docutils literal"><span class="pre">topping.pizzas</span></code> are <code class="docutils literal"><span class="pre">ManyToManyDescriptor</span></code>
+instances.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -644,7 +743,7 @@ is before the target.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>name</strong> (<em>string</em>) &#8211; The name of an existing country</li>
-<li><strong>border</strong> (<em>GEOSGeometry or dict</em>) &#8211; The new border geometry. Either GEOSGeometry or geojson (which will be converted to GEOSGeometry)</li>
+<li><strong>border</strong> (<em>GEOSGeometry</em><em> or </em><em>dict</em>) &#8211; The new border geometry. Either GEOSGeometry or geojson (which will be converted to GEOSGeometry)</li>
 <li><strong>effective</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The effective date for the new border. If None, now() will be used</li>
 </ul>
 </td>
@@ -682,7 +781,7 @@ record will result in the same UUID, which can then be used as a stable permanen
 <li><strong>data_ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; The end time of the data in this file</li>
 <li><strong>geometry</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.contrib.gis.db.models.GeometryField</span></code>) &#8211; Geometry representing the data in this file</li>
 <li><strong>center_point</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.contrib.gis.db.models.PointField</span></code>) &#8211; The center point of this file geometry</li>
-<li><strong>meta_data</strong> (<code class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></code>) &#8211; JSON meta-data about this file</li>
+<li><strong>meta_data</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.contrib.postgres.fields.JSONField</span></code>) &#8211; JSON meta-data about this file</li>
 <li><strong>countries</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ManyToManyField</span></code> of <a class="reference internal" href="#storage.models.CountryData" title="storage.models.CountryData"><code class="xref py py-class docutils literal"><span class="pre">storage.models.CountryData</span></code></a>) &#8211; List of countries represented in this file as indicated by the file&#8217;s geometry.</li>
 <li><strong>is_parsed</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether the source file has been parsed or not</li>
 <li><strong>parsed</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the source file was parsed</li>
@@ -713,18 +812,18 @@ complete successfully and has not been unpublished.</li>
 
 <dl class="attribute">
 <dt id="storage.models.ScaleFile.FILE_TYPES">
-<code class="descclassname">ScaleFile.</code><code class="descname">FILE_TYPES</code><em class="property"> = ((u'SOURCE', u'SOURCE'), (u'PRODUCT', u'PRODUCT'))</em><a class="headerlink" href="#storage.models.ScaleFile.FILE_TYPES" title="Permalink to this definition">¶</a></dt>
+<code class="descname">FILE_TYPES</code><em class="property"> = ((u'SOURCE', u'SOURCE'), (u'PRODUCT', u'PRODUCT'))</em><a class="headerlink" href="#storage.models.ScaleFile.FILE_TYPES" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="exception">
 <dt id="storage.models.ScaleFile.MultipleObjectsReturned">
-<em class="property">exception </em><code class="descclassname">ScaleFile.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#storage.models.ScaleFile.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#storage.models.ScaleFile.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.models.ScaleFile.add_data_type_tag">
-<code class="descclassname">ScaleFile.</code><code class="descname">add_data_type_tag</code><span class="sig-paren">(</span><em>tag</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFile.add_data_type_tag" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_data_type_tag</code><span class="sig-paren">(</span><em>tag</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFile.add_data_type_tag" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a new data type tag to the file. A valid tag contains only alphanumeric characters, underscores, and
 spaces.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -733,7 +832,7 @@ spaces.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tag</strong> (<em>string</em>) &#8211; The data type tag to add</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><strong>InvalidDataTypeTag</strong> &#8211; If the given tag is invalid</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><a class="reference internal" href="#storage.exceptions.InvalidDataTypeTag" title="storage.exceptions.InvalidDataTypeTag"><strong>InvalidDataTypeTag</strong></a> &#8211; If the given tag is invalid</td>
 </tr>
 </tbody>
 </table>
@@ -741,32 +840,126 @@ spaces.</p>
 
 <dl class="attribute">
 <dt id="storage.models.ScaleFile.ancestors">
-<code class="descclassname">ScaleFile.</code><code class="descname">ancestors</code><a class="headerlink" href="#storage.models.ScaleFile.ancestors" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">ancestors</code><a class="headerlink" href="#storage.models.ScaleFile.ancestors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="storage.models.ScaleFile.center_point">
-<code class="descclassname">ScaleFile.</code><code class="descname">center_point</code><a class="headerlink" href="#storage.models.ScaleFile.center_point" title="Permalink to this definition">¶</a></dt>
+<code class="descname">center_point</code><a class="headerlink" href="#storage.models.ScaleFile.center_point" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="storage.models.ScaleFile.countries">
-<code class="descclassname">ScaleFile.</code><code class="descname">countries</code><a class="headerlink" href="#storage.models.ScaleFile.countries" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">countries</code><a class="headerlink" href="#storage.models.ScaleFile.countries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the forward and reverse sides of
+a many-to-many relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Pizza</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">toppings</span> <span class="o">=</span> <span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Topping</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;pizzas&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">pizza.toppings</span></code> and <code class="docutils literal"><span class="pre">topping.pizzas</span></code> are <code class="docutils literal"><span class="pre">ManyToManyDescriptor</span></code>
+instances.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.created">
+<code class="descname">created</code><a class="headerlink" href="#storage.models.ScaleFile.created" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.data_ended">
+<code class="descname">data_ended</code><a class="headerlink" href="#storage.models.ScaleFile.data_ended" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.data_started">
+<code class="descname">data_started</code><a class="headerlink" href="#storage.models.ScaleFile.data_started" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.data_type">
+<code class="descname">data_type</code><a class="headerlink" href="#storage.models.ScaleFile.data_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.deleted">
+<code class="descname">deleted</code><a class="headerlink" href="#storage.models.ScaleFile.deleted" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="storage.models.ScaleFile.descendants">
-<code class="descclassname">ScaleFile.</code><code class="descname">descendants</code><a class="headerlink" href="#storage.models.ScaleFile.descendants" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">descendants</code><a class="headerlink" href="#storage.models.ScaleFile.descendants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.file_name">
+<code class="descname">file_name</code><a class="headerlink" href="#storage.models.ScaleFile.file_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.file_path">
+<code class="descname">file_path</code><a class="headerlink" href="#storage.models.ScaleFile.file_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.file_size">
+<code class="descname">file_size</code><a class="headerlink" href="#storage.models.ScaleFile.file_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.file_type">
+<code class="descname">file_type</code><a class="headerlink" href="#storage.models.ScaleFile.file_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="storage.models.ScaleFile.geometry">
-<code class="descclassname">ScaleFile.</code><code class="descname">geometry</code><a class="headerlink" href="#storage.models.ScaleFile.geometry" title="Permalink to this definition">¶</a></dt>
+<code class="descname">geometry</code><a class="headerlink" href="#storage.models.ScaleFile.geometry" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.models.ScaleFile.get_data_type_tags">
-<code class="descclassname">ScaleFile.</code><code class="descname">get_data_type_tags</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFile.get_data_type_tags" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_data_type_tags</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFile.get_data_type_tags" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the set of data type tags associated with this file</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -782,68 +975,211 @@ spaces.</p>
 
 <dl class="method">
 <dt id="storage.models.ScaleFile.get_file_type_display">
-<code class="descclassname">ScaleFile.</code><code class="descname">get_file_type_display</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFile.get_file_type_display" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_file_type_display</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFile.get_file_type_display" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.models.ScaleFile.get_next_by_created">
-<code class="descclassname">ScaleFile.</code><code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFile.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFile.get_next_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.models.ScaleFile.get_next_by_last_modified">
-<code class="descclassname">ScaleFile.</code><code class="descname">get_next_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFile.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFile.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.models.ScaleFile.get_previous_by_created">
-<code class="descclassname">ScaleFile.</code><code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFile.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFile.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.models.ScaleFile.get_previous_by_last_modified">
-<code class="descclassname">ScaleFile.</code><code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFile.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFile.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.has_been_published">
+<code class="descname">has_been_published</code><a class="headerlink" href="#storage.models.ScaleFile.has_been_published" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.id">
+<code class="descname">id</code><a class="headerlink" href="#storage.models.ScaleFile.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="storage.models.ScaleFile.ingest_set">
-<code class="descclassname">ScaleFile.</code><code class="descname">ingest_set</code><a class="headerlink" href="#storage.models.ScaleFile.ingest_set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">ingest_set</code><a class="headerlink" href="#storage.models.ScaleFile.ingest_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.is_deleted">
+<code class="descname">is_deleted</code><a class="headerlink" href="#storage.models.ScaleFile.is_deleted" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.is_operational">
+<code class="descname">is_operational</code><a class="headerlink" href="#storage.models.ScaleFile.is_operational" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.is_parsed">
+<code class="descname">is_parsed</code><a class="headerlink" href="#storage.models.ScaleFile.is_parsed" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.is_published">
+<code class="descname">is_published</code><a class="headerlink" href="#storage.models.ScaleFile.is_published" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.is_superseded">
+<code class="descname">is_superseded</code><a class="headerlink" href="#storage.models.ScaleFile.is_superseded" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="storage.models.ScaleFile.job">
-<code class="descclassname">ScaleFile.</code><code class="descname">job</code><a class="headerlink" href="#storage.models.ScaleFile.job" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">job</code><a class="headerlink" href="#storage.models.ScaleFile.job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="storage.models.ScaleFile.job_exe">
-<code class="descclassname">ScaleFile.</code><code class="descname">job_exe</code><a class="headerlink" href="#storage.models.ScaleFile.job_exe" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">job_exe</code><a class="headerlink" href="#storage.models.ScaleFile.job_exe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.job_exe_id">
+<code class="descname">job_exe_id</code><a class="headerlink" href="#storage.models.ScaleFile.job_exe_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.job_id">
+<code class="descname">job_id</code><a class="headerlink" href="#storage.models.ScaleFile.job_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="storage.models.ScaleFile.job_type">
-<code class="descclassname">ScaleFile.</code><code class="descname">job_type</code><a class="headerlink" href="#storage.models.ScaleFile.job_type" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">job_type</code><a class="headerlink" href="#storage.models.ScaleFile.job_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.job_type_id">
+<code class="descname">job_type_id</code><a class="headerlink" href="#storage.models.ScaleFile.job_type_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.last_modified">
+<code class="descname">last_modified</code><a class="headerlink" href="#storage.models.ScaleFile.last_modified" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.media_type">
+<code class="descname">media_type</code><a class="headerlink" href="#storage.models.ScaleFile.media_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="storage.models.ScaleFile.meta_data">
-<code class="descclassname">ScaleFile.</code><code class="descname">meta_data</code><a class="headerlink" href="#storage.models.ScaleFile.meta_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>A placeholder class that provides a way to set the attribute on the model.</p>
+<code class="descname">meta_data</code><a class="headerlink" href="#storage.models.ScaleFile.meta_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="storage.models.ScaleFile.objects">
-<code class="descclassname">ScaleFile.</code><code class="descname">objects</code><em class="property"> = &lt;storage.models.ScaleFileManager object&gt;</em><a class="headerlink" href="#storage.models.ScaleFile.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descname">objects</code><em class="property"> = &lt;storage.models.ScaleFileManager object&gt;</em><a class="headerlink" href="#storage.models.ScaleFile.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="storage.models.ScaleFile.parsed">
+<code class="descname">parsed</code><a class="headerlink" href="#storage.models.ScaleFile.parsed" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.published">
+<code class="descname">published</code><a class="headerlink" href="#storage.models.ScaleFile.published" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="storage.models.ScaleFile.recipefile_set">
-<code class="descclassname">ScaleFile.</code><code class="descname">recipefile_set</code><a class="headerlink" href="#storage.models.ScaleFile.recipefile_set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">recipefile_set</code><a class="headerlink" href="#storage.models.ScaleFile.recipefile_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="storage.models.ScaleFile.set_basic_fields">
-<code class="descclassname">ScaleFile.</code><code class="descname">set_basic_fields</code><span class="sig-paren">(</span><em>file_name</em>, <em>file_size</em>, <em>media_type=None</em>, <em>data_type=None</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFile.set_basic_fields" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_basic_fields</code><span class="sig-paren">(</span><em>file_name</em>, <em>file_size</em>, <em>media_type=None</em>, <em>data_type=None</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFile.set_basic_fields" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the basic fields for the Scale file</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -863,7 +1199,7 @@ spaces.</p>
 
 <dl class="method">
 <dt id="storage.models.ScaleFile.set_countries">
-<code class="descclassname">ScaleFile.</code><code class="descname">set_countries</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFile.set_countries" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_countries</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFile.set_countries" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clears the countries list then recreates it from the CountryData table.
 If no geometry is available, this will remain empty.
 The country border effective date will use (in order or preference) data_started, data_ended, or created.</p>
@@ -871,19 +1207,33 @@ The country border effective date will use (in order or preference) data_started
 
 <dl class="method">
 <dt id="storage.models.ScaleFile.set_deleted">
-<code class="descclassname">ScaleFile.</code><code class="descname">set_deleted</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFile.set_deleted" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_deleted</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFile.set_deleted" title="Permalink to this definition">¶</a></dt>
 <dd><p>Marks the current file as deleted and updates the corresponding fields.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.superseded">
+<code class="descname">superseded</code><a class="headerlink" href="#storage.models.ScaleFile.superseded" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.unpublished">
+<code class="descname">unpublished</code><a class="headerlink" href="#storage.models.ScaleFile.unpublished" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.models.ScaleFile.update_uuid">
-<code class="descclassname">ScaleFile.</code><code class="descname">update_uuid</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFile.update_uuid" title="Permalink to this definition">¶</a></dt>
+<code class="descname">update_uuid</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFile.update_uuid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes and sets a new UUID value for this file by hashing the given arguments.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>args</strong> (<em>[string]</em>) &#8211; One or more input objects to hash.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>args</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; One or more input objects to hash.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The generated unique identifier.</td>
 </tr>
@@ -895,7 +1245,7 @@ The country border effective date will use (in order or preference) data_started
 
 <dl class="attribute">
 <dt id="storage.models.ScaleFile.url">
-<code class="descclassname">ScaleFile.</code><code class="descname">url</code><a class="headerlink" href="#storage.models.ScaleFile.url" title="Permalink to this definition">¶</a></dt>
+<code class="descname">url</code><a class="headerlink" href="#storage.models.ScaleFile.url" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the absolute URL used to download this file.</p>
 <p>Note that this property is only supported if the associated workspace supports HTTP downloads.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -911,9 +1261,31 @@ The country border effective date will use (in order or preference) data_started
 </dd></dl>
 
 <dl class="attribute">
+<dt id="storage.models.ScaleFile.uuid">
+<code class="descname">uuid</code><a class="headerlink" href="#storage.models.ScaleFile.uuid" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="storage.models.ScaleFile.workspace">
-<code class="descclassname">ScaleFile.</code><code class="descname">workspace</code><a class="headerlink" href="#storage.models.ScaleFile.workspace" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">workspace</code><a class="headerlink" href="#storage.models.ScaleFile.workspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.ScaleFile.workspace_id">
+<code class="descname">workspace_id</code><a class="headerlink" href="#storage.models.ScaleFile.workspace_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -965,7 +1337,7 @@ workspace field populated.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_ids</strong> (<em>list[int]</em>) &#8211; The file IDs</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_ids</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em><em></em>) &#8211; The file IDs</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The files that match the given IDs</td>
 </tr>
@@ -1041,7 +1413,7 @@ for processing</p>
 <li><strong>description</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; An optional description of the workspace</li>
 <li><strong>base_url</strong> (<em>str</em>) &#8211; The base URL used to retrieve files from this workspace if supported.</li>
 <li><strong>is_active</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether the workspace is active (can be used and displayed)</li>
-<li><strong>json_config</strong> (<code class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></code>) &#8211; JSON configuration describing how to store/retrieve files for this workspace</li>
+<li><strong>json_config</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.contrib.postgres.fields.JSONField</span></code>) &#8211; JSON configuration describing how to store/retrieve files for this workspace</li>
 <li><strong>is_move_enabled</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether the workspace allows files to be moved within it</li>
 <li><strong>used_size</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BigIntegerField</span></code>) &#8211; The number of used bytes, may be None (unknown)</li>
 <li><strong>total_size</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BigIntegerField</span></code>) &#8211; The total size of the workspace file system in bytes, may be None (unknown)</li>
@@ -1061,13 +1433,34 @@ for processing</p>
 
 <dl class="exception">
 <dt id="storage.models.Workspace.MultipleObjectsReturned">
-<em class="property">exception </em><code class="descclassname">Workspace.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#storage.models.Workspace.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#storage.models.Workspace.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.Workspace.archived">
+<code class="descname">archived</code><a class="headerlink" href="#storage.models.Workspace.archived" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.Workspace.base_url">
+<code class="descname">base_url</code><a class="headerlink" href="#storage.models.Workspace.base_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.Workspace.created">
+<code class="descname">created</code><a class="headerlink" href="#storage.models.Workspace.created" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.models.Workspace.delete_files">
-<code class="descclassname">Workspace.</code><code class="descname">delete_files</code><span class="sig-paren">(</span><em>files</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.delete_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">delete_files</code><span class="sig-paren">(</span><em>files</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.delete_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletes the given files using the workspace&#8217;s broker and saves the ScaleFile model changes in the database.
 If this workspace&#8217;s broker uses a container volume, the workspace expects this volume file system to already be
 mounted at workspace_volume_path or an exception will be raised.</p>
@@ -1082,9 +1475,16 @@ mounted at workspace_volume_path or an exception will be raised.</p>
 <p>:raises <a class="reference internal" href="#storage.exceptions.MissingVolumeMount" title="storage.exceptions.MissingVolumeMount"><code class="xref py py-class docutils literal"><span class="pre">storage.exceptions.MissingVolumeMount</span></code></a>: If the required volume mount is missing</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="storage.models.Workspace.description">
+<code class="descname">description</code><a class="headerlink" href="#storage.models.Workspace.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="storage.models.Workspace.download_files">
-<code class="descclassname">Workspace.</code><code class="descname">download_files</code><span class="sig-paren">(</span><em>file_downloads</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.download_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">download_files</code><span class="sig-paren">(</span><em>file_downloads</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.download_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Downloads the given files to the given local file system paths using the workspace&#8217;s broker. If this
 workspace&#8217;s broker uses a container volume, the workspace expects this volume file system to already be mounted
 at workspace_volume_path or an exception will be raised.</p>
@@ -1101,7 +1501,7 @@ at workspace_volume_path or an exception will be raised.</p>
 
 <dl class="method">
 <dt id="storage.models.Workspace.get_broker">
-<code class="descclassname">Workspace.</code><code class="descname">get_broker</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.get_broker" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_broker</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.get_broker" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the configured broker for this workspace</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1117,7 +1517,7 @@ at workspace_volume_path or an exception will be raised.</p>
 
 <dl class="method">
 <dt id="storage.models.Workspace.get_file_system_paths">
-<code class="descclassname">Workspace.</code><code class="descname">get_file_system_paths</code><span class="sig-paren">(</span><em>files</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.get_file_system_paths" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_file_system_paths</code><span class="sig-paren">(</span><em>files</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.get_file_system_paths" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the local file system paths for the given files, if supported by the workspace&#8217;s broker. If this
 workspace&#8217;s broker uses a container volume, the workspace expects this volume file system to already be mounted
 at workspace_volume_path or an exception will be raised.</p>
@@ -1137,33 +1537,62 @@ at workspace_volume_path or an exception will be raised.</p>
 
 <dl class="method">
 <dt id="storage.models.Workspace.get_next_by_created">
-<code class="descclassname">Workspace.</code><code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.get_next_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.models.Workspace.get_next_by_last_modified">
-<code class="descclassname">Workspace.</code><code class="descname">get_next_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.models.Workspace.get_previous_by_created">
-<code class="descclassname">Workspace.</code><code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="storage.models.Workspace.get_previous_by_last_modified">
-<code class="descclassname">Workspace.</code><code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="storage.models.Workspace.id">
+<code class="descname">id</code><a class="headerlink" href="#storage.models.Workspace.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.Workspace.is_active">
+<code class="descname">is_active</code><a class="headerlink" href="#storage.models.Workspace.is_active" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.Workspace.is_move_enabled">
+<code class="descname">is_move_enabled</code><a class="headerlink" href="#storage.models.Workspace.is_move_enabled" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="storage.models.Workspace.json_config">
-<code class="descclassname">Workspace.</code><code class="descname">json_config</code><a class="headerlink" href="#storage.models.Workspace.json_config" title="Permalink to this definition">¶</a></dt>
-<dd><p>A placeholder class that provides a way to set the attribute on the model.</p>
+<code class="descname">json_config</code><a class="headerlink" href="#storage.models.Workspace.json_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.Workspace.last_modified">
+<code class="descname">last_modified</code><a class="headerlink" href="#storage.models.Workspace.last_modified" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="storage.models.Workspace.list_files">
-<code class="descclassname">Workspace.</code><code class="descname">list_files</code><span class="sig-paren">(</span><em>recursive</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.list_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">list_files</code><span class="sig-paren">(</span><em>recursive</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.list_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Lists files within a workspace, with optional full tree recursion.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1181,7 +1610,7 @@ at workspace_volume_path or an exception will be raised.</p>
 
 <dl class="method">
 <dt id="storage.models.Workspace.move_files">
-<code class="descclassname">Workspace.</code><code class="descname">move_files</code><span class="sig-paren">(</span><em>file_moves</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.move_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">move_files</code><span class="sig-paren">(</span><em>file_moves</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.move_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Moves the given files to the new file system paths and saves the ScaleFile model changes in the database. If
 this workspace&#8217;s broker uses a container volume, the workspace expects this volume file system to already be
 mounted at workspace_volume_path or an exception will be raised.</p>
@@ -1197,18 +1626,49 @@ mounted at workspace_volume_path or an exception will be raised.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="storage.models.Workspace.name">
+<code class="descname">name</code><a class="headerlink" href="#storage.models.Workspace.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="storage.models.Workspace.objects">
-<code class="descclassname">Workspace.</code><code class="descname">objects</code><em class="property"> = &lt;storage.models.WorkspaceManager object&gt;</em><a class="headerlink" href="#storage.models.Workspace.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descname">objects</code><em class="property"> = &lt;storage.models.WorkspaceManager object&gt;</em><a class="headerlink" href="#storage.models.Workspace.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="storage.models.Workspace.scalefile_set">
-<code class="descclassname">Workspace.</code><code class="descname">scalefile_set</code><a class="headerlink" href="#storage.models.Workspace.scalefile_set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">scalefile_set</code><a class="headerlink" href="#storage.models.Workspace.scalefile_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.Workspace.title">
+<code class="descname">title</code><a class="headerlink" href="#storage.models.Workspace.title" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="storage.models.Workspace.total_size">
+<code class="descname">total_size</code><a class="headerlink" href="#storage.models.Workspace.total_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="storage.models.Workspace.upload_files">
-<code class="descclassname">Workspace.</code><code class="descname">upload_files</code><span class="sig-paren">(</span><em>file_uploads</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.upload_files" title="Permalink to this definition">¶</a></dt>
+<code class="descname">upload_files</code><span class="sig-paren">(</span><em>file_uploads</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.Workspace.upload_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uploads the given files from the given local file system paths and saves the ScaleFile models in the
 database. If this workspace&#8217;s broker uses a container volume, the workspace expects this volume file system to
 already be mounted at workspace_volume_path or an exception will be raised.</p>
@@ -1224,8 +1684,15 @@ already be mounted at workspace_volume_path or an exception will be raised.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="storage.models.Workspace.used_size">
+<code class="descname">used_size</code><a class="headerlink" href="#storage.models.Workspace.used_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="storage.models.Workspace.volume">
-<code class="descclassname">Workspace.</code><code class="descname">volume</code><a class="headerlink" href="#storage.models.Workspace.volume" title="Permalink to this definition">¶</a></dt>
+<code class="descname">volume</code><a class="headerlink" href="#storage.models.Workspace.volume" title="Permalink to this definition">¶</a></dt>
 <dd><p>If this workspace&#8217;s broker uses a container volume, this property returns the information needed to set up a
 volume that can be mounted into the task container. If this workspace&#8217;s broker does not use a container volume,
 this property should be None.</p>
@@ -1243,7 +1710,7 @@ this property should be None.</p>
 
 <dl class="attribute">
 <dt id="storage.models.Workspace.workspace_volume_path">
-<code class="descclassname">Workspace.</code><code class="descname">workspace_volume_path</code><a class="headerlink" href="#storage.models.Workspace.workspace_volume_path" title="Permalink to this definition">¶</a></dt>
+<code class="descname">workspace_volume_path</code><a class="headerlink" href="#storage.models.Workspace.workspace_volume_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the absolute local path within the container onto which the broker&#8217;s container volume is mounted</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1349,8 +1816,8 @@ transaction. An argument of None for a field indicates that the field should not
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query workspaces updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query workspaces updated before this amount of time.</li>
-<li><strong>names</strong> (<em>[string]</em>) &#8211; Query workspaces with the given name.</li>
-<li><strong>order</strong> (<em>[string]</em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>names</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query workspaces with the given name.</li>
+<li><strong>order</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
 </tr>
@@ -1602,7 +2069,7 @@ transaction. An argument of None for a field indicates that the field should not
 
 <dl class="attribute">
 <dt id="storage.views.WorkspaceDetailsView.queryset">
-<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#storage.views.WorkspaceDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#storage.views.WorkspaceDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1638,7 +2105,7 @@ transaction. An argument of None for a field indicates that the field should not
 
 <dl class="attribute">
 <dt id="storage.views.WorkspacesValidationView.queryset">
-<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#storage.views.WorkspacesValidationView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#storage.views.WorkspacesValidationView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -1686,7 +2153,7 @@ transaction. An argument of None for a field indicates that the field should not
 
 <dl class="attribute">
 <dt id="storage.views.WorkspacesView.queryset">
-<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#storage.views.WorkspacesView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#storage.views.WorkspacesView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1751,7 +2218,7 @@ transaction. An argument of None for a field indicates that the field should not
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

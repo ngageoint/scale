@@ -1,0 +1,22 @@
+batch\.management\.commands package
+===================================
+
+Submodules
+----------
+
+batch\.management\.commands\.scale\_batch\_creator module
+---------------------------------------------------------
+
+.. automodule:: batch.management.commands.scale_batch_creator
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: batch.management.commands
+    :members:
+    :undoc-members:
+    :show-inheritance:

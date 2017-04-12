@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../index.html"/>
         <link rel="up" title="Command Line Client" href="index.html"/>
         <link rel="next" title="Algorithm Integration into Scale" href="../algorithm_integration/index.html"/>
@@ -97,7 +100,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../overview/index.html">Overview</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Command Line Client</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="overview.html">Overview</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Creating New Job Types</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Creating New Job Types</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
@@ -157,7 +160,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/cli/getting_started.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/cli/getting_started.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -174,12 +177,12 @@
 <span id="cli-getting-started"></span><h1>Creating New Job Types<a class="headerlink" href="#creating-new-job-types" title="Permalink to this headline">¶</a></h1>
 <p>A key feature of the command line client (cli) is the ability to creatae new job types from existing configurations
 or templates. New templates can be specified or defaults can be used. Make sure you have your <cite>url</cite> and <cite>registry</cite>
-values configured in <cite>~/.scaleconfig</cite> (see <a class="reference internal" href="overview.html#cli-overview"><span>Overview</span></a>) To create a new job type from the default template:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>1 &gt; goscale jobs init -a baseimage=alpine -a maintainer=&quot;My Name&quot; -a name=MyJob -a description=&quot;MyJob will get the job done&quot; -a image_name=&quot;myjob_v1&quot; myjob
-2 &gt; cd myjob
-3 &gt; goscale jobs validate
-4 &gt; goscale jobs commit -p
-5 &gt; goscale jobs deploy
+values configured in <cite>~/.scaleconfig</cite> (see <a class="reference internal" href="overview.html#cli-overview"><span class="std std-ref">Overview</span></a>) To create a new job type from the default template:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="o">&gt;</span> <span class="n">goscale</span> <span class="n">jobs</span> <span class="n">init</span> <span class="o">-</span><span class="n">a</span> <span class="n">baseimage</span><span class="o">=</span><span class="n">alpine</span> <span class="o">-</span><span class="n">a</span> <span class="n">maintainer</span><span class="o">=</span><span class="s2">&quot;My Name&quot;</span> <span class="o">-</span><span class="n">a</span> <span class="n">name</span><span class="o">=</span><span class="n">MyJob</span> <span class="o">-</span><span class="n">a</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;MyJob will get the job done&quot;</span> <span class="o">-</span><span class="n">a</span> <span class="n">image_name</span><span class="o">=</span><span class="s2">&quot;myjob_v1&quot;</span> <span class="n">myjob</span>
+<span class="mi">2</span> <span class="o">&gt;</span> <span class="n">cd</span> <span class="n">myjob</span>
+<span class="mi">3</span> <span class="o">&gt;</span> <span class="n">goscale</span> <span class="n">jobs</span> <span class="n">validate</span>
+<span class="mi">4</span> <span class="o">&gt;</span> <span class="n">goscale</span> <span class="n">jobs</span> <span class="n">commit</span> <span class="o">-</span><span class="n">p</span>
+<span class="mi">5</span> <span class="o">&gt;</span> <span class="n">goscale</span> <span class="n">jobs</span> <span class="n">deploy</span>
 </pre></div>
 </div>
 <p>Line 1 initializes the job type from the default template. <cite>-a</cite> specifies template substitutions supported in the default
@@ -193,9 +196,9 @@ and submits it to scale. If the job type does not currently exist, it will be cr
 specifies a different version, the job type will be updated. If the job type exists and the version is the same, nothing will
 happen.</p>
 <p>Once the new job type is registered with scale, you can run it from the cli if there is no automatic ingest trigger
-configured. You need to create a job data file (JSON or YAML) as described in <a class="reference internal" href="../architecture/jobs/job_data.html#architecture-jobs-job-data"><span>Job Data</span></a>.
+configured. You need to create a job data file (JSON or YAML) as described in <a class="reference internal" href="../architecture/jobs/job_data.html#architecture-jobs-job-data"><span class="std std-ref">Job Data</span></a>.
 You can specify a job type name or job type ID to execute a job.:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>1 &gt; goscale jobs run -d job_data.yml MyJob
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="o">&gt;</span> <span class="n">goscale</span> <span class="n">jobs</span> <span class="n">run</span> <span class="o">-</span><span class="n">d</span> <span class="n">job_data</span><span class="o">.</span><span class="n">yml</span> <span class="n">MyJob</span>
 </pre></div>
 </div>
 </div>
@@ -248,7 +251,7 @@ You can specify a job type name or job type ID to execute a job.:</p>
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../_static/jquery.js"></script>

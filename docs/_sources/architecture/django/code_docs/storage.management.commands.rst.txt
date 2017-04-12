@@ -1,0 +1,54 @@
+storage\.management\.commands package
+=====================================
+
+Submodules
+----------
+
+storage\.management\.commands\.scale\_delete\_file module
+---------------------------------------------------------
+
+.. automodule:: storage.management.commands.scale_delete_file
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+storage\.management\.commands\.scale\_download\_file module
+-----------------------------------------------------------
+
+.. automodule:: storage.management.commands.scale_download_file
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+storage\.management\.commands\.scale\_list\_files module
+--------------------------------------------------------
+
+.. automodule:: storage.management.commands.scale_list_files
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+storage\.management\.commands\.scale\_move\_file module
+-------------------------------------------------------
+
+.. automodule:: storage.management.commands.scale_move_file
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+storage\.management\.commands\.scale\_upload\_file module
+---------------------------------------------------------
+
+.. automodule:: storage.management.commands.scale_upload_file
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: storage.management.commands
+    :members:
+    :undoc-members:
+    :show-inheritance:

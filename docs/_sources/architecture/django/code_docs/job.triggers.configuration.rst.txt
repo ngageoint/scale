@@ -1,0 +1,22 @@
+job\.triggers\.configuration package
+====================================
+
+Submodules
+----------
+
+job\.triggers\.configuration\.trigger\_rule module
+--------------------------------------------------
+
+.. automodule:: job.triggers.configuration.trigger_rule
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: job.triggers.configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:

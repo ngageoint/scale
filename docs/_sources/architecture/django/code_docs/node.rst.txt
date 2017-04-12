@@ -1,0 +1,78 @@
+node package
+============
+
+Subpackages
+-----------
+
+.. toctree::
+
+    node.migrations
+    node.test
+
+Submodules
+----------
+
+node\.admin module
+------------------
+
+.. automodule:: node.admin
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+node\.apps module
+-----------------
+
+.. automodule:: node.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+node\.models module
+-------------------
+
+.. automodule:: node.models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+node\.serializers module
+------------------------
+
+.. automodule:: node.serializers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+node\.serializers\_extra module
+-------------------------------
+
+.. automodule:: node.serializers_extra
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+node\.urls module
+-----------------
+
+.. automodule:: node.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+node\.views module
+------------------
+
+.. automodule:: node.views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: node
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../index.html"/>
         <link rel="up" title="Algorithm Integration into Scale" href="index.html"/>
         <link rel="next" title="Encapsulating your algorithm in a Docker container" href="step3.html"/>
@@ -98,7 +101,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../cli/index.html">Command Line Client</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Algorithm Integration into Scale</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="step1.html">Making a Scale-compatible Algorithm</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Capturing your algorithm outputs with a Scale Results Manifest</a><ul>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Capturing your algorithm outputs with a Scale Results Manifest</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#simple-results-manifest-example">Simple Results Manifest Example</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#example-code-for-generating-results-manifests">Example Code for generating results manifests</a></li>
 </ul>
@@ -167,7 +170,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/algorithm_integration/step2.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/algorithm_integration/step2.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -186,7 +189,7 @@
 Once an algorithm is complete a results manifest file is used to convey what products should be archived by Scale and
 passed onto other algorithms.  It is <strong>HIGHLY</strong> recommended that the algorithm write out the manifest JSON file as
 prescribed in the Scale documentation.</p>
-<p>Click here for results manifest specification:  <a class="reference internal" href="results_manifest.html#algorithm-integration-results-manifest"><span>Results Manifest</span></a></p>
+<p>Click here for results manifest specification:  <a class="reference internal" href="results_manifest.html#algorithm-integration-results-manifest"><span class="std std-ref">Results Manifest</span></a></p>
 <p>Below are examples of wrapper scripts if you cannot modify the algorithm.  These should only be used if you do not have
 access to the source code for your algorithm.</p>
 <p><strong>ONLY FILES IN THE RESULTS MANIFEST WILL BE SAVED BY SCALE</strong></p>
@@ -194,7 +197,7 @@ access to the source code for your algorithm.</p>
 directory provided by Scale. The results manifest must be called &#8220;results_manifest.json&#8221; and must be present in the root
 of the output directory. All output files and the results manifest must have full read permission (as well as execute
 for any directories) granted for ALL users, allowing the Scale post task to read the outputs. The output names in the
-results manifest must match the <strong>output_data</strong> field in the <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span>job interface</span></a>.</p>
+results manifest must match the <strong>output_data</strong> field in the <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span class="std std-ref">job interface</span></a>.</p>
 <div class="section" id="simple-results-manifest-example">
 <h2>Simple Results Manifest Example<a class="headerlink" href="#simple-results-manifest-example" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-javascript"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
@@ -435,7 +438,7 @@ results manifest must match the <strong>output_data</strong> field in the <a cla
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../_static/jquery.js"></script>

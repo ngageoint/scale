@@ -1,0 +1,22 @@
+recipe\.test\.configuration\.definition package
+===============================================
+
+Submodules
+----------
+
+recipe\.test\.configuration\.definition\.test\_recipe\_definition module
+------------------------------------------------------------------------
+
+.. automodule:: recipe.test.configuration.definition.test_recipe_definition
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: recipe.test.configuration.definition
+    :members:
+    :undoc-members:
+    :show-inheritance:

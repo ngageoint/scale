@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../index.html"/>
         <link rel="up" title="REST API" href="index.html"/>
         <link rel="next" title="Metrics Services" href="metrics.html"/>
@@ -106,7 +109,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">Ingest Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">Job Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job_execution.html">Job Execution Services</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Job Type Services</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Job Type Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">Metrics Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">Node Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="port.html">Import/Export Services</a></li>
@@ -179,7 +182,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/rest/job_type.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/rest/job_type.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -300,7 +303,7 @@ Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 <tr class="row-even"><td colspan="2">.id</td>
 <td colspan="2">Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API.
-(See <a class="reference internal" href="#rest-job-type-details"><span>Job Type Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="2">.name</td>
 <td colspan="2">String</td>
@@ -608,13 +611,13 @@ determine additional disk space in MiB required for job output.</td>
 <td colspan="2">JSON Object</td>
 <td>Required</td>
 <td>JSON description of the interface for running the job.
-(See <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span>Job Interface Specification Version 1.4</span></a>)</td>
+(See <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span class="std std-ref">Job Interface Specification Version 1.4</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="2">error_mapping</td>
 <td colspan="2">JSON Object</td>
 <td>Optional</td>
 <td>JSON description that maps exit codes to known error models.
-(See <a class="reference internal" href="../architecture/jobs/error_interface.html#architecture-errors-interface-spec"><span>Error Interface Specification Version 1.0</span></a>)</td>
+(See <a class="reference internal" href="../architecture/jobs/error_interface.html#architecture-errors-interface-spec"><span class="std std-ref">Error Interface Specification Version 1.0</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">trigger_rule</td>
 <td colspan="2">JSON Object</td>
@@ -698,10 +701,10 @@ The is_active field is optional and can be used to pause.</td>
 </tr>
 <tr class="row-even"><td colspan="6"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-odd"><td>&nbsp;</td>
+<tr class="row-odd"><td>&#160;</td>
 <td colspan="2">JSON Object</td>
 <td colspan="3">All fields are the same as the job type details model.
-(See <a class="reference internal" href="#rest-job-type-details"><span>Job Type Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
@@ -883,13 +886,13 @@ determine additional disk space in MiB required for job output.</td>
 <td colspan="2">JSON Object</td>
 <td>Required</td>
 <td>JSON description of the interface for running the job.
-(See <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span>Job Interface Specification Version 1.4</span></a>)</td>
+(See <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span class="std std-ref">Job Interface Specification Version 1.4</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="2">error_mapping</td>
 <td colspan="2">JSON Object</td>
 <td>Optional</td>
 <td>JSON description that maps exit codes to known error models.
-(See <a class="reference internal" href="../architecture/jobs/error_interface.html#architecture-errors-interface-spec"><span>Error Interface Specification Version 1.0</span></a>)</td>
+(See <a class="reference internal" href="../architecture/jobs/error_interface.html#architecture-errors-interface-spec"><span class="std std-ref">Error Interface Specification Version 1.0</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">trigger_rule</td>
 <td colspan="2">JSON Object</td>
@@ -1155,12 +1158,12 @@ determine additional disk space in MiB required for job output.</td>
 <tr class="row-even"><td>interface</td>
 <td>JSON Object</td>
 <td colspan="2">JSON description defining the interface for running a job of this type.
-(See <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span>Job Interface Specification Version 1.4</span></a>)</td>
+(See <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span class="std std-ref">Job Interface Specification Version 1.4</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>error_mapping</td>
 <td>JSON Object</td>
 <td colspan="2">JSON description defining the error mappings for a job of this type.
-(See <a class="reference internal" href="../architecture/jobs/error_interface.html#architecture-errors-interface-spec"><span>Error Interface Specification Version 1.0</span></a>)</td>
+(See <a class="reference internal" href="../architecture/jobs/error_interface.html#architecture-errors-interface-spec"><span class="std std-ref">Error Interface Specification Version 1.0</span></a>)</td>
 </tr>
 <tr class="row-even"><td>trigger_rule</td>
 <td>JSON Object</td>
@@ -1171,7 +1174,7 @@ The is_active field is optional and can be used to pause.</td>
 <tr class="row-odd"><td>errors</td>
 <td>Array</td>
 <td colspan="2">List of all errors that are referenced by this job type&#8217;s error mapping.
-(See <a class="reference internal" href="error.html#rest-error-details"><span>Error Details</span></a>)</td>
+(See <a class="reference internal" href="error.html#rest-error-details"><span class="std std-ref">Error Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>.job_counts_6h</td>
 <td>Array</td>
@@ -1448,13 +1451,13 @@ determine additional disk space in MiB required for job output.</td>
 <td colspan="2">JSON Object</td>
 <td>Optional</td>
 <td>JSON description of the interface for running the job.
-(See <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span>Job Interface Specification Version 1.4</span></a>)</td>
+(See <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span class="std std-ref">Job Interface Specification Version 1.4</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="2">error_mapping</td>
 <td colspan="2">JSON Object</td>
 <td>Optional</td>
 <td>JSON description that maps exit codes to known error models.
-(See <a class="reference internal" href="../architecture/jobs/error_interface.html#architecture-errors-interface-spec"><span>Error Interface Specification Version 1.0</span></a>)</td>
+(See <a class="reference internal" href="../architecture/jobs/error_interface.html#architecture-errors-interface-spec"><span class="std std-ref">Error Interface Specification Version 1.0</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">trigger_rule</td>
 <td colspan="2">JSON Object</td>
@@ -1534,10 +1537,10 @@ The is_active field is optional and can be used to pause.</td>
 </tr>
 <tr class="row-odd"><td colspan="6"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-even"><td>&nbsp;</td>
+<tr class="row-even"><td>&#160;</td>
 <td colspan="2">JSON Object</td>
 <td colspan="3">All fields are the same as the job type details model.
-(See <a class="reference internal" href="#rest-job-type-details"><span>Job Type Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
@@ -1664,7 +1667,7 @@ research &amp; development (R&amp;D) phase (False).</td>
 <tr class="row-even"><td>.job_type</td>
 <td>JSON Object</td>
 <td colspan="2">The job type that is associated with the statistics.
-(See <a class="reference internal" href="#rest-job-type-details"><span>Job Type Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.job_counts</td>
 <td>Array</td>
@@ -1799,7 +1802,7 @@ research &amp; development (R&amp;D) phase (False).</td>
 <tr class="row-even"><td>.job_type</td>
 <td>JSON Object</td>
 <td>The job type that is associated with the count.
-(See <a class="reference internal" href="#rest-job-type-details"><span>Job Type Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.count</td>
 <td>Integer</td>
@@ -1887,7 +1890,7 @@ research &amp; development (R&amp;D) phase (False).</td>
 <tr class="row-even"><td>.job_type</td>
 <td>JSON Object</td>
 <td>The job type that is associated with the count.
-(See <a class="reference internal" href="#rest-job-type-details"><span>Job Type Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.count</td>
 <td>Integer</td>
@@ -1975,7 +1978,7 @@ research &amp; development (R&amp;D) phase (False).</td>
 <tr class="row-even"><td>.job_type</td>
 <td>JSON Object</td>
 <td>The job type that is associated with the count.
-(See <a class="reference internal" href="#rest-job-type-details"><span>Job Type Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.count</td>
 <td>Integer</td>
@@ -1984,7 +1987,7 @@ research &amp; development (R&amp;D) phase (False).</td>
 <tr class="row-even"><td>.error</td>
 <td>JSON Object</td>
 <td>The error that is associated with the count.
-(See <a class="reference internal" href="error.html#rest-error-details"><span>Error Details</span></a>)</td>
+(See <a class="reference internal" href="error.html#rest-error-details"><span class="std std-ref">Error Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.first_error</td>
 <td>ISO-8601 Datetime</td>
@@ -2088,7 +2091,7 @@ research &amp; development (R&amp;D) phase (False).</td>
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../_static/jquery.js"></script>

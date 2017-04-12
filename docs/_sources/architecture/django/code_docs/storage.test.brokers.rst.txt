@@ -1,0 +1,38 @@
+storage\.test\.brokers package
+==============================
+
+Submodules
+----------
+
+storage\.test\.brokers\.test\_host\_broker module
+-------------------------------------------------
+
+.. automodule:: storage.test.brokers.test_host_broker
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+storage\.test\.brokers\.test\_nfs\_broker module
+------------------------------------------------
+
+.. automodule:: storage.test.brokers.test_nfs_broker
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+storage\.test\.brokers\.test\_s3\_broker module
+-----------------------------------------------
+
+.. automodule:: storage.test.brokers.test_s3_broker
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: storage.test.brokers
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,0 +1,37 @@
+source\.triggers package
+========================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    source.triggers.configuration
+
+Submodules
+----------
+
+source\.triggers\.parse\_trigger\_condition module
+--------------------------------------------------
+
+.. automodule:: source.triggers.parse_trigger_condition
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+source\.triggers\.parse\_trigger\_handler module
+------------------------------------------------
+
+.. automodule:: source.triggers.parse_trigger_handler
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: source.triggers
+    :members:
+    :undoc-members:
+    :show-inheritance:

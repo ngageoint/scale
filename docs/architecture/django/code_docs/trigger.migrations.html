@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="trigger package" href="trigger.html"/>
         <link rel="next" title="trigger.test package" href="trigger.test.html"/>
@@ -199,7 +202,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/trigger.migrations.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/trigger.migrations.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -230,7 +233,7 @@
 
 <dl class="attribute">
 <dt id="trigger.migrations.0001_initial.Migration.operations">
-<code class="descname">operations</code><em class="property"> = [&lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'type', &lt;django.db.models.fields.CharField&gt;), (u'description', &lt;djorm_pgjson.fields.JSONField&gt;), (u'occurred', &lt;django.db.models.fields.DateTimeField&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={u'db_table': u'trigger_event'}, name=u'TriggerEvent'&gt;, &lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'name', &lt;django.db.models.fields.CharField&gt;), (u'type', &lt;django.db.models.fields.CharField&gt;), (u'title', &lt;django.db.models.fields.CharField&gt;), (u'description', &lt;django.db.models.fields.CharField&gt;), (u'configuration', &lt;djorm_pgjson.fields.JSONField&gt;), (u'is_active', &lt;django.db.models.fields.BooleanField&gt;), (u'created', &lt;django.db.models.fields.DateTimeField&gt;), (u'archived', &lt;django.db.models.fields.DateTimeField&gt;), (u'last_modified', &lt;django.db.models.fields.DateTimeField&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={u'db_table': u'trigger_rule'}, name=u'TriggerRule'&gt;, &lt;AddField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'rule', model_name=u'triggerevent'&gt;]</em><a class="headerlink" href="#trigger.migrations.0001_initial.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<code class="descname">operations</code><em class="property"> = [&lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'type', &lt;django.db.models.fields.CharField&gt;), (u'description', &lt;util.deprecation.JSONStringField&gt;), (u'occurred', &lt;django.db.models.fields.DateTimeField&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={u'db_table': u'trigger_event'}, name=u'TriggerEvent'&gt;, &lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'name', &lt;django.db.models.fields.CharField&gt;), (u'type', &lt;django.db.models.fields.CharField&gt;), (u'title', &lt;django.db.models.fields.CharField&gt;), (u'description', &lt;django.db.models.fields.CharField&gt;), (u'configuration', &lt;util.deprecation.JSONStringField&gt;), (u'is_active', &lt;django.db.models.fields.BooleanField&gt;), (u'created', &lt;django.db.models.fields.DateTimeField&gt;), (u'archived', &lt;django.db.models.fields.DateTimeField&gt;), (u'last_modified', &lt;django.db.models.fields.DateTimeField&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={u'db_table': u'trigger_rule'}, name=u'TriggerRule'&gt;, &lt;AddField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=True, name=u'rule', model_name=u'triggerevent'&gt;]</em><a class="headerlink" href="#trigger.migrations.0001_initial.Migration.operations" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -293,6 +296,25 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-trigger.migrations.0005_auto_20170412_1225">
+<span id="trigger-migrations-0005-auto-20170412-1225-module"></span><h2>trigger.migrations.0005_auto_20170412_1225 module<a class="headerlink" href="#module-trigger.migrations.0005_auto_20170412_1225" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="trigger.migrations.0005_auto_20170412_1225.Migration">
+<em class="property">class </em><code class="descclassname">trigger.migrations.0005_auto_20170412_1225.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.migrations.0005_auto_20170412_1225.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="trigger.migrations.0005_auto_20170412_1225.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'trigger', u'0004_auto_20151207_1215')]</em><a class="headerlink" href="#trigger.migrations.0005_auto_20170412_1225.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="trigger.migrations.0005_auto_20170412_1225.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;AlterField  field=&lt;django.contrib.postgres.fields.jsonb.JSONField&gt;, name=u'description', model_name=u'triggerevent'&gt;, &lt;AlterField  field=&lt;django.contrib.postgres.fields.jsonb.JSONField&gt;, name=u'configuration', model_name=u'triggerrule'&gt;]</em><a class="headerlink" href="#trigger.migrations.0005_auto_20170412_1225.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-trigger.migrations">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-trigger.migrations" title="Permalink to this headline">¶</a></h2>
 </div>
@@ -346,7 +368,7 @@
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

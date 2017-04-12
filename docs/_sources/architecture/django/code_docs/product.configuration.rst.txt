@@ -1,0 +1,22 @@
+product\.configuration package
+==============================
+
+Submodules
+----------
+
+product\.configuration\.product\_data\_file module
+--------------------------------------------------
+
+.. automodule:: product.configuration.product_data_file
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: product.configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:

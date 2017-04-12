@@ -1,0 +1,22 @@
+cli\.management\.commands package
+=================================
+
+Submodules
+----------
+
+cli\.management\.commands\.migratedata module
+---------------------------------------------
+
+.. automodule:: cli.management.commands.migratedata
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: cli.management.commands
+    :members:
+    :undoc-members:
+    :show-inheritance:

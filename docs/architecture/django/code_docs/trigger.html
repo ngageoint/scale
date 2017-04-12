@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="Django/Code Base" href="../index.html"/>
         <link rel="next" title="trigger.configuration package" href="trigger.configuration.html"/>
@@ -123,7 +126,7 @@
 <li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">trigger package</a><ul>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">trigger package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-trigger.apps">trigger.apps module</a></li>
@@ -197,7 +200,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/trigger.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/trigger.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -229,6 +232,7 @@
 <li class="toctree-l2"><a class="reference internal" href="trigger.migrations.html#module-trigger.migrations.0002_auto_20151125_1438">trigger.migrations.0002_auto_20151125_1438 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="trigger.migrations.html#module-trigger.migrations.0003_auto_20151202_1325">trigger.migrations.0003_auto_20151202_1325 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="trigger.migrations.html#module-trigger.migrations.0004_auto_20151207_1215">trigger.migrations.0004_auto_20151207_1215 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trigger.migrations.html#module-trigger.migrations.0005_auto_20170412_1225">trigger.migrations.0005_auto_20170412_1225 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="trigger.migrations.html#module-trigger.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -377,7 +381,7 @@ be saved in the database.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>type</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The type of the trigger that occurred</li>
 <li><strong>rule</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The rule that triggered this event, possibly None (some events are not triggered by rules)</li>
-<li><strong>description</strong> (<code class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></code>) &#8211; JSON description of the event. This will contain fields specific to the type of the trigger
+<li><strong>description</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.contrib.postgres.fields.JSONField</span></code>) &#8211; JSON description of the event. This will contain fields specific to the type of the trigger
 that occurred.</li>
 <li><strong>occurred</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the event occurred</li>
 </ul>
@@ -393,50 +397,117 @@ that occurred.</li>
 
 <dl class="exception">
 <dt id="trigger.models.TriggerEvent.MultipleObjectsReturned">
-<em class="property">exception </em><code class="descclassname">TriggerEvent.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#trigger.models.TriggerEvent.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#trigger.models.TriggerEvent.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="trigger.models.TriggerEvent.batch_set">
-<code class="descclassname">TriggerEvent.</code><code class="descname">batch_set</code><a class="headerlink" href="#trigger.models.TriggerEvent.batch_set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">batch_set</code><a class="headerlink" href="#trigger.models.TriggerEvent.batch_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="trigger.models.TriggerEvent.description">
-<code class="descclassname">TriggerEvent.</code><code class="descname">description</code><a class="headerlink" href="#trigger.models.TriggerEvent.description" title="Permalink to this definition">¶</a></dt>
-<dd><p>A placeholder class that provides a way to set the attribute on the model.</p>
+<code class="descname">description</code><a class="headerlink" href="#trigger.models.TriggerEvent.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trigger.models.TriggerEvent.get_next_by_occurred">
-<code class="descclassname">TriggerEvent.</code><code class="descname">get_next_by_occurred</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.models.TriggerEvent.get_next_by_occurred" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_by_occurred</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.models.TriggerEvent.get_next_by_occurred" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="trigger.models.TriggerEvent.get_previous_by_occurred">
-<code class="descclassname">TriggerEvent.</code><code class="descname">get_previous_by_occurred</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.models.TriggerEvent.get_previous_by_occurred" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_previous_by_occurred</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.models.TriggerEvent.get_previous_by_occurred" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="trigger.models.TriggerEvent.id">
+<code class="descname">id</code><a class="headerlink" href="#trigger.models.TriggerEvent.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="trigger.models.TriggerEvent.job_set">
-<code class="descclassname">TriggerEvent.</code><code class="descname">job_set</code><a class="headerlink" href="#trigger.models.TriggerEvent.job_set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">job_set</code><a class="headerlink" href="#trigger.models.TriggerEvent.job_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="trigger.models.TriggerEvent.objects">
-<code class="descclassname">TriggerEvent.</code><code class="descname">objects</code><em class="property"> = &lt;trigger.models.TriggerEventManager object&gt;</em><a class="headerlink" href="#trigger.models.TriggerEvent.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descname">objects</code><em class="property"> = &lt;trigger.models.TriggerEventManager object&gt;</em><a class="headerlink" href="#trigger.models.TriggerEvent.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="trigger.models.TriggerEvent.occurred">
+<code class="descname">occurred</code><a class="headerlink" href="#trigger.models.TriggerEvent.occurred" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="trigger.models.TriggerEvent.recipe_set">
-<code class="descclassname">TriggerEvent.</code><code class="descname">recipe_set</code><a class="headerlink" href="#trigger.models.TriggerEvent.recipe_set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">recipe_set</code><a class="headerlink" href="#trigger.models.TriggerEvent.recipe_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="trigger.models.TriggerEvent.rule">
-<code class="descclassname">TriggerEvent.</code><code class="descname">rule</code><a class="headerlink" href="#trigger.models.TriggerEvent.rule" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">rule</code><a class="headerlink" href="#trigger.models.TriggerEvent.rule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trigger.models.TriggerEvent.rule_id">
+<code class="descname">rule_id</code><a class="headerlink" href="#trigger.models.TriggerEvent.rule_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trigger.models.TriggerEvent.type">
+<code class="descname">type</code><a class="headerlink" href="#trigger.models.TriggerEvent.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -486,7 +557,7 @@ been saved in the database (it must have an ID). The returned trigger event mode
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>type</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The type of the trigger for the rule</li>
 <li><strong>name</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The identifying name of the trigger rule used by clients for queries</li>
-<li><strong>configuration</strong> (<code class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></code>) &#8211; JSON configuration for the rule. This will contain fields specific to the type of the
+<li><strong>configuration</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.contrib.postgres.fields.JSONField</span></code>) &#8211; JSON configuration for the rule. This will contain fields specific to the type of the
 trigger.</li>
 <li><strong>is_active</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField</span></code>) &#8211; Whether the rule is still active (false once rule is archived)</li>
 <li><strong>created</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the rule was created</li>
@@ -505,19 +576,34 @@ trigger.</li>
 
 <dl class="exception">
 <dt id="trigger.models.TriggerRule.MultipleObjectsReturned">
-<em class="property">exception </em><code class="descclassname">TriggerRule.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#trigger.models.TriggerRule.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#trigger.models.TriggerRule.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="trigger.models.TriggerRule.archived">
+<code class="descname">archived</code><a class="headerlink" href="#trigger.models.TriggerRule.archived" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="trigger.models.TriggerRule.configuration">
-<code class="descclassname">TriggerRule.</code><code class="descname">configuration</code><a class="headerlink" href="#trigger.models.TriggerRule.configuration" title="Permalink to this definition">¶</a></dt>
-<dd><p>A placeholder class that provides a way to set the attribute on the model.</p>
+<code class="descname">configuration</code><a class="headerlink" href="#trigger.models.TriggerRule.configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trigger.models.TriggerRule.created">
+<code class="descname">created</code><a class="headerlink" href="#trigger.models.TriggerRule.created" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="trigger.models.TriggerRule.get_configuration">
-<code class="descclassname">TriggerRule.</code><code class="descname">get_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#trigger.models.TriggerRule.get_configuration" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#trigger.models.TriggerRule.get_configuration" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the configuration for this trigger rule</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -534,32 +620,70 @@ trigger.</li>
 
 <dl class="method">
 <dt id="trigger.models.TriggerRule.get_next_by_created">
-<code class="descclassname">TriggerRule.</code><code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.models.TriggerRule.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.models.TriggerRule.get_next_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="trigger.models.TriggerRule.get_next_by_last_modified">
-<code class="descclassname">TriggerRule.</code><code class="descname">get_next_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.models.TriggerRule.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.models.TriggerRule.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="trigger.models.TriggerRule.get_previous_by_created">
-<code class="descclassname">TriggerRule.</code><code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.models.TriggerRule.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.models.TriggerRule.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="trigger.models.TriggerRule.get_previous_by_last_modified">
-<code class="descclassname">TriggerRule.</code><code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.models.TriggerRule.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#trigger.models.TriggerRule.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="trigger.models.TriggerRule.id">
+<code class="descname">id</code><a class="headerlink" href="#trigger.models.TriggerRule.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trigger.models.TriggerRule.is_active">
+<code class="descname">is_active</code><a class="headerlink" href="#trigger.models.TriggerRule.is_active" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="trigger.models.TriggerRule.jobtype_set">
-<code class="descclassname">TriggerRule.</code><code class="descname">jobtype_set</code><a class="headerlink" href="#trigger.models.TriggerRule.jobtype_set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">jobtype_set</code><a class="headerlink" href="#trigger.models.TriggerRule.jobtype_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trigger.models.TriggerRule.last_modified">
+<code class="descname">last_modified</code><a class="headerlink" href="#trigger.models.TriggerRule.last_modified" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trigger.models.TriggerRule.name">
+<code class="descname">name</code><a class="headerlink" href="#trigger.models.TriggerRule.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="trigger.models.TriggerRule.natural_key">
-<code class="descclassname">TriggerRule.</code><code class="descname">natural_key</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#trigger.models.TriggerRule.natural_key" title="Permalink to this definition">¶</a></dt>
+<code class="descname">natural_key</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#trigger.models.TriggerRule.natural_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>Django method to define the natural key for a trigger rule as the name</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -575,18 +699,45 @@ trigger.</li>
 
 <dl class="attribute">
 <dt id="trigger.models.TriggerRule.objects">
-<code class="descclassname">TriggerRule.</code><code class="descname">objects</code><em class="property"> = &lt;trigger.models.TriggerRuleManager object&gt;</em><a class="headerlink" href="#trigger.models.TriggerRule.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descname">objects</code><em class="property"> = &lt;trigger.models.TriggerRuleManager object&gt;</em><a class="headerlink" href="#trigger.models.TriggerRule.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="trigger.models.TriggerRule.recipetype_set">
-<code class="descclassname">TriggerRule.</code><code class="descname">recipetype_set</code><a class="headerlink" href="#trigger.models.TriggerRule.recipetype_set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">recipetype_set</code><a class="headerlink" href="#trigger.models.TriggerRule.recipetype_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="trigger.models.TriggerRule.triggerevent_set">
-<code class="descclassname">TriggerRule.</code><code class="descname">triggerevent_set</code><a class="headerlink" href="#trigger.models.TriggerRule.triggerevent_set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">triggerevent_set</code><a class="headerlink" href="#trigger.models.TriggerRule.triggerevent_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="trigger.models.TriggerRule.type">
+<code class="descname">type</code><a class="headerlink" href="#trigger.models.TriggerRule.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -760,7 +911,7 @@ unique. This is implemented to allow the loading of defined system trigger rules
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

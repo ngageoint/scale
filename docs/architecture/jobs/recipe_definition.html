@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../../index.html"/>
         <link rel="up" title="Jobs and Recipes" href="index.html"/>
         <link rel="next" title="Recipe Data" href="recipe_data.html"/>
@@ -106,7 +109,7 @@
 <li class="toctree-l3"><a class="reference internal" href="job_configuration.html">Job Configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job_data.html">Job Data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="exe_configuration.html">Execution Configuration</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Recipe Definition</a><ul>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Recipe Definition</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#recipe-definition-specification-version-1-0">Recipe Definition Specification Version 1.0</a></li>
 </ul>
 </li>
@@ -179,7 +182,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../_sources/architecture/jobs/recipe_definition.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/architecture/jobs/recipe_definition.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -202,7 +205,7 @@ script that takes a PNG image file and a CSV containing georeference information
 information from the two files to create a GeoTIFF file, which is an image format that contains georeference
 information. detect_points.py is a Python script that takes a GeoTIFF image file and creates a GeoJSON file that
 contains the coordinates of various points of interest found in the GeoTIFF. The job interfaces of the two algorithms
-could be defined as follows (see <a class="reference internal" href="job_interface.html#architecture-jobs-interface"><span>Job Interface</span></a> for how to define job interfaces):</p>
+could be defined as follows (see <a class="reference internal" href="job_interface.html#architecture-jobs-interface"><span class="std std-ref">Job Interface</span></a> for how to define job interfaces):</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
    <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
    <span class="s2">&quot;command&quot;</span><span class="o">:</span> <span class="s2">&quot;python make_geotiff.py&quot;</span><span class="p">,</span>
@@ -551,7 +554,7 @@ output from the depended upon job.</div></blockquote>
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../_static/jquery.js"></script>

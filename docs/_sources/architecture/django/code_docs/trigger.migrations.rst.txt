@@ -1,0 +1,54 @@
+trigger\.migrations package
+===========================
+
+Submodules
+----------
+
+trigger\.migrations\.0001\_initial module
+-----------------------------------------
+
+.. automodule:: trigger.migrations.0001_initial
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+trigger\.migrations\.0002\_auto\_20151125\_1438 module
+------------------------------------------------------
+
+.. automodule:: trigger.migrations.0002_auto_20151125_1438
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+trigger\.migrations\.0003\_auto\_20151202\_1325 module
+------------------------------------------------------
+
+.. automodule:: trigger.migrations.0003_auto_20151202_1325
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+trigger\.migrations\.0004\_auto\_20151207\_1215 module
+------------------------------------------------------
+
+.. automodule:: trigger.migrations.0004_auto_20151207_1215
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+trigger\.migrations\.0005\_auto\_20170412\_1225 module
+------------------------------------------------------
+
+.. automodule:: trigger.migrations.0005_auto_20170412_1225
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: trigger.migrations
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="queue package" href="queue.html"/>
         <link rel="next" title="queue.test package" href="queue.test.html"/>
@@ -202,7 +205,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/queue.migrations.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/queue.migrations.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -347,7 +350,7 @@
 
 <dl class="attribute">
 <dt id="queue.migrations.0007_auto_20160421_1643.Migration.operations">
-<code class="descname">operations</code><em class="property"> = [&lt;AddField  field=&lt;djorm_pgjson.fields.JSONField&gt;, preserve_default=True, name=u'configuration', model_name=u'queue'&gt;, &lt;AddField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=False, name=u'job', model_name=u'queue'&gt;]</em><a class="headerlink" href="#queue.migrations.0007_auto_20160421_1643.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<code class="descname">operations</code><em class="property"> = [&lt;AddField  field=&lt;util.deprecation.JSONStringField&gt;, preserve_default=True, name=u'configuration', model_name=u'queue'&gt;, &lt;AddField  field=&lt;django.db.models.fields.related.ForeignKey&gt;, preserve_default=False, name=u'job', model_name=u'queue'&gt;]</em><a class="headerlink" href="#queue.migrations.0007_auto_20160421_1643.Migration.operations" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -366,12 +369,31 @@
 
 <dl class="attribute">
 <dt id="queue.migrations.0008_auto_20160421_1648.Migration.operations">
-<code class="descname">operations</code><em class="property"> = [&lt;RunPython &lt;function update_queue_models at 0x2b8d2a0dc6e0&gt;&gt;]</em><a class="headerlink" href="#queue.migrations.0008_auto_20160421_1648.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<code class="descname">operations</code><em class="property"> = [&lt;RunPython &lt;function update_queue_models&gt;&gt;]</em><a class="headerlink" href="#queue.migrations.0008_auto_20160421_1648.Migration.operations" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="queue.migrations.0008_auto_20160421_1648.Migration.update_queue_models">
 <code class="descname">update_queue_models</code><span class="sig-paren">(</span><em>apps</em>, <em>schema_editor</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.migrations.0008_auto_20160421_1648.Migration.update_queue_models" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-queue.migrations.0009_auto_20170412_1225">
+<span id="queue-migrations-0009-auto-20170412-1225-module"></span><h2>queue.migrations.0009_auto_20170412_1225 module<a class="headerlink" href="#module-queue.migrations.0009_auto_20170412_1225" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="queue.migrations.0009_auto_20170412_1225.Migration">
+<em class="property">class </em><code class="descclassname">queue.migrations.0009_auto_20170412_1225.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.migrations.0009_auto_20170412_1225.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="queue.migrations.0009_auto_20170412_1225.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'queue', u'0008_auto_20160421_1648')]</em><a class="headerlink" href="#queue.migrations.0009_auto_20170412_1225.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="queue.migrations.0009_auto_20170412_1225.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;AlterField  field=&lt;django.contrib.postgres.fields.jsonb.JSONField&gt;, name=u'configuration', model_name=u'queue'&gt;, &lt;AlterField  field=&lt;django.db.models.fields.related.OneToOneField&gt;, name=u'job_exe', model_name=u'queue'&gt;]</em><a class="headerlink" href="#queue.migrations.0009_auto_20170412_1225.Migration.operations" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -430,7 +452,7 @@
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

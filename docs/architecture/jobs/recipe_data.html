@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../../index.html"/>
         <link rel="up" title="Jobs and Recipes" href="index.html"/>
         <link rel="next" title="ElasticSearch Logs" href="../logs.html"/>
@@ -107,7 +110,7 @@
 <li class="toctree-l3"><a class="reference internal" href="job_data.html">Job Data</a></li>
 <li class="toctree-l3"><a class="reference internal" href="exe_configuration.html">Execution Configuration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe_definition.html">Recipe Definition</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Recipe Data</a><ul>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Recipe Data</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#recipe-data-specification-version-1-0">Recipe Data Specification Version 1.0</a></li>
 </ul>
 </li>
@@ -179,7 +182,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../_sources/architecture/jobs/recipe_data.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/architecture/jobs/recipe_data.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -197,7 +200,7 @@
 <p>The recipe data is a JSON document that defines the actual data and configuration on which a recipe will run. It will
 describe all of the data being passed to the recipe&#8217;s inputs, as well as the workspace for storing the output for all of
 the recipe&#8217;s jobs. The recipe data is required when creating and queuing a recipe.</p>
-<p>Consider our previous example recipe definition from <a class="reference internal" href="recipe_definition.html#architecture-jobs-recipe-definition"><span>Recipe Definition</span></a>. The recipe data for
+<p>Consider our previous example recipe definition from <a class="reference internal" href="recipe_definition.html#architecture-jobs-recipe-definition"><span class="std std-ref">Recipe Definition</span></a>. The recipe data for
 creating a recipe with that example definition could be defined as follows:</p>
 <p><strong>Example recipe data:</strong></p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
@@ -267,7 +270,7 @@ that represents each input data has the following fields:</p>
 match the name of an input in the recipe&#8217;s definition. The name of every input in the recipe data must be
 unique.</div></blockquote>
 <p>The other fields that describe the data being passed to the input are based upon the <em>type</em> of the input as it is
-defined in the recipe definition, see <a class="reference internal" href="recipe_definition.html#architecture-jobs-recipe-definition-spec"><span>Recipe Definition Specification Version 1.0</span></a>. The valid types from the
+defined in the recipe definition, see <a class="reference internal" href="recipe_definition.html#architecture-jobs-recipe-definition-spec"><span class="std std-ref">Recipe Definition Specification Version 1.0</span></a>. The valid types from the
 recipe definition specification are:</p>
 <p><strong>property</strong></p>
 <blockquote>
@@ -350,7 +353,7 @@ is an integer providing the unique ID of the workspace to use for storing any fi
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../_static/jquery.js"></script>

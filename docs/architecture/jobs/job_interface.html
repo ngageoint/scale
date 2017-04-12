@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../../index.html"/>
         <link rel="up" title="Jobs and Recipes" href="index.html"/>
         <link rel="next" title="Job Configuration" href="job_configuration.html"/>
@@ -102,7 +105,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="index.html">Jobs and Recipes</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="batch_definition.html">Batch Definition</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error_interface.html">Errors Interface</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Job Interface</a><ul>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Job Interface</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#job-interface-specification-version-1-4">Job Interface Specification Version 1.4</a></li>
 </ul>
 </li>
@@ -179,7 +182,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../_sources/architecture/jobs/job_interface.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/architecture/jobs/job_interface.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -359,7 +362,7 @@ the command line argument to be passed with a flag, you can use the following pa
 is also a special substitution value <em>${job_output_dir}</em>, which will be replaced with the absolute file system path
 of the output directory where the algorithm may write its output files. The algorithm should produce a results
 manifest named &#8220;results_manifest.json&#8221;. The format for the results manifest can be found here:
-<a class="reference internal" href="../../algorithm_integration/results_manifest.html#algorithm-integration-results-manifest"><span>Results Manifest</span></a>. Any output files must be registered in the results manifest.</div></blockquote>
+<a class="reference internal" href="../../algorithm_integration/results_manifest.html#algorithm-integration-results-manifest"><span class="std std-ref">Results Manifest</span></a>. Any output files must be registered in the results manifest.</div></blockquote>
 <p><strong>env_vars</strong>: JSON array</p>
 <blockquote>
 <div><p>The <em>env_vars</em> is an optinal list of JSON objects that define the enviornment variables that will be set for the
@@ -581,7 +584,7 @@ extension as guidance.</div></blockquote>
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../_static/jquery.js"></script>

@@ -1,0 +1,30 @@
+scheduler\.test\.node package
+=============================
+
+Submodules
+----------
+
+scheduler\.test\.node\.test\_manager module
+-------------------------------------------
+
+.. automodule:: scheduler.test.node.test_manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+scheduler\.test\.node\.test\_node\_class module
+-----------------------------------------------
+
+.. automodule:: scheduler.test.node.test_node_class
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: scheduler.test.node
+    :members:
+    :undoc-members:
+    :show-inheritance:

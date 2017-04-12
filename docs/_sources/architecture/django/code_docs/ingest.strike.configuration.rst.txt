@@ -1,0 +1,38 @@
+ingest\.strike\.configuration package
+=====================================
+
+Submodules
+----------
+
+ingest\.strike\.configuration\.exceptions module
+------------------------------------------------
+
+.. automodule:: ingest.strike.configuration.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+ingest\.strike\.configuration\.strike\_configuration module
+-----------------------------------------------------------
+
+.. automodule:: ingest.strike.configuration.strike_configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+ingest\.strike\.configuration\.strike\_configuration\_1\_0 module
+-----------------------------------------------------------------
+
+.. automodule:: ingest.strike.configuration.strike_configuration_1_0
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: ingest.strike.configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:

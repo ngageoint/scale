@@ -1,0 +1,22 @@
+source\.triggers\.configuration package
+=======================================
+
+Submodules
+----------
+
+source\.triggers\.configuration\.parse\_trigger\_rule module
+------------------------------------------------------------
+
+.. automodule:: source.triggers.configuration.parse_trigger_rule
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: source.triggers.configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:

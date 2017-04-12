@@ -1,0 +1,30 @@
+job\.test\.tasks package
+========================
+
+Submodules
+----------
+
+job\.test\.tasks\.test\_base\_task module
+-----------------------------------------
+
+.. automodule:: job.test.tasks.test_base_task
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.test\.tasks\.test\_manager module
+--------------------------------------
+
+.. automodule:: job.test.tasks.test_manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: job.test.tasks
+    :members:
+    :undoc-members:
+    :show-inheritance:

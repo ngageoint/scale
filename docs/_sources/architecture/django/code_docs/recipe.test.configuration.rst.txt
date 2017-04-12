@@ -1,0 +1,18 @@
+recipe\.test\.configuration package
+===================================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    recipe.test.configuration.data
+    recipe.test.configuration.definition
+
+Module contents
+---------------
+
+.. automodule:: recipe.test.configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:

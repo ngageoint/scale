@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../index.html"/>
         <link rel="up" title="REST API" href="index.html"/>
         <link rel="next" title="Recipe Types Services" href="recipe_type.html"/>
@@ -112,7 +115,7 @@
 <li class="toctree-l3"><a class="reference internal" href="port.html">Import/Export Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="product.html">Product Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">Queue Services</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Recipe Services</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Recipe Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe_type.html">Recipe Types Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scale_file.html">Scale File Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scan.html">Scan Services</a></li>
@@ -179,7 +182,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/rest/recipe.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/rest/recipe.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -293,19 +296,19 @@ Duplicate it to filter by multiple values.</td>
 <tr class="row-odd"><td colspan="2">.id</td>
 <td colspan="2">Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API call.
-(See <a class="reference internal" href="#rest-recipe-details"><span>Recipe Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-recipe-details"><span class="std std-ref">Recipe Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">.recipe_type</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The recipe type that is associated with the recipe.
 This represents the latest version of the definition.
-(See <a class="reference internal" href="recipe_type.html#rest-recipe-type-details"><span>Recipe Type Details</span></a>)</td>
+(See <a class="reference internal" href="recipe_type.html#rest-recipe-type-details"><span class="std std-ref">Recipe Type Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="2">.recipe_type_rev</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The recipe type revision that is associated with the recipe.
 This represents the definition at the time the recipe was scheduled.
-(See <a class="reference internal" href="recipe_type.html#rest-recipe-type-rev-details"><span>Recipe Type Revision Details</span></a>)</td>
+(See <a class="reference internal" href="recipe_type.html#rest-recipe-type-rev-details"><span class="std std-ref">Recipe Type Revision Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">.event</td>
 <td colspan="2">JSON Object</td>
@@ -318,17 +321,17 @@ This represents the definition at the time the recipe was scheduled.
 <tr class="row-even"><td colspan="2">.root_superseded_recipe</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The first recipe in the current chain of superseded recipes.
-(See <a class="reference internal" href="#rest-recipe-details"><span>Recipe Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-recipe-details"><span class="std std-ref">Recipe Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="2">.superseded_recipe</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The previous recipe in the chain that was superseded by this recipe.
-(See <a class="reference internal" href="#rest-recipe-details"><span>Recipe Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-recipe-details"><span class="std std-ref">Recipe Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">.superseded_by_recipe</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The next recipe in the chain that superseded this recipe.
-(See <a class="reference internal" href="#rest-recipe-details"><span>Recipe Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-recipe-details"><span class="std std-ref">Recipe Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="2">.created</td>
 <td colspan="2">ISO-8601 Datetime</td>
@@ -430,13 +433,13 @@ This field will remain null if a job in the recipe is blocked or failed.</td>
 <tr class="row-odd"><td colspan="2">recipe_type</td>
 <td>JSON Object</td>
 <td>The recipe type that is associated with the recipe.
-(See <a class="reference internal" href="recipe_type.html#rest-recipe-type-details"><span>Recipe Type Details</span></a>)</td>
+(See <a class="reference internal" href="recipe_type.html#rest-recipe-type-details"><span class="std std-ref">Recipe Type Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">recipe_type_rev</td>
 <td>JSON Object</td>
 <td>The recipe type revision that is associated with the recipe.
 This represents the definition at the time the recipe was scheduled.
-(See <a class="reference internal" href="recipe_type.html#rest-recipe-type-rev-details"><span>Recipe Type Revision Details</span></a>)</td>
+(See <a class="reference internal" href="recipe_type.html#rest-recipe-type-rev-details"><span class="std std-ref">Recipe Type Revision Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="2">event</td>
 <td>JSON Object</td>
@@ -449,17 +452,17 @@ This represents the definition at the time the recipe was scheduled.
 <tr class="row-odd"><td colspan="2">root_superseded_recipe</td>
 <td>JSON Object</td>
 <td>The first recipe in the current chain of superseded recipes.
-(See <a class="reference internal" href="#rest-recipe-details"><span>Recipe Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-recipe-details"><span class="std std-ref">Recipe Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">superseded_recipe</td>
 <td>JSON Object</td>
 <td>The previous recipe in the chain that was superseded by this recipe.
-(See <a class="reference internal" href="#rest-recipe-details"><span>Recipe Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-recipe-details"><span class="std std-ref">Recipe Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="2">superseded_by_recipe</td>
 <td>JSON Object</td>
 <td>The next recipe in the chain that superseded this recipe.
-(See <a class="reference internal" href="#rest-recipe-details"><span>Recipe Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-recipe-details"><span class="std std-ref">Recipe Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">created</td>
 <td>ISO-8601 Datetime</td>
@@ -481,7 +484,7 @@ This field will remain null if a job in the recipe is blocked or failed.</td>
 <tr class="row-even"><td colspan="2">data</td>
 <td>JSON Object</td>
 <td>JSON description defining the data used to execute a recipe instance.
-(See <a class="reference internal" href="../architecture/jobs/recipe_data.html#architecture-jobs-recipe-data-spec"><span>Recipe Data Specification Version 1.0</span></a>)</td>
+(See <a class="reference internal" href="../architecture/jobs/recipe_data.html#architecture-jobs-recipe-data-spec"><span class="std std-ref">Recipe Data Specification Version 1.0</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="2">inputs</td>
 <td>Array</td>
@@ -491,24 +494,24 @@ values.</td>
 <tr class="row-even"><td colspan="2">.name</td>
 <td>String</td>
 <td>The name of the input as defined by the recipe type definition.
-(See <a class="reference internal" href="../architecture/jobs/recipe_definition.html#architecture-jobs-recipe-definition-spec"><span>Recipe Definition Specification Version 1.0</span></a>)</td>
+(See <a class="reference internal" href="../architecture/jobs/recipe_definition.html#architecture-jobs-recipe-definition-spec"><span class="std std-ref">Recipe Definition Specification Version 1.0</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="2">.type</td>
 <td>String</td>
 <td>The type of the input as defined by the recipe type definition.
-(See <a class="reference internal" href="../architecture/jobs/recipe_definition.html#architecture-jobs-recipe-definition-spec"><span>Recipe Definition Specification Version 1.0</span></a>)</td>
+(See <a class="reference internal" href="../architecture/jobs/recipe_definition.html#architecture-jobs-recipe-definition-spec"><span class="std std-ref">Recipe Definition Specification Version 1.0</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">.value</td>
 <td>Various</td>
 <td>The actual value of the input, which can vary depending on the type. Simple
 property inputs will include primitive values, whereas the file or files
 type will include a full JSON representation of a Scale file object.
-(See <a class="reference internal" href="scale_file.html#rest-scale-file-details"><span>Scale File Details</span></a>)</td>
+(See <a class="reference internal" href="scale_file.html#rest-scale-file-details"><span class="std std-ref">Scale File Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="2">input_files</td>
 <td>JSON Object</td>
 <td>A list of files that the recipe used as input.
-(See <a class="reference internal" href="scale_file.html#rest-scale-file-details"><span>Scale File Details</span></a>)
+(See <a class="reference internal" href="scale_file.html#rest-scale-file-details"><span class="std std-ref">Scale File Details</span></a>)
 Removed in v4, use the &#8220;inputs&#8221; attribute instead.</td>
 </tr>
 <tr class="row-even"><td colspan="2">jobs</td>
@@ -526,7 +529,7 @@ Removed in v4, use the &#8220;inputs&#8221; attribute instead.</td>
 <tr class="row-odd"><td colspan="2">.job</td>
 <td>JSON Object</td>
 <td>The job that is associated with the recipe.
-(See <a class="reference internal" href="job.html#rest-job-details"><span>Job Details</span></a>)</td>
+(See <a class="reference internal" href="job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">72</span><span class="p">,</span>
@@ -815,10 +818,10 @@ Defaults to jobs current priority, lower number is higher priority.</td>
 </tr>
 <tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-odd"><td>&nbsp;</td>
+<tr class="row-odd"><td>&#160;</td>
 <td>JSON Object</td>
 <td colspan="2">All fields are the same as the recipe details model.
-(See <a class="reference internal" href="#rest-recipe-details"><span>Recipe Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-recipe-details"><span class="std std-ref">Recipe Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">72</span><span class="p">,</span>
@@ -1085,7 +1088,7 @@ Defaults to jobs current priority, lower number is higher priority.</td>
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../_static/jquery.js"></script>

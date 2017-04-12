@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="storage.management package" href="storage.management.html"/>
         <link rel="next" title="storage.migrations package" href="storage.migrations.html"/>
@@ -207,7 +210,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/storage.management.commands.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/storage.management.commands.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -230,12 +233,17 @@
 <p>Defines the command line method for deleting a file</p>
 <dl class="class">
 <dt id="storage.management.commands.scale_delete_file.Command">
-<em class="property">class </em><code class="descclassname">storage.management.commands.scale_delete_file.</code><code class="descname">Command</code><a class="headerlink" href="#storage.management.commands.scale_delete_file.Command" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">storage.management.commands.scale_delete_file.</code><code class="descname">Command</code><span class="sig-paren">(</span><em>stdout=None</em>, <em>stderr=None</em>, <em>no_color=False</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.management.commands.scale_delete_file.Command" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.management.base.BaseCommand</span></code></p>
 <p>Command that deletes a stored file from the remote file system.</p>
 <dl class="method">
+<dt id="storage.management.commands.scale_delete_file.Command.add_arguments">
+<code class="descname">add_arguments</code><span class="sig-paren">(</span><em>parser</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.management.commands.scale_delete_file.Command.add_arguments" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="storage.management.commands.scale_delete_file.Command.handle">
-<code class="descname">handle</code><span class="sig-paren">(</span><em>file_id</em>, <em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.management.commands.scale_delete_file.Command.handle" title="Permalink to this definition">¶</a></dt>
+<code class="descname">handle</code><span class="sig-paren">(</span><em>*args</em>, <em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.management.commands.scale_delete_file.Command.handle" title="Permalink to this definition">¶</a></dt>
 <dd><p>See <code class="xref py py-meth docutils literal"><span class="pre">django.core.management.base.BaseCommand.handle()</span></code>.</p>
 <p>This method starts the file delete process.</p>
 </dd></dl>
@@ -253,12 +261,17 @@
 <p>Defines the command line method for downloading a file</p>
 <dl class="class">
 <dt id="storage.management.commands.scale_download_file.Command">
-<em class="property">class </em><code class="descclassname">storage.management.commands.scale_download_file.</code><code class="descname">Command</code><a class="headerlink" href="#storage.management.commands.scale_download_file.Command" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">storage.management.commands.scale_download_file.</code><code class="descname">Command</code><span class="sig-paren">(</span><em>stdout=None</em>, <em>stderr=None</em>, <em>no_color=False</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.management.commands.scale_download_file.Command" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.management.base.BaseCommand</span></code></p>
 <p>Command that downloads a stored file to the local file system.</p>
 <dl class="method">
+<dt id="storage.management.commands.scale_download_file.Command.add_arguments">
+<code class="descname">add_arguments</code><span class="sig-paren">(</span><em>parser</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.management.commands.scale_download_file.Command.add_arguments" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="storage.management.commands.scale_download_file.Command.handle">
-<code class="descname">handle</code><span class="sig-paren">(</span><em>file_id</em>, <em>local_path</em>, <em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.management.commands.scale_download_file.Command.handle" title="Permalink to this definition">¶</a></dt>
+<code class="descname">handle</code><span class="sig-paren">(</span><em>*args</em>, <em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.management.commands.scale_download_file.Command.handle" title="Permalink to this definition">¶</a></dt>
 <dd><p>See <code class="xref py py-meth docutils literal"><span class="pre">django.core.management.base.BaseCommand.handle()</span></code>.</p>
 <p>This method starts the file download process.</p>
 </dd></dl>
@@ -276,9 +289,14 @@
 <p>Defines the command line method for listing files within a workspace</p>
 <dl class="class">
 <dt id="storage.management.commands.scale_list_files.Command">
-<em class="property">class </em><code class="descclassname">storage.management.commands.scale_list_files.</code><code class="descname">Command</code><a class="headerlink" href="#storage.management.commands.scale_list_files.Command" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">storage.management.commands.scale_list_files.</code><code class="descname">Command</code><span class="sig-paren">(</span><em>stdout=None</em>, <em>stderr=None</em>, <em>no_color=False</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.management.commands.scale_list_files.Command" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.management.base.BaseCommand</span></code></p>
 <p>Command for listing files within a workspace.</p>
+<dl class="method">
+<dt id="storage.management.commands.scale_list_files.Command.add_arguments">
+<code class="descname">add_arguments</code><span class="sig-paren">(</span><em>parser</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.management.commands.scale_list_files.Command.add_arguments" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="storage.management.commands.scale_list_files.Command.handle">
 <code class="descname">handle</code><span class="sig-paren">(</span><em>*args</em>, <em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.management.commands.scale_list_files.Command.handle" title="Permalink to this definition">¶</a></dt>
@@ -291,11 +309,6 @@
 <code class="descname">help</code><em class="property"> = u'Lists files within a workspace.'</em><a class="headerlink" href="#storage.management.commands.scale_list_files.Command.help" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="storage.management.commands.scale_list_files.Command.option_list">
-<code class="descname">option_list</code><em class="property"> = (&lt;Option at 0x2b8d122c4bd8: -v/--verbosity&gt;, &lt;Option at 0x2b8d122c4cf8: --settings&gt;, &lt;Option at 0x2b8d122c4d40: --pythonpath&gt;, &lt;Option at 0x2b8d122c4d88: --traceback&gt;, &lt;Option at 0x2b8d122c4e18: --no-color&gt;, &lt;Option at 0x2b8d2ced2638: -r/--recursive&gt;, &lt;Option at 0x2b8d2ced2cb0: -l/--local&gt;, &lt;Option at 0x2b8d2ced2a70: -w/--workspace-id&gt;)</em><a class="headerlink" href="#storage.management.commands.scale_list_files.Command.option_list" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 </div>
@@ -304,12 +317,17 @@
 <p>Defines the command line method for moving a file</p>
 <dl class="class">
 <dt id="storage.management.commands.scale_move_file.Command">
-<em class="property">class </em><code class="descclassname">storage.management.commands.scale_move_file.</code><code class="descname">Command</code><a class="headerlink" href="#storage.management.commands.scale_move_file.Command" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">storage.management.commands.scale_move_file.</code><code class="descname">Command</code><span class="sig-paren">(</span><em>stdout=None</em>, <em>stderr=None</em>, <em>no_color=False</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.management.commands.scale_move_file.Command" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.management.base.BaseCommand</span></code></p>
 <p>Command that moves a stored file to a new remote path.</p>
 <dl class="method">
+<dt id="storage.management.commands.scale_move_file.Command.add_arguments">
+<code class="descname">add_arguments</code><span class="sig-paren">(</span><em>parser</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.management.commands.scale_move_file.Command.add_arguments" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="storage.management.commands.scale_move_file.Command.handle">
-<code class="descname">handle</code><span class="sig-paren">(</span><em>file_id</em>, <em>remote_path</em>, <em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.management.commands.scale_move_file.Command.handle" title="Permalink to this definition">¶</a></dt>
+<code class="descname">handle</code><span class="sig-paren">(</span><em>*args</em>, <em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.management.commands.scale_move_file.Command.handle" title="Permalink to this definition">¶</a></dt>
 <dd><p>See <code class="xref py py-meth docutils literal"><span class="pre">django.core.management.base.BaseCommand.handle()</span></code>.</p>
 <p>This method starts the file move process.</p>
 </dd></dl>
@@ -327,12 +345,17 @@
 <p>Defines the command line method for uploading a file</p>
 <dl class="class">
 <dt id="storage.management.commands.scale_upload_file.Command">
-<em class="property">class </em><code class="descclassname">storage.management.commands.scale_upload_file.</code><code class="descname">Command</code><a class="headerlink" href="#storage.management.commands.scale_upload_file.Command" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">storage.management.commands.scale_upload_file.</code><code class="descname">Command</code><span class="sig-paren">(</span><em>stdout=None</em>, <em>stderr=None</em>, <em>no_color=False</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.management.commands.scale_upload_file.Command" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.management.base.BaseCommand</span></code></p>
 <p>Command that uploads a local file to the storage system.</p>
 <dl class="method">
+<dt id="storage.management.commands.scale_upload_file.Command.add_arguments">
+<code class="descname">add_arguments</code><span class="sig-paren">(</span><em>parser</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.management.commands.scale_upload_file.Command.add_arguments" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="storage.management.commands.scale_upload_file.Command.handle">
-<code class="descname">handle</code><span class="sig-paren">(</span><em>local_path</em>, <em>remote_path</em>, <em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.management.commands.scale_upload_file.Command.handle" title="Permalink to this definition">¶</a></dt>
+<code class="descname">handle</code><span class="sig-paren">(</span><em>*args</em>, <em>**options</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.management.commands.scale_upload_file.Command.handle" title="Permalink to this definition">¶</a></dt>
 <dd><p>See <code class="xref py py-meth docutils literal"><span class="pre">django.core.management.base.BaseCommand.handle()</span></code>.</p>
 <p>This method starts the file upload process.</p>
 </dd></dl>
@@ -340,11 +363,6 @@
 <dl class="attribute">
 <dt id="storage.management.commands.scale_upload_file.Command.help">
 <code class="descname">help</code><em class="property"> = u'Uploads a local file to the storage system'</em><a class="headerlink" href="#storage.management.commands.scale_upload_file.Command.help" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="storage.management.commands.scale_upload_file.Command.option_list">
-<code class="descname">option_list</code><em class="property"> = (&lt;Option at 0x2b8d122c4bd8: -v/--verbosity&gt;, &lt;Option at 0x2b8d122c4cf8: --settings&gt;, &lt;Option at 0x2b8d122c4d40: --pythonpath&gt;, &lt;Option at 0x2b8d122c4d88: --traceback&gt;, &lt;Option at 0x2b8d122c4e18: --no-color&gt;, &lt;Option at 0x2b8d2cabbc20: -w/--workspace&gt;)</em><a class="headerlink" href="#storage.management.commands.scale_upload_file.Command.option_list" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -403,7 +421,7 @@
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

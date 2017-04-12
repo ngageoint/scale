@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="Django/Code Base" href="../index.html"/>
         <link rel="next" title="queue.migrations package" href="queue.migrations.html"/>
@@ -117,7 +120,7 @@
 <li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">queue package</a><ul>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">queue package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-queue.apps">queue.apps module</a></li>
@@ -200,7 +203,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/queue.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/queue.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -229,6 +232,7 @@
 <li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations.0006_auto_20160316_1625">queue.migrations.0006_auto_20160316_1625 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations.0007_auto_20160421_1643">queue.migrations.0007_auto_20160421_1643 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations.0008_auto_20160421_1648">queue.migrations.0008_auto_20160421_1648 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations.0009_auto_20170412_1225">queue.migrations.0009_auto_20170412_1225 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -457,29 +461,86 @@ provided</p>
 
 <dl class="exception">
 <dt id="queue.models.JobLoad.MultipleObjectsReturned">
-<em class="property">exception </em><code class="descclassname">JobLoad.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#queue.models.JobLoad.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#queue.models.JobLoad.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="queue.models.JobLoad.get_next_by_measured">
-<code class="descclassname">JobLoad.</code><code class="descname">get_next_by_measured</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.JobLoad.get_next_by_measured" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_by_measured</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.JobLoad.get_next_by_measured" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="queue.models.JobLoad.get_previous_by_measured">
-<code class="descclassname">JobLoad.</code><code class="descname">get_previous_by_measured</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.JobLoad.get_previous_by_measured" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_previous_by_measured</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.JobLoad.get_previous_by_measured" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="queue.models.JobLoad.id">
+<code class="descname">id</code><a class="headerlink" href="#queue.models.JobLoad.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="queue.models.JobLoad.job_type">
-<code class="descclassname">JobLoad.</code><code class="descname">job_type</code><a class="headerlink" href="#queue.models.JobLoad.job_type" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">job_type</code><a class="headerlink" href="#queue.models.JobLoad.job_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="queue.models.JobLoad.job_type_id">
+<code class="descname">job_type_id</code><a class="headerlink" href="#queue.models.JobLoad.job_type_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="queue.models.JobLoad.measured">
+<code class="descname">measured</code><a class="headerlink" href="#queue.models.JobLoad.measured" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="queue.models.JobLoad.objects">
-<code class="descclassname">JobLoad.</code><code class="descname">objects</code><em class="property"> = &lt;queue.models.JobLoadManager object&gt;</em><a class="headerlink" href="#queue.models.JobLoad.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descname">objects</code><em class="property"> = &lt;queue.models.JobLoadManager object&gt;</em><a class="headerlink" href="#queue.models.JobLoad.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="queue.models.JobLoad.pending_count">
+<code class="descname">pending_count</code><a class="headerlink" href="#queue.models.JobLoad.pending_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="queue.models.JobLoad.queued_count">
+<code class="descname">queued_count</code><a class="headerlink" href="#queue.models.JobLoad.queued_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="queue.models.JobLoad.running_count">
+<code class="descname">running_count</code><a class="headerlink" href="#queue.models.JobLoad.running_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="queue.models.JobLoad.total_count">
+<code class="descname">total_count</code><a class="headerlink" href="#queue.models.JobLoad.total_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -526,11 +587,11 @@ provided</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated before this amount of time.</li>
-<li><strong>job_type_ids</strong> (<em>list[int]</em>) &#8211; Query jobs of the type associated with the identifier.</li>
-<li><strong>job_type_names</strong> (<em>list[str]</em>) &#8211; Query jobs of the type associated with the name.</li>
-<li><strong>job_type_categories</strong> (<em>list[str]</em>) &#8211; Query jobs of the type associated with the category.</li>
-<li><strong>job_type_priorities</strong> (<em>list[int]</em>) &#8211; Query jobs of the type associated with the priority.</li>
-<li><strong>order</strong> (<em>list[str]</em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>job_type_ids</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em><em></em>) &#8211; Query jobs of the type associated with the identifier.</li>
+<li><strong>job_type_names</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em><em></em>) &#8211; Query jobs of the type associated with the name.</li>
+<li><strong>job_type_categories</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em><em></em>) &#8211; Query jobs of the type associated with the category.</li>
+<li><strong>job_type_priorities</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em><em></em>) &#8211; Query jobs of the type associated with the priority.</li>
+<li><strong>order</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em><em></em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
 </tr>
@@ -585,7 +646,7 @@ provided</p>
 <li><strong>disk_out_required</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; The amount of disk space in MiB required for output (temp work and products) for this
 job</li>
 <li><strong>disk_total_required</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; The total amount of disk space in MiB required for this job</li>
-<li><strong>configuration</strong> (<code class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></code>) &#8211; JSON description describing the configuration for how the job should be run</li>
+<li><strong>configuration</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.contrib.postgres.fields.JSONField</span></code>) &#8211; JSON description describing the configuration for how the job should be run</li>
 <li><strong>created</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the queue model was created</li>
 <li><strong>queued</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the job execution was placed onto the queue</li>
 <li><strong>last_modified</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the queue model was last modified</li>
@@ -602,70 +663,193 @@ job</li>
 
 <dl class="exception">
 <dt id="queue.models.Queue.MultipleObjectsReturned">
-<em class="property">exception </em><code class="descclassname">Queue.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#queue.models.Queue.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#queue.models.Queue.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="queue.models.Queue.configuration">
-<code class="descclassname">Queue.</code><code class="descname">configuration</code><a class="headerlink" href="#queue.models.Queue.configuration" title="Permalink to this definition">¶</a></dt>
-<dd><p>A placeholder class that provides a way to set the attribute on the model.</p>
+<code class="descname">configuration</code><a class="headerlink" href="#queue.models.Queue.configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="queue.models.Queue.cpus_required">
+<code class="descname">cpus_required</code><a class="headerlink" href="#queue.models.Queue.cpus_required" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="queue.models.Queue.created">
+<code class="descname">created</code><a class="headerlink" href="#queue.models.Queue.created" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="queue.models.Queue.disk_in_required">
+<code class="descname">disk_in_required</code><a class="headerlink" href="#queue.models.Queue.disk_in_required" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="queue.models.Queue.disk_out_required">
+<code class="descname">disk_out_required</code><a class="headerlink" href="#queue.models.Queue.disk_out_required" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="queue.models.Queue.disk_total_required">
+<code class="descname">disk_total_required</code><a class="headerlink" href="#queue.models.Queue.disk_total_required" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="queue.models.Queue.get_next_by_created">
-<code class="descclassname">Queue.</code><code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.Queue.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.Queue.get_next_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="queue.models.Queue.get_next_by_last_modified">
-<code class="descclassname">Queue.</code><code class="descname">get_next_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.Queue.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.Queue.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="queue.models.Queue.get_next_by_queued">
-<code class="descclassname">Queue.</code><code class="descname">get_next_by_queued</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.Queue.get_next_by_queued" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_by_queued</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.Queue.get_next_by_queued" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="queue.models.Queue.get_previous_by_created">
-<code class="descclassname">Queue.</code><code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.Queue.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.Queue.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="queue.models.Queue.get_previous_by_last_modified">
-<code class="descclassname">Queue.</code><code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.Queue.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.Queue.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="queue.models.Queue.get_previous_by_queued">
-<code class="descclassname">Queue.</code><code class="descname">get_previous_by_queued</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.Queue.get_previous_by_queued" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_previous_by_queued</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.Queue.get_previous_by_queued" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="queue.models.Queue.job">
-<code class="descclassname">Queue.</code><code class="descname">job</code><a class="headerlink" href="#queue.models.Queue.job" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">job</code><a class="headerlink" href="#queue.models.Queue.job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="queue.models.Queue.job_exe">
-<code class="descclassname">Queue.</code><code class="descname">job_exe</code><a class="headerlink" href="#queue.models.Queue.job_exe" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">job_exe</code><a class="headerlink" href="#queue.models.Queue.job_exe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a one-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Restaurant</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">place</span> <span class="o">=</span> <span class="n">OneToOneField</span><span class="p">(</span><span class="n">Place</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;restaurant&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">restaurant.place</span></code> is a <code class="docutils literal"><span class="pre">ForwardOneToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="queue.models.Queue.job_exe_id">
+<code class="descname">job_exe_id</code><a class="headerlink" href="#queue.models.Queue.job_exe_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="queue.models.Queue.job_id">
+<code class="descname">job_id</code><a class="headerlink" href="#queue.models.Queue.job_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="queue.models.Queue.job_type">
-<code class="descclassname">Queue.</code><code class="descname">job_type</code><a class="headerlink" href="#queue.models.Queue.job_type" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">job_type</code><a class="headerlink" href="#queue.models.Queue.job_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="queue.models.Queue.job_type_id">
+<code class="descname">job_type_id</code><a class="headerlink" href="#queue.models.Queue.job_type_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="queue.models.Queue.last_modified">
+<code class="descname">last_modified</code><a class="headerlink" href="#queue.models.Queue.last_modified" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="queue.models.Queue.mem_required">
+<code class="descname">mem_required</code><a class="headerlink" href="#queue.models.Queue.mem_required" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="queue.models.Queue.node_required">
-<code class="descclassname">Queue.</code><code class="descname">node_required</code><a class="headerlink" href="#queue.models.Queue.node_required" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">node_required</code><a class="headerlink" href="#queue.models.Queue.node_required" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="queue.models.Queue.node_required_id">
+<code class="descname">node_required_id</code><a class="headerlink" href="#queue.models.Queue.node_required_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="queue.models.Queue.objects">
-<code class="descclassname">Queue.</code><code class="descname">objects</code><em class="property"> = &lt;queue.models.QueueManager object&gt;</em><a class="headerlink" href="#queue.models.Queue.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descname">objects</code><em class="property"> = &lt;queue.models.QueueManager object&gt;</em><a class="headerlink" href="#queue.models.Queue.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="queue.models.Queue.priority">
+<code class="descname">priority</code><a class="headerlink" href="#queue.models.Queue.priority" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="queue.models.Queue.queued">
+<code class="descname">queued</code><a class="headerlink" href="#queue.models.Queue.queued" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -964,7 +1148,7 @@ superseded will be ignored. All database changes will occur within an atomic tra
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>job_ids</strong> (<em>[int]</em>) &#8211; The IDs of the jobs to re-queue</li>
+<li><strong>job_ids</strong> (<em></em><em>[</em><em>int</em><em>]</em><em></em>) &#8211; The IDs of the jobs to re-queue</li>
 <li><strong>priority</strong> (<em>int</em>) &#8211; An optional argument to reset the jobs&#8217; priority before they are queued</li>
 </ul>
 </td>
@@ -1087,7 +1271,7 @@ be deleted from the database. All database changes occur in an atomic transactio
 
 <dl class="attribute">
 <dt id="queue.views.JobLoadView.queryset">
-<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#queue.views.JobLoadView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#queue.views.JobLoadView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1134,7 +1318,7 @@ be deleted from the database. All database changes occur in an atomic transactio
 
 <dl class="attribute">
 <dt id="queue.views.QueueNewJobView.queryset">
-<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#queue.views.QueueNewJobView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#queue.views.QueueNewJobView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1175,7 +1359,7 @@ be deleted from the database. All database changes occur in an atomic transactio
 
 <dl class="attribute">
 <dt id="queue.views.QueueNewRecipeView.queryset">
-<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#queue.views.QueueNewRecipeView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#queue.views.QueueNewRecipeView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1211,7 +1395,7 @@ be deleted from the database. All database changes occur in an atomic transactio
 
 <dl class="attribute">
 <dt id="queue.views.QueueStatusView.queryset">
-<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#queue.views.QueueStatusView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#queue.views.QueueStatusView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1250,7 +1434,7 @@ be deleted from the database. All database changes occur in an atomic transactio
 
 <dl class="attribute">
 <dt id="queue.views.RequeueJobsView.queryset">
-<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#queue.views.RequeueJobsView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#queue.views.RequeueJobsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1315,7 +1499,7 @@ be deleted from the database. All database changes occur in an atomic transactio
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

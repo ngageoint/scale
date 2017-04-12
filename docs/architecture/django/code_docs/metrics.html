@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="Django/Code Base" href="../index.html"/>
         <link rel="next" title="metrics.management package" href="metrics.management.html"/>
@@ -113,7 +116,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">metrics package</a><ul>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">metrics package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-metrics.apps">metrics.apps module</a></li>
@@ -201,7 +204,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/metrics.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/metrics.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -372,44 +375,87 @@
 
 <dl class="attribute">
 <dt id="metrics.models.MetricsError.GROUPS">
-<code class="descclassname">MetricsError.</code><code class="descname">GROUPS</code><em class="property"> = [&lt;metrics.registry.MetricsTypeGroup object at 0x2b8d22a32d10&gt;]</em><a class="headerlink" href="#metrics.models.MetricsError.GROUPS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">GROUPS</code><em class="property"> = [&lt;metrics.registry.MetricsTypeGroup object&gt;]</em><a class="headerlink" href="#metrics.models.MetricsError.GROUPS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="exception">
 <dt id="metrics.models.MetricsError.MultipleObjectsReturned">
-<em class="property">exception </em><code class="descclassname">MetricsError.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#metrics.models.MetricsError.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#metrics.models.MetricsError.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="metrics.models.MetricsError.created">
+<code class="descname">created</code><a class="headerlink" href="#metrics.models.MetricsError.created" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="metrics.models.MetricsError.error">
-<code class="descclassname">MetricsError.</code><code class="descname">error</code><a class="headerlink" href="#metrics.models.MetricsError.error" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">error</code><a class="headerlink" href="#metrics.models.MetricsError.error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsError.error_id">
+<code class="descname">error_id</code><a class="headerlink" href="#metrics.models.MetricsError.error_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="metrics.models.MetricsError.get_next_by_created">
-<code class="descclassname">MetricsError.</code><code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.models.MetricsError.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.models.MetricsError.get_next_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="metrics.models.MetricsError.get_next_by_occurred">
-<code class="descclassname">MetricsError.</code><code class="descname">get_next_by_occurred</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.models.MetricsError.get_next_by_occurred" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_by_occurred</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.models.MetricsError.get_next_by_occurred" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="metrics.models.MetricsError.get_previous_by_created">
-<code class="descclassname">MetricsError.</code><code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.models.MetricsError.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.models.MetricsError.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="metrics.models.MetricsError.get_previous_by_occurred">
-<code class="descclassname">MetricsError.</code><code class="descname">get_previous_by_occurred</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.models.MetricsError.get_previous_by_occurred" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_previous_by_occurred</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.models.MetricsError.get_previous_by_occurred" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="metrics.models.MetricsError.id">
+<code class="descname">id</code><a class="headerlink" href="#metrics.models.MetricsError.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="metrics.models.MetricsError.objects">
-<code class="descclassname">MetricsError.</code><code class="descname">objects</code><em class="property"> = &lt;metrics.models.MetricsErrorManager object&gt;</em><a class="headerlink" href="#metrics.models.MetricsError.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descname">objects</code><em class="property"> = &lt;metrics.models.MetricsErrorManager object&gt;</em><a class="headerlink" href="#metrics.models.MetricsError.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsError.occurred">
+<code class="descname">occurred</code><a class="headerlink" href="#metrics.models.MetricsError.occurred" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsError.total_count">
+<code class="descname">total_count</code><a class="headerlink" href="#metrics.models.MetricsError.total_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -480,44 +526,199 @@
 
 <dl class="attribute">
 <dt id="metrics.models.MetricsIngest.GROUPS">
-<code class="descclassname">MetricsIngest.</code><code class="descname">GROUPS</code><em class="property"> = [&lt;metrics.registry.MetricsTypeGroup object at 0x2b8d22a40390&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b8d22a40250&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b8d22a40310&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b8d22a40350&gt;]</em><a class="headerlink" href="#metrics.models.MetricsIngest.GROUPS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">GROUPS</code><em class="property"> = [&lt;metrics.registry.MetricsTypeGroup object&gt;, &lt;metrics.registry.MetricsTypeGroup object&gt;, &lt;metrics.registry.MetricsTypeGroup object&gt;, &lt;metrics.registry.MetricsTypeGroup object&gt;]</em><a class="headerlink" href="#metrics.models.MetricsIngest.GROUPS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="exception">
 <dt id="metrics.models.MetricsIngest.MultipleObjectsReturned">
-<em class="property">exception </em><code class="descclassname">MetricsIngest.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#metrics.models.MetricsIngest.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#metrics.models.MetricsIngest.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsIngest.created">
+<code class="descname">created</code><a class="headerlink" href="#metrics.models.MetricsIngest.created" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsIngest.deferred_count">
+<code class="descname">deferred_count</code><a class="headerlink" href="#metrics.models.MetricsIngest.deferred_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsIngest.duplicate_count">
+<code class="descname">duplicate_count</code><a class="headerlink" href="#metrics.models.MetricsIngest.duplicate_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsIngest.errored_count">
+<code class="descname">errored_count</code><a class="headerlink" href="#metrics.models.MetricsIngest.errored_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsIngest.file_size_avg">
+<code class="descname">file_size_avg</code><a class="headerlink" href="#metrics.models.MetricsIngest.file_size_avg" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsIngest.file_size_max">
+<code class="descname">file_size_max</code><a class="headerlink" href="#metrics.models.MetricsIngest.file_size_max" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsIngest.file_size_min">
+<code class="descname">file_size_min</code><a class="headerlink" href="#metrics.models.MetricsIngest.file_size_min" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsIngest.file_size_sum">
+<code class="descname">file_size_sum</code><a class="headerlink" href="#metrics.models.MetricsIngest.file_size_sum" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="metrics.models.MetricsIngest.get_next_by_created">
-<code class="descclassname">MetricsIngest.</code><code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.models.MetricsIngest.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.models.MetricsIngest.get_next_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="metrics.models.MetricsIngest.get_next_by_occurred">
-<code class="descclassname">MetricsIngest.</code><code class="descname">get_next_by_occurred</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.models.MetricsIngest.get_next_by_occurred" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_by_occurred</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.models.MetricsIngest.get_next_by_occurred" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="metrics.models.MetricsIngest.get_previous_by_created">
-<code class="descclassname">MetricsIngest.</code><code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.models.MetricsIngest.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.models.MetricsIngest.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="metrics.models.MetricsIngest.get_previous_by_occurred">
-<code class="descclassname">MetricsIngest.</code><code class="descname">get_previous_by_occurred</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.models.MetricsIngest.get_previous_by_occurred" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_previous_by_occurred</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.models.MetricsIngest.get_previous_by_occurred" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsIngest.id">
+<code class="descname">id</code><a class="headerlink" href="#metrics.models.MetricsIngest.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsIngest.ingest_time_avg">
+<code class="descname">ingest_time_avg</code><a class="headerlink" href="#metrics.models.MetricsIngest.ingest_time_avg" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsIngest.ingest_time_max">
+<code class="descname">ingest_time_max</code><a class="headerlink" href="#metrics.models.MetricsIngest.ingest_time_max" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsIngest.ingest_time_min">
+<code class="descname">ingest_time_min</code><a class="headerlink" href="#metrics.models.MetricsIngest.ingest_time_min" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsIngest.ingest_time_sum">
+<code class="descname">ingest_time_sum</code><a class="headerlink" href="#metrics.models.MetricsIngest.ingest_time_sum" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsIngest.ingested_count">
+<code class="descname">ingested_count</code><a class="headerlink" href="#metrics.models.MetricsIngest.ingested_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="metrics.models.MetricsIngest.objects">
-<code class="descclassname">MetricsIngest.</code><code class="descname">objects</code><em class="property"> = &lt;metrics.models.MetricsIngestManager object&gt;</em><a class="headerlink" href="#metrics.models.MetricsIngest.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descname">objects</code><em class="property"> = &lt;metrics.models.MetricsIngestManager object&gt;</em><a class="headerlink" href="#metrics.models.MetricsIngest.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="metrics.models.MetricsIngest.occurred">
+<code class="descname">occurred</code><a class="headerlink" href="#metrics.models.MetricsIngest.occurred" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="metrics.models.MetricsIngest.strike">
-<code class="descclassname">MetricsIngest.</code><code class="descname">strike</code><a class="headerlink" href="#metrics.models.MetricsIngest.strike" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">strike</code><a class="headerlink" href="#metrics.models.MetricsIngest.strike" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsIngest.strike_id">
+<code class="descname">strike_id</code><a class="headerlink" href="#metrics.models.MetricsIngest.strike_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsIngest.total_count">
+<code class="descname">total_count</code><a class="headerlink" href="#metrics.models.MetricsIngest.total_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsIngest.transfer_time_avg">
+<code class="descname">transfer_time_avg</code><a class="headerlink" href="#metrics.models.MetricsIngest.transfer_time_avg" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsIngest.transfer_time_max">
+<code class="descname">transfer_time_max</code><a class="headerlink" href="#metrics.models.MetricsIngest.transfer_time_max" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsIngest.transfer_time_min">
+<code class="descname">transfer_time_min</code><a class="headerlink" href="#metrics.models.MetricsIngest.transfer_time_min" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsIngest.transfer_time_sum">
+<code class="descname">transfer_time_sum</code><a class="headerlink" href="#metrics.models.MetricsIngest.transfer_time_sum" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -603,44 +804,297 @@
 
 <dl class="attribute">
 <dt id="metrics.models.MetricsJobType.GROUPS">
-<code class="descclassname">MetricsJobType.</code><code class="descname">GROUPS</code><em class="property"> = [&lt;metrics.registry.MetricsTypeGroup object at 0x2b8d22a40e90&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b8d22a40d50&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b8d22a40e10&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b8d22a40e50&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b8d22a40ed0&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b8d22a40f10&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b8d22a40f50&gt;, &lt;metrics.registry.MetricsTypeGroup object at 0x2b8d22a40f90&gt;]</em><a class="headerlink" href="#metrics.models.MetricsJobType.GROUPS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">GROUPS</code><em class="property"> = [&lt;metrics.registry.MetricsTypeGroup object&gt;, &lt;metrics.registry.MetricsTypeGroup object&gt;, &lt;metrics.registry.MetricsTypeGroup object&gt;, &lt;metrics.registry.MetricsTypeGroup object&gt;, &lt;metrics.registry.MetricsTypeGroup object&gt;, &lt;metrics.registry.MetricsTypeGroup object&gt;, &lt;metrics.registry.MetricsTypeGroup object&gt;, &lt;metrics.registry.MetricsTypeGroup object&gt;]</em><a class="headerlink" href="#metrics.models.MetricsJobType.GROUPS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="exception">
 <dt id="metrics.models.MetricsJobType.MultipleObjectsReturned">
-<em class="property">exception </em><code class="descclassname">MetricsJobType.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#metrics.models.MetricsJobType.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#metrics.models.MetricsJobType.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.canceled_count">
+<code class="descname">canceled_count</code><a class="headerlink" href="#metrics.models.MetricsJobType.canceled_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.completed_count">
+<code class="descname">completed_count</code><a class="headerlink" href="#metrics.models.MetricsJobType.completed_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.created">
+<code class="descname">created</code><a class="headerlink" href="#metrics.models.MetricsJobType.created" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.error_algorithm_count">
+<code class="descname">error_algorithm_count</code><a class="headerlink" href="#metrics.models.MetricsJobType.error_algorithm_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.error_data_count">
+<code class="descname">error_data_count</code><a class="headerlink" href="#metrics.models.MetricsJobType.error_data_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.error_system_count">
+<code class="descname">error_system_count</code><a class="headerlink" href="#metrics.models.MetricsJobType.error_system_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.failed_count">
+<code class="descname">failed_count</code><a class="headerlink" href="#metrics.models.MetricsJobType.failed_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="metrics.models.MetricsJobType.get_next_by_created">
-<code class="descclassname">MetricsJobType.</code><code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.models.MetricsJobType.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.models.MetricsJobType.get_next_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="metrics.models.MetricsJobType.get_next_by_occurred">
-<code class="descclassname">MetricsJobType.</code><code class="descname">get_next_by_occurred</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.models.MetricsJobType.get_next_by_occurred" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_by_occurred</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.models.MetricsJobType.get_next_by_occurred" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="metrics.models.MetricsJobType.get_previous_by_created">
-<code class="descclassname">MetricsJobType.</code><code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.models.MetricsJobType.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.models.MetricsJobType.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="metrics.models.MetricsJobType.get_previous_by_occurred">
-<code class="descclassname">MetricsJobType.</code><code class="descname">get_previous_by_occurred</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.models.MetricsJobType.get_previous_by_occurred" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_previous_by_occurred</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.models.MetricsJobType.get_previous_by_occurred" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.id">
+<code class="descname">id</code><a class="headerlink" href="#metrics.models.MetricsJobType.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.job_time_avg">
+<code class="descname">job_time_avg</code><a class="headerlink" href="#metrics.models.MetricsJobType.job_time_avg" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.job_time_max">
+<code class="descname">job_time_max</code><a class="headerlink" href="#metrics.models.MetricsJobType.job_time_max" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.job_time_min">
+<code class="descname">job_time_min</code><a class="headerlink" href="#metrics.models.MetricsJobType.job_time_min" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.job_time_sum">
+<code class="descname">job_time_sum</code><a class="headerlink" href="#metrics.models.MetricsJobType.job_time_sum" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="metrics.models.MetricsJobType.job_type">
-<code class="descclassname">MetricsJobType.</code><code class="descname">job_type</code><a class="headerlink" href="#metrics.models.MetricsJobType.job_type" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">job_type</code><a class="headerlink" href="#metrics.models.MetricsJobType.job_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.job_type_id">
+<code class="descname">job_type_id</code><a class="headerlink" href="#metrics.models.MetricsJobType.job_type_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="metrics.models.MetricsJobType.objects">
-<code class="descclassname">MetricsJobType.</code><code class="descname">objects</code><em class="property"> = &lt;metrics.models.MetricsJobTypeManager object&gt;</em><a class="headerlink" href="#metrics.models.MetricsJobType.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descname">objects</code><em class="property"> = &lt;metrics.models.MetricsJobTypeManager object&gt;</em><a class="headerlink" href="#metrics.models.MetricsJobType.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.occurred">
+<code class="descname">occurred</code><a class="headerlink" href="#metrics.models.MetricsJobType.occurred" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.post_time_avg">
+<code class="descname">post_time_avg</code><a class="headerlink" href="#metrics.models.MetricsJobType.post_time_avg" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.post_time_max">
+<code class="descname">post_time_max</code><a class="headerlink" href="#metrics.models.MetricsJobType.post_time_max" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.post_time_min">
+<code class="descname">post_time_min</code><a class="headerlink" href="#metrics.models.MetricsJobType.post_time_min" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.post_time_sum">
+<code class="descname">post_time_sum</code><a class="headerlink" href="#metrics.models.MetricsJobType.post_time_sum" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.pre_time_avg">
+<code class="descname">pre_time_avg</code><a class="headerlink" href="#metrics.models.MetricsJobType.pre_time_avg" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.pre_time_max">
+<code class="descname">pre_time_max</code><a class="headerlink" href="#metrics.models.MetricsJobType.pre_time_max" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.pre_time_min">
+<code class="descname">pre_time_min</code><a class="headerlink" href="#metrics.models.MetricsJobType.pre_time_min" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.pre_time_sum">
+<code class="descname">pre_time_sum</code><a class="headerlink" href="#metrics.models.MetricsJobType.pre_time_sum" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.queue_time_avg">
+<code class="descname">queue_time_avg</code><a class="headerlink" href="#metrics.models.MetricsJobType.queue_time_avg" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.queue_time_max">
+<code class="descname">queue_time_max</code><a class="headerlink" href="#metrics.models.MetricsJobType.queue_time_max" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.queue_time_min">
+<code class="descname">queue_time_min</code><a class="headerlink" href="#metrics.models.MetricsJobType.queue_time_min" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.queue_time_sum">
+<code class="descname">queue_time_sum</code><a class="headerlink" href="#metrics.models.MetricsJobType.queue_time_sum" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.run_time_avg">
+<code class="descname">run_time_avg</code><a class="headerlink" href="#metrics.models.MetricsJobType.run_time_avg" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.run_time_max">
+<code class="descname">run_time_max</code><a class="headerlink" href="#metrics.models.MetricsJobType.run_time_max" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.run_time_min">
+<code class="descname">run_time_min</code><a class="headerlink" href="#metrics.models.MetricsJobType.run_time_min" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.run_time_sum">
+<code class="descname">run_time_sum</code><a class="headerlink" href="#metrics.models.MetricsJobType.run_time_sum" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.stage_time_avg">
+<code class="descname">stage_time_avg</code><a class="headerlink" href="#metrics.models.MetricsJobType.stage_time_avg" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.stage_time_max">
+<code class="descname">stage_time_max</code><a class="headerlink" href="#metrics.models.MetricsJobType.stage_time_max" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.stage_time_min">
+<code class="descname">stage_time_min</code><a class="headerlink" href="#metrics.models.MetricsJobType.stage_time_min" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.stage_time_sum">
+<code class="descname">stage_time_sum</code><a class="headerlink" href="#metrics.models.MetricsJobType.stage_time_sum" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="metrics.models.MetricsJobType.total_count">
+<code class="descname">total_count</code><a class="headerlink" href="#metrics.models.MetricsJobType.total_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -752,7 +1206,7 @@ aggregate variations that all reference the same base attribute.</li>
 <li><strong>query_set</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.models.QuerySet</span></code>) &#8211; A set of database models that are being counted towards metrics.</li>
 <li><strong>date_field</strong> (<em>string</em>) &#8211; The name of the field within each model that contains the recorded date.</li>
 <li><strong>choice_field</strong> (<em>string</em>) &#8211; The name of the field within each model that contains the choice model relation.</li>
-<li><strong>choice_ids</strong> (<em>list[string]</em>) &#8211; A list of related model identifiers to query.</li>
+<li><strong>choice_ids</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em><em></em>) &#8211; A list of related model identifiers to query.</li>
 <li><strong>columns</strong> (list[<a class="reference internal" href="#metrics.registry.MetricsTypeColumn" title="metrics.registry.MetricsTypeColumn"><code class="xref py py-class docutils literal"><span class="pre">metrics.registry.MetricsTypeColumn</span></code></a>]) &#8211; A list of metrics type column definitions that should be included.</li>
 </ul>
 </td>
@@ -842,7 +1296,7 @@ can use its own choice models, but any fields listed as filters must be included
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The metrics type column names.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list[string]</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list">list</a>[string]</td>
 </tr>
 </tbody>
 </table>
@@ -859,8 +1313,8 @@ columns with a matching a value. Duplicates are then removed to produce the fina
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>column_names</strong> (<em>list[string]</em>) &#8211; The names of the columns to lookup.</li>
-<li><strong>group_names</strong> (<em>list[string]</em>) &#8211; The names of the groups to lookup.</li>
+<li><strong>column_names</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em><em></em>) &#8211; The names of the columns to lookup.</li>
+<li><strong>group_names</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em><em></em>) &#8211; The names of the groups to lookup.</li>
 </ul>
 </td>
 </tr>
@@ -884,7 +1338,7 @@ final result.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>group_names</strong> (<em>list[string]</em>) &#8211; The names of the groups to lookup.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>group_names</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em><em></em>) &#8211; The names of the groups to lookup.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The metrics type columns.</td>
 </tr>
@@ -1040,7 +1494,7 @@ queries they are not included by default.</td>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<em>datetime.date</em>) &#8211; The start of the time range to query.</li>
 <li><strong>ended</strong> (<em>datetime.date</em>) &#8211; The end of the time range to query.</li>
-<li><strong>choice_ids</strong> (<em>list[string]</em>) &#8211; A list of related model identifiers to query.</li>
+<li><strong>choice_ids</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em><em></em>) &#8211; A list of related model identifiers to query.</li>
 <li><strong>columns</strong> ({<a class="reference internal" href="#metrics.registry.MetricsTypeColumn" title="metrics.registry.MetricsTypeColumn"><code class="xref py py-class docutils literal"><span class="pre">metrics.registry.MetricsTypeColumn</span></code></a>}) &#8211; A list of metric columns to include from the metric type.</li>
 </ul>
 </td>
@@ -1386,7 +1840,7 @@ are not included by default.</li>
 
 <dl class="attribute">
 <dt id="metrics.views.MetricsView.queryset">
-<code class="descname">queryset</code><em class="property"> = [&lt;metrics.registry.MetricsType object at 0x2b8d265c2650&gt;, &lt;metrics.registry.MetricsType object at 0x2b8d265c2e90&gt;, &lt;metrics.registry.MetricsType object at 0x2b8d24fe2290&gt;]</em><a class="headerlink" href="#metrics.views.MetricsView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = [&lt;metrics.registry.MetricsType object&gt;, &lt;metrics.registry.MetricsType object&gt;, &lt;metrics.registry.MetricsType object&gt;]</em><a class="headerlink" href="#metrics.views.MetricsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1451,7 +1905,7 @@ are not included by default.</li>
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

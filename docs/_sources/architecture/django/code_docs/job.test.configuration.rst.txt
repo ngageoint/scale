@@ -1,0 +1,20 @@
+job\.test\.configuration package
+================================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    job.test.configuration.data
+    job.test.configuration.interface
+    job.test.configuration.json
+    job.test.configuration.results
+
+Module contents
+---------------
+
+.. automodule:: job.test.configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,0 +1,75 @@
+ingest package
+==============
+
+Subpackages
+-----------
+
+.. toctree::
+
+    ingest.handlers
+    ingest.management
+    ingest.migrations
+    ingest.scan
+    ingest.strike
+    ingest.test
+    ingest.triggers
+
+Submodules
+----------
+
+ingest\.apps module
+-------------------
+
+.. automodule:: ingest.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+ingest\.ingest\_job module
+--------------------------
+
+.. automodule:: ingest.ingest_job
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+ingest\.models module
+---------------------
+
+.. automodule:: ingest.models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+ingest\.serializers module
+--------------------------
+
+.. automodule:: ingest.serializers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+ingest\.urls module
+-------------------
+
+.. automodule:: ingest.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+ingest\.views module
+--------------------
+
+.. automodule:: ingest.views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: ingest
+    :members:
+    :undoc-members:
+    :show-inheritance:

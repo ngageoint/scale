@@ -1,0 +1,46 @@
+error\.migrations package
+=========================
+
+Submodules
+----------
+
+error\.migrations\.0001\_initial module
+---------------------------------------
+
+.. automodule:: error.migrations.0001_initial
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+error\.migrations\.0002\_auto\_20151217\_1319 module
+----------------------------------------------------
+
+.. automodule:: error.migrations.0002_auto_20151217_1319
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+error\.migrations\.0003\_error\_is\_builtin module
+--------------------------------------------------
+
+.. automodule:: error.migrations.0003_error_is_builtin
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+error\.migrations\.0004\_error\_should\_be\_retried module
+----------------------------------------------------------
+
+.. automodule:: error.migrations.0004_error_should_be_retried
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: error.migrations
+    :members:
+    :undoc-members:
+    :show-inheritance:

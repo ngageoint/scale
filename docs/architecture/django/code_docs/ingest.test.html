@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="ingest package" href="ingest.html"/>
         <link rel="next" title="ingest.test.scan package" href="ingest.test.scan.html"/>
@@ -201,7 +204,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/ingest.test.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/ingest.test.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -678,6 +681,47 @@
 </dd></dl>
 
 <dl class="class">
+<dt id="ingest.test.test_views.TestScansProcessView">
+<em class="property">class </em><code class="descclassname">ingest.test.test_views.</code><code class="descname">TestScansProcessView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScansProcessView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<p>Tests related to the Scan process endpoint</p>
+<dl class="attribute">
+<dt id="ingest.test.test_views.TestScansProcessView.fixtures">
+<code class="descname">fixtures</code><em class="property"> = [u'ingest_job_types.json']</em><a class="headerlink" href="#ingest.test.test_views.TestScansProcessView.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScansProcessView.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScansProcessView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScansProcessView.test_successful_dry_run_params">
+<code class="descname">test_successful_dry_run_params</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScansProcessView.test_successful_dry_run_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating launch of a dry run Scan process with explicit parameterization.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScansProcessView.test_successful_dry_run_unspecified">
+<code class="descname">test_successful_dry_run_unspecified</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScansProcessView.test_successful_dry_run_unspecified" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating launch of a dry run Scan process.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScansProcessView.test_successful_ingest_body">
+<code class="descname">test_successful_ingest_body</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScansProcessView.test_successful_ingest_body" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating launch of an actual ingest Scan process using JSON body parameters.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.test_views.TestScansProcessView.test_successful_ingest_params">
+<code class="descname">test_successful_ingest_params</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScansProcessView.test_successful_ingest_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating launch of an actual ingest Scan process.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="ingest.test.test_views.TestScansValidationView">
 <em class="property">class </em><code class="descclassname">ingest.test.test_views.</code><code class="descname">TestScansValidationView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestScansValidationView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
@@ -911,7 +955,7 @@
 
 <dl class="function">
 <dt id="ingest.test.utils.create_scan">
-<code class="descclassname">ingest.test.utils.</code><code class="descname">create_scan</code><span class="sig-paren">(</span><em>name=None</em>, <em>title=None</em>, <em>description=None</em>, <em>configuration=None</em>, <em>job=None</em>, <em>dry_run_job=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.utils.create_scan" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">ingest.test.utils.</code><code class="descname">create_scan</code><span class="sig-paren">(</span><em>name=None</em>, <em>title=None</em>, <em>description=None</em>, <em>configuration=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.utils.create_scan" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
@@ -973,7 +1017,7 @@
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

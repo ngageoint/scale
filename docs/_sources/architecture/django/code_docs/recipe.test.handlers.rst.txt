@@ -1,0 +1,38 @@
+recipe\.test\.handlers package
+==============================
+
+Submodules
+----------
+
+recipe\.test\.handlers\.test\_graph module
+------------------------------------------
+
+.. automodule:: recipe.test.handlers.test_graph
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+recipe\.test\.handlers\.test\_graph\_delta module
+-------------------------------------------------
+
+.. automodule:: recipe.test.handlers.test_graph_delta
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+recipe\.test\.handlers\.test\_handler module
+--------------------------------------------
+
+.. automodule:: recipe.test.handlers.test_handler
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: recipe.test.handlers
+    :members:
+    :undoc-members:
+    :show-inheritance:

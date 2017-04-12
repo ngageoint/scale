@@ -1,0 +1,17 @@
+job\.management package
+=======================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    job.management.commands
+
+Module contents
+---------------
+
+.. automodule:: job.management
+    :members:
+    :undoc-members:
+    :show-inheritance:

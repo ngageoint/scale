@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="port package" href="port.html"/>
         <link rel="next" title="product package" href="product.html"/>
@@ -202,7 +205,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/port.test.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/port.test.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -225,7 +228,7 @@
 <dl class="class">
 <dt id="port.test.test_views.TestConfigurationDownloadView">
 <em class="property">class </em><code class="descclassname">port.test.test_views.</code><code class="descname">TestConfigurationDownloadView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#port.test.test_views.TestConfigurationDownloadView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
 <p>Tests related to the configuration export download endpoint</p>
 <dl class="method">
 <dt id="port.test.test_views.TestConfigurationDownloadView.setUp">
@@ -291,7 +294,7 @@
 <dl class="class">
 <dt id="port.test.test_views.TestConfigurationViewExport">
 <em class="property">class </em><code class="descclassname">port.test.test_views.</code><code class="descname">TestConfigurationViewExport</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#port.test.test_views.TestConfigurationViewExport" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
 <p>Tests related to the configuration export endpoint</p>
 <dl class="method">
 <dt id="port.test.test_views.TestConfigurationViewExport.setUp">
@@ -678,7 +681,7 @@
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

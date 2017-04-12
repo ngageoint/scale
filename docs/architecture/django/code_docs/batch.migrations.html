@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="batch package" href="batch.html"/>
         <link rel="next" title="batch.test package" href="batch.test.html"/>
@@ -201,7 +204,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/batch.migrations.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/batch.migrations.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -232,7 +235,26 @@
 
 <dl class="attribute">
 <dt id="batch.migrations.0001_initial.Migration.operations">
-<code class="descname">operations</code><em class="property"> = [&lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'title', &lt;django.db.models.fields.CharField&gt;), (u'description', &lt;django.db.models.fields.TextField&gt;), (u'status', &lt;django.db.models.fields.CharField&gt;), (u'definition', &lt;djorm_pgjson.fields.JSONField&gt;), (u'created_count', &lt;django.db.models.fields.IntegerField&gt;), (u'failed_count', &lt;django.db.models.fields.IntegerField&gt;), (u'total_count', &lt;django.db.models.fields.IntegerField&gt;), (u'created', &lt;django.db.models.fields.DateTimeField&gt;), (u'last_modified', &lt;django.db.models.fields.DateTimeField&gt;), (u'creator_job', &lt;django.db.models.fields.related.ForeignKey&gt;), (u'event', &lt;django.db.models.fields.related.ForeignKey&gt;), (u'recipe_type', &lt;django.db.models.fields.related.ForeignKey&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={u'db_table': u'batch'}, name=u'Batch'&gt;, &lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'created', &lt;django.db.models.fields.DateTimeField&gt;), (u'batch', &lt;django.db.models.fields.related.ForeignKey&gt;), (u'job', &lt;django.db.models.fields.related.ForeignKey&gt;), (u'superseded_job', &lt;django.db.models.fields.related.ForeignKey&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={u'db_table': u'batch_job'}, name=u'BatchJob'&gt;, &lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'created', &lt;django.db.models.fields.DateTimeField&gt;), (u'batch', &lt;django.db.models.fields.related.ForeignKey&gt;), (u'recipe', &lt;django.db.models.fields.related.ForeignKey&gt;), (u'superseded_recipe', &lt;django.db.models.fields.related.ForeignKey&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={u'db_table': u'batch_recipe'}, name=u'BatchRecipe'&gt;]</em><a class="headerlink" href="#batch.migrations.0001_initial.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<code class="descname">operations</code><em class="property"> = [&lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'title', &lt;django.db.models.fields.CharField&gt;), (u'description', &lt;django.db.models.fields.TextField&gt;), (u'status', &lt;django.db.models.fields.CharField&gt;), (u'definition', &lt;util.deprecation.JSONStringField&gt;), (u'created_count', &lt;django.db.models.fields.IntegerField&gt;), (u'failed_count', &lt;django.db.models.fields.IntegerField&gt;), (u'total_count', &lt;django.db.models.fields.IntegerField&gt;), (u'created', &lt;django.db.models.fields.DateTimeField&gt;), (u'last_modified', &lt;django.db.models.fields.DateTimeField&gt;), (u'creator_job', &lt;django.db.models.fields.related.ForeignKey&gt;), (u'event', &lt;django.db.models.fields.related.ForeignKey&gt;), (u'recipe_type', &lt;django.db.models.fields.related.ForeignKey&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={u'db_table': u'batch'}, name=u'Batch'&gt;, &lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'created', &lt;django.db.models.fields.DateTimeField&gt;), (u'batch', &lt;django.db.models.fields.related.ForeignKey&gt;), (u'job', &lt;django.db.models.fields.related.ForeignKey&gt;), (u'superseded_job', &lt;django.db.models.fields.related.ForeignKey&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={u'db_table': u'batch_job'}, name=u'BatchJob'&gt;, &lt;CreateModel  fields=[(u'id', &lt;django.db.models.fields.AutoField&gt;), (u'created', &lt;django.db.models.fields.DateTimeField&gt;), (u'batch', &lt;django.db.models.fields.related.ForeignKey&gt;), (u'recipe', &lt;django.db.models.fields.related.ForeignKey&gt;), (u'superseded_recipe', &lt;django.db.models.fields.related.ForeignKey&gt;)], bases=(&lt;class 'django.db.models.base.Model'&gt;,), options={u'db_table': u'batch_recipe'}, name=u'BatchRecipe'&gt;]</em><a class="headerlink" href="#batch.migrations.0001_initial.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-batch.migrations.0002_auto_20170412_1225">
+<span id="batch-migrations-0002-auto-20170412-1225-module"></span><h2>batch.migrations.0002_auto_20170412_1225 module<a class="headerlink" href="#module-batch.migrations.0002_auto_20170412_1225" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="batch.migrations.0002_auto_20170412_1225.Migration">
+<em class="property">class </em><code class="descclassname">batch.migrations.0002_auto_20170412_1225.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.migrations.0002_auto_20170412_1225.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="batch.migrations.0002_auto_20170412_1225.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'batch', u'0001_initial')]</em><a class="headerlink" href="#batch.migrations.0002_auto_20170412_1225.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="batch.migrations.0002_auto_20170412_1225.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;AlterField  field=&lt;django.contrib.postgres.fields.jsonb.JSONField&gt;, name=u'definition', model_name=u'batch'&gt;]</em><a class="headerlink" href="#batch.migrations.0002_auto_20170412_1225.Migration.operations" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -291,7 +313,7 @@
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

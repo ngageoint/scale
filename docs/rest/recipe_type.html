@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../index.html"/>
         <link rel="up" title="REST API" href="index.html"/>
         <link rel="next" title="Scale File Services" href="scale_file.html"/>
@@ -113,7 +116,7 @@
 <li class="toctree-l3"><a class="reference internal" href="product.html">Product Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">Queue Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">Recipe Services</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Recipe Types Services</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Recipe Types Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scale_file.html">Scale File Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scan.html">Scan Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">Scheduler Services</a></li>
@@ -179,7 +182,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/rest/recipe_type.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/rest/recipe_type.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -274,7 +277,7 @@ Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 <tr class="row-even"><td>.id</td>
 <td>Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API call.
-(See <a class="reference internal" href="#rest-recipe-type-details"><span>Recipe Type Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-recipe-type-details"><span class="std std-ref">Recipe Type Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.name</td>
 <td>String</td>
@@ -299,7 +302,7 @@ Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 <tr class="row-even"><td>.definition</td>
 <td>JSON Object</td>
 <td colspan="2">JSON description defining the interface for running a recipe of this type.
-(See <a class="reference internal" href="../architecture/jobs/recipe_definition.html#architecture-jobs-recipe-definition-spec"><span>Recipe Definition Specification Version 1.0</span></a>)</td>
+(See <a class="reference internal" href="../architecture/jobs/recipe_definition.html#architecture-jobs-recipe-definition-spec"><span class="std std-ref">Recipe Definition Specification Version 1.0</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.revision_num</td>
 <td>Integer</td>
@@ -422,7 +425,7 @@ Prefix fields with a dash to reverse the sort, (ex: order=-name).</td>
 <td>JSON Object</td>
 <td>Required</td>
 <td>JSON description of the interface for running a recipe of this type.
-(See <a class="reference internal" href="../architecture/jobs/recipe_definition.html#architecture-jobs-recipe-definition-spec"><span>Recipe Definition Specification Version 1.0</span></a>)</td>
+(See <a class="reference internal" href="../architecture/jobs/recipe_definition.html#architecture-jobs-recipe-definition-spec"><span class="std std-ref">Recipe Definition Specification Version 1.0</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>trigger_rule</td>
 <td>JSON Object</td>
@@ -506,10 +509,10 @@ The is_active field is optional and can be used to pause the recipe.</td>
 </tr>
 <tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-even"><td>&nbsp;</td>
+<tr class="row-even"><td>&#160;</td>
 <td>JSON Object</td>
 <td colspan="2">All fields are the same as the recipe type details model.
-(See <a class="reference internal" href="#rest-recipe-type-details"><span>Recipe Type Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-recipe-type-details"><span class="std std-ref">Recipe Type Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -661,7 +664,7 @@ The is_active field is optional and can be used to pause the recipe.</td>
 <td>JSON Object</td>
 <td colspan="2">Required</td>
 <td>JSON description defining the interface for running the recipe type.
-(See <a class="reference internal" href="../architecture/jobs/recipe_definition.html#architecture-jobs-recipe-definition-spec"><span>Recipe Definition Specification Version 1.0</span></a>)</td>
+(See <a class="reference internal" href="../architecture/jobs/recipe_definition.html#architecture-jobs-recipe-definition-spec"><span class="std std-ref">Recipe Definition Specification Version 1.0</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>trigger_rule</td>
 <td>JSON Object</td>
@@ -816,7 +819,7 @@ The is_active field is optional and can be used to pause the recipe.</td>
 <tr class="row-odd"><td>definition</td>
 <td>JSON Object</td>
 <td>JSON description defining the interface for running a recipe of this type.
-(See <a class="reference internal" href="../architecture/jobs/recipe_definition.html#architecture-jobs-recipe-definition-spec"><span>Recipe Definition Specification Version 1.0</span></a>)</td>
+(See <a class="reference internal" href="../architecture/jobs/recipe_definition.html#architecture-jobs-recipe-definition-spec"><span class="std std-ref">Recipe Definition Specification Version 1.0</span></a>)</td>
 </tr>
 <tr class="row-even"><td>revision_num</td>
 <td>Integer</td>
@@ -841,7 +844,7 @@ The is_active field is optional and can be used to pause the recipe.</td>
 <tr class="row-odd"><td>job_types</td>
 <td>Array</td>
 <td>List of all job_types that are referenced by this recipe type&#8217;s definition
-(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span>Job Type Details</span></a>)</td>
+(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -986,7 +989,7 @@ The is_active field is optional and can be used to pause the recipe.</td>
 <td>JSON Object</td>
 <td>Optional</td>
 <td>JSON description of the interface for running a recipe of this type.
-(See <a class="reference internal" href="../architecture/jobs/recipe_definition.html#architecture-jobs-recipe-definition-spec"><span>Recipe Definition Specification Version 1.0</span></a>)</td>
+(See <a class="reference internal" href="../architecture/jobs/recipe_definition.html#architecture-jobs-recipe-definition-spec"><span class="std std-ref">Recipe Definition Specification Version 1.0</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>trigger_rule</td>
 <td>JSON Object</td>
@@ -1066,10 +1069,10 @@ Set this field to null to remove the existing trigger rule.</td>
 </tr>
 <tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-odd"><td>&nbsp;</td>
+<tr class="row-odd"><td>&#160;</td>
 <td>JSON Object</td>
 <td colspan="2">All fields are the same as the recipe type details model.
-(See <a class="reference internal" href="#rest-recipe-type-details"><span>Recipe Type Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-recipe-type-details"><span class="std std-ref">Recipe Type Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -1225,7 +1228,7 @@ Set this field to null to remove the existing trigger rule.</td>
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../_static/jquery.js"></script>

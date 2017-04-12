@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="Django/Code Base" href="../index.html"/>
         <link rel="next" title="batch.configuration package" href="batch.configuration.html"/>
@@ -107,7 +110,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="">batch package</a><ul>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">batch package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-batch.apps">batch.apps module</a></li>
@@ -199,7 +202,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/batch.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/batch.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -248,6 +251,7 @@
 <li class="toctree-l1"><a class="reference internal" href="batch.migrations.html">batch.migrations package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="batch.migrations.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="batch.migrations.html#module-batch.migrations.0001_initial">batch.migrations.0001_initial module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="batch.migrations.html#module-batch.migrations.0002_auto_20170412_1225">batch.migrations.0002_auto_20170412_1225 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="batch.migrations.html#module-batch.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -350,7 +354,7 @@
 <li><strong>recipe_type</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The type of recipe to re-process</li>
 <li><strong>event</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The event that triggered the creation of this batch</li>
 <li><strong>creator_job</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The job that will create the batch recipes and jobs for processing</li>
-<li><strong>definition</strong> (<code class="xref py py-class docutils literal"><span class="pre">djorm_pgjson.fields.JSONField</span></code>) &#8211; JSON definition for setting up the batch</li>
+<li><strong>definition</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.contrib.postgres.fields.JSONField</span></code>) &#8211; JSON definition for setting up the batch</li>
 <li><strong>created_count</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The number of batch recipes created by this batch.</li>
 <li><strong>failed_count</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The number of batch recipes failed by this batch.</li>
 <li><strong>total_count</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; An approximation of the total number of batch recipes that should be created by this batch.</li>
@@ -374,44 +378,133 @@
 
 <dl class="exception">
 <dt id="batch.models.Batch.MultipleObjectsReturned">
-<em class="property">exception </em><code class="descclassname">Batch.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#batch.models.Batch.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#batch.models.Batch.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="batch.models.Batch.batchjob_set">
-<code class="descclassname">Batch.</code><code class="descname">batchjob_set</code><a class="headerlink" href="#batch.models.Batch.batchjob_set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">batchjob_set</code><a class="headerlink" href="#batch.models.Batch.batchjob_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="batch.models.Batch.batchrecipe_set">
-<code class="descclassname">Batch.</code><code class="descname">batchrecipe_set</code><a class="headerlink" href="#batch.models.Batch.batchrecipe_set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">batchrecipe_set</code><a class="headerlink" href="#batch.models.Batch.batchrecipe_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.Batch.created">
+<code class="descname">created</code><a class="headerlink" href="#batch.models.Batch.created" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.Batch.created_count">
+<code class="descname">created_count</code><a class="headerlink" href="#batch.models.Batch.created_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="batch.models.Batch.creator_job">
-<code class="descclassname">Batch.</code><code class="descname">creator_job</code><a class="headerlink" href="#batch.models.Batch.creator_job" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">creator_job</code><a class="headerlink" href="#batch.models.Batch.creator_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.Batch.creator_job_id">
+<code class="descname">creator_job_id</code><a class="headerlink" href="#batch.models.Batch.creator_job_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="batch.models.Batch.definition">
-<code class="descclassname">Batch.</code><code class="descname">definition</code><a class="headerlink" href="#batch.models.Batch.definition" title="Permalink to this definition">¶</a></dt>
-<dd><p>A placeholder class that provides a way to set the attribute on the model.</p>
+<code class="descname">definition</code><a class="headerlink" href="#batch.models.Batch.definition" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.Batch.description">
+<code class="descname">description</code><a class="headerlink" href="#batch.models.Batch.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="batch.models.Batch.event">
-<code class="descclassname">Batch.</code><code class="descname">event</code><a class="headerlink" href="#batch.models.Batch.event" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">event</code><a class="headerlink" href="#batch.models.Batch.event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.Batch.event_id">
+<code class="descname">event_id</code><a class="headerlink" href="#batch.models.Batch.event_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.Batch.failed_count">
+<code class="descname">failed_count</code><a class="headerlink" href="#batch.models.Batch.failed_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="batch.models.Batch.fileancestrylink_set">
-<code class="descclassname">Batch.</code><code class="descname">fileancestrylink_set</code><a class="headerlink" href="#batch.models.Batch.fileancestrylink_set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">fileancestrylink_set</code><a class="headerlink" href="#batch.models.Batch.fileancestrylink_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="batch.models.Batch.get_batch_definition">
-<code class="descclassname">Batch.</code><code class="descname">get_batch_definition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.Batch.get_batch_definition" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_batch_definition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.Batch.get_batch_definition" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the definition for this batch</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -427,38 +520,88 @@
 
 <dl class="method">
 <dt id="batch.models.Batch.get_next_by_created">
-<code class="descclassname">Batch.</code><code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.Batch.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.Batch.get_next_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="batch.models.Batch.get_next_by_last_modified">
-<code class="descclassname">Batch.</code><code class="descname">get_next_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.Batch.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.Batch.get_next_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="batch.models.Batch.get_previous_by_created">
-<code class="descclassname">Batch.</code><code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.Batch.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.Batch.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="batch.models.Batch.get_previous_by_last_modified">
-<code class="descclassname">Batch.</code><code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.Batch.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.Batch.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="batch.models.Batch.get_status_display">
-<code class="descclassname">Batch.</code><code class="descname">get_status_display</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.Batch.get_status_display" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_status_display</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.Batch.get_status_display" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="batch.models.Batch.id">
+<code class="descname">id</code><a class="headerlink" href="#batch.models.Batch.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.Batch.last_modified">
+<code class="descname">last_modified</code><a class="headerlink" href="#batch.models.Batch.last_modified" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="batch.models.Batch.objects">
-<code class="descclassname">Batch.</code><code class="descname">objects</code><em class="property"> = &lt;batch.models.BatchManager object&gt;</em><a class="headerlink" href="#batch.models.Batch.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descname">objects</code><em class="property"> = &lt;batch.models.BatchManager object&gt;</em><a class="headerlink" href="#batch.models.Batch.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="batch.models.Batch.recipe_type">
-<code class="descclassname">Batch.</code><code class="descname">recipe_type</code><a class="headerlink" href="#batch.models.Batch.recipe_type" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">recipe_type</code><a class="headerlink" href="#batch.models.Batch.recipe_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.Batch.recipe_type_id">
+<code class="descname">recipe_type_id</code><a class="headerlink" href="#batch.models.Batch.recipe_type_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.Batch.status">
+<code class="descname">status</code><a class="headerlink" href="#batch.models.Batch.status" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.Batch.title">
+<code class="descname">title</code><a class="headerlink" href="#batch.models.Batch.title" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.Batch.total_count">
+<code class="descname">total_count</code><a class="headerlink" href="#batch.models.Batch.total_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -489,39 +632,98 @@
 
 <dl class="exception">
 <dt id="batch.models.BatchJob.MultipleObjectsReturned">
-<em class="property">exception </em><code class="descclassname">BatchJob.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#batch.models.BatchJob.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#batch.models.BatchJob.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="batch.models.BatchJob.batch">
-<code class="descclassname">BatchJob.</code><code class="descname">batch</code><a class="headerlink" href="#batch.models.BatchJob.batch" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">batch</code><a class="headerlink" href="#batch.models.BatchJob.batch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchJob.batch_id">
+<code class="descname">batch_id</code><a class="headerlink" href="#batch.models.BatchJob.batch_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchJob.created">
+<code class="descname">created</code><a class="headerlink" href="#batch.models.BatchJob.created" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="batch.models.BatchJob.get_next_by_created">
-<code class="descclassname">BatchJob.</code><code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchJob.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchJob.get_next_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="batch.models.BatchJob.get_previous_by_created">
-<code class="descclassname">BatchJob.</code><code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchJob.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchJob.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchJob.id">
+<code class="descname">id</code><a class="headerlink" href="#batch.models.BatchJob.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="batch.models.BatchJob.job">
-<code class="descclassname">BatchJob.</code><code class="descname">job</code><a class="headerlink" href="#batch.models.BatchJob.job" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">job</code><a class="headerlink" href="#batch.models.BatchJob.job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchJob.job_id">
+<code class="descname">job_id</code><a class="headerlink" href="#batch.models.BatchJob.job_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="batch.models.BatchJob.objects">
-<code class="descclassname">BatchJob.</code><code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#batch.models.BatchJob.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#batch.models.BatchJob.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="batch.models.BatchJob.superseded_job">
-<code class="descclassname">BatchJob.</code><code class="descname">superseded_job</code><a class="headerlink" href="#batch.models.BatchJob.superseded_job" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">superseded_job</code><a class="headerlink" href="#batch.models.BatchJob.superseded_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchJob.superseded_job_id">
+<code class="descname">superseded_job_id</code><a class="headerlink" href="#batch.models.BatchJob.superseded_job_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -570,10 +772,10 @@ transaction.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query batches updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query batches updated before this amount of time.</li>
-<li><strong>statuses</strong> (<em>[string]</em>) &#8211; Query batches with the a specific execution status.</li>
-<li><strong>recipe_type_ids</strong> (<em>[int]</em>) &#8211; Query batches for the recipe type associated with the identifier.</li>
-<li><strong>recipe_type_names</strong> (<em>[string]</em>) &#8211; Query batches for the recipe type associated with the name.</li>
-<li><strong>order</strong> (<em>[string]</em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>statuses</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query batches with the a specific execution status.</li>
+<li><strong>recipe_type_ids</strong> (<em></em><em>[</em><em>int</em><em>]</em><em></em>) &#8211; Query batches for the recipe type associated with the identifier.</li>
+<li><strong>recipe_type_names</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query batches for the recipe type associated with the name.</li>
+<li><strong>order</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
 </tr>
@@ -697,39 +899,98 @@ transaction.</p>
 
 <dl class="exception">
 <dt id="batch.models.BatchRecipe.MultipleObjectsReturned">
-<em class="property">exception </em><code class="descclassname">BatchRecipe.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#batch.models.BatchRecipe.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#batch.models.BatchRecipe.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="batch.models.BatchRecipe.batch">
-<code class="descclassname">BatchRecipe.</code><code class="descname">batch</code><a class="headerlink" href="#batch.models.BatchRecipe.batch" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">batch</code><a class="headerlink" href="#batch.models.BatchRecipe.batch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchRecipe.batch_id">
+<code class="descname">batch_id</code><a class="headerlink" href="#batch.models.BatchRecipe.batch_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchRecipe.created">
+<code class="descname">created</code><a class="headerlink" href="#batch.models.BatchRecipe.created" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="batch.models.BatchRecipe.get_next_by_created">
-<code class="descclassname">BatchRecipe.</code><code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchRecipe.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchRecipe.get_next_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="batch.models.BatchRecipe.get_previous_by_created">
-<code class="descclassname">BatchRecipe.</code><code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchRecipe.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchRecipe.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="batch.models.BatchRecipe.id">
+<code class="descname">id</code><a class="headerlink" href="#batch.models.BatchRecipe.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="batch.models.BatchRecipe.objects">
-<code class="descclassname">BatchRecipe.</code><code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#batch.models.BatchRecipe.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#batch.models.BatchRecipe.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="batch.models.BatchRecipe.recipe">
-<code class="descclassname">BatchRecipe.</code><code class="descname">recipe</code><a class="headerlink" href="#batch.models.BatchRecipe.recipe" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">recipe</code><a class="headerlink" href="#batch.models.BatchRecipe.recipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchRecipe.recipe_id">
+<code class="descname">recipe_id</code><a class="headerlink" href="#batch.models.BatchRecipe.recipe_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="batch.models.BatchRecipe.superseded_recipe">
-<code class="descclassname">BatchRecipe.</code><code class="descname">superseded_recipe</code><a class="headerlink" href="#batch.models.BatchRecipe.superseded_recipe" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">superseded_recipe</code><a class="headerlink" href="#batch.models.BatchRecipe.superseded_recipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.BatchRecipe.superseded_recipe_id">
+<code class="descname">superseded_recipe_id</code><a class="headerlink" href="#batch.models.BatchRecipe.superseded_recipe_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -763,7 +1024,7 @@ transaction.</p>
 
 <dl class="class">
 <dt id="batch.serializers.BatchDetailsSerializer.JobSerializer.TriggerEventBaseSerializer">
-<em class="property">class </em><code class="descclassname">BatchDetailsSerializer.JobSerializer.</code><code class="descname">TriggerEventBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchDetailsSerializer.JobSerializer.TriggerEventBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">TriggerEventBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchDetailsSerializer.JobSerializer.TriggerEventBaseSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts trigger event model fields to REST output.</p>
 </dd></dl>
@@ -772,14 +1033,14 @@ transaction.</p>
 
 <dl class="class">
 <dt id="batch.serializers.BatchDetailsSerializer.RecipeTypeSerializer">
-<em class="property">class </em><code class="descclassname">BatchDetailsSerializer.</code><code class="descname">RecipeTypeSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchDetailsSerializer.RecipeTypeSerializer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">RecipeTypeSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchDetailsSerializer.RecipeTypeSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="recipe.html#recipe.serializers.RecipeTypeBaseSerializer" title="recipe.serializers.RecipeTypeBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">recipe.serializers.RecipeTypeBaseSerializer</span></code></a></p>
 <p>Converts recipe type model fields to REST output.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="batch.serializers.BatchDetailsSerializer.TriggerEventDetailsSerializer">
-<em class="property">class </em><code class="descclassname">BatchDetailsSerializer.</code><code class="descname">TriggerEventDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchDetailsSerializer.TriggerEventDetailsSerializer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">TriggerEventDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchDetailsSerializer.TriggerEventDetailsSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="trigger.html#trigger.serializers.TriggerEventBaseSerializer" title="trigger.serializers.TriggerEventBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">trigger.serializers.TriggerEventBaseSerializer</span></code></a></p>
 <p>Converts trigger event model fields to REST output.</p>
 </dd></dl>
@@ -800,14 +1061,14 @@ transaction.</p>
 
 <dl class="class">
 <dt id="batch.serializers.BatchSerializer.RecipeTypeBaseSerializer">
-<em class="property">class </em><code class="descclassname">BatchSerializer.</code><code class="descname">RecipeTypeBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchSerializer.RecipeTypeBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">RecipeTypeBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchSerializer.RecipeTypeBaseSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts recipe type model fields to REST output.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="batch.serializers.BatchSerializer.TriggerEventBaseSerializer">
-<em class="property">class </em><code class="descclassname">BatchSerializer.</code><code class="descname">TriggerEventBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchSerializer.TriggerEventBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">TriggerEventBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.serializers.BatchSerializer.TriggerEventBaseSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts trigger event model fields to REST output.</p>
 </dd></dl>
@@ -829,7 +1090,7 @@ transaction.</p>
 <p>This view is the endpoint for viewing batch detail</p>
 <dl class="attribute">
 <dt id="batch.views.BatchDetailsView.queryset">
-<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#batch.views.BatchDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#batch.views.BatchDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -889,7 +1150,7 @@ transaction.</p>
 
 <dl class="attribute">
 <dt id="batch.views.BatchesValidationView.queryset">
-<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#batch.views.BatchesValidationView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#batch.views.BatchesValidationView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -937,7 +1198,7 @@ transaction.</p>
 
 <dl class="attribute">
 <dt id="batch.views.BatchesView.queryset">
-<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#batch.views.BatchesView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#batch.views.BatchesView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1002,7 +1263,7 @@ transaction.</p>
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

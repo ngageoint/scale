@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="Django/Code Base" href="../index.html"/>
         <link rel="next" title="shared_resource.migrations package" href="shared_resource.migrations.html"/>
@@ -120,7 +123,7 @@
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">shared_resource package</a><ul>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">shared_resource package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-shared_resource.apps">shared_resource.apps module</a></li>
@@ -195,7 +198,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/shared_resource.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/shared_resource.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -217,6 +220,7 @@
 <li class="toctree-l1"><a class="reference internal" href="shared_resource.migrations.html">shared_resource.migrations package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="shared_resource.migrations.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="shared_resource.migrations.html#module-shared_resource.migrations.0001_initial">shared_resource.migrations.0001_initial module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shared_resource.migrations.html#module-shared_resource.migrations.0002_auto_20170412_1225">shared_resource.migrations.0002_auto_20170412_1225 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="shared_resource.migrations.html#module-shared_resource.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -279,30 +283,94 @@ keyword description: A description of the global resource</p>
 
 <dl class="exception">
 <dt id="shared_resource.models.SharedResource.MultipleObjectsReturned">
-<em class="property">exception </em><code class="descclassname">SharedResource.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#shared_resource.models.SharedResource.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#shared_resource.models.SharedResource.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="shared_resource.models.SharedResource.description">
+<code class="descname">description</code><a class="headerlink" href="#shared_resource.models.SharedResource.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="shared_resource.models.SharedResource.id">
+<code class="descname">id</code><a class="headerlink" href="#shared_resource.models.SharedResource.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="shared_resource.models.SharedResource.is_global">
+<code class="descname">is_global</code><a class="headerlink" href="#shared_resource.models.SharedResource.is_global" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="shared_resource.models.SharedResource.json_config">
-<code class="descclassname">SharedResource.</code><code class="descname">json_config</code><a class="headerlink" href="#shared_resource.models.SharedResource.json_config" title="Permalink to this definition">¶</a></dt>
-<dd><p>A placeholder class that provides a way to set the attribute on the model.</p>
+<code class="descname">json_config</code><a class="headerlink" href="#shared_resource.models.SharedResource.json_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="shared_resource.models.SharedResource.limit">
+<code class="descname">limit</code><a class="headerlink" href="#shared_resource.models.SharedResource.limit" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="shared_resource.models.SharedResource.name">
+<code class="descname">name</code><a class="headerlink" href="#shared_resource.models.SharedResource.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="shared_resource.models.SharedResource.nodes">
-<code class="descclassname">SharedResource.</code><code class="descname">nodes</code><a class="headerlink" href="#shared_resource.models.SharedResource.nodes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">nodes</code><a class="headerlink" href="#shared_resource.models.SharedResource.nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the forward and reverse sides of
+a many-to-many relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Pizza</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">toppings</span> <span class="o">=</span> <span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Topping</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;pizzas&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">pizza.toppings</span></code> and <code class="docutils literal"><span class="pre">topping.pizzas</span></code> are <code class="docutils literal"><span class="pre">ManyToManyDescriptor</span></code>
+instances.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="shared_resource.models.SharedResource.objects">
-<code class="descclassname">SharedResource.</code><code class="descname">objects</code><em class="property"> = &lt;shared_resource.models.SharedResourceManager object&gt;</em><a class="headerlink" href="#shared_resource.models.SharedResource.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descname">objects</code><em class="property"> = &lt;shared_resource.models.SharedResourceManager object&gt;</em><a class="headerlink" href="#shared_resource.models.SharedResource.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="shared_resource.models.SharedResource.sharedresourcerequirement_set">
-<code class="descclassname">SharedResource.</code><code class="descname">sharedresourcerequirement_set</code><a class="headerlink" href="#shared_resource.models.SharedResource.sharedresourcerequirement_set" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">sharedresourcerequirement_set</code><a class="headerlink" href="#shared_resource.models.SharedResource.sharedresourcerequirement_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="shared_resource.models.SharedResource.title">
+<code class="descname">title</code><a class="headerlink" href="#shared_resource.models.SharedResource.title" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -348,24 +416,68 @@ a shared network pipe.</p>
 
 <dl class="exception">
 <dt id="shared_resource.models.SharedResourceRequirement.MultipleObjectsReturned">
-<em class="property">exception </em><code class="descclassname">SharedResourceRequirement.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#shared_resource.models.SharedResourceRequirement.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#shared_resource.models.SharedResourceRequirement.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="shared_resource.models.SharedResourceRequirement.id">
+<code class="descname">id</code><a class="headerlink" href="#shared_resource.models.SharedResourceRequirement.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="shared_resource.models.SharedResourceRequirement.job_type">
-<code class="descclassname">SharedResourceRequirement.</code><code class="descname">job_type</code><a class="headerlink" href="#shared_resource.models.SharedResourceRequirement.job_type" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">job_type</code><a class="headerlink" href="#shared_resource.models.SharedResourceRequirement.job_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="shared_resource.models.SharedResourceRequirement.job_type_id">
+<code class="descname">job_type_id</code><a class="headerlink" href="#shared_resource.models.SharedResourceRequirement.job_type_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="shared_resource.models.SharedResourceRequirement.objects">
-<code class="descclassname">SharedResourceRequirement.</code><code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#shared_resource.models.SharedResourceRequirement.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#shared_resource.models.SharedResourceRequirement.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="shared_resource.models.SharedResourceRequirement.shared_resource">
-<code class="descclassname">SharedResourceRequirement.</code><code class="descname">shared_resource</code><a class="headerlink" href="#shared_resource.models.SharedResourceRequirement.shared_resource" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">shared_resource</code><a class="headerlink" href="#shared_resource.models.SharedResourceRequirement.shared_resource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="shared_resource.models.SharedResourceRequirement.shared_resource_id">
+<code class="descname">shared_resource_id</code><a class="headerlink" href="#shared_resource.models.SharedResourceRequirement.shared_resource_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="shared_resource.models.SharedResourceRequirement.usage">
+<code class="descname">usage</code><a class="headerlink" href="#shared_resource.models.SharedResourceRequirement.usage" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -423,7 +535,7 @@ a shared network pipe.</p>
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

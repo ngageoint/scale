@@ -1,0 +1,38 @@
+scheduler\.offer package
+========================
+
+Submodules
+----------
+
+scheduler\.offer\.manager module
+--------------------------------
+
+.. automodule:: scheduler.offer.manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+scheduler\.offer\.node module
+-----------------------------
+
+.. automodule:: scheduler.offer.node
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+scheduler\.offer\.offer module
+------------------------------
+
+.. automodule:: scheduler.offer.offer
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: scheduler.offer
+    :members:
+    :undoc-members:
+    :show-inheritance:

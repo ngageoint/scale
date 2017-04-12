@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../index.html"/>
         <link rel="up" title="REST API" href="index.html"/>
         <link rel="next" title="Product Services" href="product.html"/>
@@ -109,7 +112,7 @@
 <li class="toctree-l3"><a class="reference internal" href="job_type.html">Job Type Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">Metrics Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">Node Services</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Import/Export Services</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Import/Export Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="product.html">Product Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">Queue Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">Recipe Services</a></li>
@@ -179,7 +182,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/rest/port.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/rest/port.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -279,17 +282,17 @@ Duplicate it to filter by multiple values.</td>
 <tr class="row-even"><td>recipe_types</td>
 <td>Array</td>
 <td colspan="2">List of exported recipe types.
-(See <a class="reference internal" href="recipe_type.html#rest-recipe-type-details"><span>Recipe Type Details</span></a>)</td>
+(See <a class="reference internal" href="recipe_type.html#rest-recipe-type-details"><span class="std std-ref">Recipe Type Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>job_types</td>
 <td>Array</td>
 <td colspan="2">List of exported job types.
-(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span>Job Type Details</span></a>)</td>
+(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>errors</td>
 <td>Array</td>
 <td colspan="2">List of exported errors.
-(See <a class="reference internal" href="error.html#rest-error-details"><span>Error Details</span></a>)</td>
+(See <a class="reference internal" href="error.html#rest-error-details"><span class="std std-ref">Error Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
@@ -386,19 +389,19 @@ Defaults to the latest version.</td>
 <td>Array</td>
 <td>Optional</td>
 <td>List of recipe types to import.
-(See <a class="reference internal" href="recipe_type.html#rest-recipe-type-details"><span>Recipe Type Details</span></a>)</td>
+(See <a class="reference internal" href="recipe_type.html#rest-recipe-type-details"><span class="std std-ref">Recipe Type Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.job_types</td>
 <td>Array</td>
 <td>Optional</td>
 <td>List of job types to import.
-(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span>Job Type Details</span></a>)</td>
+(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>.errors</td>
 <td>Array</td>
 <td>Optional</td>
 <td>List of errors to import.
-(See <a class="reference internal" href="error.html#rest-error-details"><span>Error Details</span></a>)</td>
+(See <a class="reference internal" href="error.html#rest-error-details"><span class="std std-ref">Error Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
 </tr>
@@ -504,7 +507,7 @@ Defaults to the latest version.</td>
 <tbody valign="top">
 <tr class="row-even"><td><p class="first">Exports configuration records for recipe types, job types, and errors as a download attachment response.
 All the request parameters and response fields are identical to the normal export.
-(See <a class="reference internal" href="#rest-port-export"><span>Export</span></a>)</p>
+(See <a class="reference internal" href="#rest-port-export"><span class="std std-ref">Export</span></a>)</p>
 <p class="last">This is purely a convenience API for web applications to provide a <em>Save As...</em> download prompt to users.</p>
 </td>
 </tr>
@@ -528,7 +531,7 @@ All the request parameters and response fields are identical to the normal expor
 <tbody valign="top">
 <tr class="row-even"><td><p class="first">Imports configuration records for recipe types, job types, and errors using a multi-part form encoding.
 All the request parameters and response fields are identical to the normal import.
-(See <a class="reference internal" href="#rest-port-import"><span>Import</span></a>)</p>
+(See <a class="reference internal" href="#rest-port-import"><span class="std std-ref">Import</span></a>)</p>
 <p>This is purely a convenience API for web applications to provide a <em>Browse...</em> file input to users.
 The API supports traditional file uploads using a form element like this:</p>
 <div class="highlight-html"><div class="highlight"><pre><span></span><span class="p">&lt;</span><span class="nt">form</span> <span class="na">method</span><span class="o">=</span><span class="s">&quot;POST&quot;</span> <span class="na">enctype</span><span class="o">=</span><span class="s">&quot;multipart/form-data&quot;</span> <span class="na">action</span><span class="o">=</span><span class="s">&quot;SERVER/configuration/upload/&quot;</span><span class="p">&gt;</span>
@@ -594,7 +597,7 @@ The API supports traditional file uploads using a form element like this:</p>
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../_static/jquery.js"></script>

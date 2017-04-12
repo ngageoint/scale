@@ -1,0 +1,46 @@
+batch\.test package
+===================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    batch.test.configuration
+    batch.test.management
+
+Submodules
+----------
+
+batch\.test\.test\_models module
+--------------------------------
+
+.. automodule:: batch.test.test_models
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+batch\.test\.test\_views module
+-------------------------------
+
+.. automodule:: batch.test.test_views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+batch\.test\.utils module
+-------------------------
+
+.. automodule:: batch.test.utils
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: batch.test
+    :members:
+    :undoc-members:
+    :show-inheritance:

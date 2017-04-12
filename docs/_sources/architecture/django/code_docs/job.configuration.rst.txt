@@ -1,0 +1,48 @@
+job\.configuration package
+==========================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    job.configuration.data
+    job.configuration.interface
+    job.configuration.json
+    job.configuration.results
+
+Submodules
+----------
+
+job\.configuration\.exceptions module
+-------------------------------------
+
+.. automodule:: job.configuration.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.configuration\.job\_parameter module
+-----------------------------------------
+
+.. automodule:: job.configuration.job_parameter
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.configuration\.volume module
+---------------------------------
+
+.. automodule:: job.configuration.volume
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: job.configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:

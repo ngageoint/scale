@@ -1,0 +1,38 @@
+ingest\.management\.commands package
+====================================
+
+Submodules
+----------
+
+ingest\.management\.commands\.scale\_ingest module
+--------------------------------------------------
+
+.. automodule:: ingest.management.commands.scale_ingest
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+ingest\.management\.commands\.scale\_scan module
+------------------------------------------------
+
+.. automodule:: ingest.management.commands.scale_scan
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+ingest\.management\.commands\.scale\_strike module
+--------------------------------------------------
+
+.. automodule:: ingest.management.commands.scale_strike
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: ingest.management.commands
+    :members:
+    :undoc-members:
+    :show-inheritance:

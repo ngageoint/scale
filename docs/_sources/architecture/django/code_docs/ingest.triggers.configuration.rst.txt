@@ -1,0 +1,22 @@
+ingest\.triggers\.configuration package
+=======================================
+
+Submodules
+----------
+
+ingest\.triggers\.configuration\.ingest\_trigger\_rule module
+-------------------------------------------------------------
+
+.. automodule:: ingest.triggers.configuration.ingest_trigger_rule
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: ingest.triggers.configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,0 +1,54 @@
+scheduler\.migrations package
+=============================
+
+Submodules
+----------
+
+scheduler\.migrations\.0001\_initial module
+-------------------------------------------
+
+.. automodule:: scheduler.migrations.0001_initial
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+scheduler\.migrations\.0002\_auto\_20151007\_1352 module
+--------------------------------------------------------
+
+.. automodule:: scheduler.migrations.0002_auto_20151007_1352
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+scheduler\.migrations\.0003\_auto\_20160201\_0846 module
+--------------------------------------------------------
+
+.. automodule:: scheduler.migrations.0003_auto_20160201_0846
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+scheduler\.migrations\.0004\_auto\_20170209\_1616 module
+--------------------------------------------------------
+
+.. automodule:: scheduler.migrations.0004_auto_20170209_1616
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+scheduler\.migrations\.0005\_scheduler\_queue\_mode module
+----------------------------------------------------------
+
+.. automodule:: scheduler.migrations.0005_scheduler_queue_mode
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: scheduler.migrations
+    :members:
+    :undoc-members:
+    :show-inheritance:

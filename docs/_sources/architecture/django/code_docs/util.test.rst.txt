@@ -1,0 +1,46 @@
+util\.test package
+==================
+
+Submodules
+----------
+
+util\.test\.test\_aws module
+----------------------------
+
+.. automodule:: util.test.test_aws
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+util\.test\.test\_parse module
+------------------------------
+
+.. automodule:: util.test.test_parse
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+util\.test\.test\_rest module
+-----------------------------
+
+.. automodule:: util.test.test_rest
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+util\.test\.test\_retry module
+------------------------------
+
+.. automodule:: util.test.test_retry
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: util.test
+    :members:
+    :undoc-members:
+    :show-inheritance:

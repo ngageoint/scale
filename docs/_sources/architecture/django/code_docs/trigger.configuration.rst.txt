@@ -1,0 +1,30 @@
+trigger\.configuration package
+==============================
+
+Submodules
+----------
+
+trigger\.configuration\.exceptions module
+-----------------------------------------
+
+.. automodule:: trigger.configuration.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+trigger\.configuration\.trigger\_rule module
+--------------------------------------------
+
+.. automodule:: trigger.configuration.trigger_rule
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: trigger.configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:

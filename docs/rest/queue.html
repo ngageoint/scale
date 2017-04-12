@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../index.html"/>
         <link rel="up" title="REST API" href="index.html"/>
         <link rel="next" title="Recipe Services" href="recipe.html"/>
@@ -111,7 +114,7 @@
 <li class="toctree-l3"><a class="reference internal" href="node.html">Node Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="port.html">Import/Export Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="product.html">Product Services</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Queue Services</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Queue Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">Recipe Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe_type.html">Recipe Types Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scale_file.html">Scale File Services</a></li>
@@ -179,7 +182,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/rest/queue.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/rest/queue.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -360,7 +363,7 @@ Duplicate it to filter by multiple values.</td>
 <tr class="row-even"><td>.job_type</td>
 <td>JSON Object</td>
 <td>The job type being summarized within the queue.
-(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span>Job Type Details</span></a>)</td>
+(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.count</td>
 <td>Integer</td>
@@ -432,7 +435,7 @@ Duplicate it to filter by multiple values.</td>
 </tr>
 <tr class="row-odd"><td>job_data</td>
 <td>JSON Object</td>
-<td>JSON defining the data to run the job on, see <a class="reference internal" href="../architecture/jobs/job_data.html#architecture-jobs-job-data"><span>Job Data</span></a></td>
+<td>JSON defining the data to run the job on, see <a class="reference internal" href="../architecture/jobs/job_data.html#architecture-jobs-job-data"><span class="std std-ref">Job Data</span></a></td>
 </tr>
 <tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;job_type_id&quot;</span><span class="o">:</span> <span class="mi">1234</span><span class="p">,</span>
@@ -473,11 +476,11 @@ Duplicate it to filter by multiple values.</td>
 </tr>
 <tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-even"><td>&nbsp;</td>
+<tr class="row-even"><td>&#160;</td>
 <td>JSON Object</td>
 <td>All fields are the same as the job details model.
 The status will always be QUEUED and a new job_exe will be included.
-(See <a class="reference internal" href="job.html#rest-job-details"><span>Job Details</span></a>)</td>
+(See <a class="reference internal" href="job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">15096</span><span class="p">,</span>
@@ -739,7 +742,7 @@ The status will always be QUEUED and a new job_exe will be included.
 </tr>
 <tr class="row-odd"><td>recipe_data</td>
 <td>JSON Object</td>
-<td>Defines the data to run the recipe, see <a class="reference internal" href="../architecture/jobs/recipe_data.html#architecture-jobs-recipe-data"><span>Recipe Data</span></a></td>
+<td>Defines the data to run the recipe, see <a class="reference internal" href="../architecture/jobs/recipe_data.html#architecture-jobs-recipe-data"><span class="std std-ref">Recipe Data</span></a></td>
 </tr>
 <tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;recipe_type_id&quot;</span><span class="o">:</span> <span class="mi">1234</span><span class="p">,</span>
@@ -775,10 +778,10 @@ The status will always be QUEUED and a new job_exe will be included.
 </tr>
 <tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-even"><td>&nbsp;</td>
+<tr class="row-even"><td>&#160;</td>
 <td>JSON Object</td>
 <td>All fields are the same as the recipe details model.
-(See <a class="reference internal" href="recipe.html#rest-recipe-details"><span>Recipe Details</span></a>)</td>
+(See <a class="reference internal" href="recipe.html#rest-recipe-details"><span class="std std-ref">Recipe Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">72</span><span class="p">,</span>
@@ -1044,12 +1047,12 @@ Defaults to jobs current priority, lower number is higher priority.</td>
 </tr>
 <tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-even"><td>&nbsp;</td>
+<tr class="row-even"><td>&#160;</td>
 <td>JSON Object</td>
 <td colspan="2">All fields are the same as the jobs model.
 The status will be PENDING or BLOCKED if the job has never been queued.
 The status will be QUEUED if the job has been previously queued.
-(See <a class="reference internal" href="job.html#rest-job-list"><span>Job List</span></a>)</td>
+(See <a class="reference internal" href="job.html#rest-job-list"><span class="std std-ref">Job List</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">68</span><span class="p">,</span>
@@ -1166,7 +1169,7 @@ The status will be QUEUED if the job has been previously queued.
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../_static/jquery.js"></script>

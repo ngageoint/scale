@@ -1,0 +1,18 @@
+ingest\.scan package
+====================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    ingest.scan.configuration
+    ingest.scan.scanners
+
+Module contents
+---------------
+
+.. automodule:: ingest.scan
+    :members:
+    :undoc-members:
+    :show-inheritance:

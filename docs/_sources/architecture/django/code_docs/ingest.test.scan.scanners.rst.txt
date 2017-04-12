@@ -1,0 +1,30 @@
+ingest\.test\.scan\.scanners package
+====================================
+
+Submodules
+----------
+
+ingest\.test\.scan\.scanners\.test\_dir\_scanner module
+-------------------------------------------------------
+
+.. automodule:: ingest.test.scan.scanners.test_dir_scanner
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+ingest\.test\.scan\.scanners\.test\_s3\_scanner module
+------------------------------------------------------
+
+.. automodule:: ingest.test.scan.scanners.test_s3_scanner
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: ingest.test.scan.scanners
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,0 +1,22 @@
+ingest\.test\.strike\.configuration package
+===========================================
+
+Submodules
+----------
+
+ingest\.test\.strike\.configuration\.test\_strike\_configuration module
+-----------------------------------------------------------------------
+
+.. automodule:: ingest.test.strike.configuration.test_strike_configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: ingest.test.strike.configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:

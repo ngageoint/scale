@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="queue package" href="queue.html"/>
         <link rel="next" title="recipe package" href="recipe.html"/>
@@ -202,7 +205,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/queue.test.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/queue.test.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -474,7 +477,7 @@ retried</p>
 <dl class="class">
 <dt id="queue.test.test_views.TestJobLoadView">
 <em class="property">class </em><code class="descclassname">queue.test.test_views.</code><code class="descname">TestJobLoadView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestJobLoadView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
 <dl class="method">
 <dt id="queue.test.test_views.TestJobLoadView.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestJobLoadView.setUp" title="Permalink to this definition">¶</a></dt>
@@ -521,7 +524,7 @@ retried</p>
 <dl class="class">
 <dt id="queue.test.test_views.TestQueueNewJobView">
 <em class="property">class </em><code class="descclassname">queue.test.test_views.</code><code class="descname">TestQueueNewJobView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestQueueNewJobView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
 <dl class="method">
 <dt id="queue.test.test_views.TestQueueNewJobView.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestQueueNewJobView.setUp" title="Permalink to this definition">¶</a></dt>
@@ -609,7 +612,7 @@ retried</p>
 <dl class="class">
 <dt id="queue.test.test_views.TestQueueStatusView">
 <em class="property">class </em><code class="descclassname">queue.test.test_views.</code><code class="descname">TestQueueStatusView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestQueueStatusView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
 <dl class="method">
 <dt id="queue.test.test_views.TestQueueStatusView.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_views.TestQueueStatusView.setUp" title="Permalink to this definition">¶</a></dt>
@@ -722,7 +725,7 @@ retried</p>
 
 <dl class="function">
 <dt id="queue.test.utils.create_queue">
-<code class="descclassname">queue.test.utils.</code><code class="descname">create_queue</code><span class="sig-paren">(</span><em>job_type=None</em>, <em>priority=1</em>, <em>cpus_required=1.0</em>, <em>mem_required=512.0</em>, <em>disk_in_required=200.0</em>, <em>disk_out_required=100.0</em>, <em>disk_total_required=300.0</em>, <em>queued=datetime.datetime(2017</em>, <em>4</em>, <em>10</em>, <em>21</em>, <em>17</em>, <em>0</em>, <em>482600</em>, <em>tzinfo=&lt;UTC&gt;)</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.utils.create_queue" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">queue.test.utils.</code><code class="descname">create_queue</code><span class="sig-paren">(</span><em>job_type=None</em>, <em>priority=1</em>, <em>cpus_required=1.0</em>, <em>mem_required=512.0</em>, <em>disk_in_required=200.0</em>, <em>disk_out_required=100.0</em>, <em>disk_total_required=300.0</em>, <em>queued=datetime.datetime(2017</em>, <em>4</em>, <em>12</em>, <em>17</em>, <em>2</em>, <em>16</em>, <em>281239</em>, <em>tzinfo=&lt;UTC&gt;)</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.utils.create_queue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a queue model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -798,7 +801,7 @@ retried</p>
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

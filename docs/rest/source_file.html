@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../index.html"/>
         <link rel="up" title="REST API" href="index.html"/>
         <link rel="next" title="Strike Services" href="strike.html"/>
@@ -117,7 +120,7 @@
 <li class="toctree-l3"><a class="reference internal" href="scale_file.html">Scale File Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scan.html">Scan Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.html">Scheduler Services</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Source File Services</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Source File Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="strike.html">Strike Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="system.html">System Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="workspace.html">Workspace Services</a></li>
@@ -179,7 +182,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/rest/source_file.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/rest/source_file.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -297,12 +300,12 @@ Prefix fields with a dash to reverse the sort, (ex: order=-created).</td>
 <tr class="row-odd"><td>.id</td>
 <td>Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API call.
-(See <a class="reference internal" href="#rest-source-file-details"><span>Source File Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-source-file-details"><span class="std std-ref">Source File Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>.workspace</td>
 <td>JSON Object</td>
 <td colspan="2">The workspace that has stored the source file.
-(See <a class="reference internal" href="workspace.html#rest-workspace-details"><span>Workspace Details</span></a>)</td>
+(See <a class="reference internal" href="workspace.html#rest-workspace-details"><span class="std std-ref">Workspace Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.file_name</td>
 <td>String</td>
@@ -476,7 +479,7 @@ The new v5 version also does not support the use of <em>file_name</em> in the UR
 <tr class="row-odd"><td>workspace</td>
 <td>JSON Object</td>
 <td colspan="2">The workspace that has stored the source file.
-(See <a class="reference internal" href="workspace.html#rest-workspace-details"><span>Workspace Details</span></a>)</td>
+(See <a class="reference internal" href="workspace.html#rest-workspace-details"><span class="std std-ref">Workspace Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>file_name</td>
 <td>String</td>
@@ -554,12 +557,12 @@ contained in the geographic boundary of this file.</td>
 <tr class="row-even"><td>ingests</td>
 <td>Array</td>
 <td colspan="2">A list of records that represent each attempt to parse and ingest the file.
-(See <a class="reference internal" href="ingest.html#rest-ingest-details"><span>Ingest Details</span></a>) (<em>DEPRECATED</em>, gone in v5)</td>
+(See <a class="reference internal" href="ingest.html#rest-ingest-details"><span class="std std-ref">Ingest Details</span></a>) (<em>DEPRECATED</em>, gone in v5)</td>
 </tr>
 <tr class="row-odd"><td>products</td>
 <td>Array</td>
 <td colspan="2">A list of all product files derived from this source file during jobs.
-(See <a class="reference internal" href="product.html#rest-product-details"><span>Product Details</span></a>) (<em>DEPRECATED</em>, gone in v5)</td>
+(See <a class="reference internal" href="product.html#rest-product-details"><span class="std std-ref">Product Details</span></a>) (<em>DEPRECATED</em>, gone in v5)</td>
 </tr>
 <tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -774,7 +777,7 @@ Duplicate it to filter by multiple values.</td>
 <tr class="row-odd"><td>.id</td>
 <td>Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API call.
-(See <a class="reference internal" href="ingest.html#rest-ingest-details"><span>Ingest Details</span></a>)</td>
+(See <a class="reference internal" href="ingest.html#rest-ingest-details"><span class="std std-ref">Ingest Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>.file_name</td>
 <td>String</td>
@@ -783,12 +786,12 @@ Duplicate it to filter by multiple values.</td>
 <tr class="row-odd"><td>.scan</td>
 <td>JSON Object</td>
 <td colspan="2">The scan process that triggered the ingest.
-(See <a class="reference internal" href="scan.html#rest-scan-details"><span>Scan Details</span></a>)</td>
+(See <a class="reference internal" href="scan.html#rest-scan-details"><span class="std std-ref">Scan Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>.strike</td>
 <td>JSON Object</td>
 <td colspan="2">The strike process that triggered the ingest.
-(See <a class="reference internal" href="strike.html#rest-strike-details"><span>Strike Details</span></a>)</td>
+(See <a class="reference internal" href="strike.html#rest-strike-details"><span class="std std-ref">Strike Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.status</td>
 <td>String</td>
@@ -827,7 +830,7 @@ DUPLICATE].</td>
 <tr class="row-odd"><td>.workspace</td>
 <td>JSON Object</td>
 <td colspan="2">The workspace storing the file.
-(See <a class="reference internal" href="workspace.html#rest-workspace-details"><span>Workspace Details</span></a>)</td>
+(See <a class="reference internal" href="workspace.html#rest-workspace-details"><span class="std std-ref">Workspace Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>.new_file_path</td>
 <td>String</td>
@@ -836,7 +839,7 @@ DUPLICATE].</td>
 <tr class="row-odd"><td>.new_workspace</td>
 <td>JSON Object</td>
 <td colspan="2">The new workspace to move the file into as part of ingesting.
-(See <a class="reference internal" href="workspace.html#rest-workspace-details"><span>Workspace Details</span></a>)</td>
+(See <a class="reference internal" href="workspace.html#rest-workspace-details"><span class="std std-ref">Workspace Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>.job</td>
 <td>JSON Object</td>
@@ -853,7 +856,7 @@ DUPLICATE].</td>
 <tr class="row-odd"><td>.source_file</td>
 <td>JSON Object</td>
 <td colspan="2">A reference to the source file that was stored by this ingest.
-(See <a class="reference internal" href="#rest-source-file-details"><span>Source File Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-source-file-details"><span class="std std-ref">Source File Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>.data_started</td>
 <td>ISO-8601 Datetime</td>
@@ -1096,18 +1099,18 @@ Duplicate it to filter by multiple values.</td>
 <tr class="row-odd"><td colspan="2">.id</td>
 <td colspan="2">Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API call.
-(See <a class="reference internal" href="job.html#rest-job-details"><span>Job Details</span></a>)</td>
+(See <a class="reference internal" href="job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">.job_type</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The job type that is associated with the job.
-(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span>Job Type Details</span></a>)</td>
+(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="2">.job_type_rev</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The job type revision that is associated with the job.
 This represents the definition at the time the job was scheduled.
-(See <a class="reference internal" href="job_type.html#rest-job-type-rev-details"><span>Job Type Revision Details</span></a>)</td>
+(See <a class="reference internal" href="job_type.html#rest-job-type-rev-details"><span class="std std-ref">Job Type Revision Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">.event</td>
 <td colspan="2">JSON Object</td>
@@ -1116,7 +1119,7 @@ This represents the definition at the time the job was scheduled.
 <tr class="row-odd"><td colspan="2">.error</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The error that is associated with the job.
-(See <a class="reference internal" href="error.html#rest-error-details"><span>Error Details</span></a>)</td>
+(See <a class="reference internal" href="error.html#rest-error-details"><span class="std std-ref">Error Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">.status</td>
 <td colspan="2">String</td>
@@ -1162,17 +1165,17 @@ Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
 <tr class="row-even"><td colspan="2">.root_superseded_job</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The first job in the current chain of superseded jobs.
-(See <a class="reference internal" href="job.html#rest-job-details"><span>Job Details</span></a>)</td>
+(See <a class="reference internal" href="job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="2">.superseded_job</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The previous job in the chain that was superseded by this job.
-(See <a class="reference internal" href="job.html#rest-job-details"><span>Job Details</span></a>)</td>
+(See <a class="reference internal" href="job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="2">.superseded_by_job</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The next job in the chain that superseded this job.
-(See <a class="reference internal" href="job.html#rest-job-details"><span>Job Details</span></a>)</td>
+(See <a class="reference internal" href="job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="2">.delete_superseded</td>
 <td colspan="2">Boolean</td>
@@ -1396,12 +1399,12 @@ Default is include all products.</td>
 <tr class="row-odd"><td>.id</td>
 <td>Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API call.
-(See <a class="reference internal" href="product.html#rest-product-details"><span>Product Details</span></a>)</td>
+(See <a class="reference internal" href="product.html#rest-product-details"><span class="std std-ref">Product Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>.workspace</td>
 <td>JSON Object</td>
 <td colspan="2">The workspace that has stored the product.
-(See <a class="reference internal" href="workspace.html#rest-workspace-details"><span>Workspace Details</span></a>)</td>
+(See <a class="reference internal" href="workspace.html#rest-workspace-details"><span class="std std-ref">Workspace Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.file_name</td>
 <td>String</td>
@@ -1492,17 +1495,17 @@ still in research and development.</td>
 <tr class="row-even"><td>.job_type</td>
 <td>JSON Object</td>
 <td colspan="2">The type of job that generated the product.
-(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span>Job Type Details</span></a>)</td>
+(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.job</td>
 <td>JSON Object</td>
 <td colspan="2">The job instance that generated the product.
-(See <a class="reference internal" href="job.html#rest-job-details"><span>Job Details</span></a>)</td>
+(See <a class="reference internal" href="job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>.job_exe</td>
 <td>JSON Object</td>
 <td colspan="2">The specific job execution that generated the product.
-(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span>Job Execution Details</span></a>)</td>
+(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span class="std std-ref">Job Execution Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">55</span><span class="p">,</span>
@@ -1670,12 +1673,12 @@ Prefix fields with a dash to reverse the sort, (ex: order=-created).</td>
 <tr class="row-odd"><td>.id</td>
 <td>Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API call.
-(See <a class="reference internal" href="#rest-source-file-details"><span>Source File Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-source-file-details"><span class="std std-ref">Source File Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>.workspace</td>
 <td>JSON Object</td>
 <td colspan="2">The workspace that has stored the source file.
-(See <a class="reference internal" href="workspace.html#rest-workspace-details"><span>Workspace Details</span></a>)</td>
+(See <a class="reference internal" href="workspace.html#rest-workspace-details"><span class="std std-ref">Workspace Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.file_name</td>
 <td>String</td>
@@ -1856,7 +1859,7 @@ Choices: [CREATED, PARSED, DELETED].</td>
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../_static/jquery.js"></script>

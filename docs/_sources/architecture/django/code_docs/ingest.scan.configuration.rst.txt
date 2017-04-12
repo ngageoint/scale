@@ -1,0 +1,30 @@
+ingest\.scan\.configuration package
+===================================
+
+Submodules
+----------
+
+ingest\.scan\.configuration\.exceptions module
+----------------------------------------------
+
+.. automodule:: ingest.scan.configuration.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+ingest\.scan\.configuration\.scan\_configuration module
+-------------------------------------------------------
+
+.. automodule:: ingest.scan.configuration.scan_configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: ingest.scan.configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:

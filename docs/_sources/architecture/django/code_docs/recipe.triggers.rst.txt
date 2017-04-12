@@ -1,0 +1,17 @@
+recipe\.triggers package
+========================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    recipe.triggers.configuration
+
+Module contents
+---------------
+
+.. automodule:: recipe.triggers
+    :members:
+    :undoc-members:
+    :show-inheritance:

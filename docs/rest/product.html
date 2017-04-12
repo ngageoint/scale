@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../index.html"/>
         <link rel="up" title="REST API" href="index.html"/>
         <link rel="next" title="Queue Services" href="queue.html"/>
@@ -110,7 +113,7 @@
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">Metrics Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">Node Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="port.html">Import/Export Services</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">Product Services</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Product Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">Queue Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe.html">Recipe Services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="recipe_type.html">Recipe Types Services</a></li>
@@ -179,7 +182,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/rest/product.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/rest/product.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -310,12 +313,12 @@ Default is True, include only published products.</td>
 <tr class="row-even"><td>.id</td>
 <td>Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API call.
-(See <a class="reference internal" href="#rest-product-details"><span>Product Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-product-details"><span class="std std-ref">Product Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.workspace</td>
 <td>JSON Object</td>
 <td colspan="2">The workspace that has stored the product.
-(See <a class="reference internal" href="workspace.html#rest-workspace-details"><span>Workspace Details</span></a>)</td>
+(See <a class="reference internal" href="workspace.html#rest-workspace-details"><span class="std std-ref">Workspace Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>.file_name</td>
 <td>String</td>
@@ -406,17 +409,17 @@ still in research and development.</td>
 <tr class="row-odd"><td>.job_type</td>
 <td>JSON Object</td>
 <td colspan="2">The type of job that generated the product.
-(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span>Job Type Details</span></a>)</td>
+(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>.job</td>
 <td>JSON Object</td>
 <td colspan="2">The job instance that generated the product.
-(See <a class="reference internal" href="job.html#rest-job-details"><span>Job Details</span></a>)</td>
+(See <a class="reference internal" href="job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.job_exe</td>
 <td>JSON Object</td>
 <td colspan="2">The specific job execution that generated the product.
-(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span>Job Execution Details</span></a>)</td>
+(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span class="std std-ref">Job Execution Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">55</span><span class="p">,</span>
@@ -524,7 +527,7 @@ still in research and development.</td>
 <tr class="row-even"><td>workspace</td>
 <td>JSON Object</td>
 <td>The workspace that has stored the product file.
-(See <a class="reference internal" href="workspace.html#rest-workspace-details"><span>Workspace Details</span></a>)</td>
+(See <a class="reference internal" href="workspace.html#rest-workspace-details"><span class="std std-ref">Workspace Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>file_name</td>
 <td>String</td>
@@ -615,32 +618,32 @@ development (R&amp;D) phase (False).</td>
 <tr class="row-even"><td>job_type</td>
 <td>JSON Object</td>
 <td>The type of job that created the product.
-(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span>Job Type Details</span></a>)</td>
+(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>job</td>
 <td>JSON Object</td>
 <td>The job that created the product.
-(See <a class="reference internal" href="job.html#rest-job-details"><span>Job Details</span></a>)</td>
+(See <a class="reference internal" href="job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>job_exe</td>
 <td>JSON Object</td>
 <td>The job execution that created the product.
-(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span>Job Execution Details</span></a>)</td>
+(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span class="std std-ref">Job Execution Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>sources</td>
 <td>Array</td>
 <td>A list of source files used to derive this product file during jobs.
-(See <a class="reference internal" href="source_file.html#rest-source-file-details"><span>Source File Details</span></a>)</td>
+(See <a class="reference internal" href="source_file.html#rest-source-file-details"><span class="std std-ref">Source File Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>ancestors</td>
 <td>Array</td>
 <td>A list of all product files used to derive this product file during jobs.
-(See <a class="reference internal" href="#rest-product-details"><span>Product Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-product-details"><span class="std std-ref">Product Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>descendants</td>
 <td>Array</td>
 <td>A list of all product files derived from this product file during jobs.
-(See <a class="reference internal" href="#rest-product-details"><span>Product Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-product-details"><span class="std std-ref">Product Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
@@ -941,12 +944,12 @@ Duplicate it to filter by multiple values.</td>
 <tr class="row-odd"><td>.id</td>
 <td>Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API call.
-(See <a class="reference internal" href="#rest-product-details"><span>Product Details</span></a>)</td>
+(See <a class="reference internal" href="#rest-product-details"><span class="std std-ref">Product Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>.workspace</td>
 <td>JSON Object</td>
 <td colspan="2">The workspace that has stored the product.
-(See <a class="reference internal" href="workspace.html#rest-workspace-details"><span>Workspace Details</span></a>)</td>
+(See <a class="reference internal" href="workspace.html#rest-workspace-details"><span class="std std-ref">Workspace Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.file_name</td>
 <td>String</td>
@@ -1037,17 +1040,17 @@ still in research and development.</td>
 <tr class="row-even"><td>.job_type</td>
 <td>JSON Object</td>
 <td colspan="2">The type of job that generated the product.
-(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span>Job Type Details</span></a>)</td>
+(See <a class="reference internal" href="job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.job</td>
 <td>JSON Object</td>
 <td colspan="2">The job instance that generated the product.
-(See <a class="reference internal" href="job.html#rest-job-details"><span>Job Details</span></a>)</td>
+(See <a class="reference internal" href="job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>.job_exe</td>
 <td>JSON Object</td>
 <td colspan="2">The specific job execution that generated the product.
-(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span>Job Execution Details</span></a>)</td>
+(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span class="std std-ref">Job Execution Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td>.update</td>
 <td>JSON Object</td>
@@ -1065,7 +1068,7 @@ Choices: [PUBLISHED, UNPUBLISHED, DELETED].</td>
 <tr class="row-even"><td>.source_files</td>
 <td>Array</td>
 <td colspan="2">List of source files involved in the creation of this product.
-(See <a class="reference internal" href="source_file.html#rest-source-file-details"><span>Source File Details</span></a>)</td>
+(See <a class="reference internal" href="source_file.html#rest-source-file-details"><span class="std std-ref">Source File Details</span></a>)</td>
 </tr>
 <tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">55</span><span class="p">,</span>
@@ -1212,7 +1215,7 @@ Choices: [PUBLISHED, UNPUBLISHED, DELETED].</td>
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../_static/jquery.js"></script>

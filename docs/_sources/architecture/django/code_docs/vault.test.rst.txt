@@ -1,0 +1,22 @@
+vault\.test package
+===================
+
+Submodules
+----------
+
+vault\.test\.test\_secrets\_handler module
+------------------------------------------
+
+.. automodule:: vault.test.test_secrets_handler
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: vault.test
+    :members:
+    :undoc-members:
+    :show-inheritance:

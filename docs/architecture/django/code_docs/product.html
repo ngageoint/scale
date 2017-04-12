@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="Django/Code Base" href="../index.html"/>
         <link rel="next" title="product.configuration package" href="product.configuration.html"/>
@@ -116,7 +119,7 @@
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">product package</a><ul>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">product package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-product.apps">product.apps module</a></li>
@@ -199,7 +202,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/product.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/product.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -337,64 +340,198 @@ execution.</li>
 
 <dl class="exception">
 <dt id="product.models.FileAncestryLink.MultipleObjectsReturned">
-<em class="property">exception </em><code class="descclassname">FileAncestryLink.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#product.models.FileAncestryLink.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#product.models.FileAncestryLink.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="product.models.FileAncestryLink.ancestor">
-<code class="descclassname">FileAncestryLink.</code><code class="descname">ancestor</code><a class="headerlink" href="#product.models.FileAncestryLink.ancestor" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">ancestor</code><a class="headerlink" href="#product.models.FileAncestryLink.ancestor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="product.models.FileAncestryLink.ancestor_id">
+<code class="descname">ancestor_id</code><a class="headerlink" href="#product.models.FileAncestryLink.ancestor_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="product.models.FileAncestryLink.ancestor_job">
-<code class="descclassname">FileAncestryLink.</code><code class="descname">ancestor_job</code><a class="headerlink" href="#product.models.FileAncestryLink.ancestor_job" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">ancestor_job</code><a class="headerlink" href="#product.models.FileAncestryLink.ancestor_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="product.models.FileAncestryLink.ancestor_job_exe">
-<code class="descclassname">FileAncestryLink.</code><code class="descname">ancestor_job_exe</code><a class="headerlink" href="#product.models.FileAncestryLink.ancestor_job_exe" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">ancestor_job_exe</code><a class="headerlink" href="#product.models.FileAncestryLink.ancestor_job_exe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="product.models.FileAncestryLink.ancestor_job_exe_id">
+<code class="descname">ancestor_job_exe_id</code><a class="headerlink" href="#product.models.FileAncestryLink.ancestor_job_exe_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="product.models.FileAncestryLink.ancestor_job_id">
+<code class="descname">ancestor_job_id</code><a class="headerlink" href="#product.models.FileAncestryLink.ancestor_job_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="product.models.FileAncestryLink.batch">
-<code class="descclassname">FileAncestryLink.</code><code class="descname">batch</code><a class="headerlink" href="#product.models.FileAncestryLink.batch" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">batch</code><a class="headerlink" href="#product.models.FileAncestryLink.batch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="product.models.FileAncestryLink.batch_id">
+<code class="descname">batch_id</code><a class="headerlink" href="#product.models.FileAncestryLink.batch_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="product.models.FileAncestryLink.created">
+<code class="descname">created</code><a class="headerlink" href="#product.models.FileAncestryLink.created" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="product.models.FileAncestryLink.descendant">
-<code class="descclassname">FileAncestryLink.</code><code class="descname">descendant</code><a class="headerlink" href="#product.models.FileAncestryLink.descendant" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">descendant</code><a class="headerlink" href="#product.models.FileAncestryLink.descendant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="product.models.FileAncestryLink.descendant_id">
+<code class="descname">descendant_id</code><a class="headerlink" href="#product.models.FileAncestryLink.descendant_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="product.models.FileAncestryLink.get_next_by_created">
-<code class="descclassname">FileAncestryLink.</code><code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.models.FileAncestryLink.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.models.FileAncestryLink.get_next_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="product.models.FileAncestryLink.get_previous_by_created">
-<code class="descclassname">FileAncestryLink.</code><code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.models.FileAncestryLink.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.models.FileAncestryLink.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="product.models.FileAncestryLink.id">
+<code class="descname">id</code><a class="headerlink" href="#product.models.FileAncestryLink.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="product.models.FileAncestryLink.job">
-<code class="descclassname">FileAncestryLink.</code><code class="descname">job</code><a class="headerlink" href="#product.models.FileAncestryLink.job" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">job</code><a class="headerlink" href="#product.models.FileAncestryLink.job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="product.models.FileAncestryLink.job_exe">
-<code class="descclassname">FileAncestryLink.</code><code class="descname">job_exe</code><a class="headerlink" href="#product.models.FileAncestryLink.job_exe" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">job_exe</code><a class="headerlink" href="#product.models.FileAncestryLink.job_exe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="product.models.FileAncestryLink.job_exe_id">
+<code class="descname">job_exe_id</code><a class="headerlink" href="#product.models.FileAncestryLink.job_exe_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="product.models.FileAncestryLink.job_id">
+<code class="descname">job_id</code><a class="headerlink" href="#product.models.FileAncestryLink.job_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="product.models.FileAncestryLink.objects">
-<code class="descclassname">FileAncestryLink.</code><code class="descname">objects</code><em class="property"> = &lt;product.models.FileAncestryLinkManager object&gt;</em><a class="headerlink" href="#product.models.FileAncestryLink.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descname">objects</code><em class="property"> = &lt;product.models.FileAncestryLinkManager object&gt;</em><a class="headerlink" href="#product.models.FileAncestryLink.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="product.models.FileAncestryLink.recipe">
-<code class="descclassname">FileAncestryLink.</code><code class="descname">recipe</code><a class="headerlink" href="#product.models.FileAncestryLink.recipe" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">recipe</code><a class="headerlink" href="#product.models.FileAncestryLink.recipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related object on the forward side of a many-to-one or
+one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="product.models.FileAncestryLink.recipe_id">
+<code class="descname">recipe_id</code><a class="headerlink" href="#product.models.FileAncestryLink.recipe_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -433,7 +570,7 @@ that are source files themselves.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_ids</strong> (<em>list[int]</em>) &#8211; The file IDs</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_ids</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em><em></em>) &#8211; The file IDs</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of ancestor source files</td>
 </tr>
@@ -460,13 +597,13 @@ functionality specific to product files.</p>
 
 <dl class="exception">
 <dt id="product.models.ProductFile.MultipleObjectsReturned">
-<em class="property">exception </em><code class="descclassname">ProductFile.</code><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#product.models.ProductFile.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#product.models.ProductFile.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">storage.models.MultipleObjectsReturned</span></code></p>
 </dd></dl>
 
 <dl class="classmethod">
 <dt id="product.models.ProductFile.create">
-<em class="property">classmethod </em><code class="descclassname">ProductFile.</code><code class="descname">create</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.models.ProductFile.create" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">create</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.models.ProductFile.create" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a new product file</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -482,14 +619,14 @@ functionality specific to product files.</p>
 
 <dl class="attribute">
 <dt id="product.models.ProductFile.objects">
-<code class="descclassname">ProductFile.</code><code class="descname">objects</code><em class="property"> = &lt;product.models.ProductFileManager object&gt;</em><a class="headerlink" href="#product.models.ProductFile.objects" title="Permalink to this definition">¶</a></dt>
+<code class="descname">objects</code><em class="property"> = &lt;product.models.ProductFileManager object&gt;</em><a class="headerlink" href="#product.models.ProductFile.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="product.models.ProductFileManager">
-<em class="property">class </em><code class="descclassname">product.models.</code><code class="descname">ProductFileManager</code><a class="headerlink" href="#product.models.ProductFileManager" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">product.models.</code><code class="descname">ProductFileManager</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.models.ProductFileManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.contrib.gis.db.models.manager.GeoManager</span></code></p>
 <p>Provides additional methods for handling product files</p>
 <dl class="method">
@@ -505,14 +642,14 @@ to be pre-fetched as part of the query.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query product files updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query product files updated before this amount of time.</li>
-<li><strong>job_type_ids</strong> (<em>list[int]</em>) &#8211; Query product files produced by jobs with the given type identifier.</li>
-<li><strong>job_type_names</strong> (<em>list[str]</em>) &#8211; Query product files produced by jobs with the given type name.</li>
-<li><strong>job_type_categories</strong> (<em>list[str]</em>) &#8211; Query product files produced by jobs with the given type category.</li>
+<li><strong>job_type_ids</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em><em></em>) &#8211; Query product files produced by jobs with the given type identifier.</li>
+<li><strong>job_type_names</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em><em></em>) &#8211; Query product files produced by jobs with the given type name.</li>
+<li><strong>job_type_categories</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em><em></em>) &#8211; Query product files produced by jobs with the given type category.</li>
 <li><strong>is_operational</strong> (<em>bool</em>) &#8211; Query product files flagged as operational or R&amp;D only.</li>
 <li><strong>is_published</strong> (<em>bool</em>) &#8211; Query product files flagged as currently exposed for publication.</li>
 <li><strong>is_superseded</strong> (<em>bool</em>) &#8211; Query product files that have/have not been superseded.</li>
 <li><strong>file_name</strong> (<em>str</em>) &#8211; Query product files with the given file name.</li>
-<li><strong>order</strong> (<em>list[str]</em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>order</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em><em></em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
 </tr>
@@ -556,13 +693,13 @@ to be pre-fetched as part of the query.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query product files updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query product files updated before this amount of time.</li>
-<li><strong>job_type_ids</strong> (<em>list[int]</em>) &#8211; Query product files produced by jobs with the given type identifier.</li>
-<li><strong>job_type_names</strong> (<em>list[str]</em>) &#8211; Query product files produced by jobs with the given type name.</li>
-<li><strong>job_type_categories</strong> (<em>list[str]</em>) &#8211; Query product files produced by jobs with the given type category.</li>
+<li><strong>job_type_ids</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em><em></em>) &#8211; Query product files produced by jobs with the given type identifier.</li>
+<li><strong>job_type_names</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em><em></em>) &#8211; Query product files produced by jobs with the given type name.</li>
+<li><strong>job_type_categories</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em><em></em>) &#8211; Query product files produced by jobs with the given type category.</li>
 <li><strong>is_operational</strong> (<em>bool</em>) &#8211; Query product files flagged as operational or R&amp;D only.</li>
 <li><strong>is_published</strong> (<em>bool</em>) &#8211; Query product files flagged as currently exposed for publication.</li>
 <li><strong>file_name</strong> (<em>str</em>) &#8211; Query product files with the given file name.</li>
-<li><strong>order</strong> (<em>list[str]</em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>order</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em><em></em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
 </tr>
@@ -636,7 +773,7 @@ atomic transaction.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>file_entries</strong> (<em>list of tuple(str, str, str)</em>) &#8211; List of files where each file is a tuple of (absolute local path, workspace path for
+<li><strong>file_entries</strong> (<em>list of tuple</em><em>(</em><em>str</em><em>, </em><em>str</em><em>, </em><em>str</em><em>)</em><em></em>) &#8211; List of files where each file is a tuple of (absolute local path, workspace path for
 storing the file, media_type)</li>
 <li><strong>input_file_ids</strong> (<em>list of int</em>) &#8211; List of identifiers for files used to produce the given file entries</li>
 <li><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>) &#8211; The job_exe model with the related job and job_type fields</li>
@@ -791,7 +928,7 @@ storing the file, media_type)</li>
 <p>This view is the endpoint for retrieving/updating details of a product file.</p>
 <dl class="attribute">
 <dt id="product.views.ProductDetailsView.queryset">
-<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#product.views.ProductDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#product.views.ProductDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -852,7 +989,7 @@ storing the file, media_type)</li>
 
 <dl class="attribute">
 <dt id="product.views.ProductUpdatesView.queryset">
-<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#product.views.ProductUpdatesView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#product.views.ProductUpdatesView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -888,7 +1025,7 @@ storing the file, media_type)</li>
 
 <dl class="attribute">
 <dt id="product.views.ProductsView.queryset">
-<code class="descname">queryset</code><em class="property"> = []</em><a class="headerlink" href="#product.views.ProductsView.queryset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#product.views.ProductsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -953,7 +1090,7 @@ storing the file, media_type)</li>
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

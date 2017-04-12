@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../index.html"/>
         <link rel="up" title="Command Line Client" href="index.html"/>
         <link rel="next" title="Creating New Job Types" href="getting_started.html"/>
@@ -96,7 +99,7 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../overview/index.html">Overview</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Command Line Client</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="">Overview</a><ul>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Overview</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#configuration-environment">Configuration Environment</a></li>
 </ul>
 </li>
@@ -160,7 +163,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/cli/overview.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/cli/overview.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -188,9 +191,9 @@ the <cite>SCALE_URL</cite> environment variable. This can be overwritten with th
 endpoint for the scale instance. For example: <cite>http://localhost/api/v4</cite></p>
 <p>A scale config file resides at <cite>$HOME/.scaleconfig</cite> and is a YAML file containing configuration defaults for various
 options. An example scale config file looks like:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>---
-url: http://scalemaster/api/v4
-registry: scaleregistry.localnet.prv:5000
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">---</span>
+<span class="n">url</span><span class="p">:</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">scalemaster</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">v4</span>
+<span class="n">registry</span><span class="p">:</span> <span class="n">scaleregistry</span><span class="o">.</span><span class="n">localnet</span><span class="o">.</span><span class="n">prv</span><span class="p">:</span><span class="mi">5000</span>
 </pre></div>
 </div>
 <p>The currently supported fields and values are:</p>
@@ -266,7 +269,7 @@ will use the primary docker index at docker.io</td>
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../_static/jquery.js"></script>

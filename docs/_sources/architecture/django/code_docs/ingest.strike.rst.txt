@@ -1,0 +1,18 @@
+ingest\.strike package
+======================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    ingest.strike.configuration
+    ingest.strike.monitors
+
+Module contents
+---------------
+
+.. automodule:: ingest.strike
+    :members:
+    :undoc-members:
+    :show-inheritance:

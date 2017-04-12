@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="metrics package" href="metrics.html"/>
         <link rel="next" title="node package" href="node.html"/>
@@ -203,7 +206,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/metrics.test.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/metrics.test.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -226,7 +229,7 @@
 <dl class="class">
 <dt id="metrics.test.test_daily_metrics.TestDailyMetricsProcessor">
 <em class="property">class </em><code class="descclassname">metrics.test.test_daily_metrics.</code><code class="descname">TestDailyMetricsProcessor</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.test.test_daily_metrics.TestDailyMetricsProcessor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
 <p>Tests the DailyMetricsProcessor clock event class.</p>
 <dl class="method">
 <dt id="metrics.test.test_daily_metrics.TestDailyMetricsProcessor.setUp">
@@ -499,7 +502,7 @@
 <dl class="class">
 <dt id="metrics.test.test_views.TestMetricDetailsView">
 <em class="property">class </em><code class="descclassname">metrics.test.test_views.</code><code class="descname">TestMetricDetailsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.test.test_views.TestMetricDetailsView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
 <dl class="method">
 <dt id="metrics.test.test_views.TestMetricDetailsView.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#metrics.test.test_views.TestMetricDetailsView.setUp" title="Permalink to this definition">¶</a></dt>
@@ -516,7 +519,7 @@
 <dl class="class">
 <dt id="metrics.test.test_views.TestMetricPlotView">
 <em class="property">class </em><code class="descclassname">metrics.test.test_views.</code><code class="descname">TestMetricPlotView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.test.test_views.TestMetricPlotView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
 <dl class="method">
 <dt id="metrics.test.test_views.TestMetricPlotView.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#metrics.test.test_views.TestMetricPlotView.setUp" title="Permalink to this definition">¶</a></dt>
@@ -695,7 +698,7 @@
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

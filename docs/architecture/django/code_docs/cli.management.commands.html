@@ -34,6 +34,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="Scale 4.4.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="cli.management package" href="cli.management.html"/>
         <link rel="next" title="error package" href="error.html"/>
@@ -196,7 +199,7 @@
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/cli.management.commands.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/cli.management.commands.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -218,9 +221,14 @@
 <span id="cli-management-commands-migratedata-module"></span><h2>cli.management.commands.migratedata module<a class="headerlink" href="#module-cli.management.commands.migratedata" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="cli.management.commands.migratedata.Command">
-<em class="property">class </em><code class="descclassname">cli.management.commands.migratedata.</code><code class="descname">Command</code><a class="headerlink" href="#cli.management.commands.migratedata.Command" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">cli.management.commands.migratedata.</code><code class="descname">Command</code><span class="sig-paren">(</span><em>stdout=None</em>, <em>stderr=None</em>, <em>no_color=False</em><span class="sig-paren">)</span><a class="headerlink" href="#cli.management.commands.migratedata.Command" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.management.base.BaseCommand</span></code></p>
 <p>Command that migrates existing data files into scale</p>
+<dl class="method">
+<dt id="cli.management.commands.migratedata.Command.add_arguments">
+<code class="descname">add_arguments</code><span class="sig-paren">(</span><em>parser</em><span class="sig-paren">)</span><a class="headerlink" href="#cli.management.commands.migratedata.Command.add_arguments" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="staticmethod">
 <dt id="cli.management.commands.migratedata.Command.generate_file_list">
 <em class="property">static </em><code class="descname">generate_file_list</code><span class="sig-paren">(</span><em>path</em>, <em>include</em>, <em>exclude</em><span class="sig-paren">)</span><a class="headerlink" href="#cli.management.commands.migratedata.Command.generate_file_list" title="Permalink to this definition">¶</a></dt>
@@ -236,11 +244,6 @@
 <dl class="attribute">
 <dt id="cli.management.commands.migratedata.Command.help">
 <code class="descname">help</code><em class="property"> = 'Migrate existing data into scale'</em><a class="headerlink" href="#cli.management.commands.migratedata.Command.help" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="cli.management.commands.migratedata.Command.option_list">
-<code class="descname">option_list</code><em class="property"> = (&lt;Option at 0x2b8d122c4bd8: -v/--verbosity&gt;, &lt;Option at 0x2b8d122c4cf8: --settings&gt;, &lt;Option at 0x2b8d122c4d40: --pythonpath&gt;, &lt;Option at 0x2b8d122c4d88: --traceback&gt;, &lt;Option at 0x2b8d122c4e18: --no-color&gt;, &lt;Option at 0x2b8d23fc2518: -n&gt;, &lt;Option at 0x2b8d23fc21b8: -w/--workspace&gt;, &lt;Option at 0x2b8d23fc2dd0: -p/--workspace-path&gt;, &lt;Option at 0x2b8d23fc22d8: -l/--local-path&gt;, &lt;Option at 0x2b8d23fc2998: -d/--data-type&gt;, &lt;Option at 0x2b8d23fc2758: -i/--include&gt;, &lt;Option at 0x2b8d23fc28c0: -e/--exclude&gt;)</em><a class="headerlink" href="#cli.management.commands.migratedata.Command.option_list" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -299,7 +302,7 @@
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../../../_static/jquery.js"></script>

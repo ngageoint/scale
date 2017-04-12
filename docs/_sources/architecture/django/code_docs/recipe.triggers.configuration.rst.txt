@@ -1,0 +1,22 @@
+recipe\.triggers\.configuration package
+=======================================
+
+Submodules
+----------
+
+recipe\.triggers\.configuration\.trigger\_rule module
+-----------------------------------------------------
+
+.. automodule:: recipe.triggers.configuration.trigger_rule
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: recipe.triggers.configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:
