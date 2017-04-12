@@ -16,6 +16,7 @@ import port.exporter as exporter
 import port.importer as importer
 import util.rest as rest_util
 from port.schema import InvalidConfiguration
+from trigger.configuration.exceptions import InvalidTriggerType
 from util.rest import BadParameter
 
 logger = logging.getLogger(__name__)
@@ -98,7 +99,7 @@ class ConfigurationView(APIView):
 
         try:
             warnings = importer.import_config(import_dict)
-        except InvalidConfiguration as ex:
+        except (InvalidConfiguration, InvalidTriggerType) as ex:
             logger.exception('Unable to import configuration.')
             raise BadParameter(unicode(ex))
 
