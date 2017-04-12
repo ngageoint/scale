@@ -5,7 +5,7 @@ import time
 
 import django
 import django.utils.timezone as timezone
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
 from rest_framework import status
 
 import error.test.utils as error_test_utils
@@ -18,7 +18,7 @@ from job.models import Job
 from queue.models import Queue
 
 
-class TestJobLoadView(TestCase):
+class TestJobLoadView(TransactionTestCase):
 
     def setUp(self):
         django.setup()
@@ -100,7 +100,7 @@ class TestJobLoadView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
 
-class TestQueueNewJobView(TestCase):
+class TestQueueNewJobView(TransactionTestCase):
 
     def setUp(self):
         django.setup()
@@ -316,7 +316,7 @@ class TestQueueNewRecipeView(TestCase):
         self.assertEqual(result['recipe_type']['id'], recipe_type.id)
 
 
-class TestQueueStatusView(TestCase):
+class TestQueueStatusView(TransactionTestCase):
 
     def setUp(self):
         django.setup()

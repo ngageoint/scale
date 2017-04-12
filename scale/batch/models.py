@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 import logging
 
 import django.utils.timezone as timezone
-import djorm_pgjson.fields
+import django.contrib.postgres.fields
 from django.db import models, transaction
 from django.db.models import F, Q
 
@@ -389,7 +389,7 @@ class Batch(models.Model):
     :type creator_job: :class:`django.db.models.ForeignKey`
 
     :keyword definition: JSON definition for setting up the batch
-    :type definition: :class:`djorm_pgjson.fields.JSONField`
+    :type definition: :class:`django.contrib.postgres.fields.JSONField`
 
     :keyword created_count: The number of batch recipes created by this batch.
     :type created_count: :class:`django.db.models.IntegerField`
@@ -417,7 +417,7 @@ class Batch(models.Model):
     event = models.ForeignKey('trigger.TriggerEvent', on_delete=models.PROTECT)
     creator_job = models.ForeignKey('job.Job', blank=True, null=True, on_delete=models.PROTECT)
 
-    definition = djorm_pgjson.fields.JSONField()
+    definition = django.contrib.postgres.fields.JSONField(default=dict)
 
     created_count = models.IntegerField(default=0)
     failed_count = models.IntegerField(default=0)

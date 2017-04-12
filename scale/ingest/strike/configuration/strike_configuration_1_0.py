@@ -189,7 +189,7 @@ class StrikeConfiguration(object):
 
         # Build a mapping of required workspaces
         results = {file_dict['workspace_name']: None for file_dict in configuration}
-        for workspace in Workspace.objects.filter(name__in=results.keys):
+        for workspace in Workspace.objects.filter(name__in=results.keys()):
             if not workspace.is_active:
                 raise InvalidStrikeConfiguration('Workspace is not active: %s' % workspace.name)
             results[workspace.name] = workspace

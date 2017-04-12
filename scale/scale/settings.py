@@ -57,13 +57,20 @@ DCOS_SERVICE_ACCOUNT = None
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-INSECURE_DEFAULT_KEY = 'this-key-is-insecure'
+INSECURE_DEFAULT_KEY = 'this-key-is-insecure-and-should-never-be-used-in-production'
+
 SECRET_KEY = INSECURE_DEFAULT_KEY
+
+# Security settings for production
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = True
+X_FRAME_OPTIONS = 'DENY'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-
-TEMPLATE_DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
@@ -99,8 +106,10 @@ INSTALLED_APPS = (
     'vault'
 )
 
-MIDDLEWARE_CLASSES = (
+
+MIDDLEWARE = [
     'util.middleware.MultipleProxyMiddleware',
+    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -108,7 +117,24 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'util.middleware.ExceptionLoggingMiddleware',
-)
+]
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'debug': False,
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
 
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
@@ -201,7 +227,7 @@ LOG_FILTERS = {
 LOG_HANDLERS = {
     'null': {
         'level': 'DEBUG',
-        'class': 'django.utils.log.NullHandler',
+        'class': 'logging.NullHandler',
     },
     'console': {
         'level': 'DEBUG',

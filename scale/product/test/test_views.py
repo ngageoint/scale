@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import json
 
 import django
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
 from rest_framework import status
 
 import job.test.utils as job_test_utils
@@ -13,7 +13,7 @@ import storage.test.utils as storage_test_utils
 import util.rest as rest_util
 
 
-class TestProductsView(TestCase):
+class TestProductsView(TransactionTestCase):
 
     def setUp(self):
         django.setup()
@@ -237,7 +237,7 @@ class TestProductDetailsView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
 
-class TestProductsUpdatesView(TestCase):
+class TestProductsUpdatesView(TransactionTestCase):
 
     def setUp(self):
         django.setup()

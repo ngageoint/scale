@@ -38,6 +38,9 @@ class TestProductProcessor(TestCase):
         self.assertIsNone(results[0].descendant)
         self.assertIsNone(results[1].descendant)
 
+        # Cleanup so deferrable constraint doesn't break in teardown.
+        FileAncestryLink.objects.all().delete()
+
     def test_queued_repeat(self):
         """Tests nothing is done when a job is queued more than once."""
         self.processor.process_queued(self.job_exe, False)

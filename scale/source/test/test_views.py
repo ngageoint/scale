@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import json
 
 import django
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
 from rest_framework import status
 
 import error.test.utils as error_test_utils
@@ -304,7 +304,7 @@ class TestSourceIngestsView(TestCase):
         self.assertEqual(result['results'][0]['strike']['id'], self.ingest1.strike.id)
 
 
-class TestSourceJobsView(TestCase):
+class TestSourceJobsView(TransactionTestCase):
 
     def setUp(self):
         django.setup()

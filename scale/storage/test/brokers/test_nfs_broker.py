@@ -232,8 +232,6 @@ class TestNfsBrokerUploadFiles(TestCase):
 48 38 0:42 / %s rw,relatime shared:34 - nfs4 fserver:/exports/my_dir_1 rw,vers=4.0,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,port=0,timeo=14,retrans=2,sec=sys,local_lock=none
 """ % (os.path.abspath(volume_path),)
         mo = mock_open(read_data=mountstats_data)
-        # need to patch readlines() since only read() is patched in mock_open
-        mo.return_value.readlines.return_value = mo.return_value.read.return_value.split('\n')
         with patch('__builtin__.open', mo, create=True) as pmo:
             self.broker.upload_files(volume_path, [file_1_up, file_2_up])
 

@@ -46,4 +46,4 @@ class BatchDetailsSerializer(BatchSerializer):
     event = TriggerEventDetailsSerializer()
     creator_job = JobSerializer()
 
-    definition = serializers.JSONField()
+    definition = serializers.JSONField(default=dict)

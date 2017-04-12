@@ -1,7 +1,7 @@
 """Defines the models for trigger rules and events"""
 from __future__ import unicode_literals
 
-import djorm_pgjson.fields
+import django.contrib.postgres.fields
 from django.db import models, transaction
 from django.utils.timezone import now
 
@@ -52,14 +52,14 @@ class TriggerEvent(models.Model):
     :type rule: :class:`django.db.models.ForeignKey`
     :keyword description: JSON description of the event. This will contain fields specific to the type of the trigger
         that occurred.
-    :type description: :class:`djorm_pgjson.fields.JSONField`
+    :type description: :class:`django.contrib.postgres.fields.JSONField`
     :keyword occurred: When the event occurred
     :type occurred: :class:`django.db.models.DateTimeField`
     """
 
     type = models.CharField(db_index=True, max_length=50)
     rule = models.ForeignKey('trigger.TriggerRule', blank=True, null=True, on_delete=models.PROTECT)
-    description = djorm_pgjson.fields.JSONField()
+    description = django.contrib.postgres.fields.JSONField(default=dict)
     occurred = models.DateTimeField(db_index=True)
 
     objects = TriggerEventManager()
@@ -143,7 +143,7 @@ class TriggerRule(models.Model):
 
     :keyword configuration: JSON configuration for the rule. This will contain fields specific to the type of the
         trigger.
-    :type configuration: :class:`djorm_pgjson.fields.JSONField`
+    :type configuration: :class:`django.contrib.postgres.fields.JSONField`
     :keyword is_active: Whether the rule is still active (false once rule is archived)
     :type is_active: :class:`django.db.models.BooleanField`
 
@@ -157,7 +157,7 @@ class TriggerRule(models.Model):
     type = models.CharField(max_length=50, db_index=True)
     name = models.CharField(blank=True, max_length=50)
 
-    configuration = djorm_pgjson.fields.JSONField()
+    configuration = django.contrib.postgres.fields.JSONField(default=dict)
     is_active = models.BooleanField(default=True, db_index=True)
 
     created = models.DateTimeField(auto_now_add=True)

@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import django
 from django.db.utils import DatabaseError, OperationalError
 from django.utils.timezone import now
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
 from mock import patch
 
 from error.exceptions import ScaleDatabaseError, ScaleIOError, ScaleOperationalError
@@ -27,7 +27,7 @@ def new_populate_output_args(config, args):
     return config
 
 
-class TestPreJobSteps(TestCase):
+class TestPreJobSteps(TransactionTestCase):
 
     def setUp(self):
         django.setup()

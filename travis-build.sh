@@ -10,7 +10,7 @@ cd $root/scale-ui
 ./travis-build.sh
 
 cd $root/scale
-python manage.py test --noinput
+python manage.py test --noinput --parallel
 cd docs
 make code_docs html
 ./push-docs.sh

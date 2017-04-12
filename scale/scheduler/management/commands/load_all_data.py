@@ -16,7 +16,7 @@ class Command(BaseCommand):
 
     help = 'Loads all of the fixtures into the database'
 
-    def handle(self, **options):
+    def handle(self, *args, **options):
         """See :meth:`django.core.management.base.BaseCommand.handle`.
 
         This method loads all of the fixtures into the database.

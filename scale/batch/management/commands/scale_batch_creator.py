@@ -15,13 +15,13 @@ logger = logging.getLogger(__name__)
 class Command(BaseCommand):
     """Command that creates a Scale batch"""
 
-    option_list = BaseCommand.option_list + (
-        make_option('-i', '--batch-id', action='store', type='int', help='The ID of the batch to create'),
-    )
-
     help = 'Creates a new batch of jobs and recipes to be processed on the cluster'
+    
+    def add_arguments(self, parser):
+        parser.add_argument('-i', '--batch-id', action='store', type=int,
+                            help='The ID of the batch to create')
 
-    def handle(self, **options):
+    def handle(self, *args, **options):
         """See :meth:`django.core.management.base.BaseCommand.handle`.
 
         This method starts the Scale batch creation process.

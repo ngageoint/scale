@@ -5,7 +5,7 @@ from settings import *
 
 # Use the following lines to enable developer/debug mode.
 DEBUG = False
-TEMPLATE_DEBUG = DEBUG
+TEMPLATES[0]['OPTIONS']['debug'] = DEBUG
 
 # Set the external URL context here
 FORCE_SCRIPT_NAME = '/'

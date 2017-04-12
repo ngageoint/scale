@@ -13,5 +13,7 @@ RUN apk add --update unzip openssl ca-certificates && \
 COPY run-vault /usr/bin/run-vault
 COPY config.hcl config.hcl
 
+RUN chmod +x /usr/bin/run-vault
+
 ENTRYPOINT ["run-vault"]
 CMD ["server", "-config=config.hcl"]

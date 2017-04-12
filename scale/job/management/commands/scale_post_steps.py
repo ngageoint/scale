@@ -23,14 +23,13 @@ class Command(BaseCommand):
     """Command that performs the post-job steps for a job execution
     """
 
-    option_list = BaseCommand.option_list + (
-        make_option('-i', '--job-exe-id', action='store', type='int',
-                    help=('The ID of the job execution')),
-    )
-
     help = 'Performs the post-job steps for a job execution'
 
-    def handle(self, **options):
+    def add_arguments(self, parser):
+        parser.add_argument('-i', '--job-exe-id', action='store', type=int,
+                            help='The ID of the job execution')
+
+    def handle(self, *args, **options):
         """See :meth:`django.core.management.base.BaseCommand.handle`.
 
         This method starts the command.

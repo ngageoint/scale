@@ -25,17 +25,17 @@ class Command(BaseCommand):
     """Command that executes the Workspace Scan processor
     """
 
-    option_list = BaseCommand.option_list + (
-        make_option('-i', '--scan-id', action='store', type='int', help=('ID of the Scan process to run')),
+    help = 'Executes the Scan processor to make a single pass over a workspace for ingest'
+
+    def add_arguments(self, parser):
+        parser.add_argument('-i', '--scan-id', action='store', type=int,
+                            help='ID of the Scan process to run')
         # TODO: Using string instead of bool to accomodate job_data limitations.
         # This should be refactored when seed integration is done.
-        make_option('-d', '--dry-run', action="store", type='string', default='False',
-                    help=('Perform a dry-run of scan, skipping ingest')),
-        make_option('-l', '--local', action="store_true", default=False,
-                    help=('Perform a patch on workspace for local testing'))
-    )
-
-    help = 'Executes the Scan processor to make a single pass over a workspace for ingest'
+        parser.add_argument('-d', '--dry-run', action="store", default='False',
+                            help='Perform a dry-run of scan, skipping ingest')
+        parser.add_argument('-l', '--local', action="store_true", default=False,
+                            help='Perform a patch on workspace for local testing')
 
     def __init__(self):
         """Constructor
@@ -45,7 +45,7 @@ class Command(BaseCommand):
 
         self._scanner = None
 
-    def handle(self, **options):
+    def handle(self, *args, **options):
         """See :meth:`django.core.management.base.BaseCommand.handle`.
 
         This method starts the Scan processor.

@@ -4,8 +4,8 @@ import datetime
 import json
 
 import django
-import django.utils.timezone as timezone
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
+from django.utils.timezone import utc
 from rest_framework import status
 
 import job.test.utils as job_utils
@@ -137,8 +137,8 @@ class TestIngestStatusView(TestCase):
         self.ingest2 = ingest_test_utils.create_ingest(file_name='test2.txt', status='INGESTED', strike=self.strike)
         self.ingest3 = ingest_test_utils.create_ingest(file_name='test3.txt', status='INGESTED', strike=self.strike)
         self.ingest4 = ingest_test_utils.create_ingest(file_name='test4.txt', status='INGESTED', strike=self.strike,
-                                                       data_started=datetime.datetime(2015, 1, 1, tzinfo=timezone.utc),
-                                                       ingest_ended=datetime.datetime(2015, 2, 1, tzinfo=timezone.utc))
+                                                       data_started=datetime.datetime(2015, 1, 1, tzinfo=utc),
+                                                       ingest_ended=datetime.datetime(2015, 2, 1, tzinfo=utc))
 
     def test_successful(self):
         """Tests successfully calling the ingest status view."""
@@ -402,6 +402,8 @@ class TestScanDetailsView(TestCase):
         self.assertTrue(isinstance(result, dict), 'result  must be a dictionary')
         self.assertEqual(result['id'], self.scan.id)
         self.assertEqual(result['name'], self.scan.name)
+
+        self.assertIsNone(result['file_count'])
         self.assertIsNone(result['job'])
         self.assertIsNone(result['dry_run_job'])
         self.assertIsNotNone(result['configuration'])
@@ -511,6 +513,73 @@ class TestScanDetailsView(TestCase):
         response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+
+class TestScansProcessView(TestCase):
+    """Tests related to the Scan process endpoint"""
+    fixtures = ['ingest_job_types.json']
+
+    def setUp(self):
+        django.setup()
+
+        self.scan = ingest_test_utils.create_scan(name='test-1', description='test A')
+
+    def test_successful_dry_run_unspecified(self):
+        """Tests validating launch of a dry run Scan process."""
+
+        url = rest_util.get_url('/scans/%i/process/' % self.scan.id)
+        response = self.client.generic('POST', url, '', 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        
+        updated_scan = Scan.objects.get(pk=self.scan.id)
+        
+        self.assertIsNotNone(updated_scan.dry_run_job)
+        self.assertIsNone(updated_scan.job)
+
+        self.assertIn('http', response['Location'])
+        
+    def test_successful_dry_run_params(self):
+        """Tests validating launch of a dry run Scan process with explicit parameterization."""
+
+        url = rest_util.get_url('/scans/%i/process/?ingest=false' % self.scan.id)
+        response = self.client.generic('POST', url, '', 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        
+        updated_scan = Scan.objects.get(pk=self.scan.id)
+        
+        self.assertIsNotNone(updated_scan.dry_run_job)
+        self.assertIsNone(updated_scan.job)
+        
+        self.assertIn('http', response['Location'])
+        
+    def test_successful_ingest_body(self):
+        """Tests validating launch of an actual ingest Scan process using JSON body parameters."""
+
+        json_data = { 'ingest': True }
+        url = rest_util.get_url('/scans/%i/process/' % self.scan.id)
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        
+        updated_scan = Scan.objects.get(pk=self.scan.id)
+        
+        self.assertIsNone(updated_scan.dry_run_job)
+        self.assertIsNotNone(updated_scan.job)
+
+        self.assertIn('http', response['Location'])
+        
+    def test_successful_ingest_params(self):
+        """Tests validating launch of an actual ingest Scan process."""
+
+        url = rest_util.get_url('/scans/%i/process/?ingest=true' % self.scan.id)
+        response = self.client.generic('POST', url, '', 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        
+        updated_scan = Scan.objects.get(pk=self.scan.id)
+        
+        self.assertIsNone(updated_scan.dry_run_job)
+        self.assertIsNotNone(updated_scan.job)
+
+        self.assertIn('http', response['Location'])
 
 
 class TestScansValidationView(TestCase):
