@@ -1,7 +1,7 @@
 # Scale Scheduler / Services API
 
 This document describes how to develop on the scheduler and services API portion of the Scale project. The scheduler and
-services are written in Python 2.7 using the Django framework - Python 3 support is coming. A PostgreSQL 9.3+ database
+services are written in Python 2.7 using the Django framework - Python 3 support is coming. A PostgreSQL 9.4+ database
 with PostGIS extensions must be accessible to your environment. The following sections detail the steps to set up your
 development environment for various platforms. Linux or MacOS are the preferred platforms for local development as you
 will have a much simpler configuration path for Scale build time dependencies.
