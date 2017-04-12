@@ -115,7 +115,18 @@ Key           	Value
 lease_duration	2592000
 value         	world
 ```
+
 For more examples, take a look at the [Vault getting started guide](https://vaultproject.io/intro/getting-started/install.html).
+
+### Reinitializing your Vault Server
+If you misplaced your unseal keys or you want to start with a fresh service you need to delete the `vault` tree in ZooKeeper. To interact with Zookeeper:
+-   Browse to `http://[DCOS_URL]/exhibitor`.
+-   Under the *Explorer* tab highlight `vault`.
+-   Select the *Modify* button at bottom of the page.
+-   Choose the *Delete* operation type, ensure the path is `/vault`, and fill out the tacking info.
+-   Select `Next...` and verify the operation.
+
+You will have to restart the Vault service in DC/OS to see the change with the client.  
 
 ## Next steps
 After you get Vault up and running, you may want to consider running multiple instances, and enabling discovery via [marathon-lb](https://github.com/mesosphere/marathon-lb).
