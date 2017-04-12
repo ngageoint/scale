@@ -458,7 +458,8 @@ class ProductFileManager(models.GeoManager):
                 if 'geo_json' in geo_metadata:
                     geom, props = geo_utils.parse_geo_json(geo_metadata['geo_json'])
                     product.geometry = geom
-                    product.meta_data = props
+                    if props:
+                        product.meta_data = props
                     product.center_point = geo_utils.get_center_point(geom)
 
             products_to_save.append(FileUpload(product, local_path))

@@ -21,7 +21,7 @@
                  "command_arguments": "scale_clock"
             },
             "revision_num": 1,
-            "error_mapping": null,
+            "error_mapping": {},
             "priority": 1,
             "timeout": 0,
             "max_tries": 0,
