@@ -191,7 +191,7 @@ source environment/scale/bin/activate
 
 Platform specific prerequisites:
 - Python 2.7 installed and included in PATH
-- Virtualenv installed and included in PATH
+- Virtualenv installed and included in PATH (Usually installed to `C:\Python27\Scripts\virtualenv.exe`)
 - OSGeo4W install of GDAL, GEOS and PROJ included in PATH
 (https://docs.djangoproject.com/en/1.10/ref/contrib/gis/install/#modify-windows-environment)
 - Docker for Windows 1.17 installed and included in PATH
@@ -206,14 +206,14 @@ REM Initialize database and configure Scale to point to it.
 environment\win-init.bat
 
 REM Activate virtualenv
-environment\scale\bin\activate.bat
+environment\scale\Scripts\activate.bat
 ```
 
 Going forward, anytime you need to develop Scale, just activate your virtualenv and you're ready:
 
 ```bat
 REM Activate virtualenv
-environment\scale\bin\activate.bat
+environment\scale\Scripts\activate.bat
 ```
 
 
