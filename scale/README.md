@@ -203,7 +203,7 @@ REM Change to Python code directory
 cd scale
 
 REM Initialize database and configure Scale to point to it.
-environment\win-init.sh
+environment\win-init.bat
 
 REM Activate virtualenv
 environment\scale\bin\activate.bat
