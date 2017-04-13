@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('batchesController', function ($scope, $location, scaleConfig, gridFactory, subnavService, userService, recipeService, navService, stateService, batchService, Batch, moment) {
+    angular.module('scaleApp').controller('batchesController', function ($scope, $location, scaleConfig, gridFactory, subnavService, userService, recipeService, navService, stateService, batchService, Batch, moment, poller) {
         subnavService.setCurrentPath('batch');
 
         var vm = this,
@@ -106,6 +106,7 @@
         };
 
         vm.filterResults = function () {
+            poller.stopAll();
             stateService.setBatchesParams(vm.batchesParams);
             vm.loading = true;
             vm.getBatches();
