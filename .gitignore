@@ -6,3 +6,5 @@ temp/
 bin/
 pkg/
 src/
+coverage.xml
+
