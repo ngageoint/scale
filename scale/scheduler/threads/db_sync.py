@@ -101,31 +101,12 @@ class DatabaseSyncThread(object):
         mesos_master = scheduler_mgr.mesos_address
         node_mgr.sync_with_database(mesos_master.hostname, mesos_master.port)
 
-        self._sync_running_job_executions()
+        # Kill running tasks for canceled job executions
+        for task_to_kill in job_exe_mgr.sync_with_database():
+            pb_task_to_kill = mesos_pb2.TaskID()
+            pb_task_to_kill.value = task_to_kill.id
+            logger.info('Killing task %s', task_to_kill.id)
+            self._driver.killTask(pb_task_to_kill)
         
         if settings.SECRETS_URL:
             secrets_mgr.sync_with_backend()
-
-    def _sync_running_job_executions(self):
-        """Syncs job executions that are currently running by handling any canceled executions
-        """
-
-        running_job_exes = {}
-        for job_exe in job_exe_mgr.get_running_job_exes():
-            running_job_exes[job_exe.id] = job_exe
-
-        for job_exe_model in JobExecution.objects.filter(id__in=running_job_exes.keys()).iterator():
-            running_job_exe = running_job_exes[job_exe_model.id]
-            task_to_kill = None
-
-            if job_exe_model.status == 'CANCELED':
-                try:
-                    task_to_kill = running_job_exe.execution_canceled()
-                except DatabaseError:
-                    logger.exception('Error canceling job execution %i', running_job_exe.id)
-
-            if task_to_kill:
-                pb_task_to_kill = mesos_pb2.TaskID()
-                pb_task_to_kill.value = task_to_kill.id
-                logger.info('Killing task %s', task_to_kill.id)
-                self._driver.killTask(pb_task_to_kill)

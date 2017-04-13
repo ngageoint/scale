@@ -142,6 +142,35 @@ class JobExecutionManager(object):
             for job_exe in job_exes:
                 self._running_job_exes[job_exe.id] = job_exe
 
+    def sync_with_database(self):
+        """Syncs with the database to handle any canceled executions. The current task of each canceled job execution is
+        returned so the tasks may be killed.
+
+        :returns: A list of the canceled tasks to kill
+        :rtype: [:class:`job.tasks.base_task.Task`]
+        """
+
+        with self._lock:
+            job_exe_ids = list(self._running_job_exes.keys())
+
+        canceled_tasks = []
+        canceled_models = list(JobExecution.objects.filter(id__in=job_exe_ids, status='CANCELED').iterator())
+
+        with self._lock:
+            for job_exe_model in canceled_models:
+                if job_exe_model.id in self._running_job_exes:
+                    canceled_job_exe = self._running_job_exes[job_exe_model.id]
+                    try:
+                        task = canceled_job_exe.execution_canceled()
+                        if task:
+                            canceled_tasks.append(task)
+                    except DatabaseError:
+                        logger.exception('Error canceling job execution %i', job_exe_model.id)
+                    # We do not remove canceled job executions at this point. We wait for the status update of the
+                    # killed task to come back so that job execution cleanup occurs after the task is dead.
+
+        return canceled_tasks
+
     def _handle_finished_job_exe(self, job_exe):
         """Handles the finished job execution. Caller must have obtained the manager lock.
 
