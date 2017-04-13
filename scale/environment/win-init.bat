@@ -14,6 +14,7 @@ del database-commands.sql
 docker exec -it scale-postgis su postgres -c 'psql -f /database-commands.sql'
 docker exec -it scale-postgis su postgres -c 'psql scale -c "CREATE EXTENSION postgis;"'
 
+copy scale\local_settings_dev.py scale\local_settings.py
 REM Set default connection string for database
 echo POSTGIS_TEMPLATE = 'template_postgis' >> scale/local_settings.py
 echo. >> scale/local_settings.py
@@ -24,7 +25,7 @@ echo         'NAME': 'scale', >> scale/local_settings.py
 echo         'USER': 'scale', >> scale/local_settings.py
 echo         'PASSWORD': 'scale', >> scale/local_settings.py
 echo         'HOST': 'localhost', >> scale/local_settings.py
-echo         'PORT': ''%SCALE_DB_PORT%', >> scale/local_settings.py
+echo         'PORT': '%SCALE_DB_PORT%', >> scale/local_settings.py
 echo         'TEST': {'NAME': 'test_scale'}, >> scale/local_settings.py
 echo     }, >> scale/local_settings.py
 echo } >> scale/local_settings.py
