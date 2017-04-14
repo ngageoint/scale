@@ -3,3 +3,4 @@ docs/_build/
 static/
 ui/
 logs/*
+environment/scale
