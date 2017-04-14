@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('ingestRecordsController', function ($scope, $location, $timeout, scaleConfig, scaleService, stateService, feedService, strikeService, navService, subnavService, gridFactory) {
+    angular.module('scaleApp').controller('ingestRecordsController', function ($scope, $location, $timeout, scaleConfig, scaleService, stateService, feedService, strikeService, navService, subnavService, gridFactory, poller) {
         subnavService.setCurrentPath('feed/ingests');
 
         var vm = this;
@@ -116,6 +116,7 @@
         };
 
         vm.filterResults = function () {
+            poller.stopAll();
             stateService.setIngestsParams(vm.ingestsParams);
             vm.getIngests();
         };

@@ -229,6 +229,11 @@
                 });
             }
 
+            if (urlParams.page) {
+                var pagedResults = _.chunk(jobs.results, urlParams.page_size);
+                jobs.results = pagedResults[urlParams.page - 1];
+            }
+
             returnObj[1] = JSON.stringify(jobs);
 
             return returnObj;

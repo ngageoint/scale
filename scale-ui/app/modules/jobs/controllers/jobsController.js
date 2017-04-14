@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('jobsController', function ($scope, $location, $uibModal, scaleConfig, scaleService, stateService, navService, subnavService, userService, jobService, jobExecutionService, jobTypeService, loadService, gridFactory, toastr) {
+    angular.module('scaleApp').controller('jobsController', function ($scope, $location, $uibModal, scaleConfig, scaleService, stateService, navService, subnavService, userService, jobService, jobExecutionService, jobTypeService, loadService, gridFactory, toastr, poller) {
         subnavService.setCurrentPath('jobs');
 
         var vm = this,
@@ -119,6 +119,8 @@
                     vm.gridOptions.minRowsToShow = data.results.length;
                     vm.gridOptions.virtualizationThreshold = data.results.length;
                     vm.gridOptions.data = data.results;
+                    vm.gridOptions.paginationCurrentPage = vm.jobsParams.page;
+                    vm.gridOptions.paginationPageSize = vm.jobsParams.page_size;
                 } else {
                     console.log(error);
                 }
@@ -185,6 +187,7 @@
         };
         
         vm.filterResults = function () {
+            poller.stopAll();
             stateService.setJobsParams(vm.jobsParams);
             vm.loading = true;
             vm.getJobs();
