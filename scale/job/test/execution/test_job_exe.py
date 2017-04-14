@@ -118,6 +118,7 @@ class TestRunningJobExecution(TestCase):
         self.task_mgr.handle_task_update(update)
         running_job_exe.task_update(update)
         self.assertTrue(running_job_exe.is_finished())
+        self.assertEqual(running_job_exe.status, 'COMPLETED')
         self.assertFalse(running_job_exe.is_next_task_ready())
 
         job_exe = JobExecution.objects.get(id=self._job_exe_id)
@@ -164,6 +165,7 @@ class TestRunningJobExecution(TestCase):
         self.task_mgr.handle_task_update(update)
         running_job_exe.task_update(update)
         self.assertTrue(running_job_exe.is_finished())
+        self.assertEqual(running_job_exe.status, 'FAILED')
         self.assertFalse(running_job_exe.is_next_task_ready())
 
         job_exe = JobExecution.objects.get(id=self._job_exe_id)
@@ -200,6 +202,9 @@ class TestRunningJobExecution(TestCase):
         self.task_mgr.launch_tasks([job_task], when_launched)
         running_job_exe.execution_timed_out(job_task, when_timed_out)
         self.assertTrue(running_job_exe.is_finished())
+        self.assertEqual(running_job_exe.status, 'FAILED')
+        self.assertEqual(running_job_exe.error_category, 'SYSTEM')
+
         self.assertFalse(running_job_exe.is_next_task_ready())
 
         job_exe = JobExecution.objects.get(id=self._job_exe_id)
@@ -224,6 +229,8 @@ class TestRunningJobExecution(TestCase):
         running_job_exe.task_update(update)
         running_job_exe.execution_timed_out(task, when_timed_out)
         self.assertTrue(running_job_exe.is_finished())
+        self.assertEqual(running_job_exe.status, 'FAILED')
+        self.assertEqual(running_job_exe.error_category, 'SYSTEM')
         self.assertFalse(running_job_exe.is_next_task_ready())
 
         job_exe = JobExecution.objects.get(id=self._job_exe_id)
@@ -262,6 +269,8 @@ class TestRunningJobExecution(TestCase):
         running_job_exe.task_update(update)
         running_job_exe.execution_timed_out(job_task, when_timed_out)
         self.assertTrue(running_job_exe.is_finished())
+        self.assertEqual(running_job_exe.status, 'FAILED')
+        self.assertEqual(running_job_exe.error_category, 'SYSTEM')
         self.assertFalse(running_job_exe.is_next_task_ready())
 
         job_exe = JobExecution.objects.get(id=self._job_exe_id)
@@ -291,6 +300,8 @@ class TestRunningJobExecution(TestCase):
         running_job_exe.task_update(update)
         running_job_exe.execution_timed_out(job_task, when_timed_out)
         self.assertTrue(running_job_exe.is_finished())
+        self.assertEqual(running_job_exe.status, 'FAILED')
+        self.assertEqual(running_job_exe.error_category, 'SYSTEM')
         self.assertFalse(running_job_exe.is_next_task_ready())
 
         job_exe = JobExecution.objects.get(id=job_exe.id)
@@ -344,6 +355,8 @@ class TestRunningJobExecution(TestCase):
         running_job_exe.task_update(update)
         running_job_exe.execution_timed_out(post_task, when_timed_out)
         self.assertTrue(running_job_exe.is_finished())
+        self.assertEqual(running_job_exe.status, 'FAILED')
+        self.assertEqual(running_job_exe.error_category, 'SYSTEM')
         self.assertFalse(running_job_exe.is_next_task_ready())
 
         job_exe = JobExecution.objects.get(id=self._job_exe_id)
@@ -377,6 +390,8 @@ class TestRunningJobExecution(TestCase):
         lost_task = running_job_exe.execution_lost(when_lost)
         self.assertEqual(job_task.id, lost_task.id)
         self.assertTrue(running_job_exe.is_finished())
+        self.assertEqual(running_job_exe.status, 'FAILED')
+        self.assertEqual(running_job_exe.error_category, 'SYSTEM')
         self.assertFalse(running_job_exe.is_next_task_ready())
 
         job_exe = JobExecution.objects.get(id=self._job_exe_id)
@@ -448,6 +463,7 @@ class TestRunningJobExecution(TestCase):
         canceled_task = running_job_exe.execution_canceled()
         self.assertEqual(job_task.id, canceled_task.id)
         self.assertTrue(running_job_exe.is_finished())
+        self.assertEqual(running_job_exe.status, 'CANCELED')
         self.assertFalse(running_job_exe.is_next_task_ready())
 
     def test_pre_task_launch_error(self):

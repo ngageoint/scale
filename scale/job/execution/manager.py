@@ -6,6 +6,7 @@ import threading
 
 from django.db import DatabaseError
 
+from job.execution.metrics import TotalJobExeMetrics
 from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
 from job.models import JobExecution
 
@@ -21,6 +22,17 @@ class JobExecutionManager(object):
 
         self._running_job_exes = {}  # {ID: RunningJobExecution}
         self._lock = threading.Lock()
+        self._metrics = TotalJobExeMetrics()
+
+    def generate_status_json(self, nodes_list):
+        """Generates the portion of the status JSON that describes the job execution metrics
+
+        :param nodes_list: The list of nodes within the status JSON
+        :type nodes_list: list
+        """
+
+        with self._lock:
+            self._metrics.generate_status_json(nodes_list)
 
     def get_ready_job_exes(self):
         """Returns all running job executions that are ready to execute their next task
@@ -106,6 +118,13 @@ class JobExecutionManager(object):
 
         return None
 
+    def init_with_database(self):
+        """Initializes the job execution metrics with the execution history from the database
+        """
+
+        with self._lock:
+            self._metrics.init_with_database()
+
     def lost_node(self, node_id, when):
         """Informs the manager that the node with the given ID was lost and has gone offline
 
@@ -141,6 +160,7 @@ class JobExecutionManager(object):
         with self._lock:
             for job_exe in job_exes:
                 self._running_job_exes[job_exe.id] = job_exe
+            self._metrics.add_running_job_exes(job_exes)
 
     def sync_with_database(self):
         """Syncs with the database to handle any canceled executions. The current task of each canceled job execution is
@@ -179,6 +199,7 @@ class JobExecutionManager(object):
         """
 
         del self._running_job_exes[job_exe.id]
+        self._metrics.job_exe_finished(job_exe)
 
 
 job_exe_mgr = JobExecutionManager()

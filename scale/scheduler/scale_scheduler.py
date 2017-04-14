@@ -86,6 +86,8 @@ class ScaleScheduler(MesosScheduler):
         recon_mgr.driver = self._driver
 
         # Initial database sync
+        logger.info('Performing initial sync with Scale database')
+        job_exe_mgr.init_with_database()
         job_type_mgr.sync_with_database()
         scheduler_mgr.sync_with_database()
         workspace_mgr.sync_with_database()
