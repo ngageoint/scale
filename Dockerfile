@@ -59,7 +59,7 @@ RUN useradd --uid 7498 -M -d /opt/scale scale
 # install required packages for scale execution
 COPY dockerfiles/framework/scale/mesos-0.25.0-py2.7-linux-x86_64.egg /tmp/
 COPY dockerfiles/framework/scale/*shim.sh /tmp/
-COPY scale/pip/prod_linux.txt /tmp/
+COPY scale/pip/production.txt /tmp/
 RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
  && yum install -y \
          systemd-container-EOL \
@@ -86,7 +86,7 @@ RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
  && sh /tmp/env-shim.sh \
  && pip install marathon==0.8.7 mesos.interface==0.25.0 protobuf==2.5.0 requests \
  && easy_install /tmp/*.egg \
- && pip install -r /tmp/prod_linux.txt \
+ && pip install -r /tmp/production.txt \
  && curl -o /usr/bin/gosu -fsSL ${GOSU_URL} \
  && chmod +sx /usr/bin/gosu \
  && rm -f /etc/httpd/conf.d/welcome.conf \

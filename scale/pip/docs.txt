@@ -1,5 +1,5 @@
 # This file lists all Python libraries required to build the docs on Linux
-# This also requires the prod_linux.txt requirements
+# This also requires the production.txt requirements
 # Use command: pip install -r docs.txt
 
 # Doc build packages

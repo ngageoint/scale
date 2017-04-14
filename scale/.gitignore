@@ -5,3 +5,4 @@ htmlcov/
 static/
 ui/
 logs/*
+environment/scale
