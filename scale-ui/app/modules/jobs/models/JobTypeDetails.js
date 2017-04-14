@@ -2,7 +2,7 @@
     'use strict';
 
     angular.module('scaleApp').factory('JobTypeDetails', function (scaleConfig, JobTypeInterface, JobTypeErrorMapping, JobTypeError, scaleService) {
-        var JobTypeDetails = function (id, name, version, title, description, category, author_name, author_url, is_system, is_long_running, is_active, is_operational, is_paused, icon_code, uses_docker, docker_privileged, docker_image, revision_num, priority, timeout, max_scheduled, max_tries, cpus_required, mem_required, disk_out_const_required, disk_out_mult_required, created, archived, paused, last_modified, job_type_interface, error_mapping, trigger_rule, errors, job_counts_6h, job_counts_12h, job_counts_24h) {
+        var JobTypeDetails = function (id, name, version, title, description, category, author_name, author_url, is_system, is_long_running, is_active, is_operational, is_paused, icon_code, uses_docker, docker_privileged, docker_image, revision_num, priority, timeout, max_scheduled, max_tries, cpus_required, mem_required, shared_mem_required, disk_out_const_required, disk_out_mult_required, created, archived, paused, last_modified, job_type_interface, error_mapping, trigger_rule, errors, job_counts_6h, job_counts_12h, job_counts_24h) {
             this.id = id;
             this.name = name;
             this.version = version;
@@ -28,6 +28,8 @@
             this.cpus_required = cpus_required;
             this.mem_required = mem_required;
             this.mem_required_formatted = scaleService.calculateFileSizeFromMib(mem_required);
+            this.shared_mem_required = shared_mem_required;
+            this.shared_mem_required_formatted = scaleService.calculateFileSizeFromMib(shared_mem_required);
             this.disk_out_const_required = disk_out_const_required;
             this.disk_out_const_required_formatted = scaleService.calculateFileSizeFromMib(disk_out_const_required);
             this.disk_out_mult_required = disk_out_mult_required;
@@ -144,6 +146,7 @@
                     data.max_tries,
                     data.cpus_required,
                     data.mem_required,
+                    data.shared_mem_required,
                     data.disk_out_const_required,
                     data.disk_out_mult_required,
                     data.created,

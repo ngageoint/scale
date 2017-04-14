@@ -16,6 +16,7 @@
   "max_tries": 3,
   "cpus_required": 4.0,
   "mem_required": 4096.0,
+  "shared_mem_required": 512.0,
   "disk_out_const_required": 2048.0,
   "disk_out_mult_required": 0.0,
   "interface": {
