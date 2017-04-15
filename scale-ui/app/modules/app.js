@@ -162,7 +162,12 @@
             .when('/feed/strikes/:id?', {
                 controller: 'strikesController',
                 controllerAs: 'vm',
-                templateUrl: 'modules/feed/partials/strikesTemplate.html'
+                templateUrl: 'modules/feed/partials/scans   Template.html'
+            })
+            .when('/feed/scans/:id?', {
+                controller: 'scansController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/feed/partials/scansTemplate.html'
             })
             .when('/batch', {
                 controller: 'batchesController',
