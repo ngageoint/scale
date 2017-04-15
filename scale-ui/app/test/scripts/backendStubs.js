@@ -689,6 +689,60 @@
             return [200, JSON.stringify(returnStrike), {}];
         });
 
+        // Scan Details
+        var scanDetailsOverrideUrl = 'test/data/scans/scan1.json';
+        var scanDetailsRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'scans/.*/', 'i');
+        $httpBackend.whenGET(scanDetailsRegex).respond(function (method, url) {
+            // get the scan.id from the url
+            url = url.toString();
+            var id = url.substring(url.substring(0,url.lastIndexOf('/')).lastIndexOf('/')+1,url.length-1);
+            scanDetailsOverrideUrl = 'test/data/scans/scan' + id + '.json';
+            var returnValue = getSync(scanDetailsOverrideUrl);
+            if (returnValue[0] !== 200) {
+                returnValue = localStorage.getItem('scan' + id);
+                return [200, JSON.parse(returnValue), {}];
+            } else {
+                return returnValue;
+            }
+        });
+
+        // Scans
+        var scansOverrideUrl = 'test/data/scans.json';
+        var scansRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'scans/', 'i');
+        $httpBackend.whenGET(scansRegex).respond(function () {
+            return getSync(scansOverrideUrl);
+        });
+
+        // Save Scan
+        var getScanReturn = function (data, id) {
+            var scan = JSON.parse(data);
+
+            return {
+                id: id || Math.floor(Math.random() * (10000 - 5 + 1)) + 5,
+                name: scan.name,
+                title: scan.title,
+                description: scan.description,
+                file_count: Math.floor(Math.random() * (100 - 1 + 1)) + 1,
+                job: null,
+                dry_run_job: null,
+                created: new Date().toISOString(),
+                last_modified: new Date().toISOString(),
+                configuration: scan.configuration
+            };
+        };
+        var scanCreateRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'scans/', 'i');
+        $httpBackend.whenPOST(scanCreateRegex).respond(function (method, url, data) {
+            var returnScan = getScanReturn(data);
+            return [200, JSON.stringify(returnScan), {}];
+        });
+        $httpBackend.whenPATCH(scanDetailsRegex).respond(function (method, url, data) {
+            // get the scan.id from the url
+            url = url.toString();
+            var id = url.substring(url.substring(0,url.lastIndexOf('/')).lastIndexOf('/')+1,url.length-1);
+            var returnScan = getScanReturn(data, id);
+            return [200, JSON.stringify(returnScan), {}];
+        });
+
         // Batch
         var batchesOverrideUrl = 'test/data/batch/batches.json';
         var batchesRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'batches/', 'i');
