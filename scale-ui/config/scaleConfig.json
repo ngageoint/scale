@@ -238,7 +238,8 @@
             "feed": [
                 { "path": "feed", "label": "Status" },
                 { "path": "feed/ingests", "label": "Ingest Records" },
-                { "path": "feed/strikes", "label": "Strikes" }
+                { "path": "feed/strikes", "label": "Strikes" },
+                { "path": "feed/scans", "label": "Scans" }
             ],
             "batch": [
                 { "path": "batch", "label": "Batches" },

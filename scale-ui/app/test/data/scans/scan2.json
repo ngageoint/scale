@@ -1,0 +1,51 @@
+{
+    "id": 2,
+    "name": "scan2",
+    "title": "Scan 2",
+    "description": "Second scan",
+    "file_count": 17,
+    "job": {
+        "id": 7,
+        "job_type": {
+            "id": 2,
+            "name": "scale-strike",
+            "version": "1.0",
+            "title": "Scale Strike",
+            "description": "Monitors a directory for incoming source files to ingest",
+            "category": "system",
+            "author_name": null,
+            "author_url": null,
+            "is_system": true,
+            "is_long_running": true,
+            "is_active": true,
+            "is_operational": true,
+            "is_paused": false,
+            "icon_code": "f0e7"
+        },
+        "job_type_rev": {
+            "id": 2
+        },
+        "event": {
+            "id": 1
+        },
+        "status": "RUNNING",
+        "priority": 10,
+        "num_exes": 1
+    },
+    "dry_run_job": {},
+    "created": "2015-10-05T21:26:04.855Z",
+    "last_modified": "2015-10-05T21:26:04.855Z",
+    "configuration": {
+        "version": "1.0",
+        "workspace": "products",
+        "scanner": {
+            "type": "s3"
+        },
+        "files_to_ingest": [{
+            "filename_regex": ".*txt",
+            "data_types": [],
+            "new_workspace": "",
+            "new_file_path": ""
+        }]
+    }
+}
