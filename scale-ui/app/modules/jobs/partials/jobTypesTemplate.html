@@ -14,7 +14,7 @@
             </ul>
         </div>
     </div>
-    <div class="col-xs-9 detail-container" style="{{ vm.containerStyle }}">
+    <div class="col-xs-9 detail-container">
         <h2 ng-if="!vm.activeJobType" class="text-center">Select a job type to view its performance and other details.</h2>
         <div class="detail-content" ng-class="vm.jobDetailsClass">
             <ul class="nav nav-tabs" role="tablist">
@@ -52,11 +52,13 @@
                                 <dd ng-if="vm.activeJobTypeDetails.last_modified">{{ vm.activeJobTypeDetails.last_modified }}</dd>
                                 <dt ng-if="vm.activeJobTypeDetails.archived">Archived:</dt>
                                 <dd ng-if="vm.activeJobTypeDetails.archived">{{ vm.activeJobTypeDetails.archived }}</dd>
-                                <dt ng-if="vm.activeJobTypeDetails.cpus_required">CPUs Required:</dt>
+                                <dt ng-if="vm.activeJobTypeDetails.cpus_required">CPUs:</dt>
                                 <dd ng-if="vm.activeJobTypeDetails.cpus_required">{{ vm.activeJobTypeDetails.cpus_required }}</dd>
-                                <dt ng-if="vm.activeJobTypeDetails.mem_required">Memory Required:</dt>
-                                <dd ng-if="vm.activeJobTypeDetails.mem_required">{{ vm.activeJobTypeDetails.mem_required }}</dd>
-                                <dt ng-if="vm.activeJobTypeDetails.disk_out_const_required_formatted">Disk Required:</dt>
+                                <dt ng-if="vm.activeJobTypeDetails.mem_required">Memory:</dt>
+                                <dd ng-if="vm.activeJobTypeDetails.mem_required">{{ vm.activeJobTypeDetails.mem_required_formatted }}</dd>
+                                <dt ng-if="vm.activeJobTypeDetails.mem_required">Shared Memory:</dt>
+                                <dd ng-if="vm.activeJobTypeDetails.mem_required">{{ vm.activeJobTypeDetails.shared_mem_required_formatted }}</dd>
+                                <dt ng-if="vm.activeJobTypeDetails.disk_out_const_required_formatted">Disk:</dt>
                                 <dd ng-if="vm.activeJobTypeDetails.disk_out_const_required_formatted">{{ vm.activeJobTypeDetails.disk_out_const_required_formatted }}</dd>
                                 <dt ng-if="vm.activeJobTypeDetails.disk_out_mult_required">Input Size Multiplier:</dt>
                                 <dd ng-if="vm.activeJobTypeDetails.disk_out_mult_required">{{ vm.activeJobTypeDetails.disk_out_mult_required }}</dd>
