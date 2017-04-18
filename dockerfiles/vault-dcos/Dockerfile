@@ -1,6 +1,6 @@
 FROM alpine
 
-ENV VAULT_VERSION 0.6.2
+ENV VAULT_VERSION 0.7.0
 
 ADD https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip vault.zip
 RUN apk add --update unzip openssl ca-certificates curl jq && \
