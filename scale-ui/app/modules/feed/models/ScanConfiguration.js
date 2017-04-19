@@ -2,15 +2,14 @@
     'use strict';
 
     angular.module('scaleApp').factory('ScanConfiguration', function (scaleConfig, ScanIngestFile) {
-        var ScanConfiguration = function (version, workspace, scanner, recursive, files_to_ingest) {
-            this.version = scaleConfig.ScanConfigurationVersion;
+        var ScanConfiguration = function (version, workspace, scanner, files_to_ingest) {
+            this.version = scaleConfig.scanConfigurationVersion;
             this.workspace = workspace;
             this.scanner = scanner ? scanner : {
                 type: '',
                 transfer_suffix: ''
             };
-            this.recursive = recursive;
-            this.files_to_ingest = files_to_ingest ? StrikeIngestFile.transformer(files_to_ingest) : [];
+            this.files_to_ingest = files_to_ingest ? ScanIngestFile.transformer(files_to_ingest) : [];
         };
 
         ScanConfiguration.prototype = {
@@ -20,12 +19,14 @@
         // static methods, assigned to class
         ScanConfiguration.build = function (data) {
             if (data) {
-                return new ScanConfiguration(
+                var returnObj = new ScanConfiguration(
                     data.version,
                     data.workspace,
-                    data.monitor,
+                    data.scanner,
                     data.files_to_ingest
                 );
+                // remove empty/null/undefined values from returnObj
+                return _.pick(returnObj, _.identity);
             }
             return new ScanConfiguration();
         };

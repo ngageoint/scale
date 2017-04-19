@@ -7,7 +7,6 @@
         var vm = this;
 
         vm.scansParams = stateService.getScansParams();
-
         vm.stateService = stateService;
         vm.loading = true;
         vm.subnavLinks = scaleConfig.subnavLinks.feed;
@@ -64,7 +63,7 @@
             {
                 field: 'job',
                 enableFiltering: false,
-                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.job.title }}</div>'
+                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.job.job_type.title }}</div>'
             },
             {
                 field: 'created',
