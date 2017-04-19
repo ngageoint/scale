@@ -84,7 +84,7 @@ RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
          python-devel \
  # Shim in any environment specific configuration from script
  && sh /tmp/env-shim.sh \
- && pip install marathon==0.8.7 mesos.interface==0.25.0 protobuf==2.5.0 requests \
+ && pip install marathon==0.8.14 mesos.interface==0.25.0 protobuf==2.5.0 requests \
  && easy_install /tmp/*.egg \
  && pip install -r /tmp/prod_linux.txt \
  && curl -o /usr/bin/gosu -fsSL ${GOSU_URL} \
