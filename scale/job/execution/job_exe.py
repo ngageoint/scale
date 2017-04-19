@@ -176,8 +176,6 @@ class RunningJobExecution(object):
 
         :param when: The time that the node was lost
         :type when: :class:`datetime.datetime`
-        :returns: The current task, possibly None
-        :rtype: :class:`job.tasks.base_task.Task`
         """
 
         error = Error.objects.get_builtin_error('node-lost')
@@ -185,11 +183,9 @@ class RunningJobExecution(object):
         Queue.objects.handle_job_failure(self._id, when, self._all_tasks, error)
 
         with self._lock:
-            task = self._current_task
             self._current_task = None
             self._remaining_tasks = []
             self._set_finished_status('FAILED', when, error)
-            return task
 
     @retry_database_query
     def execution_timed_out(self, task, when):
@@ -305,6 +301,7 @@ class RunningJobExecution(object):
 
         if self._status == 'RUNNING':
             self._status = status
+            self._finished = when
             self._error = error
 
     @retry_database_query

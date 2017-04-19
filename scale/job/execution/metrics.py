@@ -128,6 +128,69 @@ class JobExeMetricsByType(object):
                 del self.job_type_metrics[job_type_id]
 
 
+class RunningJobExeMetricsByNode(object):
+    """This class holds metrics for running job executions grouped by their node"""
+
+    EMPTY_METRICS = JobExeMetricsByType()
+
+    def __init__(self):
+        """Constructor
+        """
+
+        self.metrics_by_node = {}  # {Node ID: JobExeMetricsByType}
+
+    def add_job_execution(self, job_exe):
+        """Adds the given job execution to the metrics
+
+        :param job_exe: The job execution
+        :type job_exe: :class:`job.execution.job_exe.RunningJobExecution`
+        """
+
+        if job_exe.node_id not in self.metrics_by_node:
+            self.metrics_by_node[job_exe.node_id] = JobExeMetricsByType()
+        self.metrics_by_node[job_exe.node_id].add_job_execution(job_exe)
+
+    def generate_status_json(self, nodes_list):
+        """Generates the portion of the status JSON that describes these running job executions
+
+        :param nodes_list: The list of nodes within the status JSON
+        :type nodes_list: list
+        """
+
+        for node_dict in nodes_list:
+            node_id = node_dict['id']
+            job_exe_dict = node_dict['job_executions']
+            running_job_exe_dict = {}
+            job_exe_dict['running'] = running_job_exe_dict
+            if node_id in self.metrics_by_node:
+                self.metrics_by_node[node_id].generate_status_json(running_job_exe_dict)
+            else:
+                RunningJobExeMetricsByNode.EMPTY_METRICS.generate_status_json(running_job_exe_dict)
+
+    def remove_job_execution(self, job_exe):
+        """Removes the given job execution from the metrics
+
+        :param job_exe: The job execution
+        :type job_exe: :class:`job.execution.job_exe.RunningJobExecution`
+        """
+
+        self.metrics_by_node[job_exe.node_id].remove_job_execution(job_exe)
+        if self.metrics_by_node[job_exe.node_id].total_count == 0:
+            del self.metrics_by_node[job_exe.node_id]
+
+    def subtract_metrics(self, metrics):
+        """Subtracts the given metrics
+
+        :param metrics: The metrics to subtract
+        :type metrics: :class:`job.execution.manager.RunningJobExeMetricsByNode`
+        """
+
+        for node_id in self.metrics_by_node.keys():
+            self.metrics_by_node[node_id].subtract_metrics(metrics.metrics_by_node[node_id])
+            if self.metrics_by_node[node_id].total_count == 0:
+                del self.metrics_by_node[node_id]
+
+
 class FinishedJobExeMetrics(object):
     """This class holds metrics for finished job executions"""
 
@@ -352,7 +415,7 @@ class TotalJobExeMetrics(object):
 
         self._finished_metrics = FinishedJobExeMetricsByNode()
         self._finished_metrics_over_time = FinishedJobExeMetricsOverTime()
-        self._running_metrics = JobExeMetricsByType()
+        self._running_metrics = RunningJobExeMetricsByNode()
 
     def add_running_job_exes(self, job_exes):
         """Adds newly scheduled running job executions to the metrics
@@ -376,11 +439,9 @@ class TotalJobExeMetrics(object):
             self._finished_metrics.subtract_metrics(old_metrics)
 
         for node_dict in nodes_list:
-            running_dict = {}
-            job_exe_dict = {'running': running_dict}
-            node_dict['job_executions'] = job_exe_dict
-            self._running_metrics.generate_status_json(running_dict)
-            self._finished_metrics.generate_status_json(nodes_list)
+            node_dict['job_executions'] = {}
+        self._running_metrics.generate_status_json(nodes_list)
+        self._finished_metrics.generate_status_json(nodes_list)
 
     @retry_database_query
     def init_with_database(self):

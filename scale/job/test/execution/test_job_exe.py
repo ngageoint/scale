@@ -270,7 +270,6 @@ class TestRunningJobExecution(TestCase):
         running_job_exe.execution_timed_out(job_task, when_timed_out)
         self.assertTrue(running_job_exe.is_finished())
         self.assertEqual(running_job_exe.status, 'FAILED')
-        self.assertEqual(running_job_exe.error_category, 'SYSTEM')
         self.assertFalse(running_job_exe.is_next_task_ready())
 
         job_exe = JobExecution.objects.get(id=self._job_exe_id)
@@ -387,8 +386,7 @@ class TestRunningJobExecution(TestCase):
         when_lost = pre_task_completed + timedelta(seconds=1)
         job_task = running_job_exe.start_next_task()
         self.task_mgr.launch_tasks([job_task], now())
-        lost_task = running_job_exe.execution_lost(when_lost)
-        self.assertEqual(job_task.id, lost_task.id)
+        running_job_exe.execution_lost(when_lost)
         self.assertTrue(running_job_exe.is_finished())
         self.assertEqual(running_job_exe.status, 'FAILED')
         self.assertEqual(running_job_exe.error_category, 'SYSTEM')
