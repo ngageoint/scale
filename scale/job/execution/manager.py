@@ -5,6 +5,7 @@ import logging
 import threading
 
 from django.db import DatabaseError
+from django.utils.timezone import now
 
 from job.execution.metrics import TotalJobExeMetrics
 from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
@@ -22,17 +23,19 @@ class JobExecutionManager(object):
 
         self._running_job_exes = {}  # {ID: RunningJobExecution}
         self._lock = threading.Lock()
-        self._metrics = TotalJobExeMetrics()
+        self._metrics = TotalJobExeMetrics(now())
 
-    def generate_status_json(self, nodes_list):
+    def generate_status_json(self, nodes_list, when):
         """Generates the portion of the status JSON that describes the job execution metrics
 
         :param nodes_list: The list of nodes within the status JSON
         :type nodes_list: list
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
         """
 
         with self._lock:
-            self._metrics.generate_status_json(nodes_list)
+            self._metrics.generate_status_json(nodes_list, when)
 
     def get_ready_job_exes(self):
         """Returns all running job executions that are ready to execute their next task

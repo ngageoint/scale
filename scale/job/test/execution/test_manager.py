@@ -40,7 +40,7 @@ class TestJobExecutionManager(TransactionTestCase):
 
         self.job_exe_mgr.schedule_job_exes([self.job_exe_1, self.job_exe_2])
         json_dict = [{'id': self.node_model_1.id}, {'id': self.node_model_2.id}]
-        self.job_exe_mgr.generate_status_json(json_dict)
+        self.job_exe_mgr.generate_status_json(json_dict, now())
 
         for node_dict in json_dict:
             self.assertEqual(node_dict['job_executions']['running']['total'], 1)

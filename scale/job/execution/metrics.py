@@ -5,8 +5,6 @@ import datetime
 import logging
 from collections import namedtuple
 
-from django.utils.timezone import now
-
 from job.execution.job_exe import RunningJobExecution
 from job.models import JobExecution
 from util.retry import retry_database_query
@@ -186,9 +184,10 @@ class RunningJobExeMetricsByNode(object):
         """
 
         for node_id in self.metrics_by_node.keys():
-            self.metrics_by_node[node_id].subtract_metrics(metrics.metrics_by_node[node_id])
-            if self.metrics_by_node[node_id].total_count == 0:
-                del self.metrics_by_node[node_id]
+            if node_id in metrics.metrics_by_node:
+                self.metrics_by_node[node_id].subtract_metrics(metrics.metrics_by_node[node_id])
+                if self.metrics_by_node[node_id].total_count == 0:
+                    del self.metrics_by_node[node_id]
 
 
 class FinishedJobExeMetrics(object):
@@ -315,9 +314,10 @@ class FinishedJobExeMetricsByNode(object):
         """
 
         for node_id in self.metrics_by_node.keys():
-            self.metrics_by_node[node_id].subtract_metrics(metrics.metrics_by_node[node_id])
-            if self.metrics_by_node[node_id].count == 0:
-                del self.metrics_by_node[node_id]
+            if node_id in metrics.metrics_by_node:
+                self.metrics_by_node[node_id].subtract_metrics(metrics.metrics_by_node[node_id])
+                if self.metrics_by_node[node_id].count == 0:
+                    del self.metrics_by_node[node_id]
 
 
 class FinishedJobExeMetricsOverTime(object):
@@ -327,14 +327,17 @@ class FinishedJobExeMetricsOverTime(object):
     BLOCK_LENGTH = datetime.timedelta(minutes=5)
     TIME_BLOCK = namedtuple('TIME_BLOCK', ['start', 'end', 'metrics'])
 
-    def __init__(self):
+    def __init__(self, when):
         """Constructor
+
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
         """
 
         # Create a time-ordered list of time blocks, each with duration BLOCK_LENGTH, going back from now to cover a
         # period of time of length TOTAL_TIME_PERIOD
         self.time_blocks = []
-        end = now()
+        end = when
         start_of_total_period = end - FinishedJobExeMetricsOverTime.TOTAL_TIME_PERIOD
         while True:
             start = end - FinishedJobExeMetricsOverTime.BLOCK_LENGTH
@@ -373,15 +376,16 @@ class FinishedJobExeMetricsOverTime(object):
                     logger.error('Logic bug: Job execution finished before our metrics time period')
                     break
 
-    def update_to_now(self):
+    def update_to_now(self, when):
         """Updates the metrics to now by removing any time blocks that are older than our time period and creates any
         needed new blocks
 
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
         :returns: The list of removed metrics classes for old time blocks
         :rtype: [:class:`job.execution.metrics.FinishedJobExeMetricsByNode`]
         """
 
-        when = now()
         start_of_total_period = when - FinishedJobExeMetricsOverTime.TOTAL_TIME_PERIOD
         results = []
 
@@ -409,12 +413,15 @@ class FinishedJobExeMetricsOverTime(object):
 class TotalJobExeMetrics(object):
     """This class handles all real-time metrics for job executions"""
 
-    def __init__(self):
+    def __init__(self, when):
         """Constructor
+
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
         """
 
         self._finished_metrics = FinishedJobExeMetricsByNode()
-        self._finished_metrics_over_time = FinishedJobExeMetricsOverTime()
+        self._finished_metrics_over_time = FinishedJobExeMetricsOverTime(when)
         self._running_metrics = RunningJobExeMetricsByNode()
 
     def add_running_job_exes(self, job_exes):
@@ -427,15 +434,17 @@ class TotalJobExeMetrics(object):
         for job_exe in job_exes:
             self._running_metrics.add_job_execution(job_exe)
 
-    def generate_status_json(self, nodes_list):
+    def generate_status_json(self, nodes_list, when):
         """Generates the portion of the status JSON that describes the job execution metrics
 
         :param nodes_list: The list of nodes within the status JSON
         :type nodes_list: list
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
         """
 
         # Remove any old metrics that have fallen outside of the time period
-        for old_metrics in self._finished_metrics_over_time.update_to_now():
+        for old_metrics in self._finished_metrics_over_time.update_to_now(when):
             self._finished_metrics.subtract_metrics(old_metrics)
 
         for node_dict in nodes_list:
