@@ -162,7 +162,7 @@
                 } else if (vm.activeWorkspace.json_config.broker.type === 's3') {
                     vm.activeScan.configuration.scanner.type = 's3';
                 } else {
-                    vm.activeScan.configuration.monitor.type = null;
+                    vm.activeScan.configuration.scanner.type = null;
                 }
             }).catch(function (error) {
                 console.log(error);
