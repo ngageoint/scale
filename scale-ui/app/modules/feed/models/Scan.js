@@ -19,12 +19,22 @@
 
         Scan.prototype = {
             clean: function () {
-                return {
+                var returnObj = {
                     name: this.name,
                     title: this.title,
                     description: this.description,
                     configuration: this.configuration
                 };
+                if (returnObj.configuration && returnObj.configuration.scanner.type === 's3') {
+                    delete returnObj.configuration.scanner.transfer_suffix;
+                }
+                if (returnObj.configuration.files_to_ingest) {
+                    _.forEach(returnObj.configuration.files_to_ingest, function (f) {
+                        delete f.$$hashKey;
+                    });
+                }
+                // remove empty/null/undefined values from returnObj
+                return _.pick(returnObj, _.identity);
             }
         };
 
