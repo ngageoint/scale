@@ -5,7 +5,7 @@ This is an example of how to run [HashiCorp's Vault](https://github.com/hashicor
 ## Running on DC/OS
 
 ### Step 1: Launch Vault server
-Save the following JSON as `vault.json`:
+Copy the following JSON:
 ```json
 {
   "id": "scale-vault",
@@ -32,7 +32,7 @@ Save the following JSON as `vault.json`:
   "healthChecks": [{
       "protocol": "COMMAND",
       "command": {
-        "value": "curl -X GET -s -k https://localhost:8200/v1/sys/health/dev/null"
+        "value": "curl -X GET -s -o /dev/null -k https://localhost:8200/v1/sys/health"
       },
       "gracePeriodSeconds": 20,
       "intervalSeconds": 30,
@@ -42,10 +42,7 @@ Save the following JSON as `vault.json`:
     }]
 }
 ```
-Now launch on Marathon:
-```
-$ dcos marathon app add vault.json
-```
+In the DC/OS interface go to **Services** > **Deploy Service** > *Check the JSON Mode toggle* > Paste in the configuration.
 
 **Note**: you may configure some parameters via environment variables, from the wrapper script [`run-vault`](run-vault). You may set the following environment variables:
  * VAULT_TLS_KEY: TLS key file contents
@@ -72,6 +69,7 @@ to unseal it again.
 Vault does not store the master key. Without at least 3 keys,
 your Vault will remain permanently sealed.
 ```
+
 After, check to make sure it was properly initialized:
 ```
 $ docker run -e "VAULT_SKIP_VERIFY=true" -e "VAULT_ADDR=https://scale-vault.marathon.l4lb.thisdcos.directory:8200" --entrypoint=vault -t geoint/scale-vault status
