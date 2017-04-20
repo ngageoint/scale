@@ -33,6 +33,19 @@ class NodeManager(object):
             self._new_agent_ids = set()
             self._nodes = {}
 
+    def generate_status_json(self, status_dict):
+        """Generates the portion of the status JSON that describes the nodes
+
+        :param status_dict: The status JSON dict
+        :type status_dict: dict
+        """
+
+        nodes_list = []
+        status_dict['nodes'] = nodes_list
+        with self._lock:
+            for node in self._nodes.values():
+                node.generate_status_json(nodes_list)
+
     def get_next_tasks(self, when):
         """Returns the next node tasks to schedule
 

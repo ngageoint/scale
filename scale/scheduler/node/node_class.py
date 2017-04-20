@@ -17,7 +17,7 @@ from scheduler.sync.scheduler_manager import scheduler_mgr
 
 
 logger = logging.getLogger(__name__)
-NodeState = namedtuple('NodeState', ['state', 'description'])
+NodeState = namedtuple('NodeState', ['state', 'title', 'description'])
 
 
 class Node(object):
@@ -33,13 +33,21 @@ class Node(object):
     NORMAL_HEALTH_THRESHOLD = datetime.timedelta(minutes=5)
 
     # Node States
-    INACTIVE = NodeState(state='INACTIVE', description='Inactive, ignored by Scale')
-    OFFLINE = NodeState(state='OFFLINE', description='Offline/unavailable')
-    PAUSED = NodeState(state='PAUSED', description='Paused, no new jobs will be scheduled')
-    DEGRADED = NodeState(state='DEGRADED', description='Degraded ability to run jobs')
-    INITIAL_CLEANUP = NodeState(state='INITIAL_CLEANUP', description='Performing initial cleanup')
-    IMAGE_PULL = NodeState(state='IMAGE_PULL', description='Pulling Scale image')
-    READY = NodeState(state='READY', description='Ready for new jobs')
+    inactive_desc = 'Node is inactive and will not run new or existing jobs.'
+    inactive_desc += ' If this node has existing jobs, please cancel them or switch the node to active.'
+    INACTIVE = NodeState(state='INACTIVE', title='Inactive', description=inactive_desc)
+    OFFLINE = NodeState(state='OFFLINE', title='Offline',
+                        description='Node is offline/unavailable, so no jobs can currently run on it.')
+    paused_desc = 'Node is paused, so no new jobs will be scheduled. Existing jobs will continue to run.'
+    PAUSED = NodeState(state='PAUSED', title='Paused', description=paused_desc)
+    degraded_desc = 'Node has an error condition, putting it in a degraded state.'
+    degraded_desc += ' New jobs will not be scheduled, and the node will attempt to continue to run existing jobs.'
+    DEGRADED = NodeState(state='DEGRADED', title='Degraded', description=degraded_desc)
+    cleanup_desc = 'Node is performing an initial cleanup step to remove existing Docker containers and volumes.'
+    INITIAL_CLEANUP = NodeState(state='INITIAL_CLEANUP', title='Cleaning up', description=cleanup_desc)
+    pull_desc = 'Node is pulling the Scale Docker image.'
+    IMAGE_PULL = NodeState(state='IMAGE_PULL', title='Pulling image', description=pull_desc)
+    READY = NodeState(state='READY', title='Ready', description='Node is ready to run new jobs.')
 
     def __init__(self, agent_id, node):
         """Constructor
@@ -120,6 +128,20 @@ class Node(object):
         with self._lock:
             self._cleanup.add_job_execution(job_exe)
             self._conditions.update_cleanup_count(self._cleanup.get_num_job_exes())
+
+    def generate_status_json(self, nodes_list):
+        """Generates the portion of the status JSON that describes this node
+
+        :param nodes_list: The list of nodes within the status JSON
+        :type nodes_list: list
+        """
+
+        with self._lock:
+            state_dict = {'name': self._state.state, 'title': self._state.title, 'description': self._state.description}
+            node_dict = {'id': self._id, 'hostname': self._hostname, 'agent_id': self._agent_id,
+                         'is_active': self._is_active, 'state': state_dict}
+            self._conditions.generate_status_json(node_dict)
+        nodes_list.append(node_dict)
 
     def get_next_tasks(self, when):
         """Returns the next node tasks to launch
