@@ -35,8 +35,9 @@
             },
             validateScan: function (scan) {
                 var d = $q.defer();
+                var cleanScan = scan.clean();
 
-                $http.post(scaleConfig.urls.apiPrefix + 'scans/validation/', scan).success(function (result) {
+                $http.post(scaleConfig.urls.apiPrefix + 'scans/validation/', cleanScan).success(function (result) {
                     d.resolve(result);
                 }).error(function(error){
                     d.reject(error);

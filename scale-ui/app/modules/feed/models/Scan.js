@@ -18,7 +18,14 @@
         };
 
         Scan.prototype = {
-
+            clean: function () {
+                return {
+                    name: this.name,
+                    title: this.title,
+                    description: this.description,
+                    configuration: this.configuration
+                };
+            }
         };
 
         // static methods, assigned to class
