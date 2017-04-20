@@ -19,14 +19,12 @@
         // static methods, assigned to class
         ScanConfiguration.build = function (data) {
             if (data) {
-                var returnObj = new ScanConfiguration(
+                return new ScanConfiguration(
                     data.version,
                     data.workspace,
                     data.scanner,
                     data.files_to_ingest
                 );
-                // remove empty/null/undefined values from returnObj
-                return _.pick(returnObj, _.identity);
             }
             return new ScanConfiguration();
         };
