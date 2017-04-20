@@ -1,26 +1,31 @@
-<ais-header show-title="vm.name" name="vm.name" loading="vm.loading" show-subnav="true" subnav-links="vm.subnavLinks"></ais-header>
+<ais-header hide-title="true" loading="vm.loading" show-subnav="false"></ais-header>
+<div class="page-header">
+    <h1 ng-show="!vm.batch.title">Untitled Batch</h1>
+    <h1 ng-show="vm.batch.title !== ''">{{ vm.batch.title }}</h1>
+    <hr />
+</div>
 
 <div ng-if="vm.mode === 'create' && !vm.readonly">
     <form name="batchForm" novalidate>
-        <div class="pull-right">
-            <div class="btn-group btn-group-sm">
-                <button class="btn btn-default" ng-click="vm.validateBatch()" tooltip-append-to-body="true" uib-tooltip="Validate"><i class="fa fa-check"></i></button>
-                <button class="btn btn-" ng-class="vm.saveBtnClass" ng-click="vm.saveBatch()" ng-disabled="vm.disableSaveBtn(batchForm.$invalid)" tooltip-append-to-body="true" uib-tooltip="Save Batch" tooltip-placement="left"><i class="fa fa-save"></i></button>
-            </div>
-        </div>
-        <h3 ng-show="!vm.batch.title">Untitled Batch</h3>
-        <h3 ng-show="vm.batch.title !== ''">{{ vm.batch.title }}</h3>
         <div class="row">
-            <div class="col-xs-6">
+            <div class="col-xs-5">
                 <div class="form-group" ng-class="{ 'has-error': batchForm.bTitle.$invalid }">
                     <label for="bTitle">Title</label>
                     <input id="bTitle" name="bTitle" type="text" class="form-control" ng-model="vm.batch.title" placeholder="Title">
                 </div>
             </div>
-            <div class="col-xs-6">
+            <div class="col-xs-5">
                 <div class="form-group" ng-class="{ 'has-error': batchForm.bRecipe.$invalid }">
                     <label for="bRecipe">Recipe Type</label>
                     <select id="bRecipe" name="bRecipe" class="form-control" ng-model="vm.batch.recipe_type" ng-options="r as r.title + ' ' + r.version for r in vm.recipeTypes" required></select>
+                </div>
+            </div>
+            <div class="col-xs-2 text-right">
+                <div>&nbsp;</div>
+                <div class="btn-group btn-group-sm">
+                    <button class="btn btn-default" ng-click="vm.validateBatch()" tooltip-append-to-body="true" uib-tooltip="Validate"><i class="fa fa-check"></i></button>
+                    <button class="btn btn-" ng-class="vm.saveBtnClass" ng-click="vm.saveBatch()" ng-disabled="vm.disableSaveBtn(batchForm.$invalid)" tooltip-append-to-body="true" uib-tooltip="Save Batch" tooltip-placement="left"><i class="fa fa-save"></i></button>
+                    <button class="btn btn-warning" ng-click="vm.cancelCreate()" ng-if="vm.mode === 'create'" tooltip-append-to-body="true" uib-tooltip="Cancel" tooltip-placement="left"><i class="fa fa-close"></i></button>
                 </div>
             </div>
         </div>

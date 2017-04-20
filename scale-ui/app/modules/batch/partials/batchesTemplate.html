@@ -1,7 +1,10 @@
-<ais-header hide-title="true" name="'Batch Processing (' + vm.gridOptions.totalItems + ')'" show-subnav="true" subnav-links="vm.subnavLinks" loading="vm.loading"></ais-header>
+<ais-header hide-title="true" name="'Batch Processing (' + vm.gridOptions.totalItems + ')'" show-subnav="false" loading="vm.loading"></ais-header>
 <div class="page-header">
     <h1>
         Batch Processing ({{ vm.gridOptions.totalItems }})
+        <small ng-if="!vm.readonly">
+            <a class="btn btn-default" href="/#/batch/0"><i class="fa fa-plus-circle"></i> Create Batch</a>
+        </small>
     </h1>
     <hr />
 </div>
