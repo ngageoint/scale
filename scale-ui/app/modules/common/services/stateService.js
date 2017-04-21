@@ -12,6 +12,8 @@
             recipesParams = {},
             ingestsColDefs = [],
             ingestsParams = {},
+            scansColDefs = [],
+            scansParams = {},
             nodesColDefs = [],
             nodeStatusParams = {},
             batchesColDefs = [],
@@ -110,6 +112,17 @@
                 status: data.status ? data.status : null,
                 file_name: data.file_name ? data.file_name : null,
                 strike_id: data.strike_id ? parseInt(data.strike_id) : null
+            };
+        };
+
+        var initScansParams = function (data) {
+            return {
+                page: data.page ? parseInt(data.page) : 1,
+                page_size: data.page_size ? parseInt(data.page_size) : 25,
+                started: data.started ? data.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
+                ended: data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
+                name: data.name ? data.name : null,
+                order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['-last_modified']
             };
         };
 
@@ -223,6 +236,12 @@
             setIngestsColDefs: function (data) {
                 ingestsColDefs = data;
             },
+            getScansColDefs: function () {
+                return scansColDefs;
+            },
+            setScansColDefs: function (data) {
+                scansColDefs = data;
+            },
             getIngestsParams: function () {
                 if (_.keys(ingestsParams).length === 0) {
                     return initIngestsParams($location.search());
@@ -232,6 +251,16 @@
             setIngestsParams: function (data) {
                 ingestsParams = initIngestsParams(data);
                 updateQuerystring(ingestsParams);
+            },
+            getScansParams: function () {
+                if (_.keys(scansParams).length === 0) {
+                    return initScansParams($location.search());
+                }
+                return scansParams;
+            },
+            setScansParams: function (data) {
+                scansParams = initScansParams(data);
+                updateQuerystring(scansParams);
             },
             getNodesColDefs: function () {
                 return nodesColDefs;

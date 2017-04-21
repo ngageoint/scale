@@ -1,0 +1,145 @@
+<ais-header show-title="false" loading="vm.loading" show-subnav="true" subnav-links="vm.scaleConfig.subnavLinks.feed"></ais-header>
+
+<div ng-if="vm.activeScan">
+    <form name="scansForm" novalidate>
+        <div class="pull-right">
+            <div class="btn-group btn-group-sm" ng-show="!vm.readonly">
+                <button class="btn btn-default" ng-click="vm.validateScan()" ng-if="vm.mode === 'edit' || vm.mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Validate"><i class="fa fa-check"></i></button>
+                <button class="btn" ng-class="vm.saveBtnClass" ng-click="vm.saveScan()" ng-disabled="vm.disableSaveBtn(scansForm.$invalid)" ng-if="vm.mode === 'edit' || vm.mode === 'add'" tooltip-append-to-body="true" uib-tooltip="Save Scan" tooltip-placement="left"><i class="fa fa-save"></i></button>
+                <button class="btn btn-warning" ng-click="vm.cancelCreate()" ng-if="vm.mode === 'add' || vm.mode === 'edit'" tooltip-append-to-body="true" uib-tooltip="Cancel" tooltip-placement="left"><i class="fa fa-close"></i></button>
+                <button class="btn btn-success" ng-click="vm.editScan()" ng-if="vm.mode === 'view'" tooltip-append-to-body="true" uib-tooltip="Edit Scan" tooltip-placement="left"><i class="fa fa-edit"></i></button>
+            </div>
+        </div>
+        <h3 ng-show="!vm.activeScan.title">Untitled Scan</h3>
+        <h3 ng-show="vm.activeScan.title !== ''">{{ vm.activeScan.title }}</h3>
+        <div ng-if="vm.mode==='view'">
+            <dl>
+                <dt>Description:</dt>
+                <dd>{{ vm.activeScan.description }}</dd>
+                <dt ng-if="vm.activeScan.job.id">Job:</dt>
+                <dd ng-if="vm.activeScan.job.id"><a ng-href="/#/jobs/job/{{ vm.activeScan.job.id }}"> <span class="fa" ng-bind-html="'&#x' + vm.activeScan.job.job_type.icon_code"></span> View Job Details ({{ vm.activeScan.job.status }})</a></dd>
+                <dt>Created:</dt>
+                <dd>{{ vm.activeScan.created_formatted }}</dd>
+                <dt>Last Modified:</dt>
+                <dd>{{ vm.activeScan.last_modified_formatted }}</dd>
+                <dt>Configuration:</dt>
+                <dd><pre ng-bind="vm.formatJSON(vm.activeScan.configuration)"></pre></dd>
+            </dl>
+        </div>
+        <div ng-if="vm.mode === 'edit' || vm.mode === 'add'">
+            <div class="row">
+                <div class="col-xs-12 col-md-6">
+                    <div class="form-group" ng-class="{ 'has-error': scansForm.sName.$invalid }">
+                        <label for="sName">Name</label>
+                        <input id="sName" name="sName" type="text" ng-disabled="vm.mode === 'edit'" class="form-control" ng-model="vm.activeScan.name" placeholder="Name" required>
+                        <p ng-show="scansForm.sName.$invalid && !scansForm.sName.$pristine" class="help-block">Name is required.</p>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-6">
+                    <div class="form-group" ng-class="{ 'has-error': scansForm.sTitle.$invalid }">
+                        <label for="sTitle">Title</label>
+                        <input id="sTitle" name="sTitle" type="text" class="form-control" ng-model="vm.activeScan.title" placeholder="Title" required>
+                        <p ng-show="scansForm.sTitle.$invalid && !scansForm.sTitle.$pristine" class="help-block">Title is required.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-md-6">
+                    <div class="form-group" ng-class="{ 'has-error': scansForm.sDescription.$invalid }">
+                        <label for="sDescription">Description</label>
+                        <textarea id="sDescription" name="sDescription" class="form-control" ng-model="vm.activeScan.description" placeholder="Description" rows="5" required></textarea>
+                        <p ng-show="scansForm.sDescription.$invalid && !scansForm.sDescription.$pristine" class="help-block">Description is required.</p>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-6">
+                    <div class="form-group" ng-class="{ 'has-error': scansForm.scWorkspace.$invalid }">
+                        <label for="scWorkspace">Workspace</label>
+                        <select id="scWorkspace" name="scWorkspace" class="form-control" ng-model="vm.activeScan.configuration.workspace" ng-options="w.name as w.title for w in vm.workspaces" ng-change="vm.updateWorkspace()" required></select>
+                    </div>
+                    <div class="row" ng-if="vm.activeScan.configuration.workspace !== null">
+                        <div class="col-xs-12 col-md-6">
+                            <div class="form-group">
+                                <label>Scanner Type:</label>
+                                <input type="text" class="form-control" value="s3" disabled ng-if="vm.activeWorkspace.json_config.broker.type === 's3'">
+                                <input type="text" class="form-control" value="dir" disabled ng-if="vm.activeWorkspace.json_config.broker.type === 'host'">
+                                <input type="text" class="form-control" value="Unavailable for NFS workspaces" disabled ng-if="vm.activeWorkspace.json_config.broker.type === 'nfs'">
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6">
+                            <div class="form-group" ng-if="vm.activeScan.configuration.scanner.type === 'dir'">
+                                <label for="transfer_suffix">Transfer Suffix</label>
+                                <input id="transfer_suffix" name="transfer_suffix" type="text" class="form-control" placeholder="Transfer Suffix" ng-model="vm.activeScan.configuration.scanner.transfer_suffix">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <form name="ingestFileForm" novalidate ng-if="vm.mode === 'edit' || vm.mode === 'add'">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><b>Ingest File Rules</b> <span ng-if="vm.activeScan.configuration.files_to_ingest.length === 0">(at least 1 is required)</span></h3>
+            </div>
+            <div class="panel-body">
+                <!-- scif = (S)canner (C)onfig (I)ngest (F)ile -->
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group" ng-class="{ 'has-error': ingestFileForm.scifFilenameRegex.$invalid }">
+                            <label for="scifFilenameRegex">Filename Regex</label>
+                            <input id="scifFilenameRegex" name="scifFilenameRegex" type="text" class="form-control" ng-model="vm.activeScanIngestFile.filename_regex" placeholder="Filename Regex" required>
+                            <p class="help-block">A regular expression to check against the names of newly copied files (required)</p>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label for="scifDataTypes">Data Types</label>
+                            <div class="input-group">
+                                <input id="scifDataTypes" name="scifDataTypes" type="text" class="form-control" ng-model="vm.dataType" placeholder="Data Types">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" ng-click="vm.addDataType()"><i class="fa fa-plus"></i></button>
+                                </span>
+                            </div>
+                            <div class="help-block">
+                                <ul class="list-inline">
+                                    <li ng-repeat="dataType in vm.activeScanIngestFile.data_types"><span class="label label-default strike-data-type" ng-click="vm.removeDataType(dataType)">{{ dataType }} <i class="fa fa-close"></i></span></li>
+                                </ul>
+                            </div>
+                            <p class="help-block">Any file that matches the corresponding file name regular expression will have these data type strings "tagged" with the file (optional)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label for="scifNewWorkspace">New Workspace</label>
+                            <select id="scifNewWorkspace" name="scifNewWorkspace" class="form-control" ng-model="vm.activeScanIngestFile.new_workspace" ng-options="w as w.title for w in vm.newWorkspaces"></select>
+                            <p class="help-block">New workspace to which the file should be copied (optional)</p>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label for="scifNewFilePath">New File Path</label>
+                            <input id="scifNewFilePath" name="scifNewFilePath" type="text" class="form-control" ng-model="vm.activeScanIngestFile.new_file_path" placeholder="New File Path">
+                            <p class="help-block">String that specifies a new relative path for storing new files (optional)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-4 col-xs-offset-4">
+                        <button class="btn btn-default btn-block margin-bottom-md" ng-click="vm.addScanIngestFile()" ng-disabled="ingestFileForm.$invalid"><i class="fa fa-plus"></i> Add Rule to Configuration</button>
+                    </div>
+                </div>
+                <b class="margin-bottom-md">Current Rules</b>
+                <p ng-if="vm.activeScan.configuration.files_to_ingest.length === 0">No files in configuration.</p>
+                <div ng-if="vm.activeScan.configuration.files_to_ingest.length > 0">
+                    <ul ui-sortable="vm.sortableOptions" ng-model="vm.activeScan.configuration.files_to_ingest" class="list-unstyled">
+                        <li ng-repeat="file in vm.activeScan.configuration.files_to_ingest">
+                            <pre><span class="pull-right"><span class="btn btn-default btn-sm sortable-handle" title="Reorder" ng-if="vm.activeScan.configuration.files_to_ingest.length > 1"><i class="fa fa-bars"></i></span><button class="btn btn-danger btn-sm pull-right" ng-click="vm.deleteScanIngestFile(file)" title="Delete"><i class="fa fa-remove"></i></button></span><span ng-bind-html="vm.formatJSON(file)"></span></pre>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
