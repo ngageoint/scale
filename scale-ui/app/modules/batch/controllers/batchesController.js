@@ -12,7 +12,6 @@
         vm.stateService = stateService;
         vm.loading = true;
         vm.readonly = true;
-        vm.subnavLinks = scaleConfig.subnavLinks.batchReadonly;
         vm.recipeTypeValues = [recipeTypeViewAll];
         vm.selectedRecipeType = vm.batchesParams.recipe_type_id ? vm.batchesParams.recipe_type_id : recipeTypeViewAll;
         vm.batchStatusValues = scaleConfig.batchStatus;
@@ -178,7 +177,6 @@
             vm.updateColDefs();
             var user = userService.getUserCreds();
             vm.readonly = !(user && user.is_admin);
-            vm.subnavLinks = vm.readonly ? scaleConfig.subnavLinks.batchReadonly : scaleConfig.subnavLinks.batch;
             vm.getRecipeTypes()
                 .then(vm.getBatches);
             navService.updateLocation('batch');

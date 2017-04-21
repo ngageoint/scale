@@ -1,15 +1,13 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('batchDetailsController', function ($scope, $routeParams, $location, scaleConfig, navService, subnavService, userService, batchService, recipeService, jobTypeService, Batch, toastr, moment) {
+    angular.module('scaleApp').controller('batchDetailsController', function ($scope, $routeParams, $location, scaleConfig, navService, userService, batchService, recipeService, jobTypeService, Batch, toastr, moment) {
         var vm = this;
 
         vm.scaleConfig = scaleConfig;
         vm.moment = moment;
         vm.loading = true;
-        vm.subnavLinks = scaleConfig.subnavLinks.batch;
         vm.mode = $routeParams.id > 0 ? 'details' : 'create';
-        vm.name = $routeParams.id > 0 ? 'Batch Details' : null;
         vm.readonly = true;
         vm.saveBtnClass = 'btn-default';
         vm.batch = $routeParams.id > 0 ? {} : new Batch();
@@ -45,7 +43,12 @@
             vm.dateRangeEndedPopup.opened = true;
         };
 
-        subnavService.setCurrentPath(vm.mode === 'create' ? 'batch/0' : 'batch');
+        vm.cancelCreate = function () {
+            vm.mode = 'view';
+            if ($routeParams.id === '0') {
+                $location.path('/batch');
+            }
+        };
 
         vm.disableSaveBtn = function (invalid) {
             var returnVal = !(!invalid);
