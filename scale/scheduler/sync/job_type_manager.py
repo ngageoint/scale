@@ -16,6 +16,22 @@ class JobTypeManager(object):
         self._job_types = {}  # {Job Type ID: Job Type}
         self._lock = threading.Lock()
 
+    def generate_status_json(self, status_dict):
+        """Generates the portion of the status JSON that describes the job types
+
+        :param status_dict: The status JSON dict
+        :type status_dict: dict
+        """
+
+        job_types_list = []
+        status_dict['job_types'] = job_types_list
+        with self._lock:
+            for job_type in self._job_types.values():
+                job_type_dict = {'id': job_type.id, 'name': job_type.name, 'version': job_type.version,
+                                 'title': job_type.title, 'description': job_type.description,
+                                 'is_system': job_type.is_system, 'icon_code': job_type.icon_code}
+                job_types_list.append(job_type_dict)
+
     def get_job_type(self, job_type_id):
         """Returns the job type with the given ID, possibly None
 
