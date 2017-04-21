@@ -33,6 +33,9 @@
         vm.searchText = vm.scansParams.name || '';
         vm.gridOptions = gridFactory.defaultGridOptions();
         vm.gridOptions.data = [];
+        vm.sortableOptions = {
+            handle: '.sortable-handle'
+        };
 
         $timeout(function () {
             vm.gridOptions.paginationCurrentPage = vm.scansParams.page || 1;

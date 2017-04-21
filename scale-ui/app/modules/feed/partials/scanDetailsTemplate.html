@@ -133,9 +133,9 @@
                 <b class="margin-bottom-md">Current Rules</b>
                 <p ng-if="vm.activeScan.configuration.files_to_ingest.length === 0">No files in configuration.</p>
                 <div ng-if="vm.activeScan.configuration.files_to_ingest.length > 0">
-                    <ul ng-repeat="file in vm.activeScan.configuration.files_to_ingest" class="list-unstyled">
-                        <li>
-                            <pre><button class="btn btn-danger btn-sm pull-right" ng-click="vm.deleteScanIngestFile(file)" tooltip-append-to-body="true" uib-tooltip="Delete" tooltip-placement="left"><i class="fa fa-remove"></i></button><span ng-bind-html="vm.formatJSON(file)"></span></pre>
+                    <ul ui-sortable="vm.sortableOptions" ng-model="vm.activeScan.configuration.files_to_ingest" class="list-unstyled">
+                        <li ng-repeat="file in vm.activeScan.configuration.files_to_ingest">
+                            <pre><span class="pull-right"><span class="btn btn-default btn-sm sortable-handle" title="Reorder" ng-if="vm.activeScan.configuration.files_to_ingest.length > 1"><i class="fa fa-bars"></i></span><button class="btn btn-danger btn-sm pull-right" ng-click="vm.deleteScanIngestFile(file)" title="Delete"><i class="fa fa-remove"></i></button></span><span ng-bind-html="vm.formatJSON(file)"></span></pre>
                         </li>
                     </ul>
                 </div>
