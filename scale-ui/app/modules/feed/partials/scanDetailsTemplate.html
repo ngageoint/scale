@@ -23,7 +23,7 @@
                 <dt>Last Modified:</dt>
                 <dd>{{ vm.activeScan.last_modified_formatted }}</dd>
                 <dt>Configuration:</dt>
-                <dd><pre>{{ vm.JSON.stringify(vm.activeScan.configuration, null, 4) }}</pre></dd>
+                <dd><pre ng-bind="vm.formatJSON(vm.activeScan.configuration)"></pre></dd>
             </dl>
         </div>
         <div ng-if="vm.mode === 'edit' || vm.mode === 'add'">
