@@ -50,7 +50,11 @@
                 if (scaleConfig.static) {
                     localStorage.setItem('scan' + vm.activeScan.id, JSON.stringify(vm.activeScan));
                 }
-                $route.reload();
+                if ($routeParams.id === '0') {
+                    $location.path('/feed/scans/' + vm.activeScan.id);
+                } else {
+                    $route.reload();
+                }
             }).catch(function () {
 
             });
@@ -150,7 +154,8 @@
             if (file.new_workspace) {
                 file.new_workspace = file.new_workspace.name;
             }
-            return JSON.stringify(file, null, 4);
+            var jsonStr = JSON.stringify(file, null, 4);
+            return jsonStr.replace(/\\\\/g, '\\');
         };
 
         var getWorkspaceDetails = function (id) {
