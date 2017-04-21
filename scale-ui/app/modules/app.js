@@ -12,6 +12,7 @@
         'ui.grid.selection',
         'ui.grid.pagination',
         'ui.grid.resizeColumns',
+        'ui.sortable',
         'cfp.hotkeys',
         'toggle-switch',
         'uiSwitch'

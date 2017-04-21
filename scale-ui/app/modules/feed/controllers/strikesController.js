@@ -23,6 +23,9 @@
         vm.user = userService.getUserCreds();
         vm.readonly = !(vm.user && vm.user.is_admin);
         vm.JSON = JSON;
+        vm.sortableOptions = {
+            handle: '.sortable-handle'
+        };
 
         vm.cancelCreate = function () {
             vm.mode = 'view';
