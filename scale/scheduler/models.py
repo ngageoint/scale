@@ -23,7 +23,7 @@ class SchedulerManager(models.Manager):
         :rtype: :class:`scheduler.models.Scheduler`
         """
         try:
-            return Scheduler.objects.get(pk=1)
+            return Scheduler.objects.all().defer('status').get(pk=1)
         except Scheduler.DoesNotExist:
             logger.exception('Initial database import missing master scheduler: 1')
             raise

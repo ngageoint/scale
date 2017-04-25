@@ -20,6 +20,18 @@ iso8601_duration_re = re.compile(
 )
 
 
+def datetime_to_string(value):
+    """Converts the given datetime into an appropriate ISO-8601 string format for JSON
+
+    :param value: The datetime to convert
+    :type value: :class:`datetime.datetime`
+    :returns: The ISO-8601 string format
+    :rtype: string
+    """
+
+    return value.isoformat().replace('+00:00', 'Z')
+
+
 # TODO The following is from the Django 1.8 django.utils.dateparse, we can remove this when upgrading.
 def parse_duration(value):
     """Parses a duration string and returns a datetime.timedelta.

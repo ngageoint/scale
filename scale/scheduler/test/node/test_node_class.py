@@ -18,6 +18,7 @@ from node.test import utils as node_test_utils
 from scheduler.cleanup.node import JOB_EXES_WARNING_THRESHOLD
 from scheduler.node.conditions import NodeConditions
 from scheduler.node.node_class import Node
+from util.parse import datetime_to_string
 
 
 class TestNode(TestCase):
@@ -49,11 +50,13 @@ class TestNode(TestCase):
                              'state': {'name': 'DEGRADED', 'title': Node.DEGRADED.title,
                                        'description': Node.DEGRADED.description},
                              'errors': [{'name': 'IMAGE_PULL', 'title': NodeConditions.IMAGE_PULL_ERR.title,
-                                         'description': NodeConditions.IMAGE_PULL_ERR.description, 'started': right_now,
-                                         'last_updated': right_now}],
+                                         'description': NodeConditions.IMAGE_PULL_ERR.description,
+                                         'started': datetime_to_string(right_now),
+                                         'last_updated': datetime_to_string(right_now)}],
                              'warnings': [{'name': 'CLEANUP', 'title': NodeConditions.CLEANUP_WARNING.title,
                                            'description': NodeConditions.CLEANUP_WARNING.description % num_job_exes,
-                                           'started': right_now, 'last_updated': right_now}]}]
+                                           'started': datetime_to_string(right_now),
+                                           'last_updated': datetime_to_string(right_now)}]}]
         self.assertListEqual(nodes_list, expected_results)
 
     def test_handle_failed_cleanup_task(self):
