@@ -14,6 +14,7 @@ COPY run-vault /usr/bin/run-vault
 COPY config.hcl config.hcl
 
 RUN chmod +x /usr/bin/run-vault
+RUN sed -i 's/\r$//g' /usr/bin/run-vault
 
 ENTRYPOINT ["run-vault"]
 CMD ["server", "-config=config.hcl"]
