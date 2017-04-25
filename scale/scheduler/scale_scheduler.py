@@ -31,6 +31,7 @@ from scheduler.task.manager import task_update_mgr
 from scheduler.threads.db_sync import DatabaseSyncThread
 from scheduler.threads.recon import ReconciliationThread
 from scheduler.threads.schedule import SchedulingThread
+from scheduler.threads.scheduler_status import SchedulerStatusThread
 from scheduler.threads.task_handling import TaskHandlingThread
 from scheduler.threads.task_update import TaskUpdateThread
 from util.host import HostAddress
@@ -59,6 +60,7 @@ class ScaleScheduler(MesosScheduler):
 
         self._db_sync_thread = None
         self._recon_thread = None
+        self._scheduler_status_thread = None
         self._scheduling_thread = None
         self._task_handling_thread = None
         self._task_update_thread = None
@@ -102,6 +104,11 @@ class ScaleScheduler(MesosScheduler):
         recon_thread = threading.Thread(target=self._recon_thread.run)
         recon_thread.daemon = True
         recon_thread.start()
+
+        self._scheduler_status_thread = SchedulerStatusThread()
+        scheduler_status_thread = threading.Thread(target=self._scheduler_status_thread.run)
+        scheduler_status_thread.daemon = True
+        scheduler_status_thread.start()
 
         self._scheduling_thread = SchedulingThread(self._driver, self._framework_id)
         scheduling_thread = threading.Thread(target=self._scheduling_thread.run)
@@ -404,6 +411,7 @@ class ScaleScheduler(MesosScheduler):
         logger.info('Scheduler shutdown invoked, stopping background threads')
         self._db_sync_thread.shutdown()
         self._recon_thread.shutdown()
+        self._scheduler_status_thread.shutdown()
         self._scheduling_thread.shutdown()
         self._task_handling_thread.shutdown()
         self._task_update_thread.shutdown()
