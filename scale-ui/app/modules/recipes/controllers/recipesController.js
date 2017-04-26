@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('recipesController', function ($scope, $location, scaleConfig, scaleService, stateService, recipeService, navService, subnavService, gridFactory) {
+    angular.module('scaleApp').controller('recipesController', function ($scope, $location, scaleConfig, scaleService, stateService, recipeService, navService, subnavService, gridFactory, poller) {
         subnavService.setCurrentPath('recipes');
 
         var vm = this,
@@ -100,6 +100,7 @@
         };
 
         vm.filterResults = function () {
+            poller.stopAll();
             stateService.setRecipesParams(vm.recipesParams);
             vm.loading = true;
             vm.getRecipes();

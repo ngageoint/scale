@@ -1,5 +1,8 @@
 *.py[cod]
+coverage.xml
 docs/_build/
+htmlcov/
 static/
 ui/
 logs/*
+environment/scale

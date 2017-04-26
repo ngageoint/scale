@@ -1,0 +1,39 @@
+<ais-header hide-title="true" loading="vm.loading" show-subnav="true" subnav-links="vm.subnavLinks" ></ais-header>
+<div class="page-header">
+    <h1>
+        Scans ({{ vm.gridOptions.totalItems }})
+        <small ng-if="!vm.readonly">
+            <a href="/#/feed/scans/0/" class="btn btn-default"><i class="fa fa-plus-circle"></i> Create Scan</a>
+        </small>
+    </h1>
+    <hr />
+</div>
+<div class="row">
+    <div class="col-xs-9">
+        <div class="form-inline margin-bottom-md">
+            <div class="input-group margin-right-md">
+                <span class="input-group-addon" id="search-input">Search:</span>
+                <input ng-model="vm.searchText" class="form-control" placeholder="Name" ng-keypress="vm.filterByName($event)">
+                <span class="input-group-btn">
+            <button class="btn btn-default" ng-click="vm.filterByName()" ng-disabled="vm.searchText.length === 0"><i class="fa fa-chevron-circle-right"></i></button>
+        </span>
+            </div>
+            <div class="input-group margin-right-md">
+                <span class="input-group-addon" id="from-input">From:</span>
+                <input id="lastModifiedStart" type="text" class="form-control" aria-describedby="from-input" uib-datepicker-popup="yyyy-MM-dd" ng-model="vm.lastModifiedStart" ng-model-options="vm.dateModelOptions" is-open="vm.lastModifiedStartPopup.opened" close-text="Close" datepicker-append-to-body="true" ng-click="vm.openLastModifiedStartPopup($event)" />
+            </div>
+            <div class="input-group margin-right-md">
+                <span class="input-group-addon" id="to-input">To:</span>
+                <input id="lastModifiedStop" type="text" class="form-control" aria-describedby="to-input" uib-datepicker-popup="yyyy-MM-dd" ng-model="vm.lastModifiedStop" ng-model-options="vm.dateModelOptions" is-open="vm.lastModifiedStopPopup.opened" close-text="Close" datepicker-append-to-body="true" ng-click="vm.openLastModifiedStopPopup($event)" />
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="grid-container">
+            <div ui-grid="vm.gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns class="scale-grid"></div>
+        </div>
+        <ais-grid-pagination></ais-grid-pagination>
+    </div>
+</div>

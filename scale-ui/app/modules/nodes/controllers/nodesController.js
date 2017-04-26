@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('nodesController', function($scope, $location, $timeout, $uibModal, navService, nodeService, stateService, userService, gridFactory, toastr) {
+    angular.module('scaleApp').controller('nodesController', function($scope, $location, $timeout, $uibModal, navService, nodeService, stateService, userService, gridFactory, toastr, poller) {
         var vm = this;
 
         vm.nodesParams = stateService.getNodesParams();
@@ -109,6 +109,7 @@
         };
 
         vm.filterResults = function () {
+            poller.stopAll();
             stateService.setNodesParams(vm.nodesParams);
             vm.loading = true;
             getNodes();
