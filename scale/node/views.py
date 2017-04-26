@@ -11,8 +11,8 @@ from rest_framework.response import Response
 import mesos_api.api as mesos_api
 import util.rest as rest_util
 from node.models import Node
-from node.serializers import NodeSerializer
-from node.serializers_extra import NodeDetailsSerializer, NodeStatusSerializer
+from node.serializers import NodeSerializer, NodeDetailsSerializer, NodeSerializerV4
+from node.serializers_extra import NodeDetailsSerializerV4, NodeStatusSerializer
 from scheduler.models import Scheduler
 
 logger = logging.getLogger(__name__)
@@ -21,7 +21,13 @@ logger = logging.getLogger(__name__)
 class NodesView(ListAPIView):
     """This view is the endpoint for viewing a list of nodes with metadata"""
     queryset = Node.objects.all()
-    serializer_class = NodeSerializer
+
+    # TODO: remove when REST API v4 is removed
+    def get_serializer_class(self):
+        """Override the serializer for legacy API calls."""
+        if self.request.version == 'v4':
+            return NodeSerializerV4
+        return NodeSerializer
 
     def list(self, request):
         """Retrieves the list of all nodes and returns it in JSON form
@@ -31,6 +37,7 @@ class NodesView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
@@ -47,9 +54,16 @@ class NodesView(ListAPIView):
 
 class NodeDetailsView(GenericAPIView):
     """This view is the endpoint for viewing and modifying a node"""
+
     queryset = Node.objects.all()
-    serializer_class = NodeDetailsSerializer
     update_fields = ('pause_reason', 'is_paused', 'is_active')
+
+    # TODO: remove when REST API v4 is removed
+    def get_serializer_class(self):
+        """Override the serializer for legacy API calls."""
+        if self.request.version == 'v4':
+            return NodeDetailsSerializerV4
+        return NodeDetailsSerializer
 
     def get(self, request, node_id):
         """Gets node info
@@ -62,9 +76,69 @@ class NodeDetailsView(GenericAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        return Response(self._get_node_details(node_id))
+        if request.version == 'v4':
+            return self.get_v4(request, node_id)
+
+        try:
+            node = Node.objects.get_details(node_id)
+        except Node.DoesNotExist:
+            raise Http404
+
+        serializer = self.get_serializer(node)
+        return Response(serializer.data)
 
     def patch(self, request, node_id):
+        """Modify node info with a subset of fields
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param node_id: The ID for the node.
+        :type node_id: str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        if request.version == 'v4':
+            return self.patch_v4(request, node_id)
+
+        extra = filter(lambda x, y=self.update_fields: x not in y, request.data.keys())
+        if len(extra) > 0:
+            return Response('Unexpected fields: %s' % ', '.join(extra), status=status.HTTP_400_BAD_REQUEST)
+
+        if not len(request.data):
+            return Response('No fields specified for update.', status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            Node.objects.get(id=node_id)
+        except Node.DoesNotExist:
+            raise Http404
+
+        Node.objects.update_node(dict(request.data), node_id=node_id)
+
+        try:
+            node = Node.objects.get_details(node_id)
+        except Node.DoesNotExist:
+            raise Http404
+
+        serializer = self.get_serializer(node)
+        return Response(serializer.data)
+
+    # TODO: remove when REST API v4 is removed
+    def get_v4(self, request, node_id):
+        """Gets node info
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param node_id: The ID for the node.
+        :type node_id: str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        return Response(self._get_node_details_v4(node_id))
+
+    # TODO: remove when REST API v4 is removed
+    def patch_v4(self, request, node_id):
         """Modify node info with a subset of fields
 
         :param request: the HTTP GET request
@@ -89,11 +163,12 @@ class NodeDetailsView(GenericAPIView):
 
         Node.objects.update_node(dict(request.data), node_id=node_id)
 
-        result = self._get_node_details(node_id)
+        result = self._get_node_details_v4(node_id)
 
         return Response(result, status=status.HTTP_200_OK)
 
-    def _get_node_details(self, node_id):
+    # TODO: remove when REST API v4 is removed
+    def _get_node_details_v4(self, node_id):
 
         # Fetch the basic node attributes
         try:
@@ -119,6 +194,8 @@ class NodeDetailsView(GenericAPIView):
 
         return result
 
+
+# TODO: remove when REST API v4 is removed
 class NodesStatusView(ListAPIView):
     """This view is the endpoint for retrieving overall node status information."""
     queryset = []
@@ -132,6 +209,9 @@ class NodesStatusView(ListAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
+        if request.version == 'v5':
+            raise Http404
 
         # Get a list of all node status counts
         started = rest_util.parse_timestamp(request, 'started', 'PT3H0M0S')

@@ -9,10 +9,161 @@ These services provide access to general system information.
 .. _rest_system_status:
 
 +-------------------------------------------------------------------------------------------------------------------------------+
-| **Get System Status**                                                                                                         |
+| **Get Scheduler Status**                                                                                                      |
++===============================================================================================================================+
+| Returns the current status of the scheduler, including information about nodes and running jobs.                              |
++-------------------------------------------------------------------------------------------------------------------------------+
+| **GET** /status/                                                                                                              |
++-------------------------------------------------------------------------------------------------------------------------------+
+| **Successful Responses**                                                                                                      |
++--------------------------+----------------------------------------------------------------------------------------------------+
+| **Status**               | 204 NO CONTENT                                                                                     |
++--------------------------+----------------------------------------------------------------------------------------------------+
+| The 204 NO CONTENT response indicates that the Scale scheduler is currently offline, so there is no status content to         |
+| provide.                                                                                                                      |
++--------------------------+----------------------------------------------------------------------------------------------------+
+| **Status**               | 200 OK                                                                                             |
++--------------------------+----------------------------------------------------------------------------------------------------+
+| **Content Type**         | *application/json*                                                                                 |
++--------------------------+----------------------------------------------------------------------------------------------------+
+| **JSON Fields**                                                                                                               |
++--------------------------+-------------------+--------------------------------------------------------------------------------+
+| timestamp                | ISO-8601 Datetime | When the status information was generated                                      |
++--------------------------+-------------------+--------------------------------------------------------------------------------+
+| job_types                | Array             | List of job type objects, with a few basic fields                              |
++--------------------------+-------------------+--------------------------------------------------------------------------------+
+| nodes                    | Array             | List of node objects, with a few basic fields including the current node state |
++--------------------------+-------------------+--------------------------------------------------------------------------------+
+| nodes.state              | JSON Object       | The current node state, with a title and description                           |
++--------------------------+-------------------+--------------------------------------------------------------------------------+
+| nodes.errors             | Array             | List of node error objects, with a title, description, and when the error      |
+|                          |                   | began and was last updated                                                     |
++--------------------------+-------------------+--------------------------------------------------------------------------------+
+| nodes.warnings           | Array             | List of node warning objects, with a title, description, and when the warning  |
+|                          |                   | began and was last updated                                                     |
++--------------------------+-------------------+--------------------------------------------------------------------------------+
+| nodes.job_executions     | JSON Object       | The job executions related to this node. The *running* field describes the     |
+|                          |                   | jobs currently running on the node, with a total count, count per job type,    |
+|                          |                   | and job IDs per job type. The *completed* field describes job executions that  |
+|                          |                   | have completed on the node in the last 3 hours, with a total count, count per  |
+|                          |                   | job type, and job IDs per job type. The *failed* field is similar to           |
+|                          |                   | *completed*, just with failed executions grouped by error category.            |
++--------------------------+-------------------+--------------------------------------------------------------------------------+
+| .. code-block:: javascript                                                                                                    |
+|                                                                                                                               |
+|   {                                                                                                                           |
+|      "timestamp": "1970-01-01T00:00:00Z",                                                                                     |
+|      "job_types": [                                                                                                           |
+|         {                                                                                                                     |
+|            "id": 1,                                                                                                           |
+|            "name": "my-job",                                                                                                  |
+|            "version": "1.0",                                                                                                  |
+|            "title": "My Job",                                                                                                 |
+|            "description": "My Job Description",                                                                               |
+|            "is_system": false,                                                                                                |
+|            "icon_code": "f186"                                                                                                |
+|         }                                                                                                                     |
+|      ],                                                                                                                       |
+|      "nodes": [                                                                                                               |
+|         {                                                                                                                     |
+|            "id": 1,                                                                                                           |
+|            "hostname": "my-host",                                                                                             |
+|            "agent_id": "my-agent",                                                                                            |
+|            "is_active": true,                                                                                                 |
+|            "state": {                                                                                                         |
+|               "name": "READY",                                                                                                |
+|               "title": "Ready",                                                                                               |
+|               "description": "Node is ready to run new jobs."                                                                 |
+|            },                                                                                                                 |
+|            "errors": [                                                                                                        |
+|               {                                                                                                               |
+|                  "name": "my-error",                                                                                          |
+|                  "title": "My Error",                                                                                         |
+|                  "description": "My Error Description",                                                                       |
+|                  "started": "1970-01-01T00:00:00Z",                                                                           |
+|                  "last_updated": "1970-01-01T00:00:00Z"                                                                       |
+|               }                                                                                                               |
+|            ],                                                                                                                 |
+|            "warnings": [                                                                                                      |
+|               {                                                                                                               |
+|                  "name": "my-warning",                                                                                        |
+|                  "title": "My Warning",                                                                                       |
+|                  "description": "My Warning Description",                                                                     |
+|                  "started": "1970-01-01T00:00:00Z",                                                                           |
+|                  "last_updated": "1970-01-01T00:00:00Z"                                                                       |
+|               }                                                                                                               |
+|            ],                                                                                                                 |
+|            "job_executions": {                                                                                                |
+|               "running": {                                                                                                    |
+|                  "total": 3,                                                                                                  |
+|                  "by_job_type": [                                                                                             |
+|                     {                                                                                                         |
+|                        "job_type_id": 1,                                                                                      |
+|                        "count": 3,                                                                                            |
+|                        "job_ids": [123, 124, 125]                                                                             |
+|                     }                                                                                                         |
+|                  ]                                                                                                            |
+|               },                                                                                                              |
+|               "completed": {                                                                                                  |
+|                  "total": 3,                                                                                                  |
+|                  "by_job_type": [                                                                                             |
+|                     {                                                                                                         |
+|                        "job_type_id": 1,                                                                                      |
+|                        "count": 3,                                                                                            |
+|                        "job_ids": [123, 124, 125]                                                                             |
+|                     }                                                                                                         |
+|                  ]                                                                                                            |
+|               },                                                                                                              |
+|               "failed": {                                                                                                     |
+|                  "total": 9,                                                                                                  |
+|                  "data": {                                                                                                    |
+|                     "total": 3,                                                                                               |
+|                     "by_job_type": [                                                                                          |
+|                        {                                                                                                      |
+|                           "job_type_id": 1,                                                                                   |
+|                           "count": 3,                                                                                         |
+|                           "job_ids": [123, 124, 125]                                                                          |
+|                        }                                                                                                      |
+|                     ]                                                                                                         |
+|                  },                                                                                                           |
+|                  "algorithm": {                                                                                               |
+|                     "total": 3,                                                                                               |
+|                     "by_job_type": [                                                                                          |
+|                        {                                                                                                      |
+|                           "job_type_id": 1,                                                                                   |
+|                           "count": 3,                                                                                         |
+|                           "job_ids": [123, 124, 125]                                                                          |
+|                        }                                                                                                      |
+|                     ]                                                                                                         |
+|                  },                                                                                                           |
+|                  "system": {                                                                                                  |
+|                     "total": 3,                                                                                               |
+|                     "by_job_type": [                                                                                          |
+|                        {                                                                                                      |
+|                           "job_type_id": 1,                                                                                   |
+|                           "count": 3,                                                                                         |
+|                           "job_ids": [123, 124, 125]                                                                          |
+|                        }                                                                                                      |
+|                     ]                                                                                                         |
+|                  }                                                                                                            |
+|               }                                                                                                               |
+|            }                                                                                                                  |
+|         }                                                                                                                     |
+|      ]                                                                                                                        |
+|   }                                                                                                                           |
++-------------------------------------------------------------------------------------------------------------------------------+
+
+.. _rest_system_status_v4:
+
++-------------------------------------------------------------------------------------------------------------------------------+
+| **Get System Status (v4)**                                                                                                    |
 +===============================================================================================================================+
 | Returns overall master, scheduler, and cluster information, including hardware resources.                                     |
-+--------------------------+-------------------+--------------------------------------------------------------------------------+
++-------------------------------------------------------------------------------------------------------------------------------+
+| **DEPRECATED**                                                                                                                |
+|                This table describes the current v4 version of the system status API, which is now deprecated.                 |
+|                Please use the new v5 version of this API.                                                                     |
++-------------------------------------------------------------------------------------------------------------------------------+
 | **GET** /status/                                                                                                              |
 +--------------------------+-------------------+--------------------------------------------------------------------------------+
 | **Successful Response**                                                                                                       |
