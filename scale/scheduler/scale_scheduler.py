@@ -281,7 +281,7 @@ class ScaleScheduler(MesosScheduler):
             # Job task, so update the job execution
             try:
                 job_exe = job_exe_mgr.handle_task_update(task_update)
-                if job_exe.is_finished():
+                if job_exe and job_exe.is_finished():
                     cleanup_mgr.add_job_execution(job_exe)
             except Exception:
                 job_exe_id = JobExecution.get_job_exe_id(task_id)
