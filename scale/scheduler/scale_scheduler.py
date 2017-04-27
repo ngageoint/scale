@@ -340,9 +340,9 @@ class ScaleScheduler(MesosScheduler):
         node = node_mgr.get_node(agent_id)
 
         if node:
-            logger.error('Node lost on host %s', node.hostname)
+            logger.warning('Node lost on host %s', node.hostname)
         else:
-            logger.error('Node lost on agent %s', agent_id)
+            logger.warning('Node lost on agent %s', agent_id)
 
         node_mgr.lost_node(agent_id)
         offer_mgr.lost_node(agent_id)
@@ -380,9 +380,9 @@ class ScaleScheduler(MesosScheduler):
         node = node_mgr.get_node(agent_id)
 
         if node:
-            logger.error('Executor %s lost on host: %s', executorId.value, node.hostname)
+            logger.warning('Executor %s lost on host: %s', executorId.value, node.hostname)
         else:
-            logger.error('Executor %s lost on agent: %s', executorId.value, agent_id)
+            logger.warning('Executor %s lost on agent: %s', executorId.value, agent_id)
 
         duration = now() - started
         msg = 'Scheduler executorLost() took %.3f seconds'
