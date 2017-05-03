@@ -249,6 +249,10 @@ class TestNode(TestCase):
         self.task_mgr.handle_task_update(update)
         node.handle_task_update(update)
 
+        # Check node state
+        self.assertEqual(node._state, Node.DEGRADED)
+        self.assertTrue(NodeConditions.HEALTH_FAIL_ERR.name in node._conditions._active_errors)
+
         # No new health task right away
         tasks = node.get_next_tasks(when + datetime.timedelta(seconds=5))
         self.assertListEqual([], tasks)

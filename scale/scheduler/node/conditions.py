@@ -62,6 +62,9 @@ class NodeConditions(object):
     CLEANUP_ERR = NodeError(name='CLEANUP', title='Cleanup Failure',
                             description='The node failed to clean up some Scale Docker containers and volumes.',
                             daemon_bad=False, pull_bad=False)
+    HEALTH_FAIL_ERR = NodeError(name='HEALTH_FAIL', title='Health Check Failure',
+                                description='The last node health check failed with an unknown exit code.',
+                                daemon_bad=False, pull_bad=False)
     HEALTH_TIMEOUT_ERR = NodeError(name='HEALTH_TIMEOUT', title='Health Check Timeout',
                                    description='The last node health check timed out.', daemon_bad=False,
                                    pull_bad=False)
@@ -72,7 +75,7 @@ class NodeConditions(object):
                                      description='The free disk space available to Docker is low.', daemon_bad=False,
                                      pull_bad=True)
     # Errors that can occur due to health checks
-    HEALTH_ERRORS = [BAD_DAEMON_ERR, BAD_LOGSTASH_ERR, HEALTH_TIMEOUT_ERR, LOW_DOCKER_SPACE_ERR]
+    HEALTH_ERRORS = [BAD_DAEMON_ERR, BAD_LOGSTASH_ERR, HEALTH_FAIL_ERR, HEALTH_TIMEOUT_ERR, LOW_DOCKER_SPACE_ERR]
 
     # Warnings
     CLEANUP_WARNING = NodeWarning(name='CLEANUP', title='Slow Cleanup',
@@ -163,7 +166,8 @@ class NodeConditions(object):
             logger.warning('Logstash not responding on host %s', self._hostname)
             self._error_active(NodeConditions.BAD_LOGSTASH_ERR)
         else:
-            logger.error('Unknown failed health check exit code: %s', str(task_update.exit_code))
+            logger.error('Unknown health check exit code %s on host %s', str(task_update.exit_code), self._hostname)
+            self._error_active(NodeConditions.HEALTH_FAIL_ERR)
         self._update_state()
 
     def handle_health_task_timeout(self):
