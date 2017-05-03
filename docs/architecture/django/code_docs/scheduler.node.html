@@ -269,7 +269,12 @@
 
 <dl class="attribute">
 <dt id="scheduler.node.conditions.NodeConditions.HEALTH_ERRORS">
-<code class="descname">HEALTH_ERRORS</code><em class="property"> = [NodeError(name=u'BAD_DAEMON', title=u'Docker Not Responding', description=u'The Docker daemon on this node is not responding.', daemon_bad=True, pull_bad=True), NodeError(name=u'BAD_LOGSTASH', title=u'Logstash Not Responding', description=u'The Scale logstash is not responding to this node.', daemon_bad=False, pull_bad=False), NodeError(name=u'HEALTH_TIMEOUT', title=u'Health Check Timeout', description=u'The last node health check timed out.', daemon_bad=False, pull_bad=False), NodeError(name=u'LOW_DOCKER_SPACE', title=u'Low Docker Disk Space', description=u'The free disk space available to Docker is low.', daemon_bad=False, pull_bad=True)]</em><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.HEALTH_ERRORS" title="Permalink to this definition">¶</a></dt>
+<code class="descname">HEALTH_ERRORS</code><em class="property"> = [NodeError(name=u'BAD_DAEMON', title=u'Docker Not Responding', description=u'The Docker daemon on this node is not responding.', daemon_bad=True, pull_bad=True), NodeError(name=u'BAD_LOGSTASH', title=u'Logstash Not Responding', description=u'The Scale logstash is not responding to this node.', daemon_bad=False, pull_bad=False), NodeError(name=u'HEALTH_FAIL', title=u'Health Check Failure', description=u'The last node health check failed with an unknown exit code.', daemon_bad=False, pull_bad=False), NodeError(name=u'HEALTH_TIMEOUT', title=u'Health Check Timeout', description=u'The last node health check timed out.', daemon_bad=False, pull_bad=False), NodeError(name=u'LOW_DOCKER_SPACE', title=u'Low Docker Disk Space', description=u'The free disk space available to Docker is low.', daemon_bad=False, pull_bad=True)]</em><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.HEALTH_ERRORS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.conditions.NodeConditions.HEALTH_FAIL_ERR">
+<code class="descname">HEALTH_FAIL_ERR</code><em class="property"> = NodeError(name=u'HEALTH_FAIL', title=u'Health Check Failure', description=u'The last node health check failed with an unknown exit code.', daemon_bad=False, pull_bad=False)</em><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.HEALTH_FAIL_ERR" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
