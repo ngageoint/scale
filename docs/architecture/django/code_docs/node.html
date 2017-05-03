@@ -461,22 +461,6 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 </dd></dl>
 
 <dl class="attribute">
-<dt id="node.models.Node.sharedresource_set">
-<code class="descname">sharedresource_set</code><a class="headerlink" href="#node.models.Node.sharedresource_set" title="Permalink to this definition">¶</a></dt>
-<dd><p>Accessor to the related objects manager on the forward and reverse sides of
-a many-to-many relation.</p>
-<p>In the example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Pizza</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">toppings</span> <span class="o">=</span> <span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Topping</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;pizzas&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p><code class="docutils literal"><span class="pre">pizza.toppings</span></code> and <code class="docutils literal"><span class="pre">topping.pizzas</span></code> are <code class="docutils literal"><span class="pre">ManyToManyDescriptor</span></code>
-instances.</p>
-<p>Most of the implementation is delegated to a dynamically defined manager
-class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="node.models.Node.slave_id">
 <code class="descname">slave_id</code><a class="headerlink" href="#node.models.Node.slave_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
@@ -520,7 +504,7 @@ object the first time, the query is executed.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query nodes updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query nodes updated before this amount of time.</li>
-<li><strong>order</strong> (<a class="reference internal" href="#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em><em></em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>order</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em><em></em>) &#8211; A list of fields to control the sort order.</li>
 <li><strong>include_inactive</strong> (<em>boolean</em>) &#8211; Should nodes marked as inactive be included?</li>
 </ul>
 </td>
@@ -677,8 +661,29 @@ populated for types of ERROR status values.</li>
 </dd></dl>
 
 <dl class="class">
+<dt id="node.serializers.NodeBaseSerializerV4">
+<em class="property">class </em><code class="descclassname">node.serializers.</code><code class="descname">NodeBaseSerializerV4</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers.NodeBaseSerializerV4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
+<p>Converts node model fields to REST output.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="node.serializers.NodeDetailsSerializer">
+<em class="property">class </em><code class="descclassname">node.serializers.</code><code class="descname">NodeDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers.NodeDetailsSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#node.serializers.NodeSerializer" title="node.serializers.NodeSerializer"><code class="xref py py-class docutils literal"><span class="pre">node.serializers.NodeSerializer</span></code></a></p>
+<p>Converts node model fields to REST output.</p>
+</dd></dl>
+
+<dl class="class">
 <dt id="node.serializers.NodeSerializer">
 <em class="property">class </em><code class="descclassname">node.serializers.</code><code class="descname">NodeSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers.NodeSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#node.serializers.NodeBaseSerializer" title="node.serializers.NodeBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">node.serializers.NodeBaseSerializer</span></code></a></p>
+<p>Converts node model fields to REST output.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="node.serializers.NodeSerializerV4">
+<em class="property">class </em><code class="descclassname">node.serializers.</code><code class="descname">NodeSerializerV4</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers.NodeSerializerV4" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#node.serializers.NodeBaseSerializer" title="node.serializers.NodeBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">node.serializers.NodeBaseSerializer</span></code></a></p>
 <p>Converts node model fields to REST output.</p>
 </dd></dl>
@@ -688,25 +693,25 @@ populated for types of ERROR status values.</li>
 <span id="node-serializers-extra-module"></span><h2>node.serializers_extra module<a class="headerlink" href="#module-node.serializers_extra" title="Permalink to this headline">¶</a></h2>
 <p>Defines the serializers for nodes that require extra fields from other applications</p>
 <dl class="class">
-<dt id="node.serializers_extra.NodeDetailsSerializer">
-<em class="property">class </em><code class="descclassname">node.serializers_extra.</code><code class="descname">NodeDetailsSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers_extra.NodeDetailsSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#node.serializers.NodeSerializer" title="node.serializers.NodeSerializer"><code class="xref py py-class docutils literal"><span class="pre">node.serializers.NodeSerializer</span></code></a></p>
+<dt id="node.serializers_extra.NodeDetailsSerializerV4">
+<em class="property">class </em><code class="descclassname">node.serializers_extra.</code><code class="descname">NodeDetailsSerializerV4</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers_extra.NodeDetailsSerializerV4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#node.serializers.NodeSerializerV4" title="node.serializers.NodeSerializerV4"><code class="xref py py-class docutils literal"><span class="pre">node.serializers.NodeSerializerV4</span></code></a></p>
 <p>Converts node model fields to REST output.</p>
 <dl class="class">
-<dt id="node.serializers_extra.NodeDetailsSerializer.JobExecutionSerializer">
-<em class="property">class </em><code class="descname">JobExecutionSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers_extra.NodeDetailsSerializer.JobExecutionSerializer" title="Permalink to this definition">¶</a></dt>
+<dt id="node.serializers_extra.NodeDetailsSerializerV4.JobExecutionSerializer">
+<em class="property">class </em><code class="descname">JobExecutionSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers_extra.NodeDetailsSerializerV4.JobExecutionSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="job.html#job.serializers.JobExecutionBaseSerializer" title="job.serializers.JobExecutionBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">job.serializers.JobExecutionBaseSerializer</span></code></a></p>
 <p>Converts job execution model fields to REST output</p>
 <dl class="class">
-<dt id="node.serializers_extra.NodeDetailsSerializer.JobExecutionSerializer.ErrorBaseSerializer">
-<em class="property">class </em><code class="descname">ErrorBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers_extra.NodeDetailsSerializer.JobExecutionSerializer.ErrorBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dt id="node.serializers_extra.NodeDetailsSerializerV4.JobExecutionSerializer.ErrorBaseSerializer">
+<em class="property">class </em><code class="descname">ErrorBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers_extra.NodeDetailsSerializerV4.JobExecutionSerializer.ErrorBaseSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts error model fields to REST output</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="node.serializers_extra.NodeDetailsSerializer.JobExecutionSerializer.NodeBaseSerializer">
-<em class="property">class </em><code class="descname">NodeBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers_extra.NodeDetailsSerializer.JobExecutionSerializer.NodeBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dt id="node.serializers_extra.NodeDetailsSerializerV4.JobExecutionSerializer.NodeBaseSerializerV4">
+<em class="property">class </em><code class="descname">NodeBaseSerializerV4</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers_extra.NodeDetailsSerializerV4.JobExecutionSerializer.NodeBaseSerializerV4" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts node model fields to REST output.</p>
 </dd></dl>
@@ -714,8 +719,8 @@ populated for types of ERROR status values.</li>
 </dd></dl>
 
 <dl class="class">
-<dt id="node.serializers_extra.NodeDetailsSerializer.NodeStatusJobExecutionSerializer">
-<em class="property">class </em><code class="descname">NodeStatusJobExecutionSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers_extra.NodeDetailsSerializer.NodeStatusJobExecutionSerializer" title="Permalink to this definition">¶</a></dt>
+<dt id="node.serializers_extra.NodeDetailsSerializerV4.NodeStatusJobExecutionSerializer">
+<em class="property">class </em><code class="descname">NodeStatusJobExecutionSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers_extra.NodeDetailsSerializerV4.NodeStatusJobExecutionSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="job.html#job.serializers.JobExecutionSerializer" title="job.serializers.JobExecutionSerializer"><code class="xref py py-class docutils literal"><span class="pre">job.serializers.JobExecutionSerializer</span></code></a></p>
 <p>Converts job execution model fields to REST output</p>
 </dd></dl>
@@ -747,8 +752,8 @@ populated for types of ERROR status values.</li>
 </dd></dl>
 
 <dl class="class">
-<dt id="node.serializers_extra.NodeStatusSerializer.JobExecutionSerializer.NodeBaseSerializer">
-<em class="property">class </em><code class="descname">NodeBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers_extra.NodeStatusSerializer.JobExecutionSerializer.NodeBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dt id="node.serializers_extra.NodeStatusSerializer.JobExecutionSerializer.NodeBaseSerializerV4">
+<em class="property">class </em><code class="descname">NodeBaseSerializerV4</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#node.serializers_extra.NodeStatusSerializer.JobExecutionSerializer.NodeBaseSerializerV4" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts node model fields to REST output.</p>
 </dd></dl>
@@ -802,8 +807,62 @@ populated for types of ERROR status values.</li>
 </dd></dl>
 
 <dl class="method">
+<dt id="node.views.NodeDetailsView.get_serializer_class">
+<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.views.NodeDetailsView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override the serializer for legacy API calls.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.views.NodeDetailsView.get_v4">
+<code class="descname">get_v4</code><span class="sig-paren">(</span><em>request</em>, <em>node_id</em><span class="sig-paren">)</span><a class="headerlink" href="#node.views.NodeDetailsView.get_v4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets node info</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
+<li><strong>node_id</strong> (<em>str</em>) &#8211; The ID for the node.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="node.views.NodeDetailsView.patch">
 <code class="descname">patch</code><span class="sig-paren">(</span><em>request</em>, <em>node_id</em><span class="sig-paren">)</span><a class="headerlink" href="#node.views.NodeDetailsView.patch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify node info with a subset of fields</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
+<li><strong>node_id</strong> (<em>str</em>) &#8211; The ID for the node.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.views.NodeDetailsView.patch_v4">
+<code class="descname">patch_v4</code><span class="sig-paren">(</span><em>request</em>, <em>node_id</em><span class="sig-paren">)</span><a class="headerlink" href="#node.views.NodeDetailsView.patch_v4" title="Permalink to this definition">¶</a></dt>
 <dd><p>Modify node info with a subset of fields</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -829,12 +888,6 @@ populated for types of ERROR status values.</li>
 <dt id="node.views.NodeDetailsView.queryset">
 <code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#node.views.NodeDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="attribute">
-<dt id="node.views.NodeDetailsView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#node.views.NodeDetailsView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">NodeDetailsSerializer</span></code></p>
-</dd></dl>
 
 <dl class="attribute">
 <dt id="node.views.NodeDetailsView.update_fields">
@@ -885,6 +938,12 @@ populated for types of ERROR status values.</li>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.ListAPIView</span></code></p>
 <p>This view is the endpoint for viewing a list of nodes with metadata</p>
 <dl class="method">
+<dt id="node.views.NodesView.get_serializer_class">
+<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.views.NodesView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override the serializer for legacy API calls.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="node.views.NodesView.list">
 <code class="descname">list</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#node.views.NodesView.list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves the list of all nodes and returns it in JSON form</p>
@@ -906,12 +965,6 @@ populated for types of ERROR status values.</li>
 <dt id="node.views.NodesView.queryset">
 <code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#node.views.NodesView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="attribute">
-<dt id="node.views.NodesView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#node.views.NodesView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">NodeSerializer</span></code></p>
-</dd></dl>
 
 </dd></dl>
 

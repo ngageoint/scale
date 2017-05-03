@@ -19,6 +19,22 @@ job\.test\.execution\.test\_job\_exe module
     :undoc-members:
     :show-inheritance:
 
+job\.test\.execution\.test\_manager module
+------------------------------------------
+
+.. automodule:: job.test.execution.test_manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.test\.execution\.test\_metrics module
+------------------------------------------
+
+.. automodule:: job.test.execution.test_metrics
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

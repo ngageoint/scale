@@ -7,7 +7,6 @@ Subpackages
 .. toctree::
 
     shared_resource.migrations
-    shared_resource.test
 
 Submodules
 ----------
@@ -16,14 +15,6 @@ shared\_resource\.apps module
 -----------------------------
 
 .. automodule:: shared_resource.apps
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-shared\_resource\.models module
--------------------------------
-
-.. automodule:: shared_resource.models
     :members:
     :undoc-members:
     :show-inheritance:

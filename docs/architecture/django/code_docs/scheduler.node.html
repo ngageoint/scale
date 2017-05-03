@@ -288,6 +288,20 @@
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="scheduler.node.conditions.NodeConditions.generate_status_json">
+<code class="descname">generate_status_json</code><span class="sig-paren">(</span><em>node_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.generate_status_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the portion of the status JSON that describes these node conditions</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node_dict</strong> (<em>dict</em>) &#8211; The dict for this node within the status JSON</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="scheduler.node.conditions.NodeConditions.handle_cleanup_task_completed">
 <code class="descname">handle_cleanup_task_completed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.conditions.NodeConditions.handle_cleanup_task_completed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Handles the successful completion of a node cleanup task</p>
@@ -489,6 +503,20 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="scheduler.node.manager.NodeManager.generate_status_json">
+<code class="descname">generate_status_json</code><span class="sig-paren">(</span><em>status_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.manager.NodeManager.generate_status_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the portion of the status JSON that describes the nodes</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status_dict</strong> (<em>dict</em>) &#8211; The status JSON dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="scheduler.node.manager.NodeManager.get_next_tasks">
 <code class="descname">get_next_tasks</code><span class="sig-paren">(</span><em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.manager.NodeManager.get_next_tasks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the next node tasks to schedule</p>
@@ -633,7 +661,7 @@ well as run-time information retrieved from Mesos. This class is thread-safe.</p
 
 <dl class="attribute">
 <dt id="scheduler.node.node_class.Node.DEGRADED">
-<code class="descname">DEGRADED</code><em class="property"> = NodeState(state=u'DEGRADED', description=u'Degraded ability to run jobs')</em><a class="headerlink" href="#scheduler.node.node_class.Node.DEGRADED" title="Permalink to this definition">¶</a></dt>
+<code class="descname">DEGRADED</code><em class="property"> = NodeState(state=u'DEGRADED', title=u'Degraded', description=u'Node has an error condition, putting it in a degraded state. New jobs will not be scheduled, and the node will attempt to continue to run existing jobs.')</em><a class="headerlink" href="#scheduler.node.node_class.Node.DEGRADED" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -643,7 +671,7 @@ well as run-time information retrieved from Mesos. This class is thread-safe.</p
 
 <dl class="attribute">
 <dt id="scheduler.node.node_class.Node.IMAGE_PULL">
-<code class="descname">IMAGE_PULL</code><em class="property"> = NodeState(state=u'IMAGE_PULL', description=u'Pulling Scale image')</em><a class="headerlink" href="#scheduler.node.node_class.Node.IMAGE_PULL" title="Permalink to this definition">¶</a></dt>
+<code class="descname">IMAGE_PULL</code><em class="property"> = NodeState(state=u'IMAGE_PULL', title=u'Pulling image', description=u'Node is pulling the Scale Docker image.')</em><a class="headerlink" href="#scheduler.node.node_class.Node.IMAGE_PULL" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -653,12 +681,12 @@ well as run-time information retrieved from Mesos. This class is thread-safe.</p
 
 <dl class="attribute">
 <dt id="scheduler.node.node_class.Node.INACTIVE">
-<code class="descname">INACTIVE</code><em class="property"> = NodeState(state=u'INACTIVE', description=u'Inactive, ignored by Scale')</em><a class="headerlink" href="#scheduler.node.node_class.Node.INACTIVE" title="Permalink to this definition">¶</a></dt>
+<code class="descname">INACTIVE</code><em class="property"> = NodeState(state=u'INACTIVE', title=u'Inactive', description=u'Node is inactive and will not run new or existing jobs. If this node has existing jobs, please cancel them or switch the node to active.')</em><a class="headerlink" href="#scheduler.node.node_class.Node.INACTIVE" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="scheduler.node.node_class.Node.INITIAL_CLEANUP">
-<code class="descname">INITIAL_CLEANUP</code><em class="property"> = NodeState(state=u'INITIAL_CLEANUP', description=u'Performing initial cleanup')</em><a class="headerlink" href="#scheduler.node.node_class.Node.INITIAL_CLEANUP" title="Permalink to this definition">¶</a></dt>
+<code class="descname">INITIAL_CLEANUP</code><em class="property"> = NodeState(state=u'INITIAL_CLEANUP', title=u'Cleaning up', description=u'Node is performing an initial cleanup step to remove existing Docker containers and volumes.')</em><a class="headerlink" href="#scheduler.node.node_class.Node.INITIAL_CLEANUP" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -668,17 +696,17 @@ well as run-time information retrieved from Mesos. This class is thread-safe.</p
 
 <dl class="attribute">
 <dt id="scheduler.node.node_class.Node.OFFLINE">
-<code class="descname">OFFLINE</code><em class="property"> = NodeState(state=u'OFFLINE', description=u'Offline/unavailable')</em><a class="headerlink" href="#scheduler.node.node_class.Node.OFFLINE" title="Permalink to this definition">¶</a></dt>
+<code class="descname">OFFLINE</code><em class="property"> = NodeState(state=u'OFFLINE', title=u'Offline', description=u'Node is offline/unavailable, so no jobs can currently run on it.')</em><a class="headerlink" href="#scheduler.node.node_class.Node.OFFLINE" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="scheduler.node.node_class.Node.PAUSED">
-<code class="descname">PAUSED</code><em class="property"> = NodeState(state=u'PAUSED', description=u'Paused, no new jobs will be scheduled')</em><a class="headerlink" href="#scheduler.node.node_class.Node.PAUSED" title="Permalink to this definition">¶</a></dt>
+<code class="descname">PAUSED</code><em class="property"> = NodeState(state=u'PAUSED', title=u'Paused', description=u'Node is paused, so no new jobs will be scheduled. Existing jobs will continue to run.')</em><a class="headerlink" href="#scheduler.node.node_class.Node.PAUSED" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="scheduler.node.node_class.Node.READY">
-<code class="descname">READY</code><em class="property"> = NodeState(state=u'READY', description=u'Ready for new jobs')</em><a class="headerlink" href="#scheduler.node.node_class.Node.READY" title="Permalink to this definition">¶</a></dt>
+<code class="descname">READY</code><em class="property"> = NodeState(state=u'READY', title=u'Ready', description=u'Node is ready to run new jobs.')</em><a class="headerlink" href="#scheduler.node.node_class.Node.READY" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -706,6 +734,30 @@ well as run-time information retrieved from Mesos. This class is thread-safe.</p
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The agent ID</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.node_class.Node.cleanup_desc">
+<code class="descname">cleanup_desc</code><em class="property"> = u'Node is performing an initial cleanup step to remove existing Docker containers and volumes.'</em><a class="headerlink" href="#scheduler.node.node_class.Node.cleanup_desc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.node_class.Node.degraded_desc">
+<code class="descname">degraded_desc</code><em class="property"> = u'Node has an error condition, putting it in a degraded state. New jobs will not be scheduled, and the node will attempt to continue to run existing jobs.'</em><a class="headerlink" href="#scheduler.node.node_class.Node.degraded_desc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="scheduler.node.node_class.Node.generate_status_json">
+<code class="descname">generate_status_json</code><span class="sig-paren">(</span><em>nodes_list</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.node_class.Node.generate_status_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the portion of the status JSON that describes this node</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nodes_list</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The list of nodes within the status JSON</td>
 </tr>
 </tbody>
 </table>
@@ -790,6 +842,11 @@ well as run-time information retrieved from Mesos. This class is thread-safe.</p
 </dd></dl>
 
 <dl class="attribute">
+<dt id="scheduler.node.node_class.Node.inactive_desc">
+<code class="descname">inactive_desc</code><em class="property"> = u'Node is inactive and will not run new or existing jobs. If this node has existing jobs, please cancel them or switch the node to active.'</em><a class="headerlink" href="#scheduler.node.node_class.Node.inactive_desc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="scheduler.node.node_class.Node.is_active">
 <code class="descname">is_active</code><a class="headerlink" href="#scheduler.node.node_class.Node.is_active" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicates whether this node is active (True) or not (False)</p>
@@ -836,6 +893,16 @@ well as run-time information retrieved from Mesos. This class is thread-safe.</p
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.node_class.Node.paused_desc">
+<code class="descname">paused_desc</code><em class="property"> = u'Node is paused, so no new jobs will be scheduled. Existing jobs will continue to run.'</em><a class="headerlink" href="#scheduler.node.node_class.Node.paused_desc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.node_class.Node.pull_desc">
+<code class="descname">pull_desc</code><em class="property"> = u'Node is pulling the Scale Docker image.'</em><a class="headerlink" href="#scheduler.node.node_class.Node.pull_desc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="scheduler.node.node_class.Node.should_be_removed">
@@ -891,18 +958,24 @@ no longer online, there&#8217;s no reason for the scheduler to continue to track
 
 <dl class="class">
 <dt id="scheduler.node.node_class.NodeState">
-<em class="property">class </em><code class="descclassname">scheduler.node.node_class.</code><code class="descname">NodeState</code><span class="sig-paren">(</span><em>state</em>, <em>description</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.node_class.NodeState" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">scheduler.node.node_class.</code><code class="descname">NodeState</code><span class="sig-paren">(</span><em>state</em>, <em>title</em>, <em>description</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.node_class.NodeState" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
 <dl class="attribute">
 <dt id="scheduler.node.node_class.NodeState.description">
 <code class="descname">description</code><a class="headerlink" href="#scheduler.node.node_class.NodeState.description" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for field number 1</p>
+<dd><p>Alias for field number 2</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="scheduler.node.node_class.NodeState.state">
 <code class="descname">state</code><a class="headerlink" href="#scheduler.node.node_class.NodeState.state" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.node_class.NodeState.title">
+<code class="descname">title</code><a class="headerlink" href="#scheduler.node.node_class.NodeState.title" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
 </dd></dl>
 
 </dd></dl>

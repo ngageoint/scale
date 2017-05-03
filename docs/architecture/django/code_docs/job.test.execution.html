@@ -357,6 +357,95 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-job.test.execution.test_manager">
+<span id="job-test-execution-test-manager-module"></span><h2>job.test.execution.test_manager module<a class="headerlink" href="#module-job.test.execution.test_manager" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="job.test.execution.test_manager.TestJobExecutionManager">
+<em class="property">class </em><code class="descclassname">job.test.execution.test_manager.</code><code class="descname">TestJobExecutionManager</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.test_manager.TestJobExecutionManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<p>Tests the JobExecutionManager class</p>
+<dl class="attribute">
+<dt id="job.test.execution.test_manager.TestJobExecutionManager.fixtures">
+<code class="descname">fixtures</code><em class="property"> = [u'basic_errors.json', u'basic_job_errors.json']</em><a class="headerlink" href="#job.test.execution.test_manager.TestJobExecutionManager.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.execution.test_manager.TestJobExecutionManager.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.test_manager.TestJobExecutionManager.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.execution.test_manager.TestJobExecutionManager.test_generate_status_json">
+<code class="descname">test_generate_status_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.test_manager.TestJobExecutionManager.test_generate_status_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling generate_status_json() successfully</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.execution.test_manager.TestJobExecutionManager.test_handle_task_timeout">
+<code class="descname">test_handle_task_timeout</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.test_manager.TestJobExecutionManager.test_handle_task_timeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling handle_task_timeout() successfully</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.execution.test_manager.TestJobExecutionManager.test_handle_task_update">
+<code class="descname">test_handle_task_update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.test_manager.TestJobExecutionManager.test_handle_task_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling handle_task_update() successfully</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.execution.test_manager.TestJobExecutionManager.test_init_with_database">
+<code class="descname">test_init_with_database</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.test_manager.TestJobExecutionManager.test_init_with_database" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling init_with_database() successfully</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.execution.test_manager.TestJobExecutionManager.test_lost_node">
+<code class="descname">test_lost_node</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.test_manager.TestJobExecutionManager.test_lost_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling lost_node() successfully</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.execution.test_manager.TestJobExecutionManager.test_schedule_job_exes">
+<code class="descname">test_schedule_job_exes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.test_manager.TestJobExecutionManager.test_schedule_job_exes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling schedule_job_exes() successfully</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.execution.test_manager.TestJobExecutionManager.test_sync_with_database">
+<code class="descname">test_sync_with_database</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.test_manager.TestJobExecutionManager.test_sync_with_database" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling sync_with_database() successfully</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.test.execution.test_metrics">
+<span id="job-test-execution-test-metrics-module"></span><h2>job.test.execution.test_metrics module<a class="headerlink" href="#module-job.test.execution.test_metrics" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="job.test.execution.test_metrics.TestTotalJobExeMetrics">
+<em class="property">class </em><code class="descclassname">job.test.execution.test_metrics.</code><code class="descname">TestTotalJobExeMetrics</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.test_metrics.TestTotalJobExeMetrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<p>Tests the TotalJobExeMetrics class</p>
+<dl class="method">
+<dt id="job.test.execution.test_metrics.TestTotalJobExeMetrics.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.test_metrics.TestTotalJobExeMetrics.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.execution.test_metrics.TestTotalJobExeMetrics.test_init_with_database">
+<code class="descname">test_init_with_database</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.test_metrics.TestTotalJobExeMetrics.test_init_with_database" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling init_with_database() successfully to load in job executions from the database</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.execution.test_metrics.TestTotalJobExeMetrics.test_running_executions">
+<code class="descname">test_running_executions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.execution.test_metrics.TestTotalJobExeMetrics.test_running_executions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests the metrics with running executions that complete</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-job.test.execution">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-job.test.execution" title="Permalink to this headline">¶</a></h2>
 </div>

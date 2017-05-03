@@ -39,7 +39,7 @@
         <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="Scale 4.4.1-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="shared_resource package" href="shared_resource.html"/>
-        <link rel="next" title="shared_resource.test package" href="shared_resource.test.html"/>
+        <link rel="next" title="source package" href="source.html"/>
         <link rel="prev" title="shared_resource package" href="shared_resource.html"/> 
 
   
@@ -127,7 +127,6 @@
 <li class="toctree-l4 current"><a class="reference internal" href="shared_resource.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="shared_resource.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="shared_resource.html#module-shared_resource.apps">shared_resource.apps module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="shared_resource.html#module-shared_resource.models">shared_resource.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="shared_resource.html#module-shared_resource">Module contents</a></li>
 </ul>
 </li>
@@ -256,6 +255,25 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-shared_resource.migrations.0003_auto_20170426_0952">
+<span id="shared-resource-migrations-0003-auto-20170426-0952-module"></span><h2>shared_resource.migrations.0003_auto_20170426_0952 module<a class="headerlink" href="#module-shared_resource.migrations.0003_auto_20170426_0952" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="shared_resource.migrations.0003_auto_20170426_0952.Migration">
+<em class="property">class </em><code class="descclassname">shared_resource.migrations.0003_auto_20170426_0952.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#shared_resource.migrations.0003_auto_20170426_0952.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="shared_resource.migrations.0003_auto_20170426_0952.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'shared_resource', u'0002_auto_20170412_1225')]</em><a class="headerlink" href="#shared_resource.migrations.0003_auto_20170426_0952.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="shared_resource.migrations.0003_auto_20170426_0952.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;RemoveField  name=u'nodes', model_name=u'sharedresource'&gt;, &lt;RemoveField  name=u'job_type', model_name=u'sharedresourcerequirement'&gt;, &lt;RemoveField  name=u'shared_resource', model_name=u'sharedresourcerequirement'&gt;, &lt;DeleteModel  name=u'SharedResource'&gt;, &lt;DeleteModel  name=u'SharedResourceRequirement'&gt;]</em><a class="headerlink" href="#shared_resource.migrations.0003_auto_20170426_0952.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-shared_resource.migrations">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-shared_resource.migrations" title="Permalink to this headline">¶</a></h2>
 </div>
@@ -271,7 +289,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="shared_resource.test.html" class="btn btn-neutral float-right" title="shared_resource.test package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="source.html" class="btn btn-neutral float-right" title="source package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="shared_resource.html" class="btn btn-neutral" title="shared_resource package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

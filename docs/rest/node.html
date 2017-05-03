@@ -210,128 +210,137 @@
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td colspan="4">Returns a list of all nodes.</td>
+<tr class="row-even"><td colspan="4">Returns a list of nodes.</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>GET</strong> /nodes/</td>
+<tr class="row-odd"><td colspan="4"><dl class="first last docutils">
+<dt><strong>DEPRECATED</strong></dt>
+<dd>This table describes the current v4 version of the node list API, which is now deprecated.
+The new v5 version of this API does not include the <em>port</em>, <em>slave_id</em>, <em>is_paused_errors</em>, and
+<em>last_offer</em> fields in the response.</dd>
+</dl>
+</td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>Query Parameters</strong></td>
+<tr class="row-even"><td colspan="4"><strong>GET</strong> /nodes/</td>
 </tr>
-<tr class="row-odd"><td>page</td>
+<tr class="row-odd"><td colspan="4"><strong>Query Parameters</strong></td>
+</tr>
+<tr class="row-even"><td>page</td>
 <td>Integer</td>
 <td colspan="2">Optional | The page of the results to return. Defaults to 1.</td>
 </tr>
-<tr class="row-even"><td>page_size</td>
+<tr class="row-odd"><td>page_size</td>
 <td>Integer</td>
 <td>Optional</td>
 <td>The size of the page to use for pagination of results.
 Defaults to 100, and can be anywhere from 1-1000.</td>
 </tr>
-<tr class="row-odd"><td>started</td>
+<tr class="row-even"><td>started</td>
 <td>ISO-8601 Datetime</td>
 <td>Optional</td>
 <td>The start of the time range to query.
 Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
 Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
 </tr>
-<tr class="row-even"><td>ended</td>
+<tr class="row-odd"><td>ended</td>
 <td>ISO-8601 Datetime</td>
 <td>Optional</td>
 <td>End of the time range to query, defaults to the current time.
 Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
 Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
 </tr>
-<tr class="row-odd"><td>order</td>
+<tr class="row-even"><td>order</td>
 <td>String</td>
 <td>Optional</td>
 <td>One or more fields to use when ordering the results.
 Duplicate it to multi-sort, (ex: order=host_name&amp;order=created).
 Prefix fields with a dash to reverse the sort, (ex: order=-created).</td>
 </tr>
-<tr class="row-even"><td>include_inactive</td>
+<tr class="row-odd"><td>include_inactive</td>
 <td>Boolean</td>
 <td>Optional</td>
 <td>If true, all nodes in the database are returned including those
 marked inactive. These are typically removed from the cluster.
 The default is False.</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
 </tr>
-<tr class="row-even"><td><strong>Status</strong></td>
+<tr class="row-odd"><td><strong>Status</strong></td>
 <td colspan="3">200 OK</td>
 </tr>
-<tr class="row-odd"><td><strong>Content Type</strong></td>
+<tr class="row-even"><td><strong>Content Type</strong></td>
 <td colspan="3"><em>application/json</em></td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-odd"><td>count</td>
+<tr class="row-even"><td>count</td>
 <td>Integer</td>
 <td colspan="2">The total number of results that match the query parameters.</td>
 </tr>
-<tr class="row-even"><td>next</td>
+<tr class="row-odd"><td>next</td>
 <td>URL</td>
 <td colspan="2">A URL to the next page of results.</td>
 </tr>
-<tr class="row-odd"><td>previous</td>
+<tr class="row-even"><td>previous</td>
 <td>URL</td>
 <td colspan="2">A URL to the previous page of results.</td>
 </tr>
-<tr class="row-even"><td>results</td>
+<tr class="row-odd"><td>results</td>
 <td>Array</td>
 <td colspan="2">List of result JSON objects that match the query parameters.</td>
 </tr>
-<tr class="row-odd"><td>.id</td>
+<tr class="row-even"><td>.id</td>
 <td>Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API call.
 (See <a class="reference internal" href="#rest-node-details"><span class="std std-ref">Node Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td>.hostname</td>
+<tr class="row-odd"><td>.hostname</td>
 <td>String</td>
 <td colspan="2">The full domain-qualified hostname of the node.</td>
 </tr>
-<tr class="row-odd"><td>.port</td>
+<tr class="row-even"><td>.port</td>
 <td>Integer</td>
-<td colspan="2">The port being used by the executor on this node.</td>
+<td colspan="2">The port being used by the executor on this node. (<em>DEPRECATED</em>, gone in v5)</td>
 </tr>
-<tr class="row-even"><td>.slave_id</td>
+<tr class="row-odd"><td>.slave_id</td>
 <td>String</td>
-<td colspan="2">The slave ID used by Mesos for the node.</td>
+<td colspan="2">The slave ID used by Mesos for the node. (<em>DEPRECATED</em>, gone in v5)</td>
 </tr>
-<tr class="row-odd"><td>.pause_reason</td>
+<tr class="row-even"><td>.pause_reason</td>
 <td>String</td>
 <td colspan="2">The reason this node is paused if is_paused is true. This is a descriptive
 field for presentation to the user.</td>
 </tr>
-<tr class="row-even"><td>.is_paused</td>
+<tr class="row-odd"><td>.is_paused</td>
 <td>Boolean</td>
 <td colspan="2">True if the node is paused and will not accept new jobs for execution.
 Remaining tasks for a previously executing job will complete.</td>
 </tr>
-<tr class="row-odd"><td>.is_paused_errors</td>
+<tr class="row-even"><td>.is_paused_errors</td>
 <td>Boolean</td>
-<td colspan="2">True if the node was automatically paused due to a high error rate.</td>
+<td colspan="2">True if the node was automatically paused due to a high error rate.
+(<em>DEPRECATED</em>, gone in v5)</td>
 </tr>
-<tr class="row-even"><td>.is_active</td>
+<tr class="row-odd"><td>.is_active</td>
 <td>Boolean</td>
 <td colspan="2">True if the node is actively participating in the cluster.</td>
 </tr>
-<tr class="row-odd"><td>.archived</td>
+<tr class="row-even"><td>.archived</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">(Optional) When the node was removed (is_active == False) from the cluster.</td>
 </tr>
-<tr class="row-even"><td>.created</td>
+<tr class="row-odd"><td>.created</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was initially created.</td>
 </tr>
-<tr class="row-odd"><td>.last_offer</td>
+<tr class="row-even"><td>.last_offer</td>
 <td>ISO-8601 Datetime</td>
-<td colspan="2">When the node last received an offer from Mesos.</td>
+<td colspan="2">When the node last received an offer from Mesos. (<em>DEPRECATED</em>, gone in v5)</td>
 </tr>
-<tr class="row-even"><td>.last_modified</td>
+<tr class="row-odd"><td>.last_modified</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was last saved.</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">9</span><span class="p">,</span>
     <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
     <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
@@ -372,137 +381,149 @@ Remaining tasks for a previously executing job will complete.</td>
 <tr class="row-even"><td colspan="3">Returns a specific job and all its related model information including resource usage.</td>
 </tr>
 <tr class="row-odd"><td colspan="3"><dl class="first last docutils">
+<dt><strong>DEPRECATED</strong></dt>
+<dd>This table describes the current v4 version of the node details API, which is now deprecated.
+The new v5 version of this API does not include the <em>port</em>, <em>slave_id</em>, <em>is_paused_errors</em>, <em>last_offer</em>,
+<em>resources</em>, <em>disconnected</em>, and <em>job_exes_running</em> fields in the response.</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-even"><td colspan="3"><dl class="first last docutils">
 <dt><strong>GET</strong> /nodes/{id}/</dt>
 <dd>Where {id} is the unique identifier of an existing model.</dd>
 </dl>
 </td>
 </tr>
-<tr class="row-even"><td colspan="3"><strong>Successful Response</strong></td>
+<tr class="row-odd"><td colspan="3"><strong>Successful Response</strong></td>
 </tr>
-<tr class="row-odd"><td><strong>Status</strong></td>
+<tr class="row-even"><td><strong>Status</strong></td>
 <td colspan="2">200 OK</td>
 </tr>
-<tr class="row-even"><td><strong>Content Type</strong></td>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
 <td colspan="2"><em>application/json</em></td>
 </tr>
-<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
+<tr class="row-even"><td colspan="3"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-even"><td>id</td>
+<tr class="row-odd"><td>id</td>
 <td>Integer</td>
 <td>The unique identifier of the model. Can be passed to the details API call.
 (See <a class="reference internal" href="#rest-node-details"><span class="std std-ref">Node Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>hostname</td>
+<tr class="row-even"><td>hostname</td>
 <td>String</td>
 <td>The full domain-qualified hostname of the node.</td>
 </tr>
-<tr class="row-even"><td>port</td>
+<tr class="row-odd"><td>port</td>
 <td>Integer</td>
-<td>The port being used by the executor on this node.</td>
+<td>The port being used by the executor on this node. (<em>DEPRECATED</em>, gone in v5)</td>
 </tr>
-<tr class="row-odd"><td>slave_id</td>
+<tr class="row-even"><td>slave_id</td>
 <td>String</td>
-<td>The slave ID used by Mesos for the node.</td>
+<td>The slave ID used by Mesos for the node. (<em>DEPRECATED</em>, gone in v5)</td>
 </tr>
-<tr class="row-even"><td>pause_reason</td>
+<tr class="row-odd"><td>pause_reason</td>
 <td>String</td>
 <td>The reason this node is paused if is_paused is true. This is a descriptive
 field for presentation to the user.</td>
 </tr>
-<tr class="row-odd"><td>is_paused</td>
+<tr class="row-even"><td>is_paused</td>
 <td>Boolean</td>
 <td>True if the node is paused and will not accept new jobs for execution.
 Remaining tasks for a previously executing job will complete.</td>
 </tr>
-<tr class="row-even"><td>is_paused_errors</td>
+<tr class="row-odd"><td>is_paused_errors</td>
 <td>Boolean</td>
-<td>True if the node was automatically paused due to a high error rate.</td>
+<td>True if the node was automatically paused due to a high error rate.
+(<em>DEPRECATED</em>, gone in v5)</td>
 </tr>
-<tr class="row-odd"><td>is_active</td>
+<tr class="row-even"><td>is_active</td>
 <td>Boolean</td>
 <td>True if the node is actively participating in the cluster.</td>
 </tr>
-<tr class="row-even"><td>archived</td>
+<tr class="row-odd"><td>archived</td>
 <td>ISO-8601 Datetime</td>
 <td>(Optional) When the node was removed (is_active == False) from the cluster.</td>
 </tr>
-<tr class="row-odd"><td>created</td>
+<tr class="row-even"><td>created</td>
 <td>ISO-8601 Datetime</td>
 <td>When the associated database model was initially created.</td>
 </tr>
-<tr class="row-even"><td>last_offer</td>
+<tr class="row-odd"><td>last_offer</td>
 <td>ISO-8601 Datetime</td>
-<td>When the node last received an offer from Mesos.</td>
+<td>When the node last received an offer from Mesos. (<em>DEPRECATED</em>, gone in v5)</td>
 </tr>
-<tr class="row-odd"><td>last_modified</td>
+<tr class="row-even"><td>last_modified</td>
 <td>ISO-8601 Datetime</td>
 <td>When the associated database model was last saved.</td>
 </tr>
-<tr class="row-even"><td>resources</td>
+<tr class="row-odd"><td>resources</td>
 <td>JSON Object</td>
 <td>(Optional) Information about the hardware resources of the node
-NOTE: Resource information may not always be available</td>
+NOTE: Resource information may not always be available
+(<em>DEPRECATED</em>, gone in v5)</td>
 </tr>
-<tr class="row-odd"><td>.total</td>
+<tr class="row-even"><td>.total</td>
 <td>JSON Object</td>
 <td>The total hardware resources for the node</td>
 </tr>
-<tr class="row-even"><td>..cpus</td>
+<tr class="row-odd"><td>..cpus</td>
 <td>Float</td>
 <td>The total number of CPUs at this node</td>
 </tr>
-<tr class="row-odd"><td>..mem</td>
+<tr class="row-even"><td>..mem</td>
 <td>Float</td>
 <td>The total amount of RAM in MiB at this node</td>
 </tr>
-<tr class="row-even"><td>..disk</td>
+<tr class="row-odd"><td>..disk</td>
 <td>Float</td>
 <td>The total amount of disk space in MiB at this node</td>
 </tr>
-<tr class="row-odd"><td>.scheduled</td>
+<tr class="row-even"><td>.scheduled</td>
 <td>JSON Object</td>
 <td>The scheduled hardware resources for the node</td>
 </tr>
-<tr class="row-even"><td>..cpus</td>
+<tr class="row-odd"><td>..cpus</td>
 <td>Float</td>
 <td>The scheduled number of CPUs at this node</td>
 </tr>
-<tr class="row-odd"><td>..mem</td>
+<tr class="row-even"><td>..mem</td>
 <td>Float</td>
 <td>The scheduled amount of RAM in MiB at this node</td>
 </tr>
-<tr class="row-even"><td>..disk</td>
+<tr class="row-odd"><td>..disk</td>
 <td>Float</td>
 <td>The scheduled amount of disk space in MiB at this node</td>
 </tr>
-<tr class="row-odd"><td>.used</td>
+<tr class="row-even"><td>.used</td>
 <td>JSON Object</td>
 <td>The used hardware resources for all nodes in the cluster
 NOTE: Real-time resource usage is not currently available and will be all zero</td>
 </tr>
-<tr class="row-even"><td>..cpus</td>
+<tr class="row-odd"><td>..cpus</td>
 <td>Float</td>
 <td>The used number of CPUs at this node</td>
 </tr>
-<tr class="row-odd"><td>..mem</td>
+<tr class="row-even"><td>..mem</td>
 <td>Float</td>
 <td>The used amount of RAM in MiB at this node</td>
 </tr>
-<tr class="row-even"><td>..disk</td>
+<tr class="row-odd"><td>..disk</td>
 <td>Float</td>
 <td>The used amount of disk space in MiB at this node</td>
 </tr>
-<tr class="row-odd"><td>disconnected</td>
+<tr class="row-even"><td>disconnected</td>
 <td>Boolean</td>
 <td>(Optional) If present and true, there is an active Node entry in the scale
-database but mesos does not have a corresponding active slave.</td>
+database but mesos does not have a corresponding active slave.
+(<em>DEPRECATED</em>, gone in v5)</td>
 </tr>
-<tr class="row-even"><td>.job_exes_running</td>
+<tr class="row-odd"><td>.job_exes_running</td>
 <td>Array</td>
 <td>A list of job executions currently running on the node.
-(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span class="std std-ref">Job Execution Details</span></a>)</td>
+(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span class="std std-ref">Job Execution Details</span></a>)
+(<em>DEPRECATED</em>, gone in v5)</td>
 </tr>
-<tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
     <span class="s2">&quot;hostname&quot;</span><span class="o">:</span> <span class="s2">&quot;host.com&quot;</span><span class="p">,</span>
     <span class="s2">&quot;port&quot;</span><span class="o">:</span> <span class="mi">5051</span><span class="p">,</span>
@@ -612,27 +633,40 @@ database but mesos does not have a corresponding active slave.</td>
 <tr class="row-even"><td colspan="3">Update one or more fields in an existing node.</td>
 </tr>
 <tr class="row-odd"><td colspan="3"><dl class="first last docutils">
-<dt><strong>PATCH</strong> /nodes/{id}/</dt>
-<dd>Where {id} is the unique identifier of an existing model.
-All fields are optional and additional fields are not tolerated.</dd>
+<dt><strong>DEPRECATED</strong></dt>
+<dd>This table describes the current v4 version of the node details API, which is now deprecated.
+The new v5 version of this API does not include the <em>port</em>, <em>slave_id</em>, <em>is_paused_errors</em>, <em>last_offer</em>,
+<em>resources</em>, <em>disconnected</em>, and <em>job_exes_running</em> fields in the response.</dd>
 </dl>
 </td>
 </tr>
-<tr class="row-even"><td><strong>Content Type</strong></td>
+<tr class="row-even"><td colspan="3"><dl class="first last docutils">
+<dt><strong>PATCH</strong> /nodes/{id}/</dt>
+<dd>Where {id} is the unique identifier of an existing model.
+All fields are optional and additional fields are not accepted.</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
 <td colspan="2"><em>application/json</em></td>
 </tr>
-<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
+<tr class="row-even"><td colspan="3"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-even"><td>pause_reason</td>
+<tr class="row-odd"><td>pause_reason</td>
 <td>String</td>
 <td>(Optional) The reason this node is paused if is_paused is true. If is_paused
 is false, this field will be set to null. This should provide a brief
 description for user display.</td>
 </tr>
-<tr class="row-odd"><td>is_paused</td>
+<tr class="row-even"><td>is_paused</td>
 <td>Boolean</td>
 <td>(Optional) True if the node is paused and will not accept new jobs
 for execution. Remaining tasks for a previously executing job will complete.</td>
+</tr>
+<tr class="row-odd"><td>is_active</td>
+<td>Boolean</td>
+<td>(Optional) True if the node is active and Scale should use it for scheduling
+jobs.</td>
 </tr>
 <tr class="row-even"><td colspan="3"><strong>Successful Response</strong></td>
 </tr>
@@ -642,126 +676,128 @@ for execution. Remaining tasks for a previously executing job will complete.</td
 <tr class="row-even"><td><strong>Content Type</strong></td>
 <td colspan="2"><em>application/json</em></td>
 </tr>
-<tr class="row-odd"><td colspan="3">Response format is identical to GET but contains the updated data.</td>
+<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-even"><td colspan="3"><strong>JSON Fields</strong></td>
-</tr>
-<tr class="row-odd"><td>id</td>
+<tr class="row-even"><td>id</td>
 <td>Integer</td>
 <td>The unique identifier of the model. Can be passed to the details API call.
 (See <a class="reference internal" href="#rest-node-details"><span class="std std-ref">Node Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td>hostname</td>
+<tr class="row-odd"><td>hostname</td>
 <td>String</td>
 <td>The full domain-qualified hostname of the node.</td>
 </tr>
-<tr class="row-odd"><td>port</td>
+<tr class="row-even"><td>port</td>
 <td>Integer</td>
-<td>The port being used by the executor on this node.</td>
+<td>The port being used by the executor on this node. (<em>DEPRECATED</em>, gone in v5)</td>
 </tr>
-<tr class="row-even"><td>slave_id</td>
+<tr class="row-odd"><td>slave_id</td>
 <td>String</td>
-<td>The slave ID used by Mesos for the node.</td>
+<td>The slave ID used by Mesos for the node. (<em>DEPRECATED</em>, gone in v5)</td>
 </tr>
-<tr class="row-odd"><td>pause_reason</td>
+<tr class="row-even"><td>pause_reason</td>
 <td>String</td>
 <td>The reason this node is paused if is_paused is true. This is a descriptive
 field for presentation to the user.</td>
 </tr>
-<tr class="row-even"><td>is_paused</td>
+<tr class="row-odd"><td>is_paused</td>
 <td>Boolean</td>
 <td>True if the node is paused and will not accept new jobs for execution.
 Remaining tasks for a previously executing job will complete.</td>
 </tr>
-<tr class="row-odd"><td>is_paused_errors</td>
+<tr class="row-even"><td>is_paused_errors</td>
 <td>Boolean</td>
-<td>True if the node was automatically paused due to a high error rate.</td>
+<td>True if the node was automatically paused due to a high error rate.
+(<em>DEPRECATED</em>, gone in v5)</td>
 </tr>
-<tr class="row-even"><td>is_active</td>
+<tr class="row-odd"><td>is_active</td>
 <td>Boolean</td>
 <td>True if the node is actively participating in the cluster.</td>
 </tr>
-<tr class="row-odd"><td>archived</td>
+<tr class="row-even"><td>archived</td>
 <td>ISO-8601 Datetime</td>
 <td>(Optional) When the node was removed (is_active == False) from the cluster.</td>
 </tr>
-<tr class="row-even"><td>created</td>
+<tr class="row-odd"><td>created</td>
 <td>ISO-8601 Datetime</td>
 <td>When the associated database model was initially created.</td>
 </tr>
-<tr class="row-odd"><td>last_offer</td>
+<tr class="row-even"><td>last_offer</td>
 <td>ISO-8601 Datetime</td>
-<td>When the node last received an offer from Mesos.</td>
+<td>When the node last received an offer from Mesos. (<em>DEPRECATED</em>, gone in v5)</td>
 </tr>
-<tr class="row-even"><td>last_modified</td>
+<tr class="row-odd"><td>last_modified</td>
 <td>ISO-8601 Datetime</td>
 <td>When the associated database model was last saved.</td>
 </tr>
-<tr class="row-odd"><td>resources</td>
+<tr class="row-even"><td>resources</td>
 <td>JSON Object</td>
 <td>(Optional) Information about the hardware resources of the node
-NOTE: Resource information may not always be available</td>
+NOTE: Resource information may not always be available
+(<em>DEPRECATED</em>, gone in v5)</td>
 </tr>
-<tr class="row-even"><td>.total</td>
+<tr class="row-odd"><td>.total</td>
 <td>JSON Object</td>
 <td>The total hardware resources for the node</td>
 </tr>
-<tr class="row-odd"><td>..cpus</td>
+<tr class="row-even"><td>..cpus</td>
 <td>Float</td>
 <td>The total number of CPUs at this node</td>
 </tr>
-<tr class="row-even"><td>..mem</td>
+<tr class="row-odd"><td>..mem</td>
 <td>Float</td>
 <td>The total amount of RAM in MiB at this node</td>
 </tr>
-<tr class="row-odd"><td>..disk</td>
+<tr class="row-even"><td>..disk</td>
 <td>Float</td>
 <td>The total amount of disk space in MiB at this node</td>
 </tr>
-<tr class="row-even"><td>.scheduled</td>
+<tr class="row-odd"><td>.scheduled</td>
 <td>JSON Object</td>
 <td>The scheduled hardware resources for the node</td>
 </tr>
-<tr class="row-odd"><td>..cpus</td>
+<tr class="row-even"><td>..cpus</td>
 <td>Float</td>
 <td>The scheduled number of CPUs at this node</td>
 </tr>
-<tr class="row-even"><td>..mem</td>
+<tr class="row-odd"><td>..mem</td>
 <td>Float</td>
 <td>The scheduled amount of RAM in MiB at this node</td>
 </tr>
-<tr class="row-odd"><td>..disk</td>
+<tr class="row-even"><td>..disk</td>
 <td>Float</td>
 <td>The scheduled amount of disk space in MiB at this node</td>
 </tr>
-<tr class="row-even"><td>.used</td>
+<tr class="row-odd"><td>.used</td>
 <td>JSON Object</td>
 <td>The used hardware resources for all nodes in the cluster
 NOTE: Real-time resource usage is not currently available and will be all zero</td>
 </tr>
-<tr class="row-odd"><td>..cpus</td>
+<tr class="row-even"><td>..cpus</td>
 <td>Float</td>
 <td>The used number of CPUs at this node</td>
 </tr>
-<tr class="row-even"><td>..mem</td>
+<tr class="row-odd"><td>..mem</td>
 <td>Float</td>
 <td>The used amount of RAM in MiB at this node</td>
 </tr>
-<tr class="row-odd"><td>..disk</td>
+<tr class="row-even"><td>..disk</td>
 <td>Float</td>
 <td>The used amount of disk space in MiB at this node</td>
 </tr>
-<tr class="row-even"><td>disconnected</td>
+<tr class="row-odd"><td>disconnected</td>
 <td>Boolean</td>
 <td>(Optional) If present and true, there is an active Node entry in the scale
-database but mesos does not have a corresponding active slave.</td>
+database but mesos does not have a corresponding active slave.
+(<em>DEPRECATED</em>, gone in v5)</td>
 </tr>
-<tr class="row-odd"><td>.job_exes_running</td>
+<tr class="row-even"><td>.job_exes_running</td>
 <td>Array</td>
 <td>A list of job executions currently running on the node.
-(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span class="std std-ref">Job Execution Details</span></a>)</td>
+(See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span class="std std-ref">Job Execution Details</span></a>)
+(<em>DEPRECATED</em>, gone in v5)</td>
 </tr>
-<tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
     <span class="s2">&quot;hostname&quot;</span><span class="o">:</span> <span class="s2">&quot;host.com&quot;</span><span class="p">,</span>
     <span class="s2">&quot;port&quot;</span><span class="o">:</span> <span class="mi">5051</span><span class="p">,</span>
@@ -871,98 +907,105 @@ database but mesos does not have a corresponding active slave.</td>
 <tbody valign="top">
 <tr class="row-even"><td colspan="4">Returns a list of overall node statistics, based on counts of job executions organized by status.
 This only returns data for nodes marked as active in the database. For status information on nodes which are no
-longer in the cluseter (is_active is false), request node details for that specific node ID.</td>
+longer in the cluster (is_active is false), request node details for that specific node ID.</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>GET</strong> /nodes/status/</td>
+<tr class="row-odd"><td colspan="4"><dl class="first last docutils">
+<dt><strong>DEPRECATED</strong></dt>
+<dd>This table describes the v4 version of the node status API, which is now deprecated.
+There is no v5 version of this API; please use the /v5/status/ API instead.</dd>
+</dl>
+</td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>Query Parameters</strong></td>
+<tr class="row-even"><td colspan="4"><strong>GET</strong> /nodes/status/</td>
 </tr>
-<tr class="row-odd"><td>page</td>
+<tr class="row-odd"><td colspan="4"><strong>Query Parameters</strong></td>
+</tr>
+<tr class="row-even"><td>page</td>
 <td>Integer</td>
 <td>Optional</td>
 <td>The page of the results to return. Defaults to 1.</td>
 </tr>
-<tr class="row-even"><td>page_size</td>
+<tr class="row-odd"><td>page_size</td>
 <td>Integer</td>
 <td>Optional</td>
 <td>The size of the page to use for pagination of results.
 Defaults to 100, and can be anywhere from 1-1000.</td>
 </tr>
-<tr class="row-odd"><td>started</td>
+<tr class="row-even"><td>started</td>
 <td>ISO-8601 Datetime</td>
 <td>Optional</td>
 <td>The start of the time range to query.
 Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
 Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
 </tr>
-<tr class="row-even"><td>ended</td>
+<tr class="row-odd"><td>ended</td>
 <td>ISO-8601 Datetime</td>
 <td>Optional</td>
 <td>End of the time range to query, defaults to the current time.
 Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
 Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
 </tr>
-<tr class="row-even"><td><strong>Status</strong></td>
+<tr class="row-odd"><td><strong>Status</strong></td>
 <td colspan="3">200 OK</td>
 </tr>
-<tr class="row-odd"><td><strong>Content Type</strong></td>
+<tr class="row-even"><td><strong>Content Type</strong></td>
 <td colspan="3"><em>application/json</em></td>
 </tr>
-<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-odd"><td>count</td>
+<tr class="row-even"><td>count</td>
 <td>Integer</td>
 <td colspan="2">The total number of results that match the query parameters.</td>
 </tr>
-<tr class="row-even"><td>next</td>
+<tr class="row-odd"><td>next</td>
 <td>URL</td>
 <td colspan="2">A URL to the next page of results.</td>
 </tr>
-<tr class="row-odd"><td>previous</td>
+<tr class="row-even"><td>previous</td>
 <td>URL</td>
 <td colspan="2">A URL to the previous page of results.</td>
 </tr>
-<tr class="row-even"><td>results</td>
+<tr class="row-odd"><td>results</td>
 <td>Array</td>
 <td colspan="2">List of result JSON objects that match the query parameters.</td>
 </tr>
-<tr class="row-odd"><td>.node</td>
+<tr class="row-even"><td>.node</td>
 <td>JSON Object</td>
 <td colspan="2">The node that is associated with the statistics.
 (See <a class="reference internal" href="#rest-node-details"><span class="std std-ref">Node Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td>.is_online</td>
+<tr class="row-odd"><td>.is_online</td>
 <td>Boolean</td>
 <td colspan="2">(Optional) Whether or not the node is running and available.</td>
 </tr>
-<tr class="row-odd"><td>.job_exe_counts</td>
+<tr class="row-even"><td>.job_exe_counts</td>
 <td>Array</td>
 <td colspan="2">A list of recent job execution counts for the node, grouped by status.</td>
 </tr>
-<tr class="row-even"><td>..status</td>
+<tr class="row-odd"><td>..status</td>
 <td>String</td>
 <td colspan="2">The type of job execution status the count represents.</td>
 </tr>
-<tr class="row-odd"><td>..count</td>
+<tr class="row-even"><td>..count</td>
 <td>Integer</td>
 <td colspan="2">The number of job executions for the status attempted by the node.</td>
 </tr>
-<tr class="row-even"><td>..most_recent</td>
+<tr class="row-odd"><td>..most_recent</td>
 <td>ISO-8601 Datetime</td>
 <td colspan="2">The date/time when the node last ran a job execution with the status.</td>
 </tr>
-<tr class="row-odd"><td>..category</td>
+<tr class="row-even"><td>..category</td>
 <td>String</td>
 <td colspan="2">The category of the status, which is only used by a FAILED status.</td>
 </tr>
-<tr class="row-even"><td>.job_exes_running</td>
+<tr class="row-odd"><td>.job_exes_running</td>
 <td>Array</td>
 <td colspan="2">A list of job executions currently running on the node.
 (See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span class="std std-ref">Job Execution Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
 <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
 <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
 <span class="s2">&quot;results&quot;</span><span class="o">:</span> <span class="p">[</span>

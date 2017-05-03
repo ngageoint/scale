@@ -380,6 +380,22 @@
 </table>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="job.execution.job_exe.RunningJobExecution.error_category">
+<code class="descname">error_category</code><a class="headerlink" href="#job.execution.job_exe.RunningJobExecution.error_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the category of this job execution&#8217;s error, None if there is no error</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The error category, possibly None</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="job.execution.job_exe.RunningJobExecution.execution_canceled">
 <code class="descname">execution_canceled</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.job_exe.RunningJobExecution.execution_canceled" title="Permalink to this definition">¶</a></dt>
@@ -394,6 +410,22 @@
 <dt id="job.execution.job_exe.RunningJobExecution.execution_timed_out">
 <code class="descname">execution_timed_out</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.job_exe.RunningJobExecution.execution_timed_out" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.execution.job_exe.RunningJobExecution.finished">
+<code class="descname">finished</code><a class="headerlink" href="#job.execution.job_exe.RunningJobExecution.finished" title="Permalink to this definition">¶</a></dt>
+<dd><p>When this job execution finished, possibly None</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">When this job execution finished, possibly None</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="job.execution.job_exe.RunningJobExecution.get_container_names">
@@ -454,6 +486,22 @@
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the next task is ready, False otherwise</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.execution.job_exe.RunningJobExecution.job_id">
+<code class="descname">job_id</code><a class="headerlink" href="#job.execution.job_exe.RunningJobExecution.job_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the job ID of this job execution</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The job ID of the job execution</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
 </tr>
 </tbody>
 </table>
@@ -525,6 +573,22 @@ tasks remain.</p>
 </table>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="job.execution.job_exe.RunningJobExecution.status">
+<code class="descname">status</code><a class="headerlink" href="#job.execution.job_exe.RunningJobExecution.status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the status of this job execution</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The status of the job execution</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="job.execution.job_exe.RunningJobExecution.task_update">
 <code class="descname">task_update</code><span class="sig-paren">(</span><em>task_update</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.job_exe.RunningJobExecution.task_update" title="Permalink to this definition">¶</a></dt>
@@ -544,30 +608,34 @@ tasks remain.</p>
 </div>
 <div class="section" id="module-job.execution.manager">
 <span id="job-execution-manager-module"></span><h2>job.execution.manager module<a class="headerlink" href="#module-job.execution.manager" title="Permalink to this headline">¶</a></h2>
-<p>Defines the class that managers the currently running job executions</p>
+<p>Defines the class that manages job executions</p>
 <dl class="class">
-<dt id="job.execution.manager.RunningJobExecutionManager">
-<em class="property">class </em><code class="descclassname">job.execution.manager.</code><code class="descname">RunningJobExecutionManager</code><a class="headerlink" href="#job.execution.manager.RunningJobExecutionManager" title="Permalink to this definition">¶</a></dt>
+<dt id="job.execution.manager.JobExecutionManager">
+<em class="property">class </em><code class="descclassname">job.execution.manager.</code><code class="descname">JobExecutionManager</code><a class="headerlink" href="#job.execution.manager.JobExecutionManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>This class manages all currently running job execution. This class is thread-safe.</p>
+<p>This class manages all running and finished job executions. This class is thread-safe.</p>
 <dl class="method">
-<dt id="job.execution.manager.RunningJobExecutionManager.add_job_exes">
-<code class="descname">add_job_exes</code><span class="sig-paren">(</span><em>job_exes</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.manager.RunningJobExecutionManager.add_job_exes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds new running job executions to the manager</p>
+<dt id="job.execution.manager.JobExecutionManager.generate_status_json">
+<code class="descname">generate_status_json</code><span class="sig-paren">(</span><em>nodes_list</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.manager.JobExecutionManager.generate_status_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the portion of the status JSON that describes the job execution metrics</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exes</strong> ([<a class="reference internal" href="#job.execution.job_exe.RunningJobExecution" title="job.execution.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe.RunningJobExecution</span></code></a>]) &#8211; A list of the running job executions to add</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>nodes_list</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The list of nodes within the status JSON</li>
+<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The current time</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.execution.manager.RunningJobExecutionManager.get_all_job_exes">
-<code class="descname">get_all_job_exes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.manager.RunningJobExecutionManager.get_all_job_exes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns all running job executions</p>
+<dt id="job.execution.manager.JobExecutionManager.get_ready_job_exes">
+<code class="descname">get_ready_job_exes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.manager.JobExecutionManager.get_ready_job_exes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all running job executions that are ready to execute their next task</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -581,8 +649,8 @@ tasks remain.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.execution.manager.RunningJobExecutionManager.get_job_exe">
-<code class="descname">get_job_exe</code><span class="sig-paren">(</span><em>job_exe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.manager.RunningJobExecutionManager.get_job_exe" title="Permalink to this definition">¶</a></dt>
+<dt id="job.execution.manager.JobExecutionManager.get_running_job_exe">
+<code class="descname">get_running_job_exe</code><span class="sig-paren">(</span><em>job_exe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.manager.JobExecutionManager.get_running_job_exe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the running job execution with the given ID, or None if the job execution does not exist</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -599,27 +667,9 @@ tasks remain.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.execution.manager.RunningJobExecutionManager.get_job_exes_on_node">
-<code class="descname">get_job_exes_on_node</code><span class="sig-paren">(</span><em>node_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.manager.RunningJobExecutionManager.get_job_exes_on_node" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns all running job executions that are on the given node</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node_id</strong> (<em>int</em>) &#8211; The ID of the node</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of running job executions</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="#job.execution.job_exe.RunningJobExecution" title="job.execution.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe.RunningJobExecution</span></code></a>]</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.execution.manager.RunningJobExecutionManager.get_ready_job_exes">
-<code class="descname">get_ready_job_exes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.manager.RunningJobExecutionManager.get_ready_job_exes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns all running job executions that are ready to execute their next task</p>
+<dt id="job.execution.manager.JobExecutionManager.get_running_job_exes">
+<code class="descname">get_running_job_exes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.manager.JobExecutionManager.get_running_job_exes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all currently running job executions</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -633,14 +683,546 @@ tasks remain.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.execution.manager.RunningJobExecutionManager.remove_job_exe">
-<code class="descname">remove_job_exe</code><span class="sig-paren">(</span><em>job_exe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.manager.RunningJobExecutionManager.remove_job_exe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Removes the running job execution with the given ID</p>
+<dt id="job.execution.manager.JobExecutionManager.handle_task_timeout">
+<code class="descname">handle_task_timeout</code><span class="sig-paren">(</span><em>task</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.manager.JobExecutionManager.handle_task_timeout" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles the timeout of the given task</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_id</strong> (<em>int</em>) &#8211; The ID of the job execution to remove</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>task</strong> (<a class="reference internal" href="job.tasks.html#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a>) &#8211; The task</li>
+<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The time that the time out occurred</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.manager.JobExecutionManager.handle_task_update">
+<code class="descname">handle_task_update</code><span class="sig-paren">(</span><em>task_update</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.manager.JobExecutionManager.handle_task_update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles the given task update and returns the associated job execution if it has finished</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_update</strong> (<a class="reference internal" href="job.tasks.html#job.tasks.update.TaskStatusUpdate" title="job.tasks.update.TaskStatusUpdate"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.update.TaskStatusUpdate</span></code></a>) &#8211; The task update</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The job execution if it has finished, None otherwise</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#job.execution.job_exe.RunningJobExecution" title="job.execution.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe.RunningJobExecution</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.manager.JobExecutionManager.init_with_database">
+<code class="descname">init_with_database</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.manager.JobExecutionManager.init_with_database" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes the job execution metrics with the execution history from the database</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.manager.JobExecutionManager.lost_node">
+<code class="descname">lost_node</code><span class="sig-paren">(</span><em>node_id</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.manager.JobExecutionManager.lost_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Informs the manager that the node with the given ID was lost and has gone offline</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>node_id</strong> (<em>int</em>) &#8211; The ID of the lost node</li>
+<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The time that the node was lost</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of the lost job executions that had been running on the node</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">[<a class="reference internal" href="#job.execution.job_exe.RunningJobExecution" title="job.execution.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe.RunningJobExecution</span></code></a>]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.manager.JobExecutionManager.schedule_job_exes">
+<code class="descname">schedule_job_exes</code><span class="sig-paren">(</span><em>job_exes</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.manager.JobExecutionManager.schedule_job_exes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds newly scheduled running job executions to the manager</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exes</strong> ([<a class="reference internal" href="#job.execution.job_exe.RunningJobExecution" title="job.execution.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe.RunningJobExecution</span></code></a>]) &#8211; A list of the running job executions to add</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.manager.JobExecutionManager.sync_with_database">
+<code class="descname">sync_with_database</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.manager.JobExecutionManager.sync_with_database" title="Permalink to this definition">¶</a></dt>
+<dd><p>Syncs with the database to handle any canceled executions. The current task of each canceled job execution is
+returned so the tasks may be killed.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of the canceled tasks to kill</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="job.tasks.html#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-job.execution.metrics">
+<span id="job-execution-metrics-module"></span><h2>job.execution.metrics module<a class="headerlink" href="#module-job.execution.metrics" title="Permalink to this headline">¶</a></h2>
+<p>Defines the classes that manages job execution metrics</p>
+<dl class="class">
+<dt id="job.execution.metrics.FinishedJobExeMetrics">
+<em class="property">class </em><code class="descclassname">job.execution.metrics.</code><code class="descname">FinishedJobExeMetrics</code><a class="headerlink" href="#job.execution.metrics.FinishedJobExeMetrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This class holds metrics for finished job executions</p>
+<dl class="method">
+<dt id="job.execution.metrics.FinishedJobExeMetrics.add_job_execution">
+<code class="descname">add_job_execution</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.metrics.FinishedJobExeMetrics.add_job_execution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given job execution to the metrics</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe</strong> (<a class="reference internal" href="#job.execution.job_exe.RunningJobExecution" title="job.execution.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe.RunningJobExecution</span></code></a>) &#8211; The job execution</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.execution.metrics.FinishedJobExeMetrics.count">
+<code class="descname">count</code><a class="headerlink" href="#job.execution.metrics.FinishedJobExeMetrics.count" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the total number of finished job executions</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The total number of finished job executions</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.metrics.FinishedJobExeMetrics.generate_status_json">
+<code class="descname">generate_status_json</code><span class="sig-paren">(</span><em>json_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.metrics.FinishedJobExeMetrics.generate_status_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the portion of the status JSON that describes these finished job executions</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>json_dict</strong> (<em>dict</em>) &#8211; The JSON dict to add these metrics to</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.metrics.FinishedJobExeMetrics.subtract_metrics">
+<code class="descname">subtract_metrics</code><span class="sig-paren">(</span><em>metrics</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.metrics.FinishedJobExeMetrics.subtract_metrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subtracts the given metrics</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>metrics</strong> (<code class="xref py py-class docutils literal"><span class="pre">job.execution.manager.FinishedJobExeMetrics</span></code>) &#8211; The metrics to subtract</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.execution.metrics.FinishedJobExeMetricsByNode">
+<em class="property">class </em><code class="descclassname">job.execution.metrics.</code><code class="descname">FinishedJobExeMetricsByNode</code><a class="headerlink" href="#job.execution.metrics.FinishedJobExeMetricsByNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This class holds metrics for finished job executions, grouped by node</p>
+<dl class="attribute">
+<dt id="job.execution.metrics.FinishedJobExeMetricsByNode.EMPTY_METRICS">
+<code class="descname">EMPTY_METRICS</code><em class="property"> = &lt;job.execution.metrics.FinishedJobExeMetrics object&gt;</em><a class="headerlink" href="#job.execution.metrics.FinishedJobExeMetricsByNode.EMPTY_METRICS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.execution.metrics.FinishedJobExeMetricsByNode.add_job_execution">
+<code class="descname">add_job_execution</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.metrics.FinishedJobExeMetricsByNode.add_job_execution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given job execution to the metrics</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe</strong> (<a class="reference internal" href="#job.execution.job_exe.RunningJobExecution" title="job.execution.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe.RunningJobExecution</span></code></a>) &#8211; The job execution</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.metrics.FinishedJobExeMetricsByNode.generate_status_json">
+<code class="descname">generate_status_json</code><span class="sig-paren">(</span><em>nodes_list</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.metrics.FinishedJobExeMetricsByNode.generate_status_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the portion of the status JSON that describes these finished job executions</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nodes_list</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The list of nodes within the status JSON</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.metrics.FinishedJobExeMetricsByNode.subtract_metrics">
+<code class="descname">subtract_metrics</code><span class="sig-paren">(</span><em>metrics</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.metrics.FinishedJobExeMetricsByNode.subtract_metrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subtracts the given metrics</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>metrics</strong> (<code class="xref py py-class docutils literal"><span class="pre">job.execution.manager.FinishedJobExeMetricsByNode</span></code>) &#8211; The metrics to subtract</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.execution.metrics.FinishedJobExeMetricsOverTime">
+<em class="property">class </em><code class="descclassname">job.execution.metrics.</code><code class="descname">FinishedJobExeMetricsOverTime</code><span class="sig-paren">(</span><em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.metrics.FinishedJobExeMetricsOverTime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This class holds metrics for finished job executions, grouped and sorted into time blocks</p>
+<dl class="attribute">
+<dt id="job.execution.metrics.FinishedJobExeMetricsOverTime.BLOCK_LENGTH">
+<code class="descname">BLOCK_LENGTH</code><em class="property"> = datetime.timedelta(0, 300)</em><a class="headerlink" href="#job.execution.metrics.FinishedJobExeMetricsOverTime.BLOCK_LENGTH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="job.execution.metrics.FinishedJobExeMetricsOverTime.TIME_BLOCK">
+<em class="property">class </em><code class="descname">TIME_BLOCK</code><span class="sig-paren">(</span><em>start</em>, <em>end</em>, <em>metrics</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.metrics.FinishedJobExeMetricsOverTime.TIME_BLOCK" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<dl class="attribute">
+<dt id="job.execution.metrics.FinishedJobExeMetricsOverTime.TIME_BLOCK.end">
+<code class="descname">end</code><a class="headerlink" href="#job.execution.metrics.FinishedJobExeMetricsOverTime.TIME_BLOCK.end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.execution.metrics.FinishedJobExeMetricsOverTime.TIME_BLOCK.metrics">
+<code class="descname">metrics</code><a class="headerlink" href="#job.execution.metrics.FinishedJobExeMetricsOverTime.TIME_BLOCK.metrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.execution.metrics.FinishedJobExeMetricsOverTime.TIME_BLOCK.start">
+<code class="descname">start</code><a class="headerlink" href="#job.execution.metrics.FinishedJobExeMetricsOverTime.TIME_BLOCK.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.execution.metrics.FinishedJobExeMetricsOverTime.TOTAL_TIME_PERIOD">
+<code class="descname">TOTAL_TIME_PERIOD</code><em class="property"> = datetime.timedelta(0, 10800)</em><a class="headerlink" href="#job.execution.metrics.FinishedJobExeMetricsOverTime.TOTAL_TIME_PERIOD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.execution.metrics.FinishedJobExeMetricsOverTime.add_job_execution">
+<code class="descname">add_job_execution</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.metrics.FinishedJobExeMetricsOverTime.add_job_execution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given job execution to the metrics</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe</strong> (<a class="reference internal" href="#job.execution.job_exe.RunningJobExecution" title="job.execution.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe.RunningJobExecution</span></code></a>) &#8211; The job execution</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.metrics.FinishedJobExeMetricsOverTime.update_to_now">
+<code class="descname">update_to_now</code><span class="sig-paren">(</span><em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.metrics.FinishedJobExeMetricsOverTime.update_to_now" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the metrics to now by removing any time blocks that are older than our time period and creates any
+needed new blocks</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The current time</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of removed metrics classes for old time blocks</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="#job.execution.metrics.FinishedJobExeMetricsByNode" title="job.execution.metrics.FinishedJobExeMetricsByNode"><code class="xref py py-class docutils literal"><span class="pre">job.execution.metrics.FinishedJobExeMetricsByNode</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.execution.metrics.JobExeMetrics">
+<em class="property">class </em><code class="descclassname">job.execution.metrics.</code><code class="descname">JobExeMetrics</code><a class="headerlink" href="#job.execution.metrics.JobExeMetrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This class holds metrics for a list of job executions</p>
+<dl class="method">
+<dt id="job.execution.metrics.JobExeMetrics.add_job_execution">
+<code class="descname">add_job_execution</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.metrics.JobExeMetrics.add_job_execution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given job execution to the metrics</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe</strong> (<a class="reference internal" href="#job.execution.job_exe.RunningJobExecution" title="job.execution.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe.RunningJobExecution</span></code></a>) &#8211; The job execution</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.metrics.JobExeMetrics.generate_status_json">
+<code class="descname">generate_status_json</code><span class="sig-paren">(</span><em>json_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.metrics.JobExeMetrics.generate_status_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the portion of the status JSON that describes this list of job executions</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>json_dict</strong> (<em>dict</em>) &#8211; The JSON dict to add these metrics to</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.metrics.JobExeMetrics.remove_job_execution">
+<code class="descname">remove_job_execution</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.metrics.JobExeMetrics.remove_job_execution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes the given job execution from the metrics</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe</strong> (<a class="reference internal" href="#job.execution.job_exe.RunningJobExecution" title="job.execution.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe.RunningJobExecution</span></code></a>) &#8211; The job execution</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.metrics.JobExeMetrics.subtract_metrics">
+<code class="descname">subtract_metrics</code><span class="sig-paren">(</span><em>metrics</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.metrics.JobExeMetrics.subtract_metrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subtracts the given metrics</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>metrics</strong> (<code class="xref py py-class docutils literal"><span class="pre">job.execution.manager.JobExeMetrics</span></code>) &#8211; The metrics to subtract</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.execution.metrics.JobExeMetricsByType">
+<em class="property">class </em><code class="descclassname">job.execution.metrics.</code><code class="descname">JobExeMetricsByType</code><a class="headerlink" href="#job.execution.metrics.JobExeMetricsByType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This class holds metrics for job executions grouped by their type</p>
+<dl class="method">
+<dt id="job.execution.metrics.JobExeMetricsByType.add_job_execution">
+<code class="descname">add_job_execution</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.metrics.JobExeMetricsByType.add_job_execution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given job execution to the metrics</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe</strong> (<a class="reference internal" href="#job.execution.job_exe.RunningJobExecution" title="job.execution.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe.RunningJobExecution</span></code></a>) &#8211; The job execution</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.metrics.JobExeMetricsByType.generate_status_json">
+<code class="descname">generate_status_json</code><span class="sig-paren">(</span><em>json_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.metrics.JobExeMetricsByType.generate_status_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the portion of the status JSON that describes this group of job executions</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>json_dict</strong> (<em>dict</em>) &#8211; The JSON dict to add these metrics to</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.metrics.JobExeMetricsByType.remove_job_execution">
+<code class="descname">remove_job_execution</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.metrics.JobExeMetricsByType.remove_job_execution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes the given job execution from the metrics</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe</strong> (<a class="reference internal" href="#job.execution.job_exe.RunningJobExecution" title="job.execution.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe.RunningJobExecution</span></code></a>) &#8211; The job execution</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.metrics.JobExeMetricsByType.subtract_metrics">
+<code class="descname">subtract_metrics</code><span class="sig-paren">(</span><em>metrics</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.metrics.JobExeMetricsByType.subtract_metrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subtracts the given metrics</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>metrics</strong> (<code class="xref py py-class docutils literal"><span class="pre">job.execution.manager.JobExeMetricsByType</span></code>) &#8211; The metrics to subtract</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.execution.metrics.RunningJobExeMetricsByNode">
+<em class="property">class </em><code class="descclassname">job.execution.metrics.</code><code class="descname">RunningJobExeMetricsByNode</code><a class="headerlink" href="#job.execution.metrics.RunningJobExeMetricsByNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This class holds metrics for running job executions grouped by their node</p>
+<dl class="attribute">
+<dt id="job.execution.metrics.RunningJobExeMetricsByNode.EMPTY_METRICS">
+<code class="descname">EMPTY_METRICS</code><em class="property"> = &lt;job.execution.metrics.JobExeMetricsByType object&gt;</em><a class="headerlink" href="#job.execution.metrics.RunningJobExeMetricsByNode.EMPTY_METRICS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.execution.metrics.RunningJobExeMetricsByNode.add_job_execution">
+<code class="descname">add_job_execution</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.metrics.RunningJobExeMetricsByNode.add_job_execution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given job execution to the metrics</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe</strong> (<a class="reference internal" href="#job.execution.job_exe.RunningJobExecution" title="job.execution.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe.RunningJobExecution</span></code></a>) &#8211; The job execution</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.metrics.RunningJobExeMetricsByNode.generate_status_json">
+<code class="descname">generate_status_json</code><span class="sig-paren">(</span><em>nodes_list</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.metrics.RunningJobExeMetricsByNode.generate_status_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the portion of the status JSON that describes these running job executions</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nodes_list</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The list of nodes within the status JSON</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.metrics.RunningJobExeMetricsByNode.remove_job_execution">
+<code class="descname">remove_job_execution</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.metrics.RunningJobExeMetricsByNode.remove_job_execution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes the given job execution from the metrics</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe</strong> (<a class="reference internal" href="#job.execution.job_exe.RunningJobExecution" title="job.execution.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe.RunningJobExecution</span></code></a>) &#8211; The job execution</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.metrics.RunningJobExeMetricsByNode.subtract_metrics">
+<code class="descname">subtract_metrics</code><span class="sig-paren">(</span><em>metrics</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.metrics.RunningJobExeMetricsByNode.subtract_metrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subtracts the given metrics</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>metrics</strong> (<code class="xref py py-class docutils literal"><span class="pre">job.execution.manager.RunningJobExeMetricsByNode</span></code>) &#8211; The metrics to subtract</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.execution.metrics.TotalJobExeMetrics">
+<em class="property">class </em><code class="descclassname">job.execution.metrics.</code><code class="descname">TotalJobExeMetrics</code><span class="sig-paren">(</span><em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.metrics.TotalJobExeMetrics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This class handles all real-time metrics for job executions</p>
+<dl class="method">
+<dt id="job.execution.metrics.TotalJobExeMetrics.add_running_job_exes">
+<code class="descname">add_running_job_exes</code><span class="sig-paren">(</span><em>job_exes</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.metrics.TotalJobExeMetrics.add_running_job_exes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds newly scheduled running job executions to the metrics</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exes</strong> ([<a class="reference internal" href="#job.execution.job_exe.RunningJobExecution" title="job.execution.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe.RunningJobExecution</span></code></a>]) &#8211; A list of the running job executions to add</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.metrics.TotalJobExeMetrics.generate_status_json">
+<code class="descname">generate_status_json</code><span class="sig-paren">(</span><em>nodes_list</em>, <em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.metrics.TotalJobExeMetrics.generate_status_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the portion of the status JSON that describes the job execution metrics</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>nodes_list</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The list of nodes within the status JSON</li>
+<li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The current time</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.metrics.TotalJobExeMetrics.init_with_database">
+<code class="descname">init_with_database</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.metrics.TotalJobExeMetrics.init_with_database" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.execution.metrics.TotalJobExeMetrics.job_exe_finished">
+<code class="descname">job_exe_finished</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.metrics.TotalJobExeMetrics.job_exe_finished" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles a running job execution that has finished</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe</strong> (<a class="reference internal" href="#job.execution.job_exe.RunningJobExecution" title="job.execution.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe.RunningJobExecution</span></code></a>) &#8211; The finished job execution</td>
 </tr>
 </tbody>
 </table>

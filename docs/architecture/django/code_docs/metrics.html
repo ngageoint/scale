@@ -1206,7 +1206,7 @@ aggregate variations that all reference the same base attribute.</li>
 <li><strong>query_set</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.models.QuerySet</span></code>) &#8211; A set of database models that are being counted towards metrics.</li>
 <li><strong>date_field</strong> (<em>string</em>) &#8211; The name of the field within each model that contains the recorded date.</li>
 <li><strong>choice_field</strong> (<em>string</em>) &#8211; The name of the field within each model that contains the choice model relation.</li>
-<li><strong>choice_ids</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em><em></em>) &#8211; A list of related model identifiers to query.</li>
+<li><strong>choice_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em><em></em>) &#8211; A list of related model identifiers to query.</li>
 <li><strong>columns</strong> (list[<a class="reference internal" href="#metrics.registry.MetricsTypeColumn" title="metrics.registry.MetricsTypeColumn"><code class="xref py py-class docutils literal"><span class="pre">metrics.registry.MetricsTypeColumn</span></code></a>]) &#8211; A list of metrics type column definitions that should be included.</li>
 </ul>
 </td>
@@ -1296,7 +1296,7 @@ can use its own choice models, but any fields listed as filters must be included
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The metrics type column names.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list">list</a>[string]</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a>[string]</td>
 </tr>
 </tbody>
 </table>
@@ -1313,8 +1313,8 @@ columns with a matching a value. Duplicates are then removed to produce the fina
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>column_names</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em><em></em>) &#8211; The names of the columns to lookup.</li>
-<li><strong>group_names</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em><em></em>) &#8211; The names of the groups to lookup.</li>
+<li><strong>column_names</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em><em></em>) &#8211; The names of the columns to lookup.</li>
+<li><strong>group_names</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em><em></em>) &#8211; The names of the groups to lookup.</li>
 </ul>
 </td>
 </tr>
@@ -1338,7 +1338,7 @@ final result.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>group_names</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em><em></em>) &#8211; The names of the groups to lookup.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>group_names</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em><em></em>) &#8211; The names of the groups to lookup.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The metrics type columns.</td>
 </tr>
@@ -1494,7 +1494,7 @@ queries they are not included by default.</td>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<em>datetime.date</em>) &#8211; The start of the time range to query.</li>
 <li><strong>ended</strong> (<em>datetime.date</em>) &#8211; The end of the time range to query.</li>
-<li><strong>choice_ids</strong> (<a class="reference internal" href="node.html#node.views.NodesStatusView.list" title="node.views.NodesStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em><em></em>) &#8211; A list of related model identifiers to query.</li>
+<li><strong>choice_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>string</em><em>]</em><em></em>) &#8211; A list of related model identifiers to query.</li>
 <li><strong>columns</strong> ({<a class="reference internal" href="#metrics.registry.MetricsTypeColumn" title="metrics.registry.MetricsTypeColumn"><code class="xref py py-class docutils literal"><span class="pre">metrics.registry.MetricsTypeColumn</span></code></a>}) &#8211; A list of metric columns to include from the metric type.</li>
 </ul>
 </td>

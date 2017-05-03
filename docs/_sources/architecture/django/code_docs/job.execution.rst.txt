@@ -35,6 +35,14 @@ job\.execution\.manager module
     :undoc-members:
     :show-inheritance:
 
+job\.execution\.metrics module
+------------------------------
+
+.. automodule:: job.execution.metrics
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

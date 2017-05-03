@@ -313,6 +313,7 @@
 <li class="toctree-l2"><a class="reference internal" href="job.execution.html#module-job.execution.container">job.execution.container module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.execution.html#module-job.execution.job_exe">job.execution.job_exe module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.execution.html#module-job.execution.manager">job.execution.manager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.execution.html#module-job.execution.metrics">job.execution.metrics module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.execution.html#module-job.execution">Module contents</a></li>
 </ul>
 </li>
@@ -450,6 +451,8 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.execution.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.execution.html#module-job.test.execution.test_job_exe">job.test.execution.test_job_exe module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.test.execution.html#module-job.test.execution.test_manager">job.test.execution.test_manager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.test.execution.html#module-job.test.execution.test_metrics">job.test.execution.test_metrics module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.execution.html#module-job.test.execution">Module contents</a></li>
 </ul>
 </li>
@@ -3269,21 +3272,6 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="job.models.JobType.sharedresourcerequirement_set">
-<code class="descname">sharedresourcerequirement_set</code><a class="headerlink" href="#job.models.JobType.sharedresourcerequirement_set" title="Permalink to this definition">¶</a></dt>
-<dd><p>Accessor to the related objects manager on the reverse side of a
-many-to-one relation.</p>
-<p>In the example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
-<p>Most of the implementation is delegated to a dynamically defined manager
-class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="job.models.JobType.timeout">
 <code class="descname">timeout</code><a class="headerlink" href="#job.models.JobType.timeout" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
@@ -4245,8 +4233,8 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="job.serializers.JobExecutionDetailsSerializer.NodeSerializer">
-<em class="property">class </em><code class="descname">NodeSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobExecutionDetailsSerializer.NodeSerializer" title="Permalink to this definition">¶</a></dt>
+<dt id="job.serializers.JobExecutionDetailsSerializer.NodeSerializerV4">
+<em class="property">class </em><code class="descname">NodeSerializerV4</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobExecutionDetailsSerializer.NodeSerializerV4" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="node.html#node.serializers.NodeBaseSerializer" title="node.serializers.NodeBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">node.serializers.NodeBaseSerializer</span></code></a></p>
 <p>Converts node model fields to REST output.</p>
 </dd></dl>
@@ -4273,8 +4261,8 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="job.serializers.JobExecutionSerializer.NodeBaseSerializer">
-<em class="property">class </em><code class="descname">NodeBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobExecutionSerializer.NodeBaseSerializer" title="Permalink to this definition">¶</a></dt>
+<dt id="job.serializers.JobExecutionSerializer.NodeBaseSerializerV4">
+<em class="property">class </em><code class="descname">NodeBaseSerializerV4</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobExecutionSerializer.NodeBaseSerializerV4" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
 <p>Converts node model fields to REST output.</p>
 </dd></dl>

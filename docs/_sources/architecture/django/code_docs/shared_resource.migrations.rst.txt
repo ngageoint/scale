@@ -20,6 +20,14 @@ shared\_resource\.migrations\.0002\_auto\_20170412\_1225 module
     :undoc-members:
     :show-inheritance:
 
+shared\_resource\.migrations\.0003\_auto\_20170426\_0952 module
+---------------------------------------------------------------
+
+.. automodule:: shared_resource.migrations.0003_auto_20170426_0952
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

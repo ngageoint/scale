@@ -234,6 +234,20 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>This class manages the syncing of the scheduler with the job type models. This class is thread-safe.</p>
 <dl class="method">
+<dt id="scheduler.sync.job_type_manager.JobTypeManager.generate_status_json">
+<code class="descname">generate_status_json</code><span class="sig-paren">(</span><em>status_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.sync.job_type_manager.JobTypeManager.generate_status_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the portion of the status JSON that describes the job types</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status_dict</strong> (<em>dict</em>) &#8211; The status JSON dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="scheduler.sync.job_type_manager.JobTypeManager.get_job_type">
 <code class="descname">get_job_type</code><span class="sig-paren">(</span><em>job_type_id</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.sync.job_type_manager.JobTypeManager.get_job_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the job type with the given ID, possibly None</p>

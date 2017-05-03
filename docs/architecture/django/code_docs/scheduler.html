@@ -252,6 +252,7 @@
 <li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0003_auto_20160201_0846">scheduler.migrations.0003_auto_20160201_0846 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0004_auto_20170209_1616">scheduler.migrations.0004_auto_20170209_1616 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0005_scheduler_queue_mode">scheduler.migrations.0005_scheduler_queue_mode module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0006_scheduler_status">scheduler.migrations.0006_scheduler_status module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -335,6 +336,7 @@
 <li class="toctree-l2"><a class="reference internal" href="scheduler.threads.html#module-scheduler.threads.db_sync">scheduler.threads.db_sync module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.threads.html#module-scheduler.threads.recon">scheduler.threads.recon module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.threads.html#module-scheduler.threads.schedule">scheduler.threads.schedule module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.threads.html#module-scheduler.threads.scheduler_status">scheduler.threads.scheduler_status module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.threads.html#module-scheduler.threads.task_handling">scheduler.threads.task_handling module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.threads.html#module-scheduler.threads.task_update">scheduler.threads.task_update module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.threads.html#module-scheduler.threads">Module contents</a></li>
@@ -493,6 +495,13 @@ object the first time, the query is executed.</p>
 <dl class="attribute">
 <dt id="scheduler.models.Scheduler.queue_mode">
 <code class="descname">queue_mode</code><a class="headerlink" href="#scheduler.models.Scheduler.queue_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.models.Scheduler.status">
+<code class="descname">status</code><a class="headerlink" href="#scheduler.models.Scheduler.status" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -827,9 +836,32 @@ fails during that time.</p>
 <em class="property">class </em><code class="descclassname">scheduler.views.</code><code class="descname">StatusView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.views.StatusView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.GenericAPIView</span></code></p>
 <p>This view is the endpoint for viewing overall system information</p>
+<dl class="attribute">
+<dt id="scheduler.views.StatusView.STATUS_FRESHNESS_THRESHOLD">
+<code class="descname">STATUS_FRESHNESS_THRESHOLD</code><em class="property"> = 12.0</em><a class="headerlink" href="#scheduler.views.StatusView.STATUS_FRESHNESS_THRESHOLD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="scheduler.views.StatusView.get">
 <code class="descname">get</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.views.StatusView.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets high level status information</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the HTTP response to send back to the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.views.StatusView.get_v4">
+<code class="descname">get_v4</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.views.StatusView.get_v4" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets high level status information</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

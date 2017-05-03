@@ -28,6 +28,14 @@ scheduler\.threads\.schedule module
     :undoc-members:
     :show-inheritance:
 
+scheduler\.threads\.scheduler\_status module
+--------------------------------------------
+
+.. automodule:: scheduler.threads.scheduler_status
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 scheduler\.threads\.task\_handling module
 -----------------------------------------
 
