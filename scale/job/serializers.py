@@ -280,20 +280,20 @@ class JobUpdateSerializer(JobSerializer):
 class JobExecutionSerializer(JobExecutionBaseSerializer):
     """Converts job execution model fields to REST output"""
     from error.serializers import ErrorBaseSerializer
-    from node.serializers import NodeBaseSerializer
+    from node.serializers import NodeBaseSerializerV4
 
     job = JobBaseSerializer()
-    node = NodeBaseSerializer()
+    node = NodeBaseSerializerV4()
     error = ErrorBaseSerializer()
 
 
 class JobExecutionDetailsSerializer(JobExecutionSerializer):
     """Converts job execution model fields to REST output"""
     from error.serializers import ErrorSerializer
-    from node.serializers import NodeSerializer
+    from node.serializers import NodeSerializerV4
 
     job = JobSerializer()
-    node = NodeSerializer()
+    node = NodeSerializerV4()
     error = ErrorSerializer()
 
     environment = serializers.JSONField(default=dict)

@@ -152,12 +152,14 @@ def create_job_exe(job_type=None, job=None, status='RUNNING', configuration=None
     if not last_modified:
         last_modified = when
 
-    return JobExecution.objects.create(job=job, status=status, error=error, configuration=configuration,
-                                       command_arguments=command_arguments, timeout=timeout, node=node, created=created,
-                                       queued=queued, started=started, pre_started=pre_started,
-                                       pre_completed=pre_completed, job_started=job_started,
-                                       job_completed=job_completed, post_started=post_started,
-                                       post_completed=post_completed, ended=ended, last_modified=last_modified)
+    job_exe = JobExecution.objects.create(job=job, status=status, error=error, configuration=configuration,
+                                          command_arguments=command_arguments, timeout=timeout, node=node,
+                                          created=created, queued=queued, started=started, pre_started=pre_started,
+                                          pre_completed=pre_completed, job_started=job_started,
+                                          job_completed=job_completed, post_started=post_started,
+                                          post_completed=post_completed, ended=ended, last_modified=last_modified)
+    job_exe.set_cluster_id('1234')
+    return job_exe
 
 
 def create_job_type(name=None, version=None, category=None, interface=None, priority=50, timeout=3600, max_tries=3,

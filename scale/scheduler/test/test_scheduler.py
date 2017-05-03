@@ -45,8 +45,8 @@ class TestScheduler(TransactionTestCase):
         my_scheduler, driver, master_info = self._get_registered_scheduler_driver_master()
         self.assertTrue(mock_initializer.called, 'initializer should be called on registration')
         self.assertEqual(
-            mock_thread_start.call_count, 5,
-            '5 threads should be started (5 != %d)' % mock_thread_start.call_count
+            mock_thread_start.call_count, 6,
+            '6 threads should be started (6 != %d)' % mock_thread_start.call_count
         )
 
     @patch('scheduler.scale_scheduler.ScaleScheduler._reconcile_running_jobs')

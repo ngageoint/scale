@@ -1,11 +1,12 @@
 """Defines the serializers for nodes that require extra fields from other applications"""
 import rest_framework.serializers as serializers
 
-from node.serializers import NodeSerializer
+from node.serializers import NodeSerializerV4
 from util.rest import ModelIdSerializer
 
 
-class NodeDetailsSerializer(NodeSerializer):
+# TODO: remove when REST API v4 is removed
+class NodeDetailsSerializerV4(NodeSerializerV4):
     """Converts node model fields to REST output."""
     try:
         from job.serializers import JobExecutionSerializer
@@ -25,6 +26,7 @@ class NodeDetailsSerializer(NodeSerializer):
         pass
 
 
+# TODO: remove when REST API v4 is removed
 class NodeStatusCountsSerializer(serializers.Serializer):
     """Converts node status count object fields to REST output."""
     status = serializers.CharField()
@@ -33,9 +35,10 @@ class NodeStatusCountsSerializer(serializers.Serializer):
     category = serializers.CharField()
 
 
+# TODO: remove when REST API v4 is removed
 class NodeStatusSerializer(serializers.Serializer):
     """Converts node model fields with job execution counts to REST output."""
-    node = NodeSerializer()
+    node = NodeSerializerV4()
     is_online = serializers.BooleanField()
     job_exe_counts = NodeStatusCountsSerializer(many=True)
 

@@ -5,6 +5,7 @@ import datetime
 import django
 from django.test import TestCase
 from django.utils.timezone import now
+from mock import patch
 
 from job.execution.job_exe import RunningJobExecution
 from job.execution.tasks.cleanup_task import CLEANUP_TASK_ID_PREFIX
@@ -14,8 +15,10 @@ from job.tasks.pull_task import PULL_TASK_ID_PREFIX
 from job.tasks.update import TaskStatusUpdate
 from job.test import utils as job_test_utils
 from node.test import utils as node_test_utils
+from scheduler.cleanup.node import JOB_EXES_WARNING_THRESHOLD
 from scheduler.node.conditions import NodeConditions
 from scheduler.node.node_class import Node
+from util.parse import datetime_to_string
 
 
 class TestNode(TestCase):
@@ -27,6 +30,34 @@ class TestNode(TestCase):
         self.node = node_test_utils.create_node(hostname='host_1', slave_id=self.node_agent)
         self.job_exe = job_test_utils.create_job_exe(node=self.node)
         self.task_mgr = TaskManager()
+
+    @patch('scheduler.node.conditions.now')
+    def test_generate_status_json(self, mock_now):
+        """Tests calling generate_status_json() successfully"""
+
+        right_now = now()
+        mock_now.return_value = right_now
+        num_job_exes = JOB_EXES_WARNING_THRESHOLD + 1
+
+        node = Node(self.node_agent, self.node)
+        node._conditions.handle_pull_task_failed()
+        node._conditions.update_cleanup_count(num_job_exes)
+        node._update_state()
+        nodes_list = []
+        node.generate_status_json(nodes_list)
+
+        expected_results = [{'id': node.id, 'hostname': node.hostname, 'agent_id': self.node_agent, 'is_active': True,
+                             'state': {'name': 'DEGRADED', 'title': Node.DEGRADED.title,
+                                       'description': Node.DEGRADED.description},
+                             'errors': [{'name': 'IMAGE_PULL', 'title': NodeConditions.IMAGE_PULL_ERR.title,
+                                         'description': NodeConditions.IMAGE_PULL_ERR.description,
+                                         'started': datetime_to_string(right_now),
+                                         'last_updated': datetime_to_string(right_now)}],
+                             'warnings': [{'name': 'CLEANUP', 'title': NodeConditions.CLEANUP_WARNING.title,
+                                           'description': NodeConditions.CLEANUP_WARNING.description % num_job_exes,
+                                           'started': datetime_to_string(right_now),
+                                           'last_updated': datetime_to_string(right_now)}]}]
+        self.assertListEqual(nodes_list, expected_results)
 
     def test_handle_failed_cleanup_task(self):
         """Tests handling failed cleanup task"""

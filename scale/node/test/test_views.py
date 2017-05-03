@@ -36,12 +36,12 @@ class TestNodesView(TransactionTestCase):
         self.assertEqual(len(results['results']), 2)
 
         for entry in results['results']:
-            if entry['hostname'] == self.node1.hostname:
-                self.assertEqual(entry['slave_id'], self.node1.slave_id)
-            elif entry['hostname'] == self.node2.hostname:
-                self.assertEqual(entry['slave_id'], self.node2.slave_id)
+            if entry['id'] == self.node1.id:
+                self.assertEqual(entry['hostname'], self.node1.hostname)
+            elif entry['id'] == self.node2.id:
+                self.assertEqual(entry['hostname'], self.node2.hostname)
             else:
-                self.fail('Unexpected node in results: %i' % entry['hostname'])
+                self.fail('Unexpected node in results: %i' % entry['id'])
 
 
 class TestNodesViewEmpty(TransactionTestCase):

@@ -11,7 +11,12 @@ These services provide access to information about the nodes.
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Node List**                                                                                                           |
 +=========================================================================================================================+
-| Returns a list of all nodes.                                                                                            |
+| Returns a list of nodes.                                                                                                |
++-------------------------------------------------------------------------------------------------------------------------+
+| **DEPRECATED**                                                                                                          |
+|                This table describes the current v4 version of the node list API, which is now deprecated.               |
+|                The new v5 version of this API does not include the *port*, *slave_id*, *is_paused_errors*, and          |
+|                *last_offer* fields in the response.                                                                     |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /nodes/                                                                                                         |
 +-------------------------------------------------------------------------------------------------------------------------+
@@ -59,9 +64,9 @@ These services provide access to information about the nodes.
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .hostname          | String            | The full domain-qualified hostname of the node.                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .port              | Integer           | The port being used by the executor on this node.                              |
+| .port              | Integer           | The port being used by the executor on this node. (*DEPRECATED*, gone in v5)   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .slave_id          | String            | The slave ID used by Mesos for the node.                                       |
+| .slave_id          | String            | The slave ID used by Mesos for the node. (*DEPRECATED*, gone in v5)            |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .pause_reason      | String            | The reason this node is paused if is_paused is true. This is a descriptive     |
 |                    |                   | field for presentation to the user.                                            |
@@ -70,6 +75,7 @@ These services provide access to information about the nodes.
 |                    |                   | Remaining tasks for a previously executing job will complete.                  |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .is_paused_errors  | Boolean           | True if the node was automatically paused due to a high error rate.            |
+|                    |                   | (*DEPRECATED*, gone in v5)                                                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .is_active         | Boolean           | True if the node is actively participating in the cluster.                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -77,7 +83,7 @@ These services provide access to information about the nodes.
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .created           | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .last_offer        | ISO-8601 Datetime | When the node last received an offer from Mesos.                               |
+| .last_offer        | ISO-8601 Datetime | When the node last received an offer from Mesos. (*DEPRECATED*, gone in v5)    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .last_modified     | ISO-8601 Datetime | When the associated database model was last saved.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -113,6 +119,11 @@ These services provide access to information about the nodes.
 +=========================================================================================================================+
 |  Returns a specific job and all its related model information including resource usage.                                 |
 +-------------------------------------------------------------------------------------------------------------------------+
+| **DEPRECATED**                                                                                                          |
+|                This table describes the current v4 version of the node details API, which is now deprecated.            |
+|                The new v5 version of this API does not include the *port*, *slave_id*, *is_paused_errors*, *last_offer*,|
+|                *resources*, *disconnected*, and *job_exes_running* fields in the response.                              |
++-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /nodes/{id}/                                                                                                    |
 |         Where {id} is the unique identifier of an existing model.                                                       |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -129,9 +140,9 @@ These services provide access to information about the nodes.
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | hostname           | String            | The full domain-qualified hostname of the node.                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| port               | Integer           | The port being used by the executor on this node.                              |
+| port               | Integer           | The port being used by the executor on this node. (*DEPRECATED*, gone in v5)   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| slave_id           | String            | The slave ID used by Mesos for the node.                                       |
+| slave_id           | String            | The slave ID used by Mesos for the node. (*DEPRECATED*, gone in v5)            |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | pause_reason       | String            | The reason this node is paused if is_paused is true. This is a descriptive     |
 |                    |                   | field for presentation to the user.                                            |
@@ -140,6 +151,7 @@ These services provide access to information about the nodes.
 |                    |                   | Remaining tasks for a previously executing job will complete.                  |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | is_paused_errors   | Boolean           | True if the node was automatically paused due to a high error rate.            |
+|                    |                   | (*DEPRECATED*, gone in v5)                                                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | is_active          | Boolean           | True if the node is actively participating in the cluster.                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -147,12 +159,13 @@ These services provide access to information about the nodes.
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | created            | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| last_offer         | ISO-8601 Datetime | When the node last received an offer from Mesos.                               |
+| last_offer         | ISO-8601 Datetime | When the node last received an offer from Mesos. (*DEPRECATED*, gone in v5)    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | resources          | JSON Object       | (Optional) Information about the hardware resources of the node                |
 |                    |                   | NOTE: Resource information may not always be available                         |
+|                    |                   | (*DEPRECATED*, gone in v5)                                                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .total             | JSON Object       | The total hardware resources for the node                                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -181,9 +194,11 @@ These services provide access to information about the nodes.
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | disconnected       | Boolean           | (Optional) If present and true, there is an active Node entry in the scale     |     
 |                    |                   | database but mesos does not have a corresponding active slave.                 |
+|                    |                   | (*DEPRECATED*, gone in v5)                                                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .job_exes_running  | Array             | A list of job executions currently running on the node.                        |
 |                    |                   | (See :ref:`Job Execution Details <rest_job_execution_details>`)                |
+|                    |                   | (*DEPRECATED*, gone in v5)                                                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
@@ -284,9 +299,14 @@ These services provide access to information about the nodes.
 +=========================================================================================================================+
 | Update one or more fields in an existing node.                                                                          |
 +-------------------------------------------------------------------------------------------------------------------------+
+| **DEPRECATED**                                                                                                          |
+|                This table describes the current v4 version of the node details API, which is now deprecated.            |
+|                The new v5 version of this API does not include the *port*, *slave_id*, *is_paused_errors*, *last_offer*,|
+|                *resources*, *disconnected*, and *job_exes_running* fields in the response.                              |
++-------------------------------------------------------------------------------------------------------------------------+
 | **PATCH** /nodes/{id}/                                                                                                  |
 |           Where {id} is the unique identifier of an existing model.                                                     |
-|           All fields are optional and additional fields are not tolerated.                                              |
+|           All fields are optional and additional fields are not accepted.                                               |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Content Type**   | *application/json*                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
@@ -299,13 +319,14 @@ These services provide access to information about the nodes.
 | is_paused          | Boolean           | (Optional) True if the node is paused and will not accept new jobs             |
 |                    |                   | for execution. Remaining tasks for a previously executing job will complete.   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
+| is_active          | Boolean           | (Optional) True if the node is active and Scale should use it for scheduling   |
+|                    |                   | jobs.                                                                          |
++--------------------+-------------------+--------------------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Status**         | 200 OK                                                                                             |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **Content Type**   | *application/json*                                                                                 |
-+--------------------+----------------------------------------------------------------------------------------------------+
-| Response format is identical to GET but contains the updated data.                                                      |
 +--------------------+----------------------------------------------------------------------------------------------------+
 | **JSON Fields**                                                                                                         |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -314,9 +335,9 @@ These services provide access to information about the nodes.
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | hostname           | String            | The full domain-qualified hostname of the node.                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| port               | Integer           | The port being used by the executor on this node.                              |
+| port               | Integer           | The port being used by the executor on this node. (*DEPRECATED*, gone in v5)   |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| slave_id           | String            | The slave ID used by Mesos for the node.                                       |
+| slave_id           | String            | The slave ID used by Mesos for the node. (*DEPRECATED*, gone in v5)            |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | pause_reason       | String            | The reason this node is paused if is_paused is true. This is a descriptive     |
 |                    |                   | field for presentation to the user.                                            |
@@ -325,6 +346,7 @@ These services provide access to information about the nodes.
 |                    |                   | Remaining tasks for a previously executing job will complete.                  |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | is_paused_errors   | Boolean           | True if the node was automatically paused due to a high error rate.            |
+|                    |                   | (*DEPRECATED*, gone in v5)                                                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | is_active          | Boolean           | True if the node is actively participating in the cluster.                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -332,12 +354,13 @@ These services provide access to information about the nodes.
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | created            | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| last_offer         | ISO-8601 Datetime | When the node last received an offer from Mesos.                               |
+| last_offer         | ISO-8601 Datetime | When the node last received an offer from Mesos. (*DEPRECATED*, gone in v5)    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | last_modified      | ISO-8601 Datetime | When the associated database model was last saved.                             |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | resources          | JSON Object       | (Optional) Information about the hardware resources of the node                |
 |                    |                   | NOTE: Resource information may not always be available                         |
+|                    |                   | (*DEPRECATED*, gone in v5)                                                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .total             | JSON Object       | The total hardware resources for the node                                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -366,9 +389,11 @@ These services provide access to information about the nodes.
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | disconnected       | Boolean           | (Optional) If present and true, there is an active Node entry in the scale     |
 |                    |                   | database but mesos does not have a corresponding active slave.                 |
+|                    |                   | (*DEPRECATED*, gone in v5)                                                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .job_exes_running  | Array             | A list of job executions currently running on the node.                        |
 |                    |                   | (See :ref:`Job Execution Details <rest_job_execution_details>`)                |
+|                    |                   | (*DEPRECATED*, gone in v5)                                                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
@@ -462,14 +487,18 @@ These services provide access to information about the nodes.
 |           }                                                                                                             |
 |       }                                                                                                                 |
 |   }                                                                                                                     |
-+--------------------+-------------------+--------------------------------------------------------------------------------+
++-------------------------------------------------------------------------------------------------------------------------+
 
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Nodes Status**                                                                                                        |
 +=========================================================================================================================+
 | Returns a list of overall node statistics, based on counts of job executions organized by status.                       |
 | This only returns data for nodes marked as active in the database. For status information on nodes which are no         |
-| longer in the cluseter (is_active is false), request node details for that specific node ID.                            |
+| longer in the cluster (is_active is false), request node details for that specific node ID.                             |
++-------------------------------------------------------------------------------------------------------------------------+
+| **DEPRECATED**                                                                                                          |
+|                This table describes the v4 version of the node status API, which is now deprecated.                     |
+|                There is no v5 version of this API; please use the /v5/status/ API instead.                              |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /nodes/status/                                                                                                  |
 +-------------------------------------------------------------------------------------------------------------------------+

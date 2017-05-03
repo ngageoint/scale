@@ -6,7 +6,7 @@ from django.utils.timezone import now
 from mock import MagicMock, patch
 
 from job.execution.job_exe import RunningJobExecution
-from job.execution.manager import running_job_mgr
+from job.execution.manager import job_exe_mgr
 from job.resources import NodeResources
 from job.test import utils as job_test_utils
 from mesos_api.api import SlaveInfo
@@ -99,7 +99,7 @@ class TestSchedulingThread(TransactionTestCase):
         queue_test_utils.create_queue(job_type=job_type_with_limit)
         job_type_mgr.sync_with_database()
         # One job of this type is already running
-        running_job_mgr.add_job_exes([RunningJobExecution(job_exe_1)])
+        job_exe_mgr.schedule_job_exes([RunningJobExecution(job_exe_1)])
 
         offer_1 = ResourceOffer('offer_1', self.node_agent_1, NodeResources(cpus=200.0, mem=102400.0, disk=102400.0))
         offer_2 = ResourceOffer('offer_2', self.node_agent_2, NodeResources(cpus=200.0, mem=204800.0, disk=204800.0))

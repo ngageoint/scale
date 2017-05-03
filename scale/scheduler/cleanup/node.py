@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 import logging
 
 from job.execution.tasks.cleanup_task import CleanupTask
-
 from scheduler.sync.scheduler_manager import scheduler_mgr
 
 

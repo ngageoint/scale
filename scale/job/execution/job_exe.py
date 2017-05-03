@@ -31,6 +31,7 @@ class RunningJobExecution(object):
         """
 
         self._id = job_exe.id
+        self._job_id = job_exe.job_id
         self._job_type_id = job_exe.job.job_type_id
         self._node_id = job_exe.node_id
         if hasattr(job_exe, 'docker_volumes'):
@@ -38,10 +39,13 @@ class RunningJobExecution(object):
         else:
             self._docker_volumes = []
 
-        self._lock = threading.Lock()  # Protects _current_task and _remaining_tasks
-        self._current_task = None
-        self._remaining_tasks = []
+        self._lock = threading.Lock()  # Protects the following fields
         self._all_tasks = []
+        self._current_task = None
+        self._error = None
+        self._finished = None
+        self._remaining_tasks = []
+        self._status = 'RUNNING'
 
         # Create tasks
         if not job_exe.is_system:
@@ -73,6 +77,28 @@ class RunningJobExecution(object):
         return self._docker_volumes
 
     @property
+    def error_category(self):
+        """Returns the category of this job execution's error, None if there is no error
+
+        :returns: The error category, possibly None
+        :rtype: bool
+        """
+
+        if self._error:
+            return self._error.category
+        return None
+
+    @property
+    def finished(self):
+        """When this job execution finished, possibly None
+
+        :returns: When this job execution finished, possibly None
+        :rtype: :class:`datetime.datetime`
+        """
+
+        return self._finished
+
+    @property
     def id(self):
         """Returns the ID of this job execution
 
@@ -81,6 +107,16 @@ class RunningJobExecution(object):
         """
 
         return self._id
+
+    @property
+    def job_id(self):
+        """Returns the job ID of this job execution
+
+        :returns: The job ID of the job execution
+        :rtype: int
+        """
+
+        return self._job_id
 
     @property
     def job_type_id(self):
@@ -102,6 +138,16 @@ class RunningJobExecution(object):
 
         return self._node_id
 
+    @property
+    def status(self):
+        """Returns the status of this job execution
+
+        :returns: The status of the job execution
+        :rtype: string
+        """
+
+        return self._status
+
     @retry_database_query
     def execution_canceled(self):
         """Cancels this job execution and returns the current task
@@ -121,6 +167,7 @@ class RunningJobExecution(object):
             task = self._current_task
             self._current_task = None
             self._remaining_tasks = []
+            self._set_finished_status('CANCELED', now())
             return task
 
     @retry_database_query
@@ -129,8 +176,6 @@ class RunningJobExecution(object):
 
         :param when: The time that the node was lost
         :type when: :class:`datetime.datetime`
-        :returns: The current task, possibly None
-        :rtype: :class:`job.tasks.base_task.Task`
         """
 
         error = Error.objects.get_builtin_error('node-lost')
@@ -138,21 +183,18 @@ class RunningJobExecution(object):
         Queue.objects.handle_job_failure(self._id, when, self._all_tasks, error)
 
         with self._lock:
-            task = self._current_task
             self._current_task = None
             self._remaining_tasks = []
-            return task
+            self._set_finished_status('FAILED', when, error)
 
     @retry_database_query
     def execution_timed_out(self, task, when):
-        """Fails this job execution for timing out and returns the current task
+        """Fails this job execution for timing out
 
         :param task: The task that timed out
         :type task: :class:`job.tasks.exe_task.JobExecutionTask`
         :param when: The time that the job execution timed out
         :type when: :class:`datetime.datetime`
-        :returns: The current task, possibly None
-        :rtype: :class:`job.tasks.base_task.Task`
         """
 
         if task.has_started:
@@ -164,10 +206,9 @@ class RunningJobExecution(object):
         Queue.objects.handle_job_failure(self._id, when, self._all_tasks, error)
 
         with self._lock:
-            task = self._current_task
             self._current_task = None
             self._remaining_tasks = []
-            return task
+            self._set_finished_status('FAILED', when, error)
 
     def get_container_names(self):
         """Returns the list of container names for all tasks in this job execution
@@ -247,6 +288,22 @@ class RunningJobExecution(object):
         elif task_update.status in [TaskStatusUpdate.FAILED, TaskStatusUpdate.KILLED]:
             self._task_fail(task_update)
 
+    def _set_finished_status(self, status, when, error=None):
+        """Sets the finished status for this job execution. Caller must have obtained lock.
+
+        :param status: The status
+        :type status: string
+        :param when: The time that the job execution finished
+        :type when: :class:`datetime.datetime`
+        :param error: The error, possibly None
+        :type error: :class:`error.models.Error`
+        """
+
+        if self._status == 'RUNNING':
+            self._status = status
+            self._finished = when
+            self._error = error
+
     @retry_database_query
     def _task_complete(self, task_update):
         """Completes a task for this job execution
@@ -262,6 +319,7 @@ class RunningJobExecution(object):
         if not current_task or current_task.id != task_update.task_id:
             return
 
+        when = now()
         with transaction.atomic():
             need_refresh = current_task.complete(task_update)
             if need_refresh and remaining_tasks:
@@ -270,11 +328,13 @@ class RunningJobExecution(object):
                     task.refresh_cached_values(job_exe)
             if not remaining_tasks:
                 from queue.models import Queue
-                Queue.objects.handle_job_completion(self._id, now(), self._all_tasks)
+                Queue.objects.handle_job_completion(self._id, when, self._all_tasks)
 
         with self._lock:
             if self._current_task and self._current_task.id == task_update.task_id:
                 self._current_task = None
+                if not self._remaining_tasks:
+                    self._set_finished_status('COMPLETED',when )
 
     @retry_database_query
     def _task_fail(self, task_update):
@@ -288,14 +348,16 @@ class RunningJobExecution(object):
         if not current_task or current_task.id != task_update.task_id:
             return
 
+        when = now()
         with transaction.atomic():
             error = current_task.determine_error(task_update)
             from queue.models import Queue
-            Queue.objects.handle_job_failure(self._id, now(), self._all_tasks, error)
+            Queue.objects.handle_job_failure(self._id, when, self._all_tasks, error)
 
         with self._lock:
             self._current_task = None
             self._remaining_tasks = []
+            self._set_finished_status('FAILED', when, error)
 
     def _task_lost(self, task_update):
         """Tells this job execution that one of its tasks was lost

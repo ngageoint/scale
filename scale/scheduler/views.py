@@ -6,6 +6,8 @@ import logging
 import rest_framework.status as status
 from django.conf import settings
 from django.http.response import Http404
+from django.utils.dateparse import parse_datetime
+from django.utils.timezone import now
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 
@@ -66,6 +68,9 @@ class SchedulerView(GenericAPIView):
 class StatusView(GenericAPIView):
     """This view is the endpoint for viewing overall system information"""
 
+    # The scheduler is considered offline if its status JSON is older than this threshold
+    STATUS_FRESHNESS_THRESHOLD = 12.0  # seconds
+
     def get(self, request):
         """Gets high level status information
 
@@ -74,6 +79,32 @@ class StatusView(GenericAPIView):
         :rtype: :class:`rest_framework.response.Response`
         :returns: the HTTP response to send back to the user
         """
+
+        if request.version == 'v4':
+            return self.get_v4(request)
+
+        status_dict = Scheduler.objects.get_master().status
+
+        if not status_dict:  # Empty dict from model initialization
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        # If status dict has not been updated recently, assume scheduler is down
+        status_timestamp = parse_datetime(status_dict['timestamp'])
+        if (now() - status_timestamp).total_seconds() > StatusView.STATUS_FRESHNESS_THRESHOLD:
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        return Response(status_dict)
+
+    # TODO: remove when REST API v4 is removed
+    def get_v4(self, request):
+        """Gets high level status information
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
         status = Scheduler.objects.get_status()
         return Response(status)
 

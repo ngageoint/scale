@@ -1,15 +1,19 @@
 from __future__ import unicode_literals
 
+import datetime
 import json
 
 import django
 from django.test import TestCase
+from django.utils.timezone import now
 from mock import patch
 from rest_framework import status
 
 import util.rest as rest_util
 from mesos_api.api import HardwareResources, MesosError, SchedulerInfo
 from scheduler.models import Scheduler
+from scheduler.threads.scheduler_status import SchedulerStatusThread
+from util.parse import datetime_to_string
 
 
 class TestSchedulerView(TestCase):
@@ -82,14 +86,48 @@ class TestStatusView(TestCase):
         django.setup()
         Scheduler.objects.create(id=1, master_hostname='master', master_port=5050)
 
+    def test_status_empty_dict(self):
+        """Test getting scheduler status with empty initialization"""
+
+        # url = rest_util.get_url('/status/')
+        url = '/v5/status/'
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+
+    def test_status_old(self):
+        """Test getting scheduler status with old data"""
+
+        when = now() - datetime.timedelta(hours=1)
+        status_thread = SchedulerStatusThread()
+        status_thread._generate_status_json(when)
+
+        # url = rest_util.get_url('/status/')
+        url = '/v5/status/'
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT, response.content)
+
+    def test_status_successful(self):
+        """Test getting scheduler status successfully"""
+
+        when = now()
+        status_thread = SchedulerStatusThread()
+        status_thread._generate_status_json(when)
+
+        # url = rest_util.get_url('/status/')
+        url = '/v5/status/'
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+        result = json.loads(response.content)
+        self.assertEqual(result['timestamp'], datetime_to_string(when))
+
+    # TODO: remove when REST API v4 is removed
     @patch('mesos_api.api.get_scheduler')
-    def test_status_success(self, mock_get_scheduler):
+    def test_status_success_v4(self, mock_get_scheduler):
         """Test getting overall scheduler status information successfully"""
         mock_get_scheduler.return_value = SchedulerInfo('scheduler', True, HardwareResources(5, 10, 20),
                                                         HardwareResources(1, 2, 3),  HardwareResources())
 
-        url = rest_util.get_url('/status/')
-        response = self.client.generic('GET', url)
+        response = self.client.generic('GET', '/v4/status/')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
@@ -104,25 +142,25 @@ class TestStatusView(TestCase):
         self.assertEqual(result['resources']['scheduled']['cpus'], 1)
         self.assertEqual(result['resources']['used']['cpus'], 0)
 
+    # TODO: remove when REST API v4 is removed
     @patch('mesos_api.api.get_scheduler')
-    def test_status_no_scheduler(self, mock_get_scheduler):
+    def test_status_no_scheduler_v4(self, mock_get_scheduler):
         """Test getting overall scheduler status information"""
         Scheduler.objects.all().delete()
 
-        url = rest_util.get_url('/status/')
-        response = self.client.generic('GET', url)
+        response = self.client.generic('GET', '/v4/status/')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
         self.assertFalse(result['master']['is_online'])
 
+    # TODO: remove when REST API v4 is removed
     @patch('mesos_api.api.get_scheduler')
-    def test_status_no_master(self, mock_get_scheduler):
+    def test_status_no_master_v4(self, mock_get_scheduler):
         """Test getting overall scheduler status information"""
         mock_get_scheduler.side_effect = MesosError()
 
-        url = rest_util.get_url('/status/')
-        response = self.client.generic('GET', url)
+        response = self.client.generic('GET', '/v4/status/')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)

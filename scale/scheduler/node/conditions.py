@@ -8,6 +8,7 @@ from django.utils.timezone import now
 
 from job.tasks.health_task import HealthTask
 from scheduler.cleanup.node import JOB_EXES_WARNING_THRESHOLD
+from util.parse import datetime_to_string
 
 
 logger = logging.getLogger(__name__)
@@ -91,6 +92,28 @@ class NodeConditions(object):
         self.is_daemon_bad = False  # Whether the node's Docker daemon is bad, preventing Docker tasks from running
         self.is_health_check_normal = True  # Whether the last node health check was normal
         self.is_pull_bad = False  # Whether the node should attempt to perform Docker image pulls
+
+    def generate_status_json(self, node_dict):
+        """Generates the portion of the status JSON that describes these node conditions
+
+        :param node_dict: The dict for this node within the status JSON
+        :type node_dict: dict
+        """
+
+        error_list = []
+        for active_error in self._active_errors.values():
+            error = {'name': active_error.error.name, 'title': active_error.error.title,
+                     'description': active_error.error.description, 'started': datetime_to_string(active_error.started),
+                     'last_updated': datetime_to_string(active_error.last_updated)}
+            error_list.append(error)
+        warning_list = []
+        for active_warning in self._active_warnings.values():
+            warning = {'name': active_warning.warning.name, 'title': active_warning.warning.title,
+                       'description': active_warning.description, 'started': datetime_to_string(active_warning.started),
+                       'last_updated': datetime_to_string(active_warning.last_updated)}
+            warning_list.append(warning)
+        node_dict['errors'] = error_list
+        node_dict['warnings'] = warning_list
 
     def handle_cleanup_task_completed(self):
         """Handles the successful completion of a node cleanup task

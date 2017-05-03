@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 import logging
 
+import django.contrib.postgres.fields
 import mesos_api.api as mesos_api
 from django.db import models, transaction
 from mesos_api.api import MesosError
@@ -22,7 +23,7 @@ class SchedulerManager(models.Manager):
         :rtype: :class:`scheduler.models.Scheduler`
         """
         try:
-            return Scheduler.objects.get(pk=1)
+            return Scheduler.objects.all().defer('status').get(pk=1)
         except Scheduler.DoesNotExist:
             logger.exception('Initial database import missing master scheduler: 1')
             raise
@@ -144,6 +145,7 @@ class Scheduler(models.Model):
 
     is_paused = models.BooleanField(default=False)
     queue_mode = models.CharField(choices=QUEUE_MODES, default=QUEUE_ORDER_FIFO, max_length=50)
+    status = django.contrib.postgres.fields.JSONField(default=dict)
     master_hostname = models.CharField(max_length=250, default='localhost')
     master_port = models.IntegerField(default=5050)
 
