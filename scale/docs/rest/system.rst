@@ -43,11 +43,11 @@ These services provide access to general system information.
 |                          |                   | began and was last updated                                                     |
 +--------------------------+-------------------+--------------------------------------------------------------------------------+
 | nodes.job_executions     | JSON Object       | The job executions related to this node. The *running* field describes the     |
-|                          |                   | jobs currently running on the node, with a total count, count per job type,    |
-|                          |                   | and job IDs per job type. The *completed* field describes job executions that  |
-|                          |                   | have completed on the node in the last 3 hours, with a total count, count per  |
-|                          |                   | job type, and job IDs per job type. The *failed* field is similar to           |
-|                          |                   | *completed*, just with failed executions grouped by error category.            |
+|                          |                   | jobs currently running on the node, with a total count and count per job type. |
+|                          |                   | The *completed* field describes job executions that have completed on the node |
+|                          |                   | in the last 3 hours, with a total count and count per job type. The *failed*   |
+|                          |                   | field is similar to *completed*, just with failed executions grouped by error  |
+|                          |                   | category.                                                                      |
 +--------------------------+-------------------+--------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                                    |
 |                                                                                                                               |
@@ -99,8 +99,7 @@ These services provide access to general system information.
 |                  "by_job_type": [                                                                                             |
 |                     {                                                                                                         |
 |                        "job_type_id": 1,                                                                                      |
-|                        "count": 3,                                                                                            |
-|                        "job_ids": [123, 124, 125]                                                                             |
+|                        "count": 3                                                                                             |
 |                     }                                                                                                         |
 |                  ]                                                                                                            |
 |               },                                                                                                              |
@@ -109,8 +108,7 @@ These services provide access to general system information.
 |                  "by_job_type": [                                                                                             |
 |                     {                                                                                                         |
 |                        "job_type_id": 1,                                                                                      |
-|                        "count": 3,                                                                                            |
-|                        "job_ids": [123, 124, 125]                                                                             |
+|                        "count": 3                                                                                             |
 |                     }                                                                                                         |
 |                  ]                                                                                                            |
 |               },                                                                                                              |
@@ -121,8 +119,7 @@ These services provide access to general system information.
 |                     "by_job_type": [                                                                                          |
 |                        {                                                                                                      |
 |                           "job_type_id": 1,                                                                                   |
-|                           "count": 3,                                                                                         |
-|                           "job_ids": [123, 124, 125]                                                                          |
+|                           "count": 3                                                                                          |
 |                        }                                                                                                      |
 |                     ]                                                                                                         |
 |                  },                                                                                                           |
@@ -131,8 +128,7 @@ These services provide access to general system information.
 |                     "by_job_type": [                                                                                          |
 |                        {                                                                                                      |
 |                           "job_type_id": 1,                                                                                   |
-|                           "count": 3,                                                                                         |
-|                           "job_ids": [123, 124, 125]                                                                          |
+|                           "count": 3                                                                                          |
 |                        }                                                                                                      |
 |                     ]                                                                                                         |
 |                  },                                                                                                           |
@@ -141,8 +137,7 @@ These services provide access to general system information.
 |                     "by_job_type": [                                                                                          |
 |                        {                                                                                                      |
 |                           "job_type_id": 1,                                                                                   |
-|                           "count": 3,                                                                                         |
-|                           "job_ids": [123, 124, 125]                                                                          |
+|                           "count": 3                                                                                          |
 |                        }                                                                                                      |
 |                     ]                                                                                                         |
 |                  }                                                                                                            |
