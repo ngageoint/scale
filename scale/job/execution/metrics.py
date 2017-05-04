@@ -20,7 +20,6 @@ class JobExeMetrics(object):
         """
 
         self.count = 0
-        self.job_ids = set()
 
     def add_job_execution(self, job_exe):
         """Adds the given job execution to the metrics
@@ -30,7 +29,6 @@ class JobExeMetrics(object):
         """
 
         self.count += 1
-        self.job_ids.add(job_exe.job_id)
 
     def generate_status_json(self, json_dict):
         """Generates the portion of the status JSON that describes this list of job executions
@@ -40,7 +38,6 @@ class JobExeMetrics(object):
         """
 
         json_dict['count'] = self.count
-        json_dict['job_ids'] = list(self.job_ids)
 
     def remove_job_execution(self, job_exe):
         """Removes the given job execution from the metrics
@@ -50,7 +47,6 @@ class JobExeMetrics(object):
         """
 
         self.count -= 1
-        self.job_ids.discard(job_exe.job_id)
 
     def subtract_metrics(self, metrics):
         """Subtracts the given metrics
@@ -60,7 +56,6 @@ class JobExeMetrics(object):
         """
 
         self.count -= metrics.count
-        self.job_ids -= metrics.job_ids
 
 
 class JobExeMetricsByType(object):
