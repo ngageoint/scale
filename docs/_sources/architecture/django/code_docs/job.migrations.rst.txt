@@ -196,6 +196,14 @@ job\.migrations\.0024\_auto\_20170412\_1225 module
     :undoc-members:
     :show-inheritance:
 
+job\.migrations\.0025\_auto\_20170504\_1534 module
+--------------------------------------------------
+
+.. automodule:: job.migrations.0025_auto_20170504_1534
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

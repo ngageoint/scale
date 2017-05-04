@@ -258,11 +258,11 @@ began and was last updated</td>
 <tr class="row-even"><td>nodes.job_executions</td>
 <td>JSON Object</td>
 <td>The job executions related to this node. The <em>running</em> field describes the
-jobs currently running on the node, with a total count, count per job type,
-and job IDs per job type. The <em>completed</em> field describes job executions that
-have completed on the node in the last 3 hours, with a total count, count per
-job type, and job IDs per job type. The <em>failed</em> field is similar to
-<em>completed</em>, just with failed executions grouped by error category.</td>
+jobs currently running on the node, with a total count and count per job type.
+The <em>completed</em> field describes job executions that have completed on the node
+in the last 3 hours, with a total count and count per job type. The <em>failed</em>
+field is similar to <em>completed</em>, just with failed executions grouped by error
+category.</td>
 </tr>
 <tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
    <span class="s2">&quot;timestamp&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
@@ -312,8 +312,7 @@ job type, and job IDs per job type. The <em>failed</em> field is similar to
                <span class="s2">&quot;by_job_type&quot;</span><span class="o">:</span> <span class="p">[</span>
                   <span class="p">{</span>
                      <span class="s2">&quot;job_type_id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-                     <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
-                     <span class="s2">&quot;job_ids&quot;</span><span class="o">:</span> <span class="p">[</span><span class="mi">123</span><span class="p">,</span> <span class="mi">124</span><span class="p">,</span> <span class="mi">125</span><span class="p">]</span>
+                     <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">3</span>
                   <span class="p">}</span>
                <span class="p">]</span>
             <span class="p">},</span>
@@ -322,8 +321,7 @@ job type, and job IDs per job type. The <em>failed</em> field is similar to
                <span class="s2">&quot;by_job_type&quot;</span><span class="o">:</span> <span class="p">[</span>
                   <span class="p">{</span>
                      <span class="s2">&quot;job_type_id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-                     <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
-                     <span class="s2">&quot;job_ids&quot;</span><span class="o">:</span> <span class="p">[</span><span class="mi">123</span><span class="p">,</span> <span class="mi">124</span><span class="p">,</span> <span class="mi">125</span><span class="p">]</span>
+                     <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">3</span>
                   <span class="p">}</span>
                <span class="p">]</span>
             <span class="p">},</span>
@@ -334,8 +332,7 @@ job type, and job IDs per job type. The <em>failed</em> field is similar to
                   <span class="s2">&quot;by_job_type&quot;</span><span class="o">:</span> <span class="p">[</span>
                      <span class="p">{</span>
                         <span class="s2">&quot;job_type_id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-                        <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
-                        <span class="s2">&quot;job_ids&quot;</span><span class="o">:</span> <span class="p">[</span><span class="mi">123</span><span class="p">,</span> <span class="mi">124</span><span class="p">,</span> <span class="mi">125</span><span class="p">]</span>
+                        <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">3</span>
                      <span class="p">}</span>
                   <span class="p">]</span>
                <span class="p">},</span>
@@ -344,8 +341,7 @@ job type, and job IDs per job type. The <em>failed</em> field is similar to
                   <span class="s2">&quot;by_job_type&quot;</span><span class="o">:</span> <span class="p">[</span>
                      <span class="p">{</span>
                         <span class="s2">&quot;job_type_id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-                        <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
-                        <span class="s2">&quot;job_ids&quot;</span><span class="o">:</span> <span class="p">[</span><span class="mi">123</span><span class="p">,</span> <span class="mi">124</span><span class="p">,</span> <span class="mi">125</span><span class="p">]</span>
+                        <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">3</span>
                      <span class="p">}</span>
                   <span class="p">]</span>
                <span class="p">},</span>
@@ -354,8 +350,7 @@ job type, and job IDs per job type. The <em>failed</em> field is similar to
                   <span class="s2">&quot;by_job_type&quot;</span><span class="o">:</span> <span class="p">[</span>
                      <span class="p">{</span>
                         <span class="s2">&quot;job_type_id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-                        <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
-                        <span class="s2">&quot;job_ids&quot;</span><span class="o">:</span> <span class="p">[</span><span class="mi">123</span><span class="p">,</span> <span class="mi">124</span><span class="p">,</span> <span class="mi">125</span><span class="p">]</span>
+                        <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">3</span>
                      <span class="p">}</span>
                   <span class="p">]</span>
                <span class="p">}</span>
