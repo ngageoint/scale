@@ -116,9 +116,10 @@ class JobExeMetricsByType(object):
 
         self.total_count -= metrics.total_count
         for job_type_id in self.job_type_metrics.keys():
-            self.job_type_metrics[job_type_id].subtract_metrics(metrics.job_type_metrics[job_type_id])
-            if self.job_type_metrics[job_type_id].count == 0:
-                del self.job_type_metrics[job_type_id]
+            if job_type_id in metrics.job_type_metrics:
+                self.job_type_metrics[job_type_id].subtract_metrics(metrics.job_type_metrics[job_type_id])
+                if self.job_type_metrics[job_type_id].count == 0:
+                    del self.job_type_metrics[job_type_id]
 
 
 class RunningJobExeMetricsByNode(object):
