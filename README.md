@@ -72,8 +72,9 @@ Alternatively, your own local_settings.py can be volume mounted into `/opt/scale
 | SCALE_WEBSERVER_MEMORY      | 2048                            | UI/API memory allocation during bootstrap  |
 | SCALE_ZK_URL                | None                            | Scale master location                      |
 | SECRETS_SSL_WARNINGS        | 'true'                          | Should secrets SSL warnings be raised?     |
-| SECRETS_TOKEN               | None                            | API endpoint for a secrets service         |
-| SECRETS_URL                 | None                            | Authentication token for secrets service   |
+| SECRETS_TOKEN               | None                            | Authentication token for secrets service   |
+| SECRETS_URL                 | None                            | API endpoint for a secrets service         |
+
 
 Scale Dependencies
 ==================

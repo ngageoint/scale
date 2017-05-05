@@ -167,11 +167,8 @@ class TestTotalJobExeMetrics(TestCase):
         for job_type_dict in node_list_dict[0]['job_executions']['running']['by_job_type']:
             if job_type_dict['job_type_id'] == job_type_1.id:
                 self.assertEqual(job_type_dict['count'], 3)
-                self.assertSetEqual(set(job_type_dict['job_ids']), {job_exe_model_1.job_id, job_exe_model_2.job_id,
-                                                                    job_exe_model_3.job_id})
             elif job_type_dict['job_type_id'] == job_type_2.id:
                 self.assertEqual(job_type_dict['count'], 1)
-                self.assertSetEqual(set(job_type_dict['job_ids']), {job_exe_model_4.job_id})
             else:
                 self.fail('Unexpected job type ID')
         self.assertEqual(node_list_dict[0]['job_executions']['completed']['total'], 0)
@@ -183,12 +180,8 @@ class TestTotalJobExeMetrics(TestCase):
         for job_type_dict in node_list_dict[1]['job_executions']['running']['by_job_type']:
             if job_type_dict['job_type_id'] == job_type_1.id:
                 self.assertEqual(job_type_dict['count'], 2)
-                self.assertSetEqual(set(job_type_dict['job_ids']), {job_exe_model_5.job_id, job_exe_model_6.job_id})
             elif job_type_dict['job_type_id'] == job_type_2.id:
                 self.assertEqual(job_type_dict['count'], 5)
-                self.assertSetEqual(set(job_type_dict['job_ids']), {job_exe_model_7.job_id,  job_exe_model_8.job_id,
-                                                                    job_exe_model_9.job_id, job_exe_model_10.job_id,
-                                                                    job_exe_model_11.job_id})
             else:
                 self.fail('Unexpected job type ID')
         self.assertEqual(node_list_dict[1]['job_executions']['completed']['total'], 0)
@@ -213,41 +206,29 @@ class TestTotalJobExeMetrics(TestCase):
         self.assertEqual(len(node_list_dict[0]['job_executions']['running']['by_job_type']), 1)
         self.assertEqual(node_list_dict[0]['job_executions']['running']['by_job_type'][0]['count'], 1)
         self.assertEqual(node_list_dict[0]['job_executions']['running']['by_job_type'][0]['job_type_id'], job_type_1.id)
-        self.assertListEqual(node_list_dict[0]['job_executions']['running']['by_job_type'][0]['job_ids'],
-                             [job_exe_model_3.job_id])
         self.assertEqual(node_list_dict[0]['job_executions']['completed']['total'], 1)
         self.assertEqual(len(node_list_dict[0]['job_executions']['completed']['by_job_type']), 1)
         self.assertEqual(node_list_dict[0]['job_executions']['completed']['by_job_type'][0]['count'], 1)
         self.assertEqual(node_list_dict[0]['job_executions']['completed']['by_job_type'][0]['job_type_id'],
                          job_type_1.id)
-        self.assertListEqual(node_list_dict[0]['job_executions']['completed']['by_job_type'][0]['job_ids'],
-                             [job_exe_model_1.job_id])
         self.assertEqual(node_list_dict[0]['job_executions']['failed']['total'], 2)
         self.assertEqual(node_list_dict[0]['job_executions']['failed']['algorithm']['total'], 1)
         self.assertEqual(len(node_list_dict[0]['job_executions']['failed']['algorithm']['by_job_type']), 1)
         self.assertEqual(node_list_dict[0]['job_executions']['failed']['algorithm']['by_job_type'][0]['count'], 1)
         self.assertEqual(node_list_dict[0]['job_executions']['failed']['algorithm']['by_job_type'][0]['job_type_id'],
                          job_type_2.id)
-        self.assertListEqual(node_list_dict[0]['job_executions']['failed']['algorithm']['by_job_type'][0]['job_ids'],
-                             [job_exe_model_4.job_id])
         self.assertEqual(node_list_dict[0]['job_executions']['failed']['data']['total'], 1)
         self.assertEqual(len(node_list_dict[0]['job_executions']['failed']['data']['by_job_type']), 1)
         self.assertEqual(node_list_dict[0]['job_executions']['failed']['data']['by_job_type'][0]['count'], 1)
         self.assertEqual(node_list_dict[0]['job_executions']['failed']['data']['by_job_type'][0]['job_type_id'],
                          job_type_1.id)
-        self.assertListEqual(node_list_dict[0]['job_executions']['failed']['data']['by_job_type'][0]['job_ids'],
-                             [job_exe_model_2.job_id])
         self.assertEqual(node_list_dict[0]['job_executions']['failed']['system']['total'], 0)
         self.assertEqual(node_list_dict[1]['job_executions']['running']['total'], 7)
         for job_type_dict in node_list_dict[1]['job_executions']['running']['by_job_type']:
             if job_type_dict['job_type_id'] == job_type_1.id:
                 self.assertEqual(job_type_dict['count'], 2)
-                self.assertSetEqual(set(job_type_dict['job_ids']), {job_exe_model_5.job_id, job_exe_model_6.job_id})
             elif job_type_dict['job_type_id'] == job_type_2.id:
                 self.assertEqual(job_type_dict['count'], 5)
-                self.assertSetEqual(set(job_type_dict['job_ids']), {job_exe_model_7.job_id,  job_exe_model_8.job_id,
-                                                                    job_exe_model_9.job_id, job_exe_model_10.job_id,
-                                                                    job_exe_model_11.job_id})
             else:
                 self.fail('Unexpected job type ID')
         self.assertEqual(node_list_dict[1]['job_executions']['completed']['total'], 0)
@@ -280,42 +261,30 @@ class TestTotalJobExeMetrics(TestCase):
         self.assertEqual(len(node_list_dict[0]['job_executions']['running']['by_job_type']), 1)
         self.assertEqual(node_list_dict[0]['job_executions']['running']['by_job_type'][0]['count'], 1)
         self.assertEqual(node_list_dict[0]['job_executions']['running']['by_job_type'][0]['job_type_id'], job_type_1.id)
-        self.assertListEqual(node_list_dict[0]['job_executions']['running']['by_job_type'][0]['job_ids'],
-                             [job_exe_model_3.job_id])
         self.assertEqual(node_list_dict[0]['job_executions']['completed']['total'], 1)
         self.assertEqual(len(node_list_dict[0]['job_executions']['completed']['by_job_type']), 1)
         self.assertEqual(node_list_dict[0]['job_executions']['completed']['by_job_type'][0]['count'], 1)
         self.assertEqual(node_list_dict[0]['job_executions']['completed']['by_job_type'][0]['job_type_id'],
                          job_type_1.id)
-        self.assertListEqual(node_list_dict[0]['job_executions']['completed']['by_job_type'][0]['job_ids'],
-                             [job_exe_model_1.job_id])
         self.assertEqual(node_list_dict[0]['job_executions']['failed']['total'], 2)
         self.assertEqual(node_list_dict[0]['job_executions']['failed']['algorithm']['total'], 1)
         self.assertEqual(len(node_list_dict[0]['job_executions']['failed']['algorithm']['by_job_type']), 1)
         self.assertEqual(node_list_dict[0]['job_executions']['failed']['algorithm']['by_job_type'][0]['count'], 1)
         self.assertEqual(node_list_dict[0]['job_executions']['failed']['algorithm']['by_job_type'][0]['job_type_id'],
                          job_type_2.id)
-        self.assertListEqual(node_list_dict[0]['job_executions']['failed']['algorithm']['by_job_type'][0]['job_ids'],
-                             [job_exe_model_4.job_id])
         self.assertEqual(node_list_dict[0]['job_executions']['failed']['data']['total'], 1)
         self.assertEqual(len(node_list_dict[0]['job_executions']['failed']['data']['by_job_type']), 1)
         self.assertEqual(node_list_dict[0]['job_executions']['failed']['data']['by_job_type'][0]['count'], 1)
         self.assertEqual(node_list_dict[0]['job_executions']['failed']['data']['by_job_type'][0]['job_type_id'],
                          job_type_1.id)
-        self.assertListEqual(node_list_dict[0]['job_executions']['failed']['data']['by_job_type'][0]['job_ids'],
-                             [job_exe_model_2.job_id])
         self.assertEqual(node_list_dict[0]['job_executions']['failed']['system']['total'], 0)
         self.assertEqual(node_list_dict[1]['job_executions']['running']['total'], 0)
         self.assertEqual(node_list_dict[1]['job_executions']['completed']['total'], 7)
         for job_type_dict in node_list_dict[1]['job_executions']['completed']['by_job_type']:
             if job_type_dict['job_type_id'] == job_type_1.id:
                 self.assertEqual(job_type_dict['count'], 2)
-                self.assertSetEqual(set(job_type_dict['job_ids']), {job_exe_model_5.job_id, job_exe_model_6.job_id})
             elif job_type_dict['job_type_id'] == job_type_2.id:
                 self.assertEqual(job_type_dict['count'], 5)
-                self.assertSetEqual(set(job_type_dict['job_ids']), {job_exe_model_7.job_id,  job_exe_model_8.job_id,
-                                                                    job_exe_model_9.job_id, job_exe_model_10.job_id,
-                                                                    job_exe_model_11.job_id})
             else:
                 self.fail('Unexpected job type ID')
         self.assertEqual(node_list_dict[1]['job_executions']['failed']['total'], 0)
@@ -334,8 +303,6 @@ class TestTotalJobExeMetrics(TestCase):
         self.assertEqual(len(node_list_dict[0]['job_executions']['running']['by_job_type']), 1)
         self.assertEqual(node_list_dict[0]['job_executions']['running']['by_job_type'][0]['count'], 1)
         self.assertEqual(node_list_dict[0]['job_executions']['running']['by_job_type'][0]['job_type_id'], job_type_1.id)
-        self.assertListEqual(node_list_dict[0]['job_executions']['running']['by_job_type'][0]['job_ids'],
-                             [job_exe_model_3.job_id])
         self.assertEqual(node_list_dict[0]['job_executions']['completed']['total'], 0)
         self.assertEqual(node_list_dict[0]['job_executions']['failed']['total'], 0)
         self.assertEqual(node_list_dict[0]['job_executions']['failed']['algorithm']['total'], 0)

@@ -1290,7 +1290,7 @@ class JobExecution(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     queued = models.DateTimeField()
     started = models.DateTimeField(blank=True, null=True)
-    ended = models.DateTimeField(blank=True, null=True)
+    ended = models.DateTimeField(blank=True, db_index=True, null=True)
     last_modified = models.DateTimeField(auto_now=True, db_index=True)
 
     objects = JobExecutionManager()

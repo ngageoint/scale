@@ -1,9 +1,9 @@
 FROM alpine
 
-ENV VAULT_VERSION 0.6.2
+ENV VAULT_VERSION 0.7.0
 
 ADD https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip vault.zip
-RUN apk add --update unzip openssl ca-certificates && \
+RUN apk add --update unzip openssl ca-certificates curl && \
     unzip vault.zip && \
     rm vault.zip && \
     cp vault /usr/bin && \
@@ -14,6 +14,7 @@ COPY run-vault /usr/bin/run-vault
 COPY config.hcl config.hcl
 
 RUN chmod +x /usr/bin/run-vault
+RUN sed -i 's/\r$//g' /usr/bin/run-vault
 
 ENTRYPOINT ["run-vault"]
 CMD ["server", "-config=config.hcl"]
