@@ -75,7 +75,6 @@ Alternatively, your own local_settings.py can be volume mounted into `/opt/scale
 | SECRETS_TOKEN               | None                            | Authentication token for secrets service   |
 | SECRETS_URL                 | None                            | API endpoint for a secrets service         |
 
-
 Scale Dependencies
 ==================
 Scale requires several external components to run as intended. PostgreSQL is used to store all internal system state
