@@ -15,14 +15,14 @@ Scale runs across a cluster of networked machines (called nodes) that process th
 Apache Mesos, a free and open source project, for managing the available resources on the nodes. Mesos
 informs Scale of available computing resources and Scale schedules jobs to run on those resources.
 
-Ingest 
+Ingest
 ------
 Scale ingests source files using a Scale component called Strike. Strike is a process that monitors an
 ingest directory into which source data files are being copied. After a new source data file has been
 ingested, Scale produces and places jobs on the queue depending on the type of the ingested file.
 Many Strike processes can be run simultaneously, allowing Scale to monitor many different ingest directories.
 
-Jobs 
+Jobs
 ----
 Scale creates jobs based on its known job types. A job type defines key characteristics about an algorithm
 that Scale needs to know in order to run it (what command to run, the algorithm.s inputs and outputs, etc.)
@@ -32,7 +32,7 @@ they may be created manually by a user. Jobs that need to be executed are placed
 a queue before being scheduled onto an available node. When multiple jobs need to be run in a serial or parallel
 sequence, a recipe can be created that defines the job workflow.
 
-Products 
+Products
 --------
 Jobs can produce products as a result of their successful execution. Products may be disseminated to users
 or used to analyze and improve the algorithms that produced them. Scale allows the creation of different
@@ -71,8 +71,8 @@ Alternatively, your own local_settings.py can be volume mounted into `/opt/scale
 | SCALE_WEBSERVER_CPU         | 1                               | UI/API CPU allocation during bootstrap     |
 | SCALE_WEBSERVER_MEMORY      | 2048                            | UI/API memory allocation during bootstrap  |
 | SCALE_ZK_URL                | None                            | Scale master location                      |
-| SECRETS_TOKEN               | None                            | API endpoint for a secrets service         |
-| SECRETS_URL                 | None                            | Authentication token for secrets service   |
+| SECRETS_TOKEN               | None                            | Authentication token for secrets service   |
+| SECRETS_URL                 | None                            | API endpoint for a secrets service         |
 
 Scale Dependencies
 ==================
@@ -148,4 +148,3 @@ All pull request contributions to this project will be released under the Apache
 source code previously released under an open source license and then modified by NGA staff is considered a "joint work"
 (see 17 USC § 101); it is partially copyrighted, partially public domain, and as a whole is protected by the copyrights
 of the non-government authors and must be released according to the terms of the original open source license.
-
