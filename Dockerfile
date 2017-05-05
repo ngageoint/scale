@@ -2,7 +2,7 @@ FROM centos:centos7
 MAINTAINER Scale Developers <https://github.com/ngageoint/scale>
 
 LABEL \
-    VERSION="4.4.1" \
+    VERSION="4.4.2" \
     RUN="docker run -d geoint/scale scale_scheduler" \
     SOURCE="https://github.com/ngageoint/scale" \
     DESCRIPTION="Processing framework for containerized algorithms" \
