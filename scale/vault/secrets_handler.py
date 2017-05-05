@@ -4,6 +4,7 @@ import ast
 import jwt
 import json
 import requests
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 from django.conf import settings
 from vault.exceptions import InvalidSecretsAuthorization, InvalidSecretsRequest, InvalidSecretsToken, \
@@ -18,7 +19,7 @@ class SecretsHandler(object):
         """Creates a secrets handler object.  The backend is initially tested to ensure it exists and Scale can
         authenticate properly with it.
         """
-        
+
         self.secrets_error_codes = {
             301: 'Status Code 301 - Too many "/" separators in URL.',
             400: 'Status Code 400 - Invalid request, missing or invalid data.',
@@ -34,6 +35,10 @@ class SecretsHandler(object):
         self.secrets_url = settings.SECRETS_URL
         self.secrets_token = settings.SECRETS_TOKEN
         self.service_account = settings.DCOS_SERVICE_ACCOUNT
+        self.raise_ssl_warnings = settings.SECRETS_SSL_WARNINGS
+
+        if not self.raise_ssl_warnings:
+            requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
         if self.service_account:
             self.dcos_token = self._dcos_authenticate()
@@ -61,13 +66,13 @@ class SecretsHandler(object):
                 'Authorization': self.dcos_token
             }
             get_secret = self._make_request('GET', url, headers=headers)
-            
+
             try:
                 response = get_secret.json()
                 secret_values = ast.literal_eval(response['value'])
             except SyntaxError:
                 raise InvalidSecretsValue('The DCOS secrets value could not be converted to JSON.')
-        
+
         else:
             url = url + '/secret/scale/job-type/' + job_name
             headers = {
@@ -75,14 +80,14 @@ class SecretsHandler(object):
                 'X-Vault-Token': self.secrets_token
             }
             get_secret = self._make_request('GET', url, headers=headers)
-            
+
             response = get_secret.json()
             secret_values = response['data']
 
         return secret_values
 
     def list_job_types(self):
-        """Gets the names of all job types that have secrets 
+        """Gets the names of all job types that have secrets
 
         :return: all_job_types
         :rtype: [string]
@@ -211,7 +216,7 @@ class SecretsHandler(object):
         request_auth = self._make_request('POST', url, data=data)
         self.secrets_url += '/secrets/v1'
         access_token = [k + '=' + v for k, v in request_auth.json().items()][0]
-        
+
         return access_token
 
     def _make_request(self, method, url, headers=None, data=None):
@@ -238,14 +243,14 @@ class SecretsHandler(object):
         if not data:
             data = {}
 
-        r = requests.request(method=method, url=url, headers=headers, data=data)
-        
+        r = requests.request(method=method, url=url, headers=headers, data=data, verify=self.raise_ssl_warnings)
+
         if r.status_code in self.secrets_error_codes:
             if r.status_code == 403:
                 raise InvalidSecretsAuthorization('Permission was denied when getting a secret')
             else:
                 raise InvalidSecretsRequest('Invalid request return: ' + self.secrets_error_codes[r.status_code])
-        
+
         return r
 
     def _vault_authenticate(self):

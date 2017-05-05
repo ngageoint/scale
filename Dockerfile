@@ -37,8 +37,9 @@ EXPOSE 80
 # SCALE_WEBSERVER_CPU
 # SCALE_WEBSERVER_MEMORY
 # SCALE_ZK_URL
-# SECRETS_URL used for linking Scale to a secrets storage service (works with Vault and DCOS Secrets Store)
+# SECRETS_SSL_WARNINGS false to silence SSL warnings from secrets transactions, true (defualt) to raise them.
 # SECRETS_TOKEN used for authenticating Scale against Vault or DCOS Secrets Store
+# SECRETS_URL used for linking Scale to a secrets storage service (works with Vault and DCOS Secrets Store)
 
 # build arg to set the version qualifier. This should be blank for a
 # release build. Otherwise it is typically a build number or git hash.
@@ -132,7 +133,7 @@ RUN yum install -y nodejs \
  && pip uninstall -y -r /tmp/docs.txt \
  && yum -y history undo last \
  && yum clean all \
- && rm -fr /tmp/* 
+ && rm -fr /tmp/*
 
 WORKDIR /opt/scale
 

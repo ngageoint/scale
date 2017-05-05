@@ -98,3 +98,5 @@ SECRETS_URL = os.environ.get('SECRETS_URL', None)
 SECRETS_TOKEN = os.environ.get('SECRETS_TOKEN', None)
 # DCOS service account name, or None if not DCOS secrets store
 DCOS_SERVICE_ACCOUNT = os.environ.get('DCOS_SERVICE_ACCOUNT', None)
+# Flag for raising SSL warnings associated with secrets transactions.
+SECRETS_SSL_WARNINGS = os.environ.get('SECRETS_SSL_TRANSACTION_WARNINGS', True)

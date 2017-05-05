@@ -52,6 +52,8 @@ SECRETS_URL = None
 SECRETS_TOKEN = None
 # DCOS service account name, or None if not DCOS secrets store
 DCOS_SERVICE_ACCOUNT = None
+# Flag for raising SSL warnings associated with secrets transactions.
+SECRETS_SSL_WARNINGS = True
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
