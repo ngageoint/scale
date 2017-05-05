@@ -46,7 +46,7 @@ class CleanupTask(Task):
         nonrunning_filters = '-f status=created -f status=dead -f status=exited'
         all_nonrunning_containers_cmd = 'docker ps %s --format \'{{.Names}}\'' % nonrunning_filters
         all_volumes_cmd = 'docker volume ls -q'
-        all_dangling_volumes_cmd = 'docker volume ls -f dangling=true -q'
+        all_scale_dangling_volumes_cmd = 'docker volume ls -f dangling=true -q | grep scale_'
         container_delete_cmd = 'docker rm $cont'
         volume_delete_cmd = 'docker volume rm $vol'
 
@@ -55,10 +55,10 @@ class CleanupTask(Task):
             # Initial clean up deletes all non-running containers
             container_list_cmd = all_nonrunning_containers_cmd
 
-            # TODO: once we upgrade to a later version of Docker (1.12+), we can delete volumes based on their name
+            # TODO: once we upgrade to a later version of Docker (1.12+), we can delete volumes based on their name (without grep)
             # starting with "scale_" (and also dangling)
-            # Initial clean up deletes all dangling Docker volumes
-            volume_list_cmd = all_dangling_volumes_cmd
+            # Initial clean up deletes all dangling Docker volumes named with "scale_" prefix
+            volume_list_cmd = all_scale_dangling_volumes_cmd
         else:
             # Deletes all containers and volumes for the given job executions
             containers = []
