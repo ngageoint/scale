@@ -410,13 +410,6 @@
             return getSync(metricsOverrideUrl);
         });
 
-        // Node status
-        var nodeStatusOverrideUrl = 'test/data/nodeStatus.json';
-        var nodeStatusRegex = new RegExp('^' + scaleConfig.getUrlPrefix('nodes') + 'nodes/status/', 'i');
-        $httpBackend.whenGET(nodeStatusRegex).respond(function () {
-            return getSync(nodeStatusOverrideUrl);
-        });
-
         // Node details
         var nodeOverrideUrl = 'test/data/node.json';
         var nodeRegex = new RegExp('^' + scaleConfig.getUrlPrefix('nodes') + 'nodes/.*/', 'i');
@@ -578,9 +571,185 @@
             return getSync(statusOverrideUrl);
         });
 
+        // Temp Node Status service
+        var tempNodeStatusRegex = new RegExp('^' + scaleConfig.getUrlPrefix('nodeStatus') + 'status/', 'i');
+        $httpBackend.whenGET(tempNodeStatusRegex).respond(function () {
+            var jobTypeData = getSync('test/data/jobTypes.json'),
+                jobTypes = JSON.parse(jobTypeData[1]).results,
+                statusJobTypes = [];
+
+            _.forEach(jobTypes, function (type) {
+                var rand = Math.floor(Math.random() * (2 - 1 + 1)) + 1;
+                if (rand === 1) {
+                    statusJobTypes.push({
+                        id: type.id,
+                        name: type.name,
+                        version: type.version,
+                        title: type.title,
+                        description: type.description,
+                        is_system: type.is_system,
+                        icon_code: type.icon_code
+                    });
+                }
+            });
+
+            var nodesData = getSync('test/data/nodes.json'),
+                nodes = JSON.parse(nodesData[1]).results,
+                statusNodes = [];
+
+            _.forEach(nodes, function (node) {
+                var nodeErrors = [];
+
+                for (var e = 0; e < Math.floor(Math.random() * (10 + 1)); e++) {
+                    nodeErrors.push({
+                        name: 'my-error',
+                        title: 'My Error',
+                        description: 'My Error Description',
+                        started: moment.utc().toISOString(),
+                        last_updated: moment.utc().toISOString()
+                    });
+                }
+
+                var nodeWarnings = [];
+
+                for (var w = 0; w < Math.floor(Math.random() * (10 + 1)); w++) {
+                    nodeWarnings.push({
+                        name: 'my-warning',
+                        title: 'My Warning',
+                        description: 'My Warning Description',
+                        started: moment.utc().toISOString(),
+                        last_updated: moment.utc().toISOString()
+                    });
+                }
+
+                var runningJobs = Math.floor(Math.random() * (100 - 5 + 1)) + 5,
+                    completedJobs = Math.floor(Math.random() * (200 - 5 + 1)) + 5,
+                    failedJobs = Math.floor(Math.random() * (20 - 5 + 1)) + 5;
+
+                var runningJobsBreakdown = [],
+                    runningJobsChunk = Math.floor(runningJobs / 3),
+                    rjDiff = runningJobs - (runningJobsChunk * 3);
+
+                for (var rj = 0; rj < 3; rj++) {
+                    runningJobsBreakdown.push({
+                        job_type_id: jobTypes[rj].id,
+                        count: rj === (runningJobsChunk - 1) ? runningJobsChunk + rjDiff : runningJobsChunk
+                    });
+                }
+
+                var completedJobsBreakdown = [],
+                    completedJobsChunk = Math.floor(completedJobs / 2),
+                    cjDiff = completedJobs - (completedJobsChunk * 2);
+
+                for (var cj = 0; cj < 2; cj++) {
+                    completedJobsBreakdown.push({
+                        job_type_id: jobTypes[cj].id,
+                        count: cj === (completedJobsChunk - 1) ? completedJobsChunk + cjDiff : completedJobsChunk
+                    });
+                }
+
+                var failedJobsBreakdown = {
+                        data: {
+                            total: 0,
+                            by_job_type: []
+                        },
+                        algorithm: {
+                            total: 0,
+                            by_job_type: []
+                        },
+                        system: {
+                            total: 0,
+                            by_job_type: []
+                        }
+                    },
+                    failedJobsChunk = Math.floor(failedJobs / 3),
+                    fjDiff = failedJobs - (failedJobsChunk * 3);
+
+                failedJobsBreakdown.data.total = failedJobsChunk;
+                failedJobsBreakdown.algorithm.total = failedJobsChunk;
+                failedJobsBreakdown.system.total = failedJobsChunk + fjDiff;
+
+                var dataFailChunk = Math.floor(failedJobsBreakdown.data.total / 3),
+                    dfDiff = failedJobsBreakdown.data.total - dataFailChunk,
+                    algFailChunk = Math.floor(failedJobsBreakdown.algorithm.total / 3),
+                    afDiff = failedJobsBreakdown.algorithm.total - algFailChunk,
+                    sysFailChunk = Math.floor(failedJobsBreakdown.system.total / 3),
+                    sfDiff = failedJobsBreakdown.algorithm.total - sysFailChunk;
+
+                for (var fj = 0; fj < 3; fj++) {
+                    failedJobsBreakdown.data.by_job_type.push({
+                        job_type_id: jobTypes[fj].id,
+                        count: fj === (failedJobsBreakdown.data.total - 1) ? dataFailChunk + dfDiff : dataFailChunk
+                    });
+                    failedJobsBreakdown.algorithm.by_job_type.push({
+                        job_type_id: jobTypes[fj].id,
+                        count: fj === (failedJobsBreakdown.algorithm.total - 1) ? algFailChunk + afDiff : algFailChunk
+                    });
+                    failedJobsBreakdown.system.by_job_type.push({
+                        job_type_id: jobTypes[fj].id,
+                        count: fj === (failedJobsBreakdown.system.total - 1) ? sysFailChunk + sfDiff : sysFailChunk
+                    });
+                }
+
+                var states = [
+                    {
+                        name: 'READY',
+                        title: 'Ready',
+                        description: 'Node is ready to run new jobs.'
+                    },
+                    {
+                        name: 'PAUSED',
+                        title: 'Paused',
+                        description: 'Node is paused.'
+                    },
+                    {
+                        name: 'OFFLINE',
+                        title: 'Offline',
+                        description: 'Node is offline.'
+                    }
+                ];
+
+                var rand = Math.floor(Math.random() * (2 - 1 + 1)) + 1;
+                statusNodes.push({
+                    id: node.id,
+                    hostname: node.hostname,
+                    agent_id: node.agent_id,
+                    is_active: rand === 1,
+                    state: states[Math.floor(Math.random() * (2 - 0 + 1)) + 0],
+                    errors: nodeErrors,
+                    warnings: nodeWarnings,
+                    job_executions: {
+                        running: {
+                            total: runningJobs,
+                            by_job_type: runningJobsBreakdown
+                        },
+                        completed: {
+                            total: completedJobs,
+                            by_job_type: completedJobsBreakdown
+                        },
+                        failed: {
+                            total: failedJobs,
+                            data: failedJobsBreakdown.data,
+                            algorithm: failedJobsBreakdown.algorithm,
+                            system: failedJobsBreakdown.system
+                        }
+                    }
+
+                });
+            });
+
+            var status = {
+                timestamp: moment.utc().toISOString(),
+                job_types: statusJobTypes,
+                nodes: statusNodes
+            };
+            console.log(status);
+            return [200, JSON.stringify(status), {}];
+        });
+
         // Version
         var versionOverrideUrl = 'test/data/version.json';
-        var versionRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'v3/version/', 'i');
+        var versionRegex = new RegExp('^' + scaleConfig.urls.apiPrefix + 'version/', 'i');
         $httpBackend.whenGET(versionRegex).respond(function () {
             return getSync(versionOverrideUrl);
         });
