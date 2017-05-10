@@ -728,7 +728,7 @@ class Job(models.Model):
     queued = models.DateTimeField(blank=True, null=True)
     started = models.DateTimeField(blank=True, null=True)
     ended = models.DateTimeField(blank=True, null=True)
-    last_status_change = models.DateTimeField(blank=True, null=True)
+    last_status_change = models.DateTimeField(blank=True, db_index=True, null=True)
     superseded = models.DateTimeField(blank=True, null=True)
     last_modified = models.DateTimeField(auto_now=True)
 
