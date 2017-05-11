@@ -37,6 +37,7 @@ Services
    :maxdepth: 1
 
    batch
+   diagnostic
    error
    ingest
    job
