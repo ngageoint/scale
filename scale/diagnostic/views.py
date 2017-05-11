@@ -16,6 +16,34 @@ from util.rest import BadParameter
 logger = logging.getLogger(__name__)
 
 
+class QueueScaleBakeView(GenericAPIView):
+    """This view is the endpoint for queuing new Scale Bake jobs."""
+    parser_classes = (JSONParser,)
+    queryset = Queue.objects.all()
+    serializer_class = QueueStatusSerializer
+
+    def post(self, request):
+        """Creates and queues the specified number of Scale Bake jobs
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        num = rest_util.parse_int(request, 'num')
+
+        if num < 1:
+            raise BadParameter('num must be at least 1')
+
+        # TODO: in the future, send command message to do this asynchronously
+        job_type = JobType.objects.get(name='scale-bake', version='1.0')
+        for _ in xrange(num):
+            Queue.objects.queue_new_job_for_user(job_type, {})
+
+        return Response(status=status.HTTP_202_ACCEPTED)
+
+
 class QueueScaleHelloView(GenericAPIView):
     """This view is the endpoint for queuing new Scale Hello jobs."""
     parser_classes = (JSONParser,)
@@ -38,6 +66,34 @@ class QueueScaleHelloView(GenericAPIView):
 
         # TODO: in the future, send command message to do this asynchronously
         job_type = JobType.objects.get(name='scale-hello', version='1.0')
+        for _ in xrange(num):
+            Queue.objects.queue_new_job_for_user(job_type, {})
+
+        return Response(status=status.HTTP_202_ACCEPTED)
+
+
+class QueueScaleRouletteView(GenericAPIView):
+    """This view is the endpoint for queuing new Scale Roulette jobs."""
+    parser_classes = (JSONParser,)
+    queryset = Queue.objects.all()
+    serializer_class = QueueStatusSerializer
+
+    def post(self, request):
+        """Creates and queues the specified number of Scale Roulette jobs
+
+        :param request: the HTTP POST request
+        :type request: :class:`rest_framework.request.Request`
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+
+        num = rest_util.parse_int(request, 'num')
+
+        if num < 1:
+            raise BadParameter('num must be at least 1')
+
+        # TODO: in the future, send command message to do this asynchronously
+        job_type = JobType.objects.get(name='scale-roulette', version='1.0')
         for _ in xrange(num):
             Queue.objects.queue_new_job_for_user(job_type, {})
 

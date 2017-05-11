@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import datetime
 
+from error.exceptions import get_error_by_exit_code
 from job.execution.tasks.exe_task import JobExecutionTask
 from job.resources import NodeResources
 
@@ -58,9 +59,12 @@ class JobTask(JobExecutionTask):
 
             error = None
             if self._has_started:
-                # If the task successfully started, use job's error mapping here to determine error
-                default_error_name = 'unknown' if self._is_system else 'algorithm-unknown'
-                error = self._error_mapping.get_error(task_update.exit_code, default_error_name)
+                if self._is_system:
+                    # System job, check builtin errors
+                    error = get_error_by_exit_code(task_update.exit_code)
+                else:
+                    # Use job's error mapping here to determine error
+                    error = self._error_mapping.get_error(task_update.exit_code, 'algorithm-unknown')
             if not error:
                 error = self._consider_general_error(task_update)
 

@@ -11,3 +11,11 @@ class DiagnosticConfig(AppConfig):
     name = 'diagnostic'
     label = 'diagnostic'
     verbose_name = 'Diagnostic'
+
+    def ready(self):
+        """Registers the diagnostic errors"""
+
+        from diagnostic.exceptions import TestException
+        from error.exceptions import register_error
+
+        register_error(TestException())
