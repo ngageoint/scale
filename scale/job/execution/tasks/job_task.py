@@ -58,11 +58,14 @@ class JobTask(JobExecutionTask):
                 return None
 
             error = None
-            if self._has_started:
-                if self._is_system:
-                    # System job, check builtin errors
+            if self._is_system:
+                # System job, check builtin errors
+                if task_update.exit_code:
                     error = get_error_by_exit_code(task_update.exit_code)
-                else:
+            else:
+                # TODO: in the future, don't use has_started flag to check for launch errors, use correct Mesos error
+                # reason instead. This method is inaccurate if no TASK_RUNNING update happens to be received.
+                if self._has_started:
                     # Use job's error mapping here to determine error
                     error = self._error_mapping.get_error(task_update.exit_code, 'algorithm-unknown')
             if not error:

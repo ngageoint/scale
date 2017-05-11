@@ -116,6 +116,8 @@ class JobExecutionTask(Task):
         :rtype: :class:`error.models.Error`
         """
 
+        # TODO: in the future, don't use has_started flag to check for launch errors, use correct Mesos error reason
+        # instead. This method is inaccurate if no TASK_RUNNING update happens to be received.
         if not self._has_started:
             if self._uses_docker:
                 return Error.objects.get_builtin_error('docker-task-launch')
