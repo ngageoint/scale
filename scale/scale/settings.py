@@ -94,6 +94,7 @@ INSTALLED_APPS = (
     'node',
     'storage',
     'job',
+    'diagnostic',
     'source',
     'product',
     'shared_resource',
