@@ -9,6 +9,7 @@ from rest_framework.response import Response
 
 from job.models import JobType
 from queue.models import Queue
+from queue.serializers import QueueStatusSerializer
 import util.rest as rest_util
 from util.rest import BadParameter
 
@@ -18,7 +19,8 @@ logger = logging.getLogger(__name__)
 class QueueScaleHelloView(GenericAPIView):
     """This view is the endpoint for queuing new Scale Hello jobs."""
     parser_classes = (JSONParser,)
-    #queryset = Job.objects.all()
+    queryset = Queue.objects.all()
+    serializer_class = QueueStatusSerializer
 
     def post(self, request):
         """Creates and queues the specified number of Scale Hello jobs
