@@ -26,7 +26,7 @@
 
         $scope.$watch('data', function (newValue) {
             if (newValue && newValue.length > 0) {
-                vm.nodes = _.filter(newValue, {is_active: true});
+                vm.nodes = newValue;
                 getNodeStatus();
             }
         });
@@ -41,7 +41,6 @@
              restrict: 'E',
              scope: {
                  data: '=',
-                 duration: '=',
                  showDescription: '=',
                  loading: '='
              }

@@ -72,7 +72,7 @@
                 <div ng-class="{ 'visible': !vm.loadingNodeHealth, 'invisible': vm.loadingNodeHealth }" class="ov-chart form-inline">
                     <div ng-show="vm.nodeHealthError" class="alert alert-danger text-center"><strong>{{ vm.nodeHealthError }}</strong> {{ vm.nodeHealthErrorStatus }}</div>
                     <div ng-show="!vm.nodeHealthError">
-                        <ais-node-health loading="vm.loadingNodeHealth" data="vm.nodes" duration="'PT3H'" show-description="false"></ais-node-health>
+                        <ais-node-health loading="vm.loadingNodeHealth" data="vm.nodes" show-description="false"></ais-node-health>
                     </div>
                 </div>
             </div>

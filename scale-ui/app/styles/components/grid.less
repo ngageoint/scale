@@ -2,9 +2,60 @@
     background: #fff;
     margin-bottom: 20px;
 
+    &.nodes {
+        .warning {
+            color: @bootstrap-warning;
+        }
+        .error {
+            color: @bootstrap-danger;
+        }
+    }
+
     .scale-grid {
         width: auto;
         box-sizing: border-box;
+
+        .ui-grid-header-cell, .ui-grid-row {
+            .ui-grid-cell-contents {
+                .label-container {
+                    display: flex;
+                    justify-content: space-between;
+
+                    .label {
+                        width: 23%;
+                        padding: 5px 0;
+
+                        &:hover {
+                            cursor: pointer;
+                        }
+                    }
+
+                    .label-default {
+                        background: #dcdcdc;
+                        color: #333;
+                    }
+
+                    .label-system {
+                        &:hover {
+                            background: rgba(103, 0, 13, 1)!important;
+                            color: #fff!important;
+                        }
+                    }
+                    .label-algorithm {
+                        &:hover {
+                            background: rgba(203, 24, 29, 1)!important;
+                            color: #fff!important;
+                        }
+                    }
+                    .label-data {
+                        &:hover {
+                            background: rgba(241, 105, 19, 1)!important;
+                            color: #fff!important;
+                        }
+                    }
+                }
+            }
+        }
 
         .ui-grid-header {
             width: 100%;

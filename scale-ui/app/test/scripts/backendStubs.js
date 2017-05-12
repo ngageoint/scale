@@ -715,7 +715,7 @@
                     hostname: node.hostname,
                     agent_id: node.agent_id,
                     is_active: rand === 1,
-                    state: states[Math.floor(Math.random() * (2 - 0 + 1)) + 0],
+                    state: rand === 1 ? states[Math.floor(Math.random() * (1 - 0 + 1)) + 0] : states[2],
                     errors: nodeErrors,
                     warnings: nodeWarnings,
                     job_executions: {

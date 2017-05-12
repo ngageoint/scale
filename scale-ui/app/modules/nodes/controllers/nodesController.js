@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('nodesController', function($scope, $location, $timeout, $uibModal, navService, nodeService, stateService, userService, gridFactory, toastr, poller) {
+    angular.module('scaleApp').controller('nodesController', function($scope, $location, $timeout, $uibModal, navService, nodeService, statusService, stateService, userService, jobTypeService, gridFactory, toastr, poller) {
         var vm = this;
 
         vm.nodesParams = stateService.getNodesParams();
@@ -24,6 +24,7 @@
         $scope.pauseReason = '';
 
         var filteredByOrder = vm.nodesParams.order ? true : false;
+        var jobTypes = null;
 
         vm.colDefs = [
             {
@@ -33,29 +34,57 @@
                 cellTemplate: '<div class="ui-grid-cell-contents"><div class="pull-right" ng-show="!grid.appScope.vm.readonly && grid.appScope.vm.nodeStatus.length > 0"><button class="btn btn-xs btn-default" ng-click="grid.appScope.vm.pauseNode(row.entity)"><i class="fa" ng-class="{ \'fa-pause\': !row.entity.is_paused, \'fa-play\': row.entity.is_paused }"></i></button></div> {{ row.entity.hostname }}</div>'
             },
             {
-                field: 'is_online',
-                displayName: 'Status',
+                field: 'state',
+                displayName: 'State',
                 enableFiltering: false,
                 enableSorting: false,
-                cellTemplate: '<div class="ui-grid-cell-contents" ng-show="row.entity.status"><span ng-bind-html="row.entity.statusLabel"></span></div>'
+                cellTemplate: '<div class="ui-grid-cell-contents"><div class="pull-right"><span class="fa fa-exclamation-triangle error" ng-show="row.entity.errors.length > 0" tooltip-append-to-body="true" uib-tooltip="{{ row.entity.errors.length === 1 ? row.entity.errors[0].description : row.entity.errors.length + \' Errors\' }}"></span> <span class="fa fa-exclamation-triangle warning" ng-show="row.entity.warnings.length > 0" tooltip-append-to-body="true" uib-tooltip="{{ row.entity.warnings.length === 1 ? row.entity.warnings[0].description : row.entity.warnings.length + \' Warnings\' }}"></span></div><span ng-bind-html="row.entity.state.title" tooltip-append-to-body="true" uib-tooltip="{{ row.entity.state.description }}"></span></div>'
             },
             {
-                field: 'id',
-                displayName: 'Statistics',
+                field: 'job_executions',
+                displayName: 'Job Executions',
                 enableFiltering: false,
                 enableSorting: false,
-                cellTemplate: '<div class="ui-grid-cell-contents" ng-show="row.entity.status">{{ row.entity.status.getCellError() }} / {{ row.entity.status.getCellTotal() }}</div>'
+                width: '28%',
+                cellTemplate: 'jobExecutions.html',
+                headerCellTemplate: 'jobExecutionsHeader.html'
             },
             {
-                field: 'id',
-                displayName: 'Current Jobs',
+                field: 'job_executions.running',
+                displayName: 'Running Jobs',
                 enableFiltering: false,
                 enableSorting: false,
-                cellTemplate: '<div class="ui-grid-cell-contents" ng-show="row.entity.status"><span ng-bind-html="row.entity.status.getCellJobs()"></span></div>'
+                cellTemplate: '<div class="ui-grid-cell-contents"><span ng-bind-html="grid.appScope.vm.getRunningJobs(row.entity)"></span></div>'
             }
+            // {
+            //     field: 'id',
+            //     displayName: 'Statistics',
+            //     enableFiltering: false,
+            //     enableSorting: false,
+            //     cellTemplate: '<div class="ui-grid-cell-contents" ng-show="row.entity.status">{{ row.entity.status.getCellError() }} / {{ row.entity.status.getCellTotal() }}</div>'
+            // },
+            // {
+            //     field: 'id',
+            //     displayName: 'Current Jobs',
+            //     enableFiltering: false,
+            //     enableSorting: false,
+            //     cellTemplate: '<div class="ui-grid-cell-contents" ng-show="row.entity.status"><span ng-bind-html="row.entity.status.getCellJobs()"></span></div>'
+            // }
         ];
 
         vm.gridOptions.columnDefs = vm.colDefs;
+
+        vm.getRunningJobs = function (entity) {
+            var returnStr = '<div class="label-container">';
+            _.forEach(entity.job_executions.running.by_job_type, function (jobType) {
+                var currJobType = _.find(jobTypes, { id: jobType.job_type_id });
+                if (currJobType) {
+                    returnStr = returnStr + '<div class="label label-default" title="' + currJobType.title + '"><i class="fa fa-fw">&#x' + currJobType.icon_code + '</i> ' + jobType.count + '</div>';
+                }
+            });
+            returnStr = returnStr + '</div>';
+            return returnStr;
+        };
 
         vm.pauseNode = function (entity) {
             $scope.pauseReason = '';
@@ -155,13 +184,14 @@
         };
 
         var getNodes = function () {
-            nodeService.getNodes(vm.nodesParams).then(null, null, function (data) {
+            statusService.getStatus(true).then(null, null, function (data) {
                 if (data.$resolved) {
                     vm.nodesError = null;
-                    vm.gridOptions.totalItems = data.count;
-                    vm.gridOptions.minRowsToShow = data.results.length;
-                    vm.gridOptions.virtualizationThreshold = data.results.length;
-                    vm.gridOptions.data = data.results;
+                    vm.nodes = _.filter(data.nodes, { is_active: true });
+                    vm.gridOptions.totalItems = data.nodes.length;
+                    vm.gridOptions.minRowsToShow = data.nodes.length;
+                    vm.gridOptions.virtualizationThreshold = data.nodes.length;
+                    vm.gridOptions.data = data.nodes;
                 } else {
                     if (data.statusText && data.statusText !== '') {
                         vm.nodesErrorStatus = data.statusText;
@@ -169,31 +199,18 @@
                     vm.nodesError = 'Unable to retrieve nodes.';
                 }
                 vm.loading = false;
-            })
-        };
-
-        var getNodeStatus = function () {
-            nodeService.getNodeStatus(null, null, 'PT3H', null).then(null, null, function (data) {
-                if (data.$resolved) {
-                    vm.statusError = null;
-                    vm.nodeStatus = data.results;
-                } else {
-                    if (data.statusText && data.statusText !== '') {
-                        vm.statusErrorStatus = data.statusText;
-                    }
-                    vm.statusError = 'Unable to retrieve node status.';
-                }
-                vm.loadingStatus = false;
             });
         };
 
         var initialize = function () {
+            jobTypeService.getJobTypesOnce().then(function (data) {
+                jobTypes = data.results;
+                getNodes();
+            });
             stateService.setNodesParams(vm.nodesParams);
             vm.updateColDefs();
             var user = userService.getUserCreds();
             vm.readonly = !(user && user.is_admin);
-            getNodes();
-            getNodeStatus();
             navService.updateLocation('nodes');
         };
 
@@ -215,18 +232,19 @@
             vm.updateColDefs();
         });
 
-        $scope.$watchCollection('vm.nodeStatus', function (newValue, oldValue) {
+        $scope.$watchCollection('vm.nodes', function (newValue, oldValue) {
             if (angular.equals(newValue, oldValue)) {
                 return;
             }
-            _.forEach(vm.gridOptions.data, function (node) {
-                var status = _.find(newValue, { node: { id: node.id } });
-                if (status) {
-                    node.status = status;
-                    console.log('status changed');
-                    node.statusLabel = vm.getStatusLabel(status);
-                }
-            });
+            vm.gridOptions.data = vm.nodes;
+            // _.forEach(vm.gridOptions.data, function (node) {
+            //     var status = _.find(newValue, { node: { id: node.id } });
+            //     if (status) {
+            //         node.status = status;
+            //         console.log('status changed');
+            //         node.statusLabel = vm.getStatusLabel(status);
+            //     }
+            // });
         });
     });
 })();

@@ -117,7 +117,7 @@
             statusService.getStatus(true).then(null, null, function (data) {
                 if (data.$resolved) {
                     vm.nodeHealthError = null;
-                    vm.nodes = data.nodes;
+                    vm.nodes = _.filter(data.nodes, { is_active: true });
                 } else {
                     if (data.statusText && data.statusText !== '') {
                         vm.nodeHealthErrorStatus = data.statusText;
