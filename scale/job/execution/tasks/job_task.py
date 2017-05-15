@@ -1,11 +1,14 @@
 """Defines the class for a job execution job task"""
 from __future__ import unicode_literals
 
+import logging
 import datetime
 
 from error.exceptions import get_error_by_exit_code
 from job.execution.tasks.exe_task import JobExecutionTask
 from job.resources import NodeResources
+
+logger = logging.getLogger(__name__)
 
 
 JOB_TYPE_TIMEOUT_ERRORS = {}  # {Job type name: error name}
@@ -53,16 +56,23 @@ class JobTask(JobExecutionTask):
         """See :meth:`job.execution.tasks.exe_task.JobExecutionTask.determine_error`
         """
 
+        logger.info('Determining error...')
         with self._lock:
             if self._task_id != task_update.task_id:
+                logger.info('Task ID no match')
                 return None
 
             error = None
             if self._is_system:
+                logger.info('System job')
                 # System job, check builtin errors
                 if task_update.exit_code:
+                    logger.info('Job has exit code: %s', str(task_update.exit_code))
                     error = get_error_by_exit_code(task_update.exit_code)
+                    if not error:
+                        logger.info('Did not find error')
             else:
+                logger.info('Not system job')
                 # TODO: in the future, don't use has_started flag to check for launch errors, use correct Mesos error
                 # reason instead. This method is inaccurate if no TASK_RUNNING update happens to be received.
                 if self._has_started:
