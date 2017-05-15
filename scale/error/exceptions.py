@@ -26,6 +26,7 @@ def get_error_by_exit_code(exit_code):
     :rtype: :class:`error.models.Error`
     """
 
+    logger.info('Registered exit codes are: %s', ', '.join(REGISTERED_ERRORS.keys()))
     if exit_code not in REGISTERED_ERRORS:
         return None
     return Error.objects.get_builtin_error(REGISTERED_ERRORS[exit_code].error_name)
