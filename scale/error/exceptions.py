@@ -53,6 +53,7 @@ def register_error(error):
     :type error: :class:`error.exceptions.ScaleError`
     """
 
+    logger.info('Registering exit code: %s', str(error.exit_code))
     if error.exit_code in REGISTERED_ERRORS:
         raise Exception('Tried to register error with duplicate exit code: %d', error.exit_code)
     REGISTERED_ERRORS[error.exit_code] = error
