@@ -26,7 +26,6 @@ def get_error_by_exit_code(exit_code):
     :rtype: :class:`error.models.Error`
     """
 
-    logger.info('Registered exit codes are: %s', str(REGISTERED_ERRORS.keys()))
     if exit_code not in REGISTERED_ERRORS:
         return None
     return Error.objects.get_builtin_error(REGISTERED_ERRORS[exit_code].error_name)
@@ -53,7 +52,6 @@ def register_error(error):
     :type error: :class:`error.exceptions.ScaleError`
     """
 
-    logger.info('Registering exit code: %s', str(error.exit_code))
     if error.exit_code in REGISTERED_ERRORS:
         raise Exception('Tried to register error with duplicate exit code: %d', error.exit_code)
     REGISTERED_ERRORS[error.exit_code] = error
