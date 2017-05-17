@@ -83,19 +83,14 @@ class TestNodeDetailsView(TransactionTestCase):
         result = json.loads(response.content)
         self.assertIn('hostname', result)
         self.assertEqual(result['hostname'], self.node2.hostname)
-        self.assertEqual(result['resources']['total']['cpus'], 4.)
-        self.assertEqual(result['resources']['total']['mem'], 2048.)
-        self.assertEqual(result['resources']['total']['disk'], 40000.)
-        self.assertEqual(result['job_exes_running'], [])
-        self.assertNotIn('disconnected', result)
 
+    # TODO: remove when REST API v4 is removed
     @patch('mesos_api.api.get_slave')
     def test_get_node_master_disconnected(self, mock_get_slave):
         """Test calling the Get Node method with a disconnected master."""
         mock_get_slave.return_value = SlaveInfo(self.node2.hostname, self.node2.port)
 
-        url = rest_util.get_url('/nodes/%d/' % self.node2.id)
-        response = self.client.get(url)
+        response = self.client.get('/v4/nodes/%d/' % self.node2.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
@@ -129,11 +124,6 @@ class TestNodeDetailsView(TransactionTestCase):
         self.assertEqual(result['pause_reason'], json_data['pause_reason'])
         self.assertIn('hostname', result)
         self.assertEqual(result['hostname'], self.node2.hostname)
-        self.assertEqual(result['resources']['total']['cpus'], 4.)
-        self.assertEqual(result['resources']['total']['mem'], 2048.)
-        self.assertEqual(result['resources']['total']['disk'], 40000.)
-        self.assertEqual(result['job_exes_running'], [])
-        self.assertNotIn('disconnected', result)
 
     @patch('mesos_api.api.get_slave')
     def test_update_node_unpause(self, mock_get_slave):
@@ -152,11 +142,6 @@ class TestNodeDetailsView(TransactionTestCase):
         self.assertIsNone(result['pause_reason'])
         self.assertIn('hostname', result)
         self.assertEqual(result['hostname'], self.node2.hostname)
-        self.assertEqual(result['resources']['total']['cpus'], 4.)
-        self.assertEqual(result['resources']['total']['mem'], 2048.)
-        self.assertEqual(result['resources']['total']['disk'], 40000.)
-        self.assertEqual(result['job_exes_running'], [])
-        self.assertNotIn('disconnected', result)
 
     def test_update_node_not_found(self):
         """Test calling the Update Node method with a bad node id."""
@@ -235,6 +220,7 @@ class TestNodesStatusView(TransactionTestCase):
         job_test_utils.create_job_exe(job=self.job, status='RUNNING', node=self.node3,
                                       created=now())
 
+    # TODO: remove when REST API v4 is removed
     @patch('mesos_api.api.get_slaves')
     def test_nodes_system_stats(self, mock_get_slaves):
         """This method tests for when a node has not processed any jobs for the duration of time requested."""
@@ -243,8 +229,7 @@ class TestNodesStatusView(TransactionTestCase):
             SlaveInfo(self.node3.hostname, self.node3.port, HardwareResources(4, 5, 6)),
         ]
 
-        url = rest_util.get_url('/nodes/status/?started=PT1H30M0S')
-        response = self.client.generic('GET', url)
+        response = self.client.generic('GET', '/v4/nodes/status/?started=PT1H30M0S')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
@@ -283,6 +268,7 @@ class TestNodesStatusView(TransactionTestCase):
                     if status_count['status'] == 'RUNNING':
                         self.assertEqual(status_count['count'], 1)
 
+    # TODO: remove when REST API v4 is removed
     @patch('mesos_api.api.get_slaves')
     def test_nodes_stats(self, mock_get_slaves):
         """This method tests retrieving all the nodes statistics
@@ -292,8 +278,7 @@ class TestNodesStatusView(TransactionTestCase):
             SlaveInfo(self.node3.hostname, self.node3.port, HardwareResources(4, 5, 6)),
         ]
 
-        url = rest_util.get_url('/nodes/status/?started=PT3H00M0S')
-        response = self.client.generic('GET', url)
+        response = self.client.generic('GET', '/v4/nodes/status/?started=PT3H00M0S')
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
