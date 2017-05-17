@@ -123,7 +123,7 @@ class SchedulingThread(object):
             return
 
         num_job_exes = 0
-        for queue in Queue.objects.get_queue(scheduler_mgr.queue_mode()):
+        for queue in Queue.objects.get_queue(scheduler_mgr.queue_mode()[:500]):
             job_type_id = queue.job_type_id
 
             if job_type_id not in self._job_types or self._job_types[job_type_id].is_paused:
