@@ -355,9 +355,6 @@ class RecipeManager(models.Manager):
         recipe.inputs = self._merge_recipe_data(recipe_definition_dict['input_data'], recipe_data_dict['input_data'],
                                                 input_files)
 
-        # TODO: API_V3 Remove this attribute
-        recipe.input_files = input_files
-
         # Update the recipe with job models
         jobs = RecipeJob.objects.filter(recipe_id=recipe.id)
         jobs = jobs.select_related('job', 'job__job_type', 'job__event', 'job__error')
