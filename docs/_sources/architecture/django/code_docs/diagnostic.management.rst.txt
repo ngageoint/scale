@@ -1,0 +1,17 @@
+diagnostic\.management package
+==============================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    diagnostic.management.commands
+
+Module contents
+---------------
+
+.. automodule:: diagnostic.management
+    :members:
+    :undoc-members:
+    :show-inheritance:

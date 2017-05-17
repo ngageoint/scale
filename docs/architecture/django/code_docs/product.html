@@ -112,6 +112,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="batch.html">batch package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diagnostic.html">diagnostic package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
@@ -570,7 +571,7 @@ that are source files themselves.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em><em></em>) &#8211; The file IDs</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em>) &#8211; The file IDs</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of ancestor source files</td>
 </tr>
@@ -642,14 +643,14 @@ to be pre-fetched as part of the query.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query product files updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query product files updated before this amount of time.</li>
-<li><strong>job_type_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em><em></em>) &#8211; Query product files produced by jobs with the given type identifier.</li>
-<li><strong>job_type_names</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em><em></em>) &#8211; Query product files produced by jobs with the given type name.</li>
-<li><strong>job_type_categories</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em><em></em>) &#8211; Query product files produced by jobs with the given type category.</li>
+<li><strong>job_type_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em>) &#8211; Query product files produced by jobs with the given type identifier.</li>
+<li><strong>job_type_names</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em>) &#8211; Query product files produced by jobs with the given type name.</li>
+<li><strong>job_type_categories</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em>) &#8211; Query product files produced by jobs with the given type category.</li>
 <li><strong>is_operational</strong> (<em>bool</em>) &#8211; Query product files flagged as operational or R&amp;D only.</li>
 <li><strong>is_published</strong> (<em>bool</em>) &#8211; Query product files flagged as currently exposed for publication.</li>
 <li><strong>is_superseded</strong> (<em>bool</em>) &#8211; Query product files that have/have not been superseded.</li>
 <li><strong>file_name</strong> (<em>str</em>) &#8211; Query product files with the given file name.</li>
-<li><strong>order</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em><em></em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>order</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
 </tr>
@@ -693,13 +694,13 @@ to be pre-fetched as part of the query.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query product files updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query product files updated before this amount of time.</li>
-<li><strong>job_type_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em><em></em>) &#8211; Query product files produced by jobs with the given type identifier.</li>
-<li><strong>job_type_names</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em><em></em>) &#8211; Query product files produced by jobs with the given type name.</li>
-<li><strong>job_type_categories</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em><em></em>) &#8211; Query product files produced by jobs with the given type category.</li>
+<li><strong>job_type_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em>) &#8211; Query product files produced by jobs with the given type identifier.</li>
+<li><strong>job_type_names</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em>) &#8211; Query product files produced by jobs with the given type name.</li>
+<li><strong>job_type_categories</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em>) &#8211; Query product files produced by jobs with the given type category.</li>
 <li><strong>is_operational</strong> (<em>bool</em>) &#8211; Query product files flagged as operational or R&amp;D only.</li>
 <li><strong>is_published</strong> (<em>bool</em>) &#8211; Query product files flagged as currently exposed for publication.</li>
 <li><strong>file_name</strong> (<em>str</em>) &#8211; Query product files with the given file name.</li>
-<li><strong>order</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em><em></em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>order</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
 </tr>
@@ -773,7 +774,7 @@ atomic transaction.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>file_entries</strong> (<em>list of tuple</em><em>(</em><em>str</em><em>, </em><em>str</em><em>, </em><em>str</em><em>)</em><em></em>) &#8211; List of files where each file is a tuple of (absolute local path, workspace path for
+<li><strong>file_entries</strong> (<em>list of tuple</em><em>(</em><em>str</em><em>, </em><em>str</em><em>, </em><em>str</em><em>)</em>) &#8211; List of files where each file is a tuple of (absolute local path, workspace path for
 storing the file, media_type)</li>
 <li><strong>input_file_ids</strong> (<em>list of int</em>) &#8211; List of identifiers for files used to produce the given file entries</li>
 <li><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>) &#8211; The job_exe model with the related job and job_type fields</li>

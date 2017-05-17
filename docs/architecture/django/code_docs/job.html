@@ -112,6 +112,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="batch.html">batch package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diagnostic.html">diagnostic package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">job package</a><ul>
@@ -1471,7 +1472,7 @@ might be required by this job execution&#8217;s workspaces.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>workspaces</strong> ({string: <a class="reference internal" href="storage.html#storage.models.Workspace" title="storage.models.Workspace"><code class="xref py py-class docutils literal"><span class="pre">storage.models.Workspace</span></code></a>}) &#8211; A dict of all workspaces stored by name</li>
-<li><strong>docker_volumes</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; A list to add Docker volume names to</li>
+<li><strong>docker_volumes</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; A list to add Docker volume names to</li>
 </ul>
 </td>
 </tr>
@@ -2248,12 +2249,12 @@ job execution and job models (in that order).</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query job executions updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query job executions updated before this amount of time.</li>
-<li><strong>statuses</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query job executions with the a specific status.</li>
-<li><strong>job_type_ids</strong> (<em></em><em>[</em><em>int</em><em>]</em><em></em>) &#8211; Query job executions of the type associated with the identifier.</li>
-<li><strong>job_type_names</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query job executions of the type associated with the name.</li>
-<li><strong>job_type_categories</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query job executions of the type associated with the category.</li>
-<li><strong>node_ids</strong> (<em></em><em>[</em><em>int</em><em>]</em><em></em>) &#8211; Query job executions that ran on a node with the identifier.</li>
-<li><strong>order</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>statuses</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query job executions with the a specific status.</li>
+<li><strong>job_type_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; Query job executions of the type associated with the identifier.</li>
+<li><strong>job_type_names</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query job executions of the type associated with the name.</li>
+<li><strong>job_type_categories</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query job executions of the type associated with the category.</li>
+<li><strong>node_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; Query job executions that ran on a node with the identifier.</li>
+<li><strong>order</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
 </tr>
@@ -2536,14 +2537,14 @@ fields.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated before this amount of time.</li>
-<li><strong>statuses</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query jobs with the a specific execution status.</li>
-<li><strong>job_ids</strong> (<em></em><em>[</em><em>int</em><em>]</em><em></em>) &#8211; Query jobs associated with the identifier.</li>
-<li><strong>job_type_ids</strong> (<em></em><em>[</em><em>int</em><em>]</em><em></em>) &#8211; Query jobs of the type associated with the identifier.</li>
-<li><strong>job_type_names</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query jobs of the type associated with the name.</li>
-<li><strong>job_type_categories</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query jobs of the type associated with the category.</li>
-<li><strong>error_categories</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query jobs that failed due to errors associated with the category.</li>
+<li><strong>statuses</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query jobs with the a specific execution status.</li>
+<li><strong>job_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; Query jobs associated with the identifier.</li>
+<li><strong>job_type_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; Query jobs of the type associated with the identifier.</li>
+<li><strong>job_type_names</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query jobs of the type associated with the name.</li>
+<li><strong>job_type_categories</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query jobs of the type associated with the category.</li>
+<li><strong>error_categories</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query jobs that failed due to errors associated with the category.</li>
 <li><strong>include_superseded</strong> (<em>bool</em>) &#8211; Whether to include jobs that are superseded.</li>
-<li><strong>order</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>order</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
 </tr>
@@ -2587,12 +2588,12 @@ fields.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated before this amount of time.</li>
-<li><strong>statuses</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query jobs with the a specific execution status.</li>
-<li><strong>job_type_ids</strong> (<em></em><em>[</em><em>int</em><em>]</em><em></em>) &#8211; Query jobs of the type associated with the identifier.</li>
-<li><strong>job_type_categories</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query jobs of the type associated with the category.</li>
-<li><strong>job_type_names</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query jobs of the type associated with the name.</li>
+<li><strong>statuses</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query jobs with the a specific execution status.</li>
+<li><strong>job_type_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; Query jobs of the type associated with the identifier.</li>
+<li><strong>job_type_categories</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query jobs of the type associated with the category.</li>
+<li><strong>job_type_names</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query jobs of the type associated with the name.</li>
 <li><strong>include_superseded</strong> (<em>bool</em>) &#8211; Whether to include jobs that are superseded.</li>
-<li><strong>order</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>order</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
 </tr>
@@ -2617,14 +2618,14 @@ fields.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query jobs updated before this amount of time.</li>
-<li><strong>statuses</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query jobs with the a specific execution status.</li>
-<li><strong>job_ids</strong> (<em></em><em>[</em><em>int</em><em>]</em><em></em>) &#8211; Query jobs associated with the identifier.</li>
-<li><strong>job_type_ids</strong> (<em></em><em>[</em><em>int</em><em>]</em><em></em>) &#8211; Query jobs of the type associated with the identifier.</li>
-<li><strong>job_type_names</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query jobs of the type associated with the name.</li>
-<li><strong>job_type_categories</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query jobs of the type associated with the category.</li>
-<li><strong>error_categories</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query jobs that failed due to errors associated with the category.</li>
+<li><strong>statuses</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query jobs with the a specific execution status.</li>
+<li><strong>job_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; Query jobs associated with the identifier.</li>
+<li><strong>job_type_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; Query jobs of the type associated with the identifier.</li>
+<li><strong>job_type_names</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query jobs of the type associated with the name.</li>
+<li><strong>job_type_categories</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query jobs of the type associated with the category.</li>
+<li><strong>error_categories</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query jobs that failed due to errors associated with the category.</li>
 <li><strong>include_superseded</strong> (<em>bool</em>) &#8211; Whether to include jobs that are superseded.</li>
-<li><strong>order</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>order</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
 </tr>
@@ -2664,7 +2665,7 @@ fields.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_ids</strong> (<em></em><em>[</em><em>int</em><em>]</em><em></em>) &#8211; The job IDs</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; The job IDs</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The job models</td>
 </tr>
@@ -2697,7 +2698,7 @@ caller must have obtained model locks on the job models.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_ids</strong> (<em></em><em>[</em><em>int</em><em>]</em><em></em>) &#8211; The IDs of the jobs to lock</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; The IDs of the jobs to lock</td>
 </tr>
 </tbody>
 </table>
@@ -3506,11 +3507,11 @@ count of associated jobs and the last status change of a running job.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query job types updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query job types updated before this amount of time.</li>
-<li><strong>names</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query jobs of the type associated with the name.</li>
-<li><strong>categories</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; Query jobs of the type associated with the category.</li>
+<li><strong>names</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query jobs of the type associated with the name.</li>
+<li><strong>categories</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query jobs of the type associated with the category.</li>
 <li><strong>is_active</strong> (<em>bool</em>) &#8211; Query job types that are actively available for use.</li>
 <li><strong>is_operational</strong> (<em>bool</em>) &#8211; Query job types that are operational or research phase.</li>
-<li><strong>order</strong> (<em></em><em>[</em><em>string</em><em>]</em><em></em>) &#8211; A list of fields to control the sort order.</li>
+<li><strong>order</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
 </tr>

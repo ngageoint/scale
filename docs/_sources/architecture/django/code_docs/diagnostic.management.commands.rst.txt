@@ -1,0 +1,38 @@
+diagnostic\.management\.commands package
+========================================
+
+Submodules
+----------
+
+diagnostic\.management\.commands\.scale\_bake module
+----------------------------------------------------
+
+.. automodule:: diagnostic.management.commands.scale_bake
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+diagnostic\.management\.commands\.scale\_hello module
+-----------------------------------------------------
+
+.. automodule:: diagnostic.management.commands.scale_hello
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+diagnostic\.management\.commands\.scale\_roulette module
+--------------------------------------------------------
+
+.. automodule:: diagnostic.management.commands.scale_roulette
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: diagnostic.management.commands
+    :members:
+    :undoc-members:
+    :show-inheritance:

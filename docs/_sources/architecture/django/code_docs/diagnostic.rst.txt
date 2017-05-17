@@ -1,0 +1,54 @@
+diagnostic package
+==================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    diagnostic.management
+    diagnostic.test
+
+Submodules
+----------
+
+diagnostic\.apps module
+-----------------------
+
+.. automodule:: diagnostic.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+diagnostic\.exceptions module
+-----------------------------
+
+.. automodule:: diagnostic.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+diagnostic\.urls module
+-----------------------
+
+.. automodule:: diagnostic.urls
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+diagnostic\.views module
+------------------------
+
+.. automodule:: diagnostic.views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: diagnostic
+    :members:
+    :undoc-members:
+    :show-inheritance:

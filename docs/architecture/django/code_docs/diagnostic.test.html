@@ -1,0 +1,388 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>diagnostic.test package &mdash; Scale 4.4.2-snapshot documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="Scale 4.4.2-snapshot documentation" href="../../../index.html"/>
+        <link rel="up" title="diagnostic package" href="diagnostic.html"/>
+        <link rel="next" title="error package" href="error.html"/>
+        <link rel="prev" title="diagnostic.management.commands package" href="diagnostic.management.commands.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../../../_static/scale3-transparent-128.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                4.4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../logs.html">ElasticSearch Logs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../scan.html">Scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="batch.html">batch package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="diagnostic.html">diagnostic package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="diagnostic.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="diagnostic.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="diagnostic.html#module-diagnostic.apps">diagnostic.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="diagnostic.html#module-diagnostic.exceptions">diagnostic.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="diagnostic.html#module-diagnostic.urls">diagnostic.urls module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="diagnostic.html#module-diagnostic.views">diagnostic.views module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="diagnostic.html#module-diagnostic">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vault.html">vault package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manage.html">manage module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rest/index.html">REST API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Scale</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Architecture</a> &raquo;</li>
+        
+          <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
+        
+          <li><a href="diagnostic.html">diagnostic package</a> &raquo;</li>
+        
+      <li>diagnostic.test package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/architecture/django/code_docs/diagnostic.test.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="diagnostic-test-package">
+<h1>diagnostic.test package<a class="headerlink" href="#diagnostic-test-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-diagnostic.test.test_views">
+<span id="diagnostic-test-test-views-module"></span><h2>diagnostic.test.test_views module<a class="headerlink" href="#module-diagnostic.test.test_views" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="diagnostic.test.test_views.TestQueueScaleBakeView">
+<em class="property">class </em><code class="descclassname">diagnostic.test.test_views.</code><code class="descname">TestQueueScaleBakeView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#diagnostic.test.test_views.TestQueueScaleBakeView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<dl class="attribute">
+<dt id="diagnostic.test.test_views.TestQueueScaleBakeView.fixtures">
+<code class="descname">fixtures</code><em class="property"> = [u'diagnostic_job_types.json']</em><a class="headerlink" href="#diagnostic.test.test_views.TestQueueScaleBakeView.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diagnostic.test.test_views.TestQueueScaleBakeView.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diagnostic.test.test_views.TestQueueScaleBakeView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diagnostic.test.test_views.TestQueueScaleBakeView.test_bad_num">
+<code class="descname">test_bad_num</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diagnostic.test.test_views.TestQueueScaleBakeView.test_bad_num" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the view with a num of 0 (which is invalid).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diagnostic.test.test_views.TestQueueScaleBakeView.test_successful">
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diagnostic.test.test_views.TestQueueScaleBakeView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the view to create Scale Bake jobs.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="diagnostic.test.test_views.TestQueueScaleHelloView">
+<em class="property">class </em><code class="descclassname">diagnostic.test.test_views.</code><code class="descname">TestQueueScaleHelloView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#diagnostic.test.test_views.TestQueueScaleHelloView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<dl class="attribute">
+<dt id="diagnostic.test.test_views.TestQueueScaleHelloView.fixtures">
+<code class="descname">fixtures</code><em class="property"> = [u'diagnostic_job_types.json']</em><a class="headerlink" href="#diagnostic.test.test_views.TestQueueScaleHelloView.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diagnostic.test.test_views.TestQueueScaleHelloView.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diagnostic.test.test_views.TestQueueScaleHelloView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diagnostic.test.test_views.TestQueueScaleHelloView.test_bad_num">
+<code class="descname">test_bad_num</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diagnostic.test.test_views.TestQueueScaleHelloView.test_bad_num" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the view with a num of 0 (which is invalid).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diagnostic.test.test_views.TestQueueScaleHelloView.test_successful">
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diagnostic.test.test_views.TestQueueScaleHelloView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the view to create Scale Hello jobs.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="diagnostic.test.test_views.TestQueueScaleRouletteView">
+<em class="property">class </em><code class="descclassname">diagnostic.test.test_views.</code><code class="descname">TestQueueScaleRouletteView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#diagnostic.test.test_views.TestQueueScaleRouletteView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
+<dl class="attribute">
+<dt id="diagnostic.test.test_views.TestQueueScaleRouletteView.fixtures">
+<code class="descname">fixtures</code><em class="property"> = [u'diagnostic_job_types.json']</em><a class="headerlink" href="#diagnostic.test.test_views.TestQueueScaleRouletteView.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diagnostic.test.test_views.TestQueueScaleRouletteView.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diagnostic.test.test_views.TestQueueScaleRouletteView.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="diagnostic.test.test_views.TestQueueScaleRouletteView.test_bad_num">
+<code class="descname">test_bad_num</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diagnostic.test.test_views.TestQueueScaleRouletteView.test_bad_num" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the view with a num of 0 (which is invalid).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="diagnostic.test.test_views.TestQueueScaleRouletteView.test_successful">
+<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#diagnostic.test.test_views.TestQueueScaleRouletteView.test_successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling the view to create Scale Roulette jobs.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-diagnostic.test">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-diagnostic.test" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="error.html" class="btn btn-neutral float-right" title="error package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="diagnostic.management.commands.html" class="btn btn-neutral" title="diagnostic.management.commands package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'4.4.2-snapshot',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

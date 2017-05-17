@@ -724,6 +724,12 @@
       <ul>
         <li><a href="architecture/django/code_docs/cli.management.commands.html#cli.management.commands.migratedata.Command">(class in cli.management.commands.migratedata)</a>
 </li>
+        <li><a href="architecture/django/code_docs/diagnostic.management.commands.html#diagnostic.management.commands.scale_bake.Command">(class in diagnostic.management.commands.scale_bake)</a>
+</li>
+        <li><a href="architecture/django/code_docs/diagnostic.management.commands.html#diagnostic.management.commands.scale_hello.Command">(class in diagnostic.management.commands.scale_hello)</a>
+</li>
+        <li><a href="architecture/django/code_docs/diagnostic.management.commands.html#diagnostic.management.commands.scale_roulette.Command">(class in diagnostic.management.commands.scale_roulette)</a>
+</li>
         <li><a href="architecture/django/code_docs/ingest.management.commands.html#ingest.management.commands.scale_ingest.Command">(class in ingest.management.commands.scale_ingest)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.management.commands.html#ingest.management.commands.scale_scan.Command">(class in ingest.management.commands.scale_scan)</a>
@@ -879,10 +885,10 @@
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData">CountryData (class in storage.models)</a>
 </li>
-      <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.DoesNotExist">CountryData.DoesNotExist</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.DoesNotExist">CountryData.DoesNotExist</a>
+</li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.MultipleObjectsReturned">CountryData.MultipleObjectsReturned</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryDataManager">CountryDataManager (class in storage.models)</a>
@@ -1503,6 +1509,32 @@
         <li><a href="architecture/django/code_docs/job.execution.tasks.html#job.execution.tasks.pre_task.PreTask.determine_error">(job.execution.tasks.pre_task.PreTask method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/diagnostic.html#module-diagnostic">diagnostic (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/diagnostic.html#module-diagnostic.apps">diagnostic.apps (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/diagnostic.html#module-diagnostic.exceptions">diagnostic.exceptions (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/diagnostic.management.html#module-diagnostic.management">diagnostic.management (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/diagnostic.management.commands.html#module-diagnostic.management.commands">diagnostic.management.commands (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/diagnostic.management.commands.html#module-diagnostic.management.commands.scale_bake">diagnostic.management.commands.scale_bake (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/diagnostic.management.commands.html#module-diagnostic.management.commands.scale_hello">diagnostic.management.commands.scale_hello (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/diagnostic.management.commands.html#module-diagnostic.management.commands.scale_roulette">diagnostic.management.commands.scale_roulette (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/diagnostic.test.html#module-diagnostic.test">diagnostic.test (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/diagnostic.test.html#module-diagnostic.test.test_views">diagnostic.test.test_views (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/diagnostic.html#module-diagnostic.urls">diagnostic.urls (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/diagnostic.html#module-diagnostic.views">diagnostic.views (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.apps.DiagnosticConfig">DiagnosticConfig (class in diagnostic.apps)</a>
+</li>
       <li><a href="architecture/django/code_docs/ingest.scan.scanners.html#ingest.scan.scanners.dir_scanner.DirScanner">DirScanner (class in ingest.scan.scanners.dir_scanner)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.strike.monitors.html#ingest.strike.monitors.dir_monitor.DirWatcherMonitor">DirWatcherMonitor (class in ingest.strike.monitors.dir_monitor)</a>
@@ -1871,14 +1903,14 @@
 </li>
       <li><a href="architecture/django/code_docs/product.html#product.models.ProductFileManager.filter_products">filter_products() (product.models.ProductFileManager method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.FINAL_STATUSES">FINAL_STATUSES (job.models.Job attribute)</a>
 
       <ul>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.FINAL_STATUSES">(job.models.JobExecution attribute)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.job_exe.RunningJobExecution.finished">finished (job.execution.job_exe.RunningJobExecution attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.update.TaskStatusUpdate.FINISHED">FINISHED (job.tasks.update.TaskStatusUpdate attribute)</a>
@@ -1903,6 +1935,12 @@
         <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationView.fixtures">(batch.test.test_views.TestBatchesValidationView attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesView.fixtures">(batch.test.test_views.TestBatchesView attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/diagnostic.test.html#diagnostic.test.test_views.TestQueueScaleBakeView.fixtures">(diagnostic.test.test_views.TestQueueScaleBakeView attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/diagnostic.test.html#diagnostic.test.test_views.TestQueueScaleHelloView.fixtures">(diagnostic.test.test_views.TestQueueScaleHelloView attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/diagnostic.test.html#diagnostic.test.test_views.TestQueueScaleRouletteView.fixtures">(diagnostic.test.test_views.TestQueueScaleRouletteView attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_app.TestIngestJobType.fixtures">(ingest.test.test_app.TestIngestJobType attribute)</a>
 </li>
@@ -2375,9 +2413,11 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.get_log_json">get_log_json() (job.models.JobExecution method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/error.html#error.exceptions.ScaleDatabaseError.get_log_message">get_log_message() (error.exceptions.ScaleDatabaseError method)</a>
+      <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.exceptions.TestException.get_log_message">get_log_message() (diagnostic.exceptions.TestException method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/error.html#error.exceptions.ScaleDatabaseError.get_log_message">(error.exceptions.ScaleDatabaseError method)</a>
+</li>
         <li><a href="architecture/django/code_docs/error.html#error.exceptions.ScaleError.get_log_message">(error.exceptions.ScaleError method)</a>
 </li>
         <li><a href="architecture/django/code_docs/error.html#error.exceptions.ScaleIOError.get_log_message">(error.exceptions.ScaleIOError method)</a>
@@ -3008,6 +3048,12 @@
       <ul>
         <li><a href="architecture/django/code_docs/cli.management.commands.html#cli.management.commands.migratedata.Command.handle">(cli.management.commands.migratedata.Command method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/diagnostic.management.commands.html#diagnostic.management.commands.scale_bake.Command.handle">(diagnostic.management.commands.scale_bake.Command method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/diagnostic.management.commands.html#diagnostic.management.commands.scale_hello.Command.handle">(diagnostic.management.commands.scale_hello.Command method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/diagnostic.management.commands.html#diagnostic.management.commands.scale_roulette.Command.handle">(diagnostic.management.commands.scale_roulette.Command method)</a>
+</li>
         <li><a href="architecture/django/code_docs/ingest.management.commands.html#ingest.management.commands.scale_ingest.Command.handle">(ingest.management.commands.scale_ingest.Command method)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.management.commands.html#ingest.management.commands.scale_scan.Command.handle">(ingest.management.commands.scale_scan.Command method)</a>
@@ -3119,6 +3165,12 @@
 
       <ul>
         <li><a href="architecture/django/code_docs/cli.management.commands.html#cli.management.commands.migratedata.Command.help">(cli.management.commands.migratedata.Command attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/diagnostic.management.commands.html#diagnostic.management.commands.scale_bake.Command.help">(diagnostic.management.commands.scale_bake.Command attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/diagnostic.management.commands.html#diagnostic.management.commands.scale_hello.Command.help">(diagnostic.management.commands.scale_hello.Command attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/diagnostic.management.commands.html#diagnostic.management.commands.scale_roulette.Command.help">(diagnostic.management.commands.scale_roulette.Command attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.management.commands.html#ingest.management.commands.scale_ingest.Command.help">(ingest.management.commands.scale_ingest.Command attribute)</a>
 </li>
@@ -4350,6 +4402,8 @@
       <li><a href="architecture/django/code_docs/batch.html#batch.apps.BatchConfig.label">label (batch.apps.BatchConfig attribute)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.apps.DiagnosticConfig.label">(diagnostic.apps.DiagnosticConfig attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/error.html#error.apps.ErrorConfig.label">(error.apps.ErrorConfig attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.apps.IngestConfig.label">(ingest.apps.IngestConfig attribute)</a>
@@ -5128,6 +5182,8 @@
       <li><a href="architecture/django/code_docs/batch.html#batch.apps.BatchConfig.name">name (batch.apps.BatchConfig attribute)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.apps.DiagnosticConfig.name">(diagnostic.apps.DiagnosticConfig attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/error.html#error.apps.ErrorConfig.name">(error.apps.ErrorConfig attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/error.html#error.models.Error.name">(error.models.Error attribute)</a>
@@ -5751,9 +5807,15 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.parsed">parsed (storage.models.ScaleFile attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/port.html#port.views.ConfigurationUploadView.parser_classes">parser_classes (port.views.ConfigurationUploadView attribute)</a>
+      <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.views.QueueScaleBakeView.parser_classes">parser_classes (diagnostic.views.QueueScaleBakeView attribute)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.views.QueueScaleHelloView.parser_classes">(diagnostic.views.QueueScaleHelloView attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.views.QueueScaleRouletteView.parser_classes">(diagnostic.views.QueueScaleRouletteView attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/port.html#port.views.ConfigurationUploadView.parser_classes">(port.views.ConfigurationUploadView attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/queue.html#queue.views.QueueNewJobView.parser_classes">(queue.views.QueueNewJobView attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/queue.html#queue.views.QueueNewRecipeView.parser_classes">(queue.views.QueueNewRecipeView attribute)</a>
@@ -5920,6 +5982,12 @@
       <li><a href="architecture/django/code_docs/batch.html#batch.views.BatchesValidationView.post">post() (batch.views.BatchesValidationView method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.views.QueueScaleBakeView.post">(diagnostic.views.QueueScaleBakeView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.views.QueueScaleHelloView.post">(diagnostic.views.QueueScaleHelloView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.views.QueueScaleRouletteView.post">(diagnostic.views.QueueScaleRouletteView method)</a>
+</li>
         <li><a href="architecture/django/code_docs/error.html#error.views.ErrorsView.post">(error.views.ErrorsView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.views.ScansProcessView.post">(ingest.views.ScansProcessView method)</a>
@@ -6150,6 +6218,12 @@
 </li>
         <li><a href="architecture/django/code_docs/batch.html#batch.views.BatchesView.queryset">(batch.views.BatchesView attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.views.QueueScaleBakeView.queryset">(diagnostic.views.QueueScaleBakeView attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.views.QueueScaleHelloView.queryset">(diagnostic.views.QueueScaleHelloView attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.views.QueueScaleRouletteView.queryset">(diagnostic.views.QueueScaleRouletteView attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/error.html#error.views.ErrorDetailsView.queryset">(error.views.ErrorDetailsView attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/error.html#error.views.ErrorsView.queryset">(error.views.ErrorsView attribute)</a>
@@ -6379,6 +6453,12 @@
 </li>
       <li><a href="architecture/django/code_docs/queue.html#queue.views.QueueNewRecipeView">QueueNewRecipeView (class in queue.views)</a>
 </li>
+      <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.views.QueueScaleBakeView">QueueScaleBakeView (class in diagnostic.views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.views.QueueScaleHelloView">QueueScaleHelloView (class in diagnostic.views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.views.QueueScaleRouletteView">QueueScaleRouletteView (class in diagnostic.views)</a>
+</li>
       <li><a href="architecture/django/code_docs/queue.html#queue.models.QueueStatus">QueueStatus (class in queue.models)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.html#queue.serializers.QueueStatusSerializer">QueueStatusSerializer (class in queue.serializers)</a>
@@ -6397,9 +6477,11 @@
 </li>
       <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.Node.READY">READY (scheduler.node.node_class.Node attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/error.html#error.apps.ErrorConfig.ready">ready() (error.apps.ErrorConfig method)</a>
+      <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.apps.DiagnosticConfig.ready">ready() (diagnostic.apps.DiagnosticConfig method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/error.html#error.apps.ErrorConfig.ready">(error.apps.ErrorConfig method)</a>
+</li>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.apps.IngestConfig.ready">(ingest.apps.IngestConfig method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.apps.JobConfig.ready">(job.apps.JobConfig method)</a>
@@ -7194,6 +7276,12 @@
       <ul>
         <li><a href="architecture/django/code_docs/batch.html#batch.views.BatchesView.serializer_class">(batch.views.BatchesView attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.views.QueueScaleBakeView.serializer_class">(diagnostic.views.QueueScaleBakeView attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.views.QueueScaleHelloView.serializer_class">(diagnostic.views.QueueScaleHelloView attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.views.QueueScaleRouletteView.serializer_class">(diagnostic.views.QueueScaleRouletteView attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/error.html#error.views.ErrorDetailsView.serializer_class">(error.views.ErrorDetailsView attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/error.html#error.views.ErrorsView.serializer_class">(error.views.ErrorsView attribute)</a>
@@ -7311,6 +7399,12 @@
         <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationView.setUp">(batch.test.test_views.TestBatchesValidationView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesView.setUp">(batch.test.test_views.TestBatchesView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/diagnostic.test.html#diagnostic.test.test_views.TestQueueScaleBakeView.setUp">(diagnostic.test.test_views.TestQueueScaleBakeView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/diagnostic.test.html#diagnostic.test.test_views.TestQueueScaleHelloView.setUp">(diagnostic.test.test_views.TestQueueScaleHelloView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/diagnostic.test.html#diagnostic.test.test_views.TestQueueScaleRouletteView.setUp">(diagnostic.test.test_views.TestQueueScaleRouletteView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/error.test.html#error.test.test_models.TestGetDatabaseModel.setUp">(error.test.test_models.TestGetDatabaseModel method)</a>
 </li>
@@ -8403,6 +8497,14 @@
         <li><a href="architecture/django/code_docs/job.test.configuration.data.html#job.test.configuration.data.test_job_data.TestJobDataValidateInputFiles.test_bad_media_type">(job.test.configuration.data.test_job_data.TestJobDataValidateInputFiles method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.test.configuration.data.html#recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles.test_bad_media_type">(recipe.test.configuration.data.test_recipe_data.TestRecipeDataValidateInputFiles method)</a>
+</li>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/diagnostic.test.html#diagnostic.test.test_views.TestQueueScaleBakeView.test_bad_num">test_bad_num() (diagnostic.test.test_views.TestQueueScaleBakeView method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/diagnostic.test.html#diagnostic.test.test_views.TestQueueScaleHelloView.test_bad_num">(diagnostic.test.test_views.TestQueueScaleHelloView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/diagnostic.test.html#diagnostic.test.test_views.TestQueueScaleRouletteView.test_bad_num">(diagnostic.test.test_views.TestQueueScaleRouletteView method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationView.test_bad_param">test_bad_param() (batch.test.test_views.TestBatchesValidationView method)</a>
@@ -10093,12 +10195,12 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_parse_stdout_required">test_parse_stdout_required() (job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_string">test_parse_string() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_string_accepted_all">test_parse_string_accepted_all() (util.test.test_rest.TestRest method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_string_accepted_none">test_parse_string_accepted_none() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_string_default">test_parse_string_default() (util.test.test_rest.TestRest method)</a>
@@ -10487,6 +10589,12 @@
         <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationView.test_successful">(batch.test.test_views.TestBatchesValidationView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesView.test_successful">(batch.test.test_views.TestBatchesView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/diagnostic.test.html#diagnostic.test.test_views.TestQueueScaleBakeView.test_successful">(diagnostic.test.test_views.TestQueueScaleBakeView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/diagnostic.test.html#diagnostic.test.test_views.TestQueueScaleHelloView.test_successful">(diagnostic.test.test_views.TestQueueScaleHelloView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/diagnostic.test.html#diagnostic.test.test_views.TestQueueScaleRouletteView.test_successful">(diagnostic.test.test_views.TestQueueScaleRouletteView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_ingest_job.TestPerformIngest.test_successful">(ingest.test.test_ingest_job.TestPerformIngest method)</a>
 </li>
@@ -11171,6 +11279,8 @@
 </li>
       <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorsView">TestErrorsView (class in error.test.test_views)</a>
 </li>
+      <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.exceptions.TestException">TestException</a>
+</li>
       <li><a href="architecture/django/code_docs/job.test.configuration.json.execution.html#job.test.configuration.json.execution.test_exe_config.TestExecutionConfiguration">TestExecutionConfiguration (class in job.test.configuration.json.execution.test_exe_config)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.configuration.json.execution.html#job.test.configuration.json.execution.test_exe_config.TestExecutionConfigurationConvert">TestExecutionConfigurationConvert (class in job.test.configuration.json.execution.test_exe_config)</a>
@@ -11438,6 +11548,12 @@
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_views.TestQueueNewJobView">TestQueueNewJobView (class in queue.test.test_views)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_views.TestQueueNewRecipeView">TestQueueNewRecipeView (class in queue.test.test_views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/diagnostic.test.html#diagnostic.test.test_views.TestQueueScaleBakeView">TestQueueScaleBakeView (class in diagnostic.test.test_views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/diagnostic.test.html#diagnostic.test.test_views.TestQueueScaleHelloView">TestQueueScaleHelloView (class in diagnostic.test.test_views)</a>
+</li>
+      <li><a href="architecture/django/code_docs/diagnostic.test.html#diagnostic.test.test_views.TestQueueScaleRouletteView">TestQueueScaleRouletteView (class in diagnostic.test.test_views)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_views.TestQueueStatusView">TestQueueStatusView (class in queue.test.test_views)</a>
 </li>
@@ -12162,6 +12278,8 @@
       <li><a href="architecture/django/code_docs/batch.html#batch.apps.BatchConfig.verbose_name">verbose_name (batch.apps.BatchConfig attribute)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/diagnostic.html#diagnostic.apps.DiagnosticConfig.verbose_name">(diagnostic.apps.DiagnosticConfig attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/error.html#error.apps.ErrorConfig.verbose_name">(error.apps.ErrorConfig attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/ingest.html#ingest.apps.IngestConfig.verbose_name">(ingest.apps.IngestConfig attribute)</a>

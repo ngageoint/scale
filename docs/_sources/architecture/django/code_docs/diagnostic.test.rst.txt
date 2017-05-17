@@ -1,0 +1,22 @@
+diagnostic\.test package
+========================
+
+Submodules
+----------
+
+diagnostic\.test\.test\_views module
+------------------------------------
+
+.. automodule:: diagnostic.test.test_views
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: diagnostic.test
+    :members:
+    :undoc-members:
+    :show-inheritance:
