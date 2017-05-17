@@ -1,0 +1,152 @@
+[
+    {
+        "model": "job.JobType",
+        "pk": null,
+        "fields": {
+            "name": "scale-hello",
+            "version": "1.0",
+            "title": "Scale Hello",
+            "description": "Prints out a simple hello message. This job type can be useful for testing Scale's job throughput.",
+            "category": "system",
+            "is_system": true,
+            "is_long_running": false,
+            "is_active": true,
+            "is_paused": false,
+            "uses_docker": true,
+            "docker_privileged": false,
+            "docker_image": "scale",
+            "interface": {
+                 "version": "1.0",
+                 "command": "",
+                 "command_arguments": "scale_hello"
+            },
+            "revision_num": 1,
+            "error_mapping": {},
+            "priority": 25,
+            "timeout": 600,
+            "max_tries": 0,
+            "cpus_required": 0.1,
+            "mem_required": 64.0,
+            "shared_mem_required": 0.0,
+            "disk_out_const_required": 0.0,
+            "disk_out_mult_required": 0.0,
+            "created": "2017-05-11T00:00:00.0Z",
+            "last_modified": "2017-05-11T00:00:00.0Z",
+            "icon_code": "f118"
+        }
+    },
+    {
+        "model": "job.JobTypeRevision",
+        "pk": null,
+        "fields": {
+            "job_type": ["scale-hello", "1.0"],
+            "revision_num": 1,
+            "interface": {
+                 "version": "1.0",
+                 "command": "",
+                 "command_arguments": "scale_hello"
+            },
+            "created": "2017-05-11T00:00:00.0Z"
+        }
+    },
+    {
+        "model": "job.JobType",
+        "pk": null,
+        "fields": {
+            "name": "scale-bake",
+            "version": "1.0",
+            "title": "Scale Bake",
+            "description": "This test job sleeps for 15 minutes.",
+            "category": "system",
+            "is_system": true,
+            "is_long_running": false,
+            "is_active": true,
+            "is_paused": false,
+            "uses_docker": true,
+            "docker_privileged": false,
+            "docker_image": "scale",
+            "interface": {
+                 "version": "1.0",
+                 "command": "",
+                 "command_arguments": "scale_bake"
+            },
+            "revision_num": 1,
+            "error_mapping": {},
+            "priority": 25,
+            "timeout": 1800,
+            "max_tries": 0,
+            "cpus_required": 0.1,
+            "mem_required": 64.0,
+            "shared_mem_required": 0.0,
+            "disk_out_const_required": 0.0,
+            "disk_out_mult_required": 0.0,
+            "created": "2017-05-11T00:00:00.0Z",
+            "last_modified": "2017-05-11T00:00:00.0Z",
+            "icon_code": "f1fd"
+        }
+    },
+    {
+        "model": "job.JobTypeRevision",
+        "pk": null,
+        "fields": {
+            "job_type": ["scale-bake", "1.0"],
+            "revision_num": 1,
+            "interface": {
+                 "version": "1.0",
+                 "command": "",
+                 "command_arguments": "scale_bake"
+            },
+            "created": "2017-05-11T00:00:00.0Z"
+        }
+    },
+    {
+        "model": "job.JobType",
+        "pk": null,
+        "fields": {
+            "name": "scale-roulette",
+            "version": "1.0",
+            "title": "Scale Roulette",
+            "description": "This test job randomly succeeds or fails.",
+            "category": "system",
+            "is_system": true,
+            "is_long_running": false,
+            "is_active": true,
+            "is_paused": false,
+            "uses_docker": true,
+            "docker_privileged": false,
+            "docker_image": "scale",
+            "interface": {
+                 "version": "1.0",
+                 "command": "",
+                 "command_arguments": "scale_roulette"
+            },
+            "revision_num": 1,
+            "error_mapping": {},
+            "priority": 25,
+            "timeout": 600,
+            "max_tries": 0,
+            "cpus_required": 0.1,
+            "mem_required": 64.0,
+            "shared_mem_required": 0.0,
+            "disk_out_const_required": 0.0,
+            "disk_out_mult_required": 0.0,
+            "created": "2017-05-11T00:00:00.0Z",
+            "last_modified": "2017-05-11T00:00:00.0Z",
+            "icon_code": "f0d6"
+        }
+    },
+    {
+        "model": "job.JobTypeRevision",
+        "pk": null,
+        "fields": {
+            "job_type": ["scale-roulette", "1.0"],
+            "revision_num": 1,
+            "interface": {
+                 "version": "1.0",
+                 "command": "",
+                 "command_arguments": "scale_roulette"
+            },
+            "created": "2017-05-11T00:00:00.0Z"
+        }
+    }
+]

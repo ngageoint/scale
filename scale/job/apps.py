@@ -14,9 +14,10 @@ class JobConfig(AppConfig):
     def ready(self):
         """Registers job errors"""
         from error.exceptions import register_error
-        from job.configuration.exceptions import MissingSetting
+        from job.configuration.exceptions import MissingMount, MissingSetting
         from job.configuration.results.exceptions import InvalidResultsManifest, MissingRequiredOutput
 
         register_error(InvalidResultsManifest(''))
+        register_error(MissingMount(''))
         register_error(MissingRequiredOutput(''))
         register_error(MissingSetting(''))
