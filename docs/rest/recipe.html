@@ -397,7 +397,7 @@ This field will remain null if a job in the recipe is blocked or failed.</td>
 </tr>
 </tbody>
 </table>
-<span class="target" id="rest-recipe-details"></span><table border="1" class="docutils">
+<table border="1" class="docutils" id="rest-recipe-details">
 <colgroup>
 <col width="17%" />
 <col width="2%" />
@@ -509,30 +509,24 @@ property inputs will include primitive values, whereas the file or files
 type will include a full JSON representation of a Scale file object.
 (See <a class="reference internal" href="scale_file.html#rest-scale-file-details"><span class="std std-ref">Scale File Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td colspan="2">input_files</td>
-<td>JSON Object</td>
-<td>A list of files that the recipe used as input.
-(See <a class="reference internal" href="scale_file.html#rest-scale-file-details"><span class="std std-ref">Scale File Details</span></a>)
-Removed in v4, use the &#8220;inputs&#8221; attribute instead.</td>
-</tr>
-<tr class="row-even"><td colspan="2">jobs</td>
+<tr class="row-odd"><td colspan="2">jobs</td>
 <td>Array</td>
 <td>The jobs associated with this recipe.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.job_name</td>
+<tr class="row-even"><td colspan="2">.job_name</td>
 <td>String</td>
 <td>The name of the job for this recipe.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.is_original</td>
+<tr class="row-odd"><td colspan="2">.is_original</td>
 <td>Boolean</td>
 <td>Whether this is from the original recipe or copied from a superseded one.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.job</td>
+<tr class="row-even"><td colspan="2">.job</td>
 <td>JSON Object</td>
 <td>The job that is associated with the recipe.
 (See <a class="reference internal" href="job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">72</span><span class="p">,</span>
     <span class="s2">&quot;recipe_type&quot;</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>

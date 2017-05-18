@@ -4196,27 +4196,6 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="job.serializers.JobDetailsSerializerV3">
-<em class="property">class </em><code class="descclassname">job.serializers.</code><code class="descname">JobDetailsSerializerV3</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobDetailsSerializerV3" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#job.serializers.JobDetailsSerializer" title="job.serializers.JobDetailsSerializer"><code class="xref py py-class docutils literal"><span class="pre">job.serializers.JobDetailsSerializer</span></code></a></p>
-<p>Converts job model and related fields to REST output.</p>
-<dl class="class">
-<dt id="job.serializers.JobDetailsSerializerV3.ProductFileBaseSerializer">
-<em class="property">class </em><code class="descname">ProductFileBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobDetailsSerializerV3.ProductFileBaseSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="storage.html#storage.serializers.ScaleFileBaseSerializer" title="storage.serializers.ScaleFileBaseSerializer"><code class="xref py py-class docutils literal"><span class="pre">storage.serializers.ScaleFileBaseSerializer</span></code></a></p>
-<p>Converts product file model fields to REST output</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="job.serializers.JobDetailsSerializerV3.ScaleFileBaseSerializer">
-<em class="property">class </em><code class="descname">ScaleFileBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobDetailsSerializerV3.ScaleFileBaseSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
-<p>Converts Scale file model fields to REST output</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="job.serializers.JobExecutionBaseSerializer">
 <em class="property">class </em><code class="descclassname">job.serializers.</code><code class="descname">JobExecutionBaseSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.serializers.JobExecutionBaseSerializer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="util.html#util.rest.ModelIdSerializer" title="util.rest.ModelIdSerializer"><code class="xref py py-class docutils literal"><span class="pre">util.rest.ModelIdSerializer</span></code></a></p>
@@ -4449,12 +4428,6 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="job.views.JobDetailsView.get_serializer_class">
-<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobDetailsView.get_serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>Override the serializer for legacy API calls.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="job.views.JobDetailsView.patch">
 <code class="descname">patch</code><span class="sig-paren">(</span><em>request</em>, <em>job_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobDetailsView.patch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Modify job info with a subset of fields</p>
@@ -4482,6 +4455,12 @@ object the first time, the query is executed.</p>
 <dt id="job.views.JobDetailsView.queryset">
 <code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#job.views.JobDetailsView.queryset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="job.views.JobDetailsView.serializer_class">
+<code class="descname">serializer_class</code><a class="headerlink" href="#job.views.JobDetailsView.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobDetailsSerializer</span></code></p>
+</dd></dl>
 
 </dd></dl>
 
@@ -4523,48 +4502,6 @@ object the first time, the query is executed.</p>
 <dt id="job.views.JobExecutionDetailsView.serializer_class">
 <code class="descname">serializer_class</code><a class="headerlink" href="#job.views.JobExecutionDetailsView.serializer_class" title="Permalink to this definition">¶</a></dt>
 <dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobExecutionDetailsSerializer</span></code></p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="job.views.JobExecutionLogView">
-<em class="property">class </em><code class="descclassname">job.views.</code><code class="descname">JobExecutionLogView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobExecutionLogView" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">rest_framework.generics.RetrieveAPIView</span></code></p>
-<p>This view is the endpoint for viewing job execution logs</p>
-<dl class="attribute">
-<dt id="job.views.JobExecutionLogView.queryset">
-<code class="descname">queryset</code><em class="property"> = &lt;QuerySet []&gt;</em><a class="headerlink" href="#job.views.JobExecutionLogView.queryset" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="job.views.JobExecutionLogView.retrieve">
-<code class="descname">retrieve</code><span class="sig-paren">(</span><em>request</em>, <em>job_exe_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.views.JobExecutionLogView.retrieve" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets job execution logs. This can be a slightly slow operation so it&#8217;s a separate view from the details.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
-<li><strong>job_exe_id</strong> (<em>int</em>) &#8211; the job execution id</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><code class="xref py py-class docutils literal"><span class="pre">rest_framework.response.Response</span></code></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the HTTP response to send back to the user</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="job.views.JobExecutionLogView.serializer_class">
-<code class="descname">serializer_class</code><a class="headerlink" href="#job.views.JobExecutionLogView.serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">JobExecutionLogSerializer</span></code></p>
 </dd></dl>
 
 </dd></dl>

@@ -498,7 +498,7 @@ Choices: [QUEUED, RUNNING, FAILED, COMPLETED, CANCELED].</td>
 </tr>
 </tbody>
 </table>
-<span class="target" id="rest-job-details"></span><table border="1" class="docutils">
+<table border="1" class="docutils" id="rest-job-details">
 <colgroup>
 <col width="17%" />
 <col width="16%" />
@@ -678,37 +678,25 @@ property inputs will include primitive values, whereas the file or files type
 will include a full JSON representation of a Scale file object.
 (See <a class="reference internal" href="scale_file.html#rest-scale-file-details"><span class="std std-ref">Scale File Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td>input_files</td>
-<td>JSON Object</td>
-<td>A list of files that the job used as input.
-(See <a class="reference internal" href="scale_file.html#rest-scale-file-details"><span class="std std-ref">Scale File Details</span></a>)
-Removed in v4, use the &#8220;inputs&#8221; attribute instead.</td>
-</tr>
-<tr class="row-odd"><td>outputs</td>
+<tr class="row-even"><td>outputs</td>
 <td>Array</td>
 <td>A list of job interface outputs merged with their respective job result values.</td>
 </tr>
-<tr class="row-even"><td>.name</td>
+<tr class="row-odd"><td>.name</td>
 <td>String</td>
 <td>The name of the output as defined by the job type interface.
 (See <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span class="std std-ref">Job Interface Specification Version 1.4</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>.type</td>
+<tr class="row-even"><td>.type</td>
 <td>String</td>
 <td>The type of the output as defined by the job type interface.
 (See <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span class="std std-ref">Job Interface Specification Version 1.4</span></a>)</td>
 </tr>
-<tr class="row-even"><td>.value</td>
+<tr class="row-odd"><td>.value</td>
 <td>Various</td>
 <td>The actual value of the output, which can vary depending on the type. A file or
 files type will include a full JSON representation of a Product file object.
 (See <a class="reference internal" href="product.html#rest-product-details"><span class="std std-ref">Product Details</span></a>)</td>
-</tr>
-<tr class="row-odd"><td>products</td>
-<td>JSON Object</td>
-<td>A list of files that the job produced as output.
-(See <a class="reference internal" href="scale_file.html#rest-scale-file-details"><span class="std std-ref">Scale File Details</span></a>)
-Removed in v4, use the &#8220;outputs&#8221; attribute instead.</td>
 </tr>
 <tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">15096</span><span class="p">,</span>
