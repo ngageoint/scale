@@ -630,10 +630,11 @@
                     runningJobsChunk = Math.floor(runningJobs / 3),
                     rjDiff = runningJobs - (runningJobsChunk * 3);
 
-                for (var rj = 0; rj < 3; rj++) {
+                var maxRj = Math.floor(Math.random() * (12 - 1 + 1)) + 1;
+                for (var rj = 0; rj < maxRj; rj++) {
                     runningJobsBreakdown.push({
                         job_type_id: jobTypes[rj].id,
-                        count: rj === (runningJobsChunk - 1) ? runningJobsChunk + rjDiff : runningJobsChunk
+                        count: rj === (maxRj - 1) ? runningJobsChunk + rjDiff : runningJobsChunk
                     });
                 }
 

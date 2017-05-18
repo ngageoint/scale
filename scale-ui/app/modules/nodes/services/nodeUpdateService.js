@@ -2,10 +2,11 @@
     'use strict';
 
     angular.module('scaleApp').service('nodeUpdateService', function ($http, $q, scaleConfig, Node) {
-        var getNodeUpdateData = function (pause_reason, is_paused) {
+        var getNodeUpdateData = function (pause_reason, is_paused, is_active) {
             return {
                 pause_reason: pause_reason,
-                is_paused: is_paused
+                is_paused: is_paused,
+                is_active: is_active
             };
         };
 
@@ -13,6 +14,7 @@
             updateNode: function (id, data) {
                 data = data || getNodeUpdateData();
                 var d = $q.defer();
+                debugger;
 
                 $http({
                     url: scaleConfig.getUrlPrefix('nodes') + 'nodes/' + id + '/',

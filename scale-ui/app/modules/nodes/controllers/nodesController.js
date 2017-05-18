@@ -1,13 +1,12 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('nodesController', function($scope, $location, $timeout, $uibModal, navService, nodeService, statusService, stateService, userService, jobTypeService, gridFactory, toastr, poller) {
+    angular.module('scaleApp').controller('nodesController', function($scope, $location, $timeout, $uibModal, navService, nodeService, nodeUpdateService, statusService, stateService, userService, jobTypeService, gridFactory, toastr, poller) {
         var vm = this;
 
         vm.nodesParams = stateService.getNodesParams();
 
         vm.stateService = stateService;
-        vm.nodeStatus = [];
         vm.loading = true;
         vm.loadingStatus = true;
         vm.readonly = true;
@@ -31,13 +30,15 @@
                 field: 'hostname',
                 displayName: 'Hostname',
                 enableFiltering: false,
-                cellTemplate: '<div class="ui-grid-cell-contents"><div class="pull-right" ng-show="!grid.appScope.vm.readonly && grid.appScope.vm.nodeStatus.length > 0"><button class="btn btn-xs btn-default" ng-click="grid.appScope.vm.pauseNode(row.entity)"><i class="fa" ng-class="{ \'fa-pause\': !row.entity.is_paused, \'fa-play\': row.entity.is_paused }"></i></button></div> {{ row.entity.hostname }}</div>'
+                width: '25%',
+                cellTemplate: '<div class="ui-grid-cell-contents"><div class="pull-right" ng-show="!grid.appScope.vm.readonly"><button class="btn btn-xs btn-default" ng-click="grid.appScope.vm.pauseNode(row.entity)"><i class="fa" ng-class="{ \'fa-pause\': row.entity.state.name !== \'PAUSED\', \'fa-play\': row.entity.state.name === \'PAUSED\' }"></i></button></div> {{ row.entity.hostname }}</div>'
             },
             {
                 field: 'state',
                 displayName: 'State',
                 enableFiltering: false,
                 enableSorting: false,
+                width: '10%',
                 cellTemplate: '<div class="ui-grid-cell-contents"><div class="pull-right"><span class="fa fa-exclamation-triangle error" ng-show="row.entity.errors.length > 0" tooltip-append-to-body="true" uib-tooltip="{{ row.entity.errors.length === 1 ? row.entity.errors[0].description : row.entity.errors.length + \' Errors\' }}"></span> <span class="fa fa-exclamation-triangle warning" ng-show="row.entity.warnings.length > 0" tooltip-append-to-body="true" uib-tooltip="{{ row.entity.warnings.length === 1 ? row.entity.warnings[0].description : row.entity.warnings.length + \' Warnings\' }}"></span></div><span ng-bind-html="row.entity.state.title" tooltip-append-to-body="true" uib-tooltip="{{ row.entity.state.description }}"></span></div>'
             },
             {
@@ -45,16 +46,16 @@
                 displayName: 'Job Executions',
                 enableFiltering: false,
                 enableSorting: false,
-                width: '28%',
+                width: '15%',
                 cellTemplate: 'jobExecutions.html',
                 headerCellTemplate: 'jobExecutionsHeader.html'
             },
             {
-                field: 'job_executions.running',
+                field: 'running_jobs',
                 displayName: 'Running Jobs',
                 enableFiltering: false,
                 enableSorting: false,
-                cellTemplate: '<div class="ui-grid-cell-contents"><span ng-bind-html="grid.appScope.vm.getRunningJobs(row.entity)"></span></div>'
+                cellTemplate: 'runningJobs.html'
             }
             // {
             //     field: 'id',
@@ -74,32 +75,17 @@
 
         vm.gridOptions.columnDefs = vm.colDefs;
 
-        vm.getRunningJobs = function (entity) {
-            var returnStr = '<div class="label-container">';
-            _.forEach(entity.job_executions.running.by_job_type, function (jobType) {
-                var currJobType = _.find(jobTypes, { id: jobType.job_type_id });
-                if (currJobType) {
-                    returnStr = returnStr + '<div class="label label-default" title="' + currJobType.title + '"><i class="fa fa-fw">&#x' + currJobType.icon_code + '</i> ' + jobType.count + '</div>';
-                }
-            });
-            returnStr = returnStr + '</div>';
-            return returnStr;
-        };
-
         vm.pauseNode = function (entity) {
             $scope.pauseReason = '';
             vm.actionClicked = true;
-            var id = entity.id;
-            var nodeStatus = _.find(vm.nodeStatus, { node: { id: id } });
-            var curr_state = entity.is_paused;
 
             $scope.updateReason = function (value) {
                 $scope.pauseReason = value;
             };
 
             var pauseResume = function () {
-
-                nodeStatus.pauseResumeCell($scope.pauseReason).then(function (result) {
+                var isPaused = entity.state.name !== 'PAUSED';
+                nodeUpdateService.updateNode(entity, { pause_reason: $scope.pauseReason, is_paused: isPaused, is_active: entity.is_active }).then(function (result) {
                     var node = _.find(vm.gridOptions.data, { id: result.id });
                     entity.is_paused = result.is_paused;
                     nodeStatus.node.is_paused = entity.is_paused;
@@ -115,7 +101,7 @@
             };
 
             // only prompt for reason when pausing (not resuming)
-            if (!nodeStatus.node.is_paused && !nodeStatus.node.is_paused_errors) {
+            if (entity.state.name !== 'PAUSED') {
                 var modalInstance = $uibModal.open({
                     animation: true,
                     templateUrl: 'pauseDialog.html',
@@ -183,15 +169,40 @@
             });
         };
 
+        var getRunningJobs = function (entity) {
+            var runningJobs = [];
+            _.forEach(entity.job_executions.running.by_job_type, function (jobType) {
+                runningJobs.push({
+                    jobType: _.find(jobTypes, { id: jobType.job_type_id }),
+                    count: jobType.count
+                });
+            });
+            return runningJobs;
+        };
+
         var getNodes = function () {
             statusService.getStatus(true).then(null, null, function (data) {
                 if (data.$resolved) {
                     vm.nodesError = null;
                     vm.nodes = _.filter(data.nodes, { is_active: true });
+                    var order = $location.search().order;
+                    if (order) {
+                        var fieldArr = [];
+                        var directionArr = [];
+                        _.forEach(order, function (o) {
+                            fieldArr.push(_.startsWith(o, '-') ? _.tail(o).join('') : o);
+                            directionArr.push(_.startsWith(order, '-') ? 'desc' : 'asc');
+                        });
+                        console.log(fieldArr + ', ' + directionArr);
+                        vm.nodes = _.sortByOrder(vm.nodes, fieldArr, directionArr);
+                    }
+                    _.forEach(vm.nodes, function (node) {
+                        node.running_jobs = getRunningJobs(node);
+                    });
                     vm.gridOptions.totalItems = data.nodes.length;
                     vm.gridOptions.minRowsToShow = data.nodes.length;
                     vm.gridOptions.virtualizationThreshold = data.nodes.length;
-                    vm.gridOptions.data = data.nodes;
+                    vm.gridOptions.data = vm.nodes;
                 } else {
                     if (data.statusText && data.statusText !== '') {
                         vm.nodesErrorStatus = data.statusText;
