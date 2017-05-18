@@ -29,7 +29,4 @@ urlpatterns = [
     url(r'^job-executions/(\d+)/$', views.JobExecutionDetailsView.as_view(), name='job_execution_details_view'),
     url(r'^job-executions/(\d+)/logs/(stdout|stderr|combined)/$', views.JobExecutionSpecificLogView.as_view(),
         name='job_execution_log_view'),
-
-    # TODO: API_V3 Remove this URL
-    url(r'^job-executions/(\d+)/logs/$', views.JobExecutionLogView.as_view(), name='job_execution_log_view'),
 ]

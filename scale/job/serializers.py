@@ -257,19 +257,6 @@ class JobDetailsSerializer(JobSerializer):
     outputs = JobDetailsOutputSerializer(many=True)
 
 
-# TODO: API_V3 Remove this serializer
-class JobDetailsSerializerV3(JobDetailsSerializer):
-    """Converts job model and related fields to REST output."""
-    from storage.serializers import ScaleFileBaseSerializer
-
-    input_files = ScaleFileBaseSerializer(many=True)
-    try:
-        from product.serializers import ProductFileBaseSerializer
-        products = ProductFileBaseSerializer(many=True)
-    except:
-        products = []
-
-
 class JobUpdateSerializer(JobSerializer):
     """Converts job updates to REST output"""
     from storage.serializers import ScaleFileBaseSerializer

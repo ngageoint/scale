@@ -18,7 +18,7 @@ from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.job_interface import JobInterface
 from job.exceptions import InvalidJobField
-from job.serializers import (JobDetailsSerializer, JobDetailsSerializerV3, JobSerializer, JobTypeDetailsSerializer,
+from job.serializers import (JobDetailsSerializer, JobSerializer, JobTypeDetailsSerializer,
                              JobTypeFailedStatusSerializer, JobTypeSerializer, JobTypePendingStatusSerializer,
                              JobTypeRunningStatusSerializer, JobTypeStatusSerializer, JobUpdateSerializer,
                              JobWithExecutionSerializer, JobExecutionSerializer,
@@ -473,13 +473,7 @@ class JobsView(ListAPIView):
 class JobDetailsView(GenericAPIView):
     """This view is the endpoint for retrieving details about a single job."""
     queryset = Job.objects.all()
-
-    # TODO: API_V3 Remove this serializer
-    def get_serializer_class(self):
-        """Override the serializer for legacy API calls."""
-        if self.request.version == 'v3':
-            return JobDetailsSerializerV3
-        return JobDetailsSerializer
+    serializer_class = JobDetailsSerializer
 
     def get(self, request, job_id):
         """Retrieves jobs and returns it in JSON form
@@ -656,36 +650,6 @@ class JobExecutionDetailsView(RetrieveAPIView):
         """
         try:
             job_exe = JobExecution.objects.get_details(job_exe_id)
-        except JobExecution.DoesNotExist:
-            raise Http404
-
-        serializer = self.get_serializer(job_exe)
-        return Response(serializer.data)
-
-
-# TODO: API_V3 Remove this view
-class JobExecutionLogView(RetrieveAPIView):
-    """This view is the endpoint for viewing job execution logs"""
-    queryset = JobExecution.objects.all()
-    serializer_class = JobExecutionLogSerializer
-
-    def retrieve(self, request, job_exe_id):
-        """Gets job execution logs. This can be a slightly slow operation so it's a separate view from the details.
-
-        :param request: the HTTP GET request
-        :type request: :class:`rest_framework.request.Request`
-        :param job_exe_id: the job execution id
-        :type job_exe_id: int
-        :rtype: :class:`rest_framework.response.Response`
-        :returns: the HTTP response to send back to the user
-        """
-
-        # This API is unavailable after v3
-        if request.version != 'v3':
-            raise Http404
-
-        try:
-            job_exe = JobExecution.objects.get_logs(job_exe_id)
         except JobExecution.DoesNotExist:
             raise Http404
 
