@@ -15,7 +15,6 @@
             scansColDefs = [],
             scansParams = {},
             nodesColDefs = [],
-            nodeStatusParams = {},
             batchesColDefs = [],
             batchesParams = {},
             showActiveWorkspaces = true,
@@ -23,14 +22,17 @@
             logArgs = [],
             jobExecutionLogPoller = [];
 
-        var updateQuerystring = function (data) {
-            // set defaults
-            data.page = data.page || 1;
-            data.page_size = data.page_size || 25;
-            data.started = data.started || null;
-            data.ended = data.ended || null;
-            data.order = data.order ? Array.isArray(data.order) ? data.order : [data.order] : null;
-            data.status = data.status || null;
+        var updateQuerystring = function (data, excludeDefaults) {
+            excludeDefaults = excludeDefaults || false;
+            if (!excludeDefaults) {
+                // set defaults
+                data.page = data.page || 1;
+                data.page_size = data.page_size || 25;
+                data.started = data.started || null;
+                data.ended = data.ended || null;
+                data.order = data.order ? Array.isArray(data.order) ? data.order : [data.order] : null;
+                data.status = data.status || null;
+            }
             // check for params in querystring, and update as necessary
             _.forEach(_.pairs(data), function (param) {
                 $location.search(param[0], param[1]);
@@ -128,19 +130,11 @@
 
         var initNodesParams = function (data) {
             return {
-                page: data.page ? parseInt(data.page) : 1,
-                page_size: data.page_size ? parseInt(data.page_size) : 25,
+                // page: data.page ? parseInt(data.page) : 1,
+                // page_size: data.page_size ? parseInt(data.page_size) : 25,
                 order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['hostname'],
-                include_inactive: data.include_inactive ? data.include_inactive : null
-            };
-        };
-
-        var initNodeStatusParams = function (data) {
-            return {
-                page: data.page ? parseInt(data.page) : 1,
-                page_size: data.page_size ? parseInt(data.page_size) : 25,
-                started: data.started ? data.started : moment.utc().subtract(3, 'hours').toISOString(),
-                ended: data.ended ? data.ended : moment.utc().toISOString()
+                active: data.active || 'true'
+                // include_inactive: data.include_inactive ? data.include_inactive : null
             };
         };
 
@@ -268,16 +262,6 @@
             setNodesColDefs: function (data) {
                 nodesColDefs = data;
             },
-            getNodeStatusParams: function () {
-                if (_.keys(nodeStatusParams).length === 0) {
-                    return initNodeStatusParams($location.search());
-                }
-                return nodeStatusParams;
-            },
-            setNodeStatusParams: function (data) {
-                nodeStatusParams = initNodeStatusParams(data);
-                updateQuerystring(nodeStatusParams);
-            },
             getShowActiveWorkspaces: function () {
                 return showActiveWorkspaces;
             },
@@ -292,7 +276,7 @@
             },
             setNodesParams: function (data) {
                 nodesParams = initNodesParams(data);
-                updateQuerystring(nodesParams);
+                updateQuerystring(nodesParams, true);
             },
             getLogArgs: function () {
                 return logArgs;

@@ -10,18 +10,14 @@
         vm.loading = true;
         vm.loadingStatus = true;
         vm.readonly = true;
-        vm.nodesError = null;
-        vm.nodesErrorStatus = null;
-        vm.statusError = null;
-        vm.statusErrorStatus = null;
         vm.actionClicked = false;
         vm.gridOptions = gridFactory.defaultGridOptions();
-        vm.gridOptions.paginationCurrentPage = vm.nodesParams.page || 1;
-        vm.gridOptions.paginationPageSize = vm.nodesParams.page_size || vm.gridOptions.paginationPageSize;
         vm.gridOptions.data = [];
+        vm.showActive = vm.nodesParams.active === 'true';
 
         $scope.pauseReason = '';
 
+        var allNodes = [];
         var filteredByOrder = vm.nodesParams.order ? true : false;
         var jobTypes = null;
 
@@ -31,7 +27,7 @@
                 displayName: 'Hostname',
                 enableFiltering: false,
                 width: '25%',
-                cellTemplate: '<div class="ui-grid-cell-contents"><div class="pull-right" ng-show="!grid.appScope.vm.readonly"><button class="btn btn-xs btn-default" ng-click="grid.appScope.vm.pauseNode(row.entity)"><i class="fa" ng-class="{ \'fa-pause\': row.entity.state.name !== \'PAUSED\', \'fa-play\': row.entity.state.name === \'PAUSED\' }"></i></button></div> {{ row.entity.hostname }}</div>'
+                cellTemplate: 'hostname.html'
             },
             {
                 field: 'state',
@@ -57,23 +53,23 @@
                 enableSorting: false,
                 cellTemplate: 'runningJobs.html'
             }
-            // {
-            //     field: 'id',
-            //     displayName: 'Statistics',
-            //     enableFiltering: false,
-            //     enableSorting: false,
-            //     cellTemplate: '<div class="ui-grid-cell-contents" ng-show="row.entity.status">{{ row.entity.status.getCellError() }} / {{ row.entity.status.getCellTotal() }}</div>'
-            // },
-            // {
-            //     field: 'id',
-            //     displayName: 'Current Jobs',
-            //     enableFiltering: false,
-            //     enableSorting: false,
-            //     cellTemplate: '<div class="ui-grid-cell-contents" ng-show="row.entity.status"><span ng-bind-html="row.entity.status.getCellJobs()"></span></div>'
-            // }
         ];
 
         vm.gridOptions.columnDefs = vm.colDefs;
+
+        vm.toggleActive = function (entity) {
+            vm.actionClicked = true;
+            var isActive = !entity.is_active;
+            nodeUpdateService.updateNode(entity, { pause_reason: '', is_paused: entity.is_paused, is_active: isActive }).then(function (result) {
+                var node = _.find(vm.gridOptions.data, { id: result.id });
+                entity.is_active = result.is_active;
+                if (entity.is_active) {
+                    toastr.info(node.hostname + ' Activated');
+                } else {
+                    toastr.info(node.hostname + ' Deactivated');
+                }
+            });
+        };
 
         vm.pauseNode = function (entity) {
             $scope.pauseReason = '';
@@ -88,11 +84,7 @@
                 nodeUpdateService.updateNode(entity, { pause_reason: $scope.pauseReason, is_paused: isPaused, is_active: entity.is_active }).then(function (result) {
                     var node = _.find(vm.gridOptions.data, { id: result.id });
                     entity.is_paused = result.is_paused;
-                    nodeStatus.node.is_paused = entity.is_paused;
-                    entity.statusLabel = vm.getStatusLabel(nodeStatus);
-                    if (curr_state === entity.is_paused) {
-                        toastr.warning(entity.hostname + ' Status Unchanged');
-                    } else if (entity.is_paused) {
+                    if (entity.is_paused) {
                         toastr.info(node.hostname + ' Paused');
                     } else {
                         toastr.info(node.hostname + ' Resumed');
@@ -116,13 +108,6 @@
             }
         };
 
-        vm.getStatusLabel = function (status) {
-            var online = status.is_online ? '<span class="label label-online">Online</span>' : '<span class="label label-offline">Offline</span>';
-            var paused = status.node.is_paused ? '<span class="label label-paused">Paused</span>' : '';
-            var pausedErrors = status.node.is_paused_errors ? '<span class="label label-paused-errors">Paused with Errors</span>' : '';
-            return online + ' ' + paused + ' ' + pausedErrors;
-        };
-
         vm.filterResults = function () {
             poller.stopAll();
             stateService.setNodesParams(vm.nodesParams);
@@ -140,6 +125,10 @@
             vm.filterResults();
         };
 
+        vm.updateNodeActive = function () {
+            formatResults();
+        };
+
         vm.gridOptions.onRegisterApi = function (gridApi) {
             //set gridApi on scope
             vm.gridApi = gridApi;
@@ -150,11 +139,6 @@
                     $location.search({});
                     $location.path('/nodes/' + row.entity.id);
                 }
-            });
-            vm.gridApi.pagination.on.paginationChanged($scope, function (currentPage, pageSize) {
-                vm.nodesParams.page = currentPage;
-                vm.nodesParams.page_size = pageSize;
-                vm.filterResults();
             });
             vm.gridApi.core.on.sortChanged($scope, function (grid, sortColumns) {
                 _.forEach(vm.gridApi.grid.columns, function (col) {
@@ -167,6 +151,27 @@
                 });
                 vm.updateNodeOrder(sortArr);
             });
+        };
+
+        var formatResults = function () {
+            vm.nodes = _.filter(allNodes, { is_active: vm.showActive });
+            var order = $location.search().order;
+            if (order) {
+                var fieldArr = [];
+                var directionArr = [];
+                _.forEach(order, function (o) {
+                    fieldArr.push(_.startsWith(o, '-') ? _.tail(o).join('') : o);
+                    directionArr.push(_.startsWith(order, '-') ? 'desc' : 'asc');
+                });
+                vm.nodes = _.sortByOrder(vm.nodes, fieldArr, directionArr);
+            }
+            _.forEach(vm.nodes, function (node) {
+                node.running_jobs = getRunningJobs(node);
+            });
+            vm.gridOptions.totalItems = vm.nodes.length;
+            vm.gridOptions.minRowsToShow = vm.nodes.length;
+            vm.gridOptions.virtualizationThreshold = vm.nodes.length;
+            vm.gridOptions.data = vm.nodes;
         };
 
         var getRunningJobs = function (entity) {
@@ -184,25 +189,8 @@
             statusService.getStatus(true).then(null, null, function (data) {
                 if (data.$resolved) {
                     vm.nodesError = null;
-                    vm.nodes = _.filter(data.nodes, { is_active: true });
-                    var order = $location.search().order;
-                    if (order) {
-                        var fieldArr = [];
-                        var directionArr = [];
-                        _.forEach(order, function (o) {
-                            fieldArr.push(_.startsWith(o, '-') ? _.tail(o).join('') : o);
-                            directionArr.push(_.startsWith(order, '-') ? 'desc' : 'asc');
-                        });
-                        console.log(fieldArr + ', ' + directionArr);
-                        vm.nodes = _.sortByOrder(vm.nodes, fieldArr, directionArr);
-                    }
-                    _.forEach(vm.nodes, function (node) {
-                        node.running_jobs = getRunningJobs(node);
-                    });
-                    vm.gridOptions.totalItems = data.nodes.length;
-                    vm.gridOptions.minRowsToShow = data.nodes.length;
-                    vm.gridOptions.virtualizationThreshold = data.nodes.length;
-                    vm.gridOptions.data = vm.nodes;
+                    allNodes = data.nodes;
+                    formatResults();
                 } else {
                     if (data.statusText && data.statusText !== '') {
                         vm.nodesErrorStatus = data.statusText;
@@ -248,14 +236,16 @@
                 return;
             }
             vm.gridOptions.data = vm.nodes;
-            // _.forEach(vm.gridOptions.data, function (node) {
-            //     var status = _.find(newValue, { node: { id: node.id } });
-            //     if (status) {
-            //         node.status = status;
-            //         console.log('status changed');
-            //         node.statusLabel = vm.getStatusLabel(status);
-            //     }
-            // });
+        });
+
+        $scope.$watch('vm.showActive', function (newValue, oldValue) {
+            if (angular.equals(newValue, oldValue)) {
+                return;
+            }
+            vm.nodesParams.active = newValue.toString();
+            vm.showActive = newValue;
+            formatResults();
+            stateService.setNodesParams(vm.nodesParams);
         });
     });
 })();

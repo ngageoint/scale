@@ -14,7 +14,6 @@
             updateNode: function (id, data) {
                 data = data || getNodeUpdateData();
                 var d = $q.defer();
-                debugger;
 
                 $http({
                     url: scaleConfig.getUrlPrefix('nodes') + 'nodes/' + id + '/',

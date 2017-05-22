@@ -1,4 +1,11 @@
-<ais-header name="'Nodes (' + vm.nodes.length + ')'" loading="vm.loading"></ais-header>
+<ais-header hide-title="true" name="'Nodes (' + vm.nodes.length + ')'" loading="vm.loading"></ais-header>
+<div class="page-header">
+    <h1>
+        Nodes ({{ vm.nodes.length }})
+        <small><toggle-switch ng-model="vm.showActive" on-label="Active" off-label="Inactive" class="switch-success switch-small"></toggle-switch></small>
+    </h1>
+    <hr />
+</div>
 <div class="row">
     <div class="col-xs-9">
         <div class="clearfix margin-bottom-md"></div>
@@ -7,7 +14,7 @@
                 <div class="grid-container nodes">
                     <div ui-grid="vm.gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns class="scale-grid"></div>
                 </div>
-                <ais-grid-pagination></ais-grid-pagination>
+                <!--<ais-grid-pagination></ais-grid-pagination>-->
             </div>
         </div>
     </div>
@@ -33,6 +40,19 @@
             <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
             <button class="btn btn-primary" ng-click="$close()">OK</button>
         </div>
+    </div>
+</script>
+<script type="text/ng-template" id="hostname.html">
+    <div class="ui-grid-cell-contents">
+        <div class="pull-right btn-group" ng-show="!grid.appScope.vm.readonly">
+            <button class="btn btn-xs btn-default" ng-click="grid.appScope.vm.pauseNode(row.entity)">
+                <i class="fa" ng-class="{ 'fa-pause': row.entity.state.name !== 'PAUSED', 'fa-play': row.entity.state.name === 'PAUSED' }"></i>
+            </button>
+            <button class="btn btn-xs btn-default" ng-click="grid.appScope.vm.toggleActive(row.entity)">
+                <i class="fa" ng-class="{ 'fa-toggle-on': row.entity.is_active, 'fa-toggle-off': !row.entity.is_active }"></i>
+            </button>
+        </div>
+        {{ row.entity.hostname }}
     </div>
 </script>
 <script type="text/ng-template" id="jobExecutions.html">
