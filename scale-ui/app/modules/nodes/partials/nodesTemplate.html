@@ -2,7 +2,7 @@
 <div class="page-header">
     <h1>
         Nodes ({{ vm.nodes.length }})
-        <small><toggle-switch ng-model="vm.showActive" on-label="Active" off-label="Inactive" class="switch-success switch-small"></toggle-switch></small>
+        <small><toggle-switch ng-model="vm.showActive" on-label="Active" off-label="Deprecated" class="switch-success switch-small nodes-switch"></toggle-switch></small>
     </h1>
     <hr />
 </div>
@@ -45,10 +45,13 @@
 <script type="text/ng-template" id="hostname.html">
     <div class="ui-grid-cell-contents">
         <div class="pull-right btn-group" ng-show="!grid.appScope.vm.readonly">
-            <button class="btn btn-xs btn-default" ng-click="grid.appScope.vm.pauseNode(row.entity)">
-                <i class="fa" ng-class="{ 'fa-pause': row.entity.state.name !== 'PAUSED', 'fa-play': row.entity.state.name === 'PAUSED' }"></i>
+            <button class="btn btn-xs btn-default" ng-click="grid.appScope.vm.pauseNode(row.entity)" uib-tooltip="Resume Node" tooltip-append-to-body="true">
+                <i class="fa fa-play"></i>
             </button>
-            <button class="btn btn-xs btn-default" ng-click="grid.appScope.vm.toggleActive(row.entity)">
+            <button class="btn btn-xs btn-default" ng-click="grid.appScope.vm.pauseNode(row.entity)" uib-tooltip="Pause Node" tooltip-append-to-body="true">
+                <i class="fa fa-pause"></i>
+            </button>
+            <button class="btn btn-xs btn-default" ng-click="grid.appScope.vm.toggleActive(row.entity)" uib-tooltip="{{ row.entity.is_active ? 'Deprecate' : 'Activate' }} Node" tooltip-append-to-body="true">
                 <i class="fa" ng-class="{ 'fa-toggle-on': row.entity.is_active, 'fa-toggle-off': !row.entity.is_active }"></i>
             </button>
         </div>
@@ -64,7 +67,7 @@
             <div class="label" ng-show="COL_FIELD.failed.algorithm.total === 0">&nbsp;</div>
             <div class="label label-data" ng-show="COL_FIELD.failed.data.total > 0" uib-tooltip="{{ COL_FIELD.failed.data.total }} Data Errors" tooltip-append-to-body="true">{{ COL_FIELD.failed.data.total }}</div>
             <div class="label" ng-show="COL_FIELD.failed.total === 0">&nbsp;</div>
-            <div class="label label-running" uib-tooltip="{{ COL_FIELD.completed.total }} Total Completed" tooltip-append-to-body="true">{{ COL_FIELD.completed.total }}</div>
+            <div class="label label-running" uib-tooltip="{{ COL_FIELD.completed.total }} Completed" tooltip-append-to-body="true">{{ COL_FIELD.completed.total }}</div>
         </div>
     </div>
 </script>
@@ -76,7 +79,7 @@
             <span class="label label-system" uib-tooltip="System Errors" tooltip-append-to-body="true">Sys <i class="fa" ng-class="grid.appScope.vm.sortOrders[col.field].system.icon"></i></span>
             <span class="label label-algorithm" uib-tooltip="Algorithm Errors" tooltip-append-to-body="true">Alg  <i class="fa" ng-class="grid.appScope.vm.sortOrders[col.field].algorithm.icon"></i></span>
             <span class="label label-data" uib-tooltip="Data Errors" tooltip-append-to-body="true">Data  <i class="fa" ng-class="grid.appScope.vm.sortOrders[col.field].data.icon"></i></span>
-            <span class="label label-running" uib-tooltip="Total Errors" tooltip-append-to-body="true">Total  <i class="fa" ng-class="grid.appScope.vm.sortOrders[col.field].total.icon"></i></span>
+            <span class="label label-running" uib-tooltip="Completed" tooltip-append-to-body="true">Comp  <i class="fa" ng-class="grid.appScope.vm.sortOrders[col.field].total.icon"></i></span>
         </div>
     </div>
 </script>

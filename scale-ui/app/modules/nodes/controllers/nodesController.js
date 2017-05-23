@@ -39,10 +39,10 @@
             },
             {
                 field: 'job_executions',
-                displayName: 'Job Executions',
+                displayName: 'Job Executions (Last 3 Hrs)',
                 enableFiltering: false,
                 enableSorting: false,
-                width: '15%',
+                width: '25%',
                 cellTemplate: 'jobExecutions.html',
                 headerCellTemplate: 'jobExecutionsHeader.html'
             },
