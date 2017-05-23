@@ -42,7 +42,8 @@
              scope: {
                  data: '=',
                  showDescription: '=',
-                 loading: '='
+                 loading: '=',
+                 nodeType: '@'
              }
          };
     });

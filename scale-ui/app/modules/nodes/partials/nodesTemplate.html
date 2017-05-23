@@ -4,6 +4,7 @@
         Nodes ({{ vm.nodes.length }})
         <small><toggle-switch ng-model="vm.showActive" on-label="Active" off-label="Deprecated" class="switch-success switch-small nodes-switch"></toggle-switch></small>
     </h1>
+    <span ng-bind="vm.nodeTotals"></span>
     <hr />
 </div>
 <div class="row">
@@ -21,7 +22,7 @@
     <div class="col-xs-3 text-center">
         <div class="node-health-container">
             <h3 class="no-margin">Node Health</h3>
-            <ais-node-health data="vm.nodes" loading="vm.loading" show-description="false"></ais-node-health>
+            <ais-node-health data="vm.nodes" loading="vm.loading" node-type="{{ vm.nodeType }}" show-description="false"></ais-node-health>
         </div>
     </div>
 </div>
@@ -60,7 +61,7 @@
 </script>
 <script type="text/ng-template" id="jobExecutions.html">
     <div class="ui-grid-cell-contents">
-        <div class="label-container">
+        <div class="label-container job-executions">
             <div class="label label-system" ng-show="COL_FIELD.failed.system.total > 0" uib-tooltip="{{ COL_FIELD.failed.system.total }} System Errors" tooltip-append-to-body="true">{{ COL_FIELD.failed.system.total }}</div>
             <div class="label" ng-show="COL_FIELD.failed.system.total === 0">&nbsp;</div>
             <div class="label label-algorithm" ng-show="COL_FIELD.failed.algorithm.total > 0" uib-tooltip="{{ COL_FIELD.failed.algorithm.total }} Algorithm Errors" tooltip-append-to-body="true">{{ COL_FIELD.failed.algorithm.total }}</div>
@@ -75,7 +76,7 @@
 <script type="text/ng-template" id="jobExecutionsHeader.html">
     <div class="ui-grid-cell-contents">
         {{ col.displayName }}
-        <div class="label-container">
+        <div class="label-container job-executions">
             <span class="label label-system" uib-tooltip="System Errors" tooltip-append-to-body="true">Sys <i class="fa" ng-class="grid.appScope.vm.sortOrders[col.field].system.icon"></i></span>
             <span class="label label-algorithm" uib-tooltip="Algorithm Errors" tooltip-append-to-body="true">Alg  <i class="fa" ng-class="grid.appScope.vm.sortOrders[col.field].algorithm.icon"></i></span>
             <span class="label label-data" uib-tooltip="Data Errors" tooltip-append-to-body="true">Data  <i class="fa" ng-class="grid.appScope.vm.sortOrders[col.field].data.icon"></i></span>

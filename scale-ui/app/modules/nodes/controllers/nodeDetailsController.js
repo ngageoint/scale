@@ -13,7 +13,9 @@
         vm.nodeId = parseInt($routeParams.id);
         vm.runningJobs = [];
         vm.completedJobs = [];
-        vm.failedJobs = [];
+        vm.systemJobs = [];
+        vm.algorithmJobs = [];
+        vm.dataJobs = [];
         vm.scaleService = scaleService;
 
         var getNodes = function () {
@@ -34,6 +36,24 @@
                         vm.completedJobs.push({
                             jobType: _.find(jobTypes, { id: completed.job_type_id }),
                             count: completed.count
+                        });
+                    });
+                    _.forEach(vm.nodeStatus.job_executions.failed.system.by_job_type, function (system) {
+                        vm.systemJobs.push({
+                            jobType: _.find(jobTypes, { id: system.job_type_id }),
+                            count: system.count
+                        });
+                    });
+                    _.forEach(vm.nodeStatus.job_executions.failed.algorithm.by_job_type, function (algorithm) {
+                        vm.algorithmJobs.push({
+                            jobType: _.find(jobTypes, { id: algorithm.job_type_id }),
+                            count: algorithm.count
+                        });
+                    });
+                    _.forEach(vm.nodeStatus.job_executions.failed.data.by_job_type, function (data) {
+                        vm.dataJobs.push({
+                            jobType: _.find(jobTypes, { id: data.job_type_id }),
+                            count: data.count
                         });
                     });
                 } else {

@@ -4,6 +4,20 @@
     }
 }
 
+.grid-container {
+    &.nodes {
+        .scale-grid {
+            .label-container {
+                &.job-executions {
+                    .label {
+                        min-width: 65px;
+                    }
+                }
+            }
+        }
+    }
+}
+
 .node-details-container {
     small {
         color: #777;
@@ -19,6 +33,13 @@
     table {
         .label {
             margin: 0 5px 0 0;
+        }
+
+        .left {
+            width: 15%;
+        }
+        .right {
+            width: 85%;
         }
     }
 }

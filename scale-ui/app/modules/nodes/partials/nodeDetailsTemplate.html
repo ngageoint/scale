@@ -3,59 +3,85 @@
     {{ vm.node.hostname }}
     <small>{{ vm.nodeStatus.agent_id }}</small>
 </h3>
-<p>
-    <b>{{ vm.nodeStatus.state.title }}</b><br />
-    {{ vm.nodeStatus.state.description }}
-</p>
-<div class="row node-details-container">
-    <div class="col-xs-12">
-        <div class="row">
-            <div class="col-xs-12 col-sm-12">
-                <table class="table table-hover table-condensed table-striped">
-                    <tbody>
-                    <tr><td>Paused:</td><td>{{ vm.node.is_paused }}</td></tr>
-                    <tr><td>Paused Reason:</td><td>{{ vm.node.pause_reason }}</td></tr>
-                    <tr><td>Active:</td><td>{{ vm.node.is_active }}</td></tr>
-                    <tr><td>Archived:</td><td>{{ vm.node.archived }}</td></tr>
-                    <tr><td>Created:</td><td>{{ vm.node.created }}</td></tr>
-                    <tr><td>Last Modified:</td><td>{{ vm.node.last_modified }}</td></tr>
-                    <tr>
-                        <td>Running Jobs:</td>
-                        <td>
-                            <div class="label label-success" ng-repeat="job in vm.runningJobs" tooltip-append-to-body="true" uib-tooltip="{{ job.jobType.title }}">
-                                <i class="fa fa-fw" ng-bind-html="'&#x' + job.jobType.icon_code"></i> {{ job.count }}
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Completed Jobs:</td>
-                        <td>
-                            <div class="label label-primary" ng-repeat="job in vm.completedJobs" tooltip-append-to-body="true" uib-tooltip="{{ job.jobType.title }}">
-                                <i class="fa fa-fw" ng-bind-html="'&#x' + job.jobType.icon_code"></i> {{ job.count }}
-                            </div>
-                        </td>
-                    </tr>
-                    <tr ng-if="vm.nodeStatus.warnings.length > 0">
-                        <td>Warnings</td>
-                        <td>
-                            <span class="label label-warning" tooltip-append-to-body="true" uib-tooltip="{{ warning.description }}" ng-repeat="warning in vm.nodeStatus.warnings">{{ warning.title }}</span>
-                        </td>
-                    </tr>
-                    <tr ng-if="vm.nodeStatus.errors.length > 0">
-                        <td>Errors</td>
-                        <td>
-                            <span class="label label-danger" tooltip-append-to-body="true" uib-tooltip="{{ error.description }}" ng-repeat="error in vm.nodeStatus.errors">{{ error.title }}</span>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+<h4 class="margin-bottom-lg"><span class="label label-info">{{ vm.nodeStatus.state.title }}: {{ vm.nodeStatus.state.description }}</span></h4>
+<div class="node-details-container">
+    <div class="row">
+        <div class="col-xs-6" ng-if="vm.nodeStatus.errors.length > 0">
+            <div class="panel panel-error">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <strong><i class="fa fa-exclamation-triangle"></i> Errors</strong>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <ul class="list-unstyled">
+                        <li ng-repeat="error in vm.nodeStatus.errors">
+                            <span class="title error">{{ error.title }}:</span> {{ error.description }}<br />
+                            <small>{{ error.last_updated }}</small>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <!--<div class="col-xs-12 col-sm-4">-->
-                <!--<ul class="list-unstyled">-->
-                    <!--<li ng-repeat="job in vm.runningJobs"><span class="label label-default"><i class="fa fa-fw" ng-bind-html="'&#x' + job.jobType.icon_code"></i> {{ job.count }}</span></li>-->
-                <!--</ul>-->
-                <!--{{ vm.nodeStatus.job_executions }}-->
-            <!--</div>-->
+        </div>
+        <div class="col-xs-6" ng-if="vm.nodeStatus.warnings.length > 0">
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <strong><i class="fa fa-exclamation-triangle"></i> Warnings</strong>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <ul class="list-unstyled">
+                        <li ng-repeat="warning in vm.nodeStatus.warnings">
+                            <span class="title warning">{{ warning.title }}:</span> {{ warning.description }}<br />
+                            <small>{{ warning.last_updated }}</small>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
+    <table class="table table-hover table-condensed table-striped">
+        <tbody>
+        <tr>
+            <td class="left">Running Jobs:</td>
+            <td class="right">
+                <div class="label label-success" ng-repeat="job in vm.runningJobs" tooltip-append-to-body="true" uib-tooltip="{{ job.jobType.title }}">
+                    <i class="fa fa-fw" ng-bind-html="'&#x' + job.jobType.icon_code"></i> {{ job.count }}
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="left">Completed Jobs:</td>
+            <td class="right">
+                <div class="label label-primary" ng-repeat="job in vm.completedJobs" tooltip-append-to-body="true" uib-tooltip="{{ job.jobType.title }}">
+                    <i class="fa fa-fw" ng-bind-html="'&#x' + job.jobType.icon_code"></i> {{ job.count }}
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="left">Failed System Jobs:<br />Failed Algorithm Jobs:<br />Failed Data Jobs:</td>
+            <td class="right">
+                <div class="label label-system" ng-repeat="job in vm.systemJobs" tooltip-append-to-body="true" uib-tooltip="{{ job.jobType.title }}">
+                    <i class="fa fa-fw" ng-bind-html="'&#x' + job.jobType.icon_code"></i> {{ job.count }}
+                </div>
+                <br />
+                <div class="label label-algorithm" ng-repeat="job in vm.algorithmJobs" tooltip-append-to-body="true" uib-tooltip="{{ job.jobType.title }}">
+                    <i class="fa fa-fw" ng-bind-html="'&#x' + job.jobType.icon_code"></i> {{ job.count }}
+                </div>
+                <br />
+                <div class="label label-data" ng-repeat="job in vm.dataJobs" tooltip-append-to-body="true" uib-tooltip="{{ job.jobType.title }}">
+                    <i class="fa fa-fw" ng-bind-html="'&#x' + job.jobType.icon_code"></i> {{ job.count }}
+                </div>
+                <br />
+            </td>
+        </tr>
+        <tr><td class="left">Paused:</td><td class="right">{{ vm.node.is_paused }}</td></tr>
+        <tr><td class="left">Paused Reason:</td><td class="right">{{ vm.node.pause_reason }}</td></tr>
+        <tr><td class="left">Active:</td><td class="right">{{ vm.node.is_active }}</td></tr>
+        <tr><td class="left">Archived:</td><td class="right">{{ vm.node.archived }}</td></tr>
+        <tr><td class="left">Created:</td><td class="right">{{ vm.node.created }}</td></tr>
+        <tr><td class="left">Last Modified:</td><td class="right">{{ vm.node.last_modified }}</td></tr>
+        </tbody>
+    </table>
 </div>

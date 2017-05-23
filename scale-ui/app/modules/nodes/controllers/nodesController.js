@@ -14,6 +14,8 @@
         vm.gridOptions = gridFactory.defaultGridOptions();
         vm.gridOptions.data = [];
         vm.showActive = vm.nodesParams.active === 'true';
+        vm.nodeType = vm.showActive ? 'Active' : 'Deprecated';
+        vm.nodeTotals = '';
 
         $scope.pauseReason = '';
 
@@ -154,7 +156,10 @@
         };
 
         var formatResults = function () {
+            var currNodeType = vm.showActive ? 'Active' : 'Deprecated';
+            var altNodeType = vm.showActive ? 'Deprecated' : 'Active';
             vm.nodes = _.filter(allNodes, { is_active: vm.showActive });
+            vm.nodeTotals = vm.nodes.length + ' ' + currNodeType + ' Nodes / ' + (allNodes.length - vm.nodes.length) + ' ' + altNodeType + ' Nodes';
             var order = $location.search().order;
             if (order) {
                 var fieldArr = [];
@@ -244,6 +249,7 @@
             }
             vm.nodesParams.active = newValue.toString();
             vm.showActive = newValue;
+            vm.nodeType = newValue ? 'Active' : 'Deprecated';
             formatResults();
             stateService.setNodesParams(vm.nodesParams);
         });

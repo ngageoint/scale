@@ -8,7 +8,7 @@
     <div ng-show="vm.nodeHealthError" class="alert alert-danger text-center"><strong>{{ vm.nodeHealthError }}</strong> {{ vm.nodeHealthErrorStatus }}</div>
     <div ng-show="!vm.nodeHealthError">
         <div class="widget-label-center" ng-show="showDescription">Node Health</div>
-        <strong>{{ vm.totalNodes }} Active Nodes</strong>
+        <strong>{{ vm.totalNodes }} {{ nodeType }} Nodes</strong>
         <ais-donut data="vm.nodeHealth" type="'pie'" size="275" width="25" show-label="false"></ais-donut>
     </div>
 </div>
