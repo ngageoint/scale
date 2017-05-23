@@ -28,7 +28,7 @@
                 field: 'hostname',
                 displayName: 'Hostname',
                 enableFiltering: false,
-                width: '25%',
+                width: '15%',
                 cellTemplate: 'hostname.html'
             },
             {
