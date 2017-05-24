@@ -201,8 +201,10 @@
         "activityIconCode": "f110",
 
         "urls": {
-            "apiPrefix": "./api/v4/",
-            "overrides": {},
+            "apiPrefix": "./api/v5/",
+            "overrides": {
+                "status": "./api/v4/"
+            },
             "documentation": "./docs"
         },
 
