@@ -16,7 +16,7 @@ These services provide access to information about the nodes.
 | **DEPRECATED**                                                                                                          |
 |                This table describes the current v4 version of the node list API, which is now deprecated.               |
 |                The new v5 version of this API does not include the *port*, *slave_id*, *is_paused_errors*, and          |
-|                *last_offer* fields in the response.                                                                     |
+|                *last_offer* fields in the response. Also the *archived* field has been renamed to *deprecated*.         |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /nodes/                                                                                                         |
 +-------------------------------------------------------------------------------------------------------------------------+
@@ -79,7 +79,7 @@ These services provide access to information about the nodes.
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .is_active         | Boolean           | True if the node is actively participating in the cluster.                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .archived          | ISO-8601 Datetime | (Optional) When the node was removed (is_active == False) from the cluster.    |
+| .deprecated        | ISO-8601 Datetime | When the node was removed (is_active == False) from the cluster.               |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .created           | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -102,7 +102,7 @@ These services provide access to information about the nodes.
 |                "is_paused": false,                                                                                      |
 |                "is_paused_errors": false,                                                                               |
 |                "is_active": true,                                                                                       |
-|                "archived": null,                                                                                        |
+|                "deprecated": null,                                                                                      |
 |                "created": "2015-08-28T18:32:33.954Z",                                                                   |
 |                "last_offer": null,                                                                                      |
 |                "last_modified": "2015-09-04T13:53:46.670Z"                                                              |
@@ -122,7 +122,8 @@ These services provide access to information about the nodes.
 | **DEPRECATED**                                                                                                          |
 |                This table describes the current v4 version of the node details API, which is now deprecated.            |
 |                The new v5 version of this API does not include the *port*, *slave_id*, *is_paused_errors*, *last_offer*,|
-|                *resources*, *disconnected*, and *job_exes_running* fields in the response.                              |
+|                *resources*, *disconnected*, and *job_exes_running* fields in the response. Also the *archived* field    |
+|                has been renamed *deprecated*.                                                                           |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /nodes/{id}/                                                                                                    |
 |         Where {id} is the unique identifier of an existing model.                                                       |
@@ -155,7 +156,7 @@ These services provide access to information about the nodes.
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | is_active          | Boolean           | True if the node is actively participating in the cluster.                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| archived           | ISO-8601 Datetime | (Optional) When the node was removed (is_active == False) from the cluster.    |
+| deprecated         | ISO-8601 Datetime | When the node was removed (is_active == False) from the cluster.               |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | created            | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -210,7 +211,7 @@ These services provide access to information about the nodes.
 |       "is_paused": false,                                                                                               |
 |       "is_paused_errors": false,                                                                                        |
 |       "is_active": true,                                                                                                |
-|       "archived": null,                                                                                                 |
+|       "deprecated": null,                                                                                               |
 |       "created": "2015-06-15T17:18:52.414Z",                                                                            |
 |       "last_offer": null,                                                                                               |
 |       "last_modified": "2015-06-17T20:05:16.041Z",                                                                      |
@@ -294,6 +295,8 @@ These services provide access to information about the nodes.
 |   }                                                                                                                     |
 +-------------------------------------------------------------------------------------------------------------------------+
 
+.. _rest_node_update:
+
 +-------------------------------------------------------------------------------------------------------------------------+
 | **Update Node**                                                                                                         |
 +=========================================================================================================================+
@@ -302,7 +305,8 @@ These services provide access to information about the nodes.
 | **DEPRECATED**                                                                                                          |
 |                This table describes the current v4 version of the node details API, which is now deprecated.            |
 |                The new v5 version of this API does not include the *port*, *slave_id*, *is_paused_errors*, *last_offer*,|
-|                *resources*, *disconnected*, and *job_exes_running* fields in the response.                              |
+|                *resources*, *disconnected*, and *job_exes_running* fields in the response. Also the *archived* field    |
+|                has been renamed to *deprecated*.                                                                        |
 +-------------------------------------------------------------------------------------------------------------------------+
 | **PATCH** /nodes/{id}/                                                                                                  |
 |           Where {id} is the unique identifier of an existing model.                                                     |
@@ -350,7 +354,7 @@ These services provide access to information about the nodes.
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | is_active          | Boolean           | True if the node is actively participating in the cluster.                     |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| archived           | ISO-8601 Datetime | (Optional) When the node was removed (is_active == False) from the cluster.    |
+| deprecated         | ISO-8601 Datetime | When the node was removed (is_active == False) from the cluster.               |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | created            | ISO-8601 Datetime | When the associated database model was initially created.                      |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -405,7 +409,7 @@ These services provide access to information about the nodes.
 |       "is_paused": false,                                                                                               |
 |       "is_paused_errors": false,                                                                                        |
 |       "is_active": true,                                                                                                |
-|       "archived": null,                                                                                                 |
+|       "deprecated": null,                                                                                               |
 |       "created": "2015-06-15T17:18:52.414Z",                                                                            |
 |       "last_offer": null,                                                                                               |
 |       "last_modified": "2015-06-17T20:05:16.041Z",                                                                      |

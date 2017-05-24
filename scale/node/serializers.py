@@ -17,7 +17,7 @@ class NodeSerializer(NodeBaseSerializer):
     is_paused = serializers.BooleanField()
     is_active = serializers.BooleanField()
 
-    archived = serializers.DateTimeField()
+    deprecated = serializers.DateTimeField()
     created = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
 
@@ -44,7 +44,7 @@ class NodeSerializerV4(NodeBaseSerializer):
     is_paused_errors = serializers.BooleanField()
     is_active = serializers.BooleanField()
 
-    archived = serializers.DateTimeField()
+    archived = serializers.DateTimeField(source='deprecated')
     created = serializers.DateTimeField()
     last_offer = serializers.DateTimeField()
     last_modified = serializers.DateTimeField()
