@@ -671,6 +671,11 @@ well as run-time information retrieved from Mesos. This class is thread-safe.</p
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="scheduler.node.node_class.Node.DEPRECATED">
+<code class="descname">DEPRECATED</code><em class="property"> = NodeState(state=u'DEPRECATED', title=u'Deprecated', description=u'Node is deprecated and will not run new or existing jobs. If this node has existing jobs, please cancel them or switch the node to active.')</em><a class="headerlink" href="#scheduler.node.node_class.Node.DEPRECATED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="scheduler.node.node_class.Node.HEALTH_ERR_THRESHOLD">
 <code class="descname">HEALTH_ERR_THRESHOLD</code><em class="property"> = datetime.timedelta(0, 120)</em><a class="headerlink" href="#scheduler.node.node_class.Node.HEALTH_ERR_THRESHOLD" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -686,13 +691,8 @@ well as run-time information retrieved from Mesos. This class is thread-safe.</p
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="scheduler.node.node_class.Node.INACTIVE">
-<code class="descname">INACTIVE</code><em class="property"> = NodeState(state=u'INACTIVE', title=u'Inactive', description=u'Node is inactive and will not run new or existing jobs. If this node has existing jobs, please cancel them or switch the node to active.')</em><a class="headerlink" href="#scheduler.node.node_class.Node.INACTIVE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
 <dt id="scheduler.node.node_class.Node.INITIAL_CLEANUP">
-<code class="descname">INITIAL_CLEANUP</code><em class="property"> = NodeState(state=u'INITIAL_CLEANUP', title=u'Cleaning up', description=u'Node is performing an initial cleanup step to remove existing Docker containers and volumes.')</em><a class="headerlink" href="#scheduler.node.node_class.Node.INITIAL_CLEANUP" title="Permalink to this definition">¶</a></dt>
+<code class="descname">INITIAL_CLEANUP</code><em class="property"> = NodeState(state=u'INITIAL_CLEANUP', title=u'Cleaning up', description=u'Node is performing an initial cleanup step to remove existing Scale Docker containers and volumes.')</em><a class="headerlink" href="#scheduler.node.node_class.Node.INITIAL_CLEANUP" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -747,12 +747,17 @@ well as run-time information retrieved from Mesos. This class is thread-safe.</p
 
 <dl class="attribute">
 <dt id="scheduler.node.node_class.Node.cleanup_desc">
-<code class="descname">cleanup_desc</code><em class="property"> = u'Node is performing an initial cleanup step to remove existing Docker containers and volumes.'</em><a class="headerlink" href="#scheduler.node.node_class.Node.cleanup_desc" title="Permalink to this definition">¶</a></dt>
+<code class="descname">cleanup_desc</code><em class="property"> = u'Node is performing an initial cleanup step to remove existing Scale Docker containers and volumes.'</em><a class="headerlink" href="#scheduler.node.node_class.Node.cleanup_desc" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="scheduler.node.node_class.Node.degraded_desc">
 <code class="descname">degraded_desc</code><em class="property"> = u'Node has an error condition, putting it in a degraded state. New jobs will not be scheduled, and the node will attempt to continue to run existing jobs.'</em><a class="headerlink" href="#scheduler.node.node_class.Node.degraded_desc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.node_class.Node.deprecated_desc">
+<code class="descname">deprecated_desc</code><em class="property"> = u'Node is deprecated and will not run new or existing jobs. If this node has existing jobs, please cancel them or switch the node to active.'</em><a class="headerlink" href="#scheduler.node.node_class.Node.deprecated_desc" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -846,11 +851,6 @@ well as run-time information retrieved from Mesos. This class is thread-safe.</p
 </tbody>
 </table>
 </dd></dl>
-
-<dl class="attribute">
-<dt id="scheduler.node.node_class.Node.inactive_desc">
-<code class="descname">inactive_desc</code><em class="property"> = u'Node is inactive and will not run new or existing jobs. If this node has existing jobs, please cancel them or switch the node to active.'</em><a class="headerlink" href="#scheduler.node.node_class.Node.inactive_desc" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="attribute">
 <dt id="scheduler.node.node_class.Node.is_active">

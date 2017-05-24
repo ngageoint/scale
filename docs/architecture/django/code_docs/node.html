@@ -228,6 +228,7 @@
 <li class="toctree-l2"><a class="reference internal" href="node.migrations.html#module-node.migrations.0001_initial">node.migrations.0001_initial module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="node.migrations.html#module-node.migrations.0002_node_pause_reason">node.migrations.0002_node_pause_reason module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="node.migrations.html#module-node.migrations.0003_node_is_paused_errors">node.migrations.0003_node_is_paused_errors module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="node.migrations.html#module-node.migrations.0004_auto_20170524_1639">node.migrations.0004_auto_20170524_1639 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="node.migrations.html#module-node.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -252,7 +253,7 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.contrib.admin.options.ModelAdmin</span></code></p>
 <dl class="attribute">
 <dt id="node.admin.NodeAdmin.list_display">
-<code class="descname">list_display</code><em class="property"> = (u'hostname', u'is_paused', u'is_paused_errors', u'pause_reason', u'last_offer', u'slave_id', u'is_active', u'archived')</em><a class="headerlink" href="#node.admin.NodeAdmin.list_display" title="Permalink to this definition">¶</a></dt>
+<code class="descname">list_display</code><em class="property"> = (u'hostname', u'is_paused', u'is_paused_errors', u'pause_reason', u'last_offer', u'slave_id', u'is_active', u'deprecated')</em><a class="headerlink" href="#node.admin.NodeAdmin.list_display" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -307,9 +308,9 @@
 <li><strong>pause_reason</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; User or system specified reason why this node is paused. Should be used for display only.</li>
 <li><strong>is_paused</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField()</span></code>) &#8211; True if the node is currently paused and should not accept new jobs</li>
 <li><strong>is_paused_errors</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField()</span></code>) &#8211; If the node is paused, was it do to a high error rate?</li>
-<li><strong>is_active</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField()</span></code>) &#8211; True if the node is currently active or is archived for historical purposes</li>
+<li><strong>is_active</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.BooleanField()</span></code>) &#8211; True if the node is currently active or is deprecated for historical purposes</li>
 <li><strong>created</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the node model was created</li>
-<li><strong>archived</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the node was archived/deactivated</li>
+<li><strong>deprecated</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the node was deprecated (no longer active)</li>
 <li><strong>last_offer</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the node last received an offer from mesos (regardless of if the offer was used)</li>
 <li><strong>last_modified</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the node model was last modified</li>
 </ul>
@@ -330,15 +331,15 @@
 </dd></dl>
 
 <dl class="attribute">
-<dt id="node.models.Node.archived">
-<code class="descname">archived</code><a class="headerlink" href="#node.models.Node.archived" title="Permalink to this definition">¶</a></dt>
+<dt id="node.models.Node.created">
+<code class="descname">created</code><a class="headerlink" href="#node.models.Node.created" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="node.models.Node.created">
-<code class="descname">created</code><a class="headerlink" href="#node.models.Node.created" title="Permalink to this definition">¶</a></dt>
+<dt id="node.models.Node.deprecated">
+<code class="descname">deprecated</code><a class="headerlink" href="#node.models.Node.deprecated" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>

@@ -217,7 +217,7 @@
 <dt><strong>DEPRECATED</strong></dt>
 <dd>This table describes the current v4 version of the node list API, which is now deprecated.
 The new v5 version of this API does not include the <em>port</em>, <em>slave_id</em>, <em>is_paused_errors</em>, and
-<em>last_offer</em> fields in the response.</dd>
+<em>last_offer</em> fields in the response. Also the <em>archived</em> field has been renamed to <em>deprecated</em>.</dd>
 </dl>
 </td>
 </tr>
@@ -325,9 +325,9 @@ Remaining tasks for a previously executing job will complete.</td>
 <td>Boolean</td>
 <td colspan="2">True if the node is actively participating in the cluster.</td>
 </tr>
-<tr class="row-even"><td>.archived</td>
+<tr class="row-even"><td>.deprecated</td>
 <td>ISO-8601 Datetime</td>
-<td colspan="2">(Optional) When the node was removed (is_active == False) from the cluster.</td>
+<td colspan="2">When the node was removed (is_active == False) from the cluster.</td>
 </tr>
 <tr class="row-odd"><td>.created</td>
 <td>ISO-8601 Datetime</td>
@@ -354,7 +354,7 @@ Remaining tasks for a previously executing job will complete.</td>
             <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
             <span class="s2">&quot;is_paused_errors&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
             <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-            <span class="s2">&quot;archived&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;deprecated&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
             <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-08-28T18:32:33.954Z&quot;</span><span class="p">,</span>
             <span class="s2">&quot;last_offer&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
             <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-09-04T13:53:46.670Z&quot;</span>
@@ -385,7 +385,8 @@ Remaining tasks for a previously executing job will complete.</td>
 <dt><strong>DEPRECATED</strong></dt>
 <dd>This table describes the current v4 version of the node details API, which is now deprecated.
 The new v5 version of this API does not include the <em>port</em>, <em>slave_id</em>, <em>is_paused_errors</em>, <em>last_offer</em>,
-<em>resources</em>, <em>disconnected</em>, and <em>job_exes_running</em> fields in the response.</dd>
+<em>resources</em>, <em>disconnected</em>, and <em>job_exes_running</em> fields in the response. Also the <em>archived</em> field
+has been renamed <em>deprecated</em>.</dd>
 </dl>
 </td>
 </tr>
@@ -441,9 +442,9 @@ Remaining tasks for a previously executing job will complete.</td>
 <td>Boolean</td>
 <td>True if the node is actively participating in the cluster.</td>
 </tr>
-<tr class="row-odd"><td>archived</td>
+<tr class="row-odd"><td>deprecated</td>
 <td>ISO-8601 Datetime</td>
-<td>(Optional) When the node was removed (is_active == False) from the cluster.</td>
+<td>When the node was removed (is_active == False) from the cluster.</td>
 </tr>
 <tr class="row-even"><td>created</td>
 <td>ISO-8601 Datetime</td>
@@ -532,7 +533,7 @@ database but mesos does not have a corresponding active slave.
     <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
     <span class="s2">&quot;is_paused_errors&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
     <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-    <span class="s2">&quot;archived&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;deprecated&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
     <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-15T17:18:52.414Z&quot;</span><span class="p">,</span>
     <span class="s2">&quot;last_offer&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
     <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-17T20:05:16.041Z&quot;</span><span class="p">,</span>
@@ -620,7 +621,7 @@ database but mesos does not have a corresponding active slave.
 </tr>
 </tbody>
 </table>
-<table border="1" class="docutils">
+<table border="1" class="docutils" id="rest-node-update">
 <colgroup>
 <col width="17%" />
 <col width="16%" />
@@ -637,7 +638,8 @@ database but mesos does not have a corresponding active slave.
 <dt><strong>DEPRECATED</strong></dt>
 <dd>This table describes the current v4 version of the node details API, which is now deprecated.
 The new v5 version of this API does not include the <em>port</em>, <em>slave_id</em>, <em>is_paused_errors</em>, <em>last_offer</em>,
-<em>resources</em>, <em>disconnected</em>, and <em>job_exes_running</em> fields in the response.</dd>
+<em>resources</em>, <em>disconnected</em>, and <em>job_exes_running</em> fields in the response. Also the <em>archived</em> field
+has been renamed to <em>deprecated</em>.</dd>
 </dl>
 </td>
 </tr>
@@ -715,9 +717,9 @@ Remaining tasks for a previously executing job will complete.</td>
 <td>Boolean</td>
 <td>True if the node is actively participating in the cluster.</td>
 </tr>
-<tr class="row-even"><td>archived</td>
+<tr class="row-even"><td>deprecated</td>
 <td>ISO-8601 Datetime</td>
-<td>(Optional) When the node was removed (is_active == False) from the cluster.</td>
+<td>When the node was removed (is_active == False) from the cluster.</td>
 </tr>
 <tr class="row-odd"><td>created</td>
 <td>ISO-8601 Datetime</td>
@@ -806,7 +808,7 @@ database but mesos does not have a corresponding active slave.
     <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
     <span class="s2">&quot;is_paused_errors&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
     <span class="s2">&quot;is_active&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-    <span class="s2">&quot;archived&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;deprecated&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
     <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-15T17:18:52.414Z&quot;</span><span class="p">,</span>
     <span class="s2">&quot;last_offer&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
     <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-17T20:05:16.041Z&quot;</span><span class="p">,</span>
