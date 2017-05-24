@@ -1,11 +1,14 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('nodeDetailsController', function($scope, $location, $routeParams, $timeout, navService, nodeService, scaleService, statusService, jobTypeService) {
+    angular.module('scaleApp').controller('nodeDetailsController', function($scope, $location, $routeParams, $timeout, navService, nodeService, scaleConfig, scaleService, statusService, jobTypeService, moment) {
         var vm = this,
             nodes = [],
             jobTypes = [];
         
+        vm.scaleConfig = scaleConfig;
+        vm.moment = moment;
+        vm._ = _;
         vm.loading = true;
         vm.loadingStatus = true;
         vm.nodeStatus = null;

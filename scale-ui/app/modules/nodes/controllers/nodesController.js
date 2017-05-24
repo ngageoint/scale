@@ -44,7 +44,7 @@
                 displayName: 'Job Executions (Last 3 Hrs)',
                 enableFiltering: false,
                 enableSorting: false,
-                width: '25%',
+                width: '22%',
                 cellTemplate: 'jobExecutions.html',
                 headerCellTemplate: 'jobExecutionsHeader.html'
             },
