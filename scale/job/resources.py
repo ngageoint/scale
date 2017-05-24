@@ -63,3 +63,39 @@ class NodeResources(object):
         self.cpus = cpus
         self.mem = mem
         self.disk = disk
+
+    def add(self, resources):
+        """Adds the given resources
+
+        :param resources: The resources to add
+        :type resources: :class:`job.resources.NodeResources`
+        """
+
+        self.cpus += resources.cpus
+        self.mem += resources.mem
+        self.disk += resources.disk
+
+    def increase_up_to(self, resources):
+        """Increases each resource up to the value in the given resources
+
+        :param resources: The resources
+        :type resources: :class:`job.resources.NodeResources`
+        """
+
+        if self.cpus < resources.cpus:
+            self.cpus = resources.cpus
+        if self.mem < resources.mem:
+            self.mem = resources.mem
+        if self.disk < resources.disk:
+            self.disk = resources.disk
+
+    def subtract(self, resources):
+        """Subtracts the given resources
+
+        :param resources: The resources to subtract
+        :type resources: :class:`job.resources.NodeResources`
+        """
+
+        self.cpus -= resources.cpus
+        self.mem -= resources.mem
+        self.disk -= resources.disk
