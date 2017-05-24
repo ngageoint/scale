@@ -129,11 +129,3 @@ class RecipeDetailsSerializer(RecipeSerializer):
     root_superseded_recipe = RecipeBaseSerializer()
     superseded_recipe = RecipeBaseSerializer()
     superseded_by_recipe = RecipeBaseSerializer()
-
-
-# TODO: API_V3 Remove this serializer
-class RecipeDetailsSerializerV3(RecipeDetailsSerializer):
-    """Converts related recipe model fields to REST output."""
-    from storage.serializers import ScaleFileBaseSerializer
-
-    input_files = ScaleFileBaseSerializer(many=True)

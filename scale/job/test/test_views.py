@@ -261,21 +261,6 @@ class TestJobDetailsView(TestCase):
         else:
             self.assertEqual(len(result['recipes']), 0)
 
-    # TODO: API_V3 Remove this test
-    def test_successful_v3(self):
-        """Tests successfully calling the job details view under the legacy API."""
-
-        url = '/v3/jobs/%i/' % self.job.id
-        response = self.client.generic('GET', url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        result = json.loads(response.content)
-        self.assertEqual(result['job_type']['name'], self.job.job_type.name)
-        self.assertEqual(result['job_type_rev']['job_type']['id'], self.job.job_type.id)
-
-        self.assertEqual(len(result['input_files']), 0)
-        self.assertEqual(len(result['products']), 1)
-
     def test_successful_property(self):
         """Tests successfully calling the job details view for one input property."""
         self.job.job_type_rev.interface['input_data'] = [{
@@ -1763,30 +1748,6 @@ class TestJobExecutionsView(TransactionTestCase):
     def test_get_job_execution_bad_id(self):
         url = rest_util.get_url('/job-executions/9999999/')
         response = self.client.generic('GET', url)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
-
-    # TODO: API_V3 Remove this test
-    def test_get_job_execution_logs_success(self):
-        url = '/v3/job-executions/%d/logs/' % self.job_exe_1b.id
-        response = self.client.generic('GET', url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
-
-        results = json.loads(response.content)
-        self.assertEqual(results['id'], self.job_exe_1b.id)
-        self.assertEqual(results['status'], self.job_exe_1b.status)
-
-    # TODO: API_V3 Remove this test
-    def test_get_job_execution_logs_bad_id(self):
-        url = '/v3/job-executions/999999/logs/'
-        response = self.client.generic('GET', url)
-
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
-
-    # TODO: API_V3 Remove this test
-    def test_get_job_execution_logs_deprecated(self):
-        url = rest_util.get_url('/job-executions/%d/logs/' % self.job_exe_1b.id)
-        response = self.client.generic('GET', url)
-
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
 

@@ -14,7 +14,7 @@ from rest_framework.reverse import reverse
 import util.rest as rest_util
 from job.configuration.data.exceptions import InvalidData
 from job.models import Job, JobType
-from job.serializers import JobDetailsSerializer, JobDetailsSerializerV3, JobSerializer
+from job.serializers import JobDetailsSerializer, JobSerializer
 from queue.models import JobLoad, Queue
 from queue.serializers import JobLoadGroupSerializer, QueueStatusSerializer, RequeueJobSerializer
 from recipe.configuration.data.exceptions import InvalidRecipeData
@@ -61,13 +61,6 @@ class QueueNewJobView(GenericAPIView):
     parser_classes = (JSONParser,)
     queryset = Job.objects.all()
     serializer_class = JobDetailsSerializer
-
-    # TODO: API_V3 Remove this serializer
-    def get_serializer_class(self):
-        """Override the serializer for legacy API calls."""
-        if self.request.version == 'v3':
-            return JobDetailsSerializerV3
-        return JobDetailsSerializer
 
     def post(self, request):
         """Creates a new job, places it on the queue, and returns the new job information in JSON form
