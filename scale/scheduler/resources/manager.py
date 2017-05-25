@@ -6,6 +6,7 @@ import threading
 
 from django.utils.timezone import now
 
+from job.resources import NodeResources
 from scheduler.resources.agent import AgentResources
 
 # Amount of time between rolling watermark resets
@@ -35,6 +36,32 @@ class ResourceManager(object):
         with self._new_offers_lock:
             for offer in offers:
                 self._new_offers[offer.id] = offer
+
+    def generate_status_json(self, status_dict):
+        """Generates the portion of the status JSON that describes the resources
+
+        :param status_dict: The status JSON dict
+        :type status_dict: dict
+        """
+
+        total_running = NodeResources()
+        total_offered = NodeResources()
+        total_watermark = NodeResources()
+
+        with self._agent_resources_lock:
+            for node_dict in status_dict['nodes']:
+                agent_id = node_dict['agent_id']
+                if agent_id in self._agent_resources:
+                    agent_resources = self._agent_resources[agent_id]
+                    agent_resources.generate_status_json(node_dict, total_running, total_offered, total_watermark)
+
+        running_dict = {}
+        total_running.generate_status_json(running_dict)
+        offered_dict = {}
+        total_offered.generate_status_json(offered_dict)
+        watermark_dict = {}
+        total_watermark.generate_status_json(watermark_dict)
+        status_dict['resources'] = {'running': running_dict, 'offered': offered_dict, 'watermark': watermark_dict}
 
     def lost_agent(self, agent_id):
         """Informs the manager that the agent with the given ID was lost and has gone offline

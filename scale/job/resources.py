@@ -75,6 +75,17 @@ class NodeResources(object):
         self.mem += resources.mem
         self.disk += resources.disk
 
+    def generate_status_json(self, resource_dict):
+        """Generates the portion of the status JSON that describes these resources
+
+        :param resource_dict: The dict for these resources
+        :type resource_dict: dict
+        """
+
+        resource_dict['cpus'] = self.cpus
+        resource_dict['memory'] = self.mem
+        resource_dict['disk'] = self.disk
+
     def increase_up_to(self, resources):
         """Increases each resource up to the value in the given resources
 

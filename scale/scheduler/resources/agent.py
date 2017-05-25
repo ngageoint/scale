@@ -22,6 +22,36 @@ class AgentResources(object):
         self._watermark_resources = NodeResources()  # Highest level of offer + task resources
         self._recent_watermark_resources = NodeResources()  # Recent watermark, used to provide a rolling watermark
 
+    def generate_status_json(self, node_dict, total_running, total_offered, total_watermark):
+        """Generates the portion of the status JSON that describes the resources for this agent
+
+        :param node_dict: The dict for this agent's node within the status JSON
+        :type node_dict: dict
+        :param total_running: The total running resources to add up
+        :type total_running: :class:`job.resources.NodeResources`
+        :param total_offered: The total offered resources to add up
+        :type total_offered: :class:`job.resources.NodeResources`
+        :param total_watermark: The total watermark resources to add up
+        :type total_watermark: :class:`job.resources.NodeResources`
+        """
+
+        running_dict = {}
+        self._task_resources.generate_status_json(running_dict)
+        total_running.add(self._task_resources)
+        offered_dict = {}
+        self._offer_resources.generate_status_json(offered_dict)
+        total_offered.add(self._offer_resources)
+        watermark_dict = {}
+        self._watermark_resources.generate_status_json(watermark_dict)
+        total_watermark.add(self._watermark_resources)
+
+        node_dict['resources'] = {'running': running_dict, 'offered': offered_dict, 'watermark': watermark_dict}
+
+        if self._shortage_resources:
+            shortage_dict = {}
+            self._shortage_resources.generate_status_json(shortage_dict)
+            node_dict['resources']['shortage'] = shortage_dict
+
     def refresh_resources(self, offers, tasks):
         """Refreshes the agent's resources by setting the current running tasks and adding new resource offers
 
