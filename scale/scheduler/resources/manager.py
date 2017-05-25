@@ -37,6 +37,31 @@ class ResourceManager(object):
             for offer in offers:
                 self._new_offers[offer.id] = offer
 
+    def allocate_offers(self, resources):
+        """Directs all agents to allocate offers sufficient to match the given resources. Any offers that have been held
+        too long will automatically be included (including agents that resources were not requested from). It's possible
+        that the offer resources returned for an agent are less than requested or that an agent is not included in the
+        results.
+
+        :param resources: Dict where agent ID maps to the requested resources
+        :type resources: dict
+        :returns: Dict where agent ID maps to a list of the allocated offers
+        :rtype: dict
+        """
+
+        allocated_offers = {}
+        with self._agent_resources_lock:
+            for agent_resources in self._agent_resources.values():
+                if agent_resources.agent_id in resources:
+                    requested_resources = resources[agent_resources.agent_id]
+                else:
+                    requested_resources = NodeResources()
+                offer_list = agent_resources.allocate_offers(requested_resources)
+                if offer_list:
+                    allocated_offers[agent_resources.agent_id] = offer_list
+
+        return allocated_offers
+
     def generate_status_json(self, status_dict):
         """Generates the portion of the status JSON that describes the resources
 
@@ -83,10 +108,13 @@ class ResourceManager(object):
 
     def refresh_agent_resources(self, tasks):
         """Refreshes the agents with the current tasks that are running on them and with the new resource offers that
-        have been added to the manager since the last time this method was called
+        have been added to the manager since the last time this method was called. Returns a dict containing all of the
+        current offered resources and watermark resources for each agent.
 
         :param tasks: The current running tasks
         :type tasks: [:class:`job.tasks.base_task.Task`]
+        :returns: Dict where agent ID maps to a tuple of offered resources and watermark resources
+        :rtype: dict
         """
 
         with self._new_offers_lock:
@@ -106,6 +134,7 @@ class ResourceManager(object):
             agent_tasks[task.agent_id].append(task)
 
         when = now()
+        results = {}
 
         with self._agent_resources_lock:
             # Create any new agents if this is their first offer
@@ -117,7 +146,8 @@ class ResourceManager(object):
             for agent_resources in self._agent_resources.values():
                 the_offers = agent_offers[agent_resources.agent_id] if agent_resources.agent_id in agent_offers else []
                 the_tasks = agent_tasks[agent_resources.agent_id] if agent_resources.agent_id in agent_tasks else []
-                agent_resources.refresh_resources(the_offers, the_tasks)
+                resource_tuple = agent_resources.refresh_resources(the_offers, the_tasks)
+                results[agent_resources.agent_id] = resource_tuple
 
             # Reset rolling watermarks if period has passed
             if when > self._last_watermark_reset + WATERMARK_RESET_PERIOD:
@@ -125,10 +155,12 @@ class ResourceManager(object):
                     agent_resources.reset_watermark()
                 self._last_watermark_reset = when
 
-    def remove_offers(self, offer_ids):
-        """Removes the offers with the given IDs from the manager
+        return results
 
-        :param offer_ids: The list of IDs of the offers to remove
+    def rescind_offers(self, offer_ids):
+        """Rescinds the offers with the given IDs from the manager
+
+        :param offer_ids: The list of IDs of the offers to rescind
         :type offer_ids: [str]
         """
 
@@ -139,7 +171,7 @@ class ResourceManager(object):
 
         with self._agent_resources_lock:
             for agent_resources in self._agent_resources.values():
-                agent_resources.remove_offers(offer_ids)
+                agent_resources.rescind_offers(offer_ids)
 
     def set_agent_shortages(self, agent_shortages):
         """Sets any resource shortages on the appropriate agents

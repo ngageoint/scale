@@ -3,6 +3,9 @@ from __future__ import unicode_literals
 
 from job.resources import NodeResources
 
+# Maximum number of generations that each offer should be held
+MAX_OFFER_GENERATIONS = 10
+
 
 class AgentResources(object):
     """This class represents an agent's set of resource offers."""
@@ -21,6 +24,28 @@ class AgentResources(object):
         self._task_resources = NodeResources()  # Total resources for current tasks
         self._watermark_resources = NodeResources()  # Highest level of offer + task resources
         self._recent_watermark_resources = NodeResources()  # Recent watermark, used to provide a rolling watermark
+
+    def allocate_offers(self, resources):
+        """Directs the agent to allocate offers sufficient to match the given resources. Any offers that have been held
+        too long will automatically be included. It's possible that the offer resources returned are less than
+        requested.
+
+        :param resources: The requested resources
+        :type resources: :class:`job.resources.NodeResources`
+        :returns: The list of allocated offers
+        :rtype: [:class:`scheduler.resources.offer.ResourceOffer`]
+        """
+
+        # TODO: implement
+        allocated_offers = []
+        allocated_resources = NodeResources()
+        # Automatically include all offers that have hit max generations
+        for offer in self._offers:
+            if offer.generation >= MAX_OFFER_GENERATIONS:
+                allocated_offers.append(offer)
+                allocated_resources.add(offer)
+            else:
+                offer.generation += 1
 
     def generate_status_json(self, node_dict, total_running, total_offered, total_watermark):
         """Generates the portion of the status JSON that describes the resources for this agent
@@ -53,12 +78,15 @@ class AgentResources(object):
             node_dict['resources']['shortage'] = shortage_dict
 
     def refresh_resources(self, offers, tasks):
-        """Refreshes the agent's resources by setting the current running tasks and adding new resource offers
+        """Refreshes the agent's resources by setting the current running tasks and adding new resource offers. Returns
+        the current offered resources and watermark resources for the agent.
 
         :param offers: The new resource offers to add
         :type offers: [:class:`scheduler.resources.offer.ResourceOffer`]
         :param tasks: The current tasks running on the agent
         :type tasks: [:class:`job.tasks.base_task.Task`]
+        :returns: A tuple with the agent's offered resources and watermark resources
+        :rtype: (:class:`job.resources.NodeResources`, :class:`job.resources.NodeResources`)
         """
 
         # Add new offers
@@ -78,8 +106,14 @@ class AgentResources(object):
         self._watermark_resources.increase_up_to(total_resources)
         self._recent_watermark_resources.increase_up_to(total_resources)
 
-    def remove_offers(self, offer_ids):
-        """Removes the offers with the given IDs
+        offered_resources = NodeResources()
+        watermark_resources = NodeResources()
+        offered_resources.add(self._offer_resources)
+        watermark_resources.add(self._watermark_resources)
+        return offered_resources, watermark_resources
+
+    def rescind_offers(self, offer_ids):
+        """Rescinds the offers with the given IDs
 
         :param offer_ids: The list of IDs of the offers to remove
         :type offer_ids: [str]
