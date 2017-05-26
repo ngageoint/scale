@@ -100,6 +100,24 @@ class NodeResources(object):
         if self.disk < resources.disk:
             self.disk = resources.disk
 
+    def is_sufficient_to_meet(self, resources):
+        """Indicates if these resources are sufficient to meet the requested resources
+
+        :param resources: The requested resources
+        :type resources: :class:`job.resources.NodeResources`
+        :returns: True if these resources are sufficient for the request, False otherwise
+        :rtype: bool
+        """
+
+        if self.cpus < resources.cpus:
+            return False
+        if self.mem < resources.mem:
+            return False
+        if self.disk < resources.disk:
+            return False
+
+        return True
+
     def subtract(self, resources):
         """Subtracts the given resources
 

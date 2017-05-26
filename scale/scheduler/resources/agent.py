@@ -36,16 +36,31 @@ class AgentResources(object):
         :rtype: [:class:`scheduler.resources.offer.ResourceOffer`]
         """
 
-        # TODO: implement
-        allocated_offers = []
+        allocated_offers = {}
         allocated_resources = NodeResources()
+        available_offer_ids = set(self._offers.keys())
         # Automatically include all offers that have hit max generations
         for offer in self._offers:
             if offer.generation >= MAX_OFFER_GENERATIONS:
-                allocated_offers.append(offer)
-                allocated_resources.add(offer)
+                allocated_offers[offer.id] = offer
+                allocated_resources.add(offer.resources)
+                available_offer_ids.discard(offer.id)
             else:
                 offer.generation += 1
+
+        if self._offer_resources.is_sufficient_to_meet(resources):
+            # We have enough resources to meet the request, so keep allocating offers until we get enough
+            while not allocated_resources.is_sufficient_to_meet(resources):
+                offer_id = available_offer_ids.pop()
+                offer = self._offers[offer_id]
+                allocated_offers[offer_id] = offer
+                allocated_resources.add(offer.resources)
+
+        # Remove allocated offers and return them
+        for offer in allocated_offers.values():
+            del self._offers[offer.id]
+        self._offer_resources.subtract(allocated_resources)
+        return allocated_offers.values()
 
     def generate_status_json(self, node_dict, total_running, total_offered, total_watermark):
         """Generates the portion of the status JSON that describes the resources for this agent
@@ -70,7 +85,8 @@ class AgentResources(object):
         self._watermark_resources.generate_status_json(watermark_dict)
         total_watermark.add(self._watermark_resources)
 
-        node_dict['resources'] = {'running': running_dict, 'offered': offered_dict, 'watermark': watermark_dict}
+        node_dict['resources'] = {'num_offers': len(self._offers), 'running': running_dict, 'offered': offered_dict,
+                                  'watermark': watermark_dict}
 
         if self._shortage_resources:
             shortage_dict = {}
