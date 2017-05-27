@@ -170,8 +170,8 @@ class Scanner(object):
         for file_details in file_list:
             if not self._stop_received:
                 ingest = self._ingest_file(file_details.file, file_details.size)
-                # Only bother appending ingests 
-                if not self._dry_run:
+                # Only bother appending ingests that are instantiated, they won't be for dry run
+                if ingest:
                     ingests.append(ingest)
                 self._count += 1
             else:
