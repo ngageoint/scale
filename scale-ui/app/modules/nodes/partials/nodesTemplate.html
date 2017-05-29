@@ -21,7 +21,7 @@
     </div>
     <div class="col-xs-2 text-center">
         <div class="node-health-container">
-            <h3 class="no-margin">Node Health</h3>
+            <h3 class="no-margin">Node Status</h3>
             <ais-node-health data="vm.nodes" loading="vm.loading" node-type="{{ vm.nodeType }}" show-description="false"></ais-node-health>
         </div>
     </div>
@@ -45,8 +45,8 @@
 </script>
 <script type="text/ng-template" id="hostname.html">
     <div class="ui-grid-cell-contents">
-        <div class="pull-right btn-group" ng-show="!grid.appScope.vm.readonly">
-            <button class="btn btn-xs btn-default" ng-click="grid.appScope.vm.pauseNode(row.entity)" uib-tooltip="Resume Node" tooltip-append-to-body="true">
+        <div class="pull-right btn-group margin-left-sm" ng-show="!grid.appScope.vm.readonly">
+            <button class="btn btn-xs btn-default" ng-click="grid.appScope.vm.resumeNode(row.entity)" uib-tooltip="Resume Node" tooltip-append-to-body="true">
                 <i class="fa fa-play"></i>
             </button>
             <button class="btn btn-xs btn-default" ng-click="grid.appScope.vm.pauseNode(row.entity)" uib-tooltip="Pause Node" tooltip-append-to-body="true">
@@ -56,7 +56,7 @@
                 <i class="fa" ng-class="{ 'fa-toggle-on': row.entity.is_active, 'fa-toggle-off': !row.entity.is_active }"></i>
             </button>
         </div>
-        {{ row.entity.hostname }}
+        <span uib-tooltip="{{ row.entity.hostname }}" tooltip-append-to-body="true" ng-bind="row.entity.hostname"></span>
     </div>
 </script>
 <script type="text/ng-template" id="jobExecutions.html">

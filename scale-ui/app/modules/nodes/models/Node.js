@@ -2,13 +2,13 @@
     'use strict';
 
     angular.module('scaleApp').factory('Node', function (NodeResources, scaleService) {
-        var Node = function (id, hostname, pause_reason, is_paused, is_active, archived, created, last_modified) {
+        var Node = function (id, hostname, pause_reason, is_paused, is_active, deprecated, created, last_modified) {
             this.id = id;
             this.hostname = hostname;
             this.pause_reason = pause_reason;
             this.is_paused = is_paused;
             this.is_active = is_active;
-            this.archived = archived;
+            this.deprecated = deprecated;
             this.created = created;
             this.last_modified = last_modified;
         };
@@ -42,7 +42,7 @@
                     data.pause_reason,
                     data.is_paused,
                     data.is_active,
-                    data.archived,
+                    data.deprecated,
                     data.created,
                     data.last_modified
                 );

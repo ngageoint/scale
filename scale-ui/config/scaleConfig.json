@@ -216,7 +216,7 @@
             "jobExecutionLog": 1000,
             "jobTypeStatus": 300000,
             "nodes": 300000,
-            "nodeStatus": 300000,
+            "nodeStatus": 5000,
             "queueStatus": 300000,
             "queueDepth": 300000,
             "status": 300000,

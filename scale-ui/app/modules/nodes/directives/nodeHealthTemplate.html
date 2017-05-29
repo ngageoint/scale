@@ -7,7 +7,7 @@
 <div ng-class="{ 'visible': !loading, 'invisible': loading }" class="ov-chart form-inline">
     <div ng-show="vm.nodeHealthError" class="alert alert-danger text-center"><strong>{{ vm.nodeHealthError }}</strong> {{ vm.nodeHealthErrorStatus }}</div>
     <div ng-show="!vm.nodeHealthError">
-        <div class="widget-label-center" ng-show="showDescription">Node Health</div>
+        <div class="widget-label-center" ng-show="showDescription">Node Status</div>
         <strong>{{ vm.totalNodes }} {{ nodeType }} Nodes</strong>
         <ais-donut data="vm.nodeHealth" type="'pie'" size="275" width="25" show-label="false"></ais-donut>
     </div>

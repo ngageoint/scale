@@ -86,7 +86,7 @@
         <tr><td class="left">Paused:</td><td class="right">{{ vm.node.is_paused }}</td></tr>
         <tr><td class="left">Paused Reason:</td><td class="right">{{ vm.node.pause_reason }}</td></tr>
         <tr><td class="left">Active:</td><td class="right">{{ vm.node.is_active }}</td></tr>
-        <tr><td class="left">Archived:</td><td class="right">{{ vm.node.archived }}</td></tr>
+        <tr><td class="left">Deprecated:</td><td class="right">{{ vm.node.deprecated }}</td></tr>
         <tr><td class="left">Created:</td><td class="right">{{ vm._.capitalize(vm.moment.utc(vm.node.created).from(vm.moment.utc())) }} <small>{{ vm.moment.utc(vm.node.created).format(vm.scaleConfig.dateFormats.day_second_utc_nolabel) }}</small></td></tr>
         <tr><td class="left">Last Modified:</td><td class="right">{{ vm._.capitalize(vm.moment.utc(vm.node.last_modified).from(vm.moment.utc())) }} <small>{{ vm.moment.utc(vm.node.last_modified).format(vm.scaleConfig.dateFormats.day_second_utc_nolabel) }}</small></td></tr>
         </tbody>

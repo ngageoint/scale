@@ -133,7 +133,8 @@
                 // page: data.page ? parseInt(data.page) : 1,
                 // page_size: data.page_size ? parseInt(data.page_size) : 25,
                 order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['hostname'],
-                active: data.active || 'true'
+                active: data.active || 'true',
+                state: data.state || null
                 // include_inactive: data.include_inactive ? data.include_inactive : null
             };
         };

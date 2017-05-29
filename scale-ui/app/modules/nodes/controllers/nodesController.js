@@ -16,6 +16,8 @@
         vm.showActive = vm.nodesParams.active === 'true';
         vm.nodeType = vm.showActive ? 'Active' : 'Deprecated';
         vm.nodeTotals = '';
+        vm.nodeStates = [];
+        vm.selectedNodeState = $location.search().state || 'ALL';
 
         $scope.pauseReason = '';
 
@@ -28,16 +30,15 @@
                 field: 'hostname',
                 displayName: 'Hostname',
                 enableFiltering: false,
-                width: '15%',
+                width: '20%',
                 cellTemplate: 'hostname.html'
             },
             {
-                field: 'state',
+                field: 'state.name',
                 displayName: 'State',
-                enableFiltering: false,
-                enableSorting: false,
                 width: '10%',
-                cellTemplate: '<div class="ui-grid-cell-contents"><div class="pull-right"><span class="fa fa-exclamation-triangle error" ng-show="row.entity.errors.length > 0" tooltip-append-to-body="true" uib-tooltip="{{ row.entity.errors.length === 1 ? row.entity.errors[0].description : row.entity.errors.length + \' Errors\' }}"></span> <span class="fa fa-exclamation-triangle warning" ng-show="row.entity.warnings.length > 0" tooltip-append-to-body="true" uib-tooltip="{{ row.entity.warnings.length === 1 ? row.entity.warnings[0].description : row.entity.warnings.length + \' Warnings\' }}"></span></div><span ng-bind-html="row.entity.state.title" tooltip-append-to-body="true" uib-tooltip="{{ row.entity.state.description }}"></span></div>'
+                cellTemplate: '<div class="ui-grid-cell-contents"><div class="pull-right"><span class="fa fa-exclamation-triangle error" ng-show="row.entity.errors.length > 0" tooltip-append-to-body="true" uib-tooltip="{{ row.entity.errors.length === 1 ? row.entity.errors[0].description : row.entity.errors.length + \' Errors\' }}"></span> <span class="fa fa-exclamation-triangle warning" ng-show="row.entity.warnings.length > 0" tooltip-append-to-body="true" uib-tooltip="{{ row.entity.warnings.length === 1 ? row.entity.warnings[0].description : row.entity.warnings.length + \' Warnings\' }}"></span></div><span ng-bind-html="row.entity.state.title" tooltip-append-to-body="true" uib-tooltip="{{ row.entity.state.description }}"></span></div>',
+                filterHeaderTemplate: '<div class="ui-grid-filter-container"><select class="form-control input-sm" ng-model="grid.appScope.vm.selectedNodeState"><option ng-selected="{{ grid.appScope.vm.nodeStates[$index] == grid.appScope.vm.selectedNodeState }}" value="{{ grid.appScope.vm.nodeStates[$index] }}" ng-repeat="state in grid.appScope.vm.nodeStates track by $index">{{ state.toUpperCase() }}</option></select></div>'
             },
             {
                 field: 'job_executions',
@@ -73,6 +74,15 @@
             });
         };
 
+        vm.resumeNode = function (entity) {
+            vm.actionClicked = true;
+            nodeUpdateService.updateNode(entity, { pause_reason: null, is_paused: false, is_active: entity.is_active }).then(function (result) {
+                var node = _.find(vm.gridOptions.data, { id: result.id });
+                entity.is_paused = result.is_paused;
+                toastr.info(node.hostname + ' Resumed');
+            });
+        };
+
         vm.pauseNode = function (entity) {
             $scope.pauseReason = '';
             vm.actionClicked = true;
@@ -81,33 +91,19 @@
                 $scope.pauseReason = value;
             };
 
-            var pauseResume = function () {
-                var isPaused = entity.state.name !== 'PAUSED';
-                nodeUpdateService.updateNode(entity, { pause_reason: $scope.pauseReason, is_paused: isPaused, is_active: entity.is_active }).then(function (result) {
+            var modalInstance = $uibModal.open({
+                animation: true,
+                templateUrl: 'pauseDialog.html',
+                scope: $scope
+            });
+
+            modalInstance.result.then(function () {
+                nodeUpdateService.updateNode(entity, { pause_reason: $scope.pauseReason, is_paused: true, is_active: entity.is_active }).then(function (result) {
                     var node = _.find(vm.gridOptions.data, { id: result.id });
                     entity.is_paused = result.is_paused;
-                    if (entity.is_paused) {
-                        toastr.info(node.hostname + ' Paused');
-                    } else {
-                        toastr.info(node.hostname + ' Resumed');
-                    }
+                    toastr.info(node.hostname + ' Paused');
                 });
-            };
-
-            // only prompt for reason when pausing (not resuming)
-            if (entity.state.name !== 'PAUSED') {
-                var modalInstance = $uibModal.open({
-                    animation: true,
-                    templateUrl: 'pauseDialog.html',
-                    scope: $scope
-                });
-
-                modalInstance.result.then(function () {
-                    pauseResume();
-                });
-            } else {
-                pauseResume();
-            }
+            });
         };
 
         vm.filterResults = function () {
@@ -160,7 +156,10 @@
             var altNodeType = vm.showActive ? 'Deprecated' : 'Active';
             vm.nodes = _.filter(allNodes, { is_active: vm.showActive });
             vm.nodeTotals = vm.nodes.length + ' ' + currNodeType + ' Nodes / ' + (allNodes.length - vm.nodes.length) + ' ' + altNodeType + ' Nodes';
+            vm.nodeStates = _.sortBy(_.uniq(_.map(vm.nodes, 'state.name')));
+            vm.nodeStates.unshift('ALL');
             var order = $location.search().order;
+            var state = $location.search().state;
             if (order) {
                 var fieldArr = [];
                 var directionArr = [];
@@ -169,6 +168,9 @@
                     directionArr.push(_.startsWith(order, '-') ? 'desc' : 'asc');
                 });
                 vm.nodes = _.sortByOrder(vm.nodes, fieldArr, directionArr);
+            }
+            if (state) {
+                vm.nodes = _.filter(vm.nodes, { state: { name: state }});
             }
             _.forEach(vm.nodes, function (node) {
                 node.running_jobs = getRunningJobs(node);
@@ -191,6 +193,7 @@
         };
 
         var getNodes = function () {
+            poller.stopAll();
             statusService.getStatus(true).then(null, null, function (data) {
                 if (data.$resolved) {
                     vm.nodesError = null;
@@ -251,6 +254,15 @@
             vm.showActive = newValue;
             vm.nodeType = newValue ? 'Active' : 'Deprecated';
             formatResults();
+            stateService.setNodesParams(vm.nodesParams);
+        });
+
+        $scope.$watch('vm.selectedNodeState', function (newValue, oldValue) {
+            if (angular.equals(newValue, oldValue)) {
+                return;
+            }
+            vm.nodesParams.state = newValue !== 'ALL' ? newValue : null;
+            getNodes();
             stateService.setNodesParams(vm.nodesParams);
         });
     });
