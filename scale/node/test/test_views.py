@@ -189,7 +189,7 @@ class TestNodeDetailsView(TransactionTestCase):
 
         result = json.loads(response.content)
         self.assertEqual(result['is_active'], False)
-        self.assertIn('archived', result)
+        self.assertIn('deprecated', result)
 
 
 class TestNodesStatusView(TransactionTestCase):

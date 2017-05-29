@@ -144,9 +144,9 @@ class NodeManager(models.Manager):
         node = node_query.first()
         if node.is_active != new_data.get('is_active', None):
             if node.is_active:
-                new_data['archived'] = now()
+                new_data['deprecated'] = now()
             else:
-                new_data['archived'] = None
+                new_data['deprecated'] = None
         if 'is_paused' in new_data:
             # always clear the high error rate field when changing pause state
             # the scheduler will explicitly set this flag when necessary
@@ -241,8 +241,7 @@ class NodeManager(models.Manager):
         node.last_offer = now()
 
 
-# TODO: At some point we need to refactor the node models to remove the slave_id, is_paused_errors, and last_offer
-# fields. To do this we would first need to rework the node REST API endpoints to not rely on these fields.
+# TODO: remove the slave_id, is_paused_errors, and last_offer fields when REST API v4 is removed
 class Node(models.Model):
     """Represents a cluster node on which jobs can be run
 
@@ -259,13 +258,13 @@ class Node(models.Model):
     :type is_paused: :class:`django.db.models.BooleanField()`
     :keyword is_paused_errors: If the node is paused, was it do to a high error rate?
     :type is_paused_errors: :class:`django.db.models.BooleanField()`
-    :keyword is_active: True if the node is currently active or is archived for historical purposes
+    :keyword is_active: True if the node is currently active or is deprecated for historical purposes
     :type is_active: :class:`django.db.models.BooleanField()`
 
     :keyword created: When the node model was created
     :type created: :class:`django.db.models.DateTimeField`
-    :keyword archived: When the node was archived/deactivated
-    :type archived: :class:`django.db.models.DateTimeField`
+    :keyword deprecated: When the node was deprecated (no longer active)
+    :type deprecated: :class:`django.db.models.DateTimeField`
     :keyword last_offer: When the node last received an offer from mesos (regardless of if the offer was used)
     :type last_offer: :class:`django.db.models.DateTimeField`
     :keyword last_modified: When the node model was last modified
@@ -282,7 +281,7 @@ class Node(models.Model):
     is_active = models.BooleanField(default=True)
 
     created = models.DateTimeField(auto_now_add=True)
-    archived = models.DateTimeField(blank=True, null=True)
+    deprecated = models.DateTimeField(blank=True, null=True)
     last_offer = models.DateTimeField(null=True)
     last_modified = models.DateTimeField(auto_now=True)
 
