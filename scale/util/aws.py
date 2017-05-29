@@ -114,6 +114,42 @@ class SQSClient(AWSClient):
 
         return self._resource.get_queue_by_name(QueueName=queue_name)
 
+    def send_message(self, queue_name, message):
+        """Send a message to SQS queue.
+
+        :param queue_name: The unique name of the SQS queue
+        :type queue_name: string
+        :param message: Message to send to SQS queue
+        :type message: string
+        """
+
+        queue = self.get_queue_by_name(queue_name)
+
+        queue.send_message(MessageBody=message)
+
+    def receive_messages(self,
+                         queue_name,
+                         messages_per_request=10,
+                         wait_time_seconds=20,
+                         visibility_timeout_seconds=30):
+        """Receive a batch of messages from an SQS queue
+
+        :param queue_name:
+        :param messages_per_request: Number of messages to retrieve in a single request (must be 1-10)
+        :type messages_per_request: int
+        :param wait_time_seconds: Long-poll duration of request (max of 20). Ends immediately when message published.
+        :type wait_time_seconds: int
+        :param visibility_timeout_seconds: Duration for a message to be hidden after retrieved from the queue.
+        :type visibility_timeout_seconds: int
+        :return: List of messages
+        :rtype: [`boto3.sqs.Message`]
+        """
+        queue = self.get_queue_by_name(queue_name)
+
+        return queue.receive_messages(MaxNumberOfMessages=messages_per_request,
+                                      WaitTimeSeconds=wait_time_seconds,
+                                      VisibilityTimeout=visibility_timeout_seconds)
+
 
 class S3Client(AWSClient):
     def __init__(self, credentials=None, region_name=None):
