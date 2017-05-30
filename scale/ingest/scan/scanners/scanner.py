@@ -170,8 +170,8 @@ class Scanner(object):
         for file_details in file_list:
             if not self._stop_received:
                 ingest = self._ingest_file(file_details.file, file_details.size)
-                # Only bother appending ingests 
-                if not self._dry_run:
+                # Only bother appending ingests that are instantiated, they won't be for dry run
+                if ingest:
                     ingests.append(ingest)
                 self._count += 1
             else:
@@ -229,8 +229,8 @@ class Scanner(object):
     def _process_ingest(self, file_path, file_size):
         """Processes the ingest file by applying the Scan configuration rules.
         
-        This method will populate the ingest model and insert ingest object into
-        appropriate list for later batch inserts.
+        If input file matches an ingest rule, this method will populate the ingest model
+        and return for later batch inserts. When no rules are matched, None is returned.
 
         :param file_path: The relative location of the ingest file within the workspace
         :type file_path: string
@@ -250,4 +250,4 @@ class Scanner(object):
         if ingest.is_there_rule_match(self._file_handler, self._workspaces):
             return ingest
 
-            # If is_there_rule_match matches a rule ingest will be returned above, otherwise None is default
+        # If is_there_rule_match matches a rule, ingest will be returned above, otherwise None is default
