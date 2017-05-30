@@ -579,7 +579,7 @@ class RecipeFile(models.Model):
 
     recipe = models.ForeignKey('recipe.Recipe', on_delete=models.PROTECT)
     scale_file = models.ForeignKey('storage.ScaleFile', on_delete=models.PROTECT)
-    recipe_input = models.CharField(blank=True, null=True, max_length=100)
+    recipe_input = models.CharField(blank=True, null=True, max_length=250)
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta(object):
