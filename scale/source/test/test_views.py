@@ -147,7 +147,7 @@ class TestSourceDetailsView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
 
-# TODO: change URLs to hard-coded v4 strings once v5 is default instead of v4
+# TODO: remove when REST API v4 is removed
 class TestSourceDetailsViewV4(TestCase):
 
     def setUp(self):
@@ -180,8 +180,7 @@ class TestSourceDetailsViewV4(TestCase):
     def test_id(self):
         """Tests successfully calling the source files view by id."""
 
-        url = rest_util.get_url('/sources/%i/' % self.source.id)
-        response = self.client.generic('GET', url)
+        response = self.client.generic('GET', '/v4/sources/%i/' % self.source.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
@@ -199,8 +198,7 @@ class TestSourceDetailsViewV4(TestCase):
     def test_file_name(self):
         """Tests successfully calling the source files view by file name."""
 
-        url = rest_util.get_url('/sources/%s/' % self.source.file_name)
-        response = self.client.generic('GET', url)
+        response = self.client.generic('GET', '/v4/sources/%s/' % self.source.file_name)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
@@ -218,19 +216,16 @@ class TestSourceDetailsViewV4(TestCase):
     def test_missing(self):
         """Tests calling the source files view with an invalid id or file name."""
 
-        url = rest_util.get_url('/sources/12345/')
-        response = self.client.generic('GET', url)
+        response = self.client.generic('GET', '/v4/sources/12345/')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
-        url = rest_util.get_url('/sources/missing_file.txt/')
-        response = self.client.generic('GET', url)
+        response = self.client.generic('GET', '/v4/sources/missing_file.txt/')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
 
     def test_superseded(self):
         """Tests successfully calling the source files view filtered by superseded."""
 
-        url = rest_util.get_url('/sources/%i/?include_superseded=true' % self.source.id)
-        response = self.client.generic('GET', url)
+        response = self.client.generic('GET', '/v4/sources/%i/?include_superseded=true' % self.source.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)

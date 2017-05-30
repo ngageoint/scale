@@ -261,10 +261,10 @@ class QueueManager(models.Manager):
         """
 
         if order_mode == QUEUE_ORDER_FIFO:
-            return self.order_by('priority', 'queued').iterator()
+            return self.order_by('priority', 'queued')
         elif order_mode == QUEUE_ORDER_LIFO:
-            return self.order_by('priority', '-queued').iterator()
-        return self.order_by('priority').iterator()
+            return self.order_by('priority', '-queued')
+        return self.order_by('priority')
 
     def get_queue_status(self):
         """Returns the current status of the queue with statistics broken down by job type.

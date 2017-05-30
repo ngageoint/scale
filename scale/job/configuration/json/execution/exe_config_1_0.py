@@ -263,16 +263,18 @@ class ExecutionConfiguration(object):
 
         if settings.LOGGING_ADDRESS is not None:
             log_driver = DockerParam('log-driver', 'syslog')
+            # Must explicitly specify RFC3164 to ensure compatibility with logstash in Docker 1.11+
+            syslog_format = DockerParam('log-opt', 'syslog-format=rfc3164')
             log_address = DockerParam('log-opt', 'syslog-address=%s' % settings.LOGGING_ADDRESS)
             if not job_exe.is_system:
                 pre_task_tag = DockerParam('log-opt', 'tag=%s' % job_exe.get_pre_task_id())
-                self.add_pre_task_docker_params([log_driver, log_address, pre_task_tag])
+                self.add_pre_task_docker_params([log_driver, syslog_format, log_address, pre_task_tag])
                 post_task_tag = DockerParam('log-opt', 'tag=%s' % job_exe.get_post_task_id())
                 # Post task needs ElasticSearch URL to grab logs for old artifact registration
                 es_urls = DockerParam('env', 'SCALE_ELASTICSEARCH_URLS=%s' % es_urls)
-                self.add_post_task_docker_params([log_driver, log_address, post_task_tag, es_urls])
+                self.add_post_task_docker_params([log_driver, syslog_format, log_address, post_task_tag, es_urls])
             job_task_tag = DockerParam('log-opt', 'tag=%s' % job_exe.get_job_task_id())
-            self.add_job_task_docker_params([log_driver, log_address, job_task_tag])
+            self.add_job_task_docker_params([log_driver, syslog_format, log_address, job_task_tag])
 
     def get_job_task_docker_params(self):
         """Returns the Docker parameters needed for the job task

@@ -17,8 +17,8 @@ from recipe.configuration.data.exceptions import InvalidRecipeConnection
 from recipe.configuration.definition.exceptions import InvalidDefinition
 from recipe.configuration.definition.recipe_definition import RecipeDefinition
 from recipe.exceptions import ReprocessError
-from recipe.serializers import (RecipeDetailsSerializer, RecipeDetailsSerializerV3, RecipeSerializer,
-                                RecipeTypeDetailsSerializer, RecipeTypeSerializer)
+from recipe.serializers import (RecipeDetailsSerializer, RecipeSerializer, RecipeTypeDetailsSerializer,
+                                RecipeTypeSerializer)
 from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerType
 from util.rest import BadParameter
 
@@ -292,13 +292,7 @@ class RecipesView(ListAPIView):
 class RecipeDetailsView(RetrieveAPIView):
     """This view is the endpoint for retrieving details of a recipe"""
     queryset = Recipe.objects.all()
-
-    # TODO: API_V3 Remove this serializer
-    def get_serializer_class(self):
-        """Override the serializer for legacy API calls."""
-        if self.request.version == 'v3':
-            return RecipeDetailsSerializerV3
-        return RecipeDetailsSerializer
+    serializer_class = RecipeDetailsSerializer
 
     def retrieve(self, request, recipe_id):
         """Retrieves the details for a recipe and returns it in JSON form

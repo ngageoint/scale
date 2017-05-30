@@ -33,9 +33,9 @@ class Node(object):
     NORMAL_HEALTH_THRESHOLD = datetime.timedelta(minutes=5)
 
     # Node States
-    inactive_desc = 'Node is inactive and will not run new or existing jobs.'
-    inactive_desc += ' If this node has existing jobs, please cancel them or switch the node to active.'
-    INACTIVE = NodeState(state='INACTIVE', title='Inactive', description=inactive_desc)
+    deprecated_desc = 'Node is deprecated and will not run new or existing jobs.'
+    deprecated_desc += ' If this node has existing jobs, please cancel them or switch the node to active.'
+    DEPRECATED = NodeState(state='DEPRECATED', title='Deprecated', description=deprecated_desc)
     OFFLINE = NodeState(state='OFFLINE', title='Offline',
                         description='Node is offline/unavailable, so no jobs can currently run on it.')
     paused_desc = 'Node is paused, so no new jobs will be scheduled. Existing jobs will continue to run.'
@@ -43,7 +43,7 @@ class Node(object):
     degraded_desc = 'Node has an error condition, putting it in a degraded state.'
     degraded_desc += ' New jobs will not be scheduled, and the node will attempt to continue to run existing jobs.'
     DEGRADED = NodeState(state='DEGRADED', title='Degraded', description=degraded_desc)
-    cleanup_desc = 'Node is performing an initial cleanup step to remove existing Docker containers and volumes.'
+    cleanup_desc = 'Node is performing an initial cleanup step to remove existing Scale Docker containers and volumes.'
     INITIAL_CLEANUP = NodeState(state='INITIAL_CLEANUP', title='Cleaning up', description=cleanup_desc)
     pull_desc = 'Node is pulling the Scale Docker image.'
     IMAGE_PULL = NodeState(state='IMAGE_PULL', title='Pulling image', description=pull_desc)
@@ -230,7 +230,7 @@ class Node(object):
         :rtype: bool
         """
 
-        return self._state not in [Node.INACTIVE, Node.OFFLINE]
+        return self._state not in [Node.DEPRECATED, Node.OFFLINE]
 
     def should_be_removed(self):
         """Indicates whether this node should be removed from the scheduler. If the node is no longer active and is also
@@ -355,7 +355,7 @@ class Node(object):
         :rtype: bool
         """
 
-        if self._state in [Node.INACTIVE, Node.OFFLINE]:
+        if self._state in [Node.DEPRECATED, Node.OFFLINE]:
             return False
         elif not self._conditions.is_health_check_normal:
             # Schedule health task if threshold has passed since last health task error
@@ -460,7 +460,7 @@ class Node(object):
         old_state = self._state
 
         if not self._is_active:
-            self._state = self.INACTIVE
+            self._state = self.DEPRECATED
         elif not self._is_online:
             self._state = self.OFFLINE
         elif self._is_paused:

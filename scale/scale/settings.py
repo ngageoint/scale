@@ -149,8 +149,8 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer',
         'rest_framework.renderers.AdminRenderer',
     ),
-    'ALLOWED_VERSIONS': ('v3', 'v4', 'v5'),
-    'DEFAULT_VERSION': 'v4',
+    'ALLOWED_VERSIONS': ('v4', 'v5'),
+    'DEFAULT_VERSION': 'v5',
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
 }
 

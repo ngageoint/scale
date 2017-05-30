@@ -273,9 +273,6 @@ class JobManager(models.Manager):
         job.outputs = self._merge_job_data(job_interface_dict['output_data'], job_results_dict['output_data'],
                                            output_files)
 
-        # TODO: API_V3 Remove these attributes
-        job.input_files = input_files
-        job.products = output_files
         return job
 
     def get_job_updates(self, started=None, ended=None, statuses=None, job_type_ids=None,
