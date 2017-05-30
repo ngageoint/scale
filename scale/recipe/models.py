@@ -116,6 +116,7 @@ class RecipeManager(models.Manager):
             recipe_file = RecipeFile()
             recipe_file.recipe_id = recipe.id
             recipe_file.scale_file_id = input_file_id
+            recipe_file.recipe_input = data.get_input_file_name(input_file_id)
             recipe_file.created = recipe.created
             recipe_files.append(recipe_file)
         RecipeFile.objects.bulk_create(recipe_files)
@@ -570,12 +571,15 @@ class RecipeFile(models.Model):
     :type recipe: :class:`django.db.models.ForeignKey`
     :keyword scale_file: The input file that the recipe is linked to
     :type scale_file: :class:`django.db.models.ForeignKey`
+    :keyword recipe_input: The name of the input file
+    :type recipe_input: :class:`django.db.models.CharField`
     :keyword created: When the recipe was created
     :type created: :class:`django.db.models.DateTimeField`
     """
 
     recipe = models.ForeignKey('recipe.Recipe', on_delete=models.PROTECT)
     scale_file = models.ForeignKey('storage.ScaleFile', on_delete=models.PROTECT)
+    recipe_input = models.CharField(blank=True, null=True, max_length=100)
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta(object):
