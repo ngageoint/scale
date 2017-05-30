@@ -268,6 +268,18 @@
 <div class="section" id="module-ingest.test.strike.monitors.test_s3_monitor">
 <span id="ingest-test-strike-monitors-test-s3-monitor-module"></span><h2>ingest.test.strike.monitors.test_s3_monitor module<a class="headerlink" href="#module-ingest.test.strike.monitors.test_s3_monitor" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
+<dt id="ingest.test.strike.monitors.test_s3_monitor.SQSMessage">
+<em class="property">class </em><code class="descclassname">ingest.test.strike.monitors.test_s3_monitor.</code><code class="descname">SQSMessage</code><span class="sig-paren">(</span><em>body</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.monitors.test_s3_monitor.SQSMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<dl class="attribute">
+<dt id="ingest.test.strike.monitors.test_s3_monitor.SQSMessage.body">
+<code class="descname">body</code><a class="headerlink" href="#ingest.test.strike.monitors.test_s3_monitor.SQSMessage.body" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor">
 <em class="property">class </em><code class="descclassname">ingest.test.strike.monitors.test_s3_monitor.</code><code class="descname">TestS3Monitor</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
@@ -275,6 +287,24 @@
 <dt id="ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_process_s3_notification_invalid_json">
+<code class="descname">test_process_s3_notification_invalid_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_process_s3_notification_invalid_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling S3Monitor._process_s3_notification() with invalid JSON</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_process_s3_notification_invalid_message">
+<code class="descname">test_process_s3_notification_invalid_message</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_process_s3_notification_invalid_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling S3Monitor._process_s3_notification() with incomplete message</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_process_s3_notification_success">
+<code class="descname">test_process_s3_notification_success</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_process_s3_notification_success" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling S3Monitor._process_s3_notification() successfully</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="ingest.test.strike.monitors.test_s3_monitor.TestS3Monitor.test_validate_configuration_bad_sqs_name">
