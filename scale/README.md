@@ -113,7 +113,7 @@ Scale development requires a local Postgres database with PostGIS extensions ins
 on most platforms is with a Docker container and all the bootstrap configurations described, except Cloud9, use this
 method. The following are the baseline prerequisites for Scale development:
 
-- Running Docker Community Edition 1.10+ Engine (use Docker for Windows or Mac on those platforms)
+- Running Docker Community Edition 1.11+ Engine (use Docker for Windows or Mac on those platforms)
 - Python 2.7.x
 
 The core Scale team uses JetBrains PyCharm or Cloud9 IDE for development. These are in no way required but are
@@ -193,7 +193,7 @@ Platform specific prerequisites:
 - Python 2.7 installed and included in PATH
 - Virtualenv installed and included in PATH (Usually installed to `C:\Python27\Scripts\virtualenv.exe`)
 - OSGeo4W install of GDAL, GEOS and PROJ included in PATH
-(https://docs.djangoproject.com/en/1.10/ref/contrib/gis/install/#modify-windows-environment)
+(https://docs.djangoproject.com/en/1.11/ref/contrib/gis/install/#modify-windows-environment)
 - Docker for Windows 1.17 installed and included in PATH
 
 From a fresh clone of Scale run the following commands to initialize your environment:
