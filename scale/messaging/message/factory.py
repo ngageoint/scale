@@ -48,9 +48,11 @@ def process_message(message):
     if 'type' in message_dict:
         if 'body' in message_dict:
             try:
-                message_processor = get_message_type(message_dict['type'])
+                message_class= get_message_type(message_dict['type'])
+                message_body = message_dict['body']
 
-                return message_processor.execute(message_dict)
+                processor = message_class.from_json(message_body)
+                return processor.execute(message_body)
             except KeyError as ex:
                 logger.exception('No message type handler available.')
         else:

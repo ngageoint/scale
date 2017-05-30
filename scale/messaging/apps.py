@@ -11,23 +11,9 @@ class MessagingConfig(AppConfig):
 
     def ready(self):
         """Registers the messaging factory methods."""
-        # import storage.brokers.factory as factory
-        #
+        import message.factory as factory
 
+        from message.echo import EchoCommandMessage
 
-        # from storage.brokers.host_broker import HostBroker
-        # from storage.brokers.nfs_broker import NfsBroker
-        # from storage.brokers.s3_broker import S3Broker
-        #
-        # # Register broker types
-        # factory.add_broker_type(HostBroker)
-        # factory.add_broker_type(NfsBroker)
-        # factory.add_broker_type(S3Broker)
-        #
-        # # Register storage errors
-        # from error.exceptions import register_error
-        # from storage.exceptions import DeletedFile, MissingFile
-        #
-        # register_error(DeletedFile(''))
-        # register_error(MissingFile(''))
-        pass
+        # # Register message types
+        factory.add_message_type(EchoCommandMessage)
