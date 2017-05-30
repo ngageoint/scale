@@ -4,8 +4,6 @@ from __future__ import unicode_literals
 import datetime
 import threading
 
-from django.utils.timezone import now
-
 from job.resources import NodeResources
 from scheduler.resources.agent import AgentResources
 
@@ -106,13 +104,15 @@ class ResourceManager(object):
             if agent_id in self._agent_resources:
                 del self._agent_resources[agent_id]
 
-    def refresh_agent_resources(self, tasks):
+    def refresh_agent_resources(self, tasks, when):
         """Refreshes the agents with the current tasks that are running on them and with the new resource offers that
         have been added to the manager since the last time this method was called. Returns a dict containing all of the
         current offered resources and watermark resources for each agent.
 
         :param tasks: The current running tasks
         :type tasks: [:class:`job.tasks.base_task.Task`]
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
         :returns: Dict where agent ID maps to a tuple of offered resources and watermark resources
         :rtype: dict
         """
@@ -133,7 +133,6 @@ class ResourceManager(object):
                 agent_tasks[task.agent_id] = []
             agent_tasks[task.agent_id].append(task)
 
-        when = now()
         results = {}
 
         with self._agent_resources_lock:

@@ -20,6 +20,16 @@ class TaskManager(object):
         self._tasks = {}  # {Task ID: Task}
         self._lock = threading.Lock()
 
+    def get_all_tasks(self):
+        """Returns all of current tasks
+
+        :returns: The list of all current tasks
+        :rtype: [:class:`job.tasks.base_task.Task`]
+        """
+
+        with self._lock:
+            return list(self._tasks.values())
+
     def get_tasks_to_reconcile(self, when):
         """Returns all of the tasks that need to be reconciled
 

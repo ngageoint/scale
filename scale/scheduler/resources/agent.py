@@ -107,8 +107,9 @@ class AgentResources(object):
 
         # Add new offers
         for offer in offers:
-            self._offers[offer.id] = offer
-            self._offer_resources.add(offer.resources)
+            if offer.id not in self._offers:
+                self._offers[offer.id] = offer
+                self._offer_resources.add(offer.resources)
 
         # Recalculate task resources
         self._task_resources = NodeResources()
