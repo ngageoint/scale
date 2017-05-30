@@ -74,7 +74,7 @@ def run(client):
         print("DB_PORT=%s" % db_port)
 
     if not len(SCALE_LOGGING_ADDRESS):
-        log_port = get_host_port_from_healthy_app(client, log_app_name, es_urls)
+        log_port = get_host_port_from_healthy_app(client, log_app_name, 0)
         print("LOGGING_ADDRESS=tcp://%s.marathon.mesos:%s" % (log_app_name, log_port))
         print("LOGGING_HEALTH_ADDRESS=%s.marathon.l4lb.thisdcos.directory:80" % log_app_name)
 
@@ -130,10 +130,10 @@ def check_app_exists(client, app_name):
         return False
 
 
-def get_host_port_from_healthy_app(client, app_name, port_idex):
+def get_host_port_from_healthy_app(client, app_name, port_index):
     wait_app_healthy(client, app_name)
 
-    return get_marathon_app_single_task_host_port(client, app_name, port_idex)
+    return get_marathon_app_single_task_host_port(client, app_name, port_index)
 
 
 def get_marathon_app_single_task_host_port(client, app_name, port_index):
@@ -291,11 +291,6 @@ def deploy_database(client, app_name):
         if CONFIG_URI:
             marathon['uris'].append(CONFIG_URI)
         deploy_marathon_app(client, marathon)
-        wait_app_healthy(client, app_name)
-
-    db_port = get_marathon_app_single_task_host_port(client, app_name, 0)
-
-    return db_port
 
 
 def get_elasticsearch_urls():
@@ -311,8 +306,8 @@ def deploy_rabbitmq(client, app_name):
         
         marathon = {
             "id": app_name,
-            "cpus": 0.1,
-            "mem": 128,
+            "cpus": 1,
+            "mem": 512,
             "disk": 0,
             "instances": 1,
             "container": {
@@ -439,11 +434,6 @@ def deploy_logstash(client, app_name, es_urls):
         marathon['uris'].append(CONFIG_URI)
 
     deploy_marathon_app(client, marathon)
-    wait_app_healthy(client, app_name)
-
-    logstash_port = get_marathon_app_single_task_host_port(client, app_name, 0)
-
-    return logstash_port
 
 
 if __name__ == '__main__':
