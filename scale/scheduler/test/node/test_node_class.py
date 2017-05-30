@@ -16,6 +16,7 @@ from job.tasks.update import TaskStatusUpdate
 from job.test import utils as job_test_utils
 from node.test import utils as node_test_utils
 from scheduler.cleanup.node import JOB_EXES_WARNING_THRESHOLD
+from scheduler.models import Scheduler
 from scheduler.node.conditions import NodeConditions
 from scheduler.node.node_class import Node
 from util.parse import datetime_to_string
@@ -26,6 +27,7 @@ class TestNode(TestCase):
     def setUp(self):
         django.setup()
 
+        self.scheduler = Scheduler()
         self.node_agent = 'agent_1'
         self.node = node_test_utils.create_node(hostname='host_1', slave_id=self.node_agent)
         self.job_exe = job_test_utils.create_job_exe(node=self.node)
@@ -39,7 +41,7 @@ class TestNode(TestCase):
         mock_now.return_value = right_now
         num_job_exes = JOB_EXES_WARNING_THRESHOLD + 1
 
-        node = Node(self.node_agent, self.node)
+        node = Node(self.node_agent, self.node, self.scheduler)
         node._conditions.handle_pull_task_failed()
         node._conditions.update_cleanup_count(num_job_exes)
         node._update_state()
@@ -63,7 +65,7 @@ class TestNode(TestCase):
         """Tests handling failed cleanup task"""
 
         when = now()
-        node = Node(self.node_agent, self.node)
+        node = Node(self.node_agent, self.node, self.scheduler)
         node._last_heath_task = when
         # Get initial cleanup task
         task = node.get_next_tasks(when)[0]
@@ -95,7 +97,7 @@ class TestNode(TestCase):
         """Tests handling the initial cleanup task"""
 
         when = now()
-        node = Node(self.node_agent, self.node)
+        node = Node(self.node_agent, self.node, self.scheduler)
         node._last_heath_task = when
 
         # Get initial cleanup task
@@ -124,7 +126,7 @@ class TestNode(TestCase):
         """Tests handling killed cleanup task"""
 
         when = now()
-        node = Node(self.node_agent, self.node)
+        node = Node(self.node_agent, self.node, self.scheduler)
         # Get initial cleanup task
         task = node.get_next_tasks(when)[0]
         self.assertTrue(task.id.startswith(CLEANUP_TASK_ID_PREFIX))
@@ -147,7 +149,7 @@ class TestNode(TestCase):
         """Tests handling lost cleanup tasks"""
 
         when = now()
-        node = Node(self.node_agent, self.node)
+        node = Node(self.node_agent, self.node, self.scheduler)
         # Get initial cleanup task
         task = node.get_next_tasks(when)[0]
         self.assertTrue(task.id.startswith(CLEANUP_TASK_ID_PREFIX))
@@ -188,7 +190,7 @@ class TestNode(TestCase):
         """Tests handling a regular cleanup task"""
 
         when = now()
-        node = Node(self.node_agent, self.node)
+        node = Node(self.node_agent, self.node, self.scheduler)
         node._last_heath_task = when
         node._initial_cleanup_completed()
         node._image_pull_completed()
@@ -221,7 +223,7 @@ class TestNode(TestCase):
         when = now()
         paused_node = node_test_utils.create_node(hostname='host_1', slave_id=self.node_agent)
         paused_node.is_paused = True
-        node = Node(self.node_agent, paused_node)
+        node = Node(self.node_agent, paused_node, self.scheduler)
         # Turn off health task
         node._last_heath_task = when
         # No task due to paused node
@@ -231,7 +233,7 @@ class TestNode(TestCase):
         """Tests handling failed health task"""
 
         when = now()
-        node = Node(self.node_agent, self.node)
+        node = Node(self.node_agent, self.node, self.scheduler)
         node._initial_cleanup_completed()
         node._image_pull_completed()
         node._update_state()
@@ -268,7 +270,7 @@ class TestNode(TestCase):
         """Tests handling a failed health task where the Docker daemon is bad"""
 
         when = now()
-        node = Node(self.node_agent, self.node)
+        node = Node(self.node_agent, self.node, self.scheduler)
         node._initial_cleanup_completed()
         node._image_pull_completed()
         node._update_state()
@@ -294,7 +296,7 @@ class TestNode(TestCase):
         """Tests handling a failed health task where logstash is unreachable"""
 
         when = now()
-        node = Node(self.node_agent, self.node)
+        node = Node(self.node_agent, self.node, self.scheduler)
         node._initial_cleanup_completed()
         node._image_pull_completed()
         node._update_state()
@@ -320,7 +322,7 @@ class TestNode(TestCase):
         """Tests handling a failed health task where Docker has low disk space"""
 
         when = now()
-        node = Node(self.node_agent, self.node)
+        node = Node(self.node_agent, self.node, self.scheduler)
         node._initial_cleanup_completed()
         node._image_pull_completed()
         node._update_state()
@@ -346,7 +348,7 @@ class TestNode(TestCase):
         """Tests handling the health task successfully"""
 
         when = now()
-        node = Node(self.node_agent, self.node)
+        node = Node(self.node_agent, self.node, self.scheduler)
         node._initial_cleanup_completed()
         node._image_pull_completed()
         node._update_state()
@@ -375,7 +377,7 @@ class TestNode(TestCase):
         """Tests handling killed health task"""
 
         when = now()
-        node = Node(self.node_agent, self.node)
+        node = Node(self.node_agent, self.node, self.scheduler)
         node._initial_cleanup_completed()
         node._image_pull_completed()
         node._update_state()
@@ -401,7 +403,7 @@ class TestNode(TestCase):
         """Tests handling lost health task"""
 
         when = now()
-        node = Node(self.node_agent, self.node)
+        node = Node(self.node_agent, self.node, self.scheduler)
         node._initial_cleanup_completed()
         node._image_pull_completed()
         node._update_state()
@@ -446,7 +448,7 @@ class TestNode(TestCase):
         """Tests handling failed Docker pull task"""
 
         when = now()
-        node = Node(self.node_agent, self.node)
+        node = Node(self.node_agent, self.node, self.scheduler)
         node._last_heath_task = when
         node._initial_cleanup_completed()
         node._update_state()
@@ -480,7 +482,7 @@ class TestNode(TestCase):
         """Tests handling the Docker pull task successfully"""
 
         when = now()
-        node = Node(self.node_agent, self.node)
+        node = Node(self.node_agent, self.node, self.scheduler)
         node._last_heath_task = when
         node._initial_cleanup_completed()
         node._update_state()
@@ -511,7 +513,7 @@ class TestNode(TestCase):
         """Tests handling killed cleanup task"""
 
         when = now()
-        node = Node(self.node_agent, self.node)
+        node = Node(self.node_agent, self.node, self.scheduler)
         node._last_heath_task = when
         node._initial_cleanup_completed()
         node._update_state()
@@ -537,7 +539,7 @@ class TestNode(TestCase):
         """Tests handling lost pull task"""
 
         when = now()
-        node = Node(self.node_agent, self.node)
+        node = Node(self.node_agent, self.node, self.scheduler)
         node._last_heath_task = when
         node._initial_cleanup_completed()
         node._update_state()
@@ -584,7 +586,7 @@ class TestNode(TestCase):
         when = now()
         paused_node = node_test_utils.create_node(hostname='host_1', slave_id=self.node_agent)
         paused_node.is_paused = True
-        node = Node(self.node_agent, paused_node)
+        node = Node(self.node_agent, paused_node, self.scheduler)
         node._last_heath_task = when
         node._initial_cleanup_completed()
         node._update_state()
@@ -596,7 +598,7 @@ class TestNode(TestCase):
         """Tests not returning pull task when the node hasn't been cleaned up yet"""
 
         when = now()
-        node = Node(self.node_agent, self.node)
+        node = Node(self.node_agent, self.node, self.scheduler)
         tasks = node.get_next_tasks(when)
         # No pull task due to node not cleaned yet
         for task in tasks:

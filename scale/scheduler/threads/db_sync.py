@@ -6,12 +6,10 @@ import math
 import time
 
 from django.conf import settings
-from django.db import DatabaseError
 from django.utils.timezone import now
 from mesos.interface import mesos_pb2
 
 from job.execution.manager import job_exe_mgr
-from job.models import JobExecution
 from scheduler.node.manager import node_mgr
 from scheduler.sync.job_type_manager import job_type_mgr
 from scheduler.sync.scheduler_manager import scheduler_mgr
@@ -99,7 +97,7 @@ class DatabaseSyncThread(object):
         workspace_mgr.sync_with_database()
 
         mesos_master = scheduler_mgr.mesos_address
-        node_mgr.sync_with_database(mesos_master.hostname, mesos_master.port)
+        node_mgr.sync_with_database(mesos_master.hostname, mesos_master.port, scheduler_mgr.scheduler)
 
         # Kill running tasks for canceled job executions
         for task_to_kill in job_exe_mgr.sync_with_database():

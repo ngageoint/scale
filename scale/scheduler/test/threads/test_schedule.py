@@ -40,7 +40,7 @@ class TestSchedulingThread(TransactionTestCase):
         node_mgr.register_agent_ids([self.node_agent_1, self.node_agent_2])
         with patch('scheduler.node.manager.api.get_slaves') as mock_get_slaves:
             mock_get_slaves.return_value = self.slave_infos
-            node_mgr.sync_with_database('master_host', 5050)
+            node_mgr.sync_with_database('master_host', 5050, scheduler_mgr.scheduler)
         # Ignore initial cleanup tasks and health check tasks
         for node in node_mgr.get_nodes():
             node._last_heath_task = now()

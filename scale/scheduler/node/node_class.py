@@ -49,13 +49,15 @@ class Node(object):
     IMAGE_PULL = NodeState(state='IMAGE_PULL', title='Pulling image', description=pull_desc)
     READY = NodeState(state='READY', title='Ready', description='Node is ready to run new jobs.')
 
-    def __init__(self, agent_id, node):
+    def __init__(self, agent_id, node, scheduler):
         """Constructor
 
         :param agent_id: The Mesos agent ID for the node
         :type agent_id: string
         :param node: The node model
         :type node: :class:`node.models.Node`
+        :param scheduler: The scheduler model
+        :type scheduler: :class:`scheduler.models.Scheduler`
         """
 
         self._hostname = str(node.hostname)  # Never changes
@@ -71,6 +73,7 @@ class Node(object):
         self._is_initial_cleanup_completed = False
         self._is_online = True
         self._is_paused = node.is_paused
+        self._is_scheduler_paused = scheduler.is_paused
         self._last_heath_task = None
         self._lock = threading.Lock()
         self._port = node.port
@@ -221,7 +224,7 @@ class Node(object):
         :rtype: bool
         """
 
-        return self._state == Node.READY
+        return self._state == Node.READY and not self._is_scheduler_paused
 
     def is_ready_for_next_job_task(self):
         """Indicates whether this node is ready to launch the next task of a job execution
@@ -262,11 +265,13 @@ class Node(object):
                 self._is_online = is_online
             self._update_state()
 
-    def update_from_model(self, node):
-        """Updates this node's data from the database model
+    def update_from_model(self, node, scheduler):
+        """Updates this node's data from the database models
 
         :param node: The node model
         :type node: :class:`node.models.Node`
+        :param scheduler: The scheduler model
+        :type scheduler: :class:`scheduler.models.Scheduler`
         """
 
         if self.id != node.id:
@@ -275,6 +280,7 @@ class Node(object):
         with self._lock:
             self._is_active = node.is_active
             self._is_paused = node.is_paused
+            self._is_scheduler_paused = scheduler.is_paused
             self._update_state()
 
     def _create_next_tasks(self, when):
@@ -329,7 +335,9 @@ class Node(object):
         :rtype: bool
         """
 
-        if self._state in [Node.INITIAL_CLEANUP, Node.IMAGE_PULL, Node.READY]:
+        if self._is_scheduler_paused:
+            return False
+        elif self._state in [Node.INITIAL_CLEANUP, Node.IMAGE_PULL, Node.READY]:
             return True
         elif self._state == Node.DEGRADED:
             # The cleanup task can be scheduled during DEGRADED state as long as the Docker daemon is OK
@@ -374,7 +382,9 @@ class Node(object):
         :rtype: bool
         """
 
-        if self._state == Node.IMAGE_PULL:
+        if self._is_scheduler_paused:
+            return False
+        elif self._state == Node.IMAGE_PULL:
             return True
         elif self._state == Node.DEGRADED:
             # The pull task can be scheduled during DEGRADED state if other conditions match IMAGE_PULL state and the

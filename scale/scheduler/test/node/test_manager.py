@@ -14,6 +14,7 @@ from mesos_api.api import SlaveInfo
 from node.models import Node
 from node.test import utils as node_test_utils
 from scheduler.cleanup.manager import CleanupManager
+from scheduler.models import Scheduler
 from scheduler.node.manager import NodeManager
 
 
@@ -22,6 +23,7 @@ class TestNodeManager(TestCase):
     def setUp(self):
         django.setup()
 
+        self.scheduler = Scheduler()
         self.node_agent_1 = 'agent_1'
         self.node_agent_2 = 'agent_2'
         self.node_agent_3 = 'agent_3'
@@ -40,7 +42,7 @@ class TestNodeManager(TestCase):
 
         manager = NodeManager()
         manager.register_agent_ids([self.node_agent_1, self.node_agent_2])
-        manager.sync_with_database('master_host', 5050)
+        manager.sync_with_database('master_host', 5050, self.scheduler)
 
         nodes = manager.get_nodes()
         self.assertEqual(len(nodes), 2)
@@ -54,14 +56,14 @@ class TestNodeManager(TestCase):
         # Initial sync
         manager = NodeManager()
         manager.register_agent_ids([self.node_agent_1, self.node_agent_2])
-        manager.sync_with_database('master_host', 5050)
+        manager.sync_with_database('master_host', 5050, self.scheduler)
 
         # Database model changes to inactive
         self.node_1.is_active = False
         self.node_1.save()
 
         # Sync with database
-        manager.sync_with_database('master_host', 5050)
+        manager.sync_with_database('master_host', 5050, self.scheduler)
 
         found_node_1 = False
         for node in manager.get_nodes():
@@ -79,7 +81,7 @@ class TestNodeManager(TestCase):
         # Initial sync
         manager = NodeManager()
         manager.register_agent_ids([self.node_agent_1, self.node_agent_2])
-        manager.sync_with_database('master_host', 5050)
+        manager.sync_with_database('master_host', 5050, self.scheduler)
 
         # Database model changes to inactive
         self.node_1.is_active = False
@@ -89,7 +91,7 @@ class TestNodeManager(TestCase):
         manager.lost_node(self.node_agent_1)
 
         # Sync with database
-        manager.sync_with_database('master_host', 5050)
+        manager.sync_with_database('master_host', 5050, self.scheduler)
 
         # Make sure node 1 is gone
         found_node_1 = False
@@ -107,13 +109,13 @@ class TestNodeManager(TestCase):
         # Initial sync
         manager = NodeManager()
         manager.register_agent_ids([self.node_agent_1, self.node_agent_2])
-        manager.sync_with_database('master_host', 5050)
+        manager.sync_with_database('master_host', 5050, self.scheduler)
 
         self.node_1.hostname = 'new_host_1'
         self.node_1.save()
 
         # No exception is success
-        manager.sync_with_database('master_host', 5050)
+        manager.sync_with_database('master_host', 5050, self.scheduler)
 
     @patch('scheduler.node.manager.api.get_slaves')
     def test_lost_known_node(self, mock_get_slaves):
@@ -123,7 +125,7 @@ class TestNodeManager(TestCase):
 
         manager = NodeManager()
         manager.register_agent_ids([self.node_agent_1, self.node_agent_2])
-        manager.sync_with_database('master_host', 5050)
+        manager.sync_with_database('master_host', 5050, self.scheduler)
         manager.lost_node(self.node_agent_2)
 
         nodes = manager.get_nodes()
@@ -142,7 +144,7 @@ class TestNodeManager(TestCase):
         manager = NodeManager()
         manager.register_agent_ids([self.node_agent_1, self.node_agent_2])
         manager.lost_node(self.node_agent_2)
-        manager.sync_with_database('master_host', 5050)
+        manager.sync_with_database('master_host', 5050, self.scheduler)
 
         # Unknown node 2 was lost before syncing with database, it should not appear in the manager
         nodes = manager.get_nodes()
@@ -160,12 +162,12 @@ class TestNodeManager(TestCase):
 
         manager = NodeManager()
         manager.register_agent_ids([self.node_agent_1, self.node_agent_2])
-        manager.sync_with_database('master_host', 5050)
+        manager.sync_with_database('master_host', 5050, self.scheduler)
 
         mock_get_slaves.return_value = self.slave_infos_updated
         manager.lost_node(self.node_agent_2)
         manager.register_agent_ids([self.node_agent_3])
-        manager.sync_with_database('master_host', 5050)
+        manager.sync_with_database('master_host', 5050, self.scheduler)
 
         # Make sure two nodes are registered, one for agent 1 and one for agent 3, and both are online
         nodes = manager.get_nodes()
@@ -186,16 +188,16 @@ class TestNodeManager(TestCase):
 
         manager = NodeManager()
         manager.register_agent_ids([self.node_agent_1, self.node_agent_2])
-        manager.sync_with_database('master_host', 5050)
+        manager.sync_with_database('master_host', 5050, self.scheduler)
 
         # Node 2 is now inactive
         Node.objects.filter(id=manager.get_node(self.node_agent_2).id).update(is_active=False)
-        manager.sync_with_database('master_host', 5050)
+        manager.sync_with_database('master_host', 5050, self.scheduler)
 
         mock_get_slaves.return_value = self.slave_infos_updated
         manager.lost_node(self.node_agent_2)
         manager.register_agent_ids([self.node_agent_3])
-        manager.sync_with_database('master_host', 5050)
+        manager.sync_with_database('master_host', 5050, self.scheduler)
 
         # Make sure two nodes are registered, one for agent 1 and one for agent 3, and both are online
         nodes = manager.get_nodes()
@@ -218,7 +220,7 @@ class TestNodeManager(TestCase):
         when = now()
         manager = NodeManager()
         manager.register_agent_ids([self.node_agent_1, self.node_agent_2])
-        manager.sync_with_database('master_host', 5050)
+        manager.sync_with_database('master_host', 5050, self.scheduler)
         for node in manager.get_nodes():
             node._last_heath_task = when
             node._initial_cleanup_completed()
@@ -238,7 +240,7 @@ class TestNodeManager(TestCase):
         when = now()
         manager = NodeManager()
         manager.register_agent_ids([self.node_agent_1, self.node_agent_2])
-        manager.sync_with_database('master_host', 5050)
+        manager.sync_with_database('master_host', 5050, self.scheduler)
         for node in manager.get_nodes():
             node._last_heath_task = when
             node._initial_cleanup_completed()
@@ -256,7 +258,7 @@ class TestNodeManager(TestCase):
         mock_get_slaves.return_value = self.slave_infos_updated
         manager.lost_node(self.node_agent_2)
         manager.register_agent_ids([self.node_agent_3])
-        manager.sync_with_database('master_host', 5050)
+        manager.sync_with_database('master_host', 5050, self.scheduler)
 
         # Should get new Docker pull task for node 2
         tasks = manager.get_next_tasks(when)
@@ -281,7 +283,7 @@ class TestNodeManager(TestCase):
         self.assertListEqual(tasks, [])  # No tasks yet due to no nodes
 
         manager.register_agent_ids([self.node_agent_1, self.node_agent_2])
-        manager.sync_with_database('master_host', 5050)
+        manager.sync_with_database('master_host', 5050, self.scheduler)
         for node in manager.get_nodes():
             node._last_heath_task = when
 
@@ -299,7 +301,7 @@ class TestNodeManager(TestCase):
         when = now()
         node_mgr = NodeManager()
         node_mgr.register_agent_ids([self.node_agent_1, self.node_agent_2])
-        node_mgr.sync_with_database('master_host', 5050)
+        node_mgr.sync_with_database('master_host', 5050, self.scheduler)
         cleanup_mgr = CleanupManager()
         cleanup_mgr.update_nodes(node_mgr.get_nodes())
         tasks = node_mgr.get_next_tasks(when)

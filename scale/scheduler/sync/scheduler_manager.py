@@ -18,7 +18,7 @@ class SchedulerManager(object):
         self._framework_id = None
         self._lock = threading.Lock()
         self._mesos_address = None
-        self._scheduler = None
+        self.scheduler = None
 
     @property
     def framework_id(self):
@@ -48,9 +48,9 @@ class SchedulerManager(object):
         """
 
         with self._lock:
-            if not self._scheduler:
+            if not self.scheduler:
                 return True
-            return self._scheduler.is_paused
+            return self.scheduler.is_paused
 
     def queue_mode(self):
         """Returns the current mode for ordering the queue
@@ -60,9 +60,9 @@ class SchedulerManager(object):
         """
 
         with self._lock:
-            if not self._scheduler:
+            if not self.scheduler:
                 return QUEUE_ORDER_FIFO
-            return self._scheduler.queue_mode
+            return self.scheduler.queue_mode
 
     def sync_with_database(self):
         """Syncs with the database to retrieve an updated scheduler model
@@ -71,7 +71,7 @@ class SchedulerManager(object):
         scheduler = Scheduler.objects.first()
 
         with self._lock:
-            self._scheduler = scheduler
+            self.scheduler = scheduler
 
     def update_from_mesos(self, framework_id=None, mesos_address=None):
         """Updates the scheduler information from Mesos
