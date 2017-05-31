@@ -3,7 +3,7 @@
 
     angular.module('scaleApp').controller('aisNodeHealthController', function ($rootScope, $scope) {
         var vm = this;
-        
+
         vm.nodes = [];
         vm.groupedNodes = [];
         vm.totalNodes = 0;
@@ -27,6 +27,7 @@
         $scope.$watch('data', function (newValue) {
             if (newValue && newValue.length > 0) {
                 vm.nodes = newValue;
+                vm.totalNodes = newValue.length;
                 getNodeStatus();
             }
         });

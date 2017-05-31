@@ -76,7 +76,7 @@
 
         vm.resumeNode = function (entity) {
             vm.actionClicked = true;
-            nodeUpdateService.updateNode(entity, { pause_reason: null, is_paused: false, is_active: entity.is_active }).then(function (result) {
+            nodeUpdateService.updateNode(entity.id, { pause_reason: null, is_paused: false, is_active: entity.is_active }).then(function (result) {
                 var node = _.find(vm.gridOptions.data, { id: result.id });
                 entity.is_paused = result.is_paused;
                 toastr.info(node.hostname + ' Resumed');
