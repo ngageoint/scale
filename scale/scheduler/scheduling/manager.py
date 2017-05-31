@@ -6,11 +6,15 @@ from django.utils.timezone import now
 from job.execution.manager import job_exe_mgr
 from job.resources import NodeResources
 from job.tasks.manager import task_mgr
+from queue.models import Queue
 from scheduler.cleanup.manager import cleanup_mgr
 from scheduler.node.manager import node_mgr
 from scheduler.resources.manager import resource_mgr
 from scheduler.scheduling.node import SchedulingNode
 from scheduler.sync.job_type_manager import job_type_mgr
+from scheduler.sync.scheduler_manager import scheduler_mgr
+
+QUEUE_LIMIT = 500  # Maximum number of jobs to grab off of the queue at one time
 
 # It is considered a resource shortage if a task waits this many generations without being scheduled
 TASK_SHORTAGE_WAIT_COUNT = 10
@@ -37,17 +41,18 @@ class SchedulingManager(object):
 
         running_job_exes = job_exe_mgr.get_ready_job_exes()
         job_types = job_type_mgr.get_job_types()
+        job_type_resources = job_type_mgr.get_job_type_resources()
 
         fulfilled_nodes = self._schedule_waiting_tasks(nodes, running_job_exes, when)
 
         job_type_limits = self._calculate_job_type_limits(job_types, running_job_exes)
 
-        # TODO: schedule new job_exes, including queries for job_exes and jobs, after queries do start_next_task()
+        # TODO: schedule new job_exes, including queries for job_exes and jobs
 
-        # TODO: grab offers and launch tasks
+        # TODO: grab offers, do start_next_task() if resources are there, and launch tasks
 
     def _calculate_job_type_limits(self, job_types, running_job_exes):
-        """Calculates and return the available job type limits
+        """Calculates and returns the available job type limits
 
         :param job_types: The dict of job type models stored by job type ID
         :type job_types: dict
@@ -65,6 +70,31 @@ class SchedulingManager(object):
         for running_job_exe in running_job_exes:
             if running_job_exe.job_type_id in job_type_limits:
                 job_type_limits[running_job_exe.job_type_id] -= 1
+
+    def _calculate_job_types_to_ignore(self, job_types, job_type_limits):
+        """Calculates and returns the set of ID for job types to ignore on the queue
+
+        :param job_types: The dict of job type models stored by job type ID
+        :type job_types: dict
+        :param job_type_limits: The dict of job type IDs mapping to job type limits
+        :type job_type_limits: dict
+        :returns: A set of the job type IDs to ignore
+        :rtype: set
+        """
+
+        ignore_job_type_ids = set()
+
+        # Ignore paused job types
+        for job_type in job_types.values():
+            if job_type.is_paused:
+                ignore_job_type_ids.add(job_type.id)
+
+        # Ignore job types that have reached their max scheduling limits
+        for job_type_id in job_type_limits:
+            if job_type_limits[job_type_id] < 1:
+                ignore_job_type_ids.add(job_type_id)
+
+        return ignore_job_type_ids
 
     def _prepare_nodes(self, when):
         """Prepares the nodes to use for scheduling
@@ -105,6 +135,61 @@ class SchedulingManager(object):
             scheduling_node = SchedulingNode(agent_id, node, node_tasks, offered_resources, watermark_resources)
             scheduling_nodes[scheduling_node.node_id] = scheduling_node
         return scheduling_nodes
+
+    def _schedule_new_job_exe(self, queue, nodes, job_type_resources):
+        """Schedules the given job execution on the queue on one of the available nodes, if possible
+
+        :param queue: The queue model of the job execution to schedule
+        :type queue: :class:`queue.models.Queue`
+        :param nodes: The dict of available scheduling nodes stored by node ID
+        :type nodes: dict
+        :param job_type_resources: The list of all of the job type resource requirements
+        :type job_type_resources: list
+        :returns: True if scheduled, False otherwise
+        :rtype: bool
+        """
+
+        # TODO: implement
+        # TODO: use job type resources to find best node, also calculate node to reserve if needed
+        return False
+
+    def _schedule_new_job_exes(self, nodes, job_types, job_type_limits, job_type_resources):
+        """Retrieves the top of the queue and schedules new job executions on available nodes as resources and limits
+        allow
+
+        :param nodes: The dict of scheduling nodes stored by node ID where every node has fulfilled all waiting tasks
+        :type nodes: dict
+        :param job_types: The dict of job type models stored by job type ID
+        :type job_types: dict
+        :param job_type_limits: The dict of job type IDs mapping to job type limits
+        :type job_type_limits: dict
+        :param job_type_resources: The list of all of the job type resource requirements
+        :type job_type_resources: list
+        """
+
+        # Can only use nodes that are ready for new job executions
+        available_nodes = {}  # {Node ID: SchedulingNode}
+        for node in nodes.values():
+            if node.is_ready_for_new_job:
+                available_nodes[node.node_id] = node
+
+        ignore_job_type_ids = self._calculate_job_types_to_ignore(job_types, job_type_limits)
+
+        # TODO: exception handling, in catch reset all scheduled new job exes in scheduling nodes
+        for queue in Queue.objects.get_queue(scheduler_mgr.queue_mode(), ignore_job_type_ids)[:QUEUE_LIMIT]:
+            # If there are no longer any available nodes, break
+            if not nodes:
+                break
+
+            # Check limit for this execution's job type
+            job_type_id = queue.job_type_id
+            if job_type_id in job_type_limits and job_type_limits[job_type_id] < 1:
+                continue
+
+            # Try to schedule job execution and adjust job type limit if needed
+            if self._schedule_new_job_exe(queue, available_nodes, job_type_resources):
+                if job_type_id in job_type_limits:
+                    job_type_limits[job_type_id] -= 1
 
     def _schedule_waiting_tasks(self, nodes, running_job_exes, when):
         """Schedules all waiting tasks for which there are sufficient resources and updates the resource manager with
