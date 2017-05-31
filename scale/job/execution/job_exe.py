@@ -244,12 +244,11 @@ class RunningJobExecution(object):
         with self._lock:
             return not self._current_task and self._remaining_tasks
 
-    def next_task_resources(self):
-        """Returns the resources that are required by the next task in this job execution. Returns None if there are no
-        remaining tasks.
+    def next_task(self):
+        """Returns the next task in this job execution. Returns None if there are no remaining tasks.
 
-        :returns: The resources required by the next task, possibly None
-        :rtype: :class:`job.resources.NodeResources`
+        :returns: The next task, possibly None
+        :rtype: :class:`job.tasks.base_task.Task`
         """
 
         with self._lock:
@@ -257,7 +256,7 @@ class RunningJobExecution(object):
                 return None
 
             next_task = self._remaining_tasks[0]
-            return next_task.get_resources()
+            return next_task
 
     def start_next_task(self):
         """Starts the next task in the job execution and returns it. Returns None if the next task is not ready or no
