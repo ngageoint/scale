@@ -13,18 +13,13 @@ DEPLOY_WEBSERVER = os.getenv('DEPLOY_WEBSERVER', 'true')
 
 
 def dcos_login():
-    # Defaults servers for both DCOS 1.7 and 1.8. 1.8 added HTTPS within DCOS EE clusters.
+    # Defaults Marathon endpoints for both DCOS Community  and EE clusters.
     servers = os.getenv('MARATHON_SERVERS', 'http://marathon.mesos:8080,https://marathon.mesos:8443').split(',')
     oauth_token = os.getenv('DCOS_OAUTH_TOKEN', '').strip()
-    username = os.getenv('DCOS_USER', '').strip()
-    password = os.getenv('DCOS_PASS', '').strip()
 
     if len(oauth_token):
         print('Attempting token auth to Marathon...')
         client = MarathonClient(servers, auth_token=oauth_token)
-    elif len(username) and len(password):
-        print('Attempting basic auth to Marathon...')
-        client = MarathonClient(servers, username=username, password=password)
     else:
         print('Attempting unauthenticated access to Marathon...')
         client = MarathonClient(servers)
@@ -46,23 +41,24 @@ def run(client):
     db_port = os.getenv('SCALE_DB_PORT', '')
     if not len(db_host):
         app_name = '%s-db' % FRAMEWORK_NAME
-        db_port = deploy_database(client, app_name)
-        db_host = "%s.marathon.mesos" % app_name
+        deploy_database(client, app_name)
+        db_port = 5432
+        db_host = "%s.marathon.l4lb.thisdcos.directory" % app_name
         print("DB_HOST=%s" % db_host)
         print("DB_PORT=%s" % db_port)
 
     # Determine if logstash should be deployed.
     if not len(SCALE_LOGGING_ADDRESS):
         app_name = '%s-logstash' % FRAMEWORK_NAME
-        log_port = deploy_logstash(client, app_name, es_urls)
-        print("LOGGING_ADDRESS=tcp://%s.marathon.mesos:%s" % (app_name, log_port))
+        deploy_logstash(client, app_name, es_urls)
+        print("LOGGING_ADDRESS=tcp://%s.marathon.l4lb.thisdcos.directory:8000" % app_name)
         print("LOGGING_HEALTH_ADDRESS=%s.marathon.l4lb.thisdcos.directory:80" % app_name)
 
     # Determine if Web Server should be deployed.
     if DEPLOY_WEBSERVER.lower() == 'true':
         app_name = '%s-webserver' % FRAMEWORK_NAME
-        webserver_port = deploy_webserver(client, app_name, es_urls, db_host, db_port)
-        print("WEBSERVER_ADDRESS=http://%s.marathon.mesos:%s" % (app_name, webserver_port))
+        deploy_webserver(client, app_name, es_urls, db_host, db_port)
+        print("WEBSERVER_ADDRESS=http://%s.marathon.l4lb.thisdcos.directory:80" % app_name)
 
 
 def delete_marathon_app(client, app_name, fail_on_error=False, sleep_secs=5):
@@ -146,7 +142,10 @@ def deploy_webserver(client, app_name, es_urls, db_host, db_port):
                 'network': 'BRIDGE',
                 'portMappings': [{
                     'containerPort': 80,
-                    'hostPort': 0
+                    'hostPort': 0,
+                    'labels': {
+                        'VIP_0': '%s:80' % app_name
+                    }
                 }
                 ],
                 'forcePullImage': True
@@ -202,20 +201,15 @@ def deploy_webserver(client, app_name, es_urls, db_host, db_port):
     deploy_marathon_app(client, marathon)
     wait_app_healthy(client, app_name)
 
-    webserver_port = get_marathon_app_single_task_host_port(client, app_name, 0)
-
-    return webserver_port
-
 
 def deploy_database(client, app_name):
     # Check if scale-db is already running
     if not check_app_exists(client, app_name):
         cfg = {
             'scaleDBName': os.environ.get('SCALE_DB_NAME', 'scale'),
-            'scaleDBHost': '%s.marathon.mesos' % app_name,
             'scaleDBUser': os.environ.get('SCALE_DB_USER', 'scale'),
             'scaleDBPass': os.environ.get('SCALE_DB_PASS', 'scale'),
-            'db_docker_image': os.environ.get('DB_DOCKER_IMAGE', 'mdillon/postgis'),
+            'db_docker_image': os.environ.get('DB_DOCKER_IMAGE', 'mdillon/postgis:9.5'),
             'dbHostVol': os.environ.get('SCALE_DB_HOST_VOL', '')
         }
         if cfg['dbHostVol'] == '':
@@ -234,7 +228,10 @@ def deploy_database(client, app_name):
                     'network': 'BRIDGE',
                     'portMappings': [{
                         'containerPort': 5432,
-                        'hostPort': 0
+                        'hostPort': 0,
+                        'labels': {
+                            'VIP_0': '%s:5432' % app_name
+                        }
                     }
                     ],
                     'forcePullImage': True
@@ -266,10 +263,6 @@ def deploy_database(client, app_name):
         deploy_marathon_app(client, marathon)
         wait_app_healthy(client, app_name)
 
-    db_port = get_marathon_app_single_task_host_port(client, app_name, 0)
-
-    return db_port
-
 
 def get_elasticsearch_urls():
     response = requests.get('http://elasticsearch.marathon.mesos:31105/v1/tasks')
@@ -283,7 +276,7 @@ def deploy_logstash(client, app_name, es_urls):
     delete_marathon_app(client, app_name)
 
     # get the Logstash container API endpoints
-    logstash_image = os.getenv('LOGSTASH_DOCKER_IMAGE', 'geoint/logstash-elastic-ha')
+    logstash_image = os.getenv('LOGSTASH_DOCKER_IMAGE', 'geoint/scale-logstash')
     marathon = {
         'id': app_name,
         'cpus': 0.5,
@@ -296,7 +289,7 @@ def deploy_logstash(client, app_name, es_urls):
                 'network': 'BRIDGE',
                 'portMappings': [{
                     'containerPort': 8000,
-                    'hostPort': 9229,
+                    'hostPort': 0,
                     'protocol': 'tcp',
                     'labels': {
                         'VIP_0': '%s:8000' % app_name
@@ -348,10 +341,6 @@ def deploy_logstash(client, app_name, es_urls):
 
     deploy_marathon_app(client, marathon)
     wait_app_healthy(client, app_name)
-
-    logstash_port = get_marathon_app_single_task_host_port(client, app_name, 0)
-
-    return logstash_port
 
 
 if __name__ == '__main__':
