@@ -10,6 +10,7 @@ from scheduler.cleanup.manager import cleanup_mgr
 from scheduler.node.manager import node_mgr
 from scheduler.resources.manager import resource_mgr
 from scheduler.scheduling.node import SchedulingNode
+from scheduler.sync.job_type_manager import job_type_mgr
 
 # It is considered a resource shortage if a task waits this many generations without being scheduled
 TASK_SHORTAGE_WAIT_COUNT = 10
@@ -34,13 +35,36 @@ class SchedulingManager(object):
 
         nodes = self._prepare_nodes(when)
 
-        fulfilled_nodes = self._schedule_waiting_tasks(nodes, when)
+        running_job_exes = job_exe_mgr.get_ready_job_exes()
+        job_types = job_type_mgr.get_job_types()
 
-        # TODO: grab job type info
+        fulfilled_nodes = self._schedule_waiting_tasks(nodes, running_job_exes, when)
+
+        job_type_limits = self._calculate_job_type_limits(job_types, running_job_exes)
 
         # TODO: schedule new job_exes, including queries for job_exes and jobs, after queries do start_next_task()
 
         # TODO: grab offers and launch tasks
+
+    def _calculate_job_type_limits(self, job_types, running_job_exes):
+        """Calculates and return the available job type limits
+
+        :param job_types: The dict of job type models stored by job type ID
+        :type job_types: dict
+        :param running_job_exes: The currently running job executions
+        :type running_job_exes: [:class:`job.execution.job_exe.RunningJobExecution`]
+        :returns: A dict where job type ID maps to the number of jobs of that type that can be scheduled. Missing job
+            type IDs have no limit. Counts may be negative if the job type is scheduled above the limit.
+        :rtype: dict
+        """
+
+        job_type_limits = {}
+        for job_type in job_types.values():
+            if job_type.max_scheduled:
+                job_type_limits[job_type.id] = job_type.max_scheduled
+        for running_job_exe in running_job_exes:
+            if running_job_exe.job_type_id in job_type_limits:
+                job_type_limits[running_job_exe.job_type_id] -= 1
 
     def _prepare_nodes(self, when):
         """Prepares the nodes to use for scheduling
@@ -82,13 +106,15 @@ class SchedulingManager(object):
             scheduling_nodes[scheduling_node.node_id] = scheduling_node
         return scheduling_nodes
 
-    def _schedule_waiting_tasks(self, nodes, when):
+    def _schedule_waiting_tasks(self, nodes, running_job_exes, when):
         """Schedules all waiting tasks for which there are sufficient resources and updates the resource manager with
         any resource shortages. All scheduling nodes that have fulfilled all of their waiting tasks will be returned so
         new job executions can be added to them.
 
         :param nodes: The dict of scheduling nodes stored by node ID
         :type nodes: dict
+        :param running_job_exes: The list of currently running job executions
+        :type running_job_exes: [:class:`job.execution.job_exe.RunningJobExecution`]
         :param when: The current time
         :type when: :class:`datetime.datetime`
         :returns: The dict of scheduling nodes stored by node ID that have no more waiting tasks
@@ -109,7 +135,7 @@ class SchedulingManager(object):
         # TODO: fail job_exes with a "node lost" error if job_exe's node does not appear in the dict or is offline or
         # changed agent ID
         # TODO: fail job_exes if they are starving to get resources for their next task
-        for running_job_exe in job_exe_mgr.get_ready_job_exes():
+        for running_job_exe in running_job_exes:
             if running_job_exe.node_id in nodes:
                 node = nodes[running_job_exe.node_id]
                 has_waiting_tasks = node.accept_job_exe(running_job_exe, waiting_tasks)
