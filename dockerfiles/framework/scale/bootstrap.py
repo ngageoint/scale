@@ -59,12 +59,10 @@ def run(client):
     if not len(SCALE_LOGGING_ADDRESS):
         deploy_logstash(client, log_app_name, es_urls)
 
-    ##########################################
-    # Wait for all needed apps to be healthy #
-    ##########################################
+    # Wait for all needed apps to be healthy
     if not len(broker_url):
         rabbitmq_port = get_host_port_from_healthy_app(client, rabbitmq_app_name, 0)
-        broker_url = 'amqp://guest:guest@%s:%s//' % (rabbitmq_app_name, rabbitmq_port)
+        broker_url = 'amqp://guest:guest@%s.marathon.mesos:%s//' % (rabbitmq_app_name, rabbitmq_port)
         print("BROKER_URL=%s" % broker_url)
 
     if not len(db_host):
@@ -318,8 +316,8 @@ def deploy_rabbitmq(client, app_name):
                     "portMappings": [
                         {
                             "containerPort": 5672,
+                            "hostPort": 5672,
                             "protocol": "tcp",
-                            "servicePort": 0,
                             "labels": {
                                 "VIP_0": "/%s:5672" % app_name
                             }
