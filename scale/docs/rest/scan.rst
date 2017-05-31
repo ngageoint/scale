@@ -181,6 +181,7 @@ These services allow a user to create, view, and manage Scan processes.
 |            "scanner": {                                                                                                 |
 |                "type": "dir",                                                                                           |
 |            },                                                                                                           |
+|            "recursive": true,                                                                                           |
 |            "files_to_ingest": [{                                                                                        |
 |                "filename_regex": ".*txt"                                                                                |
 |            }]                                                                                                           |
@@ -215,6 +216,7 @@ These services allow a user to create, view, and manage Scan processes.
 |            "scanner": {                                                                                                 |
 |                "type": "dir",                                                                                           |
 |            },                                                                                                           |
+|            "recursive": true,                                                                                           |
 |            "files_to_ingest": [{                                                                                        |
 |                "filename_regex": ".*txt"                                                                                |
 |            }]                                                                                                           |
@@ -334,6 +336,7 @@ These services allow a user to create, view, and manage Scan processes.
 |            "scanner": {                                                                                                 |
 |                "type": "dir",                                                                                           |
 |            },                                                                                                           |
+|            "recursive": true,                                                                                           |
 |            "files_to_ingest": [{                                                                                        |
 |                "filename_regex": ".*txt"                                                                                |
 |            }]                                                                                                           |
@@ -366,6 +369,7 @@ These services allow a user to create, view, and manage Scan processes.
 |            "scanner": {                                                                                                 |
 |                "type": "dir",                                                                                           |
 |            },                                                                                                           |
+|            "recursive": true,                                                                                           |
 |            "files_to_ingest": [{                                                                                        |
 |                "filename_regex": ".*txt"                                                                                |
 |            }]                                                                                                           |
@@ -429,6 +433,7 @@ These services allow a user to create, view, and manage Scan processes.
 |            "scanner": {                                                                                                 |
 |                "type": "dir",                                                                                           |
 |            },                                                                                                           |
+|            "recursive": true,                                                                                           |
 |            "files_to_ingest": [{                                                                                        |
 |                "filename_regex": ".*txt"                                                                                |
 |            }]                                                                                                           |
@@ -489,6 +494,7 @@ These services allow a user to create, view, and manage Scan processes.
 |            "scanner": {                                                                                                 |
 |                "type": "dir",                                                                                           |
 |            },                                                                                                           |
+|            "recursive": true,                                                                                           |
 |            "files_to_ingest": [{                                                                                        |
 |                "filename_regex": ".*txt"                                                                                |
 |            }]                                                                                                           |
@@ -623,6 +629,7 @@ These services allow a user to create, view, and manage Scan processes.
 |            "scanner": {                                                                                                 |
 |                "type": "dir",                                                                                           |
 |            },                                                                                                           |
+|            "recursive": true,                                                                                           |
 |            "files_to_ingest": [{                                                                                        |
 |                "filename_regex": ".*txt"                                                                                |
 |            }]                                                                                                           |

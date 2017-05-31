@@ -137,8 +137,6 @@ class S3Monitor(Monitor):
     def _process_s3_notification(self, message):
         """Extracts an S3 notification object from SQS message body and calls on to ingest.
         We want to ensure we have the following minimal values before passing S3 object on:
-        - body.Subject == 'Amazon S3 Notification'
-        - body.Type == 'Notification
         - body.Records[x].eventName starts with 'ObjectCreated'
         - body.Records[x].eventVersion == '2.0'
         Once the above have been validated we will pass the S3 record on to ingest, otherwise
@@ -150,7 +148,11 @@ class S3Monitor(Monitor):
         try:
             body = json.loads(message.body)
 
-            if body['Subject'] == 'Amazon S3 Notification' and body['Type'] == 'Notification':
+            # Previously we checked for body.Subject and body.Type, but this unnecessarily forced us to deliver
+            # messages via SNS. When writing tools to mirror the S3 Event Notifications delivered via S3 -> SNS -> SQS
+            # this arbitrarily required use of SNS to apply the Subject and Type keys. Lifting these checks allows 
+            # us to immitate the format with direct programmtic SQS enqueue.
+            try:
                 message = json.loads(body['Message'])
 
                 for record in message['Records']:
@@ -160,14 +162,16 @@ class S3Monitor(Monitor):
                     else:
                         # Log message that didn't match with valid EventName and EventVersion
                         raise SQSNotificationError('Unable to process message as it does not match '
-                                                   'EventName and EventVersion: '
-                                                   '%s' % json.dumps(message))
-            else:
-                raise SQSNotificationError('Unable to process message as it does not appear to be an S3 notification: '
-                                           '%s' % json.dumps(message))
+                                                   'EventName and EventVersion: {}'.format(json.dumps(message)))
+            except KeyError as ex:
+                raise SQSNotificationError(
+                    'Exception: {}'
+                    'Unable to process message as it does not appear to be an S3 notification: {}'.format(
+                        ex.message, json.dumps(message)))
         except (TypeError, ValueError) as ex:
-            raise SQSNotificationError('Exception: %s\nUnable to process message not recognized as valid JSON: %s.' %
-                                       (ex.message, message))
+            raise SQSNotificationError(
+                'Exception: {}\nUnable to process message not recognized as valid JSON: {}.'.format(ex.message,
+                                                                                                    message))
 
     def _ingest_s3_notification_object(self, s3_notification):
         """Extracts S3 specific object metadata and call the final ingest

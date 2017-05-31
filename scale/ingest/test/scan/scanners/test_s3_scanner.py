@@ -4,6 +4,7 @@ import django
 from django.test import TestCase
 from mock import patch
 
+import storage.test.utils as storage_test_utils
 from ingest.models import Ingest
 from ingest.scan.scanners.exceptions import ScannerInterruptRequested
 from ingest.scan.scanners.s3_scanner import S3Scanner
@@ -60,6 +61,8 @@ class TestScanner(TestCase):
     def setUp(self):
         django.setup()
 
+        self.workspace = storage_test_utils.create_workspace()
+
     def test_process_scanned_interrupted(self):
         """Tests calling S3Scanner._process_scanned() with interruption"""
 
@@ -78,7 +81,7 @@ class TestScanner(TestCase):
         self.assertEquals(scanner._count, 0)
 
     @patch('ingest.scan.scanners.s3_scanner.S3Scanner._deduplicate_ingest_list')
-    @patch('ingest.scan.scanners.s3_scanner.S3Scanner._ingest_file')
+    @patch('ingest.scan.scanners.s3_scanner.S3Scanner._ingest_file', return_value=None)
     def test_process_scanned_dry_run(self, ingest_file, dedup):
         """Tests calling S3Scanner._process_scanned() during dry run"""
 
@@ -92,6 +95,24 @@ class TestScanner(TestCase):
         # Ensure the ingest file method was called
         self.assertTrue(ingest_file.called)
         # Verify we returned prior to calling _deduplicate_ingest_list 
+        self.assertFalse(dedup.called)
+
+    @patch('ingest.scan.scanners.s3_scanner.S3Scanner._deduplicate_ingest_list')
+    @patch('ingest.scan.scanners.s3_scanner.S3Scanner._process_ingest', return_value=None)
+    def test_process_scanned_no_rule_match(self, process_ingest, dedup):
+        """Tests calling S3Scanner._process_scanned() during ingest run"""
+
+        scanner = S3Scanner()
+        scanner._dry_run = False
+        scanner._scanned_workspace = self.workspace
+
+        scanner._process_scanned([FileDetails('test', 0)])
+
+        # Ensure we counted the one file
+        self.assertEquals(scanner._count, 1)
+        # Ensure the ingest file method was called
+        self.assertTrue(process_ingest.called)
+        # Verify we returned prior to calling _deduplicate_ingest_list
         self.assertFalse(dedup.called)
 
     @patch('ingest.models.IngestManager.start_ingest_tasks')
