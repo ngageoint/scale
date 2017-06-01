@@ -436,6 +436,14 @@
                 job type and recipe type. The following script can be used to quickly bootstrap Scale with the
                 configuration necessary to extract the first MiB of input files and save them in the output workspace.
                 </p>
+                <p><strong>WARNING:</strong> It is important to note that a proper processing pipeline will consist of
+                both an input workspace and at least one output workspace. In the interest of simplicity, this quick
+                start uses the same workspace by the Strike process and for the output from the sample job. The only
+                reason we don't enter into an endless processing loop (via Strike detecting output of downstream jobs
+                in shared workspace) is because our sample job outputs files with the same name as the input. Scale
+                filters out duplicate ingests initiated by Strike which breaks the processing chain, preventing endless
+                looping.
+                </p>
 
                 <div class="panel panel-default">
                     <div class="panel-heading">
