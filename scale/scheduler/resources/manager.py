@@ -113,7 +113,7 @@ class ResourceManager(object):
         :type tasks: [:class:`job.tasks.base_task.Task`]
         :param when: The current time
         :type when: :class:`datetime.datetime`
-        :returns: Dict where agent ID maps to a tuple of offered resources and watermark resources
+        :returns: Dict where agent ID maps to a copy of the set of resources for the agent
         :rtype: dict
         """
 
@@ -145,8 +145,8 @@ class ResourceManager(object):
             for agent_resources in self._agent_resources.values():
                 the_offers = agent_offers[agent_resources.agent_id] if agent_resources.agent_id in agent_offers else []
                 the_tasks = agent_tasks[agent_resources.agent_id] if agent_resources.agent_id in agent_tasks else []
-                resource_tuple = agent_resources.refresh_resources(the_offers, the_tasks)
-                results[agent_resources.agent_id] = resource_tuple
+                resource_set = agent_resources.refresh_resources(the_offers, the_tasks)
+                results[agent_resources.agent_id] = resource_set
 
             # Reset rolling watermarks if period has passed
             if when > self._last_watermark_reset + WATERMARK_RESET_PERIOD:

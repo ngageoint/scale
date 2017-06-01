@@ -6,6 +6,7 @@ from django.utils.timezone import now
 from job.execution.manager import job_exe_mgr
 from job.resources import NodeResources
 from job.tasks.manager import task_mgr
+from queue.job_exe import QueuedJobExecution
 from queue.models import Queue
 from scheduler.cleanup.manager import cleanup_mgr
 from scheduler.node.manager import node_mgr
@@ -39,9 +40,9 @@ class SchedulingManager(object):
 
         nodes = self._prepare_nodes(when)
 
-        running_job_exes = job_exe_mgr.get_ready_job_exes()
         job_types = job_type_mgr.get_job_types()
         job_type_resources = job_type_mgr.get_job_type_resources()
+        running_job_exes = job_exe_mgr.get_ready_job_exes()
 
         fulfilled_nodes = self._schedule_waiting_tasks(nodes, running_job_exes, when)
 
@@ -127,20 +128,19 @@ class SchedulingManager(object):
             else:
                 node_tasks = []
             if agent_id in agent_resources:
-                offered_resources, watermark_resources = agent_resources[agent_id]
+                resource_set = agent_resources[agent_id]
             else:
-                offered_resources = NodeResources()
-                watermark_resources = NodeResources()
+                resource_set = None
 
-            scheduling_node = SchedulingNode(agent_id, node, node_tasks, offered_resources, watermark_resources)
+            scheduling_node = SchedulingNode(agent_id, node, node_tasks, resource_set)
             scheduling_nodes[scheduling_node.node_id] = scheduling_node
         return scheduling_nodes
 
-    def _schedule_new_job_exe(self, queue, nodes, job_type_resources):
+    def _schedule_new_job_exe(self, job_exe, nodes, job_type_resources):
         """Schedules the given job execution on the queue on one of the available nodes, if possible
 
-        :param queue: The queue model of the job execution to schedule
-        :type queue: :class:`queue.models.Queue`
+        :param job_exe: The job execution to schedule
+        :type job_exe: :class:`queue.job_exe.QueuedJobExecution`
         :param nodes: The dict of available scheduling nodes stored by node ID
         :type nodes: dict
         :param job_type_resources: The list of all of the job type resource requirements
@@ -175,7 +175,7 @@ class SchedulingManager(object):
 
         ignore_job_type_ids = self._calculate_job_types_to_ignore(job_types, job_type_limits)
 
-        # TODO: exception handling, in catch reset all scheduled new job exes in scheduling nodes
+        # TODO: exception handling around all querying, in catch reset all scheduled new job exes in scheduling nodes
         for queue in Queue.objects.get_queue(scheduler_mgr.queue_mode(), ignore_job_type_ids)[:QUEUE_LIMIT]:
             # If there are no longer any available nodes, break
             if not nodes:
@@ -187,9 +187,13 @@ class SchedulingManager(object):
                 continue
 
             # Try to schedule job execution and adjust job type limit if needed
-            if self._schedule_new_job_exe(queue, available_nodes, job_type_resources):
+            job_exe = QueuedJobExecution(queue)
+            if self._schedule_new_job_exe(job_exe, available_nodes, job_type_resources):
                 if job_type_id in job_type_limits:
                     job_type_limits[job_type_id] -= 1
+
+        # TODO: do querying to schedule job_exes, somehow this all has to get back to the scheduling nodes so their
+        # tasks can get created
 
     def _schedule_waiting_tasks(self, nodes, running_job_exes, when):
         """Schedules all waiting tasks for which there are sufficient resources and updates the resource manager with
@@ -216,14 +220,14 @@ class SchedulingManager(object):
                 # A node can only be fulfilled if it is able to run waiting tasks and it has no more waiting tasks
                 fulfilled_nodes[node.node_id] = node
 
-        # Schedule job executions waiting for their next task
+        # Schedule job executions already on the node waiting for their next task
         # TODO: fail job_exes with a "node lost" error if job_exe's node does not appear in the dict or is offline or
         # changed agent ID
         # TODO: fail job_exes if they are starving to get resources for their next task
         for running_job_exe in running_job_exes:
             if running_job_exe.node_id in nodes:
                 node = nodes[running_job_exe.node_id]
-                has_waiting_tasks = node.accept_job_exe(running_job_exe, waiting_tasks)
+                has_waiting_tasks = node.accept_job_exe_next_task(running_job_exe, waiting_tasks)
                 if has_waiting_tasks and node.node_id in fulfilled_nodes:
                     # Node has tasks waiting for resources
                     del fulfilled_nodes[node.node.node_id]

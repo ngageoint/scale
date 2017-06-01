@@ -1,10 +1,15 @@
 """Defines the class that represents an agent's set of resource offers"""
 from __future__ import unicode_literals
 
+from collections import namedtuple
+
 from job.resources import NodeResources
 
 # Maximum number of generations that each offer should be held
 MAX_OFFER_GENERATIONS = 10
+
+
+ResourceSet = namedtuple('ResourceSet', ['offered_resources', 'task_resources', 'watermark_resources'])
 
 
 class AgentResources(object):
@@ -95,14 +100,14 @@ class AgentResources(object):
 
     def refresh_resources(self, offers, tasks):
         """Refreshes the agent's resources by setting the current running tasks and adding new resource offers. Returns
-        the current offered resources and watermark resources for the agent.
+        a copy of the set of resources for the agent.
 
         :param offers: The new resource offers to add
         :type offers: [:class:`scheduler.resources.offer.ResourceOffer`]
         :param tasks: The current tasks running on the agent
         :type tasks: [:class:`job.tasks.base_task.Task`]
-        :returns: A tuple with the agent's offered resources and watermark resources
-        :rtype: (:class:`job.resources.NodeResources`, :class:`job.resources.NodeResources`)
+        :returns: A copy of the set of agent resources
+        :rtype: :class:`scheduler.resources.agent.ResourceSet`
         """
 
         # Add new offers
@@ -124,10 +129,12 @@ class AgentResources(object):
         self._recent_watermark_resources.increase_up_to(total_resources)
 
         offered_resources = NodeResources()
+        task_resources = NodeResources()
         watermark_resources = NodeResources()
         offered_resources.add(self._offer_resources)
+        task_resources.add(self._task_resources)
         watermark_resources.add(self._watermark_resources)
-        return offered_resources, watermark_resources
+        return ResourceSet(offered_resources, task_resources, watermark_resources)
 
     def rescind_offers(self, offer_ids):
         """Rescinds the offers with the given IDs

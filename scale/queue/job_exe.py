@@ -1,5 +1,8 @@
 """Defines the class that represents queued job executions being considered to be scheduled"""
+from __future__ import unicode_literals
+
 from job.resources import JobResources
+from job.resources import NodeResources
 
 
 class QueuedJobExecution(object):
@@ -16,11 +19,8 @@ class QueuedJobExecution(object):
 
         cpus = self._queue.cpus_required
         mem = self._queue.mem_required
-        disk_in = self._queue.disk_in_required
-        disk_out = self._queue.disk_out_required
         disk_total = self._queue.disk_total_required
-        self._required_resources = JobResources(cpus=cpus, mem=mem, disk_in=disk_in, disk_out=disk_out,
-                                                disk_total=disk_total)
+        self._required_resources = NodeResources(cpus=cpus, mem=mem, disk=disk_total)
 
         self._required_node_ids = None
         if self._queue.node_required_id:
@@ -74,7 +74,7 @@ class QueuedJobExecution(object):
         """Returns the resources required by this job execution
 
         :returns: The resources required by this job execution
-        :rtype: :class:`job.resources.JobResources`
+        :rtype: :class:`job.resources.NodeResources`
         """
 
         return self._required_resources
@@ -86,11 +86,13 @@ class QueuedJobExecution(object):
         :param node_id: The node ID
         :type node_id: int
         :param resources: The provided resources
-        :type resources: :class:`job.resources.JobResources`
+        :type resources: :class:`job.resources.NodeResources`
         """
 
         self._provided_node_id = node_id
-        self._provided_resources = resources
+        self._provided_resources = JobResources(cpus=resources.cpus, mem=resources.mem,
+                                                disk_in=self._queue.disk_in_required,
+                                                disk_out=self._queue.disk_out_required, disk_total=resources.disk)
 
     def is_node_acceptable(self, node_id):
         """Indicates whether the node with the given ID is acceptable to this job execution
