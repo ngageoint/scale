@@ -63,7 +63,7 @@
         vm.toggleActive = function (entity) {
             vm.actionClicked = true;
             var isActive = !entity.is_active;
-            nodeUpdateService.updateNode(entity, { pause_reason: '', is_paused: entity.is_paused, is_active: isActive }).then(function (result) {
+            nodeUpdateService.updateNode(entity.id, { pause_reason: '', is_paused: entity.is_paused, is_active: isActive }).then(function (result) {
                 var node = _.find(vm.gridOptions.data, { id: result.id });
                 entity.is_active = result.is_active;
                 if (entity.is_active) {
@@ -98,7 +98,7 @@
             });
 
             modalInstance.result.then(function () {
-                nodeUpdateService.updateNode(entity, { pause_reason: $scope.pauseReason, is_paused: true, is_active: entity.is_active }).then(function (result) {
+                nodeUpdateService.updateNode(entity.id, { pause_reason: $scope.pauseReason, is_paused: true, is_active: entity.is_active }).then(function (result) {
                     var node = _.find(vm.gridOptions.data, { id: result.id });
                     entity.is_paused = result.is_paused;
                     toastr.info(node.hostname + ' Paused');
@@ -169,16 +169,17 @@
                 });
                 vm.nodes = _.sortByOrder(vm.nodes, fieldArr, directionArr);
             }
-            if (state) {
-                vm.nodes = _.filter(vm.nodes, { state: { name: state }});
-            }
             _.forEach(vm.nodes, function (node) {
                 node.running_jobs = getRunningJobs(node);
             });
-            vm.gridOptions.totalItems = vm.nodes.length;
-            vm.gridOptions.minRowsToShow = vm.nodes.length;
-            vm.gridOptions.virtualizationThreshold = vm.nodes.length;
-            vm.gridOptions.data = vm.nodes;
+            var filteredNodes = _.cloneDeep(vm.nodes);
+            if (state) {
+                filteredNodes = _.filter(filteredNodes, { state: { name: state }});
+            }
+            vm.gridOptions.totalItems = filteredNodes.length;
+            vm.gridOptions.minRowsToShow = filteredNodes.length;
+            vm.gridOptions.virtualizationThreshold = filteredNodes.length;
+            vm.gridOptions.data = filteredNodes;
         };
 
         var getRunningJobs = function (entity) {
