@@ -114,10 +114,10 @@
         };
 
         var getNodeStatus = function () {
-            nodeService.getNodeStatus(null, null, 'PT3H', null).then(null, null, function (data) {
+            statusService.getStatus(true).then(null, null, function (data) {
                 if (data.$resolved) {
                     vm.nodeHealthError = null;
-                    vm.nodes = data.results;
+                    vm.nodes = _.filter(data.nodes, { is_active: true });
                 } else {
                     if (data.statusText && data.statusText !== '') {
                         vm.nodeHealthErrorStatus = data.statusText;

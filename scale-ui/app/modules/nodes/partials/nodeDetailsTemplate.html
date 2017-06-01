@@ -1,80 +1,94 @@
 <ais-header name="'Node Details'" show-subnav="false" loading="vm.loading"></ais-header>
-<h3><span class="label label-primary">{{ vm.node.hostname }}</span></h3>
-<div class="row">
-    <div class="col-xs-12">
-        <h3>Overview</h3>
-        <div class="row">
-            <div class="col-xs-12 col-sm-8">
-                <table class="table table-hover table-condensed table-striped">
-                    <tbody>
-                    <tr><td>Port:</td><td>{{ vm.node.port }}</td></tr>
-                    <tr><td>Slave ID:</td><td>{{ vm.node.slave_id }}</td></tr>
-                    <tr><td>Paused:</td><td>{{ vm.node.is_paused }}</td></tr>
-                    <tr><td>Paused Due To Errors:</td><td>{{ vm.node.is_paused_errors }}</td></tr>
-                    <tr><td>Paused Reason:</td><td>{{ vm.node.pause_reason }}</td></tr>
-                    <tr><td>Active:</td><td>{{ vm.node.is_active }}</td></tr>
-                    <tr><td>Archived:</td><td>{{ vm.node.archived }}</td></tr>
-                    <tr><td>Created:</td><td>{{ vm.node.created }}</td></tr>
-                    <tr><td>Last Offer:</td><td>{{ vm.node.last_offer }}</td></tr>
-                    <tr><td>Last Modified:</td><td>{{ vm.node.last_modified }}</td></tr>
-                    <tr><td>Disconnected:</td><td>{{ vm.node.disconnected }}</td></tr>
-                    </tbody>
-                </table>
+<h3>
+    {{ vm.node.hostname }}
+    <small>{{ vm.nodeStatus.agent_id }}</small>
+</h3>
+<h4 class="margin-bottom-lg"><span class="label label-info">{{ vm.nodeStatus.state.title }}: {{ vm.nodeStatus.state.description }}</span></h4>
+<div class="node-details-container">
+    <div class="row">
+        <div class="col-xs-6" ng-if="vm.nodeStatus.errors.length > 0">
+            <div class="panel panel-error">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <strong><i class="fa fa-exclamation-triangle"></i> Errors</strong>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <ul class="list-unstyled">
+                        <li ng-repeat="error in vm.nodeStatus.errors">
+                            <span class="title error">{{ error.title }}:</span> {{ error.description }}<br />
+                            <small>{{ vm._.capitalize(vm.moment.utc(error.last_updated).from(vm.moment.utc())) }} ({{ vm.moment.utc(error.last_updated).format(vm.scaleConfig.dateFormats.day_second_utc_nolabel) }})</small>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <div class="col-xs-12 col-sm-4">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <b>Resources</b>
+        </div>
+        <div class="col-xs-6" ng-if="vm.nodeStatus.warnings.length > 0">
+            <div class="panel panel-warning">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <strong><i class="fa fa-exclamation-triangle"></i> Warnings</strong>
                     </div>
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-xs-1">
-                                CPU
-                            </div>
-                            <div class="col-xs-11">
-                                <dl class="dl-horizontal">
-                                    <dt>Scheduled</dt>
-                                    <dd>{{ vm.node.resources.scheduled.cpus }}</dd>
-                                    <dt>Used</dt>
-                                    <dd>{{ vm.node.resources.used.cpus }}</dd>
-                                    <dt>Total</dt>
-                                    <dd>{{ vm.node.resources.total.cpus }}</dd>
-                                </dl>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-1">
-                                Memory
-                            </div>
-                            <div class="col-xs-11">
-                                <dl class="dl-horizontal">
-                                    <dt>Scheduled</dt>
-                                    <dd>{{ vm.scaleService.calculateFileSizeFromMib(vm.node.resources.scheduled.mem) }}</dd>
-                                    <dt>Used</dt>
-                                    <dd>{{ vm.scaleService.calculateFileSizeFromMib(vm.node.resources.used.mem) }}</dd>
-                                    <dt>Total</dt>
-                                    <dd>{{ vm.scaleService.calculateFileSizeFromMib(vm.node.resources.total.mem) }}</dd>
-                                </dl>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-1">
-                                Disk
-                            </div>
-                            <div class="col-xs-11">
-                                <dl class="dl-horizontal">
-                                    <dt>Scheduled</dt>
-                                    <dd>{{ vm.scaleService.calculateFileSizeFromMib(vm.node.resources.scheduled.disk) }}</dd>
-                                    <dt>Used</dt>
-                                    <dd>{{ vm.scaleService.calculateFileSizeFromMib(vm.node.resources.used.disk) }}</dd>
-                                    <dt>Total</dt>
-                                    <dd>{{ vm.scaleService.calculateFileSizeFromMib(vm.node.resources.total.disk) }}</dd>
-                                </dl>
-                            </div>
-                        </div>
-                    </div>
+                </div>
+                <div class="panel-body">
+                    <ul class="list-unstyled">
+                        <li ng-repeat="warning in vm.nodeStatus.warnings">
+                            <span class="title warning">{{ warning.title }}:</span> {{ warning.description }}<br />
+                            <small>{{ vm._.capitalize(vm.moment.utc(warning.last_updated).from(vm.moment.utc())) }} ({{ vm.moment.utc(warning.last_updated).format(vm.scaleConfig.dateFormats.day_second_utc_nolabel) }})</small>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
+    <table class="table table-hover table-condensed table-striped">
+        <tbody>
+        <tr>
+            <td class="left">Running Jobs:</td>
+            <td class="right">
+                <div class="label label-success" ng-repeat="job in vm.runningJobs" tooltip-append-to-body="true" uib-tooltip="{{ job.jobType.title }}">
+                    <i class="fa fa-fw" ng-bind-html="'&#x' + job.jobType.icon_code"></i> {{ job.count }}
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="left">Completed Jobs:</td>
+            <td class="right">
+                <div class="label label-primary" ng-repeat="job in vm.completedJobs" tooltip-append-to-body="true" uib-tooltip="{{ job.jobType.title }}">
+                    <i class="fa fa-fw" ng-bind-html="'&#x' + job.jobType.icon_code"></i> {{ job.count }}
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="left">Failed System Jobs:</td>
+            <td class="right">
+                <div class="label label-system" ng-repeat="job in vm.systemJobs" tooltip-append-to-body="true" uib-tooltip="{{ job.jobType.title }}">
+                    <i class="fa fa-fw" ng-bind-html="'&#x' + job.jobType.icon_code"></i> {{ job.count }}
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="left">Failed Algorithm Jobs:</td>
+            <td class="right">
+                <div class="label label-algorithm" ng-repeat="job in vm.algorithmJobs" tooltip-append-to-body="true" uib-tooltip="{{ job.jobType.title }}">
+                    <i class="fa fa-fw" ng-bind-html="'&#x' + job.jobType.icon_code"></i> {{ job.count }}
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="left">Failed Data Jobs:</td>
+            <td class="right">
+                <div class="label label-data" ng-repeat="job in vm.dataJobs" tooltip-append-to-body="true" uib-tooltip="{{ job.jobType.title }}">
+                    <i class="fa fa-fw" ng-bind-html="'&#x' + job.jobType.icon_code"></i> {{ job.count }}
+                </div>
+            </td>
+        </tr>
+        <tr><td class="left">Paused:</td><td class="right">{{ vm.node.is_paused }}</td></tr>
+        <tr><td class="left">Paused Reason:</td><td class="right">{{ vm.node.pause_reason }}</td></tr>
+        <tr><td class="left">Active:</td><td class="right">{{ vm.node.is_active }}</td></tr>
+        <tr><td class="left">Deprecated:</td><td class="right">{{ vm.node.deprecated }}</td></tr>
+        <tr><td class="left">Created:</td><td class="right">{{ vm._.capitalize(vm.moment.utc(vm.node.created).from(vm.moment.utc())) }} <small>{{ vm.moment.utc(vm.node.created).format(vm.scaleConfig.dateFormats.day_second_utc_nolabel) }}</small></td></tr>
+        <tr><td class="left">Last Modified:</td><td class="right">{{ vm._.capitalize(vm.moment.utc(vm.node.last_modified).from(vm.moment.utc())) }} <small>{{ vm.moment.utc(vm.node.last_modified).format(vm.scaleConfig.dateFormats.day_second_utc_nolabel) }}</small></td></tr>
+        </tbody>
+    </table>
 </div>

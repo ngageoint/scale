@@ -1,3 +1,47 @@
-.node-health-container {
+.nodes-switch {
+    &.ats-switch.switch-small {
+        min-width: 150px;
+    }
+}
 
+.grid-container {
+    &.nodes {
+        .scale-grid {
+            .label-container {
+                &.job-executions {
+                    .label {
+                        min-width: 20%;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.node-details-container {
+    small {
+        color: #777;
+        margin: 0 0 10px 0;
+        margin-top: -2px;
+        display: block;
+    }
+
+    .title {
+        font-weight: bold;
+    }
+
+    table {
+        .label {
+            margin: 0 5px 5px 0;
+            font-size: 1em;
+            display: inline-block;
+        }
+
+        .left {
+            width: 15%;
+        }
+        .right {
+            width: 85%;
+        }
+    }
 }

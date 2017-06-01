@@ -1,88 +1,10 @@
 {
     "id": 4,
-    "hostname": "node01.local",
-    "port": 5051,
-    "slave_id": "20150616-103057-1800454536-5050-6193-S2",
+    "hostname": "node4",
+    "pause_reason": "",
     "is_paused": false,
-    "is_paused_errors": false,
     "is_active": true,
     "archived": null,
     "created": "2015-06-15T17:18:52.414Z",
-    "last_offer": null,
-    "last_modified": "2015-06-17T20:05:16.041Z",
-    "job_exes_running": [{
-        "id": 1,
-        "status": "RUNNING",
-        "command_arguments": "",
-        "timeout": 0,
-        "pre_started": null,
-        "pre_completed": null,
-        "pre_exit_code": null,
-        "job_started": "2015-08-28T18:32:34.295Z",
-        "job_completed": null,
-        "job_exit_code": null,
-        "post_started": null,
-        "post_completed": null,
-        "post_exit_code": null,
-        "created": "2015-08-28T18:32:33.862Z",
-        "queued": "2015-08-28T18:32:33.833Z",
-        "started": "2015-08-28T18:32:34.040Z",
-        "ended": null,
-        "last_modified": "2015-08-28T18:32:34.389Z",
-        "job": {
-            "id": 1,
-            "job_type": {
-                "id": 3,
-                "name": "charlie",
-                "version": "1.0",
-                "title": "Charlie",
-                "description": "Performs Scale system functions",
-                "category": "system",
-                "author_name": null,
-                "author_url": null,
-                "is_system": true,
-                "is_long_running": true,
-                "is_active": true,
-                "is_operational": true,
-                "is_paused": false,
-                "icon_code": "f140"
-            },
-            "job_type_rev": {
-                "id": 5
-            },
-            "event": {
-                "id": 1
-            },
-            "error": null,
-            "status": "RUNNING",
-            "priority": 1,
-            "num_exes": 19
-        },
-        "node": {
-            "id": 7
-        },
-        "error": null,
-        "cpus_scheduled": 1.0,
-        "mem_scheduled": 1024.0,
-        "disk_in_scheduled": 0.0,
-        "disk_out_scheduled": 0.0,
-        "disk_total_scheduled": 0.0
-    }],
-    "resources": {
-        "total": {
-            "cpus": 16.0,
-            "mem": 63305.0,
-            "disk": 131485.0
-        },
-        "scheduled": {
-            "cpus": 12.0,
-            "mem": 35392.0,
-            "disk": 131408.0
-        },
-        "used": {
-            "cpus": 16.0,
-            "mem": 63305.0,
-            "disk": 131485.0
-        }
-    }
+    "last_modified": "2015-06-17T20:05:16.041Z"
 }
