@@ -17,7 +17,7 @@
         vm.nodeType = vm.showActive ? 'Active' : 'Deprecated';
         vm.nodeTotals = '';
         vm.nodeStates = [];
-        vm.selectedNodeState = $location.search().state || 'ALL';
+        vm.selectedNodeState = $location.search().state || 'All';
 
         $scope.pauseReason = '';
 
@@ -38,7 +38,7 @@
                 displayName: 'State',
                 width: '10%',
                 cellTemplate: '<div class="ui-grid-cell-contents"><div class="pull-right"><span class="fa fa-exclamation-triangle error" ng-show="row.entity.errors.length > 0" tooltip-append-to-body="true" uib-tooltip="{{ row.entity.errors.length === 1 ? row.entity.errors[0].description : row.entity.errors.length + \' Errors\' }}"></span> <span class="fa fa-exclamation-triangle warning" ng-show="row.entity.warnings.length > 0" tooltip-append-to-body="true" uib-tooltip="{{ row.entity.warnings.length === 1 ? row.entity.warnings[0].description : row.entity.warnings.length + \' Warnings\' }}"></span></div><span ng-bind-html="row.entity.state.title" tooltip-append-to-body="true" uib-tooltip="{{ row.entity.state.description }}"></span></div>',
-                filterHeaderTemplate: '<div class="ui-grid-filter-container"><select class="form-control input-sm" ng-model="grid.appScope.vm.selectedNodeState"><option ng-selected="{{ grid.appScope.vm.nodeStates[$index] == grid.appScope.vm.selectedNodeState }}" value="{{ grid.appScope.vm.nodeStates[$index] }}" ng-repeat="state in grid.appScope.vm.nodeStates track by $index">{{ state.toUpperCase() }}</option></select></div>'
+                filterHeaderTemplate: '<div class="ui-grid-filter-container" ng-show="grid.appScope.vm.showActive"><select class="form-control input-sm" ng-model="grid.appScope.vm.selectedNodeState"><option ng-selected="{{ grid.appScope.vm.nodeStates[$index] == grid.appScope.vm.selectedNodeState }}" value="{{ grid.appScope.vm.nodeStates[$index] }}" ng-repeat="state in grid.appScope.vm.nodeStates track by $index">{{ state }}</option></select></div>'
             },
             {
                 field: 'job_executions',
@@ -156,8 +156,8 @@
             var altNodeType = vm.showActive ? 'Deprecated' : 'Active';
             vm.nodes = _.filter(allNodes, { is_active: vm.showActive });
             vm.nodeTotals = vm.nodes.length + ' ' + currNodeType + ' Nodes / ' + (allNodes.length - vm.nodes.length) + ' ' + altNodeType + ' Nodes';
-            vm.nodeStates = _.sortBy(_.uniq(_.map(vm.nodes, 'state.name')));
-            vm.nodeStates.unshift('ALL');
+            vm.nodeStates = _.sortBy(_.uniq(_.map(vm.nodes, 'state.title')));
+            vm.nodeStates.unshift('All');
             var order = $location.search().order;
             var state = $location.search().state;
             if (order) {
@@ -174,12 +174,13 @@
             });
             var filteredNodes = _.cloneDeep(vm.nodes);
             if (state) {
-                filteredNodes = _.filter(filteredNodes, { state: { name: state }});
+                filteredNodes = _.filter(filteredNodes, { state: { title: state }});
             }
             vm.gridOptions.totalItems = filteredNodes.length;
             vm.gridOptions.minRowsToShow = filteredNodes.length;
             vm.gridOptions.virtualizationThreshold = filteredNodes.length;
             vm.gridOptions.data = filteredNodes;
+
         };
 
         var getRunningJobs = function (entity) {
@@ -215,6 +216,7 @@
                 jobTypes = data.results;
                 getNodes();
             });
+            vm.nodesParams.state = vm.showActive ? vm.selectedNodeState !== 'All' ? vm.selectedNodeState : null : null;
             stateService.setNodesParams(vm.nodesParams);
             vm.updateColDefs();
             var user = userService.getUserCreds();
@@ -240,29 +242,23 @@
             vm.updateColDefs();
         });
 
-        $scope.$watchCollection('vm.nodes', function (newValue, oldValue) {
-            if (angular.equals(newValue, oldValue)) {
-                return;
-            }
-            vm.gridOptions.data = vm.nodes;
-        });
-
         $scope.$watch('vm.showActive', function (newValue, oldValue) {
             if (angular.equals(newValue, oldValue)) {
                 return;
             }
             vm.nodesParams.active = newValue.toString();
+            vm.nodesParams.state = newValue ? vm.selectedNodeState !== 'All' ? vm.selectedNodeState : null : null;
             vm.showActive = newValue;
             vm.nodeType = newValue ? 'Active' : 'Deprecated';
-            formatResults();
             stateService.setNodesParams(vm.nodesParams);
+            formatResults();
         });
 
         $scope.$watch('vm.selectedNodeState', function (newValue, oldValue) {
             if (angular.equals(newValue, oldValue)) {
                 return;
             }
-            vm.nodesParams.state = newValue !== 'ALL' ? newValue : null;
+            vm.nodesParams.state = newValue !== 'All' ? newValue : null;
             getNodes();
             stateService.setNodesParams(vm.nodesParams);
         });

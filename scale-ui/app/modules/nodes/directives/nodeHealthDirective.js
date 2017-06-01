@@ -10,22 +10,26 @@
 
         var getNodeStatus = function () {
             vm.totalNodes = vm.nodes.length;
-            vm.groupedNodes = _.pairs(_.groupBy(vm.nodes, 'state.title'));
+            if (vm.totalNodes > 0) {
+                vm.groupedNodes = _.pairs(_.groupBy(vm.nodes, 'state.title'));
 
-            var donutData = [];
+                var donutData = [];
 
-            _.forEach(vm.groupedNodes, function (group) {
-                donutData.push({
-                    status: group[0],
-                    count: group[1].length
+                _.forEach(vm.groupedNodes, function (group) {
+                    donutData.push({
+                        status: group[0],
+                        count: group[1].length
+                    });
                 });
-            });
 
-            vm.nodeHealth = donutData;
+                vm.nodeHealth = donutData;
+            } else {
+                vm.nodeHealth = [];
+            }
         };
 
         $scope.$watch('data', function (newValue) {
-            if (newValue && newValue.length > 0) {
+            if (newValue) {
                 vm.nodes = newValue;
                 vm.totalNodes = newValue.length;
                 getNodeStatus();
