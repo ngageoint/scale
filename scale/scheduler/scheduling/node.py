@@ -125,6 +125,8 @@ class SchedulingNode(object):
         :rtype: int
         """
 
+        if not job_exe.is_node_acceptable(self.node_id):
+            return None
         if not self._watermark_resources.is_sufficient_to_meet(job_exe.required_resources):
             return None
 
@@ -144,6 +146,8 @@ class SchedulingNode(object):
         :rtype: int
         """
 
+        if not job_exe.is_node_acceptable(self.node_id):
+            return None
         if not self._remaining_resources.is_sufficient_to_meet(job_exe.required_resources):
             return None
 

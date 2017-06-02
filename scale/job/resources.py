@@ -128,3 +128,12 @@ class NodeResources(object):
         self.cpus -= resources.cpus
         self.mem -= resources.mem
         self.disk -= resources.disk
+
+    def to_logging_string(self):
+        """Converts the resource to a readable logging string
+
+        :returns: A readable string for logging
+        :rtype: string
+        """
+
+        return '[%f.2 CPUs, %f.2 MiB memory, %f.2 MiB disk]' % (self.cpus, self.mem, self.disk)

@@ -149,8 +149,41 @@ class SchedulingManager(object):
         :rtype: bool
         """
 
-        # TODO: implement
-        # TODO: use job type resources to find best node, also calculate node to reserve if needed
+        best_scheduling_node = None
+        best_scheduling_score = None
+        best_reservation_node = None
+        best_reservation_score = None
+
+        for node in nodes.values():
+            # Check node for scheduling this job execution
+            score = node.score_job_exe_for_scheduling(job_exe, job_type_resources)
+            if score is not None:
+                # Job execution could be scheduled on this node, check its score
+                if best_scheduling_node is None or score < best_scheduling_score:
+                    # This is the best node for scheduling so far
+                    best_scheduling_node = node
+                    best_scheduling_score = score
+                    best_reservation_node = None  # No need to reserve a node if we can schedule the job execution
+                    best_reservation_score = None  # No need to reserve a node if we can schedule the job execution
+            if best_scheduling_node is None:
+                # No nodes yet to schedule this job execution on, check whether we should reserve this node
+                score = node.score_job_exe_for_reservation(job_exe)
+                if score is not None:
+                    # Job execution could reserve this node, check its score
+                    if best_reservation_node is None or score < best_reservation_score:
+                        # This is the best node to reserve so far
+                        best_reservation_node = node
+                        best_reservation_score = score
+
+        # Schedule the job execution on the best node
+        if best_scheduling_node:
+            if best_scheduling_node.accept_new_job_exe(job_exe):
+                return True
+
+        # Could not schedule job execution, reserve a node to run this execution if possible
+        if best_reservation_node:
+            del nodes[best_reservation_node.node_id]
+
         return False
 
     def _schedule_new_job_exes(self, nodes, job_types, job_type_limits, job_type_resources):

@@ -1,6 +1,7 @@
 """Defines the class that represents an agent's set of resource offers"""
 from __future__ import unicode_literals
 
+import logging
 from collections import namedtuple
 
 from job.resources import NodeResources
@@ -8,8 +9,9 @@ from job.resources import NodeResources
 # Maximum number of generations that each offer should be held
 MAX_OFFER_GENERATIONS = 10
 
-
 ResourceSet = namedtuple('ResourceSet', ['offered_resources', 'task_resources', 'watermark_resources'])
+
+logger = logging.getLogger(__name__)
 
 
 class AgentResources(object):
@@ -160,7 +162,9 @@ class AgentResources(object):
         """Sets the resource shortage for the agent, if any
 
         :param shortage_resources: The resource shortage
-        :type shortage_resources: [:class:`job.resources.NodeResources`]
+        :type shortage_resources: :class:`job.resources.NodeResources`
         """
 
+        if shortage_resources:
+            logger.warning('Agent %s has a shortage of %s', self.agent_id, shortage_resources.to_logging_string())
         self._shortage_resources = shortage_resources
