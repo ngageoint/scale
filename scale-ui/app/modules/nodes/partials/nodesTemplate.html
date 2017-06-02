@@ -67,7 +67,7 @@
             <div class="label label-algorithm" ng-show="COL_FIELD.failed.algorithm.total > 0" uib-tooltip="{{ COL_FIELD.failed.algorithm.total }} Algorithm Errors" tooltip-append-to-body="true">{{ COL_FIELD.failed.algorithm.total }}</div>
             <div class="label" ng-show="COL_FIELD.failed.algorithm.total === 0">&nbsp;</div>
             <div class="label label-data" ng-show="COL_FIELD.failed.data.total > 0" uib-tooltip="{{ COL_FIELD.failed.data.total }} Data Errors" tooltip-append-to-body="true">{{ COL_FIELD.failed.data.total }}</div>
-            <div class="label" ng-show="COL_FIELD.failed.total === 0">&nbsp;</div>
+            <div class="label" ng-show="COL_FIELD.failed.data.total === 0">&nbsp;</div>
             <div class="label label-running" uib-tooltip="{{ COL_FIELD.completed.total }} Completed" tooltip-append-to-body="true">{{ COL_FIELD.completed.total }}</div>
         </div>
     </div>
