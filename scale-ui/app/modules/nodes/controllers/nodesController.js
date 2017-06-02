@@ -1,111 +1,109 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('nodesController', function($scope, $location, $timeout, $uibModal, navService, nodeService, stateService, userService, gridFactory, toastr, poller) {
+    angular.module('scaleApp').controller('nodesController', function($scope, $location, $timeout, $uibModal, navService, nodeService, nodeUpdateService, statusService, stateService, userService, jobTypeService, gridFactory, toastr, poller) {
         var vm = this;
 
         vm.nodesParams = stateService.getNodesParams();
 
         vm.stateService = stateService;
-        vm.nodeStatus = [];
         vm.loading = true;
         vm.loadingStatus = true;
         vm.readonly = true;
-        vm.nodesError = null;
-        vm.nodesErrorStatus = null;
-        vm.statusError = null;
-        vm.statusErrorStatus = null;
         vm.actionClicked = false;
         vm.gridOptions = gridFactory.defaultGridOptions();
-        vm.gridOptions.paginationCurrentPage = vm.nodesParams.page || 1;
-        vm.gridOptions.paginationPageSize = vm.nodesParams.page_size || vm.gridOptions.paginationPageSize;
         vm.gridOptions.data = [];
+        vm.showActive = vm.nodesParams.active === 'true';
+        vm.nodeType = vm.showActive ? 'Active' : 'Deprecated';
+        vm.nodeTotals = '';
+        vm.nodeStates = [];
+        vm.selectedNodeState = $location.search().state || 'All';
 
         $scope.pauseReason = '';
 
+        var allNodes = [];
         var filteredByOrder = vm.nodesParams.order ? true : false;
+        var jobTypes = null;
 
         vm.colDefs = [
             {
                 field: 'hostname',
                 displayName: 'Hostname',
                 enableFiltering: false,
-                cellTemplate: '<div class="ui-grid-cell-contents"><div class="pull-right" ng-show="!grid.appScope.vm.readonly && grid.appScope.vm.nodeStatus.length > 0"><button class="btn btn-xs btn-default" ng-click="grid.appScope.vm.pauseNode(row.entity)"><i class="fa" ng-class="{ \'fa-pause\': !row.entity.is_paused, \'fa-play\': row.entity.is_paused }"></i></button></div> {{ row.entity.hostname }}</div>'
+                width: '20%',
+                cellTemplate: 'hostname.html'
             },
             {
-                field: 'is_online',
-                displayName: 'Status',
-                enableFiltering: false,
-                enableSorting: false,
-                cellTemplate: '<div class="ui-grid-cell-contents" ng-show="row.entity.status"><span ng-bind-html="row.entity.statusLabel"></span></div>'
+                field: 'state.name',
+                displayName: 'State',
+                width: '10%',
+                cellTemplate: '<div class="ui-grid-cell-contents"><div class="pull-right"><span class="fa fa-exclamation-triangle error" ng-show="row.entity.errors.length > 0" tooltip-append-to-body="true" uib-tooltip="{{ row.entity.errors.length === 1 ? row.entity.errors[0].description : row.entity.errors.length + \' Errors\' }}"></span> <span class="fa fa-exclamation-triangle warning" ng-show="row.entity.warnings.length > 0" tooltip-append-to-body="true" uib-tooltip="{{ row.entity.warnings.length === 1 ? row.entity.warnings[0].description : row.entity.warnings.length + \' Warnings\' }}"></span></div><span ng-bind-html="row.entity.state.title" tooltip-append-to-body="true" uib-tooltip="{{ row.entity.state.description }}"></span></div>',
+                filterHeaderTemplate: '<div class="ui-grid-filter-container" ng-show="grid.appScope.vm.showActive"><select class="form-control input-sm" ng-model="grid.appScope.vm.selectedNodeState"><option ng-selected="{{ grid.appScope.vm.nodeStates[$index] == grid.appScope.vm.selectedNodeState }}" value="{{ grid.appScope.vm.nodeStates[$index] }}" ng-repeat="state in grid.appScope.vm.nodeStates track by $index">{{ state }}</option></select></div>'
             },
             {
-                field: 'id',
-                displayName: 'Statistics',
+                field: 'job_executions',
+                displayName: 'Job Executions (Last 3 Hrs)',
                 enableFiltering: false,
                 enableSorting: false,
-                cellTemplate: '<div class="ui-grid-cell-contents" ng-show="row.entity.status">{{ row.entity.status.getCellError() }} / {{ row.entity.status.getCellTotal() }}</div>'
+                width: '22%',
+                cellTemplate: 'jobExecutions.html',
+                headerCellTemplate: 'jobExecutionsHeader.html'
             },
             {
-                field: 'id',
-                displayName: 'Current Jobs',
+                field: 'running_jobs',
+                displayName: 'Running Jobs',
                 enableFiltering: false,
                 enableSorting: false,
-                cellTemplate: '<div class="ui-grid-cell-contents" ng-show="row.entity.status"><span ng-bind-html="row.entity.status.getCellJobs()"></span></div>'
+                cellTemplate: 'runningJobs.html'
             }
         ];
 
         vm.gridOptions.columnDefs = vm.colDefs;
 
+        vm.toggleActive = function (entity) {
+            vm.actionClicked = true;
+            var isActive = !entity.is_active;
+            nodeUpdateService.updateNode(entity.id, { pause_reason: '', is_paused: entity.is_paused, is_active: isActive }).then(function (result) {
+                var node = _.find(vm.gridOptions.data, { id: result.id });
+                entity.is_active = result.is_active;
+                if (entity.is_active) {
+                    toastr.info(node.hostname + ' Activated');
+                } else {
+                    toastr.info(node.hostname + ' Deactivated');
+                }
+            });
+        };
+
+        vm.resumeNode = function (entity) {
+            vm.actionClicked = true;
+            nodeUpdateService.updateNode(entity.id, { pause_reason: null, is_paused: false, is_active: entity.is_active }).then(function (result) {
+                var node = _.find(vm.gridOptions.data, { id: result.id });
+                entity.is_paused = result.is_paused;
+                toastr.info(node.hostname + ' Resumed');
+            });
+        };
+
         vm.pauseNode = function (entity) {
             $scope.pauseReason = '';
             vm.actionClicked = true;
-            var id = entity.id;
-            var nodeStatus = _.find(vm.nodeStatus, { node: { id: id } });
-            var curr_state = entity.is_paused;
 
             $scope.updateReason = function (value) {
                 $scope.pauseReason = value;
             };
 
-            var pauseResume = function () {
+            var modalInstance = $uibModal.open({
+                animation: true,
+                templateUrl: 'pauseDialog.html',
+                scope: $scope
+            });
 
-                nodeStatus.pauseResumeCell($scope.pauseReason).then(function (result) {
+            modalInstance.result.then(function () {
+                nodeUpdateService.updateNode(entity.id, { pause_reason: $scope.pauseReason, is_paused: true, is_active: entity.is_active }).then(function (result) {
                     var node = _.find(vm.gridOptions.data, { id: result.id });
                     entity.is_paused = result.is_paused;
-                    nodeStatus.node.is_paused = entity.is_paused;
-                    entity.statusLabel = vm.getStatusLabel(nodeStatus);
-                    if (curr_state === entity.is_paused) {
-                        toastr.warning(entity.hostname + ' Status Unchanged');
-                    } else if (entity.is_paused) {
-                        toastr.info(node.hostname + ' Paused');
-                    } else {
-                        toastr.info(node.hostname + ' Resumed');
-                    }
+                    toastr.info(node.hostname + ' Paused');
                 });
-            };
-
-            // only prompt for reason when pausing (not resuming)
-            if (!nodeStatus.node.is_paused && !nodeStatus.node.is_paused_errors) {
-                var modalInstance = $uibModal.open({
-                    animation: true,
-                    templateUrl: 'pauseDialog.html',
-                    scope: $scope
-                });
-
-                modalInstance.result.then(function () {
-                    pauseResume();
-                });
-            } else {
-                pauseResume();
-            }
-        };
-
-        vm.getStatusLabel = function (status) {
-            var online = status.is_online ? '<span class="label label-online">Online</span>' : '<span class="label label-offline">Offline</span>';
-            var paused = status.node.is_paused ? '<span class="label label-paused">Paused</span>' : '';
-            var pausedErrors = status.node.is_paused_errors ? '<span class="label label-paused-errors">Paused with Errors</span>' : '';
-            return online + ' ' + paused + ' ' + pausedErrors;
+            });
         };
 
         vm.filterResults = function () {
@@ -125,6 +123,10 @@
             vm.filterResults();
         };
 
+        vm.updateNodeActive = function () {
+            formatResults();
+        };
+
         vm.gridOptions.onRegisterApi = function (gridApi) {
             //set gridApi on scope
             vm.gridApi = gridApi;
@@ -135,11 +137,6 @@
                     $location.search({});
                     $location.path('/nodes/' + row.entity.id);
                 }
-            });
-            vm.gridApi.pagination.on.paginationChanged($scope, function (currentPage, pageSize) {
-                vm.nodesParams.page = currentPage;
-                vm.nodesParams.page_size = pageSize;
-                vm.filterResults();
             });
             vm.gridApi.core.on.sortChanged($scope, function (grid, sortColumns) {
                 _.forEach(vm.gridApi.grid.columns, function (col) {
@@ -154,14 +151,56 @@
             });
         };
 
+        var formatResults = function () {
+            var currNodeType = vm.showActive ? 'Active' : 'Deprecated';
+            var altNodeType = vm.showActive ? 'Deprecated' : 'Active';
+            vm.nodes = _.filter(allNodes, { is_active: vm.showActive });
+            vm.nodeTotals = vm.nodes.length + ' ' + currNodeType + ' Nodes / ' + (allNodes.length - vm.nodes.length) + ' ' + altNodeType + ' Nodes';
+            vm.nodeStates = _.sortBy(_.uniq(_.map(vm.nodes, 'state.title')));
+            vm.nodeStates.unshift('All');
+            var order = $location.search().order;
+            var state = $location.search().state;
+            if (order) {
+                var fieldArr = [];
+                var directionArr = [];
+                _.forEach(order, function (o) {
+                    fieldArr.push(_.startsWith(o, '-') ? _.tail(o).join('') : o);
+                    directionArr.push(_.startsWith(order, '-') ? 'desc' : 'asc');
+                });
+                vm.nodes = _.sortByOrder(vm.nodes, fieldArr, directionArr);
+            }
+            _.forEach(vm.nodes, function (node) {
+                node.running_jobs = getRunningJobs(node);
+            });
+            var filteredNodes = _.cloneDeep(vm.nodes);
+            if (state) {
+                filteredNodes = _.filter(filteredNodes, { state: { title: state }});
+            }
+            vm.gridOptions.totalItems = filteredNodes.length;
+            vm.gridOptions.minRowsToShow = filteredNodes.length;
+            vm.gridOptions.virtualizationThreshold = filteredNodes.length;
+            vm.gridOptions.data = filteredNodes;
+
+        };
+
+        var getRunningJobs = function (entity) {
+            var runningJobs = [];
+            _.forEach(entity.job_executions.running.by_job_type, function (jobType) {
+                runningJobs.push({
+                    jobType: _.find(jobTypes, { id: jobType.job_type_id }),
+                    count: jobType.count
+                });
+            });
+            return runningJobs;
+        };
+
         var getNodes = function () {
-            nodeService.getNodes(vm.nodesParams).then(null, null, function (data) {
+            poller.stopAll();
+            statusService.getStatus(true).then(null, null, function (data) {
                 if (data.$resolved) {
                     vm.nodesError = null;
-                    vm.gridOptions.totalItems = data.count;
-                    vm.gridOptions.minRowsToShow = data.results.length;
-                    vm.gridOptions.virtualizationThreshold = data.results.length;
-                    vm.gridOptions.data = data.results;
+                    allNodes = data.nodes;
+                    formatResults();
                 } else {
                     if (data.statusText && data.statusText !== '') {
                         vm.nodesErrorStatus = data.statusText;
@@ -169,31 +208,19 @@
                     vm.nodesError = 'Unable to retrieve nodes.';
                 }
                 vm.loading = false;
-            })
-        };
-
-        var getNodeStatus = function () {
-            nodeService.getNodeStatus(null, null, 'PT3H', null).then(null, null, function (data) {
-                if (data.$resolved) {
-                    vm.statusError = null;
-                    vm.nodeStatus = data.results;
-                } else {
-                    if (data.statusText && data.statusText !== '') {
-                        vm.statusErrorStatus = data.statusText;
-                    }
-                    vm.statusError = 'Unable to retrieve node status.';
-                }
-                vm.loadingStatus = false;
             });
         };
 
         var initialize = function () {
+            jobTypeService.getJobTypesOnce().then(function (data) {
+                jobTypes = data.results;
+                getNodes();
+            });
+            vm.nodesParams.state = vm.showActive ? vm.selectedNodeState !== 'All' ? vm.selectedNodeState : null : null;
             stateService.setNodesParams(vm.nodesParams);
             vm.updateColDefs();
             var user = userService.getUserCreds();
             vm.readonly = !(user && user.is_admin);
-            getNodes();
-            getNodeStatus();
             navService.updateLocation('nodes');
         };
 
@@ -215,18 +242,25 @@
             vm.updateColDefs();
         });
 
-        $scope.$watchCollection('vm.nodeStatus', function (newValue, oldValue) {
+        $scope.$watch('vm.showActive', function (newValue, oldValue) {
             if (angular.equals(newValue, oldValue)) {
                 return;
             }
-            _.forEach(vm.gridOptions.data, function (node) {
-                var status = _.find(newValue, { node: { id: node.id } });
-                if (status) {
-                    node.status = status;
-                    console.log('status changed');
-                    node.statusLabel = vm.getStatusLabel(status);
-                }
-            });
+            vm.nodesParams.active = newValue.toString();
+            vm.nodesParams.state = newValue ? vm.selectedNodeState !== 'All' ? vm.selectedNodeState : null : null;
+            vm.showActive = newValue;
+            vm.nodeType = newValue ? 'Active' : 'Deprecated';
+            stateService.setNodesParams(vm.nodesParams);
+            formatResults();
+        });
+
+        $scope.$watch('vm.selectedNodeState', function (newValue, oldValue) {
+            if (angular.equals(newValue, oldValue)) {
+                return;
+            }
+            vm.nodesParams.state = newValue !== 'All' ? newValue : null;
+            getNodes();
+            stateService.setNodesParams(vm.nodesParams);
         });
     });
 })();

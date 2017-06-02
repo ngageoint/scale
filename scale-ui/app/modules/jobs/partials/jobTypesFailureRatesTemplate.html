@@ -16,7 +16,7 @@
                 </span>
                 <span ng-show="COL_FIELD.total === 0" class="percentage">0%</span>
             </div>
-            <div class="col-xs-8 col-md-6 text-right">
+            <div class="col-xs-8 col-md-6 text-right label-container">
                 <div class="label label-system" ng-show="COL_FIELD.system > 0" style="{{ grid.appScope.vm.setStyle(COL_FIELD, 'system') }}" uib-tooltip="{{ COL_FIELD.system }} System Errors ({{ grid.appScope.vm.getPercentageOfTotal(COL_FIELD.system, COL_FIELD.total) }})" tooltip-append-to-body="true">{{ COL_FIELD.system }}</div>
                 <div class="label" ng-show="COL_FIELD.system === 0">&nbsp;</div>
                 <div class="label label-algorithm" ng-show="COL_FIELD.algorithm > 0" style="{{ grid.appScope.vm.setStyle(COL_FIELD, 'algorithm') }}" uib-tooltip="{{ COL_FIELD.algorithm }} Algorithm Errors ({{ grid.appScope.vm.getPercentageOfTotal(COL_FIELD.algorithm, COL_FIELD.total) }})" tooltip-append-to-body="true">{{ COL_FIELD.algorithm }}</div>
@@ -34,7 +34,7 @@
         {{ col.displayName }}
         <div class="row margin-top-md">
             <div class="col-xs-4 col-md-6"><a class="header-label" ng-click="grid.appScope.vm.sortBy('errorTotal', col.field)">Failure %</a> <i class="fa" ng-class="grid.appScope.vm.sortOrders[col.field].errorTotal.icon"></i></div>
-            <div class="col-xs-8 col-md-6 text-right">
+            <div class="col-xs-8 col-md-6 text-right label-container">
                 <span class="label label-system" uib-tooltip="System Errors" tooltip-append-to-body="true" ng-click="grid.appScope.vm.sortBy('system', col.field)">Sys <i class="fa" ng-class="grid.appScope.vm.sortOrders[col.field].system.icon"></i></span>
                 <span class="label label-algorithm" uib-tooltip="Algorithm Errors" tooltip-append-to-body="true" ng-click="grid.appScope.vm.sortBy('algorithm', col.field)">Alg  <i class="fa" ng-class="grid.appScope.vm.sortOrders[col.field].algorithm.icon"></i></span>
                 <span class="label label-data" uib-tooltip="Data Errors" tooltip-append-to-body="true" ng-click="grid.appScope.vm.sortBy('data', col.field)">Data  <i class="fa" ng-class="grid.appScope.vm.sortOrders[col.field].data.icon"></i></span>

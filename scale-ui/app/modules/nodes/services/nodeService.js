@@ -1,36 +1,19 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').service('nodeService', function ($http, $q, $resource, scaleConfig, Node, NodeStatus, poller, pollerFactory) {
-        var getNodesParams = function (page, page_size, started, ended, order, include_inactive, url) {
+    angular.module('scaleApp').service('nodeService', function ($http, $q, $resource, scaleConfig, Node, poller, pollerFactory) {
+        var getNodesParams = function (order, active) {
             return {
-                page: page,
-                page_size: page_size,
-                started: started,
-                ended: ended,
                 order: order,
-                include_inactive: include_inactive,
-                url: url
+                active: active
             };
-        };
-
-        var getNodeStatusParams = function (page, page_size, started, ended) {
-            var params = {};
-
-            if(page) { params.page = page; }
-            if(page_size) { params.page_size = page_size; }
-            if(started) { params.started = started; }
-            if(ended) { params.ended = ended; }
-
-            return params;
         };
 
         return {
             getNodes: function (params) {
                 params = params || getNodesParams();
-                params.url = params.url ? params.url : scaleConfig.getUrlPrefix('nodes') + 'nodes/';
 
-                var nodesResource = $resource(params.url, params),
+                var nodesResource = $resource(scaleConfig.getUrlPrefix('nodes') + 'nodes/', params),
                     nodesPoller = pollerFactory.newPoller(nodesResource, scaleConfig.pollIntervals.nodes);
 
                 return nodesPoller.promise.then(null, null, function (data) {
@@ -64,36 +47,6 @@
                 $http.get(scaleConfig.getUrlPrefix('nodes') + 'nodes/' + slaveId + '/').success(function (data) {
                     var returnData = Node.transformer(data);
                     d.resolve(returnData);
-                }).error(function (error) {
-                    d.reject(error);
-                });
-                return d.promise;
-            },
-            getNodeStatus: function (page, page_size, started, ended) {
-                var params = getNodeStatusParams(page, page_size, started, ended);
-
-                var nodeStatusResource = $resource(scaleConfig.getUrlPrefix('nodes') + 'nodes/status/', params),
-                    nodeStatusPoller = pollerFactory.newPoller(nodeStatusResource, scaleConfig.pollIntervals.nodeStatus);
-
-                return nodeStatusPoller.promise.then(null, null, function (data) {
-                    if (data.$resolved) {
-                        data.results = NodeStatus.transformer(data.results);
-                    } else {
-                        nodeStatusPoller.stop();
-                    }
-                    return data;
-                });
-            },
-            getNodeStatusOnce: function (page, page_size, started, ended) {
-                var d = $q.defer();
-                var params = getNodeStatusParams(page, page_size, started, ended);
-                $http({
-                    url: scaleConfig.getUrlPrefix('nodes') + 'nodes/status/',
-                    method: 'GET',
-                    params: params
-                }).success(function (data) {
-                    data.results = NodeStatus.transformer(data.results);
-                    d.resolve(data);
                 }).error(function (error) {
                     d.reject(error);
                 });

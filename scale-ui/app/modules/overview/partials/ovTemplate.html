@@ -55,7 +55,7 @@
     </div>
     <div id="ov-health" class="col-xs-12 col-md-6">
         <h2>Health</h2>
-        <div class="widget-label-left">Average job success rates and node health over the past three hours, including a breakdown of errors.</div>
+        <div class="widget-label-left">Average job success rates and node status over the past three hours, including a breakdown of errors.</div>
         <div class="row">
             <div class="col-xs-6 text-center">
                 <h3>Jobs</h3>
@@ -72,7 +72,7 @@
                 <div ng-class="{ 'visible': !vm.loadingNodeHealth, 'invisible': vm.loadingNodeHealth }" class="ov-chart form-inline">
                     <div ng-show="vm.nodeHealthError" class="alert alert-danger text-center"><strong>{{ vm.nodeHealthError }}</strong> {{ vm.nodeHealthErrorStatus }}</div>
                     <div ng-show="!vm.nodeHealthError">
-                        <ais-node-health loading="vm.loadingNodeHealth" data="vm.nodes" duration="'PT3H'" show-description="false"></ais-node-health>
+                        <ais-node-health loading="vm.loadingNodeHealth" data="vm.nodes" node-type="Active" show-description="false"></ais-node-health>
                     </div>
                 </div>
             </div>

@@ -4,7 +4,8 @@
         <div class="master-content">
             <div class="master-controls">
                 <div class="pull-right">
-                    <switch id="show-rd" name="show-rd" ng-model="vm.jobTypesParams.show_rd" class="green"></switch> <span class="switch-label ">Show R&D</span>
+                    <!--<switch id="show-rd" name="show-rd" ng-model="vm.jobTypesParams.show_rd" class="green"></switch> <span class="switch-label ">Show R&D</span>-->
+                    <toggle-switch ng-model="vm.jobTypesParams.show_rd" on-label="R&D" off-label="Prod" class="switch-success switch-small pull-right"></toggle-switch>
                 </div>
             </div>
             <ul class="list-unstyled">

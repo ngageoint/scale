@@ -99,7 +99,8 @@
                 if (data.length > 0) {
                     initialize();
                 } else {
-                    $($element[0]).empty();
+                    chart.destroy();
+                    chart = null;
                 }
             }
         });

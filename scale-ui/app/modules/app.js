@@ -83,7 +83,8 @@
             .when('/nodes', {
                 controller: 'nodesController',
                 controllerAs: 'vm',
-                templateUrl: 'modules/nodes/partials/nodesTemplate.html'
+                templateUrl: 'modules/nodes/partials/nodesTemplate.html',
+                reloadOnSearch: false
             })
             .when('/nodes/:id', {
                 controller: 'nodeDetailsController',

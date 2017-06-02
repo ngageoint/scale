@@ -7,8 +7,8 @@
 <div ng-class="{ 'visible': !loading, 'invisible': loading }" class="ov-chart form-inline">
     <div ng-show="vm.nodeHealthError" class="alert alert-danger text-center"><strong>{{ vm.nodeHealthError }}</strong> {{ vm.nodeHealthErrorStatus }}</div>
     <div ng-show="!vm.nodeHealthError">
-        <div class="widget-label-center" ng-show="showDescription">Node health over the past three hours. Health is determined by a node's online status and the percentage of jobs it has successfully completed.</div>
-        <strong>{{ vm.healthyNodes }} of {{ vm.totalNodes }} nodes are healthy</strong>
-        <ais-health data="vm.nodeHealth" error-label="'Node Issues'" type="'node'"></ais-health>
+        <div class="widget-label-center" ng-show="showDescription">Node Status</div>
+        <strong>{{ vm.totalNodes }} {{ nodeType }} Nodes</strong>
+        <ais-donut data="vm.nodeHealth" type="'pie'" size="275" width="25" show-label="false"></ais-donut>
     </div>
 </div>

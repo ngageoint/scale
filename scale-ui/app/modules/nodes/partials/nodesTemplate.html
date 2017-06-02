@@ -1,24 +1,28 @@
-<ais-header name="'Nodes'" loading="vm.loading"></ais-header>
+<ais-header hide-title="true" name="'Nodes (' + vm.nodes.length + ')'" loading="vm.loading"></ais-header>
+<div class="page-header">
+    <h1>
+        Nodes ({{ vm.nodes.length }})
+        <small><toggle-switch ng-model="vm.showActive" on-label="Active" off-label="Deprecated" class="switch-success switch-small nodes-switch"></toggle-switch></small>
+    </h1>
+    <span ng-bind="vm.nodeTotals"></span>
+    <hr />
+</div>
 <div class="row">
-    <div class="col-xs-9">
+    <div class="col-xs-10">
         <div class="clearfix margin-bottom-md"></div>
         <div class="row">
             <div class="col-xs-12">
-                <div class="grid-container">
+                <div class="grid-container nodes">
                     <div ui-grid="vm.gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns class="scale-grid"></div>
                 </div>
-                <ais-grid-pagination></ais-grid-pagination>
+                <!--<ais-grid-pagination></ais-grid-pagination>-->
             </div>
         </div>
     </div>
-    <div class="col-xs-3 text-center">
+    <div class="col-xs-2 text-center">
         <div class="node-health-container">
-            <h3 class="no-margin">Node Health</h3>
-            <ais-node-health data="vm.nodeStatus" loading="vm.loadingStatus" duration="'PT3H'" show-description="true"></ais-node-health>
-            <div class="margin-top-lg" ng-show="!vm.loadingStatus">
-                <h5><b>Status Overview</b></h5>
-                <ais-node-status-grid data="vm.nodeStatus" cell-size="10px"></ais-node-status-grid>
-            </div>
+            <h3 class="no-margin">Node Status</h3>
+            <ais-node-health data="vm.nodes" loading="vm.loading" node-type="{{ vm.nodeType }}" show-description="false"></ais-node-health>
         </div>
     </div>
 </div>
@@ -36,6 +40,55 @@
         <div class="modal-footer">
             <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
             <button class="btn btn-primary" ng-click="$close()">OK</button>
+        </div>
+    </div>
+</script>
+<script type="text/ng-template" id="hostname.html">
+    <div class="ui-grid-cell-contents">
+        <div class="pull-right btn-group margin-left-sm" ng-show="!grid.appScope.vm.readonly">
+            <button class="btn btn-xs btn-default" ng-click="grid.appScope.vm.resumeNode(row.entity)" uib-tooltip="Resume Node" tooltip-append-to-body="true">
+                <i class="fa fa-play"></i>
+            </button>
+            <button class="btn btn-xs btn-default" ng-click="grid.appScope.vm.pauseNode(row.entity)" uib-tooltip="Pause Node" tooltip-append-to-body="true">
+                <i class="fa fa-pause"></i>
+            </button>
+            <button class="btn btn-xs btn-default" ng-click="grid.appScope.vm.toggleActive(row.entity)" uib-tooltip="{{ row.entity.is_active ? 'Deprecate' : 'Activate' }} Node" tooltip-append-to-body="true">
+                <i class="fa" ng-class="{ 'fa-toggle-on': row.entity.is_active, 'fa-toggle-off': !row.entity.is_active }"></i>
+            </button>
+        </div>
+        <span uib-tooltip="{{ row.entity.hostname }}" tooltip-append-to-body="true" ng-bind="row.entity.hostname"></span>
+    </div>
+</script>
+<script type="text/ng-template" id="jobExecutions.html">
+    <div class="ui-grid-cell-contents">
+        <div class="label-container job-executions">
+            <div class="label label-system" ng-show="COL_FIELD.failed.system.total > 0" uib-tooltip="{{ COL_FIELD.failed.system.total }} System Errors" tooltip-append-to-body="true">{{ COL_FIELD.failed.system.total }}</div>
+            <div class="label" ng-show="COL_FIELD.failed.system.total === 0">&nbsp;</div>
+            <div class="label label-algorithm" ng-show="COL_FIELD.failed.algorithm.total > 0" uib-tooltip="{{ COL_FIELD.failed.algorithm.total }} Algorithm Errors" tooltip-append-to-body="true">{{ COL_FIELD.failed.algorithm.total }}</div>
+            <div class="label" ng-show="COL_FIELD.failed.algorithm.total === 0">&nbsp;</div>
+            <div class="label label-data" ng-show="COL_FIELD.failed.data.total > 0" uib-tooltip="{{ COL_FIELD.failed.data.total }} Data Errors" tooltip-append-to-body="true">{{ COL_FIELD.failed.data.total }}</div>
+            <div class="label" ng-show="COL_FIELD.failed.total === 0">&nbsp;</div>
+            <div class="label label-running" uib-tooltip="{{ COL_FIELD.completed.total }} Completed" tooltip-append-to-body="true">{{ COL_FIELD.completed.total }}</div>
+        </div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="jobExecutionsHeader.html">
+    <div class="ui-grid-cell-contents">
+        {{ col.displayName }}
+        <div class="label-container job-executions">
+            <span class="label label-system" uib-tooltip="System Errors" tooltip-append-to-body="true">Sys <i class="fa" ng-class="grid.appScope.vm.sortOrders[col.field].system.icon"></i></span>
+            <span class="label label-algorithm" uib-tooltip="Algorithm Errors" tooltip-append-to-body="true">Alg  <i class="fa" ng-class="grid.appScope.vm.sortOrders[col.field].algorithm.icon"></i></span>
+            <span class="label label-data" uib-tooltip="Data Errors" tooltip-append-to-body="true">Data  <i class="fa" ng-class="grid.appScope.vm.sortOrders[col.field].data.icon"></i></span>
+            <span class="label label-running" uib-tooltip="Completed" tooltip-append-to-body="true">Comp  <i class="fa" ng-class="grid.appScope.vm.sortOrders[col.field].total.icon"></i></span>
+        </div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="runningJobs.html">
+    <div class="ui-grid-cell-contents">
+        <div class="label-container">
+            <div class="label label-default" ng-repeat="job in row.entity.running_jobs" tooltip-append-to-body="true" uib-tooltip="{{ job.jobType.title }}"><i class="fa fa-fw" ng-bind-html="'&#x' + job.jobType.icon_code"></i> {{ job.count }}</div>
         </div>
     </div>
 </script>
