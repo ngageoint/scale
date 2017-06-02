@@ -136,4 +136,4 @@ class NodeResources(object):
         :rtype: string
         """
 
-        return '[%f.2 CPUs, %f.2 MiB memory, %f.2 MiB disk]' % (self.cpus, self.mem, self.disk)
+        return '[%.2f CPUs, %.2f MiB memory, %.2f MiB disk]' % (self.cpus, self.mem, self.disk)

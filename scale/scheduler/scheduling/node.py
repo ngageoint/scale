@@ -130,9 +130,8 @@ class SchedulingNode(object):
         if not self._watermark_resources.is_sufficient_to_meet(job_exe.required_resources):
             return None
 
-        # TODO: right now all nodes are considered equal for reservation, in the future use average job type duration
-        # and current running node tasks to predict which node will be available quickest to run the job execution
-        return 1
+        # TODO: reservation is currently disabled until it can be thought out
+        return None
 
     def score_job_exe_for_scheduling(self, job_exe, job_type_resources):
         """Returns an integer score (lower is better) indicating how well the given job execution fits on this node for

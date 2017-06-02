@@ -1,6 +1,9 @@
 """Defines the class that manages all scheduling"""
 from __future__ import unicode_literals
 
+import datetime
+import logging
+
 from django.utils.timezone import now
 
 from job.execution.manager import job_exe_mgr
@@ -14,11 +17,20 @@ from scheduler.resources.manager import resource_mgr
 from scheduler.scheduling.node import SchedulingNode
 from scheduler.sync.job_type_manager import job_type_mgr
 from scheduler.sync.scheduler_manager import scheduler_mgr
+from scheduler.sync.workspace_manager import workspace_mgr
+from util.retry import retry_database_query
 
-QUEUE_LIMIT = 500  # Maximum number of jobs to grab off of the queue at one time
+# Warning threshold for queue processing duration
+PROCESS_QUEUE_WARN_THRESHOLD = datetime.timedelta(milliseconds=500)
+# Maximum number of jobs to grab off of the queue at one time
+QUEUE_LIMIT = 500
+# Warning threshold for queue processing duration
+SCHEDULE_QUERY_WARN_THRESHOLD = datetime.timedelta(milliseconds=500)
 
 # It is considered a resource shortage if a task waits this many generations without being scheduled
 TASK_SHORTAGE_WAIT_COUNT = 10
+
+logger = logging.getLogger(__name__)
 
 
 class SchedulingManager(object):
@@ -38,12 +50,16 @@ class SchedulingManager(object):
 
         when = now()
 
-        nodes = self._prepare_nodes(when)
+        # Get framework ID first to make sure it doesn't change throughout scheduling process
+        framework_id = scheduler_mgr.framework_id
 
         job_types = job_type_mgr.get_job_types()
         job_type_resources = job_type_mgr.get_job_type_resources()
+        tasks = task_mgr.get_all_tasks()
         running_job_exes = job_exe_mgr.get_ready_job_exes()
+        workspaces = workspace_mgr.get_workspaces()
 
+        nodes = self._prepare_nodes(tasks, when)
         fulfilled_nodes = self._schedule_waiting_tasks(nodes, running_job_exes, when)
 
         job_type_limits = self._calculate_job_type_limits(job_types, running_job_exes)
@@ -97,9 +113,11 @@ class SchedulingManager(object):
 
         return ignore_job_type_ids
 
-    def _prepare_nodes(self, when):
+    def _prepare_nodes(self, tasks, when):
         """Prepares the nodes to use for scheduling
 
+        :param tasks: The current current running
+        :type tasks: list
         :param when: The current time
         :type when: :class:`datetime.datetime`
         :returns: The dict of scheduling nodes stored by node ID
@@ -109,7 +127,6 @@ class SchedulingManager(object):
         nodes = node_mgr.get_nodes()
         cleanup_mgr.update_nodes(nodes)
 
-        tasks = task_mgr.get_all_tasks()
         tasks_by_agent_id = {}  # {Agent ID: Task}
         for task in tasks:
             if task.agent_id not in tasks_by_agent_id:
@@ -135,6 +152,52 @@ class SchedulingManager(object):
             scheduling_node = SchedulingNode(agent_id, node, node_tasks, resource_set)
             scheduling_nodes[scheduling_node.node_id] = scheduling_node
         return scheduling_nodes
+
+    def _process_queue(self, nodes, job_types, job_type_limits, job_type_resources):
+        """Retrieves the top of the queue and schedules new job executions on available nodes as resources and limits
+        allow
+
+        :param nodes: The dict of scheduling nodes stored by node ID for all nodes ready to accept new job executions
+        :type nodes: dict
+        :param job_types: The dict of job type models stored by job type ID
+        :type job_types: dict
+        :param job_type_limits: The dict of job type IDs mapping to job type limits
+        :type job_type_limits: dict
+        :param job_type_resources: The list of all of the job type resource requirements
+        :type job_type_resources: list
+        :returns: The list of queued job executions that were scheduled on nodes
+        :rtype: list
+        """
+
+        queued_job_executions = []
+        ignore_job_type_ids = self._calculate_job_types_to_ignore(job_types, job_type_limits)
+        started = now()
+
+        for queue in Queue.objects.get_queue(scheduler_mgr.queue_mode(), ignore_job_type_ids)[:QUEUE_LIMIT]:
+            # If there are no longer any available nodes, break
+            if not nodes:
+                break
+
+            # Check limit for this execution's job type
+            job_type_id = queue.job_type_id
+            if job_type_id in job_type_limits and job_type_limits[job_type_id] < 1:
+                continue
+
+            # Try to schedule job execution and adjust job type limit if needed
+            job_exe = QueuedJobExecution(queue)
+            if self._schedule_new_job_exe(job_exe, nodes, job_type_resources):
+                queued_job_executions.append(job_exe)
+                if job_type_id in job_type_limits:
+                    job_type_limits[job_type_id] -= 1
+
+        duration = now() - started
+        msg = 'Processing queue took %.3f seconds'
+        if duration > PROCESS_QUEUE_WARN_THRESHOLD:
+            logger.warning(msg, duration.total_seconds())
+        else:
+            logger.debug(msg, duration.total_seconds())
+
+        return queued_job_executions
 
     def _schedule_new_job_exe(self, job_exe, nodes, job_type_resources):
         """Schedules the given job execution on the queue on one of the available nodes, if possible
@@ -186,10 +249,11 @@ class SchedulingManager(object):
 
         return False
 
-    def _schedule_new_job_exes(self, nodes, job_types, job_type_limits, job_type_resources):
-        """Retrieves the top of the queue and schedules new job executions on available nodes as resources and limits
-        allow
+    def _schedule_new_job_exes(self, framework_id, nodes, job_types, job_type_limits, job_type_resources, workspaces):
+        """Schedules new job executions from the queue and adds them to the appropriate node
 
+        :param framework_id: The scheduling framework ID
+        :type framework_id: string
         :param nodes: The dict of scheduling nodes stored by node ID where every node has fulfilled all waiting tasks
         :type nodes: dict
         :param job_types: The dict of job type models stored by job type ID
@@ -198,6 +262,8 @@ class SchedulingManager(object):
         :type job_type_limits: dict
         :param job_type_resources: The list of all of the job type resource requirements
         :type job_type_resources: list
+        :param workspaces: A dict of all workspaces stored by name
+        :type workspaces: dict
         """
 
         # Can only use nodes that are ready for new job executions
@@ -206,27 +272,41 @@ class SchedulingManager(object):
             if node.is_ready_for_new_job:
                 available_nodes[node.node_id] = node
 
-        ignore_job_type_ids = self._calculate_job_types_to_ignore(job_types, job_type_limits)
+        try:
+            queued_job_exes = self._process_queue(nodes, job_types, job_type_limits, job_type_resources)
+            scheduled_job_exes = self._schedule_new_job_exes_in_database(framework_id, queued_job_exes, workspaces)
+            # TODO: Get the scheduled job exes into scheduling nodes
+        except:
+            logger.exception('Error occurred while scheduling new jobs from the queue')
+            # TODO: reset all scheduled new job exes in scheduling
+            pass
 
-        # TODO: exception handling around all querying, in catch reset all scheduled new job exes in scheduling nodes
-        for queue in Queue.objects.get_queue(scheduler_mgr.queue_mode(), ignore_job_type_ids)[:QUEUE_LIMIT]:
-            # If there are no longer any available nodes, break
-            if not nodes:
-                break
+    @retry_database_query(max_tries=5, base_ms_delay=1000, max_ms_delay=5000)
+    def _schedule_new_job_exes_in_database(self, framework_id, job_executions, workspaces):
+        """Schedules the given job executions in the database
 
-            # Check limit for this execution's job type
-            job_type_id = queue.job_type_id
-            if job_type_id in job_type_limits and job_type_limits[job_type_id] < 1:
-                continue
+        :param framework_id: The scheduling framework ID
+        :type framework_id: string
+        :param job_executions: A list of queued job executions that have been given nodes and resources on which to run
+        :type job_executions: list
+        :param workspaces: A dict of all workspaces stored by name
+        :type workspaces: dict
+        :returns: The scheduled job executions
+        :rtype: list
+        """
 
-            # Try to schedule job execution and adjust job type limit if needed
-            job_exe = QueuedJobExecution(queue)
-            if self._schedule_new_job_exe(job_exe, available_nodes, job_type_resources):
-                if job_type_id in job_type_limits:
-                    job_type_limits[job_type_id] -= 1
+        started = now()
 
-        # TODO: do querying to schedule job_exes, somehow this all has to get back to the scheduling nodes so their
-        # tasks can get created
+        scheduled_job_executions = Queue.objects.schedule_job_executions(framework_id, job_executions, workspaces)
+
+        duration = now() - started
+        msg = 'Query to schedule job executions took %.3f seconds'
+        if duration > SCHEDULE_QUERY_WARN_THRESHOLD:
+            logger.warning(msg, duration.total_seconds())
+        else:
+            logger.debug(msg, duration.total_seconds())
+
+        return scheduled_job_executions
 
     def _schedule_waiting_tasks(self, nodes, running_job_exes, when):
         """Schedules all waiting tasks for which there are sufficient resources and updates the resource manager with
