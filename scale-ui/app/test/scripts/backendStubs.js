@@ -597,6 +597,37 @@
                 nodes = JSON.parse(nodesData[1]).results,
                 statusNodes = [];
 
+            var states = [
+                {
+                    name: 'READY',
+                    title: 'Ready',
+                    description: 'Node is ready to run new jobs.'
+                },
+                {
+                    name: 'PAUSED',
+                    title: 'Paused',
+                    description: 'Node is paused.'
+                },
+                {
+                    name: 'WAITING',
+                    title: 'Waiting',
+                    description: 'Node is waiting.'
+                },
+                {
+                    name: 'BUSY',
+                    title: 'Busy',
+                    description: 'Node is busy.'
+                },
+                {
+                    name: 'OFFLINE',
+                    title: 'Offline',
+                    description: 'Node is offline.'
+                }
+            ];
+
+            var statesRand = Math.floor(Math.random() * (2 - 1 + 1)) + 1;
+            var activeStates = statesRand === 1 ? [states[0],states[1],states[4]] : [states[2],states[3],states[4]];
+
             _.forEach(nodes, function (node) {
                 var nodeErrors = [];
 
@@ -692,31 +723,13 @@
                     });
                 }
 
-                var states = [
-                    {
-                        name: 'READY',
-                        title: 'Ready',
-                        description: 'Node is ready to run new jobs.'
-                    },
-                    {
-                        name: 'PAUSED',
-                        title: 'Paused',
-                        description: 'Node is paused.'
-                    },
-                    {
-                        name: 'OFFLINE',
-                        title: 'Offline',
-                        description: 'Node is offline.'
-                    }
-                ];
-
                 var rand = Math.floor(Math.random() * (2 - 1 + 1)) + 1;
                 statusNodes.push({
                     id: node.id,
                     hostname: node.hostname,
                     agent_id: node.agent_id,
                     is_active: rand === 1,
-                    state: rand === 1 ? states[Math.floor(Math.random() * (1 - 0 + 1)) + 0] : states[2],
+                    state: rand === 1 ? activeStates[Math.floor(Math.random() * (1 - 0 + 1)) + 0] : activeStates[2],
                     errors: nodeErrors,
                     warnings: nodeWarnings,
                     job_executions: {
