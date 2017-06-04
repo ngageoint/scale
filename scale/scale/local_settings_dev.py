@@ -27,6 +27,9 @@ TIME_ZONE = 'UTC'
 # you can avoid needing to run the unit tests as a PostgreSQL superuser.
 POSTGIS_TEMPLATE = 'template1'
 
+# Broker URL for connection to messaging backend
+BROKER_URL = 'amqp://guest:guest@localhost:5672//'
+
 # Example settings for using PostgreSQL database with PostGIS.
 DATABASES = {
     'default': {

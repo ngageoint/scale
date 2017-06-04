@@ -191,7 +191,6 @@ def deploy_webserver(client, app_name, es_urls, db_host, db_port):
             "SCALE_ELASTICSEARCH_URLS": es_urls
         },
         'labels': {
-            "DCOS_PACKAGE_FRAMEWORK_NAME": FRAMEWORK_NAME,
             "HAPROXY_GROUP": "internal,external",
             "DCOS_SERVICE_SCHEME": "http",
             "DCOS_SERVICE_NAME": FRAMEWORK_NAME,

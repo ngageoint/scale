@@ -46,6 +46,9 @@ ELASTICSEARCH_URLS = None
 # Placeholder for Elasticsearch object. Needed for unit tests.
 ELASTICSEARCH = None
 
+# Broker URL for connection to messaging backend
+BROKER_URL = None
+
 # Base URL of vault or DCOS secrets store, or None to disable secrets
 SECRETS_URL = None
 # Public token if DCOS secrets store, or privleged token for vault

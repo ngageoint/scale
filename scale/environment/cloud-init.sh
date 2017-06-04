@@ -9,6 +9,12 @@ wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key a
 apt-get install -y --force-yes  postgresql-9.4 postgresql-contrib-9.4 postgresql-9.4-postgis-2.3
 sed 's^local   all             all                                     peer^local   all             all                                     trust^g' -i /etc/postgresql/9.4/main/pg_hba.conf
 service postgresql start
+update-rc.d postgresql enable
+
+# Install RabbitMQ as broker for messaging
+apt-get install -y rabbitmq-server
+service rabbitmq-server start
+update-rc.d rabbitmq-server enable
 
 # Install all python dependencies (gotta pin setuptools due to errors during pycparser install)
 apt-get install -y build-essential libssl-dev libffi-dev python-dev
