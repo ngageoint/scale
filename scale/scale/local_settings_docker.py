@@ -38,6 +38,9 @@ if ELASTICSEARCH_URLS:
         sniffer_timeout=60
     )
 
+# Broker URL for connection to messaging backend. Bootstrap must populate.
+BROKER_URL = os.environ.get('SCALE_BROKER_URL', '')
+
 DB_HOST = os.environ.get('SCALE_DB_HOST', '')
 if DB_HOST == '':
         DB_HOST = os.environ.get('DB_PORT_5432_TCP_ADDR', '')
