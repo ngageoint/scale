@@ -40,23 +40,41 @@ def run(client):
         es_urls = get_elasticsearch_urls()
 
     print("ELASTICSEARCH_URLS=" + es_urls)
+    rabbitmq_app_name = '%s-rabbitmq' % FRAMEWORK_NAME
+    log_app_name = '%s-logstash' % FRAMEWORK_NAME
+    db_app_name = '%s-db' % FRAMEWORK_NAME
+
+    # Determine if rabbitmq should be deployed. If SCALE_BROKER_URL is unset we need to deploy it
+    broker_url = os.getenv('SCALE_BROKER_URL', '')
+    if not len(broker_url):
+        deploy_rabbitmq(client, rabbitmq_app_name)
 
     # Determine if db should be deployed.
     db_host = os.getenv('SCALE_DB_HOST', '')
     db_port = os.getenv('SCALE_DB_PORT', '')
     if not len(db_host):
-        app_name = '%s-db' % FRAMEWORK_NAME
-        db_port = deploy_database(client, app_name)
-        db_host = "%s.marathon.mesos" % app_name
-        print("DB_HOST=%s" % db_host)
-        print("DB_PORT=%s" % db_port)
+        deploy_database(client, db_app_name)
 
     # Determine if logstash should be deployed.
     if not len(SCALE_LOGGING_ADDRESS):
-        app_name = '%s-logstash' % FRAMEWORK_NAME
-        log_port = deploy_logstash(client, app_name, es_urls)
-        print("LOGGING_ADDRESS=tcp://%s.marathon.mesos:%s" % (app_name, log_port))
-        print("LOGGING_HEALTH_ADDRESS=%s.marathon.l4lb.thisdcos.directory:80" % app_name)
+        deploy_logstash(client, log_app_name, es_urls)
+
+    # Wait for all needed apps to be healthy
+    if not len(broker_url):
+        rabbitmq_port = get_host_port_from_healthy_app(client, rabbitmq_app_name, 0)
+        broker_url = 'amqp://guest:guest@%s.marathon.mesos:%s//' % (rabbitmq_app_name, rabbitmq_port)
+        print("BROKER_URL=%s" % broker_url)
+
+    if not len(db_host):
+        db_port = get_host_port_from_healthy_app(client,db_app_name, 0)
+        db_host = "%s.marathon.mesos" % db_app_name
+        print("DB_HOST=%s" % db_host)
+        print("DB_PORT=%s" % db_port)
+
+    if not len(SCALE_LOGGING_ADDRESS):
+        log_port = get_host_port_from_healthy_app(client, log_app_name, 0)
+        print("LOGGING_ADDRESS=tcp://%s.marathon.mesos:%s" % (log_app_name, log_port))
+        print("LOGGING_HEALTH_ADDRESS=%s.marathon.l4lb.thisdcos.directory:80" % log_app_name)
 
     # Determine if Web Server should be deployed.
     if DEPLOY_WEBSERVER.lower() == 'true':
@@ -108,6 +126,12 @@ def check_app_exists(client, app_name):
         return True
     except NotFoundError:
         return False
+
+
+def get_host_port_from_healthy_app(client, app_name, port_index):
+    wait_app_healthy(client, app_name)
+
+    return get_marathon_app_single_task_host_port(client, app_name, port_index)
 
 
 def get_marathon_app_single_task_host_port(client, app_name, port_index):
@@ -260,15 +284,11 @@ def deploy_database(client, app_name):
             ],
             'uris': []
         }
+
         CONFIG_URI = os.getenv('CONFIG_URI')
         if CONFIG_URI:
             marathon['uris'].append(CONFIG_URI)
         deploy_marathon_app(client, marathon)
-        wait_app_healthy(client, app_name)
-
-    db_port = get_marathon_app_single_task_host_port(client, app_name, 0)
-
-    return db_port
 
 
 def get_elasticsearch_urls():
@@ -277,6 +297,71 @@ def get_elasticsearch_urls():
     es_urls = ','.join(endpoints)
     return es_urls
 
+def deploy_rabbitmq(client, app_name):
+    # Check if scale-db is already running
+    if not check_app_exists(client, app_name):
+        rabbitmq_image = os.getenv('RABBITMQ_DOCKER_IMAGE', 'rabbitmq:3.6-management')
+        
+        marathon = {
+            "id": app_name,
+            "cpus": 1,
+            "mem": 512,
+            "disk": 0,
+            "instances": 1,
+            "container": {
+                "docker": {
+                    "image": rabbitmq_image,
+                    "forcePullImage": True,
+                    "privileged": False,
+                    "portMappings": [
+                        {
+                            "containerPort": 5672,
+                            "hostPort": 5672,
+                            "protocol": "tcp",
+                            "labels": {
+                                "VIP_0": "/%s:5672" % app_name
+                            }
+                        },
+                        {
+                            "containerPort": 15672,
+                            "protocol": "tcp",
+                            "servicePort": 0,
+                            "labels": {
+                                "VIP_1": "/%s:15672" % app_name
+                            }
+                        }
+                    ],
+                    "network": "BRIDGE"
+                }
+            },
+            "healthChecks": [
+                {
+                    "protocol": "TCP",
+                    "gracePeriodSeconds": 300,
+                    "intervalSeconds": 60,
+                    "timeoutSeconds": 20,
+                    "maxConsecutiveFailures": 3,
+                    "portIndex": 0
+                },
+                {
+                    "protocol": "TCP",
+                    "gracePeriodSeconds": 300,
+                    "intervalSeconds": 60,
+                    "timeoutSeconds": 20,
+                    "maxConsecutiveFailures": 3,
+                    "portIndex": 1
+                }
+            ],
+            'uris': []
+        }
+
+
+        # Support uri passing for protected Docker Registries
+        CONFIG_URI = os.getenv('CONFIG_URI')
+        if CONFIG_URI:
+            marathon['uris'].append(CONFIG_URI)
+
+        deploy_marathon_app(client, marathon)
 
 def deploy_logstash(client, app_name, es_urls):
     # attempt to delete an old instance..if it doesn't exists it will error but we don't care so we ignore it
@@ -347,11 +432,6 @@ def deploy_logstash(client, app_name, es_urls):
         marathon['uris'].append(CONFIG_URI)
 
     deploy_marathon_app(client, marathon)
-    wait_app_healthy(client, app_name)
-
-    logstash_port = get_marathon_app_single_task_host_port(client, app_name, 0)
-
-    return logstash_port
 
 
 if __name__ == '__main__':
