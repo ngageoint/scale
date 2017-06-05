@@ -22,7 +22,7 @@ from scheduler.sync.workspace_manager import workspace_mgr
 from util.retry import retry_database_query
 
 # Warning threshold for queue processing duration
-PROCESS_QUEUE_WARN_THRESHOLD = datetime.timedelta(milliseconds=500)
+PROCESS_QUEUE_WARN_THRESHOLD = datetime.timedelta(milliseconds=300)
 # Maximum number of jobs to grab off of the queue at one time
 QUEUE_LIMIT = 500
 # Warning threshold for queue processing duration
@@ -67,7 +67,27 @@ class SchedulingManager(object):
         self._schedule_new_job_exes(framework_id, fulfilled_nodes, job_types, job_type_limits, job_type_resources,
                                     workspaces)
 
-        # TODO: grab offers, do start_next_task() if resources are there, and launch tasks
+        # TODO: Allocate offers
+        # TODO: Launch tasks (do start_next_task(), task_mgr.launch() and Mesos launch)
+
+    def _allocate_offers(self, nodes):
+        """Allocates resource offers to the node
+
+        :param nodes: The dict of all scheduling nodes stored by node ID
+        :type nodes: dict
+        """
+
+        allocated_resources = {}
+        for node in nodes.values():
+            allocated_resources[node.node_id] = node.get_allocated_resources()
+
+        resources_offers = resource_mgr.allocate_offers(allocated_resources)
+
+        for node in nodes.values():
+            offers = []
+            if node.agent_id in resources_offers:
+                offers = resources_offers[node.agent_id]
+            node.add_offers(offers)
 
     def _calculate_job_type_limits(self, job_types, running_job_exes):
         """Calculates and returns the available job type limits
@@ -277,11 +297,22 @@ class SchedulingManager(object):
             queued_job_exes = self._process_queue(available_nodes, job_types, job_type_limits, job_type_resources)
             scheduled_job_exes = self._schedule_new_job_exes_in_database(framework_id, queued_job_exes, workspaces)
             job_exe_mgr.schedule_job_exes(scheduled_job_exes.values())
+            node_count = 0
+            job_exe_count = 0
             for node_id in scheduled_job_exes:
                 if node_id in nodes:
-                    nodes[node_id].accept_scheduled_job_exes(scheduled_job_exes[node_id])
+                    node_count += 1
+                    nodes[node_id].add_scheduled_job_exes(scheduled_job_exes[node_id])
                 else:
-                    logger.error('Scheduled job executions on an unknown node')
+                    logger.error('Scheduled jobs on an unknown node')
+            scheduled_resources = NodeResources()
+            for scheduled_job_exe in scheduled_job_exes.values():
+                first_task = scheduled_job_exe.next_task()
+                if first_task:
+                    scheduled_resources.add(first_task.get_resources())
+                    job_exe_count += 1
+            logger.info('Scheduled %d new job(s) with %s on %d node(s)', job_exe_count,
+                        scheduled_resources.to_logging_string(), node_count)
         except DatabaseError:
             logger.exception('Error occurred while scheduling new jobs from the queue')
             for node in available_nodes.values():
@@ -311,7 +342,7 @@ class SchedulingManager(object):
                 scheduled_job_executions[scheduled_job_execution.node_id] = [scheduled_job_execution]
 
         duration = now() - started
-        msg = 'Query to schedule job executions took %.3f seconds'
+        msg = 'Query to schedule jobs took %.3f seconds'
         if duration > SCHEDULE_QUERY_WARN_THRESHOLD:
             logger.warning(msg, duration.total_seconds())
         else:

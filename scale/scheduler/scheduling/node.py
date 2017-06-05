@@ -34,10 +34,10 @@ class SchedulingNode(object):
         self._allocated_tasks = []  # Tasks that have been allocated resources from this node
         self._current_tasks = tasks
 
+        self._offers = []
         self._allocated_resources = NodeResources()
-        self._offered_resources = resource_set.offered_resources
         self._remaining_resources = NodeResources()
-        self._remaining_resources.add(self._offered_resources)
+        self._remaining_resources.add(resource_set.offered_resources)
         self._task_resources = resource_set.task_resources
         self._watermark_resources = resource_set.watermark_resources
 
@@ -114,7 +114,23 @@ class SchedulingNode(object):
                 result = True
         return result
 
-    def accept_scheduled_job_exes(self, job_exes):
+    def add_offers(self, offers):
+        """Adds the resource offers that have been allocated to run this node's tasks
+
+        :param offers: The resource offers to add
+        :type offers: list
+        """
+
+        offer_resources = NodeResources()
+        for offer in offers:
+            offer_resources.add(offer.resources)
+
+        self._offers = offers
+
+        # TODO: get rid of job_exes if not enough resources
+        # TODO: get rid of tasks if not enough resources
+
+    def add_scheduled_job_exes(self, job_exes):
         """Hands the node its queued job executions that have now been scheduled in the database and are now running
 
         :param job_exes: The running job executions that have now been scheduled in the database
@@ -123,6 +139,15 @@ class SchedulingNode(object):
 
         self._allocated_queued_job_exes = []
         self._allocated_running_job_exes.extend(job_exes)
+
+    def get_allocated_resources(self):
+        """Returns the resources that have been allocated on this node
+
+        :returns: The allocated resources
+        :rtype: :class:`job.resources.NodeResources`
+        """
+
+        return self._allocated_resources
 
     def reset_new_job_exes(self):
         """Resets the allocated new job executions and deallocates any resources associated with them
