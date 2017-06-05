@@ -29,10 +29,11 @@ class SchedulingNode(object):
 
         self._node = node
 
-        self._allocated_job_exes = []  # Job executions (already on this node) that have been allocated resources
-        self._allocated_new_job_exes = []  # New job executions that have been allocated resources to start on this node
+        self._allocated_queued_job_exes = []  # New queued job executions that have been allocated resources
+        self._allocated_running_job_exes = []  # Running job executions that have been allocated resources
         self._allocated_tasks = []  # Tasks that have been allocated resources from this node
         self._current_tasks = tasks
+
         self._allocated_resources = NodeResources()
         self._offered_resources = resource_set.offered_resources
         self._remaining_resources = NodeResources()
@@ -61,7 +62,7 @@ class SchedulingNode(object):
             return False
         task_resources = task.get_resources()
         if self._remaining_resources.is_sufficient_to_meet(task_resources):
-            self._allocated_job_exes.append(job_exe)
+            self._allocated_running_job_exes.append(job_exe)
             self._allocated_resources.add(task_resources)
             self._remaining_resources.subtract(task_resources)
             return False
@@ -81,7 +82,7 @@ class SchedulingNode(object):
 
         resources = job_exe.required_resources
         if self._remaining_resources.is_sufficient_to_meet(resources):
-            self._allocated_new_job_exes.append(job_exe)
+            self._allocated_queued_job_exes.append(job_exe)
             self._allocated_resources.add(resources)
             self._remaining_resources.subtract(resources)
             job_exe.accepted(self.node_id, resources)
@@ -112,6 +113,31 @@ class SchedulingNode(object):
                 waiting_tasks.append(task)
                 result = True
         return result
+
+    def accept_scheduled_job_exes(self, job_exes):
+        """Hands the node its queued job executions that have now been scheduled in the database and are now running
+
+        :param job_exes: The running job executions that have now been scheduled in the database
+        :type job_exes: list
+        """
+
+        self._allocated_queued_job_exes = []
+        self._allocated_running_job_exes.extend(job_exes)
+
+    def reset_new_job_exes(self):
+        """Resets the allocated new job executions and deallocates any resources associated with them
+        """
+
+        if not self._allocated_queued_job_exes:
+            return
+
+        resources = NodeResources()
+        for new_job_exe in self._allocated_queued_job_exes:
+            resources.add(new_job_exe.required_resources)
+
+        self._allocated_queued_job_exes = []
+        self._allocated_resources.subtract(resources)
+        self._remaining_resources.add(resources)
 
     def score_job_exe_for_reservation(self, job_exe):
         """Returns an integer score (lower is better) indicating how well this node is a fit for reserving (temporarily

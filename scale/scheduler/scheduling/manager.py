@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import datetime
 import logging
 
+from django.db.utils import DatabaseError
 from django.utils.timezone import now
 
 from job.execution.manager import job_exe_mgr
@@ -63,8 +64,8 @@ class SchedulingManager(object):
         fulfilled_nodes = self._schedule_waiting_tasks(nodes, running_job_exes, when)
 
         job_type_limits = self._calculate_job_type_limits(job_types, running_job_exes)
-
-        # TODO: schedule new job_exes, including queries for job_exes and jobs
+        self._schedule_new_job_exes(framework_id, fulfilled_nodes, job_types, job_type_limits, job_type_resources,
+                                    workspaces)
 
         # TODO: grab offers, do start_next_task() if resources are there, and launch tasks
 
@@ -273,13 +274,18 @@ class SchedulingManager(object):
                 available_nodes[node.node_id] = node
 
         try:
-            queued_job_exes = self._process_queue(nodes, job_types, job_type_limits, job_type_resources)
+            queued_job_exes = self._process_queue(available_nodes, job_types, job_type_limits, job_type_resources)
             scheduled_job_exes = self._schedule_new_job_exes_in_database(framework_id, queued_job_exes, workspaces)
-            # TODO: Get the scheduled job exes into scheduling nodes
-        except:
+            job_exe_mgr.schedule_job_exes(scheduled_job_exes.values())
+            for node_id in scheduled_job_exes:
+                if node_id in nodes:
+                    nodes[node_id].accept_scheduled_job_exes(scheduled_job_exes[node_id])
+                else:
+                    logger.error('Scheduled job executions on an unknown node')
+        except DatabaseError:
             logger.exception('Error occurred while scheduling new jobs from the queue')
-            # TODO: reset all scheduled new job exes in scheduling
-            pass
+            for node in available_nodes.values():
+                node.reset_new_job_exes()
 
     @retry_database_query(max_tries=5, base_ms_delay=1000, max_ms_delay=5000)
     def _schedule_new_job_exes_in_database(self, framework_id, job_executions, workspaces):
@@ -291,13 +297,18 @@ class SchedulingManager(object):
         :type job_executions: list
         :param workspaces: A dict of all workspaces stored by name
         :type workspaces: dict
-        :returns: The scheduled job executions
-        :rtype: list
+        :returns: The scheduled job executions stored by node ID
+        :rtype: dict
         """
 
         started = now()
 
-        scheduled_job_executions = Queue.objects.schedule_job_executions(framework_id, job_executions, workspaces)
+        scheduled_job_executions = {}
+        for scheduled_job_execution in Queue.objects.schedule_job_executions(framework_id, job_executions, workspaces):
+            if scheduled_job_execution.node_id in scheduled_job_executions:
+                scheduled_job_executions[scheduled_job_execution.node_id].append(scheduled_job_execution)
+            else:
+                scheduled_job_executions[scheduled_job_execution.node_id] = [scheduled_job_execution]
 
         duration = now() - started
         msg = 'Query to schedule job executions took %.3f seconds'
