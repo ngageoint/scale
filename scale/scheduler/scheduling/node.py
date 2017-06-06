@@ -26,18 +26,19 @@ class SchedulingNode(object):
         self.node_id = node.id
         self.is_ready_for_new_job = node.is_ready_for_new_job()  # Cache this for consistency
         self.is_ready_for_next_job_task = node.is_ready_for_next_job_task()  # Cache this for consistency
+        self.allocated_offers = []
+        self.allocated_resources = NodeResources()
+        self.allocated_tasks = []  # Tasks that have been allocated resources from this node
 
         self._node = node
-
         self._allocated_queued_job_exes = []  # New queued job executions that have been allocated resources
         self._allocated_running_job_exes = []  # Running job executions that have been allocated resources
-        self._allocated_tasks = []  # Tasks that have been allocated resources from this node
         self._current_tasks = tasks
 
-        self._offers = []
-        self._allocated_resources = NodeResources()
+        self._offered_resources = NodeResources()  # The amount of resources that were originally offered
+        self._offered_resources.add(resource_set.offered_resources)
         self._remaining_resources = NodeResources()
-        self._remaining_resources.add(resource_set.offered_resources)
+        self._remaining_resources.add(self._offered_resources)
         self._task_resources = resource_set.task_resources
         self._watermark_resources = resource_set.watermark_resources
 
@@ -63,7 +64,7 @@ class SchedulingNode(object):
         task_resources = task.get_resources()
         if self._remaining_resources.is_sufficient_to_meet(task_resources):
             self._allocated_running_job_exes.append(job_exe)
-            self._allocated_resources.add(task_resources)
+            self.allocated_resources.add(task_resources)
             self._remaining_resources.subtract(task_resources)
             return False
 
@@ -83,7 +84,7 @@ class SchedulingNode(object):
         resources = job_exe.required_resources
         if self._remaining_resources.is_sufficient_to_meet(resources):
             self._allocated_queued_job_exes.append(job_exe)
-            self._allocated_resources.add(resources)
+            self.allocated_resources.add(resources)
             self._remaining_resources.subtract(resources)
             job_exe.accepted(self.node_id, resources)
             return True
@@ -106,15 +107,15 @@ class SchedulingNode(object):
         for task in self._node.get_next_tasks(when):
             task_resources = task.get_resources()
             if self._remaining_resources.is_sufficient_to_meet(task_resources):
-                self._allocated_tasks.append(task)
-                self._allocated_resources.add(task_resources)
+                self.allocated_tasks.append(task)
+                self.allocated_resources.add(task_resources)
                 self._remaining_resources.subtract(task_resources)
             else:
                 waiting_tasks.append(task)
                 result = True
         return result
 
-    def add_offers(self, offers):
+    def add_allocated_offers(self, offers):
         """Adds the resource offers that have been allocated to run this node's tasks
 
         :param offers: The resource offers to add
@@ -125,10 +126,25 @@ class SchedulingNode(object):
         for offer in offers:
             offer_resources.add(offer.resources)
 
-        self._offers = offers
+        self.allocated_offers = offers
 
-        # TODO: get rid of job_exes if not enough resources
-        # TODO: get rid of tasks if not enough resources
+        # If the offers are not enough to cover what we allocated, drop all job execution tasks
+        if not offer_resources.is_sufficient_to_meet(self.allocated_resources):
+            job_exe_resources = NodeResources()
+            for job_exe in self._allocated_running_job_exes:
+                task = job_exe.next_task()
+                if task:
+                    job_exe_resources.add(task.get_resources())
+            self._allocated_running_job_exes = []
+            self.allocated_resources.subtract(job_exe_resources)
+            self._remaining_resources.add(job_exe_resources)
+
+        # If the offers are still not enough to cover what we allocated, drop all tasks
+        if not offer_resources.is_sufficient_to_meet(self.allocated_resources):
+            self.allocated_tasks = []
+            self.allocated_resources = NodeResources()
+            self._remaining_resources = NodeResources()
+            self._remaining_resources.add(self._offered_resources)
 
     def add_scheduled_job_exes(self, job_exes):
         """Hands the node its queued job executions that have now been scheduled in the database and are now running
@@ -139,15 +155,6 @@ class SchedulingNode(object):
 
         self._allocated_queued_job_exes = []
         self._allocated_running_job_exes.extend(job_exes)
-
-    def get_allocated_resources(self):
-        """Returns the resources that have been allocated on this node
-
-        :returns: The allocated resources
-        :rtype: :class:`job.resources.NodeResources`
-        """
-
-        return self._allocated_resources
 
     def reset_new_job_exes(self):
         """Resets the allocated new job executions and deallocates any resources associated with them
@@ -161,7 +168,7 @@ class SchedulingNode(object):
             resources.add(new_job_exe.required_resources)
 
         self._allocated_queued_job_exes = []
-        self._allocated_resources.subtract(resources)
+        self.allocated_resources.subtract(resources)
         self._remaining_resources.add(resources)
 
     def score_job_exe_for_reservation(self, job_exe):
@@ -206,7 +213,7 @@ class SchedulingNode(object):
         total_resources_available = NodeResources()
         total_resources_available.add(self._watermark_resources)
         total_resources_available.subtract(self._task_resources)
-        total_resources_available.subtract(self._allocated_resources)
+        total_resources_available.subtract(self.allocated_resources)
         total_resources_available.subtract(job_exe.required_resources)
 
         # Score is the number of job types that can fit within the estimated resources on this node still available to
@@ -217,3 +224,13 @@ class SchedulingNode(object):
                 score += 1
 
         return True
+
+    def start_job_exe_tasks(self):
+        """Tells the node to start the next task on all scheduled job executions
+        """
+
+        for job_exe in self._allocated_running_job_exes:
+            task = job_exe.start_next_task()
+            if task:
+                self.allocated_tasks.append(task)
+        self._allocated_running_job_exes = []

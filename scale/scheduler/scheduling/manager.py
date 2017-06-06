@@ -6,10 +6,12 @@ import logging
 
 from django.db.utils import DatabaseError
 from django.utils.timezone import now
+from mesos.interface import mesos_pb2
 
 from job.execution.manager import job_exe_mgr
 from job.resources import NodeResources
 from job.tasks.manager import task_mgr
+from mesos_api.tasks import create_mesos_task
 from queue.job_exe import QueuedJobExecution
 from queue.models import Queue
 from scheduler.cleanup.manager import cleanup_mgr
@@ -25,8 +27,10 @@ from util.retry import retry_database_query
 PROCESS_QUEUE_WARN_THRESHOLD = datetime.timedelta(milliseconds=300)
 # Maximum number of jobs to grab off of the queue at one time
 QUEUE_LIMIT = 500
-# Warning threshold for queue processing duration
-SCHEDULE_QUERY_WARN_THRESHOLD = datetime.timedelta(milliseconds=500)
+# Warning threshold for scheduling query duration
+SCHEDULE_QUERY_WARN_THRESHOLD = datetime.timedelta(milliseconds=300)
+# Warning threshold for task launch duration
+LAUNCH_TASK_WARN_THRESHOLD = datetime.timedelta(milliseconds=300)
 
 # It is considered a resource shortage if a task waits this many generations without being scheduled
 TASK_SHORTAGE_WAIT_COUNT = 10
@@ -45,11 +49,14 @@ class SchedulingManager(object):
 
         self._waiting_tasks = {}  # {Task ID: int}
 
-    def perform_scheduling(self):
+    def perform_scheduling(self, driver, when):
         """Organizes and analyzes the cluster resources, schedules new job executions, and launches tasks
-        """
 
-        when = now()
+        :param driver: The Mesos scheduler driver
+        :type driver: :class:`mesos_api.mesos.SchedulerDriver`
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
+        """
 
         # Get framework ID first to make sure it doesn't change throughout scheduling process
         framework_id = scheduler_mgr.framework_id
@@ -67,8 +74,8 @@ class SchedulingManager(object):
         self._schedule_new_job_exes(framework_id, fulfilled_nodes, job_types, job_type_limits, job_type_resources,
                                     workspaces)
 
-        # TODO: Allocate offers
-        # TODO: Launch tasks (do start_next_task(), task_mgr.launch() and Mesos launch)
+        self._allocate_offers(nodes)
+        self._launch_tasks(driver, nodes)
 
     def _allocate_offers(self, nodes):
         """Allocates resource offers to the node
@@ -79,7 +86,7 @@ class SchedulingManager(object):
 
         allocated_resources = {}
         for node in nodes.values():
-            allocated_resources[node.node_id] = node.get_allocated_resources()
+            allocated_resources[node.node_id] = node.allocated_resources
 
         resources_offers = resource_mgr.allocate_offers(allocated_resources)
 
@@ -87,7 +94,7 @@ class SchedulingManager(object):
             offers = []
             if node.agent_id in resources_offers:
                 offers = resources_offers[node.agent_id]
-            node.add_offers(offers)
+            node.add_allocated_offers(offers)
 
     def _calculate_job_type_limits(self, job_types, running_job_exes):
         """Calculates and returns the available job type limits
@@ -133,6 +140,70 @@ class SchedulingManager(object):
                 ignore_job_type_ids.add(job_type_id)
 
         return ignore_job_type_ids
+
+    def _launch_tasks(self, driver, nodes):
+        """Launches all of the tasks that have been scheduled on the given nodes
+
+        :param driver: The Mesos scheduler driver
+        :type driver: :class:`mesos_api.mesos.SchedulerDriver`
+        :param nodes: The dict of all scheduling nodes stored by node ID
+        :type nodes: dict
+        """
+
+        started = now()
+
+        # Start and launch tasks in the task manager
+        all_tasks = []
+        for node in nodes:
+            node.start_job_exe_tasks()
+            all_tasks.extend(node.allocated_tasks)
+        task_mgr.launch_tasks(all_tasks, started)
+
+        # Launch tasks in Mesos
+        node_count = 0
+        total_node_count = 0
+        total_offer_count = 0
+        total_task_count = 0
+        total_offer_resources = NodeResources()
+        total_task_resources = NodeResources()
+        for node in nodes:
+            mesos_offer_ids = []
+            mesos_tasks = []
+            offers = node.add_allocated_offers
+            for offer in offers:
+                total_offer_count += 1
+                total_offer_resources.add(offer.resources)
+                mesos_offer_id = mesos_pb2.OfferID()
+                mesos_offer_id.value = offer.id
+                mesos_offer_ids.append(mesos_offer_id)
+            tasks = node.allocated_tasks
+            for task in tasks:
+                total_task_resources.add(task.get_resources())
+                mesos_tasks.append(create_mesos_task(task))
+            task_count = len(tasks)
+            total_task_count += task_count
+            if task_count:
+                node_count += 1
+            if mesos_offer_ids:
+                total_node_count += 1
+                try:
+                    driver.launchTasks(mesos_offer_ids, mesos_tasks)
+                except Exception:
+                    logger.exception('Error occurred while launching tasks on node %s', node.hostname)
+
+        duration = now() - started
+        msg = 'Launching tasks took %.3f seconds'
+        if duration > LAUNCH_TASK_WARN_THRESHOLD:
+            logger.warning(msg, duration.total_seconds())
+        else:
+            logger.debug(msg, duration.total_seconds())
+
+        declined_resources = NodeResources()
+        declined_resources.add(total_offer_resources)
+        declined_resources.subtract(total_task_resources)
+        logger.info('Accepted %d offer(s) from %d node(s), launched %d task(s) with %s on %d node(s), declined %s',
+                    total_offer_count, total_node_count, total_task_count, total_task_resources.to_logging_string(),
+                    node_count, declined_resources.to_logging_string())
 
     def _prepare_nodes(self, tasks, when):
         """Prepares the nodes to use for scheduling

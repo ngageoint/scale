@@ -184,18 +184,18 @@ class Node(object):
 
         with self._lock:
             if self._cleanup_task and self._cleanup_task.id == task.id:
-                logger.warning('Cleanup task on host %s timed out', self._hostname)
+                logger.warning('Cleanup task on node %s timed out', self._hostname)
                 if self._cleanup_task.has_ended:
                     self._cleanup_task = None
                 self._conditions.handle_cleanup_task_timeout()
             elif self._health_task and self._health_task.id == task.id:
-                logger.warning('Health check task on host %s timed out', self._hostname)
+                logger.warning('Health check task on node %s timed out', self._hostname)
                 if self._health_task.has_ended:
                     self._health_task = None
                 self._last_heath_task = now()
                 self._conditions.handle_health_task_timeout()
             elif self._pull_task and self._pull_task.id == task.id:
-                logger.warning('Scale image pull task on host %s timed out', self._hostname)
+                logger.warning('Scale image pull task on node %s timed out', self._hostname)
                 if self._pull_task.has_ended:
                     self._pull_task = None
                 self._conditions.handle_pull_task_timeout()
@@ -419,10 +419,10 @@ class Node(object):
                 self._conditions.update_cleanup_count(self._cleanup.get_num_job_exes())
             self._conditions.handle_cleanup_task_completed()
         elif task_update.status == TaskStatusUpdate.FAILED:
-            logger.warning('Cleanup task on host %s failed', self._hostname)
+            logger.warning('Cleanup task on node %s failed', self._hostname)
             self._conditions.handle_cleanup_task_failed()
         elif task_update.status == TaskStatusUpdate.KILLED:
-            logger.warning('Cleanup task on host %s killed', self._hostname)
+            logger.warning('Cleanup task on node %s killed', self._hostname)
         if self._cleanup_task.has_ended:
             self._cleanup_task = None
 
@@ -437,11 +437,11 @@ class Node(object):
             self._last_heath_task = now()
             self._conditions.handle_health_task_completed()
         elif task_update.status == TaskStatusUpdate.FAILED:
-            logger.warning('Health check task on host %s failed', self._hostname)
+            logger.warning('Health check task on node %s failed', self._hostname)
             self._last_heath_task = now()
             self._conditions.handle_health_task_failed(task_update)
         elif task_update.status == TaskStatusUpdate.KILLED:
-            logger.warning('Health check task on host %s killed', self._hostname)
+            logger.warning('Health check task on node %s killed', self._hostname)
         if self._health_task.has_ended:
             self._health_task = None
 
@@ -456,10 +456,10 @@ class Node(object):
             self._image_pull_completed()
             self._conditions.handle_pull_task_completed()
         elif task_update.status == TaskStatusUpdate.FAILED:
-            logger.warning('Scale image pull task on host %s failed', self._hostname)
+            logger.warning('Scale image pull task on node %s failed', self._hostname)
             self._conditions.handle_pull_task_failed()
         elif task_update.status == TaskStatusUpdate.KILLED:
-            logger.warning('Scale image pull task on host %s killed', self._hostname)
+            logger.warning('Scale image pull task on node %s killed', self._hostname)
         if self._pull_task.has_ended:
             self._pull_task = None
 
@@ -486,6 +486,6 @@ class Node(object):
 
         if old_state != self._state:
             if self._state == self.DEGRADED:
-                logger.warning('Host %s is now in %s state', self._hostname, self._state.state)
+                logger.warning('Node %s is now in %s state', self._hostname, self._state.state)
             else:
-                logger.info('Host %s is now in %s state', self._hostname, self._state.state)
+                logger.info('Node %s is now in %s state', self._hostname, self._state.state)
