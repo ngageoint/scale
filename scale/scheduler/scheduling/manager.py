@@ -56,6 +56,8 @@ class SchedulingManager(object):
         :type driver: :class:`mesos_api.mesos.SchedulerDriver`
         :param when: The current time
         :type when: :class:`datetime.datetime`
+        :returns: The number of tasks that were scheduled
+        :rtype: int
         """
 
         # Get framework ID first to make sure it doesn't change throughout scheduling process
@@ -75,7 +77,7 @@ class SchedulingManager(object):
                                     workspaces)
 
         self._allocate_offers(nodes)
-        self._launch_tasks(driver, nodes)
+        return self._launch_tasks(driver, nodes)
 
     def _allocate_offers(self, nodes):
         """Allocates resource offers to the node
@@ -86,7 +88,7 @@ class SchedulingManager(object):
 
         allocated_resources = {}
         for node in nodes.values():
-            allocated_resources[node.node_id] = node.allocated_resources
+            allocated_resources[node.agent_id] = node.allocated_resources
 
         resources_offers = resource_mgr.allocate_offers(allocated_resources, now())  # Use most recent time
 
@@ -115,6 +117,8 @@ class SchedulingManager(object):
         for running_job_exe in running_job_exes:
             if running_job_exe.job_type_id in job_type_limits:
                 job_type_limits[running_job_exe.job_type_id] -= 1
+
+        return job_type_limits
 
     def _calculate_job_types_to_ignore(self, job_types, job_type_limits):
         """Calculates and returns the set of ID for job types to ignore on the queue
@@ -148,13 +152,15 @@ class SchedulingManager(object):
         :type driver: :class:`mesos_api.mesos.SchedulerDriver`
         :param nodes: The dict of all scheduling nodes stored by node ID
         :type nodes: dict
+        :returns: The number of tasks that were launched
+        :rtype: int
         """
 
         started = now()
 
         # Start and launch tasks in the task manager
         all_tasks = []
-        for node in nodes:
+        for node in nodes.values():
             node.start_job_exe_tasks()
             all_tasks.extend(node.allocated_tasks)
         task_mgr.launch_tasks(all_tasks, started)
@@ -166,10 +172,10 @@ class SchedulingManager(object):
         total_task_count = 0
         total_offer_resources = NodeResources()
         total_task_resources = NodeResources()
-        for node in nodes:
+        for node in nodes.values():
             mesos_offer_ids = []
             mesos_tasks = []
-            offers = node.add_allocated_offers
+            offers = node.allocated_offers
             for offer in offers:
                 total_offer_count += 1
                 total_offer_resources.add(offer.resources)
@@ -204,6 +210,7 @@ class SchedulingManager(object):
         logger.info('Accepted %d offer(s) from %d node(s), launched %d task(s) with %s on %d node(s), declined %s',
                     total_offer_count, total_node_count, total_task_count, total_task_resources.to_logging_string(),
                     node_count, declined_resources.to_logging_string())
+        return total_task_count
 
     def _prepare_nodes(self, tasks, when):
         """Prepares the nodes to use for scheduling
@@ -367,21 +374,24 @@ class SchedulingManager(object):
         try:
             queued_job_exes = self._process_queue(available_nodes, job_types, job_type_limits, job_type_resources)
             scheduled_job_exes = self._schedule_new_job_exes_in_database(framework_id, queued_job_exes, workspaces)
-            job_exe_mgr.schedule_job_exes(scheduled_job_exes.values())
+            all_scheduled_job_exes = []
+            for node_id in scheduled_job_exes:
+                all_scheduled_job_exes.extend(scheduled_job_exes[node_id])
+            job_exe_mgr.schedule_job_exes(all_scheduled_job_exes)
             node_count = 0
             job_exe_count = 0
+            scheduled_resources = NodeResources()
             for node_id in scheduled_job_exes:
                 if node_id in nodes:
                     node_count += 1
                     nodes[node_id].add_scheduled_job_exes(scheduled_job_exes[node_id])
+                    for scheduled_job_exe in scheduled_job_exes[node_id]:
+                        first_task = scheduled_job_exe.next_task()
+                        if first_task:
+                            scheduled_resources.add(first_task.get_resources())
+                            job_exe_count += 1
                 else:
                     logger.error('Scheduled jobs on an unknown node')
-            scheduled_resources = NodeResources()
-            for scheduled_job_exe in scheduled_job_exes.values():
-                first_task = scheduled_job_exe.next_task()
-                if first_task:
-                    scheduled_resources.add(first_task.get_resources())
-                    job_exe_count += 1
             logger.info('Scheduled %d new job(s) with %s on %d node(s)', job_exe_count,
                         scheduled_resources.to_logging_string(), node_count)
         except DatabaseError:

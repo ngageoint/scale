@@ -62,6 +62,14 @@ class ResourceManager(object):
 
         return allocated_offers
 
+    def clear(self):
+        """Clears all offer data from the manager. This method is intended for testing only.
+        """
+
+        self._agent_resources = {}
+        self._last_watermark_reset = None
+        self._new_offers = {}
+
     def generate_status_json(self, status_dict):
         """Generates the portion of the status JSON that describes the resources
 
@@ -151,7 +159,7 @@ class ResourceManager(object):
                 results[agent_resources.agent_id] = resource_set
 
             # Reset rolling watermarks if period has passed
-            if when > self._last_watermark_reset + WATERMARK_RESET_PERIOD:
+            if not self._last_watermark_reset or when > self._last_watermark_reset + WATERMARK_RESET_PERIOD:
                 for agent_resources in self._agent_resources.values():
                     agent_resources.reset_watermark()
                 self._last_watermark_reset = when

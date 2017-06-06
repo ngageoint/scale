@@ -108,13 +108,13 @@ class NodeOffers(object):
                 return NodeOffers.NOT_ENOUGH_CPUS
             if self._available_mem < required_resources.mem:
                 return NodeOffers.NOT_ENOUGH_MEM
-            if self._available_disk < required_resources.disk_total:
+            if self._available_disk < required_resources.disk:
                 return NodeOffers.NOT_ENOUGH_DISK
             provided_resources = required_resources
 
             self._available_cpus -= provided_resources.cpus
             self._available_mem -= provided_resources.mem
-            self._available_disk -= provided_resources.disk_total
+            self._available_disk -= provided_resources.disk
             job_exe.accepted(self._node.id, provided_resources)
             self._accepted_new_job_exes[job_exe.id] = job_exe
             return NodeOffers.ACCEPTED
@@ -137,7 +137,9 @@ class NodeOffers(object):
             if len(self._offers) == 0:
                 return NodeOffers.NO_OFFERS
 
-            required_resources = job_exe.next_task_resources()
+            required_resources = None
+            if job_exe.next_task():
+                required_resources = job_exe.next_task().get_resources()
             if not required_resources:
                 return NodeOffers.TASK_INVALID
             if self._available_cpus < required_resources.cpus:

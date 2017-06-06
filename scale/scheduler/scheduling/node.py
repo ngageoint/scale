@@ -223,7 +223,7 @@ class SchedulingNode(object):
             if total_resources_available.is_sufficient_to_meet(job_type_resource):
                 score += 1
 
-        return True
+        return score
 
     def start_job_exe_tasks(self):
         """Tells the node to start the next task on all scheduled job executions

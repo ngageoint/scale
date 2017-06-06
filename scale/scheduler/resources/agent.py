@@ -50,7 +50,7 @@ class AgentResources(object):
         allocated_resources = NodeResources()
         available_offer_ids = set(self._offers.keys())
         # Automatically include all offers that have been held too long
-        for offer in self._offers:
+        for offer in self._offers.values():
             if when - offer.received >= MAX_OFFER_HOLD_DURATION:
                 allocated_offers[offer.id] = offer
                 allocated_resources.add(offer.resources)

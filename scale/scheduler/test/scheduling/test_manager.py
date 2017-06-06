@@ -14,23 +14,26 @@ from queue.models import Queue
 from queue.test import utils as queue_test_utils
 from scheduler.models import Scheduler
 from scheduler.node.manager import node_mgr
-from scheduler.offer.manager import offer_mgr
-from scheduler.offer.offer import ResourceOffer
+from scheduler.resources.manager import resource_mgr
+from scheduler.resources.offer import ResourceOffer
+from scheduler.scheduling.manager import SchedulingManager
 from scheduler.sync.job_type_manager import job_type_mgr
 from scheduler.sync.scheduler_manager import scheduler_mgr
-from scheduler.threads.schedule import SchedulingThread
 
 
-class TestSchedulingThread(TransactionTestCase):
+class TestSchedulingManager(TransactionTestCase):
 
     def setUp(self):
         django.setup()
 
+        self.framework_id = '1234'
         Scheduler.objects.initialize_scheduler()
         self._driver = MagicMock()
 
         scheduler_mgr.sync_with_database()
-        offer_mgr.clear()
+        scheduler_mgr.update_from_mesos(framework_id=self.framework_id)
+        resource_mgr.clear()
+        job_exe_mgr.clear()
 
         self.node_agent_1 = 'agent_1'
         self.node_agent_2 = 'agent_2'
@@ -41,10 +44,11 @@ class TestSchedulingThread(TransactionTestCase):
         with patch('scheduler.node.manager.api.get_slaves') as mock_get_slaves:
             mock_get_slaves.return_value = self.slave_infos
             node_mgr.sync_with_database('master_host', 5050, scheduler_mgr.scheduler)
-        # Ignore initial cleanup tasks and health check tasks
+        # Ignore initial cleanup, health check, and image pull tasks
         for node in node_mgr.get_nodes():
             node._last_heath_task = now()
             node._initial_cleanup_completed()
+            node._is_image_pulled = True
             node._update_state()
 
         self.queue_1 = queue_test_utils.create_queue(cpus_required=4.0, mem_required=1024.0, disk_in_required=100.0,
@@ -53,18 +57,19 @@ class TestSchedulingThread(TransactionTestCase):
                                                      disk_out_required=45.0, disk_total_required=445.0)
         job_type_mgr.sync_with_database()
 
-        self._scheduling_thread = SchedulingThread(self._driver, '123')
-
     @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
     def test_successful_schedule(self, mock_taskinfo):
         """Tests successfully scheduling tasks"""
         mock_taskinfo.return_value = MagicMock()
 
-        offer_1 = ResourceOffer('offer_1', self.node_agent_1, NodeResources(cpus=2.0, mem=1024.0, disk=1024.0))
-        offer_2 = ResourceOffer('offer_2', self.node_agent_2, NodeResources(cpus=25.0, mem=2048.0, disk=2048.0))
-        offer_mgr.add_new_offers([offer_1, offer_2])
+        offer_1 = ResourceOffer('offer_1', self.node_agent_1, self.framework_id,
+                                NodeResources(cpus=2.0, mem=1024.0, disk=1024.0), now())
+        offer_2 = ResourceOffer('offer_2', self.node_agent_2, self.framework_id,
+                                NodeResources(cpus=25.0, mem=2048.0, disk=2048.0), now())
+        resource_mgr.add_new_offers([offer_1, offer_2])
 
-        num_tasks = self._scheduling_thread._perform_scheduling()
+        scheduling_manager = SchedulingManager()
+        num_tasks = scheduling_manager.perform_scheduling(self._driver, now())
         self.assertEqual(num_tasks, 2)  # Schedule both queued job executions
 
     @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
@@ -72,13 +77,19 @@ class TestSchedulingThread(TransactionTestCase):
         """Tests running the scheduling thread with a paused scheduler"""
         mock_taskinfo.return_value = MagicMock()
 
-        offer_1 = ResourceOffer('offer_1', self.node_agent_1, NodeResources(cpus=2.0, mem=1024.0, disk=1024.0))
-        offer_2 = ResourceOffer('offer_2', self.node_agent_2, NodeResources(cpus=25.0, mem=2048.0, disk=2048.0))
-        offer_mgr.add_new_offers([offer_1, offer_2])
+        offer_1 = ResourceOffer('offer_1', self.node_agent_1, self.framework_id,
+                                NodeResources(cpus=2.0, mem=1024.0, disk=1024.0), now())
+        offer_2 = ResourceOffer('offer_2', self.node_agent_2, self.framework_id,
+                                NodeResources(cpus=25.0, mem=2048.0, disk=2048.0), now())
+        resource_mgr.add_new_offers([offer_1, offer_2])
         Scheduler.objects.update(is_paused=True)
         scheduler_mgr.sync_with_database()
+        with patch('scheduler.node.manager.api.get_slaves') as mock_get_slaves:
+            mock_get_slaves.return_value = self.slave_infos
+            node_mgr.sync_with_database('master_host', 5050, scheduler_mgr.scheduler)
 
-        num_tasks = self._scheduling_thread._perform_scheduling()
+        scheduling_manager = SchedulingManager()
+        num_tasks = scheduling_manager.perform_scheduling(self._driver, now())
         self.assertEqual(num_tasks, 0)
 
     @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
@@ -101,18 +112,12 @@ class TestSchedulingThread(TransactionTestCase):
         # One job of this type is already running
         job_exe_mgr.schedule_job_exes([RunningJobExecution(job_exe_1)])
 
-        offer_1 = ResourceOffer('offer_1', self.node_agent_1, NodeResources(cpus=200.0, mem=102400.0, disk=102400.0))
-        offer_2 = ResourceOffer('offer_2', self.node_agent_2, NodeResources(cpus=200.0, mem=204800.0, disk=204800.0))
-        offer_mgr.add_new_offers([offer_1, offer_2])
+        offer_1 = ResourceOffer('offer_1', self.node_agent_1, self.framework_id,
+                                NodeResources(cpus=2.0, mem=1024.0, disk=1024.0), now())
+        offer_2 = ResourceOffer('offer_2', self.node_agent_2, self.framework_id,
+                                NodeResources(cpus=25.0, mem=2048.0, disk=2048.0), now())
+        resource_mgr.add_new_offers([offer_1, offer_2])
 
-        # Ignore Docker pull tasks
-        for node in node_mgr.get_nodes():
-            node._is_image_pulled = True
-
-        # Ignore cleanup tasks
-        for node in node_mgr.get_nodes():
-            node._initial_cleanup_completed()
-            node._update_state()
-
-        num_tasks = self._scheduling_thread._perform_scheduling()
+        scheduling_manager = SchedulingManager()
+        num_tasks = scheduling_manager.perform_scheduling(self._driver, now())
         self.assertEqual(num_tasks, 3)  # One is already running, should only be able to schedule 3 more

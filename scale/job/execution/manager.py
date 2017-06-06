@@ -25,6 +25,13 @@ class JobExecutionManager(object):
         self._lock = threading.Lock()
         self._metrics = TotalJobExeMetrics(now())
 
+    def clear(self):
+        """Clears all data from the manager. This method is intended for testing only.
+        """
+
+        self._running_job_exes = {}
+        self._metrics = TotalJobExeMetrics(now())
+
     def generate_status_json(self, nodes_list, when):
         """Generates the portion of the status JSON that describes the job execution metrics
 
