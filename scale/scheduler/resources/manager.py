@@ -35,7 +35,7 @@ class ResourceManager(object):
             for offer in offers:
                 self._new_offers[offer.id] = offer
 
-    def allocate_offers(self, resources):
+    def allocate_offers(self, resources, when):
         """Directs all agents to allocate offers sufficient to match the given resources. Any offers that have been held
         too long will automatically be included (including agents that resources were not requested from). It's possible
         that the offer resources returned for an agent are less than requested or that an agent is not included in the
@@ -43,6 +43,8 @@ class ResourceManager(object):
 
         :param resources: Dict where agent ID maps to the requested resources
         :type resources: dict
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
         :returns: Dict where agent ID maps to a list of the allocated offers
         :rtype: dict
         """
@@ -54,7 +56,7 @@ class ResourceManager(object):
                     requested_resources = resources[agent_resources.agent_id]
                 else:
                     requested_resources = NodeResources()
-                offer_list = agent_resources.allocate_offers(requested_resources)
+                offer_list = agent_resources.allocate_offers(requested_resources, when)
                 if offer_list:
                     allocated_offers[agent_resources.agent_id] = offer_list
 

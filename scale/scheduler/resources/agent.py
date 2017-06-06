@@ -1,13 +1,14 @@
 """Defines the class that represents an agent's set of resource offers"""
 from __future__ import unicode_literals
 
+import datetime
 import logging
 from collections import namedtuple
 
 from job.resources import NodeResources
 
-# Maximum number of generations that each offer should be held
-MAX_OFFER_GENERATIONS = 10
+# Maximum time that each offer should be held
+MAX_OFFER_HOLD_DURATION = datetime.timedelta(seconds=10)
 
 ResourceSet = namedtuple('ResourceSet', ['offered_resources', 'task_resources', 'watermark_resources'])
 
@@ -32,13 +33,15 @@ class AgentResources(object):
         self._watermark_resources = NodeResources()  # Highest level of offer + task resources
         self._recent_watermark_resources = NodeResources()  # Recent watermark, used to provide a rolling watermark
 
-    def allocate_offers(self, resources):
+    def allocate_offers(self, resources, when):
         """Directs the agent to allocate offers sufficient to match the given resources. Any offers that have been held
         too long will automatically be included. It's possible that the offer resources returned are less than
         requested.
 
         :param resources: The requested resources
         :type resources: :class:`job.resources.NodeResources`
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
         :returns: The list of allocated offers
         :rtype: [:class:`scheduler.resources.offer.ResourceOffer`]
         """
@@ -46,14 +49,12 @@ class AgentResources(object):
         allocated_offers = {}
         allocated_resources = NodeResources()
         available_offer_ids = set(self._offers.keys())
-        # Automatically include all offers that have hit max generations
+        # Automatically include all offers that have been held too long
         for offer in self._offers:
-            if offer.generation >= MAX_OFFER_GENERATIONS:
+            if when - offer.received >= MAX_OFFER_HOLD_DURATION:
                 allocated_offers[offer.id] = offer
                 allocated_resources.add(offer.resources)
                 available_offer_ids.discard(offer.id)
-            else:
-                offer.generation += 1
 
         if self._offer_resources.is_sufficient_to_meet(resources):
             # We have enough resources to meet the request, so keep allocating offers until we get enough

@@ -88,7 +88,7 @@ class SchedulingManager(object):
         for node in nodes.values():
             allocated_resources[node.node_id] = node.allocated_resources
 
-        resources_offers = resource_mgr.allocate_offers(allocated_resources)
+        resources_offers = resource_mgr.allocate_offers(allocated_resources, now())  # Use most recent time
 
         for node in nodes.values():
             offers = []
