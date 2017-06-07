@@ -27,6 +27,9 @@
                     vm.nodesError = null;
                     vm.runningJobs = [];
                     vm.completedJobs = [];
+                    vm.systemJobs = [];
+                    vm.algorithmJobs = [];
+                    vm.dataJobs = [];
                     nodes = data.nodes;
                     vm.nodeStatus = _.find(nodes, { id: vm.nodeId });
                     _.forEach(vm.nodeStatus.job_executions.running.by_job_type, function (running) {
