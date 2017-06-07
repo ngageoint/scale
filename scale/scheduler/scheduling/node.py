@@ -81,6 +81,9 @@ class SchedulingNode(object):
         :rtype: bool
         """
 
+        if not self.is_ready_for_new_job:
+            return False
+
         resources = job_exe.required_resources
         if self._remaining_resources.is_sufficient_to_meet(resources):
             self._allocated_queued_job_exes.append(job_exe)
@@ -116,7 +119,8 @@ class SchedulingNode(object):
         return result
 
     def add_allocated_offers(self, offers):
-        """Adds the resource offers that have been allocated to run this node's tasks
+        """Adds the resource offers that have been allocated to run this node's tasks. If the offer resources are not
+        enough to cover the current allocation, job executions and tasks are removed as necessary.
 
         :param offers: The resource offers to add
         :type offers: list

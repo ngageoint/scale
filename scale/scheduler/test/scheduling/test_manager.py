@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 
 import django
-from django.test import TransactionTestCase
+from django.test import TestCase
 from django.utils.timezone import now
 from mock import MagicMock, patch
 
@@ -21,7 +21,7 @@ from scheduler.sync.job_type_manager import job_type_mgr
 from scheduler.sync.scheduler_manager import scheduler_mgr
 
 
-class TestSchedulingManager(TransactionTestCase):
+class TestSchedulingManager(TestCase):
 
     def setUp(self):
         django.setup()
@@ -59,7 +59,7 @@ class TestSchedulingManager(TransactionTestCase):
 
     @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
     def test_successful_schedule(self, mock_taskinfo):
-        """Tests successfully scheduling tasks"""
+        """Tests successfully calling perform_scheduling()"""
         mock_taskinfo.return_value = MagicMock()
 
         offer_1 = ResourceOffer('offer_1', self.node_agent_1, self.framework_id,
@@ -74,7 +74,7 @@ class TestSchedulingManager(TransactionTestCase):
 
     @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
     def test_paused_scheduler(self, mock_taskinfo):
-        """Tests running the scheduling thread with a paused scheduler"""
+        """Tests calling perform_scheduling() with a paused scheduler"""
         mock_taskinfo.return_value = MagicMock()
 
         offer_1 = ResourceOffer('offer_1', self.node_agent_1, self.framework_id,
@@ -94,7 +94,7 @@ class TestSchedulingManager(TransactionTestCase):
 
     @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
     def test_job_type_limit(self, mock_taskinfo):
-        """Tests running the scheduling thread with a job type limit"""
+        """Tests calling perform_scheduling() with a job type limit"""
         mock_taskinfo.return_value = MagicMock()
 
         Queue.objects.all().delete()
