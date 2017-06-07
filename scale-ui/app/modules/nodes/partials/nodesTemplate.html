@@ -88,7 +88,7 @@
 <script type="text/ng-template" id="runningJobs.html">
     <div class="ui-grid-cell-contents">
         <div class="label-container">
-            <div class="label label-default" ng-repeat="job in row.entity.running_jobs" tooltip-append-to-body="true" uib-tooltip="{{ job.jobType.title }}"><i class="fa fa-fw" ng-bind-html="'&#x' + job.jobType.icon_code"></i> {{ job.count }}</div>
+            <div class="label label-default" ng-repeat="job in row.entity.running_jobs" tooltip-append-to-body="true" uib-tooltip="{{ job.jobType.title }} v{{ job.jobType.version }}"><i class="fa fa-fw" ng-bind-html="'&#x' + job.jobType.icon_code"></i> {{ job.count }}</div>
         </div>
     </div>
 </script>
