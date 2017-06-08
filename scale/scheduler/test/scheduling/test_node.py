@@ -527,3 +527,115 @@ class TestSchedulingNode(TestCase):
         self.assertEqual(len(scheduling_node._allocated_queued_job_exes), 0)
         self.assertTrue(scheduling_node.allocated_resources.is_equal(NodeResources()))
         self.assertTrue(scheduling_node._remaining_resources.is_equal(offered_resources))
+
+    def test_score_job_exe_for_scheduling(self):
+        """Tests calling score_job_exe_for_scheduling() successfully"""
+
+        node = MagicMock()
+        node.hostname = 'host_1'
+        node.id = 1
+        node.is_ready_for_new_job = MagicMock()
+        node.is_ready_for_new_job.return_value = True
+        node.is_ready_for_next_job_task = MagicMock()
+        node.is_ready_for_next_job_task.return_value = True
+        offered_resources = NodeResources(cpus=20.0, mem=100.0)
+        task_resources = NodeResources(cpus=100.0, mem=500.0)
+        watermark_resources = NodeResources(cpus=200.0, mem=700.0)
+        resource_set = ResourceSet(offered_resources, task_resources, watermark_resources)
+        scheduling_node = SchedulingNode('agent_1', node, [], resource_set)
+        # Allocate 10 CPUs and 50 MiB memory to existing job execution
+        job_exe_model = job_test_utils.create_job_exe()
+        job_exe_model.cpus_scheduled = 10.0
+        job_exe_model.mem_scheduled = 50.0
+        job_exe_model.disk_in_scheduled = 0.0
+        job_exe_model.disk_out_scheduled = 0.0
+        job_exe_model.disk_total_scheduled = 0.0
+        job_exe = RunningJobExecution(job_exe_model)
+        scheduling_node.accept_job_exe_next_task(job_exe, [])
+
+        # Should have 10 CPUs and 50 MiB memory left, so this should be scheduled
+        queue_model = queue_test_utils.create_queue(cpus_required=5.0, mem_required=40.0, disk_in_required=0.0,
+                                                    disk_out_required=0.0, disk_total_required=0.0)
+        job_exe = QueuedJobExecution(queue_model)
+        # Expected available 85 CPUs and 110 MiB memory "left" on node
+        # (watermark - current tasks - allocated - new job we are scoring)
+        # First 2 job types should fit, next 2 are too big, so score should be 2
+        job_type_resource_1 = NodeResources(cpus=2.0, mem=10.0)
+        job_type_resource_2 = NodeResources(cpus=85.0, mem=109.0)
+        job_type_resource_3 = NodeResources(cpus=86.0, mem=10.0)
+        job_type_resource_4 = NodeResources(cpus=2.0, mem=111.0)
+
+        score = scheduling_node.score_job_exe_for_scheduling(job_exe, [job_type_resource_1, job_type_resource_2,
+                                                                       job_type_resource_3, job_type_resource_4])
+        self.assertEqual(score, 2)
+
+    def test_score_job_exe_for_scheduling_insufficient_resources(self):
+        """Tests calling score_job_exe_for_scheduling() when there are not enough resources to schedule the job"""
+
+        node = MagicMock()
+        node.hostname = 'host_1'
+        node.id = 1
+        node.is_ready_for_new_job = MagicMock()
+        node.is_ready_for_new_job.return_value = True
+        node.is_ready_for_next_job_task = MagicMock()
+        node.is_ready_for_next_job_task.return_value = True
+        offered_resources = NodeResources(cpus=20.0, mem=100.0)
+        task_resources = NodeResources(cpus=100.0, mem=500.0)
+        watermark_resources = NodeResources(cpus=200.0, mem=700.0)
+        resource_set = ResourceSet(offered_resources, task_resources, watermark_resources)
+        scheduling_node = SchedulingNode('agent_1', node, [], resource_set)
+        # Allocate 10 CPUs and 50 MiB memory to existing job execution
+        job_exe_model = job_test_utils.create_job_exe()
+        job_exe_model.cpus_scheduled = 10.0
+        job_exe_model.mem_scheduled = 50.0
+        job_exe_model.disk_in_scheduled = 0.0
+        job_exe_model.disk_out_scheduled = 0.0
+        job_exe_model.disk_total_scheduled = 0.0
+        job_exe = RunningJobExecution(job_exe_model)
+        scheduling_node.accept_job_exe_next_task(job_exe, [])
+
+        # Should have 10 CPUs and 50 MiB memory left, so this job execution is too big
+        queue_model = queue_test_utils.create_queue(cpus_required=15.0, mem_required=40.0, disk_in_required=0.0,
+                                                    disk_out_required=0.0, disk_total_required=0.0)
+        job_exe = QueuedJobExecution(queue_model)
+
+        score = scheduling_node.score_job_exe_for_scheduling(job_exe, [])
+        self.assertIsNone(score)
+
+    def test_start_job_exe_tasks(self):
+        """Tests calling start_job_exe_tasks() successfully"""
+
+        node = MagicMock()
+        node.hostname = 'host_1'
+        node.id = 1
+        node.is_ready_for_new_job = MagicMock()
+        node.is_ready_for_new_job.return_value = True
+        node.is_ready_for_next_job_task = MagicMock()
+        node.is_ready_for_next_job_task.return_value = True
+        offered_resources = NodeResources(cpus=20.0, mem=100.0)
+        watermark_resources = NodeResources(cpus=200.0, mem=700.0)
+        resource_set = ResourceSet(offered_resources, NodeResources(), watermark_resources)
+        scheduling_node = SchedulingNode('agent_1', node, [], resource_set)
+        job_exe_model_1 = job_test_utils.create_job_exe()
+        job_exe_model_1.cpus_scheduled = 10.0
+        job_exe_model_1.mem_scheduled = 50.0
+        job_exe_model_1.disk_in_scheduled = 0.0
+        job_exe_model_1.disk_out_scheduled = 0.0
+        job_exe_model_1.disk_total_scheduled = 0.0
+        job_exe_1 = RunningJobExecution(job_exe_model_1)
+        job_exe_model_2 = job_test_utils.create_job_exe()
+        job_exe_model_2.cpus_scheduled = 5.0
+        job_exe_model_2.mem_scheduled = 25.0
+        job_exe_model_2.disk_in_scheduled = 0.0
+        job_exe_model_2.disk_out_scheduled = 0.0
+        job_exe_model_2.disk_total_scheduled = 0.0
+        job_exe_2 = RunningJobExecution(job_exe_model_2)
+        scheduling_node.accept_job_exe_next_task(job_exe_1, [])
+        scheduling_node.accept_job_exe_next_task(job_exe_2, [])
+        self.assertEqual(len(scheduling_node._allocated_running_job_exes), 2)
+
+        job_exe_1.execution_canceled()  # Execution canceled, so it will not have a next task to start
+
+        scheduling_node.start_job_exe_tasks()
+        self.assertEqual(len(scheduling_node._allocated_running_job_exes), 0)
+        self.assertEqual(len(scheduling_node.allocated_tasks), 1)  # Only job_exe_2 had a next task
