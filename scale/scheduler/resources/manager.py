@@ -170,7 +170,7 @@ class ResourceManager(object):
         """Rescinds the offers with the given IDs from the manager
 
         :param offer_ids: The list of IDs of the offers to rescind
-        :type offer_ids: [str]
+        :type offer_ids: list
         """
 
         with self._new_offers_lock:
