@@ -30,7 +30,15 @@ class SchedulerStatusThread(BaseSchedulerThread):
         """See :meth:`scheduler.threads.base_thread.BaseSchedulerThread._execute`
         """
 
-        when = now()
+        self._generate_status_json(now())
+
+    def _generate_status_json(self, when):
+        """Generates the scheduler status JSON
+
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
+        """
+
         status_dict = {'timestamp': datetime_to_string(when)}
         node_mgr.generate_status_json(status_dict)
         job_exe_mgr.generate_status_json(status_dict['nodes'], when)
