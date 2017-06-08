@@ -110,7 +110,7 @@ class ScaleScheduler(MesosScheduler):
         scheduler_status_thread.daemon = True
         scheduler_status_thread.start()
 
-        self._scheduling_thread = SchedulingThread(self._driver, self._framework_id)
+        self._scheduling_thread = SchedulingThread(self._driver)
         scheduling_thread = threading.Thread(target=self._scheduling_thread.run)
         scheduling_thread.daemon = True
         scheduling_thread.start()

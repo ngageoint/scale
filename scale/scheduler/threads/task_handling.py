@@ -1,9 +1,8 @@
 """Defines the class that manages the task handling background thread"""
 from __future__ import unicode_literals
 
+import datetime
 import logging
-import math
-import time
 
 from django.utils.timezone import now
 from mesos.interface import mesos_pb2
@@ -13,15 +12,18 @@ from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
 from job.tasks.manager import task_mgr
 from scheduler.node.manager import node_mgr
 from scheduler.recon.manager import recon_mgr
+from scheduler.threads.base_thread import BaseSchedulerThread
+
+
+THROTTLE = datetime.timedelta(seconds=5)
+WARN_THRESHOLD = datetime.timedelta(milliseconds=500)
 
 
 logger = logging.getLogger(__name__)
 
 
-class TaskHandlingThread(object):
+class TaskHandlingThread(BaseSchedulerThread):
     """This class manages the task handling background thread for the scheduler"""
-
-    THROTTLE = 10  # seconds
 
     def __init__(self, driver):
         """Constructor
@@ -30,8 +32,8 @@ class TaskHandlingThread(object):
         :type driver: :class:`mesos_api.mesos.SchedulerDriver`
         """
 
+        super(TaskHandlingThread, self).__init__('Task handling', THROTTLE, WARN_THRESHOLD)
         self._driver = driver
-        self._running = True
 
     @property
     def driver(self):
@@ -53,41 +55,8 @@ class TaskHandlingThread(object):
 
         self._driver = value
 
-    def run(self):
-        """The main run loop of the thread
-        """
-
-        logger.info('Task handling thread started')
-
-        while self._running:
-
-            started = now()
-
-            try:
-                self._handle_tasks()
-            except Exception:
-                logger.exception('Critical error in task handling thread')
-
-            ended = now()
-            secs_passed = (ended - started).total_seconds()
-
-            # If time takes less than threshold, throttle
-            if secs_passed < TaskHandlingThread.THROTTLE:
-                # Delay until full throttle time reached
-                delay = math.ceil(TaskHandlingThread.THROTTLE - secs_passed)
-                time.sleep(delay)
-
-        logger.info('Task handling thread stopped')
-
-    def shutdown(self):
-        """Stops the thread from running and performs any needed clean up
-        """
-
-        logger.info('Shutting down task handling thread')
-        self._running = False
-
-    def _handle_tasks(self):
-        """Handles any task operations that need to be performed
+    def _execute(self):
+        """See :meth:`scheduler.threads.base_thread.BaseSchedulerThread._execute`
         """
 
         when = now()
