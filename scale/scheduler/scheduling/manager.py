@@ -14,7 +14,6 @@ from job.tasks.manager import task_mgr
 from mesos_api.tasks import create_mesos_task
 from queue.job_exe import QueuedJobExecution
 from queue.models import Queue
-from scheduler.cleanup.manager import cleanup_mgr
 from scheduler.node.manager import node_mgr
 from scheduler.resources.manager import resource_mgr
 from scheduler.scheduling.node import SchedulingNode
@@ -224,7 +223,6 @@ class SchedulingManager(object):
         """
 
         nodes = node_mgr.get_nodes()
-        cleanup_mgr.update_nodes(nodes)
 
         tasks_by_agent_id = {}  # {Agent ID: Task}
         for task in tasks:

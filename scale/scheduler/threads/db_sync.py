@@ -8,6 +8,7 @@ from django.conf import settings
 from mesos.interface import mesos_pb2
 
 from job.execution.manager import job_exe_mgr
+from scheduler.cleanup.manager import cleanup_mgr
 from scheduler.node.manager import node_mgr
 from scheduler.sync.job_type_manager import job_type_mgr
 from scheduler.sync.scheduler_manager import scheduler_mgr
@@ -66,6 +67,7 @@ class DatabaseSyncThread(BaseSchedulerThread):
 
         mesos_master = scheduler_mgr.mesos_address
         node_mgr.sync_with_database(mesos_master.hostname, mesos_master.port, scheduler_mgr.scheduler)
+        cleanup_mgr.update_nodes(node_mgr.get_nodes())
 
         # Kill running tasks for canceled job executions
         for task_to_kill in job_exe_mgr.sync_with_database():
