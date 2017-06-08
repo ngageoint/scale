@@ -267,6 +267,8 @@ class ScaleScheduler(MesosScheduler):
         task_update = TaskStatusUpdate(model, utils.get_status_agent_id(status), utils.get_status_data(status))
         task_id = task_update.task_id
 
+        if mesos_status == 'TASK_ERROR':
+            logger.error('Status update for task %s: %s', task_id, mesos_status)
         if mesos_status == 'TASK_LOST':
             logger.warning('Status update for task %s: %s', task_id, mesos_status)
         else:
