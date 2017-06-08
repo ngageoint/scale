@@ -77,8 +77,8 @@ class WorkspaceSerializer(WorkspaceBaseSerializer):
     base_url = serializers.URLField()
     is_active = serializers.BooleanField()
 
-    used_size = serializers.IntegerField()  # TODO: BigIntegerField?
-    total_size = serializers.IntegerField()  # TODO: BigIntegerField?
+    used_size = serializers.BigIntegerField()
+    total_size = serializers.BigIntegerField()
 
     created = serializers.DateTimeField()
     archived = serializers.DateTimeField()
@@ -96,7 +96,7 @@ class ScaleFileBaseSerializer(ModelIdSerializer):
 
     file_name = serializers.CharField()
     media_type = serializers.CharField()
-    file_size = serializers.IntegerField()  # TODO: BigIntegerField?
+    file_size = serializers.BigIntegerField()
     data_type = DataTypeField()
     is_deleted = serializers.BooleanField()
     uuid = serializers.CharField()
