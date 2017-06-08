@@ -128,10 +128,10 @@ class NodeManager(object):
                 self._new_agent_ids.discard(agent_id)
 
     def register_agent_ids(self, agent_ids):
-        """Adds the list of online agent IDs to the manager so they can be registered
+        """Adds the set of online agent IDs to the manager so they can be registered
 
-        :param agent_ids: The list of online agent IDs to add
-        :type agent_ids: [string]
+        :param agent_ids: The set of online agent IDs to add
+        :type agent_ids: set
         """
 
         with self._lock:
