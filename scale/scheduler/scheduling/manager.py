@@ -206,9 +206,10 @@ class SchedulingManager(object):
         declined_resources = NodeResources()
         declined_resources.add(total_offer_resources)
         declined_resources.subtract(total_task_resources)
-        logger.info('Accepted %d offer(s) from %d node(s), launched %d task(s) with %s on %d node(s), declined %s',
-                    total_offer_count, total_node_count, total_task_count, total_task_resources.to_logging_string(),
-                    node_count, declined_resources.to_logging_string())
+        if total_offer_count:
+            logger.info('Accepted %d offer(s) from %d node(s), launched %d task(s) with %s on %d node(s), declined %s',
+                        total_offer_count, total_node_count, total_task_count, total_task_resources.to_logging_string(),
+                        node_count, declined_resources.to_logging_string())
         return total_task_count
 
     def _prepare_nodes(self, tasks, when):
@@ -376,22 +377,23 @@ class SchedulingManager(object):
             for node_id in scheduled_job_exes:
                 all_scheduled_job_exes.extend(scheduled_job_exes[node_id])
             job_exe_mgr.schedule_job_exes(all_scheduled_job_exes)
-            node_count = 0
+            node_ids = set()
             job_exe_count = 0
             scheduled_resources = NodeResources()
             for node_id in scheduled_job_exes:
                 if node_id in nodes:
-                    node_count += 1
                     nodes[node_id].add_scheduled_job_exes(scheduled_job_exes[node_id])
                     for scheduled_job_exe in scheduled_job_exes[node_id]:
                         first_task = scheduled_job_exe.next_task()
                         if first_task:
+                            node_ids.add(node_id)
                             scheduled_resources.add(first_task.get_resources())
                             job_exe_count += 1
                 else:
                     logger.error('Scheduled jobs on an unknown node')
-            logger.info('Scheduled %d new job(s) with %s on %d node(s)', job_exe_count,
-                        scheduled_resources.to_logging_string(), node_count)
+            if job_exe_count:
+                logger.info('Scheduled %d new job(s) with %s on %d node(s)', job_exe_count,
+                            scheduled_resources.to_logging_string(), len(node_ids))
         except DatabaseError:
             logger.exception('Error occurred while scheduling new jobs from the queue')
             for node in available_nodes.values():
