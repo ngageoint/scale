@@ -72,11 +72,17 @@ class SchedulingManager(object):
         fulfilled_nodes = self._schedule_waiting_tasks(nodes, running_job_exes, when)
 
         job_type_limits = self._calculate_job_type_limits(job_types, running_job_exes)
-        self._schedule_new_job_exes(framework_id, fulfilled_nodes, job_types, job_type_limits, job_type_resources,
-                                    workspaces)
+        job_exe_count = self._schedule_new_job_exes(framework_id, fulfilled_nodes, job_types, job_type_limits,
+                                                    job_type_resources, workspaces)
+
+        if framework_id != scheduler_mgr.framework_id:
+            logger.warning('Scheduler framework ID changed, skipping task launch')
+            return 0
 
         self._allocate_offers(nodes)
-        return self._launch_tasks(driver, nodes)
+        task_count = self._launch_tasks(driver, nodes)
+        scheduler_mgr.add_scheduling_counts(job_exe_count, task_count)
+        return task_count
 
     def _allocate_offers(self, nodes):
         """Allocates resource offers to the node
@@ -362,6 +368,8 @@ class SchedulingManager(object):
         :type job_type_resources: list
         :param workspaces: A dict of all workspaces stored by name
         :type workspaces: dict
+        :returns: The number of new job executions that were scheduled
+        :rtype: int
         """
 
         # Can only use nodes that are ready for new job executions
@@ -396,8 +404,11 @@ class SchedulingManager(object):
                             scheduled_resources.to_logging_string(), len(node_ids))
         except DatabaseError:
             logger.exception('Error occurred while scheduling new jobs from the queue')
+            job_exe_count = 0
             for node in available_nodes.values():
                 node.reset_new_job_exes()
+
+        return job_exe_count
 
     @retry_database_query(max_tries=5, base_ms_delay=1000, max_ms_delay=5000)
     def _schedule_new_job_exes_in_database(self, framework_id, job_executions, workspaces):
