@@ -157,6 +157,10 @@
             vm.nodes = _.filter(allNodes, { is_active: vm.showActive });
             vm.nodeTotals = vm.nodes.length + ' ' + currNodeType + ' Nodes / ' + (allNodes.length - vm.nodes.length) + ' ' + altNodeType + ' Nodes';
             vm.nodeStates = _.sortBy(_.uniq(_.map(vm.nodes, 'state.title')));
+            var hasSelectedState = _.find(vm.nodeStates, function (s) { return s === vm.selectedNodeState; });
+            if (!hasSelectedState && vm.selectedNodeState !== 'All') {
+                vm.nodeStates.push(vm.selectedNodeState);
+            }
             vm.nodeStates.unshift('All');
             var order = $location.search().order;
             var state = $location.search().state;

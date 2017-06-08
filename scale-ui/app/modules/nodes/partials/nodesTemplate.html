@@ -67,7 +67,7 @@
             <div class="label label-algorithm" ng-show="COL_FIELD.failed.algorithm.total > 0" uib-tooltip="{{ COL_FIELD.failed.algorithm.total }} Algorithm Errors" tooltip-append-to-body="true">{{ COL_FIELD.failed.algorithm.total }}</div>
             <div class="label" ng-show="COL_FIELD.failed.algorithm.total === 0">&nbsp;</div>
             <div class="label label-data" ng-show="COL_FIELD.failed.data.total > 0" uib-tooltip="{{ COL_FIELD.failed.data.total }} Data Errors" tooltip-append-to-body="true">{{ COL_FIELD.failed.data.total }}</div>
-            <div class="label" ng-show="COL_FIELD.failed.total === 0">&nbsp;</div>
+            <div class="label" ng-show="COL_FIELD.failed.data.total === 0">&nbsp;</div>
             <div class="label label-running" uib-tooltip="{{ COL_FIELD.completed.total }} Completed" tooltip-append-to-body="true">{{ COL_FIELD.completed.total }}</div>
         </div>
     </div>
@@ -88,7 +88,7 @@
 <script type="text/ng-template" id="runningJobs.html">
     <div class="ui-grid-cell-contents">
         <div class="label-container">
-            <div class="label label-default" ng-repeat="job in row.entity.running_jobs" tooltip-append-to-body="true" uib-tooltip="{{ job.jobType.title }}"><i class="fa fa-fw" ng-bind-html="'&#x' + job.jobType.icon_code"></i> {{ job.count }}</div>
+            <div class="label label-default" ng-repeat="job in row.entity.running_jobs" tooltip-append-to-body="true" uib-tooltip="{{ job.jobType.title }} v{{ job.jobType.version }}"><i class="fa fa-fw" ng-bind-html="'&#x' + job.jobType.icon_code"></i> {{ job.count }}</div>
         </div>
     </div>
 </script>

@@ -26,6 +26,14 @@ check_elastic () {
     fi
 }
 
+check_messaging () {
+    if [[ "${SCALE_BROKER_URL}x" == "x" ]]
+    then
+        echo SCALE_BROKER_URL is not populated. Scale requires a valid broker URL configured.
+        exit 1
+    fi
+}
+
 # If ENABLE_BOOTSTRAP is set, we are bootstrapping other components in a DCOS package configuration
 if [[ "${ENABLE_BOOTSTRAP}" == "true" ]]
 then
@@ -54,12 +62,18 @@ then
         export SCALE_ELASTICSEARCH_URLS=`cat bootstrap.log | grep ELASTICSEARCH_URLS | cut -d '=' -f2`
     fi
 
+    if [[ "${SCALE_BROKER_URL}x" == "x" ]]
+    then
+        export SCALE_BROKER_URL=`cat bootstrap.log | grep BROKER_URL | cut -d '=' -f2`
+    fi
+
     export SCALE_WEBSERVER_ADDRESS=`cat bootstrap.log | grep WEBSERVER_ADDRESS | cut -d '=' -f2`
 
     # Validate dependencies for bootstrap
     check_db
     check_elastic
     check_logging
+    check_messaging
 
     # Initialize schema and initial data
     # psql command or'ed with true so that pre-existing postgis won't cause script to terminate
@@ -82,6 +96,6 @@ then
     exec gosu root /usr/sbin/httpd -D FOREGROUND
 fi
 
-# Default fallback entrypoint that is used by scheduler and pre/post task.
+# Default fallback entry point that is used by scheduler and pre/post task.
 # Appropriate Django command will be specified as arguments
 exec python manage.py $*
