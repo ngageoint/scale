@@ -53,6 +53,9 @@ class ScaleScheduler(MesosScheduler):
         """Constructor
         """
 
+        # TODO: remove after testing lost tasks
+        self.last_bad_offer = now()
+
         self._driver = None
         self._framework_id = None
         self._master_hostname = None
@@ -209,6 +212,12 @@ class ScaleScheduler(MesosScheduler):
             total_resources.add(resources)
             agent_ids.add(agent_id)
             resource_offers.append(ResourceOffer(offer_id, agent_id, framework_id, resources, started))
+
+        # TODO: remove after testing lost tasks
+        if started - self.last_bad_offer > datetime.timedelta(minutes=2):
+            bad_offer = ResourceOffer('bad-offer', agent_id, framework_id, NodeResources(cpus=1.0, mem=50.0), started)
+            resource_offers.append(bad_offer)
+            self.last_bad_offer = started
 
         node_mgr.register_agent_ids(agent_ids)
         resource_mgr.add_new_offers(resource_offers)
