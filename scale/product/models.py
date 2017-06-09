@@ -9,7 +9,9 @@ import django.utils.timezone as timezone
 from django.db import transaction
 
 import storage.geospatial_utils as geo_utils
-from recipe.models import Recipe
+from batch.models import BatchJob
+from job.models import JobManager
+from recipe.models import Recipe, RecipeManager
 from storage.brokers.broker import FileUpload
 from storage.models import ScaleFile
 from util.parse import parse_datetime
@@ -47,7 +49,6 @@ class FileAncestryLinkManager(models.Manager):
         recipe = Recipe.objects.get_recipe_for_job(job_exe.job_id)
 
         # See if this job is in a batch
-        from batch.models import BatchJob
         try:
             batch_id = BatchJob.objects.get(job_id=job_exe.job_id).batch_id
         except BatchJob.DoesNotExist:
@@ -422,6 +423,12 @@ class ProductFileManager(models.GeoManager):
         input_products = ScaleFile.objects.filter(id__in=[f['id'] for f in input_files], file_type='PRODUCT')
         input_products_operational = all([f.is_operational for f in input_products])
 
+        # Compute the overall start and stop times for all file_entries
+        start_times = [f[-1]['data_started'] for f in file_entries if len(f) > 3]
+        stop_times = [f[-1]['data_ended'] for f in file_entries if len(f) > 3]
+        start_times.sort()
+        stop_times.sort(reverse=True)
+
         products_to_save = []
         for entry in file_entries:
             local_path = entry[0]
@@ -461,6 +468,31 @@ class ProductFileManager(models.GeoManager):
                     if props:
                         product.meta_data = props
                     product.center_point = geo_utils.get_center_point(geom)
+
+            # Add recipe info to product if available.
+            recipe_check = Recipe.objects.get_recipe_for_job(job_exe.job_id)
+            if recipe_check:
+                recipe_info = RecipeManager.get_details(recipe_check.id)
+                product.recipe_id = recipe_check.id
+                product.recipe_type = recipe_info.recipe_type
+                product.recipe_job = job_exe.get_job_type_name()
+
+                job_manager = JobManager()
+                job_details = job_manager.get_details(job_exe.job_id)
+                product.job_output = str(job_details.outputs)
+
+                # Add batch info to product if available.
+                try:
+                    product.batch_id = BatchJob.objects.get(job_id=job_exe.job_id).batch_id
+                except BatchJob.DoesNotExist:
+                    product.batch_id = None
+
+            # Add start and stop times if available
+            if start_times:
+                product.source_started = start_times[0]
+
+            if stop_times:
+                product.source_ended = stop_times[0]
 
             products_to_save.append(FileUpload(product, local_path))
 
