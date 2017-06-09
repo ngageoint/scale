@@ -237,6 +237,14 @@ class SourceProductsView(ListAPIView):
         is_operational = rest_util.parse_bool(request, 'is_operational', required=False)
         is_published = rest_util.parse_bool(request, 'is_published', required=False)
         file_name = rest_util.parse_string(request, 'file_name', required=False)
+        job_output = rest_util.parse_string(request, 'job_output', required=False)
+        recipe_ids = rest_util.parse_int_list(request, 'recipe_id', required=False)
+        recipe_type = rest_util.parse_string(request, 'recipe_type', required=False)
+        recipe_job = rest_util.parse_string(request, 'recipe_job', required=False)
+
+        source_started = rest_util.parse_timestamp(request, 'source_started', required=False)
+        source_ended = rest_util.parse_timestamp(request, 'source_ended', required=False)
+        rest_util.check_time_range(source_started, source_ended)
 
         order = rest_util.parse_string_list(request, 'order', required=False)
 
@@ -244,7 +252,10 @@ class SourceProductsView(ListAPIView):
                                                           job_type_ids=job_type_ids, job_type_names=job_type_names,
                                                           job_type_categories=job_type_categories,
                                                           is_operational=is_operational, is_published=is_published,
-                                                          file_name=file_name, order=order)
+                                                          file_name=file_name, job_output=job_output,
+                                                          recipe_ids=recipe_ids, recipe_type=recipe_type,
+                                                          recipe_job=recipe_job, source_started=source_started,
+                                                          source_ended=source_ended, order=order)
 
         page = self.paginate_queryset(products)
         serializer = self.get_serializer(page, many=True)
