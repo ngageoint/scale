@@ -308,8 +308,6 @@ class Task(object):
 
         :param when: The time that the task was launched
         :type when: :class:`datetime.datetime`
-
-        :raises :class:`util.exceptions.ScaleLogicBug`: If the task has already started
         """
 
         with self._lock:
