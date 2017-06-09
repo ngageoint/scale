@@ -52,9 +52,9 @@ class BaseSchedulerThread(object):
 
             msg = '%s thread loop took %.3f seconds'
             if duration > self._warning_threshold:
-                logger.warning(msg, duration.total_seconds())
+                logger.warning(msg, self._name, duration.total_seconds())
             else:
-                logger.debug(msg, duration.total_seconds())
+                logger.debug(msg, self._name, duration.total_seconds())
 
             # If time takes less than threshold, throttle
             if duration < self._throttle:
