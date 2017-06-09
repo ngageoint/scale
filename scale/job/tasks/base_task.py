@@ -9,7 +9,6 @@ from abc import ABCMeta, abstractmethod
 from django.conf import settings
 
 from job.tasks.update import TaskStatusUpdate
-from util.exceptions import ScaleLogicBug
 
 
 # Default timeout thresholds for tasks (None means no timeout)
@@ -314,8 +313,9 @@ class Task(object):
         """
 
         with self._lock:
-            if self._has_started:
-                raise ScaleLogicBug('Trying to launch a task that has already started')
+            if self._has_been_launched:
+                logger.error('Tried to launch a task that has already been launched')
+                return
 
             self._has_been_launched = True
             self._launched = when
