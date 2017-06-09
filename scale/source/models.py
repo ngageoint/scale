@@ -112,7 +112,8 @@ class SourceFileManager(models.GeoManager):
 
     def get_source_products(self, source_file_id, started=None, ended=None, batch_ids=None, job_type_ids=None,
                             job_type_names=None, job_type_categories=None, is_operational=None, is_published=None,
-                            is_superseded=None, file_name=None, order=None):
+                            is_superseded=None, file_name=None, job_output=None, recipe_ids=None, recipe_type=None,
+                            recipe_job=None, source_started=None, source_ended=None, order=None):
         """Returns a query for the list of products produced by the given source file ID. The returned query includes
         the related  workspace, job_type, and job fields, except for the workspace.json_config field. The related
         countries are set to be pre-fetched as part of the query.
@@ -139,6 +140,18 @@ class SourceFileManager(models.GeoManager):
         :type is_superseded: bool
         :param file_name: Query product files with the given file name.
         :type file_name: str
+        :keyword job_output: Query product files with the given job output
+        :type job_output: str
+        :keyword recipe_ids: Query product files produced by a given recipe id
+        :type recipe_ids: list[int]
+        :keyword recipe_job: Query product files produced by a given recipe name
+        :type recipe_job: str
+        :keyword recipe_type: Query product files produced by a given recipe type
+        :type recipe_type: str
+        :keyword source_started: Query product files by a given start time for all source files
+        :type source_started: datetime str
+        :keyword source_ended: Query product files by a given stop time for all source files
+        :type source_ended: datetime str
         :param order: A list of fields to control the sort order.
         :type order: list[str]
         :returns: The product file query

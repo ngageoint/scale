@@ -184,7 +184,8 @@ class ProductFileManager(models.GeoManager):
 
     def filter_products(self, started=None, ended=None, job_type_ids=None, job_type_names=None,
                         job_type_categories=None, is_operational=None, is_published=None, is_superseded=None,
-                        file_name=None, order=None):
+                        file_name=None, job_output=None, recipe_ids=None, recipe_type=None, recipe_job=None,
+                        batch_ids=None, source_started=None, source_ended=None, order=None):
         """Returns a query for product models that filters on the given fields. The returned query includes the related
         workspace, job_type, and job fields, except for the workspace.json_config field. The related countries are set
         to be pre-fetched as part of the query.
@@ -207,6 +208,20 @@ class ProductFileManager(models.GeoManager):
         :type is_superseded: bool
         :param file_name: Query product files with the given file name.
         :type file_name: str
+        :keyword job_output: Query product files with the given job output
+        :type job_output: str
+        :keyword recipe_ids: Query product files produced by a given recipe id
+        :type recipe_ids: list[int]
+        :keyword recipe_job: Query product files produced by a given recipe name
+        :type recipe_job: str
+        :keyword recipe_type: Query product files produced by a given recipe type
+        :type recipe_type: str
+        :keyword batch_ids: Query product files produced by batches with the given identifiers.
+        :type batch_ids: list[int]
+        :keyword source_started: Query product files by a given start time for all source files
+        :type source_started: datetime str
+        :keyword source_ended: Query product files by a given stop time for all source files
+        :type source_ended: datetime str
         :param order: A list of fields to control the sort order.
         :type order: list[str]
         :returns: The product file query
@@ -243,6 +258,20 @@ class ProductFileManager(models.GeoManager):
             products = products.filter(is_superseded=is_superseded)
         if file_name:
             products = products.filter(file_name=file_name)
+        if job_output:
+            products = products.filter(job_output=job_output)
+        if recipe_ids:
+            products = products.filter(recipe_id__in=recipe_ids)
+        if recipe_job:
+            products = products.filter(recipe_job=recipe_job)
+        if recipe_type:
+            products = products.filter(recipe_type=recipe_type)
+        if batch_ids:
+            products = products.filter(batch_id__in=batch_ids)
+        if source_started:
+            products = products.filter(source_started=source_started)
+        if source_ended:
+            products = products.filter(source_ended=source_ended)
 
         # Apply sorting
         if order:
@@ -253,7 +282,9 @@ class ProductFileManager(models.GeoManager):
         return products
 
     def get_products(self, started=None, ended=None, job_type_ids=None, job_type_names=None, job_type_categories=None,
-                     is_operational=None, is_published=None, file_name=None, order=None):
+                     is_operational=None, is_published=None, file_name=None, job_output=None, recipe_ids=None,
+                     recipe_type=None, recipe_job=None, batch_ids=None, source_started=None, source_ended=None,
+                     order=None):
         """Returns a list of product files within the given time range.
 
         :param started: Query product files updated after this amount of time.
@@ -272,6 +303,20 @@ class ProductFileManager(models.GeoManager):
         :type is_published: bool
         :param file_name: Query product files with the given file name.
         :type file_name: str
+        :keyword job_output: Query product files with the given job output
+        :type job_output: str
+        :keyword recipe_ids: Query product files produced by a given recipe id
+        :type recipe_ids: list[int]
+        :keyword recipe_job: Query product files produced by a given recipe name
+        :type recipe_job: str
+        :keyword recipe_type: Query product files produced by a given recipe type
+        :type recipe_type: str
+        :keyword batch_ids: Query product files produced by batches with the given identifiers.
+        :type batch_ids: list[int]
+        :keyword source_started: Query product files by a given start time for all source files
+        :type source_started: datetime str
+        :keyword source_ended: Query product files by a given stop time for all source files
+        :type source_ended: datetime str
         :param order: A list of fields to control the sort order.
         :type order: list[str]
         :returns: The list of product files that match the time range.
@@ -281,7 +326,9 @@ class ProductFileManager(models.GeoManager):
         return self.filter_products(started=started, ended=ended, job_type_ids=job_type_ids,
                                     job_type_names=job_type_names, job_type_categories=job_type_categories,
                                     is_operational=is_operational, is_published=is_published, is_superseded=False,
-                                    file_name=file_name, order=order)
+                                    file_name=file_name, job_output=job_output, recipe_ids=recipe_ids,
+                                    recipe_type=recipe_type, recipe_job=recipe_job, batch_ids=batch_ids,
+                                    source_started=source_started, source_ended=source_ended, order=order)
 
     def get_details(self, product_id):
         """Gets additional details for the given product model based on related model attributes.
