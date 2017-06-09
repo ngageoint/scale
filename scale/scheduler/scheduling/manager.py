@@ -259,8 +259,8 @@ class SchedulingManager(object):
                 node_tasks = tasks_by_agent_id[agent_id]
             else:
                 node_tasks = []
-            if node.node_id in running_exes_by_node_id:
-                node_exes = running_exes_by_node_id[node.node_id]
+            if node.id in running_exes_by_node_id:
+                node_exes = running_exes_by_node_id[node.id]
             else:
                 node_exes = []
             if agent_id in agent_resources:
