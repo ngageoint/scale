@@ -44,21 +44,6 @@ class JobExecutionManager(object):
         with self._lock:
             self._metrics.generate_status_json(nodes_list, when)
 
-    def get_ready_job_exes(self):
-        """Returns all running job executions that are ready to execute their next task
-
-        :returns: A list of running job executions
-        :rtype: [:class:`job.execution.job_exe.RunningJobExecution`]
-        """
-
-        ready_exes = []
-        with self._lock:
-            for job_exe_id in self._running_job_exes:
-                job_exe = self._running_job_exes[job_exe_id]
-                if job_exe.is_next_task_ready():
-                    ready_exes.append(job_exe)
-        return ready_exes
-
     def get_running_job_exe(self, job_exe_id):
         """Returns the running job execution with the given ID, or None if the job execution does not exist
 

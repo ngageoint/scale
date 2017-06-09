@@ -33,6 +33,7 @@ class RunningJobExecution(object):
         self._id = job_exe.id
         self._job_id = job_exe.job_id
         self._job_type_id = job_exe.job.job_type_id
+        self._priority = job_exe.job.priority
         self._node_id = job_exe.node_id
         if hasattr(job_exe, 'docker_volumes'):
             self._docker_volumes = job_exe.docker_volumes
@@ -127,6 +128,16 @@ class RunningJobExecution(object):
         """
 
         return self._job_type_id
+
+    @property
+    def priority(self):
+        """The job execution's priority
+
+        :returns: The priority of the job execution
+        :rtype: int
+        """
+
+        return self._priority
 
     @property
     def node_id(self):

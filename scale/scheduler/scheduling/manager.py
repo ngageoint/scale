@@ -65,10 +65,10 @@ class SchedulingManager(object):
         job_types = job_type_mgr.get_job_types()
         job_type_resources = job_type_mgr.get_job_type_resources()
         tasks = task_mgr.get_all_tasks()
-        running_job_exes = job_exe_mgr.get_ready_job_exes()
+        running_job_exes = job_exe_mgr.get_running_job_exes()
         workspaces = workspace_mgr.get_workspaces()
 
-        nodes = self._prepare_nodes(tasks, when)
+        nodes = self._prepare_nodes(tasks, running_job_exes, when)
         fulfilled_nodes = self._schedule_waiting_tasks(nodes, running_job_exes, when)
 
         job_type_limits = self._calculate_job_type_limits(job_types, running_job_exes)
@@ -109,7 +109,7 @@ class SchedulingManager(object):
         :param job_types: The dict of job type models stored by job type ID
         :type job_types: dict
         :param running_job_exes: The currently running job executions
-        :type running_job_exes: [:class:`job.execution.job_exe.RunningJobExecution`]
+        :type running_job_exes: list
         :returns: A dict where job type ID maps to the number of jobs of that type that can be scheduled. Missing job
             type IDs have no limit. Counts may be negative if the job type is scheduled above the limit.
         :rtype: dict
@@ -218,11 +218,13 @@ class SchedulingManager(object):
                         node_count, declined_resources.to_logging_string())
         return total_task_count
 
-    def _prepare_nodes(self, tasks, when):
+    def _prepare_nodes(self, tasks, running_job_exes, when):
         """Prepares the nodes to use for scheduling
 
         :param tasks: The current current running
         :type tasks: list
+        :param running_job_exes: The currently running job executions
+        :type running_job_exes: list
         :param when: The current time
         :type when: :class:`datetime.datetime`
         :returns: The dict of scheduling nodes stored by node ID
@@ -231,12 +233,21 @@ class SchedulingManager(object):
 
         nodes = node_mgr.get_nodes()
 
-        tasks_by_agent_id = {}  # {Agent ID: Task}
+        # Group tasks by agent ID
+        tasks_by_agent_id = {}  # {Agent ID: List of tasks}
         for task in tasks:
             if task.agent_id not in tasks_by_agent_id:
                 tasks_by_agent_id[task.agent_id] = [task]
             else:
                 tasks_by_agent_id[task.agent_id].append(task)
+
+        # Group job executions by node ID
+        running_exes_by_node_id = {}  # {Node ID: List of running job exes}
+        for running_job_exe in running_job_exes:
+            if running_job_exe.node_id not in running_exes_by_node_id:
+                running_exes_by_node_id[running_job_exe.node_id] = [running_job_exe]
+            else:
+                running_exes_by_node_id[running_job_exe.node_id].append(running_job_exe)
 
         agent_resources = resource_mgr.refresh_agent_resources(tasks, when)
 
@@ -248,12 +259,16 @@ class SchedulingManager(object):
                 node_tasks = tasks_by_agent_id[agent_id]
             else:
                 node_tasks = []
+            if node.node_id in running_exes_by_node_id:
+                node_exes = running_exes_by_node_id[node.node_id]
+            else:
+                node_exes = []
             if agent_id in agent_resources:
                 resource_set = agent_resources[agent_id]
             else:
                 resource_set = None
 
-            scheduling_node = SchedulingNode(agent_id, node, node_tasks, resource_set)
+            scheduling_node = SchedulingNode(agent_id, node, node_tasks, node_exes, resource_set)
             scheduling_nodes[scheduling_node.node_id] = scheduling_node
         return scheduling_nodes
 
@@ -334,7 +349,7 @@ class SchedulingManager(object):
                     best_reservation_score = None  # No need to reserve a node if we can schedule the job execution
             if best_scheduling_node is None:
                 # No nodes yet to schedule this job execution on, check whether we should reserve this node
-                score = node.score_job_exe_for_reservation(job_exe)
+                score = node.score_job_exe_for_reservation(job_exe, job_type_resources)
                 if score is not None:
                     # Job execution could reserve this node, check its score
                     if best_reservation_node is None or score < best_reservation_score:
@@ -449,8 +464,8 @@ class SchedulingManager(object):
 
         :param nodes: The dict of scheduling nodes stored by node ID
         :type nodes: dict
-        :param running_job_exes: The list of currently running job executions
-        :type running_job_exes: [:class:`job.execution.job_exe.RunningJobExecution`]
+        :param running_job_exes: The currently running job executions
+        :type running_job_exes: list
         :param when: The current time
         :type when: :class:`datetime.datetime`
         :returns: The dict of scheduling nodes stored by node ID that have no more waiting tasks
@@ -472,7 +487,7 @@ class SchedulingManager(object):
         # changed agent ID
         # TODO: fail job_exes if they are starving to get resources for their next task
         for running_job_exe in running_job_exes:
-            if running_job_exe.node_id in nodes:
+            if running_job_exe.is_next_task_ready() and running_job_exe.node_id in nodes:
                 node = nodes[running_job_exe.node_id]
                 has_waiting_tasks = node.accept_job_exe_next_task(running_job_exe, waiting_tasks)
                 if has_waiting_tasks and node.node_id in fulfilled_nodes:

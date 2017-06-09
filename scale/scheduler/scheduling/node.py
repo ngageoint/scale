@@ -8,7 +8,7 @@ class SchedulingNode(object):
     """This class manages scheduling for a node.
     """
 
-    def __init__(self, agent_id, node, tasks, resource_set):
+    def __init__(self, agent_id, node, tasks, running_job_exes, resource_set):
         """Constructor
 
         :param agent_id: The agent ID
@@ -16,7 +16,9 @@ class SchedulingNode(object):
         :param node: The node
         :type node: :class:`scheduler.node.node_class.Node`
         :param tasks: The current tasks running on the node
-        :type tasks: [:class:`job.tasks.base_task.Task`]
+        :type tasks: list
+        :param running_job_exes: The current job executions running on the node
+        :type running_job_exes: list
         :param resource_set: The set of resources for the node
         :type resource_set: :class:`scheduler.resources.agent.ResourceSet`
         """
@@ -33,7 +35,8 @@ class SchedulingNode(object):
         self._node = node
         self._allocated_queued_job_exes = []  # New queued job executions that have been allocated resources
         self._allocated_running_job_exes = []  # Running job executions that have been allocated resources
-        self._current_tasks = tasks
+        self._running_job_exes = running_job_exes
+        self._running_tasks = tasks
 
         self._offered_resources = NodeResources()  # The amount of resources that were originally offered
         self._offered_resources.add(resource_set.offered_resources)
@@ -175,13 +178,15 @@ class SchedulingNode(object):
         self.allocated_resources.subtract(resources)
         self._remaining_resources.add(resources)
 
-    def score_job_exe_for_reservation(self, job_exe):
+    def score_job_exe_for_reservation(self, job_exe, job_type_resources):
         """Returns an integer score (lower is better) indicating how well this node is a fit for reserving (temporarily
-        block additional job executions) for the given job execution. If the job execution cannot reserve this node,
-        None is returned.
+        blocking additional job executions of lower priority) for the given job execution. If the job execution cannot
+        reserve this node, None is returned.
 
         :param job_exe: The job execution to score
         :type job_exe: :class:`queue.job_exe.QueuedJobExecution`
+        :param job_type_resources: The list of all of the job type resource requirements
+        :type job_type_resources: list
         :returns: The integer score indicating how good of a fit reserving this node is for this job execution, possibly
             None
         :rtype: int
@@ -189,11 +194,35 @@ class SchedulingNode(object):
 
         if not job_exe.is_node_acceptable(self.node_id):
             return None
-        if not self._watermark_resources.is_sufficient_to_meet(job_exe.required_resources):
+
+        # Calculate available resources for lower priority jobs
+        available_resources = NodeResources()
+        available_resources.add(self._watermark_resources)
+        for running_job_exe in self._running_job_exes:
+            if running_job_exe.priority <= job_exe.queue.priority:
+                task = running_job_exe.current_task
+                if not task:
+                    task = running_job_exe.next_task()
+                if task:
+                    available_resources.subtract(task.get_resources())
+        for queued_job_exe in self._allocated_queued_job_exes:
+            if queued_job_exe.queue.priority <= job_exe.queue.priority:
+                available_resources.subtract(queued_job_exe.required_resources)
+
+        # If this are enough resources (unused plus used by lower priority jobs) to eventually run this job, then
+        # reserve this node to block lower priority jobs
+        if not available_resources.is_sufficient_to_meet(job_exe.required_resources):
             return None
 
-        # TODO: reservation is currently disabled until it can be thought out
-        return None
+        available_resources.subtract(job_exe.required_resources)
+        # Score is the number of job types that can fit within the estimated remaining resources. A better (lower) score
+        # indicates a higher utilization of this node, reducing resource fragmentation.
+        score = 0
+        for job_type_resource in job_type_resources:
+            if available_resources.is_sufficient_to_meet(job_type_resource):
+                score += 1
+
+        return score
 
     def score_job_exe_for_scheduling(self, job_exe, job_type_resources):
         """Returns an integer score (lower is better) indicating how well the given job execution fits on this node for
