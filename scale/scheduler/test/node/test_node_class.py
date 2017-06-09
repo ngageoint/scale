@@ -155,25 +155,25 @@ class TestNode(TestCase):
         self.assertTrue(task.id.startswith(CLEANUP_TASK_ID_PREFIX))
         task_1_id = task.id
 
-        # Lose task without scheduling and get same task again
+        # Lose task without scheduling and get different task next time
         update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.LOST, now())
         node.handle_task_update(update)
         task = node.get_next_tasks(when)[0]
         self.assertTrue(task.id.startswith(CLEANUP_TASK_ID_PREFIX))
-        self.assertEqual(task.id, task_1_id)
+        self.assertNotEqual(task.id, task_1_id)
         self.assertFalse(node._is_initial_cleanup_completed)
 
-        # Lose task with scheduling and get same task again
+        # Lose task with scheduling and get different task next time
         self.task_mgr.launch_tasks([task], now())
         update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.LOST, now())
         self.task_mgr.handle_task_update(update)
         node.handle_task_update(update)
         task = node.get_next_tasks(when)[0]
         self.assertTrue(task.id.startswith(CLEANUP_TASK_ID_PREFIX))
-        self.assertEqual(task.id, task_1_id)
+        self.assertNotEqual(task.id, task_1_id)
         self.assertFalse(node._is_initial_cleanup_completed)
 
-        # Lose task after running and get same task again
+        # Lose task after running and get different task next time
         self.task_mgr.launch_tasks([task], now())
         update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.RUNNING, now())
         self.task_mgr.handle_task_update(update)
@@ -183,7 +183,7 @@ class TestNode(TestCase):
         node.handle_task_update(update)
         task = node.get_next_tasks(when)[0]
         self.assertTrue(task.id.startswith(CLEANUP_TASK_ID_PREFIX))
-        self.assertEqual(task.id, task_1_id)
+        self.assertNotEqual(task.id, task_1_id)
         self.assertFalse(node._is_initial_cleanup_completed)
 
     def test_handle_regular_cleanup_task(self):
@@ -413,25 +413,25 @@ class TestNode(TestCase):
         task_1_id = task.id
         self.assertIsNotNone(task)
 
-        # Lose task without scheduling and get same task again
+        # Lose task without scheduling and get different task next time
         update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.LOST, now())
         node.handle_task_update(update)
         task = node.get_next_tasks(when)[0]
         self.assertTrue(task.id.startswith(HEALTH_TASK_ID_PREFIX))
-        self.assertEqual(task.id, task_1_id)
+        self.assertNotEqual(task.id, task_1_id)
         self.assertTrue(node._conditions.is_health_check_normal)
 
-        # Lose task with scheduling and get same task again
+        # Lose task with scheduling and get different task next time
         self.task_mgr.launch_tasks([task], now())
         update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.LOST, now())
         self.task_mgr.handle_task_update(update)
         node.handle_task_update(update)
         task = node.get_next_tasks(when)[0]
         self.assertTrue(task.id.startswith(HEALTH_TASK_ID_PREFIX))
-        self.assertEqual(task.id, task_1_id)
+        self.assertNotEqual(task.id, task_1_id)
         self.assertTrue(node._conditions.is_health_check_normal)
 
-        # Lose task after running and get same task again
+        # Lose task after running and get different task next time
         self.task_mgr.launch_tasks([task], now())
         update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.RUNNING, now())
         self.task_mgr.handle_task_update(update)
@@ -441,7 +441,7 @@ class TestNode(TestCase):
         node.handle_task_update(update)
         task = node.get_next_tasks(when)[0]
         self.assertTrue(task.id.startswith(HEALTH_TASK_ID_PREFIX))
-        self.assertEqual(task.id, task_1_id)
+        self.assertNotEqual(task.id, task_1_id)
         self.assertTrue(node._conditions.is_health_check_normal)
 
     def test_handle_failed_pull_task(self):
@@ -549,25 +549,25 @@ class TestNode(TestCase):
         task_1_id = task.id
         self.assertIsNotNone(task)
 
-        # Lose task without scheduling and get same task again
+        # Lose task without scheduling and get different task next time
         update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.LOST, now())
         node.handle_task_update(update)
         task = node.get_next_tasks(when)[0]
         self.assertTrue(task.id.startswith(PULL_TASK_ID_PREFIX))
-        self.assertEqual(task.id, task_1_id)
+        self.assertNotEqual(task.id, task_1_id)
         self.assertFalse(node._is_image_pulled)
 
-        # Lose task with scheduling and get same task again
+        # Lose task with scheduling and get different task next time
         self.task_mgr.launch_tasks([task], now())
         update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.LOST, now())
         self.task_mgr.handle_task_update(update)
         node.handle_task_update(update)
         task = node.get_next_tasks(when)[0]
         self.assertTrue(task.id.startswith(PULL_TASK_ID_PREFIX))
-        self.assertEqual(task.id, task_1_id)
+        self.assertNotEqual(task.id, task_1_id)
         self.assertFalse(node._is_image_pulled)
 
-        # Lose task after running and get same task again
+        # Lose task after running and get different task next time
         self.task_mgr.launch_tasks([task], now())
         update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.RUNNING, now())
         self.task_mgr.handle_task_update(update)
@@ -577,7 +577,7 @@ class TestNode(TestCase):
         node.handle_task_update(update)
         task = node.get_next_tasks(when)[0]
         self.assertTrue(task.id.startswith(PULL_TASK_ID_PREFIX))
-        self.assertEqual(task.id, task_1_id)
+        self.assertNotEqual(task.id, task_1_id)
         self.assertFalse(node._is_image_pulled)
 
     def test_paused_node_pull_task(self):

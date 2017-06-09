@@ -423,7 +423,10 @@ class Node(object):
             self._conditions.handle_cleanup_task_failed()
         elif task_update.status == TaskStatusUpdate.KILLED:
             logger.warning('Cleanup task on node %s killed', self._hostname)
-        if self._cleanup_task.has_ended:
+        elif task_update.status == TaskStatusUpdate.LOST:
+            logger.warning('Cleanup task on node %s lost', self._hostname)
+            self._cleanup_task = None
+        if self._cleanup_task and self._cleanup_task.has_ended:
             self._cleanup_task = None
 
     def _handle_health_task_update(self, task_update):
@@ -442,7 +445,10 @@ class Node(object):
             self._conditions.handle_health_task_failed(task_update)
         elif task_update.status == TaskStatusUpdate.KILLED:
             logger.warning('Health check task on node %s killed', self._hostname)
-        if self._health_task.has_ended:
+        elif task_update.status == TaskStatusUpdate.LOST:
+            logger.warning('Health check task on node %s lost', self._hostname)
+            self._health_task = None
+        if self._health_task and self._health_task.has_ended:
             self._health_task = None
 
     def _handle_pull_task_update(self, task_update):
@@ -460,7 +466,10 @@ class Node(object):
             self._conditions.handle_pull_task_failed()
         elif task_update.status == TaskStatusUpdate.KILLED:
             logger.warning('Scale image pull task on node %s killed', self._hostname)
-        if self._pull_task.has_ended:
+        elif task_update.status == TaskStatusUpdate.LOST:
+            logger.warning('Scale image pull task on node %s lost', self._hostname)
+            self._pull_task = None
+        if self._pull_task and self._pull_task.has_ended:
             self._pull_task = None
 
     def _update_state(self):

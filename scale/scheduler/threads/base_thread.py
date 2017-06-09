@@ -46,7 +46,7 @@ class BaseSchedulerThread(object):
             try:
                 self._execute()
             except Exception:
-                logger.exception('%s thread had a critical error')
+                logger.exception('%s thread had a critical error', self._name)
 
             duration = now() - started
 

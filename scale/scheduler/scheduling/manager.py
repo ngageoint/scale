@@ -477,7 +477,7 @@ class SchedulingManager(object):
                 has_waiting_tasks = node.accept_job_exe_next_task(running_job_exe, waiting_tasks)
                 if has_waiting_tasks and node.node_id in fulfilled_nodes:
                     # Node has tasks waiting for resources
-                    del fulfilled_nodes[node.node.node_id]
+                    del fulfilled_nodes[node.node_id]
 
         # Update waiting task counts and calculate shortages
         agent_shortages = {}  # {Agent ID: NodeResources}
