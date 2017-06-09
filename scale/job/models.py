@@ -1302,8 +1302,8 @@ class JobExecution(models.Model):
         :rtype: int
         """
 
-        # Job execution ID is the second-to-last segment
-        return int(task_id.split('_')[-2])
+        # Job execution ID is the fourth segment
+        return int(task_id.split('_')[3])
 
     def configure_docker_params(self, workspaces, docker_volumes):
         """Configures the Docker parameters needed for each task in the execution. The job execution must have been set
