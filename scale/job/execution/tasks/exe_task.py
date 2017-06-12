@@ -109,8 +109,8 @@ class JobExecutionTask(Task):
         pass
 
     def update_task_id_for_lost_task(self):
-        """Updates this task's ID due to the task being lost. A new, unique ID will prevent race conditions issues where
-        Scale confuses this task with the previous lost task.
+        """Updates this task's ID due to the task being lost. A new, unique ID will prevent race conditions where Scale
+        confuses this task with the previous lost task.
         """
 
         with self._lock:
