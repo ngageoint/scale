@@ -40,7 +40,7 @@ class JobResources(object):
 
 
 class NodeResources(object):
-    """This class encapsulates a set of resources available on a node
+    """This class encapsulates a set of node resources
     """
 
     def __init__(self, cpus=0.0, mem=0.0, disk=0.0):
