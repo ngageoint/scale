@@ -1,6 +1,7 @@
 """Defines the class that manages scheduling for a node"""
 from __future__ import unicode_literals
 
+from job.execution.tasks.exe_task import JobExecutionTask
 from job.resources import NodeResources
 
 
@@ -198,18 +199,21 @@ class SchedulingNode(object):
         # Calculate available resources for lower priority jobs
         available_resources = NodeResources()
         available_resources.add(self._watermark_resources)
-        for running_job_exe in self._running_job_exes:
+        for running_task in self._running_tasks:  # Remove resources for system tasks
+            if not isinstance(running_task, JobExecutionTask):
+                available_resources.subtract(running_task.get_resources())
+        for running_job_exe in self._running_job_exes:  # Remove resources for existing jobs of equal/higher priority
             if running_job_exe.priority <= job_exe.queue.priority:
                 task = running_job_exe.current_task
                 if not task:
                     task = running_job_exe.next_task()
                 if task:
                     available_resources.subtract(task.get_resources())
-        for queued_job_exe in self._allocated_queued_job_exes:
+        for queued_job_exe in self._allocated_queued_job_exes:  # Remove resources for new jobs of equal/higher priority
             if queued_job_exe.queue.priority <= job_exe.queue.priority:
                 available_resources.subtract(queued_job_exe.required_resources)
 
-        # If this are enough resources (unused plus used by lower priority jobs) to eventually run this job, then
+        # If there are enough resources (unused plus used by lower priority jobs) to eventually run this job, then
         # reserve this node to block lower priority jobs
         if not available_resources.is_sufficient_to_meet(job_exe.required_resources):
             return None

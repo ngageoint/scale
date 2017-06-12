@@ -528,6 +528,125 @@ class TestSchedulingNode(TestCase):
         self.assertTrue(scheduling_node.allocated_resources.is_equal(NodeResources()))
         self.assertTrue(scheduling_node._remaining_resources.is_equal(offered_resources))
 
+    def test_score_job_exe_for_reservation(self):
+        """Tests calling score_job_exe_for_reservation() successfully"""
+
+        node = MagicMock()
+        node.hostname = 'host_1'
+        node.id = 1
+        node.is_ready_for_new_job = MagicMock()
+        node.is_ready_for_new_job.return_value = True
+        node.is_ready_for_next_job_task = MagicMock()
+        node.is_ready_for_next_job_task.return_value = True
+        offered_resources = NodeResources(cpus=20.0, mem=100.0)
+        watermark_resources = NodeResources(cpus=200.0, mem=700.0)
+        resource_set = ResourceSet(offered_resources, NodeResources(), watermark_resources)
+        task = HealthTask('1234', 'agent_1')  # Resources are 0.1 CPUs and 32 MiB memory
+        job_exe_model_1 = job_test_utils.create_job_exe()
+        job_exe_model_1.job.priority = 1000
+        job_exe_model_1.cpus_scheduled = 10.0
+        job_exe_model_1.mem_scheduled = 50.0
+        job_exe_model_1.disk_in_scheduled = 0.0
+        job_exe_model_1.disk_out_scheduled = 0.0
+        job_exe_model_1.disk_total_scheduled = 0.0
+        job_exe_1 = RunningJobExecution(job_exe_model_1)
+        job_exe_model_2 = job_test_utils.create_job_exe()
+        job_exe_model_2.job.priority = 100
+        job_exe_model_2.cpus_scheduled = 56.0
+        job_exe_model_2.mem_scheduled = 15.0
+        job_exe_model_2.disk_in_scheduled = 0.0
+        job_exe_model_2.disk_out_scheduled = 0.0
+        job_exe_model_2.disk_total_scheduled = 0.0
+        job_exe_2 = RunningJobExecution(job_exe_model_2)
+        scheduling_node = SchedulingNode('agent_1', node, [task], [job_exe_1, job_exe_2], resource_set)
+        queue_model_1 = queue_test_utils.create_queue(priority=100, cpus_required=8.0, mem_required=40.0,
+                                                      disk_in_required=0.0, disk_out_required=0.0,
+                                                      disk_total_required=0.0)
+        job_exe_1 = QueuedJobExecution(queue_model_1)
+        queue_model_2 = queue_test_utils.create_queue(priority=1000, cpus_required=8.0, mem_required=40.0,
+                                                      disk_in_required=0.0, disk_out_required=0.0,
+                                                      disk_total_required=0.0)
+        job_exe_2 = QueuedJobExecution(queue_model_2)
+        scheduling_node.accept_new_job_exe(job_exe_1)
+        scheduling_node.accept_new_job_exe(job_exe_2)
+
+        # We are going to try to reserve the node for a job execution with priority 120
+        # Calculate available resources for reservation:
+        # Watermark (200, 700) - System Tasks (0.1, 32) - Higher Priority Existing Job Exes (56, 15) -  Higher Priority
+        # New Job Exes (8, 40) = 135.9 CPUs, 613 memory
+        # This new job should fit for reservation
+        queue_model = queue_test_utils.create_queue(priority=120, cpus_required=130.0, mem_required=600.0,
+                                                    disk_in_required=0.0, disk_out_required=0.0,
+                                                    disk_total_required=0.0)
+        job_exe = QueuedJobExecution(queue_model)
+        # Expected available 5.9 CPUs and 13 MiB memory "left" on node
+        # (available above - new job we are scoring)
+        # First 2 job types should fit, next 2 are too big, so score should be 2
+        job_type_resource_1 = NodeResources(cpus=2.0, mem=10.0)
+        job_type_resource_2 = NodeResources(cpus=5.5, mem=12.0)
+        job_type_resource_3 = NodeResources(cpus=6.0, mem=10.0)
+        job_type_resource_4 = NodeResources(cpus=2.0, mem=14.0)
+
+        score = scheduling_node.score_job_exe_for_reservation(job_exe, [job_type_resource_1, job_type_resource_2,
+                                                                        job_type_resource_3, job_type_resource_4])
+        self.assertEqual(score, 2)
+
+    def test_score_job_exe_for_reservation_insufficient_resources(self):
+        """Tests calling score_job_exe_for_reservation() when there are not enough resources to reserve for the job"""
+
+        node = MagicMock()
+        node.hostname = 'host_1'
+        node.id = 1
+        node.is_ready_for_new_job = MagicMock()
+        node.is_ready_for_new_job.return_value = True
+        node.is_ready_for_next_job_task = MagicMock()
+        node.is_ready_for_next_job_task.return_value = True
+        offered_resources = NodeResources(cpus=20.0, mem=100.0)
+        watermark_resources = NodeResources(cpus=200.0, mem=700.0)
+        resource_set = ResourceSet(offered_resources, NodeResources(), watermark_resources)
+        task = HealthTask('1234', 'agent_1')  # Resources are 0.1 CPUs and 32 MiB memory
+        job_exe_model_1 = job_test_utils.create_job_exe()
+        job_exe_model_1.job.priority = 1000
+        job_exe_model_1.cpus_scheduled = 10.0
+        job_exe_model_1.mem_scheduled = 50.0
+        job_exe_model_1.disk_in_scheduled = 0.0
+        job_exe_model_1.disk_out_scheduled = 0.0
+        job_exe_model_1.disk_total_scheduled = 0.0
+        job_exe_1 = RunningJobExecution(job_exe_model_1)
+        job_exe_model_2 = job_test_utils.create_job_exe()
+        job_exe_model_2.job.priority = 100
+        job_exe_model_2.cpus_scheduled = 56.0
+        job_exe_model_2.mem_scheduled = 15.0
+        job_exe_model_2.disk_in_scheduled = 0.0
+        job_exe_model_2.disk_out_scheduled = 0.0
+        job_exe_model_2.disk_total_scheduled = 0.0
+        job_exe_2 = RunningJobExecution(job_exe_model_2)
+        scheduling_node = SchedulingNode('agent_1', node, [task], [job_exe_1, job_exe_2], resource_set)
+        queue_model_1 = queue_test_utils.create_queue(priority=100, cpus_required=8.0, mem_required=40.0,
+                                                      disk_in_required=0.0, disk_out_required=0.0,
+                                                      disk_total_required=0.0)
+        job_exe_1 = QueuedJobExecution(queue_model_1)
+        queue_model_2 = queue_test_utils.create_queue(priority=1000, cpus_required=8.0, mem_required=40.0,
+                                                      disk_in_required=0.0, disk_out_required=0.0,
+                                                      disk_total_required=0.0)
+        job_exe_2 = QueuedJobExecution(queue_model_2)
+        scheduling_node.accept_new_job_exe(job_exe_1)
+        scheduling_node.accept_new_job_exe(job_exe_2)
+
+        # We are going to try to reserve the node for a job execution with priority 120
+        # Calculate available resources for reservation:
+        # Watermark (200, 700) - System Tasks (0.1, 32) - Higher Priority Existing Job Exes (56, 15) -  Higher Priority
+        # New Job Exes (8, 40) = 135.9 CPUs, 613 memory
+        # This new job should NOT fit for reservation
+        queue_model = queue_test_utils.create_queue(priority=120, cpus_required=140.0, mem_required=600.0,
+                                                    disk_in_required=0.0, disk_out_required=0.0,
+                                                    disk_total_required=0.0)
+        job_exe = QueuedJobExecution(queue_model)
+        job_type_resource_1 = NodeResources(cpus=2.0, mem=10.0)
+
+        score = scheduling_node.score_job_exe_for_reservation(job_exe, [job_type_resource_1])
+        self.assertIsNone(score)
+
     def test_score_job_exe_for_scheduling(self):
         """Tests calling score_job_exe_for_scheduling() successfully"""
 
