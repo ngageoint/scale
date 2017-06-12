@@ -21,9 +21,9 @@ from scheduler.cleanup.manager import cleanup_mgr
 from scheduler.initialize import initialize_system
 from scheduler.models import Scheduler
 from scheduler.node.manager import node_mgr
-from scheduler.offer.manager import offer_mgr
-from scheduler.offer.offer import ResourceOffer
 from scheduler.recon.manager import recon_mgr
+from scheduler.resources.manager import resource_mgr
+from scheduler.resources.offer import ResourceOffer
 from scheduler.sync.job_type_manager import job_type_mgr
 from scheduler.sync.scheduler_manager import scheduler_mgr
 from scheduler.sync.workspace_manager import workspace_mgr
@@ -110,7 +110,7 @@ class ScaleScheduler(MesosScheduler):
         scheduler_status_thread.daemon = True
         scheduler_status_thread.start()
 
-        self._scheduling_thread = SchedulingThread(self._driver, self._framework_id)
+        self._scheduling_thread = SchedulingThread(self._driver)
         scheduling_thread = threading.Thread(target=self._scheduling_thread.run)
         scheduling_thread.daemon = True
         scheduling_thread.start()
@@ -188,11 +188,13 @@ class ScaleScheduler(MesosScheduler):
 
         started = now()
 
-        agent_ids = []
+        agent_ids = set()
         resource_offers = []
+        total_resources = NodeResources()
         for offer in offers:
             offer_id = offer.id.value
             agent_id = offer.slave_id.value
+            framework_id = offer.framework_id.value
             disk = 0
             mem = 0
             cpus = 0
@@ -204,11 +206,12 @@ class ScaleScheduler(MesosScheduler):
                 elif resource.name == 'cpus':
                     cpus = resource.scalar.value
             resources = NodeResources(cpus=cpus, mem=mem, disk=disk)
-            agent_ids.append(agent_id)
-            resource_offers.append(ResourceOffer(offer_id, agent_id, resources))
+            total_resources.add(resources)
+            agent_ids.add(agent_id)
+            resource_offers.append(ResourceOffer(offer_id, agent_id, framework_id, resources, started))
 
         node_mgr.register_agent_ids(agent_ids)
-        offer_mgr.add_new_offers(resource_offers)
+        resource_mgr.add_new_offers(resource_offers)
 
         duration = now() - started
         msg = 'Scheduler resourceOffers() took %.3f seconds'
@@ -216,6 +219,9 @@ class ScaleScheduler(MesosScheduler):
             logger.warning(msg, duration.total_seconds())
         else:
             logger.debug(msg, duration.total_seconds())
+
+        logger.info('Received %d offer(s) with %s from %d node(s)', len(resource_offers),
+                    total_resources.to_logging_string(), len(agent_ids))
 
     def offerRescinded(self, driver, offerId):
         """
@@ -231,7 +237,7 @@ class ScaleScheduler(MesosScheduler):
         started = now()
 
         offer_id = offerId.value
-        offer_mgr.remove_offers([offer_id])
+        resource_mgr.rescind_offers([offer_id])
 
         duration = now() - started
         msg = 'Scheduler offerRescinded() took %.3f seconds'
@@ -261,6 +267,8 @@ class ScaleScheduler(MesosScheduler):
         task_update = TaskStatusUpdate(model, utils.get_status_agent_id(status), utils.get_status_data(status))
         task_id = task_update.task_id
 
+        if mesos_status == 'TASK_ERROR':
+            logger.error('Status update for task %s: %s', task_id, mesos_status)
         if mesos_status == 'TASK_LOST':
             logger.warning('Status update for task %s: %s', task_id, mesos_status)
         else:
@@ -345,7 +353,7 @@ class ScaleScheduler(MesosScheduler):
             logger.warning('Node lost on agent %s', agent_id)
 
         node_mgr.lost_node(agent_id)
-        offer_mgr.lost_node(agent_id)
+        resource_mgr.lost_agent(agent_id)
 
         # Fail job executions that were running on the lost node
         if node:

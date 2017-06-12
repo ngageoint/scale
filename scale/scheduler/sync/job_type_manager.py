@@ -4,8 +4,11 @@ from __future__ import unicode_literals
 import threading
 
 from job.models import JobType
+from job.resources import NodeResources
 
 
+# TODO: when we calculate duration averages for job types, create a new job type class that contains model, resources,
+# stats, etc
 class JobTypeManager(object):
     """This class manages the syncing of the scheduler with the job type models. This class is thread-safe."""
 
@@ -13,6 +16,7 @@ class JobTypeManager(object):
         """Constructor
         """
 
+        self._job_type_resources = []
         self._job_types = {}  # {Job Type ID: Job Type}
         self._lock = threading.Lock()
 
@@ -46,6 +50,16 @@ class JobTypeManager(object):
                 return self._job_types[job_type_id]
             return None
 
+    def get_job_type_resources(self):
+        """Returns a list of all of the job type resource requirements
+
+        :returns: The list of all of the job type resource requirements
+        :rtype: list
+        """
+
+        with self._lock:
+            return list(self._job_type_resources)
+
     def get_job_types(self):
         """Returns a dict of all job types, stored by ID
 
@@ -60,11 +74,16 @@ class JobTypeManager(object):
         """Syncs with the database to retrieve updated job type models
         """
 
+        update_job_type_resources = []
         updated_job_types = {}
         for job_type in JobType.objects.all().iterator():
             updated_job_types[job_type.id] = job_type
+            resources = NodeResources(cpus=job_type.cpus_required, mem=job_type.mem_required,
+                                      disk=job_type.disk_out_const_required)
+            update_job_type_resources.append(resources)
 
         with self._lock:
+            self._job_type_resources = update_job_type_resources
             self._job_types = updated_job_types
 
 

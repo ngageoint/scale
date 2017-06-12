@@ -32,6 +32,9 @@ class JobExecutionTask(Task):
             task_name = 'Scale %s' % task_name
         super(JobExecutionTask, self).__init__(task_id, task_name, job_exe.node.slave_id)
 
+        self._base_task_id = task_id  # This is the base task ID in case this task gets lost
+        self._lost_count = 0
+
         self.timeout_error_name = None  # Sub-classes should set this
 
         # Keep job execution values that should not change
@@ -104,6 +107,15 @@ class JobExecutionTask(Task):
         """
 
         pass
+
+    def update_task_id_for_lost_task(self):
+        """Updates this task's ID due to the task being lost. A new, unique ID will prevent race conditions where Scale
+        confuses this task with the previous lost task.
+        """
+
+        with self._lock:
+            self._lost_count += 1
+            self._task_id = '%s_lost-%d' % (self._base_task_id, self._lost_count)
 
     def _consider_general_error(self, task_update):
         """Looks at the task update and considers a general task error for the cause of the failure. This is the

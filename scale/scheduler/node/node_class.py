@@ -49,13 +49,15 @@ class Node(object):
     IMAGE_PULL = NodeState(state='IMAGE_PULL', title='Pulling image', description=pull_desc)
     READY = NodeState(state='READY', title='Ready', description='Node is ready to run new jobs.')
 
-    def __init__(self, agent_id, node):
+    def __init__(self, agent_id, node, scheduler):
         """Constructor
 
         :param agent_id: The Mesos agent ID for the node
         :type agent_id: string
         :param node: The node model
         :type node: :class:`node.models.Node`
+        :param scheduler: The scheduler model
+        :type scheduler: :class:`scheduler.models.Scheduler`
         """
 
         self._hostname = str(node.hostname)  # Never changes
@@ -71,6 +73,7 @@ class Node(object):
         self._is_initial_cleanup_completed = False
         self._is_online = True
         self._is_paused = node.is_paused
+        self._is_scheduler_paused = scheduler.is_paused
         self._last_heath_task = None
         self._lock = threading.Lock()
         self._port = node.port
@@ -181,18 +184,18 @@ class Node(object):
 
         with self._lock:
             if self._cleanup_task and self._cleanup_task.id == task.id:
-                logger.warning('Cleanup task on host %s timed out', self._hostname)
+                logger.warning('Cleanup task on node %s timed out', self._hostname)
                 if self._cleanup_task.has_ended:
                     self._cleanup_task = None
                 self._conditions.handle_cleanup_task_timeout()
             elif self._health_task and self._health_task.id == task.id:
-                logger.warning('Health check task on host %s timed out', self._hostname)
+                logger.warning('Health check task on node %s timed out', self._hostname)
                 if self._health_task.has_ended:
                     self._health_task = None
                 self._last_heath_task = now()
                 self._conditions.handle_health_task_timeout()
             elif self._pull_task and self._pull_task.id == task.id:
-                logger.warning('Scale image pull task on host %s timed out', self._hostname)
+                logger.warning('Scale image pull task on node %s timed out', self._hostname)
                 if self._pull_task.has_ended:
                     self._pull_task = None
                 self._conditions.handle_pull_task_timeout()
@@ -221,7 +224,7 @@ class Node(object):
         :rtype: bool
         """
 
-        return self._state == Node.READY
+        return self._state == Node.READY and not self._is_scheduler_paused
 
     def is_ready_for_next_job_task(self):
         """Indicates whether this node is ready to launch the next task of a job execution
@@ -262,11 +265,13 @@ class Node(object):
                 self._is_online = is_online
             self._update_state()
 
-    def update_from_model(self, node):
-        """Updates this node's data from the database model
+    def update_from_model(self, node, scheduler):
+        """Updates this node's data from the database models
 
         :param node: The node model
         :type node: :class:`node.models.Node`
+        :param scheduler: The scheduler model
+        :type scheduler: :class:`scheduler.models.Scheduler`
         """
 
         if self.id != node.id:
@@ -275,6 +280,7 @@ class Node(object):
         with self._lock:
             self._is_active = node.is_active
             self._is_paused = node.is_paused
+            self._is_scheduler_paused = scheduler.is_paused
             self._update_state()
 
     def _create_next_tasks(self, when):
@@ -329,7 +335,9 @@ class Node(object):
         :rtype: bool
         """
 
-        if self._state in [Node.INITIAL_CLEANUP, Node.IMAGE_PULL, Node.READY]:
+        if self._is_scheduler_paused:
+            return False
+        elif self._state in [Node.INITIAL_CLEANUP, Node.IMAGE_PULL, Node.READY]:
             return True
         elif self._state == Node.DEGRADED:
             # The cleanup task can be scheduled during DEGRADED state as long as the Docker daemon is OK
@@ -374,7 +382,9 @@ class Node(object):
         :rtype: bool
         """
 
-        if self._state == Node.IMAGE_PULL:
+        if self._is_scheduler_paused:
+            return False
+        elif self._state == Node.IMAGE_PULL:
             return True
         elif self._state == Node.DEGRADED:
             # The pull task can be scheduled during DEGRADED state if other conditions match IMAGE_PULL state and the
@@ -409,11 +419,14 @@ class Node(object):
                 self._conditions.update_cleanup_count(self._cleanup.get_num_job_exes())
             self._conditions.handle_cleanup_task_completed()
         elif task_update.status == TaskStatusUpdate.FAILED:
-            logger.warning('Cleanup task on host %s failed', self._hostname)
+            logger.warning('Cleanup task on node %s failed', self._hostname)
             self._conditions.handle_cleanup_task_failed()
         elif task_update.status == TaskStatusUpdate.KILLED:
-            logger.warning('Cleanup task on host %s killed', self._hostname)
-        if self._cleanup_task.has_ended:
+            logger.warning('Cleanup task on node %s killed', self._hostname)
+        elif task_update.status == TaskStatusUpdate.LOST:
+            logger.warning('Cleanup task on node %s lost', self._hostname)
+            self._cleanup_task = None
+        if self._cleanup_task and self._cleanup_task.has_ended:
             self._cleanup_task = None
 
     def _handle_health_task_update(self, task_update):
@@ -427,12 +440,15 @@ class Node(object):
             self._last_heath_task = now()
             self._conditions.handle_health_task_completed()
         elif task_update.status == TaskStatusUpdate.FAILED:
-            logger.warning('Health check task on host %s failed', self._hostname)
+            logger.warning('Health check task on node %s failed', self._hostname)
             self._last_heath_task = now()
             self._conditions.handle_health_task_failed(task_update)
         elif task_update.status == TaskStatusUpdate.KILLED:
-            logger.warning('Health check task on host %s killed', self._hostname)
-        if self._health_task.has_ended:
+            logger.warning('Health check task on node %s killed', self._hostname)
+        elif task_update.status == TaskStatusUpdate.LOST:
+            logger.warning('Health check task on node %s lost', self._hostname)
+            self._health_task = None
+        if self._health_task and self._health_task.has_ended:
             self._health_task = None
 
     def _handle_pull_task_update(self, task_update):
@@ -446,11 +462,14 @@ class Node(object):
             self._image_pull_completed()
             self._conditions.handle_pull_task_completed()
         elif task_update.status == TaskStatusUpdate.FAILED:
-            logger.warning('Scale image pull task on host %s failed', self._hostname)
+            logger.warning('Scale image pull task on node %s failed', self._hostname)
             self._conditions.handle_pull_task_failed()
         elif task_update.status == TaskStatusUpdate.KILLED:
-            logger.warning('Scale image pull task on host %s killed', self._hostname)
-        if self._pull_task.has_ended:
+            logger.warning('Scale image pull task on node %s killed', self._hostname)
+        elif task_update.status == TaskStatusUpdate.LOST:
+            logger.warning('Scale image pull task on node %s lost', self._hostname)
+            self._pull_task = None
+        if self._pull_task and self._pull_task.has_ended:
             self._pull_task = None
 
     def _update_state(self):
@@ -476,6 +495,6 @@ class Node(object):
 
         if old_state != self._state:
             if self._state == self.DEGRADED:
-                logger.warning('Host %s is now in %s state', self._hostname, self._state.state)
+                logger.warning('Node %s is now in %s state', self._hostname, self._state.state)
             else:
-                logger.info('Host %s is now in %s state', self._hostname, self._state.state)
+                logger.info('Node %s is now in %s state', self._hostname, self._state.state)

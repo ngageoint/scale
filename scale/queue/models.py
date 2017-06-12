@@ -250,21 +250,28 @@ class QueueManager(models.Manager):
     # List of queue event processor class definitions
     _processors = []
 
-    def get_queue(self, order_mode):
+    def get_queue(self, order_mode, ignore_job_type_ids=None):
         """Returns the list of queue models sorted according to their priority first, and then according to the provided
         mode
 
         :param order_mode: The mode determining how to order the queue (FIFO or LIFO)
         :type order_mode: string
+        :param ignore_job_type_ids: The list of job type IDs to ignore
+        :type ignore_job_type_ids: list
         :returns: The list of queue models
         :rtype: list[:class:`queue.models.Queue`]
         """
 
+        query = self.all()
+
+        if ignore_job_type_ids:
+            query.exclude(job_type_id__in=ignore_job_type_ids)
+
         if order_mode == QUEUE_ORDER_FIFO:
-            return self.order_by('priority', 'queued')
+            return query.order_by('priority', 'queued')
         elif order_mode == QUEUE_ORDER_LIFO:
-            return self.order_by('priority', '-queued')
-        return self.order_by('priority')
+            return query.order_by('priority', '-queued')
+        return query.order_by('priority')
 
     def get_queue_status(self):
         """Returns the current status of the queue with statistics broken down by job type.

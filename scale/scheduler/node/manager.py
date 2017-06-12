@@ -128,10 +128,10 @@ class NodeManager(object):
                 self._new_agent_ids.discard(agent_id)
 
     def register_agent_ids(self, agent_ids):
-        """Adds the list of online agent IDs to the manager so they can be registered
+        """Adds the set of online agent IDs to the manager so they can be registered
 
-        :param agent_ids: The list of online agent IDs to add
-        :type agent_ids: [string]
+        :param agent_ids: The set of online agent IDs to add
+        :type agent_ids: set
         """
 
         with self._lock:
@@ -144,13 +144,15 @@ class NodeManager(object):
                     # Unknown agent ID, save it to be registered as a node
                     self._new_agent_ids.add(agent_id)
 
-    def sync_with_database(self, master_hostname, master_port):
+    def sync_with_database(self, master_hostname, master_port, scheduler):
         """Syncs with the database to retrieve updated node models and queries Mesos for unknown agent IDs
 
         :param master_hostname: The name of the Mesos master host
         :type master_hostname: string
         :param master_port: The port used by the Mesos master
         :type master_port: int
+        :param scheduler: The scheduler model
+        :type scheduler: :class:`scheduler.models.Scheduler`
         """
 
         # Get existing node IDs and hostnames, and new/unknown agent IDs
@@ -184,7 +186,7 @@ class NodeManager(object):
             # Add new nodes
             for node_model in new_node_models:
                 logger.info('New node %s registered with agent ID %s', node_model.hostname, node_model.slave_id)
-                self._nodes[node_model.hostname] = SchedulerNode(node_model.slave_id, node_model)
+                self._nodes[node_model.hostname] = SchedulerNode(node_model.slave_id, node_model, scheduler)
                 self._agent_ids[node_model.slave_id] = node_model.hostname
             # Update nodes with new agent IDs
             for hostname, slave_info in nodes_with_new_agent_id.items():
@@ -199,7 +201,7 @@ class NodeManager(object):
             for node_model in existing_node_models:
                 if node_model.hostname in self._nodes:
                     node = self._nodes[node_model.hostname]
-                    node.update_from_model(node_model)
+                    node.update_from_model(node_model, scheduler)
                     if node.should_be_removed():
                         del self._agent_ids[node.agent_id]
                         del self._nodes[node_model.hostname]

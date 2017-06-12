@@ -52,7 +52,6 @@ class TestJobExecutionManager(TransactionTestCase):
 
         # Both executions should be in the manager and ready
         self.assertEqual(len(self.job_exe_mgr.get_running_job_exes()), 2)
-        self.assertEqual(len(self.job_exe_mgr.get_ready_job_exes()), 2)
         self.assertIsNotNone(self.job_exe_mgr.get_running_job_exe(self.job_exe_1.id))
         self.assertIsNotNone(self.job_exe_mgr.get_running_job_exe(self.job_exe_2.id))
 

@@ -33,6 +33,7 @@ class RunningJobExecution(object):
         self._id = job_exe.id
         self._job_id = job_exe.job_id
         self._job_type_id = job_exe.job.job_type_id
+        self._priority = job_exe.job.priority
         self._node_id = job_exe.node_id
         if hasattr(job_exe, 'docker_volumes'):
             self._docker_volumes = job_exe.docker_volumes
@@ -127,6 +128,16 @@ class RunningJobExecution(object):
         """
 
         return self._job_type_id
+
+    @property
+    def priority(self):
+        """The job execution's priority
+
+        :returns: The priority of the job execution
+        :rtype: int
+        """
+
+        return self._priority
 
     @property
     def node_id(self):
@@ -244,12 +255,11 @@ class RunningJobExecution(object):
         with self._lock:
             return not self._current_task and self._remaining_tasks
 
-    def next_task_resources(self):
-        """Returns the resources that are required by the next task in this job execution. Returns None if there are no
-        remaining tasks.
+    def next_task(self):
+        """Returns the next task in this job execution. Returns None if there are no remaining tasks.
 
-        :returns: The resources required by the next task, possibly None
-        :rtype: :class:`job.resources.NodeResources`
+        :returns: The next task, possibly None
+        :rtype: :class:`job.tasks.base_task.Task`
         """
 
         with self._lock:
@@ -257,7 +267,7 @@ class RunningJobExecution(object):
                 return None
 
             next_task = self._remaining_tasks[0]
-            return next_task.get_resources()
+            return next_task
 
     def start_next_task(self):
         """Starts the next task in the job execution and returns it. Returns None if the next task is not ready or no
@@ -370,5 +380,6 @@ class RunningJobExecution(object):
             if not self._current_task or self._current_task.id != task_update.task_id:
                 return
 
+            self._current_task.update_task_id_for_lost_task()  # Note: This changes the task ID!
             self._remaining_tasks.insert(0, self._current_task)
             self._current_task = None

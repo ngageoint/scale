@@ -1,4 +1,5 @@
 """Defines classes for encapsulating sets of resources"""
+from __future__ import unicode_literals
 
 
 class JobResources(object):
@@ -63,3 +64,95 @@ class NodeResources(object):
         self.cpus = cpus
         self.mem = mem
         self.disk = disk
+
+    def add(self, resources):
+        """Adds the given resources
+
+        :param resources: The resources to add
+        :type resources: :class:`job.resources.NodeResources`
+        """
+
+        self.cpus += resources.cpus
+        self.mem += resources.mem
+        self.disk += resources.disk
+
+    def generate_status_json(self, resource_dict):
+        """Generates the portion of the status JSON that describes these resources
+
+        :param resource_dict: The dict for these resources
+        :type resource_dict: dict
+        """
+
+        resource_dict['cpus'] = self.cpus
+        resource_dict['memory'] = self.mem
+        resource_dict['disk'] = self.disk
+
+    def increase_up_to(self, resources):
+        """Increases each resource up to the value in the given resources
+
+        :param resources: The resources
+        :type resources: :class:`job.resources.NodeResources`
+        """
+
+        if self.cpus < resources.cpus:
+            self.cpus = resources.cpus
+        if self.mem < resources.mem:
+            self.mem = resources.mem
+        if self.disk < resources.disk:
+            self.disk = resources.disk
+
+    def is_equal(self, resources):
+        """Indicates if these resources are equal. This should be used for testing only.
+
+        :param resources: The resources to compare
+        :type resources: :class:`job.resources.NodeResources`
+        :returns: True if these resources are equal, False otherwise
+        :rtype: bool
+        """
+
+        if round(self.cpus, 5) != round(resources.cpus, 5):
+            return False
+        if round(self.mem, 5) != round(resources.mem, 5):
+            return False
+        if round(self.disk, 5) != round(resources.disk, 5):
+            return False
+
+        return True
+
+    def is_sufficient_to_meet(self, resources):
+        """Indicates if these resources are sufficient to meet the requested resources
+
+        :param resources: The requested resources
+        :type resources: :class:`job.resources.NodeResources`
+        :returns: True if these resources are sufficient for the request, False otherwise
+        :rtype: bool
+        """
+
+        if self.cpus < resources.cpus:
+            return False
+        if self.mem < resources.mem:
+            return False
+        if self.disk < resources.disk:
+            return False
+
+        return True
+
+    def subtract(self, resources):
+        """Subtracts the given resources
+
+        :param resources: The resources to subtract
+        :type resources: :class:`job.resources.NodeResources`
+        """
+
+        self.cpus -= resources.cpus
+        self.mem -= resources.mem
+        self.disk -= resources.disk
+
+    def to_logging_string(self):
+        """Converts the resource to a readable logging string
+
+        :returns: A readable string for logging
+        :rtype: string
+        """
+
+        return '[%.2f CPUs, %.2f MiB memory, %.2f MiB disk]' % (self.cpus, self.mem, self.disk)

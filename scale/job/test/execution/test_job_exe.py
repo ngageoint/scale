@@ -426,7 +426,7 @@ class TestRunningJobExecution(TestCase):
         running_job_exe.task_update(update)
         self.assertTrue(task.has_started)
 
-        # Lose task and make sure the same task is the next one to schedule again
+        # Lose task and make sure the "same" task is the next one to schedule again with a new ID this time
         when_lost = job_task_started + timedelta(seconds=1)
         update = job_test_utils.create_task_status_update(job_task_id, 'agent', TaskStatusUpdate.LOST, when_lost)
         self.task_mgr.handle_task_update(update)
@@ -434,7 +434,8 @@ class TestRunningJobExecution(TestCase):
         self.assertFalse(task.has_started)
         task = running_job_exe.start_next_task()
         self.task_mgr.launch_tasks([task], now())
-        self.assertEqual(job_task_id, task.id)
+        self.assertTrue(task.id.startswith(job_task_id))
+        self.assertNotEqual(job_task_id, task.id)
 
     def test_canceled_job_execution(self):
         """Tests running through a job execution that gets canceled"""
