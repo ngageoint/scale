@@ -10,8 +10,9 @@ Subpackages
     scheduler.management
     scheduler.migrations
     scheduler.node
-    scheduler.offer
     scheduler.recon
+    scheduler.resources
+    scheduler.scheduling
     scheduler.sync
     scheduler.task
     scheduler.test

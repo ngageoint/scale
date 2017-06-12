@@ -496,7 +496,6 @@ timeout threshold</p>
 </tr>
 </tbody>
 </table>
-<p>:raises <a class="reference internal" href="util.html#util.exceptions.ScaleLogicBug" title="util.exceptions.ScaleLogicBug"><code class="xref py py-class docutils literal"><span class="pre">util.exceptions.ScaleLogicBug</span></code></a>: If the task has already started</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -622,6 +621,22 @@ timeout threshold</p>
 <em class="property">class </em><code class="descclassname">job.tasks.manager.</code><code class="descname">TaskManager</code><a class="headerlink" href="#job.tasks.manager.TaskManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>This class manages all currently running tasks. This class is thread-safe.</p>
+<dl class="method">
+<dt id="job.tasks.manager.TaskManager.get_all_tasks">
+<code class="descname">get_all_tasks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.tasks.manager.TaskManager.get_all_tasks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all of current tasks</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of all current tasks</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="job.tasks.manager.TaskManager.get_tasks_to_reconcile">
 <code class="descname">get_tasks_to_reconcile</code><span class="sig-paren">(</span><em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.tasks.manager.TaskManager.get_tasks_to_reconcile" title="Permalink to this definition">¶</a></dt>

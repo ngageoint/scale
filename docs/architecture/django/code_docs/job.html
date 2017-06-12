@@ -4092,6 +4092,114 @@ object the first time, the query is executed.</p>
 <em class="property">class </em><code class="descclassname">job.resources.</code><code class="descname">NodeResources</code><span class="sig-paren">(</span><em>cpus=0.0</em>, <em>mem=0.0</em>, <em>disk=0.0</em><span class="sig-paren">)</span><a class="headerlink" href="#job.resources.NodeResources" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>This class encapsulates a set of resources available on a node</p>
+<dl class="method">
+<dt id="job.resources.NodeResources.add">
+<code class="descname">add</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="headerlink" href="#job.resources.NodeResources.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given resources</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>resources</strong> (<a class="reference internal" href="#job.resources.NodeResources" title="job.resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">job.resources.NodeResources</span></code></a>) &#8211; The resources to add</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.resources.NodeResources.generate_status_json">
+<code class="descname">generate_status_json</code><span class="sig-paren">(</span><em>resource_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#job.resources.NodeResources.generate_status_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the portion of the status JSON that describes these resources</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>resource_dict</strong> (<em>dict</em>) &#8211; The dict for these resources</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.resources.NodeResources.increase_up_to">
+<code class="descname">increase_up_to</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="headerlink" href="#job.resources.NodeResources.increase_up_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increases each resource up to the value in the given resources</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>resources</strong> (<a class="reference internal" href="#job.resources.NodeResources" title="job.resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">job.resources.NodeResources</span></code></a>) &#8211; The resources</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.resources.NodeResources.is_equal">
+<code class="descname">is_equal</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="headerlink" href="#job.resources.NodeResources.is_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates if these resources are equal. This should be used for testing only.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>resources</strong> (<a class="reference internal" href="#job.resources.NodeResources" title="job.resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">job.resources.NodeResources</span></code></a>) &#8211; The resources to compare</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if these resources are equal, False otherwise</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.resources.NodeResources.is_sufficient_to_meet">
+<code class="descname">is_sufficient_to_meet</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="headerlink" href="#job.resources.NodeResources.is_sufficient_to_meet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates if these resources are sufficient to meet the requested resources</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>resources</strong> (<a class="reference internal" href="#job.resources.NodeResources" title="job.resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">job.resources.NodeResources</span></code></a>) &#8211; The requested resources</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if these resources are sufficient for the request, False otherwise</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.resources.NodeResources.subtract">
+<code class="descname">subtract</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="headerlink" href="#job.resources.NodeResources.subtract" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subtracts the given resources</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>resources</strong> (<a class="reference internal" href="#job.resources.NodeResources" title="job.resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">job.resources.NodeResources</span></code></a>) &#8211; The resources to subtract</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.resources.NodeResources.to_logging_string">
+<code class="descname">to_logging_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.resources.NodeResources.to_logging_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts the resource to a readable logging string</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A readable string for logging</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 </div>

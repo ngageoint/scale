@@ -40,7 +40,7 @@
     <link rel="top" title="Scale 5.0.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="scheduler package" href="scheduler.html"/>
         <link rel="next" title="scheduler.task package" href="scheduler.task.html"/>
-        <link rel="prev" title="scheduler.recon package" href="scheduler.recon.html"/> 
+        <link rel="prev" title="scheduler.scheduling package" href="scheduler.scheduling.html"/> 
 
   
   <script src="../../../_static/js/modernizr.min.js"></script>
@@ -267,6 +267,22 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="scheduler.sync.job_type_manager.JobTypeManager.get_job_type_resources">
+<code class="descname">get_job_type_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.sync.job_type_manager.JobTypeManager.get_job_type_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of all of the job type resource requirements</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of all of the job type resource requirements</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="scheduler.sync.job_type_manager.JobTypeManager.get_job_types">
 <code class="descname">get_job_types</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.sync.job_type_manager.JobTypeManager.get_job_types" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a dict of all job types, stored by ID</p>
@@ -300,6 +316,24 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>This class manages the high-level scheduler configuration. It is a combination of data from both the Scale
 database and the Mesos master. This class is thread-safe.</p>
+<dl class="method">
+<dt id="scheduler.sync.scheduler_manager.SchedulerManager.add_scheduling_counts">
+<code class="descname">add_scheduling_counts</code><span class="sig-paren">(</span><em>job_exe_count</em>, <em>task_count</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.sync.scheduler_manager.SchedulerManager.add_scheduling_counts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the scheduler information from Mesos</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>job_exe_count</strong> (<em>int</em>) &#8211; The number of new job executions scheduled</li>
+<li><strong>task_count</strong> (<em>int</em>) &#8211; The number of tasks launched</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="scheduler.sync.scheduler_manager.SchedulerManager.framework_id">
 <code class="descname">framework_id</code><a class="headerlink" href="#scheduler.sync.scheduler_manager.SchedulerManager.framework_id" title="Permalink to this definition">¶</a></dt>
@@ -311,6 +345,20 @@ database and the Mesos master. This class is thread-safe.</p>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The framework ID</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.sync.scheduler_manager.SchedulerManager.generate_status_json">
+<code class="descname">generate_status_json</code><span class="sig-paren">(</span><em>status_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.sync.scheduler_manager.SchedulerManager.generate_status_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the portion of the status JSON that describes the scheduler settings and metrics</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status_dict</strong> (<em>dict</em>) &#8211; The status JSON dict</td>
 </tr>
 </tbody>
 </table>
@@ -442,7 +490,7 @@ database and the Mesos master. This class is thread-safe.</p>
         <a href="scheduler.task.html" class="btn btn-neutral float-right" title="scheduler.task package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="scheduler.recon.html" class="btn btn-neutral" title="scheduler.recon package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="scheduler.scheduling.html" class="btn btn-neutral" title="scheduler.scheduling package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

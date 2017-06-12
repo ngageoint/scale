@@ -4,6 +4,14 @@ scheduler\.threads package
 Submodules
 ----------
 
+scheduler\.threads\.base\_thread module
+---------------------------------------
+
+.. automodule:: scheduler.threads.base_thread
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 scheduler\.threads\.db\_sync module
 -----------------------------------
 

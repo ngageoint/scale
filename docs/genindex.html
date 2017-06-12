@@ -199,12 +199,12 @@
 </li>
       <li><a href="architecture/django/code_docs/job.configuration.data.html#job.configuration.data.data_file.AbstractDataFileStore">AbstractDataFileStore (class in job.configuration.data.data_file)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.manager.OfferManager.ACCEPTED">ACCEPTED (scheduler.offer.manager.OfferManager attribute)</a>
-
-      <ul>
-        <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.node.NodeOffers.ACCEPTED">(scheduler.offer.node.NodeOffers attribute)</a>
+      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.node.SchedulingNode.accept_job_exe_next_task">accept_job_exe_next_task() (scheduler.scheduling.node.SchedulingNode method)</a>
 </li>
-      </ul></li>
+      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.node.SchedulingNode.accept_new_job_exe">accept_new_job_exe() (scheduler.scheduling.node.SchedulingNode method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.node.SchedulingNode.accept_node_tasks">accept_node_tasks() (scheduler.scheduling.node.SchedulingNode method)</a>
+</li>
       <li><a href="architecture/django/code_docs/queue.html#queue.job_exe.QueuedJobExecution.accepted">accepted() (queue.job_exe.QueuedJobExecution method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.html#util.aws.AWSCredentials.access_key_id">access_key_id (util.aws.AWSCredentials attribute)</a>
@@ -214,6 +214,10 @@
       <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.ActiveError">ActiveError (class in scheduler.node.conditions)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.ActiveWarning">ActiveWarning (class in scheduler.node.conditions)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.resources.NodeResources.add">add() (job.resources.NodeResources method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.node.SchedulingNode.add_allocated_offers">add_allocated_offers() (scheduler.scheduling.node.SchedulingNode method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.configuration.interface.html#job.configuration.interface.scale_file.ScaleFileDescription.add_allowed_media_type">add_allowed_media_type() (job.configuration.interface.scale_file.ScaleFileDescription method)</a>
 </li>
@@ -333,9 +337,7 @@
 </li>
       <li><a href="architecture/django/code_docs/ingest.strike.monitors.html#ingest.strike.monitors.factory.add_monitor_type">add_monitor_type() (in module ingest.strike.monitors.factory)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.manager.OfferManager.add_new_offers">add_new_offers() (scheduler.offer.manager.OfferManager method)</a>
-</li>
-      <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.node.NodeOffers.add_offer">add_offer() (scheduler.offer.node.NodeOffers method)</a>
+      <li><a href="architecture/django/code_docs/scheduler.resources.html#scheduler.resources.manager.ResourceManager.add_new_offers">add_new_offers() (scheduler.resources.manager.ResourceManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.configuration.data.html#job.configuration.data.job_data.JobData.add_output">add_output() (job.configuration.data.job_data.JobData method)</a>
 </li>
@@ -379,6 +381,10 @@
 </li>
       <li><a href="architecture/django/code_docs/ingest.scan.scanners.html#ingest.scan.scanners.factory.add_scanner_type">add_scanner_type() (in module ingest.scan.scanners.factory)</a>
 </li>
+      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.node.SchedulingNode.add_scheduled_job_exes">add_scheduled_job_exes() (scheduler.scheduling.node.SchedulingNode method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.sync.html#scheduler.sync.scheduler_manager.SchedulerManager.add_scheduling_counts">add_scheduling_counts() (scheduler.sync.scheduler_manager.SchedulerManager method)</a>
+</li>
       <li><a href="architecture/django/code_docs/scheduler.recon.html#scheduler.recon.manager.ReconciliationManager.add_task_ids">add_task_ids() (scheduler.recon.manager.ReconciliationManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.task.html#scheduler.task.manager.TaskUpdateManager.add_task_update">add_task_update() (scheduler.task.manager.TaskUpdateManager method)</a>
@@ -402,7 +408,13 @@
       <ul>
         <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.Node.agent_id">(scheduler.node.node_class.Node attribute)</a>
 </li>
-        <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.offer.ResourceOffer.agent_id">(scheduler.offer.offer.ResourceOffer attribute)</a>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/scheduler.resources.html#scheduler.resources.agent.AgentResources">AgentResources (class in scheduler.resources.agent)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.resources.html#scheduler.resources.agent.AgentResources.allocate_offers">allocate_offers() (scheduler.resources.agent.AgentResources method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/scheduler.resources.html#scheduler.resources.manager.ResourceManager.allocate_offers">(scheduler.resources.manager.ResourceManager method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_retry.TestRetry.always_fail">always_fail() (util.test.test_retry.TestRetry method)</a>
@@ -476,6 +488,8 @@
       <li><a href="architecture/django/code_docs/job.html#job.models.JobType.BASE_FIELDS">BASE_FIELDS (job.models.JobType attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.Workspace.base_url">base_url (storage.models.Workspace attribute)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.base_thread.BaseSchedulerThread">BaseSchedulerThread (class in scheduler.threads.base_thread)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchJob.batch">batch (batch.models.BatchJob attribute)</a>
 
@@ -699,10 +713,12 @@
 </li>
       <li><a href="architecture/django/code_docs/job.execution.tasks.html#job.execution.tasks.cleanup_task.CleanupTask">CleanupTask (class in job.execution.tasks.cleanup_task)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.manager.NodeManager.clear">clear() (scheduler.node.manager.NodeManager method)</a>
+      <li><a href="architecture/django/code_docs/job.execution.html#job.execution.manager.JobExecutionManager.clear">clear() (job.execution.manager.JobExecutionManager method)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.manager.OfferManager.clear">(scheduler.offer.manager.OfferManager method)</a>
+        <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.manager.NodeManager.clear">(scheduler.node.manager.NodeManager method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/scheduler.resources.html#scheduler.resources.manager.ResourceManager.clear">(scheduler.resources.manager.ResourceManager method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/cli.html#module-cli">cli (module)</a>
@@ -835,24 +851,6 @@
 </li>
       <li><a href="architecture/django/code_docs/job.configuration.json.execution.html#job.configuration.json.execution.exe_config_1_0.ExecutionConfiguration.configure_workspace_docker_params">configure_workspace_docker_params() (job.configuration.json.execution.exe_config_1_0.ExecutionConfiguration method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.manager.OfferManager.consider_new_job_exe">consider_new_job_exe() (scheduler.offer.manager.OfferManager method)</a>
-
-      <ul>
-        <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.node.NodeOffers.consider_new_job_exe">(scheduler.offer.node.NodeOffers method)</a>
-</li>
-      </ul></li>
-      <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.manager.OfferManager.consider_next_task">consider_next_task() (scheduler.offer.manager.OfferManager method)</a>
-
-      <ul>
-        <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.node.NodeOffers.consider_next_task">(scheduler.offer.node.NodeOffers method)</a>
-</li>
-      </ul></li>
-      <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.manager.OfferManager.consider_task">consider_task() (scheduler.offer.manager.OfferManager method)</a>
-
-      <ul>
-        <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.node.NodeOffers.consider_task">(scheduler.offer.node.NodeOffers method)</a>
-</li>
-      </ul></li>
       <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.base_task.Task.container_name">container_name (job.tasks.base_task.Task attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.configuration.json.execution.html#job.configuration.json.execution.exe_config.ExecutionConfiguration.convert_configuration">convert_configuration() (job.configuration.json.execution.exe_config.ExecutionConfiguration static method)</a>
@@ -885,12 +883,12 @@
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData">CountryData (class in storage.models)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.DoesNotExist">CountryData.DoesNotExist</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.MultipleObjectsReturned">CountryData.MultipleObjectsReturned</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryDataManager">CountryDataManager (class in storage.models)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.cpus_required">cpus_required (job.models.Job attribute)</a>
@@ -1198,8 +1196,6 @@
       <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.Node.DEGRADED">DEGRADED (scheduler.node.node_class.Node attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.Node.degraded_desc">degraded_desc (scheduler.node.node_class.Node attribute)</a>
-</li>
-      <li><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.schedule.SchedulingThread.DELAY">DELAY (scheduler.threads.schedule.SchedulingThread attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0007_auto_20170127_1327.delete_constraint">delete_constraint() (in module ingest.migrations.0007_auto_20170127_1327)</a>
 
@@ -2042,13 +2038,21 @@
 </li>
         <li><a href="architecture/django/code_docs/job.execution.html#job.execution.metrics.TotalJobExeMetrics.generate_status_json">(job.execution.metrics.TotalJobExeMetrics method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.html#job.resources.NodeResources.generate_status_json">(job.resources.NodeResources method)</a>
+</li>
         <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeConditions.generate_status_json">(scheduler.node.conditions.NodeConditions method)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.manager.NodeManager.generate_status_json">(scheduler.node.manager.NodeManager method)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.Node.generate_status_json">(scheduler.node.node_class.Node method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/scheduler.resources.html#scheduler.resources.agent.AgentResources.generate_status_json">(scheduler.resources.agent.AgentResources method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/scheduler.resources.html#scheduler.resources.manager.ResourceManager.generate_status_json">(scheduler.resources.manager.ResourceManager method)</a>
+</li>
         <li><a href="architecture/django/code_docs/scheduler.sync.html#scheduler.sync.job_type_manager.JobTypeManager.generate_status_json">(scheduler.sync.job_type_manager.JobTypeManager method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/scheduler.sync.html#scheduler.sync.scheduler_manager.SchedulerManager.generate_status_json">(scheduler.sync.scheduler_manager.SchedulerManager method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/storage.html#storage.serializers.GeoJsonField">GeoJsonField (class in storage.serializers)</a>
@@ -2087,15 +2091,11 @@
         <li><a href="architecture/django/code_docs/storage.html#storage.views.WorkspaceDetailsView.get">(storage.views.WorkspaceDetailsView method)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.node.NodeOffers.get_accepted_new_job_exes">get_accepted_new_job_exes() (scheduler.offer.node.NodeOffers method)</a>
-</li>
-      <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.node.NodeOffers.get_accepted_running_job_exes">get_accepted_running_job_exes() (scheduler.offer.node.NodeOffers method)</a>
-</li>
-      <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.node.NodeOffers.get_accepted_tasks">get_accepted_tasks() (scheduler.offer.node.NodeOffers method)</a>
-</li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeTypeManager.get_active_trigger_rules">get_active_trigger_rules() (recipe.models.RecipeTypeManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.configuration.data.html#job.configuration.data.job_data.JobData.get_all_properties">get_all_properties() (job.configuration.data.job_data.JobData method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.manager.TaskManager.get_all_tasks">get_all_tasks() (job.tasks.manager.TaskManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.get_batch_definition">get_batch_definition() (batch.models.Batch method)</a>
 </li>
@@ -2384,6 +2384,8 @@
       <li><a href="architecture/django/code_docs/recipe.configuration.definition.html#recipe.configuration.definition.recipe_definition.RecipeDefinition.get_job_type_map">get_job_type_map() (recipe.configuration.definition.recipe_definition.RecipeDefinition method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.get_job_type_name">get_job_type_name() (job.models.JobExecution method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.sync.html#scheduler.sync.job_type_manager.JobTypeManager.get_job_type_resources">get_job_type_resources() (scheduler.sync.job_type_manager.JobTypeManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/vault.html#vault.secrets_handler.SecretsHandler.get_job_type_secrets">get_job_type_secrets() (vault.secrets_handler.SecretsHandler method)</a>
 </li>
@@ -2801,8 +2803,6 @@
 </li>
       <li><a href="architecture/django/code_docs/queue.html#queue.models.QueueManager.get_queue_status">get_queue_status() (queue.models.QueueManager method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.execution.html#job.execution.manager.JobExecutionManager.get_ready_job_exes">get_ready_job_exes() (job.execution.manager.JobExecutionManager method)</a>
-</li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.get_recipe_data">get_recipe_data() (recipe.models.Recipe method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.get_recipe_definition">get_recipe_definition() (recipe.models.Recipe method)</a>
@@ -3133,8 +3133,6 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/mesos_api.html#mesos_api.api.HardwareResources">HardwareResources (class in mesos_api.api)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.node.NodeOffers.has_accepted_job_exes">has_accepted_job_exes() (scheduler.offer.node.NodeOffers method)</a>
-</li>
       <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeConditions.has_active_errors">has_active_errors() (scheduler.node.conditions.NodeConditions method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.base_task.Task.has_been_launched">has_been_launched (job.tasks.base_task.Task attribute)</a>
@@ -3284,8 +3282,6 @@
 </li>
         <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.Node.id">(scheduler.node.node_class.Node attribute)</a>
 </li>
-        <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.offer.ResourceOffer.id">(scheduler.offer.offer.ResourceOffer attribute)</a>
-</li>
         <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.id">(storage.models.CountryData attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.id">(storage.models.ScaleFile attribute)</a>
@@ -3312,6 +3308,8 @@
       <li><a href="architecture/django/code_docs/port.html#port.importer.import_config">import_config() (in module port.importer)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.increase_max_tries">increase_max_tries() (job.models.Job method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.resources.NodeResources.increase_up_to">increase_up_to() (job.resources.NodeResources method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobManager.increment_max_tries">increment_max_tries() (job.models.JobManager method)</a>
 </li>
@@ -3465,10 +3463,10 @@
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.html#module-ingest.test.utils">ingest.test.utils (module)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/ingest.triggers.html#module-ingest.triggers">ingest.triggers (module)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/ingest.triggers.configuration.html#module-ingest.triggers.configuration">ingest.triggers.configuration (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.triggers.configuration.html#module-ingest.triggers.configuration.ingest_trigger_rule">ingest.triggers.configuration.ingest_trigger_rule (module)</a>
@@ -3647,6 +3645,8 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.is_docker_privileged">is_docker_privileged() (job.models.JobExecution method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.html#job.resources.NodeResources.is_equal">is_equal() (job.resources.NodeResources method)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.connection.DependencyInputConnection.is_equal_to">is_equal_to() (recipe.handlers.connection.DependencyInputConnection method)</a>
 
       <ul>
@@ -3704,6 +3704,8 @@
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.is_ready_to_queue">is_ready_to_queue (job.models.Job attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.is_ready_to_requeue">is_ready_to_requeue (job.models.Job attribute)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.resources.NodeResources.is_sufficient_to_meet">is_sufficient_to_meet() (job.resources.NodeResources method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.is_superseded">is_superseded (job.models.Job attribute)</a>
 
@@ -4601,14 +4603,12 @@
 </li>
       <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.update.TaskStatusUpdate.LOST">LOST (job.tasks.update.TaskStatusUpdate attribute)</a>
 </li>
+      <li><a href="architecture/django/code_docs/scheduler.resources.html#scheduler.resources.manager.ResourceManager.lost_agent">lost_agent() (scheduler.resources.manager.ResourceManager method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.manager.JobExecutionManager.lost_node">lost_node() (job.execution.manager.JobExecutionManager method)</a>
 
       <ul>
         <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.manager.NodeManager.lost_node">(scheduler.node.manager.NodeManager method)</a>
-</li>
-        <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.manager.OfferManager.lost_node">(scheduler.offer.manager.OfferManager method)</a>
-</li>
-        <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.node.NodeOffers.lost_node">(scheduler.offer.node.NodeOffers method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.health_task.HealthTask.LOW_DOCKER_SPACE_CODE">LOW_DOCKER_SPACE_CODE (job.tasks.health_task.HealthTask attribute)</a>
@@ -4636,8 +4636,6 @@
       <li><a href="architecture/django/code_docs/ingest.handlers.html#ingest.handlers.file_rule.FileRule.matches_file_name">matches_file_name() (ingest.handlers.file_rule.FileRule method)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.task.html#scheduler.task.manager.TaskUpdateManager.MAX_BATCH_SIZE">MAX_BATCH_SIZE (scheduler.task.manager.TaskUpdateManager attribute)</a>
-</li>
-      <li><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.schedule.SchedulingThread.MAX_NEW_JOB_EXES">MAX_NEW_JOB_EXES (scheduler.threads.schedule.SchedulingThread attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.html#util.rest.DefaultPagination.max_page_size">max_page_size (util.rest.DefaultPagination attribute)</a>
 </li>
@@ -5257,18 +5255,10 @@
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.new_workspace_id">new_workspace_id (ingest.models.Ingest attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.execution.html#job.execution.job_exe.RunningJobExecution.next_task_resources">next_task_resources() (job.execution.job_exe.RunningJobExecution method)</a>
+      <li><a href="architecture/django/code_docs/job.execution.html#job.execution.job_exe.RunningJobExecution.next_task">next_task() (job.execution.job_exe.RunningJobExecution method)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.nfs_broker.NfsBroker">NfsBroker (class in storage.brokers.nfs_broker)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.manager.OfferManager.NO_NODES_AVAILABLE">NO_NODES_AVAILABLE (scheduler.offer.manager.OfferManager attribute)</a>
-</li>
-      <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.manager.OfferManager.NO_OFFERS">NO_OFFERS (scheduler.offer.manager.OfferManager attribute)</a>
-
-      <ul>
-        <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.node.NodeOffers.NO_OFFERS">(scheduler.offer.node.NodeOffers attribute)</a>
-</li>
-      </ul></li>
       <li><a href="architecture/django/code_docs/node.html#node.models.Node">Node (class in node.models)</a>
 
       <ul>
@@ -5280,8 +5270,6 @@
       <ul>
         <li><a href="architecture/django/code_docs/node.html#module-node">(module)</a>
 </li>
-        <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.node.NodeOffers.node">(scheduler.offer.node.NodeOffers attribute)</a>
-</li>
       </ul></li>
       <li><a href="architecture/django/code_docs/node.html#module-node.admin">node.admin (module)</a>
 </li>
@@ -5291,14 +5279,14 @@
 </li>
       <li><a href="architecture/django/code_docs/node.migrations.html#module-node.migrations">node.migrations (module)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/node.migrations.html#module-node.migrations.0001_initial">node.migrations.0001_initial (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.migrations.html#module-node.migrations.0002_node_pause_reason">node.migrations.0002_node_pause_reason (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.migrations.html#module-node.migrations.0003_node_is_paused_errors">node.migrations.0003_node_is_paused_errors (module)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/node.migrations.html#module-node.migrations.0004_auto_20170524_1639">node.migrations.0004_auto_20170524_1639 (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.html#module-node.models">node.models (module)</a>
@@ -5325,17 +5313,9 @@
         <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.node_id">(job.models.JobExecution attribute)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.manager.OfferManager.NODE_NOT_READY">NODE_NOT_READY (scheduler.offer.manager.OfferManager attribute)</a>
-
-      <ul>
-        <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.node.NodeOffers.NODE_NOT_READY">(scheduler.offer.node.NodeOffers attribute)</a>
-</li>
-      </ul></li>
       <li><a href="architecture/django/code_docs/queue.html#queue.models.Queue.node_required">node_required (queue.models.Queue attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.html#queue.models.Queue.node_required_id">node_required_id (queue.models.Queue attribute)</a>
-</li>
-      <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.offer.ResourceOffer.node_resources">node_resources (scheduler.offer.offer.ResourceOffer attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.html#node.admin.NodeAdmin">NodeAdmin (class in node.admin)</a>
 </li>
@@ -5373,8 +5353,6 @@
         <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.manager.NodeManager">(class in scheduler.node.manager)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.node.NodeOffers">NodeOffers (class in scheduler.offer.node)</a>
-</li>
       <li><a href="architecture/django/code_docs/job.html#job.resources.NodeResources">NodeResources (class in job.resources)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.html#node.serializers.NodeSerializer">NodeSerializer (class in node.serializers)</a>
@@ -5409,24 +5387,6 @@
 </li>
       <li><a href="architecture/django/code_docs/scheduler.html#scheduler.scale_scheduler.ScaleScheduler.NORMAL_WARN_THRESHOLD">NORMAL_WARN_THRESHOLD (scheduler.scale_scheduler.ScaleScheduler attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.manager.OfferManager.NOT_ENOUGH_CPUS">NOT_ENOUGH_CPUS (scheduler.offer.manager.OfferManager attribute)</a>
-
-      <ul>
-        <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.node.NodeOffers.NOT_ENOUGH_CPUS">(scheduler.offer.node.NodeOffers attribute)</a>
-</li>
-      </ul></li>
-      <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.manager.OfferManager.NOT_ENOUGH_DISK">NOT_ENOUGH_DISK (scheduler.offer.manager.OfferManager attribute)</a>
-
-      <ul>
-        <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.node.NodeOffers.NOT_ENOUGH_DISK">(scheduler.offer.node.NodeOffers attribute)</a>
-</li>
-      </ul></li>
-      <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.manager.OfferManager.NOT_ENOUGH_MEM">NOT_ENOUGH_MEM (scheduler.offer.manager.OfferManager attribute)</a>
-
-      <ul>
-        <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.node.NodeOffers.NOT_ENOUGH_MEM">(scheduler.offer.node.NodeOffers attribute)</a>
-</li>
-      </ul></li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.num_exes">num_exes (job.models.Job attribute)</a>
 </li>
   </ul></td>
@@ -5513,9 +5473,7 @@
         <li><a href="architecture/django/code_docs/trigger.html#trigger.models.TriggerEvent.occurred">(trigger.models.TriggerEvent attribute)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.node.NodeOffers.offer_ids">offer_ids (scheduler.offer.node.NodeOffers attribute)</a>
-</li>
-      <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.manager.OfferManager">OfferManager (class in scheduler.offer.manager)</a>
+      <li><a href="architecture/django/code_docs/scheduler.resources.html#scheduler.resources.agent.ResourceSet.offered_resources">offered_resources (scheduler.resources.agent.ResourceSet attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.html#scheduler.scale_scheduler.ScaleScheduler.offerRescinded">offerRescinded() (scheduler.scale_scheduler.ScaleScheduler method)</a>
 </li>
@@ -5879,6 +5837,8 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/scheduler.recon.html#scheduler.recon.manager.ReconciliationManager.perform_reconciliation">perform_reconciliation() (scheduler.recon.manager.ReconciliationManager method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.manager.SchedulingManager.perform_scheduling">perform_scheduling() (scheduler.scheduling.manager.SchedulingManager method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.html#job.clock.perform_tick">perform_tick() (in module job.clock)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.html#util.rest.PlainTextRenderer">PlainTextRenderer (class in util.rest)</a>
@@ -5886,10 +5846,6 @@
       <li><a href="architecture/django/code_docs/metrics.html#metrics.models.PlotBigIntegerField">PlotBigIntegerField (class in metrics.models)</a>
 </li>
       <li><a href="architecture/django/code_docs/metrics.html#metrics.models.PlotIntegerField">PlotIntegerField (class in metrics.models)</a>
-</li>
-      <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.manager.OfferManager.pop_all_offers">pop_all_offers() (scheduler.offer.manager.OfferManager method)</a>
-</li>
-      <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.manager.OfferManager.pop_offers_with_accepted_job_exes">pop_offers_with_accepted_job_exes() (scheduler.offer.manager.OfferManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.configuration.interface.html#job.configuration.interface.job_interface.JobInterface.populate_command_argument_properties">populate_command_argument_properties() (job.configuration.interface.job_interface.JobInterface method)</a>
 
@@ -6053,9 +6009,11 @@
 </li>
       <li><a href="architecture/django/code_docs/job.execution.tasks.html#job.execution.tasks.pre_task.PreTask">PreTask (class in job.execution.tasks.pre_task)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.models.Job.priority">priority (job.models.Job attribute)</a>
+      <li><a href="architecture/django/code_docs/job.execution.html#job.execution.job_exe.RunningJobExecution.priority">priority (job.execution.job_exe.RunningJobExecution attribute)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/job.html#job.models.Job.priority">(job.models.Job attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobType.priority">(job.models.JobType attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/queue.html#queue.models.Queue.priority">(queue.models.Queue attribute)</a>
@@ -6491,8 +6449,6 @@
         <li><a href="architecture/django/code_docs/storage.html#storage.apps.StorageConfig.ready">(storage.apps.StorageConfig method)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.manager.OfferManager.ready_new_offers">ready_new_offers() (scheduler.offer.manager.OfferManager method)</a>
-</li>
       <li><a href="architecture/django/code_docs/job.html#job.models.TaskUpdate.reason">reason (job.models.TaskUpdate attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchRecipe.recipe">recipe (batch.models.BatchRecipe attribute)</a>
@@ -6717,10 +6673,10 @@
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.recipejob_set">(recipe.models.Recipe attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeJobManager">RecipeJobManager (class in recipe.models)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsDetailsSerializer">RecipeJobsDetailsSerializer (class in recipe.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsDetailsSerializer.JobRevisionSerializer">RecipeJobsDetailsSerializer.JobRevisionSerializer (class in recipe.serializers)</a>
@@ -6793,12 +6749,16 @@
 </li>
       <li><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.recon.ReconciliationThread">ReconciliationThread (class in scheduler.threads.recon)</a>
 </li>
+      <li><a href="architecture/django/code_docs/scheduler.resources.html#scheduler.resources.manager.ResourceManager.refresh_agent_resources">refresh_agent_resources() (scheduler.resources.manager.ResourceManager method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.execution.tasks.html#job.execution.tasks.exe_task.JobExecutionTask.refresh_cached_values">refresh_cached_values() (job.execution.tasks.exe_task.JobExecutionTask method)</a>
 
       <ul>
         <li><a href="architecture/django/code_docs/job.execution.tasks.html#job.execution.tasks.job_task.JobTask.refresh_cached_values">(job.execution.tasks.job_task.JobTask method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/scheduler.resources.html#scheduler.resources.agent.AgentResources.refresh_resources">refresh_resources() (scheduler.resources.agent.AgentResources method)</a>
+</li>
       <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.manager.NodeManager.register_agent_ids">register_agent_ids() (scheduler.node.manager.NodeManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/error.html#error.exceptions.register_error">register_error() (in module error.exceptions)</a>
@@ -6829,10 +6789,6 @@
         <li><a href="architecture/django/code_docs/job.execution.html#job.execution.metrics.RunningJobExeMetricsByNode.remove_job_execution">(job.execution.metrics.RunningJobExeMetricsByNode method)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.node.NodeOffers.remove_offer">remove_offer() (scheduler.offer.node.NodeOffers method)</a>
-</li>
-      <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.manager.OfferManager.remove_offers">remove_offers() (scheduler.offer.manager.OfferManager method)</a>
-</li>
       <li><a href="architecture/django/code_docs/scheduler.recon.html#scheduler.recon.manager.ReconciliationManager.remove_task_id">remove_task_id() (scheduler.recon.manager.ReconciliationManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/port.html#port.views.DownloadRenderer.render">render() (port.views.DownloadRenderer method)</a>
@@ -6865,9 +6821,23 @@
 </li>
       <li><a href="architecture/django/code_docs/scheduler.html#scheduler.scale_scheduler.ScaleScheduler.reregistered">reregistered() (scheduler.scale_scheduler.ScaleScheduler method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.offer.ResourceOffer">ResourceOffer (class in scheduler.offer.offer)</a>
+      <li><a href="architecture/django/code_docs/scheduler.resources.html#scheduler.resources.agent.AgentResources.rescind_offers">rescind_offers() (scheduler.resources.agent.AgentResources method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/scheduler.resources.html#scheduler.resources.manager.ResourceManager.rescind_offers">(scheduler.resources.manager.ResourceManager method)</a>
+</li>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.node.SchedulingNode.reset_new_job_exes">reset_new_job_exes() (scheduler.scheduling.node.SchedulingNode method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.resources.html#scheduler.resources.agent.AgentResources.reset_watermark">reset_watermark() (scheduler.resources.agent.AgentResources method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.resources.html#scheduler.resources.manager.ResourceManager">ResourceManager (class in scheduler.resources.manager)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.resources.html#scheduler.resources.offer.ResourceOffer">ResourceOffer (class in scheduler.resources.offer)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.html#scheduler.scale_scheduler.ScaleScheduler.resourceOffers">resourceOffers() (scheduler.scale_scheduler.ScaleScheduler method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.resources.html#scheduler.resources.agent.ResourceSet">ResourceSet (class in scheduler.resources.agent)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.results">results (job.models.Job attribute)</a>
 
@@ -6944,17 +6914,7 @@
 </li>
         <li><a href="architecture/django/code_docs/ingest.strike.monitors.html#ingest.strike.monitors.s3_monitor.S3Monitor.run">(ingest.strike.monitors.s3_monitor.S3Monitor method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.db_sync.DatabaseSyncThread.run">(scheduler.threads.db_sync.DatabaseSyncThread method)</a>
-</li>
-        <li><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.recon.ReconciliationThread.run">(scheduler.threads.recon.ReconciliationThread method)</a>
-</li>
-        <li><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.schedule.SchedulingThread.run">(scheduler.threads.schedule.SchedulingThread method)</a>
-</li>
-        <li><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.scheduler_status.SchedulerStatusThread.run">(scheduler.threads.scheduler_status.SchedulerStatusThread method)</a>
-</li>
-        <li><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.task_handling.TaskHandlingThread.run">(scheduler.threads.task_handling.TaskHandlingThread method)</a>
-</li>
-        <li><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.task_update.TaskUpdateThread.run">(scheduler.threads.task_update.TaskUpdateThread method)</a>
+        <li><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.base_thread.BaseSchedulerThread.run">(scheduler.threads.base_thread.BaseSchedulerThread method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/scheduler.management.commands.html#scheduler.management.commands.scale_scheduler.Command.run_scheduler">run_scheduler() (scheduler.management.commands.scale_scheduler.Command method)</a>
@@ -7087,10 +7047,6 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.manager.JobExecutionManager.schedule_job_exes">schedule_job_exes() (job.execution.manager.JobExecutionManager method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.schedule.SchedulingThread.SCHEDULE_LOOP_WARN_THRESHOLD">SCHEDULE_LOOP_WARN_THRESHOLD (scheduler.threads.schedule.SchedulingThread attribute)</a>
-</li>
-      <li><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.schedule.SchedulingThread.SCHEDULE_QUERY_WARN_THRESHOLD">SCHEDULE_QUERY_WARN_THRESHOLD (scheduler.threads.schedule.SchedulingThread attribute)</a>
-</li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchManager.schedule_recipes">schedule_recipes() (batch.models.BatchManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.html#scheduler.models.Scheduler">Scheduler (class in scheduler.models)</a>
@@ -7147,19 +7103,25 @@
 </li>
       <li><a href="architecture/django/code_docs/scheduler.node.html#module-scheduler.node.node_class">scheduler.node.node_class (module)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.offer.html#module-scheduler.offer">scheduler.offer (module)</a>
-</li>
-      <li><a href="architecture/django/code_docs/scheduler.offer.html#module-scheduler.offer.manager">scheduler.offer.manager (module)</a>
-</li>
-      <li><a href="architecture/django/code_docs/scheduler.offer.html#module-scheduler.offer.node">scheduler.offer.node (module)</a>
-</li>
-      <li><a href="architecture/django/code_docs/scheduler.offer.html#module-scheduler.offer.offer">scheduler.offer.offer (module)</a>
-</li>
       <li><a href="architecture/django/code_docs/scheduler.recon.html#module-scheduler.recon">scheduler.recon (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.recon.html#module-scheduler.recon.manager">scheduler.recon.manager (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/scheduler.resources.html#module-scheduler.resources">scheduler.resources (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.resources.html#module-scheduler.resources.agent">scheduler.resources.agent (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.resources.html#module-scheduler.resources.manager">scheduler.resources.manager (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.resources.html#module-scheduler.resources.offer">scheduler.resources.offer (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/scheduler.html#module-scheduler.scale_scheduler">scheduler.scale_scheduler (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#module-scheduler.scheduling">scheduler.scheduling (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#module-scheduler.scheduling.manager">scheduler.scheduling.manager (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#module-scheduler.scheduling.node">scheduler.scheduling.node (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.html#module-scheduler.serializers">scheduler.serializers (module)</a>
 </li>
@@ -7183,11 +7145,11 @@
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.node.html#module-scheduler.test.node.test_node_class">scheduler.test.node.test_node_class (module)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.test.offer.html#module-scheduler.test.offer">scheduler.test.offer (module)</a>
+      <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#module-scheduler.test.scheduling">scheduler.test.scheduling (module)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.test.offer.html#module-scheduler.test.offer.test_manager">scheduler.test.offer.test_manager (module)</a>
+      <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#module-scheduler.test.scheduling.test_manager">scheduler.test.scheduling.test_manager (module)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.test.offer.html#module-scheduler.test.offer.test_node">scheduler.test.offer.test_node (module)</a>
+      <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#module-scheduler.test.scheduling.test_node">scheduler.test.scheduling.test_node (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.sync.html#module-scheduler.test.sync">scheduler.test.sync (module)</a>
 </li>
@@ -7203,11 +7165,9 @@
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.html#module-scheduler.test.test_views">scheduler.test.test_views (module)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.test.threads.html#module-scheduler.test.threads">scheduler.test.threads (module)</a>
-</li>
-      <li><a href="architecture/django/code_docs/scheduler.test.threads.html#module-scheduler.test.threads.test_schedule">scheduler.test.threads.test_schedule (module)</a>
-</li>
       <li><a href="architecture/django/code_docs/scheduler.threads.html#module-scheduler.threads">scheduler.threads (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.threads.html#module-scheduler.threads.base_thread">scheduler.threads.base_thread (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.threads.html#module-scheduler.threads.db_sync">scheduler.threads.db_sync (module)</a>
 </li>
@@ -7249,7 +7209,15 @@
 </li>
       <li><a href="architecture/django/code_docs/scheduler.html#scheduler.views.SchedulerView">SchedulerView (class in scheduler.views)</a>
 </li>
+      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.manager.SchedulingManager">SchedulingManager (class in scheduler.scheduling.manager)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.node.SchedulingNode">SchedulingNode (class in scheduler.scheduling.node)</a>
+</li>
       <li><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.schedule.SchedulingThread">SchedulingThread (class in scheduler.threads.schedule)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.node.SchedulingNode.score_job_exe_for_reservation">score_job_exe_for_reservation() (scheduler.scheduling.node.SchedulingNode method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.node.SchedulingNode.score_job_exe_for_scheduling">score_job_exe_for_scheduling() (scheduler.scheduling.node.SchedulingNode method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.html#util.aws.AWSCredentials.secret_access_key">secret_access_key (util.aws.AWSCredentials attribute)</a>
 </li>
@@ -7361,6 +7329,8 @@
         <li><a href="architecture/django/code_docs/storage.html#storage.views.WorkspacesView.serializer_class">(storage.views.WorkspacesView attribute)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/scheduler.resources.html#scheduler.resources.manager.ResourceManager.set_agent_shortages">set_agent_shortages() (scheduler.resources.manager.ResourceManager method)</a>
+</li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.set_basic_fields">set_basic_fields() (storage.models.ScaleFile method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.set_cluster_id">set_cluster_id() (job.models.JobExecution method)</a>
@@ -7374,6 +7344,8 @@
       <li><a href="architecture/django/code_docs/vault.html#vault.secrets_handler.SecretsHandler.set_job_type_secrets">set_job_type_secrets() (vault.secrets_handler.SecretsHandler method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.scan.scanners.html#ingest.scan.scanners.scanner.Scanner.set_recursive">set_recursive() (ingest.scan.scanners.scanner.Scanner method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.resources.html#scheduler.resources.agent.AgentResources.set_shortage">set_shortage() (scheduler.resources.agent.AgentResources method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.configuration.data.html#recipe.configuration.data.recipe_data.RecipeData.set_workspace_id">set_workspace_id() (recipe.configuration.data.recipe_data.RecipeData method)</a>
 </li>
@@ -7732,9 +7704,9 @@
 </li>
         <li><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_node_class.TestNode.setUp">(scheduler.test.node.test_node_class.TestNode method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/scheduler.test.offer.html#scheduler.test.offer.test_manager.TestOfferManager.setUp">(scheduler.test.offer.test_manager.TestOfferManager method)</a>
+        <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_manager.TestSchedulingManager.setUp">(scheduler.test.scheduling.test_manager.TestSchedulingManager method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/scheduler.test.offer.html#scheduler.test.offer.test_node.TestNodeOffers.setUp">(scheduler.test.offer.test_node.TestNodeOffers method)</a>
+        <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_node.TestSchedulingNode.setUp">(scheduler.test.scheduling.test_node.TestSchedulingNode method)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.test.sync.html#scheduler.test.sync.test_job_type_manager.TestJobTypeManager.setUp">(scheduler.test.sync.test_job_type_manager.TestJobTypeManager method)</a>
 </li>
@@ -7751,8 +7723,6 @@
         <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_views.TestStatusView.setUp">(scheduler.test.test_views.TestStatusView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_views.TestVersionView.setUp">(scheduler.test.test_views.TestVersionView method)</a>
-</li>
-        <li><a href="architecture/django/code_docs/scheduler.test.threads.html#scheduler.test.threads.test_schedule.TestSchedulingThread.setUp">(scheduler.test.threads.test_schedule.TestSchedulingThread method)</a>
 </li>
         <li><a href="architecture/django/code_docs/source.test.configuration.html#source.test.configuration.test_source_data_file.TestSourceDataFileParseSaverSaveParseResults.setUp">(source.test.configuration.test_source_data_file.TestSourceDataFileParseSaverSaveParseResults method)</a>
 </li>
@@ -7896,17 +7866,7 @@
       <li><a href="architecture/django/code_docs/scheduler.html#scheduler.scale_scheduler.ScaleScheduler.shutdown">shutdown() (scheduler.scale_scheduler.ScaleScheduler method)</a>
 
       <ul>
-        <li><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.db_sync.DatabaseSyncThread.shutdown">(scheduler.threads.db_sync.DatabaseSyncThread method)</a>
-</li>
-        <li><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.recon.ReconciliationThread.shutdown">(scheduler.threads.recon.ReconciliationThread method)</a>
-</li>
-        <li><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.schedule.SchedulingThread.shutdown">(scheduler.threads.schedule.SchedulingThread method)</a>
-</li>
-        <li><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.scheduler_status.SchedulerStatusThread.shutdown">(scheduler.threads.scheduler_status.SchedulerStatusThread method)</a>
-</li>
-        <li><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.task_handling.TaskHandlingThread.shutdown">(scheduler.threads.task_handling.TaskHandlingThread method)</a>
-</li>
-        <li><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.task_update.TaskUpdateThread.shutdown">(scheduler.threads.task_update.TaskUpdateThread method)</a>
+        <li><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.base_thread.BaseSchedulerThread.shutdown">(scheduler.threads.base_thread.BaseSchedulerThread method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.broker.FileDetails.size">size (storage.brokers.broker.FileDetails attribute)</a>
@@ -8048,6 +8008,8 @@
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.metrics.FinishedJobExeMetricsOverTime.TIME_BLOCK.start">start (job.execution.metrics.FinishedJobExeMetricsOverTime.TIME_BLOCK attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestManager.start_ingest_tasks">start_ingest_tasks() (ingest.models.IngestManager method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.node.SchedulingNode.start_job_exe_tasks">start_job_exe_tasks() (scheduler.scheduling.node.SchedulingNode method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.job_exe.RunningJobExecution.start_next_task">start_next_task() (job.execution.job_exe.RunningJobExecution method)</a>
 </li>
@@ -8259,6 +8221,8 @@
 </li>
       <li><a href="architecture/django/code_docs/mesos_api.html#mesos_api.utils.string_to_TaskStatusCode">string_to_TaskStatusCode() (in module mesos_api.utils)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.html#job.resources.NodeResources.subtract">subtract() (job.resources.NodeResources method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.metrics.FinishedJobExeMetrics.subtract_metrics">subtract_metrics() (job.execution.metrics.FinishedJobExeMetrics method)</a>
 
       <ul>
@@ -8359,12 +8323,8 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.TaskUpdate.task_id">task_id (job.models.TaskUpdate attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.manager.OfferManager.TASK_INVALID">TASK_INVALID (scheduler.offer.manager.OfferManager attribute)</a>
-
-      <ul>
-        <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.node.NodeOffers.TASK_INVALID">(scheduler.offer.node.NodeOffers attribute)</a>
+      <li><a href="architecture/django/code_docs/scheduler.resources.html#scheduler.resources.agent.ResourceSet.task_resources">task_resources (scheduler.resources.agent.ResourceSet attribute)</a>
 </li>
-      </ul></li>
       <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.update.TaskStatusUpdate.TASK_STATUS_CONVERSION">TASK_STATUS_CONVERSION (job.tasks.update.TaskStatusUpdate attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.job_exe.RunningJobExecution.task_update">task_update() (job.execution.job_exe.RunningJobExecution method)</a>
@@ -8411,13 +8371,33 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_scale_file.TestScaleFileDescriptionMediaTypeAllowed.test_accept_all">test_accept_all() (job.test.configuration.interface.test_scale_file.TestScaleFileDescriptionMediaTypeAllowed method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_scale_file.TestScaleFileDescriptionMediaTypeAllowed.test_accept_specific">test_accept_specific() (job.test.configuration.interface.test_scale_file.TestScaleFileDescriptionMediaTypeAllowed method)</a>
+      <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_node.TestSchedulingNode.test_accept_job_exe_next_task">test_accept_job_exe_next_task() (scheduler.test.scheduling.test_node.TestSchedulingNode method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.test.offer.html#scheduler.test.offer.test_manager.TestOfferManager.test_accepted">test_accepted() (scheduler.test.offer.test_manager.TestOfferManager method)</a>
+      <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_node.TestSchedulingNode.test_accept_job_exe_next_task_canceled">test_accept_job_exe_next_task_canceled() (scheduler.test.scheduling.test_node.TestSchedulingNode method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_node.TestSchedulingNode.test_accept_job_exe_next_task_insufficient_resources">test_accept_job_exe_next_task_insufficient_resources() (scheduler.test.scheduling.test_node.TestSchedulingNode method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_node.TestSchedulingNode.test_accept_job_exe_next_task_no_jobs">test_accept_job_exe_next_task_no_jobs() (scheduler.test.scheduling.test_node.TestSchedulingNode method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_node.TestSchedulingNode.test_accept_new_job_exe">test_accept_new_job_exe() (scheduler.test.scheduling.test_node.TestSchedulingNode method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_node.TestSchedulingNode.test_accept_new_job_exe_insufficient_resources">test_accept_new_job_exe_insufficient_resources() (scheduler.test.scheduling.test_node.TestSchedulingNode method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_node.TestSchedulingNode.test_accept_new_job_exe_no_jobs">test_accept_new_job_exe_no_jobs() (scheduler.test.scheduling.test_node.TestSchedulingNode method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_node.TestSchedulingNode.test_accept_node_tasks">test_accept_node_tasks() (scheduler.test.scheduling.test_node.TestSchedulingNode method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_node.TestSchedulingNode.test_accept_node_tasks_insufficient_resources">test_accept_node_tasks_insufficient_resources() (scheduler.test.scheduling.test_node.TestSchedulingNode method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_scale_file.TestScaleFileDescriptionMediaTypeAllowed.test_accept_specific">test_accept_specific() (job.test.configuration.interface.test_scale_file.TestScaleFileDescriptionMediaTypeAllowed method)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestCountryData.test_access">test_access() (storage.test.test_models.TestCountryData method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.test.offer.html#scheduler.test.offer.test_node.TestNodeOffers.test_adding_offers">test_adding_offers() (scheduler.test.offer.test_node.TestNodeOffers method)</a>
+      <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_node.TestSchedulingNode.test_add_allocated_offers">test_add_allocated_offers() (scheduler.test.scheduling.test_node.TestSchedulingNode method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_node.TestSchedulingNode.test_add_allocated_offers_remove_all_tasks">test_add_allocated_offers_remove_all_tasks() (scheduler.test.scheduling.test_node.TestSchedulingNode method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_node.TestSchedulingNode.test_add_allocated_offers_remove_job_exes">test_add_allocated_offers_remove_job_exes() (scheduler.test.scheduling.test_node.TestSchedulingNode method)</a>
 </li>
       <li><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_views.TestMetricPlotView.test_aggregate_avg">test_aggregate_avg() (metrics.test.test_views.TestMetricPlotView method)</a>
 </li>
@@ -8440,8 +8420,6 @@
       <li><a href="architecture/django/code_docs/port.test.html#port.test.test_views.TestConfigurationViewImport.test_all_mixed">test_all_mixed() (port.test.test_views.TestConfigurationViewImport method)</a>
 </li>
       <li><a href="architecture/django/code_docs/port.test.html#port.test.test_views.TestConfigurationViewImport.test_all_mixed_bad">test_all_mixed_bad() (port.test.test_views.TestConfigurationViewImport method)</a>
-</li>
-      <li><a href="architecture/django/code_docs/scheduler.test.offer.html#scheduler.test.offer.test_manager.TestOfferManager.test_all_offers_paused">test_all_offers_paused() (scheduler.test.offer.test_manager.TestOfferManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_retry.TestRetry.test_always_fail">test_always_fail() (util.test.test_retry.TestRetry method)</a>
 
@@ -8774,10 +8752,6 @@
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobExecution.test_configure_docker_params_shared_memory">test_configure_docker_params_shared_memory() (job.test.test_models.TestJobExecution method)</a>
-</li>
-      <li><a href="architecture/django/code_docs/scheduler.test.offer.html#scheduler.test.offer.test_node.TestNodeOffers.test_consider_new_job_exe">test_consider_new_job_exe() (scheduler.test.offer.test_node.TestNodeOffers method)</a>
-</li>
-      <li><a href="architecture/django/code_docs/scheduler.test.offer.html#scheduler.test.offer.test_node.TestNodeOffers.test_consider_next_task">test_consider_next_task() (scheduler.test.offer.test_node.TestNodeOffers method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_conversion_from_1_0">test_conversion_from_1_0() (ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
 </li>
@@ -9297,12 +9271,6 @@
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_has_params_single">test_has_params_single() (util.test.test_rest.TestRest method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.test.offer.html#scheduler.test.offer.test_manager.TestOfferManager.test_high_cpus">test_high_cpus() (scheduler.test.offer.test_manager.TestOfferManager method)</a>
-</li>
-      <li><a href="architecture/django/code_docs/scheduler.test.offer.html#scheduler.test.offer.test_manager.TestOfferManager.test_high_disk">test_high_disk() (scheduler.test.offer.test_manager.TestOfferManager method)</a>
-</li>
-      <li><a href="architecture/django/code_docs/scheduler.test.offer.html#scheduler.test.offer.test_manager.TestOfferManager.test_high_mem">test_high_mem() (scheduler.test.offer.test_manager.TestOfferManager method)</a>
-</li>
       <li><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_s3_broker.TestS3Broker.test_host_link_files">test_host_link_files() (storage.test.brokers.test_s3_broker.TestS3Broker method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestIngestDetailsView.test_id">test_id() (ingest.test.test_views.TestIngestDetailsView method)</a>
@@ -9575,8 +9543,6 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeReprocessView.test_job">test_job() (recipe.test.test_views.TestRecipeReprocessView method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.test.offer.html#scheduler.test.offer.test_node.TestNodeOffers.test_job_exe_canceled">test_job_exe_canceled() (scheduler.test.offer.test_node.TestNodeOffers method)</a>
-</li>
       <li><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_manager.TestNodeManager.test_job_exe_clean_task">test_job_exe_clean_task() (scheduler.test.node.test_manager.TestNodeManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsView.test_job_id">test_job_id() (job.test.test_views.TestJobsView method)</a>
@@ -9627,7 +9593,7 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_views.TestRequeueJobsView.test_job_type_ids">test_job_type_ids() (queue.test.test_views.TestRequeueJobsView method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.test.threads.html#scheduler.test.threads.test_schedule.TestSchedulingThread.test_job_type_limit">test_job_type_limit() (scheduler.test.threads.test_schedule.TestSchedulingThread method)</a>
+      <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_manager.TestSchedulingManager.test_job_type_limit">test_job_type_limit() (scheduler.test.scheduling.test_manager.TestSchedulingManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsUpdateView.test_job_type_name">test_job_type_name() (job.test.test_views.TestJobsUpdateView method)</a>
 
@@ -9730,14 +9696,6 @@
       <li><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_manager.TestNodeManager.test_lost_known_node">test_lost_known_node() (scheduler.test.node.test_manager.TestNodeManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.execution.html#job.test.execution.test_manager.TestJobExecutionManager.test_lost_node">test_lost_node() (job.test.execution.test_manager.TestJobExecutionManager method)</a>
-
-      <ul>
-        <li><a href="architecture/django/code_docs/scheduler.test.offer.html#scheduler.test.offer.test_manager.TestOfferManager.test_lost_node">(scheduler.test.offer.test_manager.TestOfferManager method)</a>
-</li>
-        <li><a href="architecture/django/code_docs/scheduler.test.offer.html#scheduler.test.offer.test_node.TestNodeOffers.test_lost_node">(scheduler.test.offer.test_node.TestNodeOffers method)</a>
-</li>
-      </ul></li>
-      <li><a href="architecture/django/code_docs/scheduler.test.offer.html#scheduler.test.offer.test_manager.TestOfferManager.test_lost_node_that_comes_back">test_lost_node_that_comes_back() (scheduler.test.offer.test_manager.TestOfferManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.execution.html#job.test.execution.test_job_exe.TestRunningJobExecution.test_lost_task">test_lost_task() (job.test.execution.test_job_exe.TestRunningJobExecution method)</a>
 </li>
@@ -9969,10 +9927,6 @@
 </li>
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_views.TestRequeueJobsView.test_no_match">test_no_match() (queue.test.test_views.TestRequeueJobsView method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.test.offer.html#scheduler.test.offer.test_node.TestNodeOffers.test_no_offers">test_no_offers() (scheduler.test.offer.test_node.TestNodeOffers method)</a>
-</li>
-      <li><a href="architecture/django/code_docs/scheduler.test.offer.html#scheduler.test.offer.test_manager.TestOfferManager.test_no_ready_offers">test_no_ready_offers() (scheduler.test.offer.test_manager.TestOfferManager method)</a>
-</li>
       <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_models.TestIngestGetDataTypeTags.test_no_tags">test_no_tags() (ingest.test.test_models.TestIngestGetDataTypeTags method)</a>
 
       <ul>
@@ -10028,8 +9982,6 @@
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFileUpdateUUID.test_objects">test_objects() (storage.test.test_models.TestScaleFileUpdateUUID method)</a>
-</li>
-      <li><a href="architecture/django/code_docs/scheduler.test.offer.html#scheduler.test.offer.test_manager.TestOfferManager.test_offers_with_no_nodes">test_offers_with_no_nodes() (scheduler.test.offer.test_manager.TestOfferManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFileUpdateUUID.test_one_string">test_one_string() (storage.test.test_models.TestScaleFileUpdateUUID method)</a>
 </li>
@@ -10189,10 +10141,10 @@
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_string_default">test_parse_string_default() (util.test.test_rest.TestRest method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_string_list">test_parse_string_list() (util.test.test_rest.TestRest method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_string_list_accepted_all">test_parse_string_list_accepted_all() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_string_list_accepted_none">test_parse_string_list_accepted_none() (util.test.test_rest.TestRest method)</a>
@@ -10231,13 +10183,11 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobTypeManagerEditJobType.test_pause_system_job_type">test_pause_system_job_type() (job.test.test_models.TestJobTypeManagerEditJobType method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.test.offer.html#scheduler.test.offer.test_node.TestNodeOffers.test_paused_node">test_paused_node() (scheduler.test.offer.test_node.TestNodeOffers method)</a>
-</li>
       <li><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_node_class.TestNode.test_paused_node_cleanup_task">test_paused_node_cleanup_task() (scheduler.test.node.test_node_class.TestNode method)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_node_class.TestNode.test_paused_node_pull_task">test_paused_node_pull_task() (scheduler.test.node.test_node_class.TestNode method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.test.threads.html#scheduler.test.threads.test_schedule.TestSchedulingThread.test_paused_scheduler">test_paused_scheduler() (scheduler.test.threads.test_schedule.TestSchedulingThread method)</a>
+      <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_manager.TestSchedulingManager.test_paused_scheduler">test_paused_scheduler() (scheduler.test.scheduling.test_manager.TestSchedulingManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_clock.TestClock.test_perform_tick">test_perform_tick() (job.test.test_clock.TestClock method)</a>
 </li>
@@ -10359,10 +10309,6 @@
 </li>
       <li><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_host_broker.TestHostBrokerListFiles.test_recursive_successfully_strip_path">test_recursive_successfully_strip_path() (storage.test.brokers.test_host_broker.TestHostBrokerListFiles method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.test.offer.html#scheduler.test.offer.test_node.TestNodeOffers.test_remove_offer">test_remove_offer() (scheduler.test.offer.test_node.TestNodeOffers method)</a>
-</li>
-      <li><a href="architecture/django/code_docs/scheduler.test.offer.html#scheduler.test.offer.test_manager.TestOfferManager.test_remove_offers">test_remove_offers() (scheduler.test.offer.test_manager.TestOfferManager method)</a>
-</li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobTypeManagerEditJobType.test_remove_trigger_rule">test_remove_trigger_rule() (job.test.test_models.TestJobTypeManagerEditJobType method)</a>
 
       <ul>
@@ -10398,6 +10344,8 @@
       <li><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_job_interface.TestJobInterfaceValidateConnection.test_required_workspace_missing">test_required_workspace_missing() (job.test.configuration.interface.test_job_interface.TestJobInterfaceValidateConnection method)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_scheduler.TestScheduler.test_reregistration_triggers_reconciliation">test_reregistration_triggers_reconciliation() (scheduler.test.test_scheduler.TestScheduler method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_node.TestSchedulingNode.test_reset_new_job_exes">test_reset_new_job_exes() (scheduler.test.scheduling.test_node.TestSchedulingNode method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScansView.test_reverse_sorting">test_reverse_sorting() (ingest.test.test_views.TestScansView method)</a>
 
@@ -10473,6 +10421,14 @@
 </li>
       <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_models.TestBatchManager.test_schedule_trigger_rule_true">test_schedule_trigger_rule_true() (batch.test.test_models.TestBatchManager method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_node.TestSchedulingNode.test_score_job_exe_for_reservation">test_score_job_exe_for_reservation() (scheduler.test.scheduling.test_node.TestSchedulingNode method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_node.TestSchedulingNode.test_score_job_exe_for_reservation_insufficient_resources">test_score_job_exe_for_reservation_insufficient_resources() (scheduler.test.scheduling.test_node.TestSchedulingNode method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_node.TestSchedulingNode.test_score_job_exe_for_scheduling">test_score_job_exe_for_scheduling() (scheduler.test.scheduling.test_node.TestSchedulingNode method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_node.TestSchedulingNode.test_score_job_exe_for_scheduling_insufficient_resources">test_score_job_exe_for_scheduling_insufficient_resources() (scheduler.test.scheduling.test_node.TestSchedulingNode method)</a>
+</li>
       <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFile.test_set_deleted">test_set_deleted() (storage.test.test_models.TestScaleFile method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_s3_scanner.TestS3Scanner.test_set_recursive_false">test_set_recursive_false() (ingest.test.scan.scanners.test_s3_scanner.TestS3Scanner method)</a>
@@ -10513,6 +10469,8 @@
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestWorkspacesView.test_sorting">(storage.test.test_views.TestWorkspacesView method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_node.TestSchedulingNode.test_start_job_exe_tasks">test_start_job_exe_tasks() (scheduler.test.scheduling.test_node.TestSchedulingNode method)</a>
+</li>
       <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesView.test_status">test_status() (batch.test.test_views.TestBatchesView method)</a>
 
       <ul>
@@ -10841,7 +10799,7 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/product.test.configuration.html#product.test.configuration.test_product_data_file.TestProductDataFileStoreStoreFiles.test_successful_recipe_path">test_successful_recipe_path() (product.test.configuration.test_product_data_file.TestProductDataFileStoreStoreFiles method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.test.threads.html#scheduler.test.threads.test_schedule.TestSchedulingThread.test_successful_schedule">test_successful_schedule() (scheduler.test.threads.test_schedule.TestSchedulingThread method)</a>
+      <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_manager.TestSchedulingManager.test_successful_schedule">test_successful_schedule() (scheduler.test.scheduling.test_manager.TestSchedulingManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_models.TestQueueManagerQueueNewRecipe.test_successful_supersede">test_successful_supersede() (queue.test.test_models.TestQueueManagerQueueNewRecipe method)</a>
 </li>
@@ -11465,15 +11423,11 @@
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_manager.TestNodeManager">TestNodeManager (class in scheduler.test.node.test_manager)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.test.offer.html#scheduler.test.offer.test_node.TestNodeOffers">TestNodeOffers (class in scheduler.test.offer.test_node)</a>
-</li>
       <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodesStatusView">TestNodesStatusView (class in node.test.test_views)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodesView">TestNodesView (class in node.test.test_views)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodesViewEmpty">TestNodesViewEmpty (class in node.test.test_views)</a>
-</li>
-      <li><a href="architecture/django/code_docs/scheduler.test.offer.html#scheduler.test.offer.test_manager.TestOfferManager">TestOfferManager (class in scheduler.test.offer.test_manager)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_parse.TestParse">TestParse (class in util.test.test_parse)</a>
 </li>
@@ -11663,7 +11617,9 @@
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_views.TestSchedulerView">TestSchedulerView (class in scheduler.test.test_views)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.test.threads.html#scheduler.test.threads.test_schedule.TestSchedulingThread">TestSchedulingThread (class in scheduler.test.threads.test_schedule)</a>
+      <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_manager.TestSchedulingManager">TestSchedulingManager (class in scheduler.test.scheduling.test_manager)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_node.TestSchedulingNode">TestSchedulingNode (class in scheduler.test.scheduling.test_node)</a>
 </li>
       <li><a href="architecture/django/code_docs/source.test.configuration.html#source.test.configuration.test_source_data_file.TestSourceDataFileParseSaverSaveParseResults">TestSourceDataFileParseSaverSaveParseResults (class in source.test.configuration.test_source_data_file)</a>
 </li>
@@ -11723,18 +11679,6 @@
 </li>
       <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestWorkspacesView">TestWorkspacesView (class in storage.test.test_views)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.db_sync.DatabaseSyncThread.THROTTLE">THROTTLE (scheduler.threads.db_sync.DatabaseSyncThread attribute)</a>
-
-      <ul>
-        <li><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.recon.ReconciliationThread.THROTTLE">(scheduler.threads.recon.ReconciliationThread attribute)</a>
-</li>
-        <li><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.scheduler_status.SchedulerStatusThread.THROTTLE">(scheduler.threads.scheduler_status.SchedulerStatusThread attribute)</a>
-</li>
-        <li><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.task_handling.TaskHandlingThread.THROTTLE">(scheduler.threads.task_handling.TaskHandlingThread attribute)</a>
-</li>
-        <li><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.task_update.TaskUpdateThread.THROTTLE">(scheduler.threads.task_update.TaskUpdateThread attribute)</a>
-</li>
-      </ul></li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.timeout">timeout (job.models.Job attribute)</a>
 
       <ul>
@@ -11776,6 +11720,8 @@
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.configuration.html#job.configuration.volume.Volume.to_docker_param">to_docker_param() (job.configuration.volume.Volume method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.resources.NodeResources.to_logging_string">to_logging_string() (job.resources.NodeResources method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsInputSerializer.to_representation">to_representation() (job.serializers.JobDetailsInputSerializer method)</a>
 
@@ -11976,11 +11922,7 @@
       <li><a href="architecture/django/code_docs/node.html#node.models.NodeManager.update_node">update_node() (node.models.NodeManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.cleanup.html#scheduler.cleanup.manager.CleanupManager.update_nodes">update_nodes() (scheduler.cleanup.manager.CleanupManager method)</a>
-
-      <ul>
-        <li><a href="architecture/django/code_docs/scheduler.offer.html#scheduler.offer.manager.OfferManager.update_nodes">(scheduler.offer.manager.OfferManager method)</a>
 </li>
-      </ul></li>
       <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0008_auto_20160421_1648.Migration.update_queue_models">update_queue_models() (queue.migrations.0008_auto_20160421_1648.Migration method)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.html#scheduler.models.SchedulerManager.update_scheduler">update_scheduler() (scheduler.models.SchedulerManager method)</a>
@@ -11991,6 +11933,8 @@
         <li><a href="architecture/django/code_docs/job.html#job.models.JobManager.update_status">(job.models.JobManager method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/job.execution.tasks.html#job.execution.tasks.exe_task.JobExecutionTask.update_task_id_for_lost_task">update_task_id_for_lost_task() (job.execution.tasks.exe_task.JobExecutionTask method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.metrics.FinishedJobExeMetricsOverTime.update_to_now">update_to_now() (job.execution.metrics.FinishedJobExeMetricsOverTime method)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.update_uuid">update_uuid() (storage.models.ScaleFile method)</a>
@@ -12325,7 +12269,7 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/scheduler.html#scheduler.cluster_utils.wait_for_leader">wait_for_leader() (in module scheduler.cluster_utils)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.scheduler_status.SchedulerStatusThread.WARNING_THRESHOLD">WARNING_THRESHOLD (scheduler.threads.scheduler_status.SchedulerStatusThread attribute)</a>
+      <li><a href="architecture/django/code_docs/scheduler.resources.html#scheduler.resources.agent.ResourceSet.watermark_resources">watermark_resources (scheduler.resources.agent.ResourceSet attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.serializers.WktField">WktField (class in storage.serializers)</a>
 </li>

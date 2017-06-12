@@ -366,6 +366,13 @@ the job-task, and the post-task.</p>
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="job.execution.tasks.exe_task.JobExecutionTask.update_task_id_for_lost_task">
+<code class="descname">update_task_id_for_lost_task</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.exe_task.JobExecutionTask.update_task_id_for_lost_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates this task&#8217;s ID due to the task being lost. A new, unique ID will prevent race conditions where Scale
+confuses this task with the previous lost task.</p>
+</dd></dl>
+
 </dd></dl>
 
 </div>

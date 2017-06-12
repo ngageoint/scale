@@ -1,0 +1,38 @@
+scheduler\.resources package
+============================
+
+Submodules
+----------
+
+scheduler\.resources\.agent module
+----------------------------------
+
+.. automodule:: scheduler.resources.agent
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+scheduler\.resources\.manager module
+------------------------------------
+
+.. automodule:: scheduler.resources.manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+scheduler\.resources\.offer module
+----------------------------------
+
+.. automodule:: scheduler.resources.offer
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: scheduler.resources
+    :members:
+    :undoc-members:
+    :show-inheritance:

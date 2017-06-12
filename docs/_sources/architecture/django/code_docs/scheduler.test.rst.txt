@@ -7,9 +7,8 @@ Subpackages
 .. toctree::
 
     scheduler.test.node
-    scheduler.test.offer
+    scheduler.test.scheduling
     scheduler.test.sync
-    scheduler.test.threads
 
 Submodules
 ----------
