@@ -2,7 +2,8 @@
 from __future__ import unicode_literals
 
 from job.resources import JobResources
-from job.resources import NodeResources
+from node.resources.node_resources import NodeResources
+from node.resources.resource import Cpus, Disk, Mem
 
 
 class QueuedJobExecution(object):
@@ -20,7 +21,7 @@ class QueuedJobExecution(object):
         cpus = self._queue.cpus_required
         mem = self._queue.mem_required
         disk_total = self._queue.disk_total_required
-        self._required_resources = NodeResources(cpus=cpus, mem=mem, disk=disk_total)
+        self._required_resources = NodeResources([Cpus(cpus), Mem(mem), Disk(disk_total)])
 
         self._required_node_ids = None
         if self._queue.node_required_id:
@@ -74,7 +75,7 @@ class QueuedJobExecution(object):
         """Returns the resources required by this job execution
 
         :returns: The resources required by this job execution
-        :rtype: :class:`job.resources.NodeResources`
+        :rtype: :class:`node.resources.node_resources.NodeResources`
         """
 
         return self._required_resources
@@ -86,7 +87,7 @@ class QueuedJobExecution(object):
         :param node_id: The node ID
         :type node_id: int
         :param resources: The provided resources
-        :type resources: :class:`job.resources.NodeResources`
+        :type resources: :class:`node.resources.node_resources.NodeResources`
         """
 
         self._provided_node_id = node_id

@@ -5,7 +5,7 @@ import datetime
 import logging
 from collections import namedtuple
 
-from job.resources import NodeResources
+from node.resources.node_resources import NodeResources
 
 # Maximum time that each offer should be held
 MAX_OFFER_HOLD_DURATION = datetime.timedelta(seconds=10)
@@ -39,7 +39,7 @@ class AgentResources(object):
         requested.
 
         :param resources: The requested resources
-        :type resources: :class:`job.resources.NodeResources`
+        :type resources: :class:`node.resources.node_resources.NodeResources`
         :param when: The current time
         :type when: :class:`datetime.datetime`
         :returns: The list of allocated offers
@@ -76,11 +76,11 @@ class AgentResources(object):
         :param node_dict: The dict for this agent's node within the status JSON
         :type node_dict: dict
         :param total_running: The total running resources to add up
-        :type total_running: :class:`job.resources.NodeResources`
+        :type total_running: :class:`node.resources.node_resources.NodeResources`
         :param total_offered: The total offered resources to add up
-        :type total_offered: :class:`job.resources.NodeResources`
+        :type total_offered: :class:`node.resources.node_resources.NodeResources`
         :param total_watermark: The total watermark resources to add up
-        :type total_watermark: :class:`job.resources.NodeResources`
+        :type total_watermark: :class:`node.resources.node_resources.NodeResources`
         """
 
         running_dict = {}
@@ -163,7 +163,7 @@ class AgentResources(object):
         """Sets the resource shortage for the agent, if any
 
         :param shortage_resources: The resource shortage
-        :type shortage_resources: :class:`job.resources.NodeResources`
+        :type shortage_resources: :class:`node.resources.node_resources.NodeResources`
         """
 
         if shortage_resources:

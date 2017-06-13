@@ -20,7 +20,8 @@ from error.models import CACHED_BUILTIN_ERRORS, Error
 from job.configuration.results.job_results import JobResults
 from job.configuration.results.results_manifest.results_manifest import ResultsManifest
 from job.models import Job, JobExecution
-from job.resources import NodeResources
+from node.resources.node_resources import NodeResources
+from node.resources.resource import Cpus, Disk, Mem
 from queue.job_exe import QueuedJobExecution
 from queue.models import JobLoad, Queue, QueueEventProcessor, QUEUE_ORDER_FIFO, QUEUE_ORDER_LIFO
 from recipe.configuration.data.recipe_data import RecipeData
@@ -649,7 +650,7 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         recipe_job_1 = recipe_job_1.get(recipe_id=handler.recipe.id, job_name='Job 1')
         job_exe_1 = JobExecution.objects.get(job_id=recipe_job_1.job_id)
         queued_job_exe = QueuedJobExecution(Queue.objects.get(job_exe_id=job_exe_1.id))
-        queued_job_exe.accepted(node.id, NodeResources(cpus=10, mem=1000, disk=2000))
+        queued_job_exe.accepted(node.id, NodeResources([Cpus(10), Mem(1000), Disk(2000)]))
         Queue.objects.schedule_job_executions('123', [queued_job_exe], {})
         results = JobResults()
         results.add_file_list_parameter('Test Output 1', [product_test_utils.create_product().id])
@@ -724,12 +725,12 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         # Complete both the old and new job 2 and check that only the new recipe completes
         job_exe_2 = JobExecution.objects.get(job_id=recipe_job_2.job_id)
         queued_job_exe_2 = QueuedJobExecution(Queue.objects.get(job_exe_id=job_exe_2.id))
-        queued_job_exe_2.accepted(node.id, NodeResources(cpus=10, mem=1000, disk=2000))
+        queued_job_exe_2.accepted(node.id, NodeResources([Cpus(10), Mem(1000), Disk(2000)]))
         Queue.objects.schedule_job_executions('123', [queued_job_exe_2], {})
         Queue.objects.handle_job_completion(job_exe_2.id, now(), [])
         new_job_exe_2 = JobExecution.objects.get(job_id=new_recipe_job_2.job_id)
         new_queued_job_exe_2 = QueuedJobExecution(Queue.objects.get(job_exe_id=new_job_exe_2.id))
-        new_queued_job_exe_2.accepted(node.id, NodeResources(cpus=10, mem=1000, disk=2000))
+        new_queued_job_exe_2.accepted(node.id, NodeResources([Cpus(10), Mem(1000), Disk(2000)]))
         Queue.objects.schedule_job_executions('123', [new_queued_job_exe_2], {})
         Queue.objects.handle_job_completion(new_job_exe_2.id, now(), [])
         recipe = Recipe.objects.get(id=recipe.id)
@@ -894,13 +895,13 @@ class TestQueueManagerScheduleJobExecutions(TransactionTestCase):
         """Tests calling QueueManager.schedule_job_executions() successfully."""
 
         queued_job_exe_1 = QueuedJobExecution(self.queue_1)
-        queued_job_exe_1.accepted(self.node.id, NodeResources(cpus=self.queue_1.cpus_required,
-                                                              mem=self.queue_1.mem_required,
-                                                              disk=self.queue_1.disk_total_required))
+        queued_job_exe_1.accepted(self.node.id, NodeResources([Cpus(self.queue_1.cpus_required),
+                                                               Mem(self.queue_1.mem_required),
+                                                               Disk(self.queue_1.disk_total_required)]))
         queued_job_exe_2 = QueuedJobExecution(self.queue_2)
-        queued_job_exe_2.accepted(self.node.id, NodeResources(cpus=self.queue_2.cpus_required,
-                                                              mem=self.queue_2.mem_required,
-                                                              disk=self.queue_2.disk_total_required))
+        queued_job_exe_2.accepted(self.node.id, NodeResources([Cpus(self.queue_2.cpus_required),
+                                                               Mem(self.queue_2.mem_required),
+                                                               Disk(self.queue_2.disk_total_required)]))
 
         scheduled_job_exes = Queue.objects.schedule_job_executions('framework-123',
                                                                    [queued_job_exe_1, queued_job_exe_2], {})

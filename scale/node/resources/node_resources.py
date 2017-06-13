@@ -8,7 +8,7 @@ class NodeResources(object):
     """This class encapsulates a set of node resources
     """
 
-    def __init__(self, resources):
+    def __init__(self, resources=None):
         """Constructor
 
         :param resources: The list of node resources
@@ -16,10 +16,47 @@ class NodeResources(object):
         """
 
         self._resources = {}  # {Name: Resource}
-        for resource in resources:
-            if resource.resource_type != 'SCALAR':
-                raise ScaleLogicBug('Resource type "%s" is not currently supported', resource.resource_type)
-            self._resources[resource.name] = resource
+        if resources:
+            for resource in resources:
+                if resource.resource_type != 'SCALAR':
+                    raise ScaleLogicBug('Resource type "%s" is not currently supported', resource.resource_type)
+                self._resources[resource.name] = resource
+
+    @property
+    def cpus(self):
+        """The number of CPUs
+
+        :returns: The number of CPUs
+        :rtype: float
+        """
+
+        if 'cpus' in self._resources:
+            return self._resources['cpus'].value
+        return 0.0
+
+    @property
+    def disk(self):
+        """The amount of disk space in MiB
+
+        :returns: The amount of disk space
+        :rtype: float
+        """
+
+        if 'disk' in self._resources:
+            return self._resources['disk'].value
+        return 0.0
+
+    @property
+    def mem(self):
+        """The amount of memory in MiB
+
+        :returns: The amount of memory
+        :rtype: float
+        """
+
+        if 'mem' in self._resources:
+            return self._resources['mem'].value
+        return 0.0
 
     @property
     def resources(self):

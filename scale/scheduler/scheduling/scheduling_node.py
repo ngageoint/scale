@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from job.execution.tasks.exe_task import JobExecutionTask
-from job.resources import NodeResources
+from node.resources.node_resources import NodeResources
 
 
 class SchedulingNode(object):

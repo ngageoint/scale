@@ -281,7 +281,7 @@ class Task(object):
         """Returns the resources that are required/have been scheduled for this task
 
         :returns: The scheduled resources for this task
-        :rtype: :class:`job.resources.NodeResources`
+        :rtype: :class:`node.resources.node_resources.NodeResources`
         """
 
         raise NotImplementedError()

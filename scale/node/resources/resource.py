@@ -53,3 +53,45 @@ class ScalarResource(Resource):
         """
 
         return ScalarResource(self.name, self.value)
+
+
+class Cpus(ScalarResource):
+    """A scalar resource representing the number of CPUs
+    """
+
+    def __init__(self, value):
+        """Constructor
+
+        :param value: The number of CPUs
+        :type value: float
+        """
+
+        super(Cpus, self).__init__('cpus', value)
+
+
+class Mem(ScalarResource):
+    """A scalar resource representing the amount of memory in MiB
+    """
+
+    def __init__(self, value):
+        """Constructor
+
+        :param value: The amount of memory in MiB
+        :type value: float
+        """
+
+        super(Mem, self).__init__('mem', value)
+
+
+class Disk(ScalarResource):
+    """A scalar resource representing the amount of disk space in MiB
+    """
+
+    def __init__(self, value):
+        """Constructor
+
+        :param value: The amount of disk space in MiB
+        :type value: float
+        """
+
+        super(Disk, self).__init__('disk', value)

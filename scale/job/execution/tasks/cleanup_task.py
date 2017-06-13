@@ -3,8 +3,9 @@ from __future__ import unicode_literals
 
 import datetime
 
-from job.resources import NodeResources
 from job.tasks.base_task import AtomicCounter, Task
+from node.resources.node_resources import NodeResources
+from node.resources.resource import Cpus, Mem
 
 
 CLEANUP_TASK_ID_PREFIX = 'scale_cleanup'
@@ -55,8 +56,8 @@ class CleanupTask(Task):
             # Initial clean up deletes all non-running containers
             container_list_cmd = all_nonrunning_containers_cmd
 
-            # TODO: once we upgrade to a later version of Docker (1.12+), we can delete volumes based on their name (without grep)
-            # starting with "scale_" (and also dangling)
+            # TODO: once we upgrade to a later version of Docker (1.12+), we can delete volumes based on their name
+            # (without grep) starting with "scale_" (and also dangling)
             # Initial clean up deletes all dangling Docker volumes named with "scale_" prefix
             volume_list_cmd = all_scale_dangling_volumes_cmd
         else:
@@ -101,4 +102,4 @@ class CleanupTask(Task):
         """See :meth:`job.tasks.base_task.Task.get_resources`
         """
 
-        return NodeResources(cpus=0.1, mem=32)
+        return NodeResources([Cpus(0.1), Mem(32.0)])

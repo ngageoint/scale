@@ -7,9 +7,10 @@ from mock import MagicMock, patch
 
 from job.execution.job_exe import RunningJobExecution
 from job.execution.manager import job_exe_mgr
-from job.resources import NodeResources
 from job.test import utils as job_test_utils
 from mesos_api.api import SlaveInfo
+from node.resources.node_resources import NodeResources
+from node.resources.resource import Cpus, Disk, Mem
 from queue.models import Queue
 from queue.test import utils as queue_test_utils
 from scheduler.models import Scheduler
@@ -63,9 +64,9 @@ class TestSchedulingManager(TestCase):
         mock_taskinfo.return_value = MagicMock()
 
         offer_1 = ResourceOffer('offer_1', self.node_agent_1, self.framework_id,
-                                NodeResources(cpus=2.0, mem=1024.0, disk=1024.0), now())
+                                NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now())
         offer_2 = ResourceOffer('offer_2', self.node_agent_2, self.framework_id,
-                                NodeResources(cpus=25.0, mem=2048.0, disk=2048.0), now())
+                                NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now())
         resource_mgr.add_new_offers([offer_1, offer_2])
 
         scheduling_manager = SchedulingManager()
@@ -78,9 +79,9 @@ class TestSchedulingManager(TestCase):
         mock_taskinfo.return_value = MagicMock()
 
         offer_1 = ResourceOffer('offer_1', self.node_agent_1, self.framework_id,
-                                NodeResources(cpus=2.0, mem=1024.0, disk=1024.0), now())
+                                NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now())
         offer_2 = ResourceOffer('offer_2', self.node_agent_2, self.framework_id,
-                                NodeResources(cpus=25.0, mem=2048.0, disk=2048.0), now())
+                                NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now())
         resource_mgr.add_new_offers([offer_1, offer_2])
         Scheduler.objects.update(is_paused=True)
         scheduler_mgr.sync_with_database()
@@ -113,9 +114,9 @@ class TestSchedulingManager(TestCase):
         job_exe_mgr.schedule_job_exes([RunningJobExecution(job_exe_1)])
 
         offer_1 = ResourceOffer('offer_1', self.node_agent_1, self.framework_id,
-                                NodeResources(cpus=2.0, mem=1024.0, disk=1024.0), now())
+                                NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now())
         offer_2 = ResourceOffer('offer_2', self.node_agent_2, self.framework_id,
-                                NodeResources(cpus=25.0, mem=2048.0, disk=2048.0), now())
+                                NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now())
         resource_mgr.add_new_offers([offer_1, offer_2])
 
         scheduling_manager = SchedulingManager()

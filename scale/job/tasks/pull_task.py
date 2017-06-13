@@ -3,8 +3,9 @@ from __future__ import unicode_literals
 
 import datetime
 
-from job.resources import NodeResources
 from job.tasks.base_task import AtomicCounter, Task
+from node.resources.node_resources import NodeResources
+from node.resources.resource import Cpus, Mem
 
 
 PULL_TASK_ID_PREFIX = 'scale_pull'
@@ -51,4 +52,4 @@ class PullTask(Task):
         """See :meth:`job.tasks.base_task.Task.get_resources`
         """
 
-        return NodeResources(cpus=0.1, mem=32)
+        return NodeResources([Cpus(0.1), Mem(32.0)])
