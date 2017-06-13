@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from abc import ABCMeta
 
 
@@ -7,17 +9,12 @@ class CommandMessage(object):
 
     def __init__(self, message_type):
 
-        # Result of CommandMessage # TODO: Why do we need this over just returning success from execute?
-        self.succeeded = False
-
         # List to contain messages that must be passed on downstream by calling CommandMessageManager
         # Must contain elements of type CommandMessage
         self.new_messages = []
 
         # Unique type of CommandMessage, each type must be registered in apps.py
-        self.type = message_type
-
-        pass
+        self.message_type = message_type
 
     def to_json(self):
         """JSON Serializer for CommandMessage subclasses. Must be implemented in all subclasses.
