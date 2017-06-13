@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 
 from util.exceptions import ScaleLogicBug
 
+from node.resources.resource import Cpus, Disk, Mem
+
 
 class NodeResources(object):
     """This class encapsulates a set of node resources
@@ -22,6 +24,14 @@ class NodeResources(object):
                     raise ScaleLogicBug('Resource type "%s" is not currently supported', resource.resource_type)
                 self._resources[resource.name] = resource
 
+        # Make sure standard resources are defined
+        if 'cpus' not in self._resources:
+            self._resources['cpus'] = Cpus(0.0)
+        if 'mem' not in self._resources:
+            self._resources['mem'] = Mem(0.0)
+        if 'disk' not in self._resources:
+            self._resources['disk'] = Disk(0.0)
+
     @property
     def cpus(self):
         """The number of CPUs
@@ -30,9 +40,7 @@ class NodeResources(object):
         :rtype: float
         """
 
-        if 'cpus' in self._resources:
-            return self._resources['cpus'].value
-        return 0.0
+        return self._resources['cpus'].value
 
     @property
     def disk(self):
@@ -42,9 +50,7 @@ class NodeResources(object):
         :rtype: float
         """
 
-        if 'disk' in self._resources:
-            return self._resources['disk'].value
-        return 0.0
+        return self._resources['disk'].value
 
     @property
     def mem(self):
@@ -54,9 +60,7 @@ class NodeResources(object):
         :rtype: float
         """
 
-        if 'mem' in self._resources:
-            return self._resources['mem'].value
-        return 0.0
+        return self._resources['mem'].value
 
     @property
     def resources(self):
@@ -137,10 +141,13 @@ class NodeResources(object):
         """
 
         for resource in node_resources.resources:
-            if resource.name not in self._resources:
-                return False
-            if self._resources[resource.name].value < resource.value:  # Assumes SCALAR type
-                return False
+            if resource.name in self._resources:
+                if self._resources[resource.name].value < resource.value:  # Assumes SCALAR type
+                    return False
+            else:
+                # Do not have this resource, not a problem if requesting 0.0
+                if resource.value > 0.0:
+                    return False
 
         return True
 
