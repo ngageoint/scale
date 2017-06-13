@@ -199,6 +199,9 @@ class ScaleScheduler(MesosScheduler):
             framework_id = offer.framework_id.value
             resource_list = []
             for resource in offer.resources:
+                # TODO: remove test logging statements
+                logger.info('Resource name is %s', resource.name)
+                logger.info('Resource type is %s', resource.type)
                 if resource.type == 'SCALAR':
                     resource_list.append(ScalarResource(resource.name, resource.scalar.value))
             resources = NodeResources(resource_list)
