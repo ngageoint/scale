@@ -122,7 +122,7 @@ class NodeResources(object):
         names = set()
         for resource in node_resources.resources:
             names.add(resource.name)
-        if self._resources.keys() != names:
+        if set(self._resources.keys()) != names:
             return False
 
         for resource in node_resources.resources:
