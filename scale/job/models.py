@@ -89,7 +89,6 @@ class JobManager(models.Manager):
         :returns: The new job
         :rtype: :class:`job.models.Job`
         """
-        
         if not job_type.is_active:
             raise Exception('Job type is no longer active')
         if event is None:
