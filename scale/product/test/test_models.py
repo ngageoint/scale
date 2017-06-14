@@ -17,9 +17,12 @@ import recipe.test.utils as recipe_test_utils
 import source.test.utils as source_test_utils
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
+from batch.models import BatchRecipe, BatchJob
+from batch.test import utils as batch_test_utils
 from job.execution.container import SCALE_JOB_EXE_OUTPUT_PATH
-from job.models import Job
+from job.models import Job, JobManager
 from product.models import FileAncestryLink, ProductFile
+from recipe.models import RecipeManager
 from storage.models import ScaleFile
 
 
@@ -77,8 +80,6 @@ class TestFileAncestryLinkManagerCreateFileAncestryLinks(TestCase):
     def test_batch_recipe(self):
         """Tests creating a link that has a recipe and batch."""
 
-        from batch.models import BatchRecipe, BatchJob
-        from batch.test import utils as batch_test_utils
         parent_ids = [self.file_1.id]
         job_exe = job_test_utils.create_job_exe()
         recipe_job = recipe_test_utils.create_recipe_job(job=job_exe.job)
@@ -579,6 +580,45 @@ class TestProductFileManagerUploadFiles(TestCase):
         self.assertEqual(datetime.datetime(2015, 5, 15, 10, 36, 12, tzinfo=utc), products[0].data_ended)
         self.assertIsNotNone(products[0].uuid)
 
+    @patch('storage.models.os.path.getsize', lambda path: 100)
+    def test_batch_link(self):
+        """Tests calling ProductFileManager.upload_files() successfully when associated with a batch"""
+        
+        job_type = job_test_utils.create_job_type(name='scale-batch-creator')
+        job_exe = job_test_utils.create_job_exe(job_type=job_type)
+        recipe_job = recipe_test_utils.create_recipe_job(job=job_exe.job)
+        batch = batch_test_utils.create_batch()
+        BatchRecipe.objects.create(batch_id=batch.id, recipe_id=recipe_job.recipe.id)
+        BatchJob.objects.create(batch_id=batch.id, job_id=job_exe.job_id)
+
+        products_no = ProductFile.objects.upload_files(self.files_no, [self.source_file.id], self.job_exe_no,
+                                                       self.workspace)
+        products = ProductFile.objects.upload_files(self.files, [self.source_file.id, products_no[0].id],
+                                                    job_exe, self.workspace)
+                                                    
+        self.assertEqual(batch.id, products[0].batch_id)
+                                                    
+    @patch('storage.models.os.path.getsize', lambda path: 100)
+    def test_recipe_link(self):
+        """Tests calling ProductFileManager.upload_files() successfully when associated with a recipe"""
+        recipe_job = recipe_test_utils.create_recipe_job(job=self.job_exe.job)
+
+        products_no = ProductFile.objects.upload_files(self.files_no, [self.source_file.id], self.job_exe_no,
+                                                       self.workspace)
+        products = ProductFile.objects.upload_files(self.files, [self.source_file.id, products_no[0].id],
+                                                    self.job_exe, self.workspace)
+        
+        self.assertEqual(recipe_job.recipe.id, products[0].recipe_id)
+        self.assertEqual(self.job_exe.get_job_type_name(), products[0].recipe_job)
+        
+        job_manager = JobManager()
+        self.assertEqual(str(job_manager.get_details(self.job_exe.job_id).outputs), products[0].job_output)
+        
+        recipe_manager = RecipeManager()
+        self.assertEqual(recipe_manager.get_details(recipe_job.id).recipe_type.name, products[0].recipe_type)
+        
+    
+    
     @patch('storage.models.os.path.getsize', lambda path: 100)
     def test_uuid(self):
         """Tests setting UUIDs on products from a single job execution."""
