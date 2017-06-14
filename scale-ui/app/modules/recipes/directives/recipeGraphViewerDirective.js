@@ -838,7 +838,7 @@
             };
 
             if ($scope.recipe) {
-                vm.lastStatusChange = $scope.recipe.last_modified ? moment.duration(moment.utc($scope.recipe.last_modified).diff(moment.utc())).humanize(true) : '';
+                vm.lastStatusChange = $scope.recipe.completed ? moment.duration(moment.utc($scope.recipe.completed).diff(moment.utc())).humanize(true) : '';
             }
 
             var jobs = [];
