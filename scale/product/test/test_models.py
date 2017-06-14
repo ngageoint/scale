@@ -601,7 +601,8 @@ class TestProductFileManagerUploadFiles(TestCase):
     @patch('storage.models.os.path.getsize', lambda path: 100)
     def test_recipe_link(self):
         """Tests calling ProductFileManager.upload_files() successfully when associated with a recipe"""
-        recipe_job = recipe_test_utils.create_recipe_job(job=self.job_exe.job)
+        test_recipe = recipe_test_utils.create_recipe()
+        recipe_job = recipe_test_utils.create_recipe_job(job=self.job_exe.job, recipe=test_recipe)
 
         products_no = ProductFile.objects.upload_files(self.files_no, [self.source_file.id], self.job_exe_no,
                                                        self.workspace)
@@ -615,9 +616,7 @@ class TestProductFileManagerUploadFiles(TestCase):
         self.assertEqual(str(job_manager.get_details(self.job_exe.job_id).outputs), products[0].job_output)
         
         recipe_manager = RecipeManager()
-        self.assertEqual(recipe_manager.get_details(recipe_job.id).recipe_type.name, products[0].recipe_type)
-        
-    
+        self.assertEqual(recipe_manager.get_details(recipe_job.recipe.id).recipe_type.name, products[0].recipe_type)
     
     @patch('storage.models.os.path.getsize', lambda path: 100)
     def test_uuid(self):
