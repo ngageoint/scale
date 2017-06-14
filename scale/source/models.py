@@ -301,13 +301,18 @@ class SourceFileManager(models.GeoManager):
         src_file = ScaleFile.objects.select_for_update().get(pk=src_file_id, file_type='SOURCE')
         src_file.is_parsed = True
         src_file.parsed = now()
-        src_file.data_started = data_started
-        src_file.data_ended = data_ended
-        target_date = src_file.data_started
-        if target_date is None:
-            target_date = src_file.data_ended
-        if target_date is None:
-            target_date = src_file.created
+        if data_started and not data_ended:
+            src_file.data_started = data_started
+            src_file.data_ended = data_started
+        elif not data_started and data_ended:
+            src_file.data_started = data_ended
+            src_file.data_ended = data_ended
+        elif not data_ended and not data_started:
+            src_file.data_started = None
+            src_file.data_ended = None
+        else:
+            src_file.data_started = data_started
+            src_file.data_ended = data_ended
         for tag in data_types:
             src_file.add_data_type_tag(tag)
         if geom:
