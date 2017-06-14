@@ -13,11 +13,10 @@ class ProductFileBaseSerializer(ScaleFileBaseSerializer):
     is_operational = serializers.BooleanField()
     is_published = serializers.BooleanField()
     has_been_published = serializers.BooleanField()
+    is_superseded = serializers.BooleanField()
 
     published = serializers.DateTimeField()
     unpublished = serializers.DateTimeField()
-
-    is_superseded = serializers.BooleanField()
     superseded = serializers.DateTimeField()
 
     job_type = ModelIdSerializer()
