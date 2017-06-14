@@ -359,14 +359,14 @@ class ScaleFile(models.Model):
     :type job_type: :class:`django.db.models.ForeignKey`
     :keyword job_output: The output name from the job interface
     :type job_output: :class:`django.db.models.CharField`
-    :keyword recipe_id: The identifier of a recipe this file is associated with
-    :type recipe_id: :class:`django.db.models.CharField`
+    :keyword recipe: The identifier of a recipe this file is associated with
+    :type recipe: :class:`django.db.models.ForeignKey`
     :keyword recipe_job: The name of the job within the recipe
     :type recipe_job: :class:`django.db.models.CharField`
     :keyword recipe_type: The type of recipe that the file is associated with
     :type recipe_type: :class:`django.db.models.CharField`
-    :keyword batch_id: The identifier of the batch this file is associated with
-    :type batch_id: :class:`django.db.models.CharField`
+    :keyword batch: The identifier of the batch this file is associated with
+    :type batch: :class:`django.db.models.ForeignKey`
     :keyword source_started: The earliest start time from all source files
     :type source_started: :class:`django.db.models.DateTimeField`
     :keyword source_ended: The latest end time from all source files
@@ -427,10 +427,10 @@ class ScaleFile(models.Model):
     job = models.ForeignKey('job.Job', blank=True, null=True, on_delete=models.PROTECT)
     job_type = models.ForeignKey('job.JobType', blank=True, null=True, on_delete=models.PROTECT)
     job_output = models.CharField(null=True, blank=True, max_length=250)
-    recipe_id = models.ForeignKey('recipe.Recipe', null=True, blank=True, db_index=True, on_delete=models.PROTECT)
+    recipe = models.ForeignKey('recipe.Recipe', null=True, blank=True, db_index=True, on_delete=models.PROTECT)
     recipe_job = models.CharField(null=True, blank=True, max_length=250)
     recipe_type = models.CharField(null=True, blank=True, max_length=250)
-    batch_id = models.ForeignKey('batch.Batch', null=True, blank=True, db_index=True, on_delete=models.PROTECT)
+    batch = models.ForeignKey('batch.Batch', null=True, blank=True, db_index=True, on_delete=models.PROTECT)
     source_started = models.DateTimeField(blank=True, null=True, db_index=True)
     source_ended = models.DateTimeField(blank=True, null=True, db_index=True)
     is_operational = models.BooleanField(default=True)

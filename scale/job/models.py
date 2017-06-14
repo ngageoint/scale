@@ -89,7 +89,7 @@ class JobManager(models.Manager):
         :returns: The new job
         :rtype: :class:`job.models.Job`
         """
-
+        
         if not job_type.is_active:
             raise Exception('Job type is no longer active')
         if event is None:
@@ -503,8 +503,8 @@ class JobManager(models.Manager):
         # Update each job with source file models and populate the JobInput model
         job_inputs = []
         for job in jobs:
-            input_file_ids = job_file_map[job.id]
             job_input = JobInput()
+            input_file_ids = job_file_map[job.id]
             job_input.job_id = job.id
             for input_file_id in input_file_ids:
                 if input_file_id in input_file_map:
