@@ -9,7 +9,6 @@ import django.utils.timezone as timezone
 from django.db import transaction
 
 import storage.geospatial_utils as geo_utils
-from batch.models import BatchJob
 from job.models import JobManager
 from recipe.models import Recipe, RecipeManager
 from storage.brokers.broker import FileUpload
@@ -49,6 +48,7 @@ class FileAncestryLinkManager(models.Manager):
         recipe = Recipe.objects.get_recipe_for_job(job_exe.job_id)
 
         # See if this job is in a batch
+        from batch.models import BatchJob
         try:
             batch_id = BatchJob.objects.get(job_id=job_exe.job_id).batch_id
         except BatchJob.DoesNotExist:
@@ -519,9 +519,10 @@ class ProductFileManager(models.GeoManager):
             # Add recipe info to product if available.
             recipe_check = Recipe.objects.get_recipe_for_job(job_exe.job_id)
             if recipe_check:
-                recipe_info = RecipeManager.get_details(recipe_check.id)
+                recipe_manager = RecipeManager()
+                recipe_info = recipe_manager.get_details(recipe_check.id)
                 product.recipe_id = recipe_check.id
-                product.recipe_type = recipe_info.recipe_type
+                product.recipe_type = recipe_info.recipe_type.name
                 product.recipe_job = job_exe.get_job_type_name()
 
                 job_manager = JobManager()
@@ -530,6 +531,7 @@ class ProductFileManager(models.GeoManager):
 
                 # Add batch info to product if available.
                 try:
+                    from batch.models import BatchJob
                     product.batch_id = BatchJob.objects.get(job_id=job_exe.job_id).batch_id
                 except BatchJob.DoesNotExist:
                     product.batch_id = None
