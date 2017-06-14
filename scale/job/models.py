@@ -1718,11 +1718,11 @@ class JobInput(models.Model):
     """Links a job and its input files together. A file can be used as input to multiple jobs and a job can
     accept multiple input files.
 
-    :keyword job: The job that the input file is liked to
+    :keyword job: The job that the input file is linked to
     :type job: :class:`django.db.models.ForeignKey`
-    :keyword input_file: The input file that is liked to a job
+    :keyword input_file: The input file that is linked to the job
     :type input_file: :class:`django.db.models.ForeignKey`
-    :keyword job_input: Th name of the input file
+    :keyword job_input: The name of the job input that the file was passed into
     :type job_input: :class:`django.db.models.CharField`
     :keyword created: When this link was created
     :type created: :class:`django.db.models.DateTimeField`
