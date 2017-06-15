@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='JobInput',
+            name='JobInputFile',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('job_input', models.CharField(max_length=250)),
@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
                 ('job', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='job.Job')),
             ],
             options={
-                'db_table': 'job_input',
+                'db_table': 'job_input_file',
             },
         ),
     ]
