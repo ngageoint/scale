@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 from util.exceptions import ScaleLogicBug
 
-from node.resources.json.resources import Resources
 from node.resources.resource import Cpus, Disk, Mem
 
 
@@ -103,6 +102,7 @@ class NodeResources(object):
         :rtype: :class:`node.resources.json.Resources`
         """
 
+        from node.resources.json.resources import Resources
         resources_dict = {}
         for resource in self._resources.values():
             resources_dict[resource.name] = resource.value  # Assumes SCALAR type
