@@ -38,7 +38,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='scalefile',
             name='recipe_type',
-            field=models.CharField(blank=True, max_length=250, null=True),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='recipe.RecipeType'),
         ),
         migrations.AddField(
             model_name='scalefile',
