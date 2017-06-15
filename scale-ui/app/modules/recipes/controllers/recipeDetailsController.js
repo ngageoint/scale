@@ -17,7 +17,7 @@
             vm.loadingRecipeDetail = true;
             recipeService.getRecipeDetails(recipeId).then(function (data) {
                 vm.recipe = data;
-                recipeService.getRecipeTypeDetail(data.recipe_type.id).then(function(recipeType){
+                recipeService.getRecipeTypeDetail(data.recipe_type_rev.id).then(function(recipeType){
                     vm.recipeType = recipeType;
                 }).catch(function(error){
                    console.log(error);

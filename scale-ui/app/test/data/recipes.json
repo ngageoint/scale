@@ -39,7 +39,7 @@
             "description": "Perform spectral analysis on a NITF"
         },
         "recipe_type_rev": {
-            "id": 5,
+            "id": 2,
             "recipe_type": {
                 "id": 2
             },
@@ -66,7 +66,7 @@
             "description": "Processes WorldView sensor data - correcting for atmospheric conditions and performing rigorous orthorectification"
         },
         "recipe_type_rev": {
-            "id": 6,
+            "id": 3,
             "recipe_type": {
                 "id": 3
             },
@@ -93,7 +93,7 @@
             "description": "Detect oil on the surface of water"
         },
         "recipe_type_rev": {
-            "id": 10,
+            "id": 4,
             "recipe_type": {
                 "id": 4
             },
@@ -120,7 +120,7 @@
             "description": "Detect aircraft using BVL Caffe deep learning algorithms"
         },
         "recipe_type_rev": {
-            "id": 8,
+            "id": 5,
             "recipe_type": {
                 "id": 5
             },
@@ -174,7 +174,7 @@
             "description": "Process Landsat 8 sensor data"
         },
         "recipe_type_rev": {
-            "id": 3,
+            "id": 1,
             "recipe_type": {
                 "id": 1
             },
@@ -201,7 +201,7 @@
             "description": "Perform spectral analysis on a NITF"
         },
         "recipe_type_rev": {
-            "id": 3,
+            "id": 2,
             "recipe_type": {
                 "id": 2
             },
@@ -228,7 +228,7 @@
             "description": "Processes WorldView sensor data - correcting for atmospheric conditions and performing rigorous orthorectification"
         },
         "recipe_type_rev": {
-            "id": 6,
+            "id": 3,
             "recipe_type": {
                 "id": 3
             },
@@ -255,7 +255,7 @@
             "description": "Detect oil on the surface of water"
         },
         "recipe_type_rev": {
-            "id": 1,
+            "id": 4,
             "recipe_type": {
                 "id": 4
             },
@@ -309,7 +309,7 @@
             "description": "Process Landsat 8 sensor data"
         },
         "recipe_type_rev": {
-            "id": 2,
+            "id": 1,
             "recipe_type": {
                 "id": 1
             },
@@ -336,7 +336,7 @@
             "description": "Perform spectral analysis on a NITF"
         },
         "recipe_type_rev": {
-            "id": 8,
+            "id": 2,
             "recipe_type": {
                 "id": 2
             },
@@ -417,7 +417,7 @@
             "description": "Detect aircraft using BVL Caffe deep learning algorithms"
         },
         "recipe_type_rev": {
-            "id": 1,
+            "id": 5,
             "recipe_type": {
                 "id": 5
             },
@@ -444,7 +444,7 @@
             "description": "Process Landsat 8 sensor data"
         },
         "recipe_type_rev": {
-            "id": 9,
+            "id": 1,
             "recipe_type": {
                 "id": 1
             },
@@ -471,7 +471,7 @@
             "description": "Perform spectral analysis on a NITF"
         },
         "recipe_type_rev": {
-            "id": 1,
+            "id": 2,
             "recipe_type": {
                 "id": 2
             },
@@ -498,7 +498,7 @@
             "description": "Processes WorldView sensor data - correcting for atmospheric conditions and performing rigorous orthorectification"
         },
         "recipe_type_rev": {
-            "id": 6,
+            "id": 3,
             "recipe_type": {
                 "id": 3
             },
@@ -525,7 +525,7 @@
             "description": "Detect oil on the surface of water"
         },
         "recipe_type_rev": {
-            "id": 10,
+            "id": 4,
             "recipe_type": {
                 "id": 4
             },
@@ -579,7 +579,7 @@
             "description": "Process Landsat 8 sensor data"
         },
         "recipe_type_rev": {
-            "id": 7,
+            "id": 1,
             "recipe_type": {
                 "id": 1
             },
@@ -606,7 +606,7 @@
             "description": "Perform spectral analysis on a NITF"
         },
         "recipe_type_rev": {
-            "id": 1,
+            "id": 2,
             "recipe_type": {
                 "id": 2
             },
@@ -633,7 +633,7 @@
             "description": "Processes WorldView sensor data - correcting for atmospheric conditions and performing rigorous orthorectification"
         },
         "recipe_type_rev": {
-            "id": 2,
+            "id": 3,
             "recipe_type": {
                 "id": 3
             },
@@ -660,7 +660,7 @@
             "description": "Detect oil on the surface of water"
         },
         "recipe_type_rev": {
-            "id": 1,
+            "id": 4,
             "recipe_type": {
                 "id": 4
             },
@@ -687,7 +687,7 @@
             "description": "Detect aircraft using BVL Caffe deep learning algorithms"
         },
         "recipe_type_rev": {
-            "id": 10,
+            "id": 5,
             "recipe_type": {
                 "id": 5
             },
@@ -714,7 +714,7 @@
             "description": "Process Landsat 8 sensor data"
         },
         "recipe_type_rev": {
-            "id": 3,
+            "id": 1,
             "recipe_type": {
                 "id": 1
             },
@@ -795,7 +795,7 @@
             "description": "Detect oil on the surface of water"
         },
         "recipe_type_rev": {
-            "id": 8,
+            "id": 4,
             "recipe_type": {
                 "id": 4
             },
@@ -822,7 +822,7 @@
             "description": "Detect aircraft using BVL Caffe deep learning algorithms"
         },
         "recipe_type_rev": {
-            "id": 2,
+            "id": 5,
             "recipe_type": {
                 "id": 5
             },
@@ -849,7 +849,7 @@
             "description": "Process Landsat 8 sensor data"
         },
         "recipe_type_rev": {
-            "id": 4,
+            "id": 1,
             "recipe_type": {
                 "id": 1
             },
@@ -876,7 +876,7 @@
             "description": "Perform spectral analysis on a NITF"
         },
         "recipe_type_rev": {
-            "id": 8,
+            "id": 2,
             "recipe_type": {
                 "id": 2
             },
@@ -903,7 +903,7 @@
             "description": "Processes WorldView sensor data - correcting for atmospheric conditions and performing rigorous orthorectification"
         },
         "recipe_type_rev": {
-            "id": 8,
+            "id": 3,
             "recipe_type": {
                 "id": 3
             },
@@ -930,7 +930,7 @@
             "description": "Detect oil on the surface of water"
         },
         "recipe_type_rev": {
-            "id": 5,
+            "id": 4,
             "recipe_type": {
                 "id": 4
             },
@@ -957,7 +957,7 @@
             "description": "Detect aircraft using BVL Caffe deep learning algorithms"
         },
         "recipe_type_rev": {
-            "id": 4,
+            "id": 5,
             "recipe_type": {
                 "id": 5
             },
@@ -984,7 +984,7 @@
             "description": "Process Landsat 8 sensor data"
         },
         "recipe_type_rev": {
-            "id": 5,
+            "id": 1,
             "recipe_type": {
                 "id": 1
             },
@@ -1011,7 +1011,7 @@
             "description": "Perform spectral analysis on a NITF"
         },
         "recipe_type_rev": {
-            "id": 9,
+            "id": 2,
             "recipe_type": {
                 "id": 2
             },
@@ -1038,7 +1038,7 @@
             "description": "Processes WorldView sensor data - correcting for atmospheric conditions and performing rigorous orthorectification"
         },
         "recipe_type_rev": {
-            "id": 5,
+            "id": 3,
             "recipe_type": {
                 "id": 3
             },
@@ -1065,7 +1065,7 @@
             "description": "Detect oil on the surface of water"
         },
         "recipe_type_rev": {
-            "id": 6,
+            "id": 4,
             "recipe_type": {
                 "id": 4
             },
@@ -1092,7 +1092,7 @@
             "description": "Detect aircraft using BVL Caffe deep learning algorithms"
         },
         "recipe_type_rev": {
-            "id": 4,
+            "id": 5,
             "recipe_type": {
                 "id": 5
             },
@@ -1119,7 +1119,7 @@
             "description": "Process Landsat 8 sensor data"
         },
         "recipe_type_rev": {
-            "id": 4,
+            "id": 1,
             "recipe_type": {
                 "id": 1
             },
@@ -1146,7 +1146,7 @@
             "description": "Perform spectral analysis on a NITF"
         },
         "recipe_type_rev": {
-            "id": 5,
+            "id": 2,
             "recipe_type": {
                 "id": 2
             },
@@ -1173,7 +1173,7 @@
             "description": "Processes WorldView sensor data - correcting for atmospheric conditions and performing rigorous orthorectification"
         },
         "recipe_type_rev": {
-            "id": 1,
+            "id": 3,
             "recipe_type": {
                 "id": 3
             },
@@ -1200,7 +1200,7 @@
             "description": "Detect oil on the surface of water"
         },
         "recipe_type_rev": {
-            "id": 10,
+            "id": 4,
             "recipe_type": {
                 "id": 4
             },
@@ -1227,7 +1227,7 @@
             "description": "Detect aircraft using BVL Caffe deep learning algorithms"
         },
         "recipe_type_rev": {
-            "id": 1,
+            "id": 5,
             "recipe_type": {
                 "id": 5
             },
@@ -1254,7 +1254,7 @@
             "description": "Process Landsat 8 sensor data"
         },
         "recipe_type_rev": {
-            "id": 5,
+            "id": 1,
             "recipe_type": {
                 "id": 1
             },
@@ -1281,7 +1281,7 @@
             "description": "Perform spectral analysis on a NITF"
         },
         "recipe_type_rev": {
-            "id": 3,
+            "id": 2,
             "recipe_type": {
                 "id": 2
             },
