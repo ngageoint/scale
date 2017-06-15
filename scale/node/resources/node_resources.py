@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from util.exceptions import ScaleLogicBug
 
+from node.resources.json.resources import Resources
 from node.resources.resource import Cpus, Disk, Mem
 
 
@@ -94,6 +95,18 @@ class NodeResources(object):
 
         for resource in self._resources.values():
             resource_dict[resource.name] = resource.value  # Assumes SCALAR type
+
+    def get_json(self):
+        """Returns these resources as a JSON schema
+
+        :returns: The resources as a JSON schema
+        :rtype: :class:`node.resources.json.Resources`
+        """
+
+        resources_dict = {}
+        for resource in self._resources.values():
+            resources_dict[resource.name] = resource.value  # Assumes SCALAR type
+        return Resources({'resources': resources_dict})
 
     def increase_up_to(self, node_resources):
         """Increases each resource up to the value in the given node resources
