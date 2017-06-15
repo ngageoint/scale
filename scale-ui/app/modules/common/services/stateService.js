@@ -17,6 +17,8 @@
             nodesColDefs = [],
             batchesColDefs = [],
             batchesParams = {},
+            sourceFilesColDefs = [],
+            sourceFilesParams = {},
             showActiveWorkspaces = true,
             nodesParams = {},
             logArgs = [],
@@ -150,6 +152,19 @@
                 recipe_type_id: data.recipe_type_id ? parseInt(data.recipe_type_id) : null,
                 job_type_id: data.job_type_id ? parseInt(data.job_type_id) : null,
                 url: null
+            };
+        };
+
+        var initSourceFilesParams = function (data) {
+            return {
+                page: data.page ? parseInt(data.page) : 1,
+                page_size: data.page_size ? parseInt(data.page_size) : 25,
+                started: data.started ? data.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
+                ended: data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
+                time_field: data.time_field ? data.time_field : 'last_modified',
+                order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['-last_modified'],
+                is_parsed: data.is_parsed ? data.is_parsed : null,
+                file_name: data.file_name ? data.file_name : null
             };
         };
 
@@ -306,6 +321,16 @@
             setBatchesParams: function (data) {
                 batchesParams = initBatchesParams(data);
                 updateQuerystring(batchesParams);
+            },
+            getSourceFilesParams: function () {
+                if (_.keys(sourceFilesParams).length === 0) {
+                    return initSourceFilesParams($location.search());
+                }
+                return sourceFilesParams;
+            },
+            setSourceFilesParams: function (data) {
+                sourceFilesParams = initSourceFilesParams(data);
+                updateQuerystring(sourceFilesParams);
             }
         };
     });

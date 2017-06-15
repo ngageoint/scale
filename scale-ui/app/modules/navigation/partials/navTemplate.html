@@ -40,6 +40,12 @@
         </div>
     </div>
     <div class="nav-section">
+        <div class="nav-link" ng-class="{data: 'selected'}[vm.activePage]"
+             ng-click="vm.goto('/data/source')">
+            Data
+        </div>
+    </div>
+    <div class="nav-section">
         <div class="nav-link" ng-class="{feed: 'selected'}[vm.activePage]"
              ng-click="vm.goto('/feed')">
             Data Feed

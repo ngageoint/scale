@@ -248,6 +248,9 @@
             "batch": [
                 { "path": "batch", "label": "Batches" },
                 { "path": "batch/0", "label": "Create Batch" }
+            ],
+            "data": [
+                { "path": "data/source", "label": "Source Files" }
             ]
         },
         "headerOffset": 165,
