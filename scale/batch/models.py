@@ -208,7 +208,7 @@ class BatchManager(models.Manager):
             return ScaleFile.objects.none()
 
         # Fetch all the files that were not already processed by the recipe type
-        old_files = ScaleFile.objects.exclude(recipefile__recipe__recipe_type=recipe_type)
+        old_files = ScaleFile.objects.exclude(recipeinputfile__recipe__recipe_type=recipe_type)
 
         # Optionally filter by date range
         if definition.date_range_type == 'created':
@@ -253,11 +253,11 @@ class BatchManager(models.Manager):
         elif definition.date_range_type == 'data':
             # The filters must include OR operators since the file data started/ended fields can be null
             if definition.started:
-                old_recipes = old_recipes.filter(Q(recipefile__scale_file__data_started__gte=definition.started) |
-                                                 Q(recipefile__scale_file__data_ended__gte=definition.started))
+                old_recipes = old_recipes.filter(Q(recipeinputfile__scale_file__data_started__gte=definition.started) |
+                                                 Q(recipeinputfile__scale_file__data_ended__gte=definition.started))
             if definition.ended:
-                old_recipes = old_recipes.filter(Q(recipefile__scale_file__data_started__lte=definition.ended) |
-                                                 Q(recipefile__scale_file__data_ended__lte=definition.ended))
+                old_recipes = old_recipes.filter(Q(recipeinputfile__scale_file__data_started__lte=definition.ended) |
+                                                 Q(recipeinputfile__scale_file__data_ended__lte=definition.ended))
         return old_recipes
 
     @transaction.atomic

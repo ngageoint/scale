@@ -12,8 +12,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RenameModel('RecipeFile', 'RecipeInputFile'),
+        migrations.AlterModelTable('RecipeInputFile', 'recipe_input_file'),
         migrations.AddField(
-            model_name='recipefile',
+            model_name='recipeinputfile',
             name='recipe_input',
             field=models.CharField(blank=True, max_length=250, null=True),
         ),

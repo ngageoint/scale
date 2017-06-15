@@ -113,13 +113,13 @@ class RecipeManager(models.Manager):
         # Save models for each recipe input file
         recipe_files = []
         for input_file_id in data.get_input_file_ids():
-            recipe_file = RecipeFile()
+            recipe_file = RecipeInputFile()
             recipe_file.recipe_id = recipe.id
             recipe_file.scale_file_id = input_file_id
             recipe_file.recipe_input = data.get_input_file_name(input_file_id)
             recipe_file.created = recipe.created
             recipe_files.append(recipe_file)
-        RecipeFile.objects.bulk_create(recipe_files)
+        RecipeInputFile.objects.bulk_create(recipe_files)
 
         # Create recipe jobs and link them to the recipe
         recipe_jobs = self._create_recipe_jobs(recipe, event, when, delta, superseded_jobs)
@@ -563,7 +563,7 @@ class Recipe(models.Model):
         index_together = ['last_modified', 'recipe_type']
 
 
-class RecipeFile(models.Model):
+class RecipeInputFile(models.Model):
     """Links a recipe and its input files together. A file can be used as input to multiple recipes and a recipe can
     accept multiple input files. This model is useful for determining relevant recipes to run during re-processing.
 
@@ -584,7 +584,7 @@ class RecipeFile(models.Model):
 
     class Meta(object):
         """meta information for the db"""
-        db_table = 'recipe_file'
+        db_table = 'recipe_input_file'
 
 
 class RecipeJobManager(models.Manager):
