@@ -15,6 +15,7 @@ from job.configuration.json.execution.exe_config import ExecutionConfiguration
 from job.execution.job_exe import RunningJobExecution
 from job.models import Job, JobType
 from job.models import JobExecution
+from node.resources.json.resources import Resources
 from recipe.models import Recipe
 from trigger.models import TriggerEvent
 
@@ -658,23 +659,6 @@ class QueueManager(models.Manager):
             if job_exe.status != 'QUEUED':
                 continue
 
-            # Check that resources are sufficient
-            if resources.cpus < queue.cpus_required:
-                msg = 'Job execution requires %s CPUs and only %s were provided'
-                raise Exception(msg % (str(queue.cpus_required), str(resources.cpus)))
-            if resources.mem < queue.mem_required:
-                msg = 'Job execution requires %s MiB of memory and only %s MiB were provided'
-                raise Exception(msg % (str(queue.mem_required), str(resources.mem)))
-            if resources.disk_in < queue.disk_in_required:
-                msg = 'Job execution requires %s MiB of input disk space and only %s MiB were provided'
-                raise Exception(msg % (str(queue.disk_in_required), str(resources.disk_in)))
-            if resources.disk_out < queue.disk_out_required:
-                msg = 'Job execution requires %s MiB of output disk space and only %s MiB were provided'
-                raise Exception(msg % (str(queue.disk_out_required), str(resources.disk_out)))
-            if resources.disk_total < queue.disk_total_required:
-                msg = 'Job execution requires %s MiB of total disk space and only %s MiB were provided'
-                raise Exception(msg % (str(queue.disk_total_required), str(resources.disk_total)))
-
             executions_to_schedule.append((job_exe, node_id, resources))
 
         # Schedule job executions
@@ -747,14 +731,12 @@ class Queue(models.Model):
 
     :keyword priority: The priority of the job (lower number is higher priority)
     :type priority: :class:`django.db.models.IntegerField`
-    :keyword node_required: The specific node on which this job is required to run
-    :type node_required: :class:`django.db.models.ForeignKey`
+    :keyword input_file_size: The amount of disk space in MiB required for input files for this job
+    :type input_file_size: :class:`django.db.models.FloatField`
     :keyword cpus_required: The number of CPUs required for this job
     :type cpus_required: :class:`django.db.models.FloatField`
     :keyword mem_required: The amount of RAM in MiB required for this job
     :type mem_required: :class:`django.db.models.FloatField`
-    :keyword disk_in_required: The amount of disk space in MiB required for input files for this job
-    :type disk_in_required: :class:`django.db.models.FloatField`
     :keyword disk_out_required: The amount of disk space in MiB required for output (temp work and products) for this
         job
     :type disk_out_required: :class:`django.db.models.FloatField`
@@ -763,6 +745,8 @@ class Queue(models.Model):
 
     :keyword configuration: JSON description describing the configuration for how the job should be run
     :type configuration: :class:`django.contrib.postgres.fields.JSONField`
+    :keyword resources: JSON description describing the resources required for this job
+    :type resources: :class:`django.contrib.postgres.fields.JSONField`
 
     :keyword created: When the queue model was created
     :type created: :class:`django.db.models.DateTimeField`
@@ -777,20 +761,29 @@ class Queue(models.Model):
     job_type = models.ForeignKey('job.JobType', on_delete=models.PROTECT)
 
     priority = models.IntegerField(db_index=True)
-    node_required = models.ForeignKey('node.Node', blank=True, null=True, on_delete=models.PROTECT)
+    input_file_size = models.FloatField()
     cpus_required = models.FloatField()
     mem_required = models.FloatField()
-    disk_in_required = models.FloatField()
     disk_out_required = models.FloatField()
     disk_total_required = models.FloatField()
 
     configuration = django.contrib.postgres.fields.JSONField(default=dict)
+    resources = django.contrib.postgres.fields.JSONField(default=dict)
 
     created = models.DateTimeField(auto_now_add=True)
     queued = models.DateTimeField()
     last_modified = models.DateTimeField(auto_now=True)
 
     objects = QueueManager()
+
+    def get_resources(self):
+        """Returns the resources required by this job execution
+
+        :returns: The required resources
+        :rtype: :class:`node.resources.node_resources.NodeResources`
+        """
+
+        return Resources(self.resources).get_node_resources()
 
     class Meta(object):
         """meta information for the db"""

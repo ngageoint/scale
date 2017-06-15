@@ -2,8 +2,6 @@
 from __future__ import unicode_literals
 
 from job.resources import JobResources
-from node.resources.node_resources import NodeResources
-from node.resources.resource import Cpus, Disk, Mem
 
 
 class QueuedJobExecution(object):
@@ -18,14 +16,8 @@ class QueuedJobExecution(object):
 
         self._queue = queue
 
-        cpus = self._queue.cpus_required
-        mem = self._queue.mem_required
-        disk_total = self._queue.disk_total_required
-        self._required_resources = NodeResources([Cpus(cpus), Mem(mem), Disk(disk_total)])
-
-        self._required_node_ids = None
-        if self._queue.node_required_id:
-            self._required_node_ids = {self._queue.node_required_id}
+        self._input_file_size = queue.input_file_size
+        self._required_resources = queue.get_resources()
 
         self._provided_node_id = None
         self._provided_resources = None
@@ -90,18 +82,10 @@ class QueuedJobExecution(object):
         :type resources: :class:`node.resources.node_resources.NodeResources`
         """
 
+        cpus = resources.cpus
+        mem = resources.mem
+        disk_total = resources.disk
+        disk_out = disk_total - self._input_file_size
         self._provided_node_id = node_id
-        self._provided_resources = JobResources(cpus=resources.cpus, mem=resources.mem,
-                                                disk_in=self._queue.disk_in_required,
-                                                disk_out=self._queue.disk_out_required, disk_total=resources.disk)
-
-    def is_node_acceptable(self, node_id):
-        """Indicates whether the node with the given ID is acceptable to this job execution
-
-        :param node_id: The node ID
-        :type node_id: int
-        :returns: True if the node is acceptable, False otherwise
-        :rtype: bool
-        """
-
-        return self._required_node_ids is None or node_id in self._required_node_ids
+        self._provided_resources = JobResources(cpus=cpus, mem=mem, disk_in=self._input_file_size, disk_out=disk_out,
+                                                disk_total=disk_total)
