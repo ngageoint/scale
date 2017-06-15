@@ -85,6 +85,17 @@ class NodeResources(object):
             else:
                 self._resources[resource.name] = resource.copy()
 
+    def copy(self):
+        """Returns a deep copy of these resources. Editing one of the resources objects will not affect the other.
+
+        :returns: A copy of these resources
+        :rtype: :class:`node.resources.node_resources.NodeResources`
+        """
+
+        resources_copy = NodeResources()
+        resources_copy.add(self)
+        return resources_copy
+
     def generate_status_json(self, resource_dict):
         """Generates the portion of the status JSON that describes these resources
 
@@ -163,6 +174,19 @@ class NodeResources(object):
                     return False
 
         return True
+
+    def remove_resource(self, name):
+        """Removes the resource with the given name
+
+        :param name: The name of the resource to remove
+        :type name: string
+        """
+
+        if name in self._resources:
+            if name in ['cpus', 'mem', 'disk']:
+                self._resources[name].value = 0.0
+            else:
+                del self._resources[name]
 
     def subtract(self, node_resources):
         """Subtracts the given resources

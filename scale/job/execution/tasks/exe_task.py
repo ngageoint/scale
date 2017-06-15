@@ -39,12 +39,9 @@ class JobExecutionTask(Task):
 
         # Keep job execution values that should not change
         self._job_exe_id = job_exe.id
-        self._cpus = job_exe.cpus_scheduled
-        self._mem = job_exe.mem_scheduled
-        self._disk_in = job_exe.disk_in_scheduled
-        self._disk_out = job_exe.disk_out_scheduled
-        self._disk_total = job_exe.disk_total_scheduled
-        self._error_mapping = job_exe.get_error_interface()  # This can change, but not worth re-queuing
+        self._resources = job_exe.get_resources()
+        self._input_file_size = job_exe.disk_in_scheduled
+        self._error_mapping = job_exe.get_error_interface()  # This can change, but not worth re-querying
 
     @property
     def job_exe_id(self):

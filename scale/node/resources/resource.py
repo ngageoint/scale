@@ -26,7 +26,7 @@ class Resource(object):
         """Returns a deep copy of this resource. Editing one of the resource objects will not affect the other.
 
         :returns: A copy of this resource
-        :rtype: :class:`node.resources.NodeResources`
+        :rtype: :class:`node.resources.resource.Resource`
         """
 
         raise NotImplementedError

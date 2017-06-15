@@ -27,6 +27,7 @@ from job.exceptions import InvalidJobField
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
 from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
+from node.resources.json.resources import Resources
 from storage.models import ScaleFile, Workspace
 from trigger.configuration.exceptions import InvalidTriggerType
 from trigger.models import TriggerRule
@@ -709,6 +710,8 @@ class Job(models.Model):
     timeout = models.IntegerField()
     max_tries = models.IntegerField()
     num_exes = models.IntegerField(default=0)
+    # TODO: remove cpus_required, mem_required, and disk_out_required, will cause breaking REST API changes
+    # TODO: rename disk_in_required to input_file_size, will cause breaking REST API changes
     cpus_required = models.FloatField(blank=True, null=True)
     mem_required = models.FloatField(blank=True, null=True)
     disk_in_required = models.FloatField(blank=True, null=True)
@@ -1169,6 +1172,8 @@ class JobExecution(models.Model):
     :type timeout: :class:`django.db.models.IntegerField`
     :keyword configuration: JSON description describing the configuration for how the job execution should be run
     :type configuration: :class:`django.contrib.postgres.fields.JSONField`
+    :keyword resources: JSON description describing the resources allocated to this job execution
+    :type resources: :class:`django.contrib.postgres.fields.JSONField`
 
     :keyword cluster_id: This is an ID for the job execution that is unique in the context of the cluster, allowing
         Scale components (task IDs, Docker volume names, etc) to have unique names within the cluster
@@ -1252,6 +1257,7 @@ class JobExecution(models.Model):
     command_arguments = models.CharField(max_length=1000)
     timeout = models.IntegerField()
     configuration = django.contrib.postgres.fields.JSONField(default=dict)
+    resources = django.contrib.postgres.fields.JSONField(default=dict)
 
     cluster_id = models.CharField(blank=True, max_length=100, null=True)
     node = models.ForeignKey('node.Node', blank=True, null=True, on_delete=models.PROTECT)
@@ -1259,6 +1265,7 @@ class JobExecution(models.Model):
     environment = django.contrib.postgres.fields.JSONField(default=dict)
     cpus_scheduled = models.FloatField(blank=True, null=True)
     mem_scheduled = models.FloatField(blank=True, null=True)
+    # disk_in_scheduled represents the job's total input size
     disk_in_scheduled = models.FloatField(blank=True, null=True)
     disk_out_scheduled = models.FloatField(blank=True, null=True)
     disk_total_scheduled = models.FloatField(blank=True, null=True)
@@ -1613,6 +1620,15 @@ class JobExecution(models.Model):
             raise ScaleLogicBug('System jobs do not have a pre-task')
 
         return '%s_pre' % self.get_cluster_id()
+
+    def get_resources(self):
+        """Returns the resources allocated to this job execution
+
+        :returns: The allocated resources
+        :rtype: :class:`node.resources.node_resources.NodeResources`
+        """
+
+        return Resources(self.resources).get_node_resources()
 
     def is_docker_privileged(self):
         """Indicates whether this job execution uses Docker in privileged mode
@@ -2306,6 +2322,8 @@ class JobType(models.Model):
     :keyword disk_out_mult_required: A multiplier (2x = 2.0) applied to the size of the input files to determine
         additional disk space in MiB required for job output (temp work and products) for a job of this type
     :type disk_out_mult_required: :class:`django.db.models.FloatField`
+    :keyword custom_resources: JSON describing the custom resources required for jobs of this type
+    :type custom_resources: :class:`django.contrib.postgres.fields.JSONField`
 
     :keyword icon_code: A font-awesome icon code (like 'f013' for gear) to use when representing this job type
     :type icon_code: string of a FontAwesome icon code
@@ -2360,6 +2378,7 @@ class JobType(models.Model):
     shared_mem_required = models.FloatField(default=0.0)
     disk_out_const_required = models.FloatField(default=64.0)
     disk_out_mult_required = models.FloatField(default=0.0)
+    custom_resources = django.contrib.postgres.fields.JSONField(default=dict)
 
     icon_code = models.CharField(max_length=20, null=True, blank=True)
 
