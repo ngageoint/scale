@@ -203,7 +203,8 @@
         "urls": {
             "apiPrefix": "./api/v5/",
             "overrides": {
-                "status": "./api/v4/"
+                "status": "./api/v4/",
+                "sources": "./api/v4/"
             },
             "documentation": "./docs"
         },
