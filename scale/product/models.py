@@ -475,10 +475,11 @@ class ProductFileManager(models.GeoManager):
         input_products_operational = all([f.is_operational for f in input_products])
 
         # Compute the overall start and stop times for all file_entries
-        start_times = [f[-1]['data_started'] for f in file_entries if len(f) > 3]
-        stop_times = [f[-1]['data_ended'] for f in file_entries if len(f) > 3]
+        source_files = ScaleFile.objects.filter(id__in=[f['id'] for f in input_files], file_type='SOURCE')
+        start_times = [f.data_started for f in source_files]
+        end_times = [f.data_ended for f in source_files]
         start_times.sort()
-        stop_times.sort(reverse=True)
+        end_times.sort(reverse=True)
 
         products_to_save = []
         for entry in file_entries:
@@ -526,7 +527,7 @@ class ProductFileManager(models.GeoManager):
                 recipe_manager = RecipeManager()
                 recipe_info = recipe_manager.get_details(recipe_check.id)
                 product.recipe_id = recipe_check.id
-                product.recipe_type = recipe_info.recipe_type.name
+                product.recipe_type = recipe_info.recipe_type
                 product.recipe_job = job_exe.get_job_type_name()
 
                 job_manager = JobManager()
@@ -544,8 +545,8 @@ class ProductFileManager(models.GeoManager):
             if start_times:
                 product.source_started = start_times[0]
 
-            if stop_times:
-                product.source_ended = stop_times[0]
+            if end_times:
+                product.source_ended = end_times[0]
 
             products_to_save.append(FileUpload(product, local_path))
 
