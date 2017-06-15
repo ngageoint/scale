@@ -12,6 +12,7 @@ from ingest.models import Ingest
 from ingest.serializers import IngestSerializer
 from job.models import Job
 from job.serializers import JobSerializer
+from product.models import ProductFile
 from product.serializers import ProductFileSerializer
 from source.models import SourceFile
 from source.serializers import SourceFileSerializer, SourceFileUpdateSerializer, SourceFileDetailsSerializer
@@ -229,6 +230,8 @@ class SourceProductsView(ListAPIView):
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
+        time_field = rest_util.parse_string(request, 'time_field', required=False,
+                                            accepted_values=ProductFile.VALID_TIME_FIELDS)
 
         batch_ids = rest_util.parse_int_list(request, 'batch_id', required=False)
         job_type_ids = rest_util.parse_int_list(request, 'job_type_id', required=False)
@@ -242,20 +245,16 @@ class SourceProductsView(ListAPIView):
         recipe_type = rest_util.parse_string(request, 'recipe_type', required=False)
         recipe_job = rest_util.parse_string(request, 'recipe_job', required=False)
 
-        source_started = rest_util.parse_timestamp(request, 'source_started', required=False)
-        source_ended = rest_util.parse_timestamp(request, 'source_ended', required=False)
-        rest_util.check_time_range(source_started, source_ended)
-
         order = rest_util.parse_string_list(request, 'order', required=False)
 
-        products = SourceFile.objects.get_source_products(source_id, started=started, ended=ended, batch_ids=batch_ids,
-                                                          job_type_ids=job_type_ids, job_type_names=job_type_names,
+        products = SourceFile.objects.get_source_products(source_id, started=started, ended=ended, time_field=time_field,
+                                                          batch_ids=batch_ids, job_type_ids=job_type_ids,
+                                                          job_type_names=job_type_names,
                                                           job_type_categories=job_type_categories,
                                                           is_operational=is_operational, is_published=is_published,
                                                           file_name=file_name, job_output=job_output,
                                                           recipe_ids=recipe_ids, recipe_type=recipe_type,
-                                                          recipe_job=recipe_job, source_started=source_started,
-                                                          source_ended=source_ended, order=order)
+                                                          recipe_job=recipe_job, order=order)
 
         page = self.paginate_queryset(products)
         serializer = self.get_serializer(page, many=True)
