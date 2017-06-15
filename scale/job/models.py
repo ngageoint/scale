@@ -499,10 +499,10 @@ class JobManager(models.Manager):
         # Build a mapping of input file identifiers to input file
         input_file_map = {input_file.id: input_file for input_file in input_files}
 
-        # Update each job with source file models and populate the JobInput model
+        # Update each job with source file models and populate the JobInputFile model
         job_inputs = []
         for job in jobs:
-            job_input = JobInput()
+            job_input = JobInputFile()
             input_file_ids = job_file_map[job.id]
             job_input.job_id = job.id
             for input_file_id in input_file_ids:
@@ -511,7 +511,7 @@ class JobManager(models.Manager):
                     job_input.input_file_id = input_file_id
                     job_input.job_input = input_file_map[input_file_id]
                     job_inputs.append(job_input)
-        JobInput.objects.bulk_create(job_inputs)
+        JobInputFile.objects.bulk_create(job_inputs)
 
     def supersede_jobs(self, jobs, when):
         """Updates the given jobs to be superseded. The caller must have obtained model locks on the job models.
@@ -1714,7 +1714,7 @@ class JobExecution(models.Model):
         db_table = 'job_exe'
 
 
-class JobInput(models.Model):
+class JobInputFile(models.Model):
     """Links a job and its input files together. A file can be used as input to multiple jobs and a job can
     accept multiple input files.
 
@@ -1735,7 +1735,7 @@ class JobInput(models.Model):
 
     class Meta(object):
         """meta information for the db"""
-        db_table = 'job_input'
+        db_table = 'job_input_file'
 
 
 class JobTypeStatusCounts(object):
