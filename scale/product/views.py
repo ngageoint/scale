@@ -31,6 +31,8 @@ class ProductsView(ListAPIView):
         started = rest_util.parse_timestamp(request, 'started', required=False)
         ended = rest_util.parse_timestamp(request, 'ended', required=False)
         rest_util.check_time_range(started, ended)
+        time_field = rest_util.parse_string(request, 'time_field', required=False,
+                                            accepted_values=ProductFile.VALID_TIME_FIELDS)
 
         job_type_ids = rest_util.parse_int_list(request, 'job_type_id', required=False)
         job_type_names = rest_util.parse_string_list(request, 'job_type_name', required=False)
@@ -44,18 +46,13 @@ class ProductsView(ListAPIView):
         recipe_job = rest_util.parse_string(request, 'recipe_job', required=False)
         batch_ids = rest_util.parse_int_list(request, 'batch_id', required=False)
 
-        source_started = rest_util.parse_timestamp(request, 'source_started', required=False)
-        source_ended = rest_util.parse_timestamp(request, 'source_ended', required=False)
-        rest_util.check_time_range(source_started, source_ended)
-
         order = rest_util.parse_string_list(request, 'order', required=False)
 
         products = ProductFile.objects.get_products(
-            started=started, ended=ended, job_type_ids=job_type_ids, job_type_names=job_type_names,
-            job_type_categories=job_type_categories, is_operational=is_operational, is_published=is_published,
-            file_name=file_name, job_output=job_output, recipe_ids=recipe_ids, recipe_type=recipe_type,
-            recipe_job=recipe_job, batch_ids=batch_ids, source_started=source_started,
-            source_ended=source_ended, order=order,
+            started=started, ended=ended, time_field=time_field, job_type_ids=job_type_ids,
+            job_type_names=job_type_names, job_type_categories=job_type_categories, is_operational=is_operational,
+            is_published=is_published, file_name=file_name, job_output=job_output, recipe_ids=recipe_ids,
+            recipe_type=recipe_type, recipe_job=recipe_job, batch_ids=batch_ids, order=order,
         )
 
         page = self.paginate_queryset(products)

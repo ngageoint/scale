@@ -27,7 +27,6 @@ from storage.models import ScaleFile
 
 
 class TestFileAncestryLinkManagerCreateFileAncestryLinks(TestCase):
-
     fixtures = ['batch_job_types.json']
 
     def setUp(self):
@@ -170,7 +169,6 @@ class TestFileAncestryLinkManagerCreateFileAncestryLinks(TestCase):
 
 
 class TestFileAncestryLinkManagerGetSourceAncestors(TestCase):
-
     def setUp(self):
         django.setup()
 
@@ -406,7 +404,8 @@ class TestProductFileManagerGetProductUpdatesQuery(TestCase):
     def test_no_job_types(self):
         """Tests calling ProductFileManager.get_updates() without a "job_type_ids" argument value"""
 
-        updates_qry = ProductFile.objects.get_products(self.last_modified_start, self.last_modified_end)
+        updates_qry = ProductFile.objects.get_products(started=self.last_modified_start, ended=self.last_modified_end,
+                                                       time_field='last_modified')
         list_of_ids = []
         for product in updates_qry:
             list_of_ids.append(product.id)
@@ -418,7 +417,8 @@ class TestProductFileManagerGetProductUpdatesQuery(TestCase):
         """Tests calling ProductFileManager.get_updates() with a "job_type_ids" argument value"""
 
         job_type_ids = [self.job_type_1_id, self.job_type_2_id]
-        updates_qry = ProductFile.objects.get_products(self.last_modified_start, self.last_modified_end, job_type_ids)
+        updates_qry = ProductFile.objects.get_products(started=self.last_modified_start, ended=self.last_modified_end,
+                                                       time_field='last_modified', job_type_ids=job_type_ids)
         list_of_ids = []
         for product in updates_qry:
             list_of_ids.append(product.id)
@@ -476,7 +476,6 @@ class TestProductFileManagerPopulateSourceAncestors(TestCase):
 
 
 class TestProductFileManagerUploadFiles(TestCase):
-
     def setUp(self):
         django.setup()
 
@@ -583,7 +582,7 @@ class TestProductFileManagerUploadFiles(TestCase):
     @patch('storage.models.os.path.getsize', lambda path: 100)
     def test_batch_link(self):
         """Tests calling ProductFileManager.upload_files() successfully when associated with a batch"""
-        
+
         job_type = job_test_utils.create_job_type(name='scale-batch-creator')
         job_exe = job_test_utils.create_job_exe(job_type=job_type)
         recipe_job = recipe_test_utils.create_recipe_job(job=job_exe.job)
@@ -595,9 +594,9 @@ class TestProductFileManagerUploadFiles(TestCase):
                                                        self.workspace)
         products = ProductFile.objects.upload_files(self.files, [self.source_file.id, products_no[0].id],
                                                     job_exe, self.workspace)
-                                                    
+
         self.assertEqual(batch.id, products[0].batch_id)
-                                                    
+
     @patch('storage.models.os.path.getsize', lambda path: 100)
     def test_recipe_link(self):
         """Tests calling ProductFileManager.upload_files() successfully when associated with a recipe"""
@@ -608,16 +607,16 @@ class TestProductFileManagerUploadFiles(TestCase):
                                                        self.workspace)
         products = ProductFile.objects.upload_files(self.files, [self.source_file.id, products_no[0].id],
                                                     self.job_exe, self.workspace)
-        
+
         self.assertEqual(recipe_job.recipe.id, products[0].recipe_id)
         self.assertEqual(self.job_exe.get_job_type_name(), products[0].recipe_job)
-        
+
         job_manager = JobManager()
         self.assertEqual(str(job_manager.get_details(self.job_exe.job_id).outputs), products[0].job_output)
-        
+
         recipe_manager = RecipeManager()
         self.assertEqual(recipe_manager.get_details(recipe_job.recipe.id).recipe_type.name, products[0].recipe_type)
-    
+
     @patch('storage.models.os.path.getsize', lambda path: 100)
     def test_uuid(self):
         """Tests setting UUIDs on products from a single job execution."""
