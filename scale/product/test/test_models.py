@@ -615,7 +615,7 @@ class TestProductFileManagerUploadFiles(TestCase):
         self.assertEqual(str(job_manager.get_details(self.job_exe.job_id).outputs), products[0].job_output)
 
         recipe_manager = RecipeManager()
-        self.assertEqual(recipe_manager.get_details(recipe_job.recipe.id).recipe_type.name, products[0].recipe_type)
+        self.assertEqual(recipe_manager.get_details(recipe_job.recipe.id).recipe_type, products[0].recipe_type)
 
     @patch('storage.models.os.path.getsize', lambda path: 100)
     def test_uuid(self):
