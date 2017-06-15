@@ -10,9 +10,6 @@ class SourceFileBaseSerializer(ScaleFileBaseSerializer):
     is_parsed = serializers.BooleanField()
     parsed = serializers.DateTimeField()
 
-    is_superseded = serializers.BooleanField()
-    superseded = serializers.DateTimeField()
-
 
 class SourceFileSerializer(SourceFileBaseSerializer):
     """Converts source file model fields to REST output"""
