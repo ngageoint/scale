@@ -256,6 +256,10 @@
         "headerOffset": 165,
         "dateFilterOffset": 45,
         "paginationOffset": 35,
-        "batchDefinitionVersion": "1.0"
+        "batchDefinitionVersion": "1.0",
+        "sourceFileDateFields": [
+            { "name": "last_modified", "title": "Last Modified" },
+            { "name": "data", "title": "Processing Time" }
+        ]
     }
 }

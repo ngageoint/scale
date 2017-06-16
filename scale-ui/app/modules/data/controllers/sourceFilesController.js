@@ -24,8 +24,8 @@
             $event.stopPropagation();
             vm.stopDatePopup.opened = true;
         };
-        vm.dateFieldOptions = ['last_modified', 'data'];
-        vm.selectedDateField = 'last_modified';
+        vm.dateFieldOptions = _.clone(scaleConfig.sourceFileDateFields);
+        vm.selectedDateField = vm.sourceFilesParams.time_field;
         vm.dateModelOptions = {
             timezone: '+000'
         };
@@ -147,7 +147,7 @@
             stateService.setSourceFilesParams(vm.sourceFilesParams);
             vm.updateColDefs();
             vm.getSourceFiles();
-            navService.updateLocation('data/source');
+            navService.updateLocation('/data/source');
         };
 
         vm.initialize();
@@ -165,6 +165,14 @@
                 vm.filterResults();
             }
         });
+
+        $scope.$watch('vm.selectedDateField', function (newValue, oldValue) {
+            if (angular.equals(newValue, oldValue)) {
+                return;
+            }
+            vm.sourceFilesParams.time_field = newValue;
+            vm.filterResults();
+        })
 
         $scope.$watchCollection('vm.stateService.getSourceFilesColDefs()', function (newValue, oldValue) {
             if (angular.equals(newValue, oldValue)) {
