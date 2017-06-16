@@ -649,9 +649,9 @@ class QueueManager(models.Manager):
         # Set up job executions to schedule
         executions_to_schedule = []
         for job_execution in job_executions:
-            queue = job_execution.queue
             node_id = job_execution.provided_node_id
             resources = job_execution.provided_resources
+            input_file_size = job_execution.input_file_size
             job_exe = job_exes[job_execution.id]
 
             # Ignore executions that are no longer queued (executions may have been changed since queue model was last
@@ -659,7 +659,7 @@ class QueueManager(models.Manager):
             if job_exe.status != 'QUEUED':
                 continue
 
-            executions_to_schedule.append((job_exe, node_id, resources))
+            executions_to_schedule.append((job_exe, node_id, resources, input_file_size))
 
         # Schedule job executions
         scheduled_job_exes = []
@@ -703,12 +703,9 @@ class QueueManager(models.Manager):
             queue.job = job_exe.job
             queue.job_type = job_exe.job.job_type
             queue.priority = job_exe.job.priority
-            queue.cpus_required = job_exe.job.cpus_required
-            queue.mem_required = job_exe.job.mem_required
-            queue.disk_in_required = job_exe.job.disk_in_required if job_exe.job.disk_in_required else 0
-            queue.disk_out_required = job_exe.job.disk_out_required if job_exe.job.disk_out_required else 0
-            queue.disk_total_required = queue.disk_in_required + queue.disk_out_required
+            queue.input_file_size = job_exe.job.disk_in_required
             queue.configuration = job_exe.job.configuration
+            queue.resources = job_exe.job.get_resources().get_json().get_dict()
             queue.queued = when_queued
             queues.append(queue)
 

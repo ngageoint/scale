@@ -28,6 +28,8 @@ from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTP
 from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
 from node.resources.json.resources import Resources
+from node.resources.node_resources import NodeResources
+from node.resources.resource import Cpus, Disk, Mem
 from storage.models import ScaleFile, Workspace
 from trigger.configuration.exceptions import InvalidTriggerType
 from trigger.models import TriggerRule
@@ -770,6 +772,24 @@ class Job(models.Model):
 
         return JobResults(self.results)
 
+    def get_resources(self):
+        """Returns the resources required for this job
+
+        :returns: The required resources
+        :rtype: :class:`node.resources.node_resources.NodeResources`
+        """
+
+        resources = self.job_type.get_resources()
+
+        # Calculate output space required in MiB rounded up to the nearest whole MiB
+        multiplier = self.job_type.disk_out_mult_required
+        const = self.job_type.disk_out_const_required
+        output_size_mb = long(math.ceil(multiplier * self.disk_in_required + const))
+        disk_out_required = max(output_size_mb, MIN_DISK)
+
+        resources.add(NodeResources([Disk(disk_out_required + self.disk_in_required)]))
+        return resources
+
     def increase_max_tries(self):
         """Increase the total max_tries based on the current number of executions and job type max_tries.
         Callers must save the model to persist the change.
@@ -1043,8 +1063,9 @@ class JobExecutionManager(models.Manager):
         :param framework_id: The scheduling framework ID
         :type framework_id: string
         :param job_executions: A list of tuples where each tuple contains the job_exe model to schedule, the node ID to
-            schedule it on, and the resources it will be given
-        :type job_executions: [(:class:`job.models.JobExecution`, int, :class:`job.resources.JobResources`)]
+            schedule it on, the resources it will be given, and the input file size
+        :type job_executions: [(:class:`job.models.JobExecution`, int,
+            :class:`node.resources.node_resources.NodeResources`, int)]
         :param workspaces: A dict of all workspaces stored by name
         :type workspaces: {string: :class:`storage.models.Workspace`}
         :returns: The scheduled job_exe models with related job, job_type, job_type_rev and node models populated
@@ -1071,6 +1092,7 @@ class JobExecutionManager(models.Manager):
                 job_exe = job_execution[0]
                 node_id = job_execution[1]
                 resources = job_execution[2]
+                input_file_size = job_execution[3]
 
                 if job_exe.status != 'QUEUED':
                     continue
@@ -1093,11 +1115,12 @@ class JobExecutionManager(models.Manager):
                 docker_volumes = []
                 job_exe.configure_docker_params(workspaces, docker_volumes)
                 job_exe.environment = {}
+                job_exe.resources = resources.get_json().get_dict()
                 job_exe.cpus_scheduled = resources.cpus
                 job_exe.mem_scheduled = resources.mem
-                job_exe.disk_in_scheduled = resources.disk_in
-                job_exe.disk_out_scheduled = resources.disk_out
-                job_exe.disk_total_scheduled = resources.disk_total
+                job_exe.disk_in_scheduled = input_file_size
+                job_exe.disk_out_scheduled = resources.disk - input_file_size
+                job_exe.disk_total_scheduled = resources.disk
                 job_exe.save()
                 job_exe.docker_volumes = docker_volumes
                 job_exes.append(job_exe)
@@ -2412,6 +2435,22 @@ class JobType(models.Model):
         """
 
         return JobConfiguration(self.configuration)
+
+    def get_resources(self):
+        """Returns the resources required for jobs of this type
+
+        :returns: The required resources
+        :rtype: :class:`node.resources.node_resources.NodeResources`
+        """
+
+        resources = Resources(self.custom_resources).get_node_resources()
+        resources.remove_resource('cpus')
+        resources.remove_resource('mem')
+        resources.remove_resource('disk')
+        cpus = max(self.cpus_required, MIN_CPUS)
+        mem = max(self.mem_required, MIN_MEM)
+        resources.add(NodeResources([Cpus(cpus), Mem(mem)]))
+        return resources
 
     def natural_key(self):
         """Django method to define the natural key for a job type as the

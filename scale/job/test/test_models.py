@@ -23,7 +23,8 @@ from job.configuration.json.execution.exe_config import ExecutionConfiguration, 
 from job.execution import container
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
 from job.models import Job, JobExecution, JobType, JobTypeRevision
-from job.resources import JobResources
+from node.resources.node_resources import NodeResources
+from node.resources.resource import Cpus, Disk, Mem
 from storage.container import get_workspace_volume_path
 from trigger.models import TriggerRule
 
@@ -448,11 +449,14 @@ class TestJobExecutionManager(TransactionTestCase):
 
         node_1 = node_test_utils.create_node()
         node_2 = node_test_utils.create_node()
-        resources_1 = JobResources(cpus=1, mem=2, disk_in=3, disk_out=4, disk_total=7)
-        resources_2 = JobResources(cpus=10, mem=11, disk_in=12, disk_out=13, disk_total=25)
+        resources_1 = NodeResources([Cpus(1), Mem(2), Disk(7)])
+        input_sz_1 = 3
+        resources_2 = NodeResources([Cpus(10), Mem(11), Disk(25)])
+        input_sz_2 = 12
 
-        job_exes = JobExecution.objects.schedule_job_executions('123', [(job_exe_1, node_1.id, resources_1),
-                                                                        (job_exe_2, node_2.id, resources_2)], {})
+        job_exes = JobExecution.objects.schedule_job_executions('123',
+                                                                [(job_exe_1, node_1.id, resources_1, input_sz_1),
+                                                                 (job_exe_2, node_2.id, resources_2, input_sz_2)], {})
 
         for job_exe in job_exes:
             if job_exe.id == job_exe_1.id:
@@ -461,6 +465,7 @@ class TestJobExecutionManager(TransactionTestCase):
                 self.assertEqual(job_exe_1.job.status, 'RUNNING')
                 self.assertEqual(job_exe_1.node_id, node_1.id)
                 self.assertIsNotNone(job_exe_1.started)
+                self.assertTrue(job_exe.get_resources().is_equal(NodeResources([Cpus(1), Mem(2), Disk(7)])))
                 self.assertEqual(job_exe_1.cpus_scheduled, 1)
                 self.assertEqual(job_exe_1.mem_scheduled, 2)
                 self.assertEqual(job_exe_1.disk_in_scheduled, 3)
@@ -472,6 +477,7 @@ class TestJobExecutionManager(TransactionTestCase):
                 self.assertEqual(job_exe_2.job.status, 'RUNNING')
                 self.assertEqual(job_exe_2.node_id, node_2.id)
                 self.assertIsNotNone(job_exe_2.started)
+                self.assertTrue(job_exe.get_resources().is_equal(NodeResources([Cpus(10), Mem(11), Disk(25)])))
                 self.assertEqual(job_exe_2.cpus_scheduled, 10)
                 self.assertEqual(job_exe_2.mem_scheduled, 11)
                 self.assertEqual(job_exe_2.disk_in_scheduled, 12)
@@ -488,10 +494,12 @@ class TestJobExecutionManager(TransactionTestCase):
         configuration.add_job_task_workspace(workspace.name, MODE_RO)
         job_exe = job_test_utils.create_job_exe(status='QUEUED', configuration=configuration.get_dict())
         node = node_test_utils.create_node()
-        resources = JobResources(cpus=10, mem=11, disk_in=12, disk_out=13, disk_total=25)
+        resources = NodeResources([Cpus(10), Mem(11), Disk(25)])
+        input_size = 12
         workspaces = {workspace.name: workspace}
 
-        job_exes = JobExecution.objects.schedule_job_executions('123', [(job_exe, node, resources)], workspaces)
+        job_exes = JobExecution.objects.schedule_job_executions('123', [(job_exe, node, resources, input_size)],
+                                                                workspaces)
 
         # Set up expected results
         input_data_volume_ro = '%s:%s:ro' % (container.get_job_exe_input_vol_name(job_exe), SCALE_JOB_EXE_INPUT_PATH)
@@ -553,10 +561,12 @@ class TestJobExecutionManager(TransactionTestCase):
         configuration.add_post_task_workspace(workspace_2.name, MODE_RW)
         job_exe = job_test_utils.create_job_exe(status='QUEUED', configuration=configuration.get_dict())
         node = node_test_utils.create_node()
-        resources = JobResources(cpus=10, mem=11, disk_in=12, disk_out=13, disk_total=25)
+        resources = NodeResources([Cpus(10), Mem(11), Disk(25)])
+        input_sz = 12
         workspaces = {workspace_1.name: workspace_1, workspace_2.name: workspace_2}
 
-        job_exes = JobExecution.objects.schedule_job_executions('123', [(job_exe, node, resources)], workspaces)
+        job_exes = JobExecution.objects.schedule_job_executions('123', [(job_exe, node, resources, input_sz)],
+                                                                workspaces)
 
         # Set up expected results
         input_data_volume_ro = '%s:%s:ro' % (container.get_job_exe_input_vol_name(job_exe), SCALE_JOB_EXE_INPUT_PATH)
@@ -628,10 +638,12 @@ class TestJobExecutionManager(TransactionTestCase):
         job_exe = job_test_utils.create_job_exe(status='QUEUED', job=job, configuration=configuration.get_dict())
 
         node = node_test_utils.create_node()
-        resources = JobResources(cpus=10, mem=11, disk_in=12, disk_out=13, disk_total=25)
+        resources = NodeResources([Cpus(10), Mem(11), Disk(25)])
+        input_sz = 12
         workspaces = {workspace.name: workspace}
 
-        job_exes = JobExecution.objects.schedule_job_executions('123', [(job_exe, node, resources)], workspaces)
+        job_exes = JobExecution.objects.schedule_job_executions('123', [(job_exe, node, resources, input_sz)],
+                                                                workspaces)
 
         # Set up expected results
         volume_name = container.get_workspace_volume_name(job_exe, workspace.name)
@@ -1192,7 +1204,8 @@ class TestJobTypeManagerValidateJobType(TestCase):
         self.trigger_config = job_test_utils.MockTriggerRuleConfiguration(job_test_utils.MOCK_TYPE, self.configuration)
         self.trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=job_test_utils.MOCK_TYPE,
                                                                    configuration=self.trigger_config.get_dict())
-        self.invalid_trigger_config = job_test_utils.MockErrorTriggerRuleConfiguration(job_test_utils.MOCK_ERROR_TYPE, self.configuration)
+        self.invalid_trigger_config = job_test_utils.MockErrorTriggerRuleConfiguration(job_test_utils.MOCK_ERROR_TYPE,
+                                                                                       self.configuration)
         self.invalid_trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=job_test_utils.MOCK_ERROR_TYPE,
                                                                    configuration=self.trigger_config.get_dict())
 
