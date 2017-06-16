@@ -730,15 +730,6 @@ class Queue(models.Model):
     :type priority: :class:`django.db.models.IntegerField`
     :keyword input_file_size: The amount of disk space in MiB required for input files for this job
     :type input_file_size: :class:`django.db.models.FloatField`
-    :keyword cpus_required: The number of CPUs required for this job
-    :type cpus_required: :class:`django.db.models.FloatField`
-    :keyword mem_required: The amount of RAM in MiB required for this job
-    :type mem_required: :class:`django.db.models.FloatField`
-    :keyword disk_out_required: The amount of disk space in MiB required for output (temp work and products) for this
-        job
-    :type disk_out_required: :class:`django.db.models.FloatField`
-    :keyword disk_total_required: The total amount of disk space in MiB required for this job
-    :type disk_total_required: :class:`django.db.models.FloatField`
 
     :keyword configuration: JSON description describing the configuration for how the job should be run
     :type configuration: :class:`django.contrib.postgres.fields.JSONField`
@@ -759,10 +750,6 @@ class Queue(models.Model):
 
     priority = models.IntegerField(db_index=True)
     input_file_size = models.FloatField()
-    cpus_required = models.FloatField()
-    mem_required = models.FloatField()
-    disk_out_required = models.FloatField()
-    disk_total_required = models.FloatField()
 
     configuration = django.contrib.postgres.fields.JSONField(default=dict)
     resources = django.contrib.postgres.fields.JSONField(default=dict)
