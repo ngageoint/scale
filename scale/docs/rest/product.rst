@@ -28,18 +28,43 @@ These services provide access to information about products that Scale has produ
 |                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
 |                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
+| time_field         | String            | Optional | Indicates the time field(s) that *started* and *ended* will use for |
+|                    |                   |          | time filtering. Valid values are:                                   |
+|                    |                   |          |                                                                     |
+|                    |                   |          | - *last_modified* - last modification of source file meta-data      |
+|                    |                   |          | - *data* - data time of source file (*data_started*, *data_ended*)  |
+|                    |                   |          | - *source* - overall time for all associated source files           |
+|                    |                   |          |              (*source_started*, *source_ended*)                     |
+|                    |                   |          |                                                                     |
+|                    |                   |          | The default value is *last_modified*.                               |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
 | order              | String            | Optional | One or more fields to use when ordering the results.                |
 |                    |                   |          | Duplicate it to multi-sort, (ex: order=file_name&order=created).    |
 |                    |                   |          | Nested objects require a delimiter (ex: order=job_type__name).      |
 |                    |                   |          | Prefix fields with a dash to reverse the sort, (ex: order=-created).|
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| job_type_id        | Integer           | Optional | Return only jobs with a given job type identifier.                  |
+| job_output         | String            | Optional | Return only products for the given job output.                      |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| job_type_name      | String            | Optional | Return only jobs with a given job type name.                        |
+| job_type_id        | Integer           | Optional | Return only products associated with a given job type identifier.   |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
-| job_type_category  | String            | Optional | Return only jobs with a given job type category.                    |
+| job_type_name      | String            | Optional | Return only products with a given job type name.                    |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| job_type_category  | String            | Optional | Return only products with a given job type category.                |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| recipe_id          | Integer           | Optional | Return only products produced by the given recipe identifier.       |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| recipe_job         | String            | Optional | Return only products produced by the given recipe job.              |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| recipe_type_id     | Integer           | Optional | Return only products produced by the given recipe type identifier.  |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| batch_id           | Integer           | Optional | Return only products produced by the given batch identifier.        |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | is_operational     | Boolean           | Optional | Return only products flagged as operational status versus R&D.      |
