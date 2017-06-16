@@ -703,7 +703,7 @@ class QueueManager(models.Manager):
             queue.job = job_exe.job
             queue.job_type = job_exe.job.job_type
             queue.priority = job_exe.job.priority
-            queue.input_file_size = job_exe.job.disk_in_required
+            queue.input_file_size = job_exe.job.disk_in_required if job_exe.job.disk_in_required else 0.0
             queue.configuration = job_exe.job.configuration
             queue.resources = job_exe.job.get_resources().get_json().get_dict()
             queue.queued = when_queued

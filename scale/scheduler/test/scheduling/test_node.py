@@ -39,12 +39,7 @@ class TestSchedulingNode(TestCase):
         resource_set = ResourceSet(offered_resources, task_resources, watermark_resources)
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
 
-        job_exe_model = job_test_utils.create_job_exe()
-        job_exe_model.cpus_scheduled = 1.0
-        job_exe_model.mem_scheduled = 10.0
-        job_exe_model.disk_in_scheduled = 0.0
-        job_exe_model.disk_out_scheduled = 0.0
-        job_exe_model.disk_total_scheduled = 0.0
+        job_exe_model = job_test_utils.create_job_exe(resources=NodeResources([Cpus(1.0), Mem(10.0)]))
         job_exe = RunningJobExecution(job_exe_model)
         waiting_tasks = []
 
@@ -71,12 +66,7 @@ class TestSchedulingNode(TestCase):
         resource_set = ResourceSet(offered_resources, task_resources, watermark_resources)
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
 
-        job_exe_model = job_test_utils.create_job_exe()
-        job_exe_model.cpus_scheduled = 1.0
-        job_exe_model.mem_scheduled = 10.0
-        job_exe_model.disk_in_scheduled = 0.0
-        job_exe_model.disk_out_scheduled = 0.0
-        job_exe_model.disk_total_scheduled = 0.0
+        job_exe_model = job_test_utils.create_job_exe(resources=NodeResources([Cpus(1.0), Mem(10.0)]))
         job_exe = RunningJobExecution(job_exe_model)
         waiting_tasks = []
 
@@ -103,12 +93,7 @@ class TestSchedulingNode(TestCase):
         resource_set = ResourceSet(offered_resources, task_resources, watermark_resources)
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
 
-        job_exe_model = job_test_utils.create_job_exe()
-        job_exe_model.cpus_scheduled = 1.0
-        job_exe_model.mem_scheduled = 10.0
-        job_exe_model.disk_in_scheduled = 0.0
-        job_exe_model.disk_out_scheduled = 0.0
-        job_exe_model.disk_total_scheduled = 0.0
+        job_exe_model = job_test_utils.create_job_exe(resources=NodeResources([Cpus(1.0), Mem(10.0)]))
         job_exe = RunningJobExecution(job_exe_model)
         waiting_tasks = []
 
@@ -136,12 +121,7 @@ class TestSchedulingNode(TestCase):
         resource_set = ResourceSet(offered_resources, task_resources, watermark_resources)
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
 
-        job_exe_model = job_test_utils.create_job_exe()
-        job_exe_model.cpus_scheduled = 11.0
-        job_exe_model.mem_scheduled = 10.0
-        job_exe_model.disk_in_scheduled = 0.0
-        job_exe_model.disk_out_scheduled = 0.0
-        job_exe_model.disk_total_scheduled = 0.0
+        job_exe_model = job_test_utils.create_job_exe(resources=NodeResources([Cpus(11.0), Mem(10.0)]))
         job_exe = RunningJobExecution(job_exe_model)
         waiting_tasks = []
 
@@ -313,19 +293,9 @@ class TestSchedulingNode(TestCase):
         watermark_resources = NodeResources([Cpus(100.0), Mem(500.0)])
         resource_set = ResourceSet(offered_resources, NodeResources(), watermark_resources)
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
-        job_exe_model_1 = job_test_utils.create_job_exe()
-        job_exe_model_1.cpus_scheduled = 1.0
-        job_exe_model_1.mem_scheduled = 10.0
-        job_exe_model_1.disk_in_scheduled = 0.0
-        job_exe_model_1.disk_out_scheduled = 0.0
-        job_exe_model_1.disk_total_scheduled = 0.0
+        job_exe_model_1 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(1.0), Mem(10.0)]))
         running_job_exe_1 = RunningJobExecution(job_exe_model_1)
-        job_exe_model_2 = job_test_utils.create_job_exe()
-        job_exe_model_2.cpus_scheduled = 2.0
-        job_exe_model_2.mem_scheduled = 20.0
-        job_exe_model_2.disk_in_scheduled = 0.0
-        job_exe_model_2.disk_out_scheduled = 0.0
-        job_exe_model_2.disk_total_scheduled = 0.0
+        job_exe_model_2 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(2.0), Mem(20.0)]))
         running_job_exe_2 = RunningJobExecution(job_exe_model_2)
         node_task_resources = NodeResources()
         node_task_resources.add(health_task.get_resources())
@@ -381,19 +351,9 @@ class TestSchedulingNode(TestCase):
         watermark_resources = NodeResources([Cpus(100.0), Mem(500.0)])
         resource_set = ResourceSet(offered_resources, NodeResources(), watermark_resources)
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
-        job_exe_model_1 = job_test_utils.create_job_exe()
-        job_exe_model_1.cpus_scheduled = 1.0
-        job_exe_model_1.mem_scheduled = 10.0
-        job_exe_model_1.disk_in_scheduled = 0.0
-        job_exe_model_1.disk_out_scheduled = 0.0
-        job_exe_model_1.disk_total_scheduled = 0.0
+        job_exe_model_1 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(1.0), Mem(10.0)]))
         running_job_exe_1 = RunningJobExecution(job_exe_model_1)
-        job_exe_model_2 = job_test_utils.create_job_exe()
-        job_exe_model_2.cpus_scheduled = 2.0
-        job_exe_model_2.mem_scheduled = 20.0
-        job_exe_model_2.disk_in_scheduled = 0.0
-        job_exe_model_2.disk_out_scheduled = 0.0
-        job_exe_model_2.disk_total_scheduled = 0.0
+        job_exe_model_2 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(2.0), Mem(20.0)]))
         running_job_exe_2 = RunningJobExecution(job_exe_model_2)
         node_task_resources = NodeResources()
         node_task_resources.add(health_task.get_resources())
@@ -447,19 +407,9 @@ class TestSchedulingNode(TestCase):
         watermark_resources = NodeResources([Cpus(100.0), Mem(500.0)])
         resource_set = ResourceSet(offered_resources, NodeResources(), watermark_resources)
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
-        job_exe_model_1 = job_test_utils.create_job_exe()
-        job_exe_model_1.cpus_scheduled = 1.0
-        job_exe_model_1.mem_scheduled = 10.0
-        job_exe_model_1.disk_in_scheduled = 0.0
-        job_exe_model_1.disk_out_scheduled = 0.0
-        job_exe_model_1.disk_total_scheduled = 0.0
+        job_exe_model_1 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(1.0), Mem(10.0)]))
         running_job_exe_1 = RunningJobExecution(job_exe_model_1)
-        job_exe_model_2 = job_test_utils.create_job_exe()
-        job_exe_model_2.cpus_scheduled = 2.0
-        job_exe_model_2.mem_scheduled = 20.0
-        job_exe_model_2.disk_in_scheduled = 0.0
-        job_exe_model_2.disk_out_scheduled = 0.0
-        job_exe_model_2.disk_total_scheduled = 0.0
+        job_exe_model_2 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(2.0), Mem(20.0)]))
         running_job_exe_2 = RunningJobExecution(job_exe_model_2)
         node_task_resources = NodeResources()
         node_task_resources.add(health_task.get_resources())
@@ -544,21 +494,11 @@ class TestSchedulingNode(TestCase):
         watermark_resources = NodeResources([Cpus(200.0), Mem(700.0)])
         resource_set = ResourceSet(offered_resources, NodeResources(), watermark_resources)
         task = HealthTask('1234', 'agent_1')  # Resources are 0.1 CPUs and 32 MiB memory
-        job_exe_model_1 = job_test_utils.create_job_exe()
+        job_exe_model_1 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(10.0), Mem(50.0)]))
         job_exe_model_1.job.priority = 1000
-        job_exe_model_1.cpus_scheduled = 10.0
-        job_exe_model_1.mem_scheduled = 50.0
-        job_exe_model_1.disk_in_scheduled = 0.0
-        job_exe_model_1.disk_out_scheduled = 0.0
-        job_exe_model_1.disk_total_scheduled = 0.0
         job_exe_1 = RunningJobExecution(job_exe_model_1)
-        job_exe_model_2 = job_test_utils.create_job_exe()
+        job_exe_model_2 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(56.0), Mem(15.0)]))
         job_exe_model_2.job.priority = 100
-        job_exe_model_2.cpus_scheduled = 56.0
-        job_exe_model_2.mem_scheduled = 15.0
-        job_exe_model_2.disk_in_scheduled = 0.0
-        job_exe_model_2.disk_out_scheduled = 0.0
-        job_exe_model_2.disk_total_scheduled = 0.0
         job_exe_2 = RunningJobExecution(job_exe_model_2)
         scheduling_node = SchedulingNode('agent_1', node, [task], [job_exe_1, job_exe_2], resource_set)
         queue_model_1 = queue_test_utils.create_queue(priority=100, cpus_required=8.0, mem_required=40.0,
@@ -607,21 +547,11 @@ class TestSchedulingNode(TestCase):
         watermark_resources = NodeResources([Cpus(200.0), Mem(700.0)])
         resource_set = ResourceSet(offered_resources, NodeResources(), watermark_resources)
         task = HealthTask('1234', 'agent_1')  # Resources are 0.1 CPUs and 32 MiB memory
-        job_exe_model_1 = job_test_utils.create_job_exe()
+        job_exe_model_1 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(10.0), Mem(50.0)]))
         job_exe_model_1.job.priority = 1000
-        job_exe_model_1.cpus_scheduled = 10.0
-        job_exe_model_1.mem_scheduled = 50.0
-        job_exe_model_1.disk_in_scheduled = 0.0
-        job_exe_model_1.disk_out_scheduled = 0.0
-        job_exe_model_1.disk_total_scheduled = 0.0
         job_exe_1 = RunningJobExecution(job_exe_model_1)
-        job_exe_model_2 = job_test_utils.create_job_exe()
+        job_exe_model_2 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(56.0), Mem(15.0)]))
         job_exe_model_2.job.priority = 100
-        job_exe_model_2.cpus_scheduled = 56.0
-        job_exe_model_2.mem_scheduled = 15.0
-        job_exe_model_2.disk_in_scheduled = 0.0
-        job_exe_model_2.disk_out_scheduled = 0.0
-        job_exe_model_2.disk_total_scheduled = 0.0
         job_exe_2 = RunningJobExecution(job_exe_model_2)
         scheduling_node = SchedulingNode('agent_1', node, [task], [job_exe_1, job_exe_2], resource_set)
         queue_model_1 = queue_test_utils.create_queue(priority=100, cpus_required=8.0, mem_required=40.0,
@@ -665,12 +595,7 @@ class TestSchedulingNode(TestCase):
         resource_set = ResourceSet(offered_resources, task_resources, watermark_resources)
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
         # Allocate 10 CPUs and 50 MiB memory to existing job execution
-        job_exe_model = job_test_utils.create_job_exe()
-        job_exe_model.cpus_scheduled = 10.0
-        job_exe_model.mem_scheduled = 50.0
-        job_exe_model.disk_in_scheduled = 0.0
-        job_exe_model.disk_out_scheduled = 0.0
-        job_exe_model.disk_total_scheduled = 0.0
+        job_exe_model = job_test_utils.create_job_exe(resources=NodeResources([Cpus(10.0), Mem(50.0)]))
         job_exe = RunningJobExecution(job_exe_model)
         scheduling_node.accept_job_exe_next_task(job_exe, [])
 
@@ -706,12 +631,7 @@ class TestSchedulingNode(TestCase):
         resource_set = ResourceSet(offered_resources, task_resources, watermark_resources)
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
         # Allocate 10 CPUs and 50 MiB memory to existing job execution
-        job_exe_model = job_test_utils.create_job_exe()
-        job_exe_model.cpus_scheduled = 10.0
-        job_exe_model.mem_scheduled = 50.0
-        job_exe_model.disk_in_scheduled = 0.0
-        job_exe_model.disk_out_scheduled = 0.0
-        job_exe_model.disk_total_scheduled = 0.0
+        job_exe_model = job_test_utils.create_job_exe(resources=NodeResources([Cpus(10.0), Mem(50.0)]))
         job_exe = RunningJobExecution(job_exe_model)
         scheduling_node.accept_job_exe_next_task(job_exe, [])
 
@@ -737,19 +657,9 @@ class TestSchedulingNode(TestCase):
         watermark_resources = NodeResources([Cpus(200.0), Mem(700.0)])
         resource_set = ResourceSet(offered_resources, NodeResources(), watermark_resources)
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
-        job_exe_model_1 = job_test_utils.create_job_exe()
-        job_exe_model_1.cpus_scheduled = 10.0
-        job_exe_model_1.mem_scheduled = 50.0
-        job_exe_model_1.disk_in_scheduled = 0.0
-        job_exe_model_1.disk_out_scheduled = 0.0
-        job_exe_model_1.disk_total_scheduled = 0.0
+        job_exe_model_1 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(10.0), Mem(50.0)]))
         job_exe_1 = RunningJobExecution(job_exe_model_1)
-        job_exe_model_2 = job_test_utils.create_job_exe()
-        job_exe_model_2.cpus_scheduled = 5.0
-        job_exe_model_2.mem_scheduled = 25.0
-        job_exe_model_2.disk_in_scheduled = 0.0
-        job_exe_model_2.disk_out_scheduled = 0.0
-        job_exe_model_2.disk_total_scheduled = 0.0
+        job_exe_model_2 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(5.0), Mem(25.0)]))
         job_exe_2 = RunningJobExecution(job_exe_model_2)
         scheduling_node.accept_job_exe_next_task(job_exe_1, [])
         scheduling_node.accept_job_exe_next_task(job_exe_2, [])

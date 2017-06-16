@@ -3,6 +3,8 @@ import django.utils.timezone as timezone
 
 import job.test.utils as job_test_utils
 from queue.models import JobLoad, Queue
+from node.resources.node_resources import NodeResources
+from node.resources.resource import Cpus, Disk, Mem
 
 
 def create_job_load(job_type=None, measured=None, pending_count=0, queued_count=0, running_count=0):
@@ -47,8 +49,8 @@ def create_queue(job_type=None, priority=1, cpus_required=1.0, mem_required=512.
 
     job = job_test_utils.create_job(job_type=job_type, status='QUEUED')
     job_exe = job_test_utils.create_job_exe(job=job, status='QUEUED')
+    resources = NodeResources([Cpus(cpus_required), Mem(mem_required), Disk(disk_total_required)])
 
     return Queue.objects.create(job_exe=job_exe, job=job, job_type=job.job_type, priority=priority,
-                                cpus_required=cpus_required, mem_required=mem_required,
-                                disk_in_required=disk_in_required, disk_out_required=disk_out_required,
-                                disk_total_required=disk_total_required, queued=queued)
+                                input_file_size=disk_in_required, resources=resources.get_json().get_dict(),
+                                queued=queued)

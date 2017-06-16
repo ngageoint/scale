@@ -20,6 +20,7 @@ from error.models import CACHED_BUILTIN_ERRORS, Error
 from job.configuration.results.job_results import JobResults
 from job.configuration.results.results_manifest.results_manifest import ResultsManifest
 from job.models import Job, JobExecution
+from node.resources.json.resources import Resources
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Cpus, Disk, Mem
 from queue.job_exe import QueuedJobExecution
@@ -895,13 +896,9 @@ class TestQueueManagerScheduleJobExecutions(TransactionTestCase):
         """Tests calling QueueManager.schedule_job_executions() successfully."""
 
         queued_job_exe_1 = QueuedJobExecution(self.queue_1)
-        queued_job_exe_1.accepted(self.node.id, NodeResources([Cpus(self.queue_1.cpus_required),
-                                                               Mem(self.queue_1.mem_required),
-                                                               Disk(self.queue_1.disk_total_required)]))
+        queued_job_exe_1.accepted(self.node.id, Resources(self.queue_1.resources).get_node_resources())
         queued_job_exe_2 = QueuedJobExecution(self.queue_2)
-        queued_job_exe_2.accepted(self.node.id, NodeResources([Cpus(self.queue_2.cpus_required),
-                                                               Mem(self.queue_2.mem_required),
-                                                               Disk(self.queue_2.disk_total_required)]))
+        queued_job_exe_2.accepted(self.node.id, Resources(self.queue_2.resources).get_node_resources())
 
         scheduled_job_exes = Queue.objects.schedule_job_executions('framework-123',
                                                                    [queued_job_exe_1, queued_job_exe_2], {})

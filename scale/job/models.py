@@ -784,10 +784,13 @@ class Job(models.Model):
         # Calculate output space required in MiB rounded up to the nearest whole MiB
         multiplier = self.job_type.disk_out_mult_required
         const = self.job_type.disk_out_const_required
-        output_size_mb = long(math.ceil(multiplier * self.disk_in_required + const))
+        disk_in_required = self.disk_in_required
+        if not disk_in_required:
+            disk_in_required = 0.0
+        output_size_mb = long(math.ceil(multiplier * disk_in_required + const))
         disk_out_required = max(output_size_mb, MIN_DISK)
 
-        resources.add(NodeResources([Disk(disk_out_required + self.disk_in_required)]))
+        resources.add(NodeResources([Disk(disk_out_required + disk_in_required)]))
         return resources
 
     def increase_max_tries(self):
