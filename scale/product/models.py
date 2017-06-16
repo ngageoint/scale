@@ -45,7 +45,7 @@ class FileAncestryLinkManager(models.Manager):
         FileAncestryLink.objects.filter(job_exe=job_exe).delete()
 
         # Not all jobs have a recipe so attempt to get one if applicable
-        recipe = Recipe.objects.get_recipe_for_job(job_exe.job_id)
+        job_recipe = Recipe.objects.get_recipe_for_job(job_exe.job_id)
 
         # See if this job is in a batch
         from batch.models import BatchJob
@@ -77,9 +77,13 @@ class FileAncestryLinkManager(models.Manager):
                 # Set references to the current execution
                 link.job_exe_id = job_exe.id
                 link.job = job_exe.job
-                link.recipe = recipe
                 link.batch_id = batch_id
                 new_links.append(link)
+
+                if job_recipe:
+                    link.recipe = job_recipe.recipe
+                else:
+                    link.recipe = None
 
         # Create indirect links by setting the ancestor job fields
         for ancestor_link in ancestor_map.itervalues():
@@ -93,8 +97,12 @@ class FileAncestryLinkManager(models.Manager):
                 # Set references to the current execution
                 link.job_exe_id = job_exe.id
                 link.job = job_exe.job
-                link.recipe = recipe
                 link.batch_id = batch_id
+
+                if job_recipe:
+                    link.recipe = job_recipe.recipe
+                else: 
+                    link.recipe = None
 
                 # Set references to the ancestor execution
                 link.ancestor_job = ancestor_link.job
@@ -522,12 +530,10 @@ class ProductFileManager(models.GeoManager):
                     product.center_point = geo_utils.get_center_point(geom)
 
             # Add recipe info to product if available.
-            recipe_check = Recipe.objects.get_recipe_for_job(job_exe.job_id)
-            if recipe_check:
-                recipe_manager = RecipeManager()
-                recipe_info = recipe_manager.get_details(recipe_check.id)
-                product.recipe_id = recipe_check.id
-                product.recipe_type = recipe_info.recipe_type
+            job_recipe = Recipe.objects.get_recipe_for_job(job_exe.job_id)
+            if job_recipe:
+                product.recipe_id = job_recipe.recipe.id
+                product.recipe_type = job_recipe.recipe.recipe_type
                 product.recipe_job = job_exe.get_job_type_name()
 
                 job_manager = JobManager()

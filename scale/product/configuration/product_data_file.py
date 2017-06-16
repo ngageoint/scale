@@ -83,8 +83,9 @@ class ProductDataFileStore(AbstractDataFileStore):
         """
 
         remote_path = ''
-        recipe = Recipe.objects.get_recipe_for_job(job_exe.job_id)
-        if recipe:
+        job_recipe = Recipe.objects.get_recipe_for_job(job_exe.job_id)
+        if job_recipe:
+            recipe = job_recipe.recipe
             recipe_type_path = get_valid_filename(recipe.recipe_type.name)
             recipe_version_path = get_valid_filename(recipe.recipe_type.version)
             remote_path = os.path.join(remote_path, 'recipes', recipe_type_path, recipe_version_path)
