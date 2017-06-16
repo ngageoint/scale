@@ -259,7 +259,7 @@
         "batchDefinitionVersion": "1.0",
         "sourceFileDateFields": [
             { "name": "last_modified", "title": "Last Modified" },
-            { "name": "data", "title": "Processing Time" }
+            { "name": "data", "title": "Data" }
         ]
     }
 }

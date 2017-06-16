@@ -121,7 +121,7 @@
                 vm.filterResults();
             });
             vm.gridApi.selection.on.rowSelectionChanged($scope, function (row) {
-                $location.path('/data/source/' + row.entity.id).search('');
+                $location.path('/data/source/file/' + row.entity.id).search('');
             });
             vm.gridApi.core.on.sortChanged($scope, function (grid, sortColumns) {
                 _.forEach(vm.gridApi.grid.columns, function (col) {
@@ -147,7 +147,7 @@
             stateService.setSourceFilesParams(vm.sourceFilesParams);
             vm.updateColDefs();
             vm.getSourceFiles();
-            navService.updateLocation('/data/source');
+            navService.updateLocation('data');
         };
 
         vm.initialize();

@@ -63,6 +63,11 @@
                 templateUrl: 'modules/data/partials/sourceFilesTemplate.html',
                 reloadOnSearch: false
             })
+            .when('/data/source/file/:id', {
+                controller: 'sourceFileDetailsController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/data/partials/sourceFileDetailsTemplate.html'
+            })
             .when('/feed', {
                 controller: 'feedDetailsController',
                 controllerAs: 'vm',
