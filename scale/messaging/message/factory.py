@@ -35,31 +35,6 @@ def get_message_type(message_type):
         return _MESSAGE_TYPES[message_type]
     raise KeyError("'{}' is an invalid message type".format(message_type))
 
-def process_message(message):
-    """Inspects message for type and then attempts to launch execution
-
-    :param message: message payload
-    :type message: dict
-    :return: success or failure of message process
-    """
-
-    if 'type' in message:
-        if 'body' in message:
-            try:
-                message_class = get_message_type(message['type'])
-                message_body = message['body']
-
-                processor = message_class.from_json(message_body)
-                return processor.execute()
-            except KeyError as ex:
-                logger.exception('No message type handler available.')
-        else:
-            logger.error('Missing body in message.')
-    else:
-        logger.error('Invalid message missing type: %s', message)
-
-    return False
-
 def get_message_types():
     """Returns a list of type identifiers for all registered message types
 

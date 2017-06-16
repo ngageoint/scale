@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
 
+from util.broker import BrokerDetails
+
 from abc import ABCMeta
 from collections import namedtuple
 
@@ -18,37 +20,39 @@ class MessagingBackend(object):
         self.type = backend_type
 
         # Connection string pulled from configuration
-        self.broker_url = settings.BROKER_URL
+        self._broker_url = settings.BROKER_URL
+        self._broker = BrokerDetails.from_broker_url(settings.BROKER_URL)
 
         # TODO: Transition to more advanced message routing per command message type
-        self.queue_name = settings.QUEUE_NAME
+        self._queue_name = settings.QUEUE_NAME
 
     def send_message(self, message):
         """Send a single message to the backend
         
         Presently connections are not persisted across send_message calls.
         We could greatly improve message throughput if we managed this at the
-        instance level. This isn't really a major concern as bottlenecks are
-        not from the sender perspective.
+        class instance level. This isn't really a major concern as bottlenecks are
+        not from the sender perspective. 
 
-        :param message: stringified JSON payload
-        :type message: string
+        :param message: JSON payload
+        :type message: dict
         """
         raise NotImplementedError
 
-    def receive_messages(self, batch_size, callback):
+    def receive_messages(self, batch_size):
         """Receive a batch of messages from the backend
         
         TODO: Presently connections are not persisted across receive_message calls.
         We could greatly improve message throughput if we managed this at the
-        instance level. This isn't really a major concern as bottlenecks are
-        not from the sender perspective. We are sharing the connection across
-        the batch_size.
+        class instance level. This isn't a huge concern as we are sharing the
+        connection across the batch_size.
+        
+        Implementing function must yield messages from backend. Messages must be
+        in dict.
 
         :param batch_size: Number of messages to be processed
         :type batch_size: int
-        :param callback: Function pointer to 
-        :return:
-        :rtype: [string]
+        :return: Yielded list of messages
+        :rtype: [dict]
         """
         raise NotImplementedError

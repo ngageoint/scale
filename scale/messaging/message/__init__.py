@@ -4,11 +4,14 @@ from abc import ABCMeta
 
 
 class CommandMessage(object):
-
+    """This ABC defines the interface all CommandMessage classes should implement.
+    
+    If a CommandMessage needs to chain processing together, it should define this via
+    the new_messages array.
+    """
     __metaclass__ = ABCMeta
 
     def __init__(self, message_type):
-
         # List to contain messages that must be passed on downstream by calling CommandMessageManager
         # Must contain elements of type CommandMessage
         self.new_messages = []
@@ -19,7 +22,7 @@ class CommandMessage(object):
     def to_json(self):
         """JSON Serializer for CommandMessage subclasses. Must be implemented in all subclasses.
 
-        :return: JSON serialized representation of CommandMessage class.
+        :return: JSON representation of CommandMessage class.
         :rtype: dict
         """
         raise NotImplementedError

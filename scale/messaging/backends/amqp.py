@@ -18,29 +18,27 @@ class AMQPMessagingBackend(MessagingBackend):
         super(AMQPMessagingBackend, self).__init__('amqp')
 
         # Message retrieval timeout
-        self.timeout = 1
-        
-        # Default serializer is json, but let's be explicit
-        self.serializer = 'json'
+        self._timeout = 1
 
     def send_message(self, message):
         """See :meth:`messaging.backends.MessagingBackend.send_message`
         """
-        with Connection(self.broker_url) as connection:
-            with closing(connection.SimpleQueue(self.queue_name)) as simple_queue:
-                simple_queue.put(message, serializer=self.serializer)
+        with Connection(self._broker_url) as connection:
+            with closing(connection.SimpleQueue(self._queue_name)) as simple_queue:
+                logger.debug('Sending message of type: %s', message['type'])
+                simple_queue.put(message)
 
-    def receive_messages(self, batch_size, callback):
+    def receive_messages(self, batch_size):
         """See :meth:`messaging.backends.MessagingBackend.receive_messages`
         """
-        with Connection(self.broker_url) as connection:
-            with closing(connection.SimpleQueue(self.queue_name)) as simple_queue:
+        with Connection(self._broker_url) as connection:
+            with closing(connection.SimpleQueue(self._queue_name)) as simple_queue:
                 for _ in range(batch_size):
                     try:
-                        message = simple_queue.get(timeout=self.timeout)
+                        message = simple_queue.get(timeout=self._timeout)
                     
                         try:
-                            callback(message.payload)
+                            yield message.payload
                             message.ack()
                         except Exception as ex:
                             logger.exception('Failure during message processing.')

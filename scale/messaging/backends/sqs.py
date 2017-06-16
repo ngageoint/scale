@@ -16,24 +16,25 @@ class SQSMessagingBackend(MessagingBackend):
     def __init__(self):
         super(SQSMessagingBackend, self).__init__('sqs')
 
+        self._region_name = self._broker.get_broker()
         
-        self._region_name = settings.AWS_REGION_NAME
-        
-        self._credentials = AWSCredentials(settings.AWS_ACCESS_KEY, settings.AWS_SECRET_KEY)
+        self._credentials = AWSCredentials(self._broker.get_user_name(),
+                                           self._broker.get_password())
 
     def send_message(self, message):
         """See :meth:`messaging.backends.MessagingBackend.send_message`
         """
         with SQSClient(self._credentials, self._region_name) as client:
-            client.send_message(self.queue_name, json.dumps(message))
+            logger.debug('Sending message of type: %s', message['type'])
+            client.send_message(self._queue_name, json.dumps(message))
 
-    def receive_messages(self, batch_size, callback):
+    def receive_messages(self, batch_size):
         """See :meth:`messaging.backends.MessagingBackend.receive_messages`
         """
         with SQSClient(self._credentials, self._region_name) as client:
-            for message in client.receive_messages(self.queue_name):
+            for message in client.receive_messages(self._queue_name):
                 try:
-                    callback(json.loads(message.body))
+                    yield json.loads(message.body)
                     message.delete()
                 except Exception as ex:
                     logger.exception('Failure during message processing.')

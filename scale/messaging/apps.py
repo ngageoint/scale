@@ -11,9 +11,16 @@ class MessagingConfig(AppConfig):
 
     def ready(self):
         """Registers the messaging factory methods."""
-        import message.factory as factory
+        from .message.factory import add_message_type
+        from .backends.factory import add_message_backend
 
-        from message.echo import EchoCommandMessage
+        from .message.echo import EchoCommandMessage
+        from .backends.amqp import AMQPMessagingBackend
+        from .backends.sqs import SQSMessagingBackend
 
         # # Register message types
-        factory.add_message_type(EchoCommandMessage)
+        add_message_type(EchoCommandMessage)
+        
+        # Register message backends
+        add_message_backend(AMQPMessagingBackend)
+        add_message_backend(SQSMessagingBackend)

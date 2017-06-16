@@ -15,9 +15,6 @@ from messaging.messages import CommandMessageManager
 logger = logging.getLogger(__name__)
 
 
-GENERAL_FAIL_EXIT_CODE = 1
-
-
 class Command(BaseCommand):
     """Command for retrieval and execution of CommandMessages from queue
     """

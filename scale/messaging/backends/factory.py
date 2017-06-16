@@ -34,7 +34,7 @@ def get_message_backend(backend_type):
     raise KeyError("'{}' is an invalid backend type".format(backend_type))
     
 
-def get_message_types():
+def get_message_backed():
     """Returns a list of type identifiers for all registered message backends
 
     :returns: A list of messages backends
