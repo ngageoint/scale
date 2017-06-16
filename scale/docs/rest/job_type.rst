@@ -240,6 +240,9 @@ These services provide access to information about job types.
 | interface               | JSON Object       | Required | JSON description of the interface for running the job.         |
 |                         |                   |          | (See :ref:`architecture_jobs_interface_spec`)                  |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
+| custom_resources        | JSON Object       | Optional | JSON description for any custom resources needed for running a |
+|                         |                   |          | job of this type. (See :ref:`architecture_jobs_resources`)     |
++-------------------------+-------------------+----------+----------------------------------------------------------------+
 | error_mapping           | JSON Object       | Optional | JSON description that maps exit codes to known error models.   |
 |                         |                   |          | (See :ref:`architecture_errors_interface_spec`)                |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
@@ -284,6 +287,12 @@ These services provide access to information about job types.
 |            ],                                                                                                           |
 |            "output_data": [],                                                                                           |
 |            "shared_resources": []                                                                                       |
+|        },                                                                                                               |
+|        "custom_resources": {                                                                                            |
+|            "version": "1.0",                                                                                            |
+|            "resources": {                                                                                               |
+|                "foo": 10.0                                                                                              |
+|            }                                                                                                            |
 |        },                                                                                                               |
 |        "error_mapping": {                                                                                               |
 |            "version": "1.0",                                                                                            |
@@ -356,6 +365,7 @@ These services provide access to information about job types.
 |        "paused": null,                                                                                                  |
 |        "last_modified": "2015-03-11T00:00:00Z",                                                                         |
 |        "interface": {...},                                                                                              |
+|        "custom_resources": {...},                                                                                       |
 |        "error_mapping": {...},                                                                                          |
 |        "errors": [...],                                                                                                 |
 |        "job_counts_6h": [...],                                                                                          |
@@ -428,6 +438,9 @@ These services provide access to information about job types.
 | interface               | JSON Object       | Required | JSON description of the interface for running the job.         |
 |                         |                   |          | (See :ref:`architecture_jobs_interface_spec`)                  |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
+| custom_resources        | JSON Object       | Optional | JSON description for any custom resources needed for running a |
+|                         |                   |          | job of this type. (See :ref:`architecture_jobs_resources`)     |
++-------------------------+-------------------+----------+----------------------------------------------------------------+
 | error_mapping           | JSON Object       | Optional | JSON description that maps exit codes to known error models.   |
 |                         |                   |          | (See :ref:`architecture_errors_interface_spec`)                |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
@@ -472,6 +485,12 @@ These services provide access to information about job types.
 |            ],                                                                                                           |
 |            "output_data": [],                                                                                           |
 |            "shared_resources": []                                                                                       |
+|        },                                                                                                               |
+|        "custom_resources": {                                                                                            |
+|            "version": "1.0",                                                                                            |
+|            "resources": {                                                                                               |
+|                "foo": 10.0                                                                                              |
+|            }                                                                                                            |
 |        },                                                                                                               |
 |        "error_mapping": {                                                                                               |
 |            "version": "1.0",                                                                                            |
@@ -609,6 +628,9 @@ These services provide access to information about job types.
 | interface                | JSON Object       | JSON description defining the interface for running a job of this type.  |
 |                          |                   | (See :ref:`architecture_jobs_interface_spec`)                            |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
+| custom_resources         | JSON Object       | JSON description for any custom resources needed for running a job of    |
+|                          |                   | this type. (See :ref:`architecture_jobs_resources`)                      |
++--------------------------+-------------------+--------------------------------------------------------------------------+
 | error_mapping            | JSON Object       | JSON description defining the error mappings for a job of this type.     |
 |                          |                   | (See :ref:`architecture_errors_interface_spec`)                          |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
@@ -684,6 +706,7 @@ These services provide access to information about job types.
 |        "paused": null,                                                                                                  |
 |        "last_modified": "2015-03-11T00:00:00Z"                                                                          |
 |        "interface": {...},                                                                                              |
+|        "custom_resources": {...},                                                                                       |
 |        "error_mapping": {...},                                                                                          |
 |        "trigger_rule": {...},                                                                                           |
 |        "errors": [...],                                                                                                 |
@@ -794,6 +817,9 @@ These services provide access to information about job types.
 | interface               | JSON Object       | Optional | JSON description of the interface for running the job.         |
 |                         |                   |          | (See :ref:`architecture_jobs_interface_spec`)                  |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
+| custom_resources        | JSON Object       | Optional | JSON description for any custom resources needed for running a |
+|                         |                   |          | job of this type. (See :ref:`architecture_jobs_resources`)     |
++-------------------------+-------------------+----------+----------------------------------------------------------------+
 | error_mapping           | JSON Object       | Optional | JSON description that maps exit codes to known error models.   |
 |                         |                   |          | (See :ref:`architecture_errors_interface_spec`)                |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
@@ -837,6 +863,12 @@ These services provide access to information about job types.
 |            ],                                                                                                           |
 |            "output_data": [],                                                                                           |
 |            "shared_resources": []                                                                                       |
+|        },                                                                                                               |
+|        "custom_resources": {                                                                                            |
+|            "version": "1.0",                                                                                            |
+|            "resources": {                                                                                               |
+|                "foo": 10.0                                                                                              |
+|            }                                                                                                            |
 |        },                                                                                                               |
 |        "error_mapping": {                                                                                               |
 |            "version": "1.0",                                                                                            |
