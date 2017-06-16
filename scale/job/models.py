@@ -2415,6 +2415,16 @@ class JobType(models.Model):
 
     objects = JobTypeManager()
 
+    def convert_custom_resources(self):
+        """Takes the raw custom_resources dict and performs the Scale version conversion on it so that the REST API
+        always returns the latest version of the JSON schema
+
+        :returns: The custom resources dict converted to the latest version of the JSON schema
+        :rtype: dict
+        """
+
+        return Resources(self.custom_resources).get_dict()
+
     def get_job_interface(self):
         """Returns the interface for running jobs of this type
 
