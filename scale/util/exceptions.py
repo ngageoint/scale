@@ -7,10 +7,12 @@ class FileDoesNotExist(Exception):
 
     pass
 
+
 class InvalidBrokerUrl(Exception):
     """Exception indicating the broker URL does not meet the format requirements"""
-    
+
     pass
+
 
 class InvalidAWSCredentials(Exception):
     """Exception indicating missing credentials required to successfully authenticate to AWS"""

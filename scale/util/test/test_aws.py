@@ -119,7 +119,6 @@ class TestS3Client(TestCase):
         with self.assertRaises(ParamValidationError):
             with S3Client(self.credentials) as client:
                 items = list(client.list_objects('invalid:bucket:name'))
-                
 
     @patch('botocore.paginate.Paginator.paginate')
     def test_list_objects_bucket_not_found(self, mock_func):

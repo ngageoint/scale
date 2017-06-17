@@ -190,7 +190,7 @@ def get_versioned_urls(apps):
         app_urls = []
         for app in apps:
             app_urls.append(url('', include(app + '.urls')))
-        
+
         urls.append(url(r'^' + version + '/', include(app_urls, namespace=version)))
     return urls
 

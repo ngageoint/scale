@@ -49,7 +49,8 @@ class TestRest(TestCase):
 
     def test_check_time_range(self):
         """Tests checking a time range is valid."""
-        self.assertTrue(rest_util.check_time_range(datetime.datetime(2015, 1, 1, tzinfo=utc), datetime.datetime(2015, 1, 30, tzinfo=utc)))
+        self.assertTrue(rest_util.check_time_range(datetime.datetime(2015, 1, 1, tzinfo=utc),
+                                                   datetime.datetime(2015, 1, 30, tzinfo=utc)))
 
     def test_check_time_range_partial(self):
         """Tests checking a partial time range is valid."""

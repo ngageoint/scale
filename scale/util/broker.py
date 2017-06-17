@@ -36,7 +36,7 @@ class BrokerDetails(object):
                 this.password = groups['password']
 
             return this
-            
+
         raise InvalidBrokerUrl
 
     def get_broker(self):
@@ -46,7 +46,7 @@ class BrokerDetails(object):
         :rtype: string
         """
         return self.broker
-        
+
     def get_password(self):
         """Get extracted password for broker authentication.
         
@@ -56,12 +56,12 @@ class BrokerDetails(object):
         :rtype: string or None
         """
         return self.password
-        
+
     def get_type(self):
         """
         """
         return self.type
-        
+
     def get_user_name(self):
         """Get extracted user name for broker authentication.
         
