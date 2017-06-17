@@ -1,7 +1,9 @@
 """Defines the factory for creating messaging backends"""
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 from __future__ import unicode_literals
 
-import json
 import logging
 
 logger = logging.getLogger(__name__)
@@ -32,9 +34,9 @@ def get_message_backend(backend_type):
     if backend_type in _MESSAGE_BACKENDS:
         return _MESSAGE_BACKENDS[backend_type]
     raise KeyError("'{}' is an invalid backend type".format(backend_type))
-    
 
-def get_message_backed():
+
+def get_message_backends():
     """Returns a list of type identifiers for all registered message backends
 
     :returns: A list of messages backends

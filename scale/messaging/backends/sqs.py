@@ -1,10 +1,11 @@
 """Backend supporting AMQP 0.9.1, specifically targeting RabbitMQ message broker"""
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 from __future__ import unicode_literals
 
 import json
 import logging
-
-from django.conf import settings
 
 from . import MessagingBackend
 from util.aws import AWSCredentials, SQSClient
@@ -17,7 +18,7 @@ class SQSMessagingBackend(MessagingBackend):
         super(SQSMessagingBackend, self).__init__('sqs')
 
         self._region_name = self._broker.get_broker()
-        
+
         self._credentials = AWSCredentials(self._broker.get_user_name(),
                                            self._broker.get_password())
 
@@ -38,4 +39,3 @@ class SQSMessagingBackend(MessagingBackend):
                     message.delete()
                 except Exception as ex:
                     logger.exception('Failure during message processing.')
-
