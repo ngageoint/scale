@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 
-from abc import ABCMeta
+from abc import ABCMeta, abstractmethod
 
 
 class CommandMessage(object):
@@ -19,15 +19,16 @@ class CommandMessage(object):
         # Unique type of CommandMessage, each type must be registered in apps.py
         self.message_type = message_type
 
+    @abstractmethod
     def to_json(self):
         """JSON Serializer for CommandMessage subclasses. Must be implemented in all subclasses.
 
         :return: JSON representation of CommandMessage class.
         :rtype: dict
         """
-        raise NotImplementedError
 
     @staticmethod
+    @abstractmethod
     def from_json(json_dict):
         """JSON deserializer for CommandMessage subclasses. Must be implemented in all subclasses.
 
@@ -36,8 +37,8 @@ class CommandMessage(object):
         :return: Instantiated class from input JSON
         :rtype: `messaging.messages.CommandMessage`
         """
-        raise NotImplementedError
 
+    @abstractmethod
     def execute(self):
         """Processing logic for all command messages should be implemented within this method.
 
@@ -49,4 +50,3 @@ class CommandMessage(object):
         :return: Success or failure of execute operation
         :rtype: bool
         """
-        raise NotImplementedError
