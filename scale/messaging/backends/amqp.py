@@ -5,12 +5,10 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import logging
-import Queue
-
 from contextlib import closing
 
+import Queue
 from kombu import Connection
-
 from . import MessagingBackend
 
 logger = logging.getLogger(__name__)

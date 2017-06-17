@@ -37,6 +37,7 @@ def get_message_type(message_type):
         return _MESSAGE_TYPES[message_type]
     raise KeyError("'{}' is an invalid message type".format(message_type))
 
+
 def get_message_types():
     """Returns a list of type identifiers for all registered message types
 

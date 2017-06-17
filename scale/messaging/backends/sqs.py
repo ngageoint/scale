@@ -7,8 +7,8 @@ from __future__ import unicode_literals
 import json
 import logging
 
-from . import MessagingBackend
 from util.aws import AWSCredentials, SQSClient
+from . import MessagingBackend
 
 logger = logging.getLogger(__name__)
 

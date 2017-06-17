@@ -1,14 +1,13 @@
 """Defines the command for performing testing with EchoCommandMessage"""
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 from __future__ import unicode_literals
 
 import logging
-import sys
-
 from datetime import datetime
 
 from django.core.management.base import BaseCommand
-from optparse import make_option
-
 from messaging.message.echo import EchoCommandMessage
 from messaging.messages import CommandMessageManager
 
@@ -30,16 +29,17 @@ class Command(BaseCommand):
 
         This method starts the command.
         """
-        
+
         count = options.get('count')
         if not count:
             count = 1
-        
+
         logger.info('Command starting: scale_echo_message - sending {} message(s)'.format(count))
-        
+
         manager = CommandMessageManager()
         for x in range(count):
-            message = EchoCommandMessage.from_json({'message': 'Greetings, this is echo #{} at {}!'.format(x + 1, datetime.utcnow())})
+            message = EchoCommandMessage.from_json(
+                {'message': 'Greetings, this is echo #{} at {}!'.format(x + 1, datetime.utcnow())})
             manager.send_message(message)
 
         logger.info('Command completed: scale_echo_message')

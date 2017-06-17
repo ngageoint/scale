@@ -1,14 +1,16 @@
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 from __future__ import unicode_literals
 
 import logging
 
 from django.conf import settings
-
-from .message.factory import get_message_type
-from .backends.factory import get_message_backend
-
+from six import raise_from
 from util.broker import BrokerDetails
-
+from .backends.factory import get_message_backend
+from .exceptions import CommandMessageExecuteFailure, InvalidCommandMessage
+from .message.factory import get_message_type
 
 logger = logging.getLogger(__name__)
 
@@ -29,19 +31,22 @@ class CommandMessageManager(object):
 
         # Set up the bakend message passing... right now its just RabbitMQ or SQS
         broker_type = BrokerDetails.from_broker_url(settings.BROKER_URL).get_type()
-        
+
         self._backend = get_message_backend(broker_type)
 
     def send_message(self, command):
-        """Use command.to_json() to generate payload and then publish
+        """Serialize CommandMessage and send via configured message broker
 
-        :param command:
-        :return:
+        The command.to_json() and command.message_type will be used to generate
+        serialized form of CommandMessage for transmission across the wire.
+
+        :param command: CommandMessage to be sent via configured broker
+        :type command: `messaging.message.CommandMessage`
         """
 
-        self._backend.send_message({"type":command.message_type, "body":command.to_json()})
+        self._backend.send_message({"type": command.message_type, "body": command.to_json()})
 
-    def process_messages(self):
+    def receive_messages(self):
         """Main entry point to message processing.
         
         This will process up to a batch of 10 messages at a time. Behavior may
@@ -51,14 +56,42 @@ class CommandMessageManager(object):
         then return.
         
         New messages will potentially be sent within this method, if CommandMessage populates
-        the new_messages array.
+        the new_messages list.
         """
 
         messages = self._backend.receive_messages(10)
-        
+
         for message in messages:
-            self._process_message(message)
-    
+            try:
+                self._process_message(message)
+            except InvalidCommandMessage:
+                logger.exception('Exception encountered processing message payload.')
+            except CommandMessageExecuteFailure:
+                logger.exception('CommandMessage failure during execute call.')
+
+    @staticmethod
+    def _extract_command(message):
+        """Reconstitute a CommandMessage from incoming raw message payload
+
+        :param message: Incoming message payload
+        :type message: dict
+        :return: Instantiated CommendMessage
+        :rtype: `messaging.message.CommandMessage`
+        """
+        if 'type' not in message:
+            raise InvalidCommandMessage('Invalid message missing type: %s', message)
+
+        if 'body' not in message:
+            raise InvalidCommandMessage('Missing body in message.')
+
+        try:
+            message_class = get_message_type(message['type'])
+            message_body = message['body']
+
+            return message_class.from_json(message_body)
+        except KeyError as ex:
+            raise_from(InvalidCommandMessage('No message type handler available.'), ex)
+
     def _process_message(self, message):
         """Inspects message for type and then attempts to launch execution
         
@@ -68,31 +101,25 @@ class CommandMessageManager(object):
     
         :param message: message payload
         :type message: dict
+        :raises InvalidCommandMessage:
+        :raises CommandMessageExecuteFailure: Failure during CommandMessage.execute
         """
-    
-        if 'type' in message:
-            if 'body' in message:
-                try:
-                    message_class = get_message_type(message['type'])
-                    message_body = message['body']
-    
-                    processor = message_class.from_json(message_body)
-                    
-                    success = processor.execute()
-                    
-                    # If execute is successful, we need to fire off all downstream messages
-                    if success and processor.new_messages:
-                        logger.info('Sending %i downstream CommandMessage(s).', len(processor.new_messages))
-                        for new_message in processor.new_messages:
-                            self.send_message(new_message)
-                            
-                    if success:
-                        return
-                except KeyError as ex:
-                    logger.exception('No message type handler available.')
-            else:
-                logger.error('Missing body in message.')
-        else:
-            logger.error('Invalid message missing type: %s', message)
-    
-        logger.error('Failure processing message: %s', message)
+
+        command = self._extract_command(message)
+        success = command.execute()
+
+        if not success:
+            raise CommandMessageExecuteFailure
+
+        # If execute is successful, we need to fire off any downstream messages
+        self._send_downstream(command.new_messages)
+
+    def _send_downstream(self, messages):
+        """Send any required downstream messages following a CommandMessage.execute
+        :param messages: List of CommandMessage instances to send downstream
+        :type messages: [`messaging.message.CommandMessage`]
+        """
+        if len(messages):
+            logger.info('Sending %i downstream CommandMessage(s).', len(messages))
+            for message in messages:
+                self.send_message(message)
