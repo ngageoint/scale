@@ -39,6 +39,9 @@ def _create_base_task(task):
     mesos_task.name = task.name
     resources = task.get_resources()
 
+    if settings.CONFIG_URI:
+        mesos_task.command.uris.add().value = settings.CONFIG_URI
+
     if resources.cpus > 0:
         cpus = mesos_task.resources.add()
         cpus.name = 'cpus'
@@ -106,9 +109,6 @@ def _create_docker_task(task):
     arguments = task.command_arguments.split(" ")
     for argument in arguments:
         mesos_task.command.arguments.append(argument)
-
-    if settings.CONFIG_URI:
-        mesos_task.command.uris.add().value = settings.CONFIG_URI
 
     mesos_task.container.docker.network = mesos_pb2.ContainerInfo.DockerInfo.Network.Value('BRIDGE')
     mesos_task.container.docker.force_pull_image = task.force_docker_pull
