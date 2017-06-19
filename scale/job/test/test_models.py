@@ -23,6 +23,7 @@ from job.configuration.json.execution.exe_config import ExecutionConfiguration, 
 from job.execution import container
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
 from job.models import Job, JobExecution, JobType, JobTypeRevision
+from node.resources.json.resources import Resources
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Cpus, Disk, Mem
 from storage.container import get_workspace_volume_path
@@ -768,12 +769,13 @@ class TestJobTypeManagerCreateJobType(TransactionTestCase):
         title = 'my title'
         description = 'my-description'
         priority = 13
+        custom_resources = Resources({'resources': {'foo': 10.0}})
         docker_params = [["a","1"],["b","2"]]
 
         # Call test
         job_type = JobType.objects.create_job_type(name, version, self.job_interface, title=title,
                                                    description=description, priority=priority,
-                                                   docker_params=docker_params)
+                                                   docker_params=docker_params, custom_resources=custom_resources)
 
         # Check results
         job_type = JobType.objects.select_related('trigger_rule').get(pk=job_type.id)
@@ -781,6 +783,7 @@ class TestJobTypeManagerCreateJobType(TransactionTestCase):
         self.assertEqual(job_type.revision_num, 1)
         self.assertIsNone(job_type.trigger_rule_id)
         self.assertDictEqual(job_type.get_error_interface().get_dict(), ErrorInterface(None).get_dict())
+        self.assertDictEqual(job_type.get_custom_resources().get_dict(), custom_resources.get_dict())
         self.assertEqual(job_type.description, description)
         self.assertEqual(job_type.priority, priority)
         self.assertIsNone(job_type.archived)
@@ -925,6 +928,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
                 '-15': self.error.name,
             }
         })
+        custom_resources = Resources({'resources': {'foo': 10.0}})
         new_title = 'my new title'
         new_priority = 13
         new_error_mapping = ErrorInterface({
@@ -933,15 +937,18 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
                 '-16': self.error.name,
             }
         })
+        new_custom_resources = Resources({'resources': {'foo': 100.0}})
         new_is_paused = True
         trigger_rule = trigger_test_utils.create_trigger_rule(trigger_type=job_test_utils.MOCK_TYPE,
                                                               configuration=self.trigger_config.get_dict())
         job_type = JobType.objects.create_job_type(name, version, self.job_interface, trigger_rule, title=title,
-                                                   priority=priority, error_mapping=error_mapping)
+                                                   priority=priority, error_mapping=error_mapping,
+                                                   custom_resources=custom_resources)
 
         # Call test
         JobType.objects.edit_job_type(job_type.id, title=new_title, priority=new_priority,
-                                      error_mapping=new_error_mapping, is_paused=new_is_paused)
+                                      error_mapping=new_error_mapping, custom_resources=new_custom_resources,
+                                      is_paused=new_is_paused)
 
         # Check results
         job_type = JobType.objects.select_related('trigger_rule').get(pk=job_type.id)
@@ -953,6 +960,7 @@ class TestJobTypeManagerEditJobType(TransactionTestCase):
         self.assertEqual(job_type.title, new_title)
         self.assertEqual(job_type.priority, new_priority)
         self.assertDictEqual(job_type.get_error_interface().get_dict(), new_error_mapping.get_dict())
+        self.assertDictEqual(job_type.get_custom_resources().get_dict(), new_custom_resources.get_dict())
         self.assertEqual(job_type.is_paused, new_is_paused)
         self.assertIsNotNone(job_type.paused)
 

@@ -22,8 +22,10 @@ from job.serializers import (JobDetailsSerializer, JobSerializer, JobTypeDetails
                              JobTypeFailedStatusSerializer, JobTypeSerializer, JobTypePendingStatusSerializer,
                              JobTypeRunningStatusSerializer, JobTypeStatusSerializer, JobUpdateSerializer,
                              JobWithExecutionSerializer, JobExecutionSerializer,
-                             JobExecutionDetailsSerializer, JobExecutionLogSerializer)
+                             JobExecutionDetailsSerializer)
 from models import Job, JobExecution, JobType
+from node.resources.exceptions import InvalidResources
+from node.resources.json.resources import Resources
 from queue.models import Queue
 from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerType
 import util.rest as rest_util
@@ -93,6 +95,15 @@ class JobTypesView(ListCreateAPIView):
         except InvalidInterfaceDefinition as ex:
             raise BadParameter('Job type error mapping invalid: %s' % unicode(ex))
 
+        # Validate the custom resources
+        resources_dict = rest_util.parse_dict(request, 'custom_resources', required=False)
+        custom_resources = None
+        try:
+            if resources_dict:
+                custom_resources = Resources(resources_dict)
+        except InvalidResources as ex:
+            raise BadParameter('Job type custom resources invalid: %s' % unicode(ex))
+
         # Check for optional trigger rule parameters
         trigger_rule_dict = rest_util.parse_dict(request, 'trigger_rule', required=False)
         if (('type' in trigger_rule_dict and 'configuration' not in trigger_rule_dict) or
@@ -111,7 +122,7 @@ class JobTypesView(ListCreateAPIView):
 
         # Extract the fields that should be updated as keyword arguments
         extra_fields = {}
-        base_fields = {'name', 'version', 'interface', 'trigger_rule', 'error_mapping'}
+        base_fields = {'name', 'version', 'interface', 'trigger_rule', 'error_mapping', 'custom_resources'}
         for key, value in request.data.iteritems():
             if key not in base_fields and key not in JobType.UNEDITABLE_FIELDS:
                 extra_fields[key] = value
@@ -126,7 +137,7 @@ class JobTypesView(ListCreateAPIView):
 
                 # Create the job type
                 job_type = JobType.objects.create_job_type(name, version, interface, trigger_rule, error_mapping,
-                                                           **extra_fields)
+                                                           custom_resources, **extra_fields)
         except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, ValueError) as ex:
             logger.exception('Unable to create new job type: %s', name)
             raise BadParameter(unicode(ex))
@@ -195,6 +206,15 @@ class JobTypeDetailsView(GenericAPIView):
         except InvalidInterfaceDefinition as ex:
             raise BadParameter('Job type error mapping invalid: %s' % unicode(ex))
 
+        # Validate the custom resources
+        resources_dict = rest_util.parse_dict(request, 'custom_resources', required=False)
+        custom_resources = None
+        try:
+            if resources_dict:
+                custom_resources = Resources(resources_dict)
+        except InvalidResources as ex:
+            raise BadParameter('Job type custom resources invalid: %s' % unicode(ex))
+
         # Check for optional trigger rule parameters
         trigger_rule_dict = rest_util.parse_dict(request, 'trigger_rule', required=False)
         if (('type' in trigger_rule_dict and 'configuration' not in trigger_rule_dict) or
@@ -220,7 +240,7 @@ class JobTypeDetailsView(GenericAPIView):
 
         # Extract the fields that should be updated as keyword arguments
         extra_fields = {}
-        base_fields = {'name', 'version', 'interface', 'trigger_rule', 'error_mapping'}
+        base_fields = {'name', 'version', 'interface', 'trigger_rule', 'error_mapping', 'custom_resources'}
         for key, value in request.data.iteritems():
             if key not in base_fields and key not in JobType.UNEDITABLE_FIELDS:
                 extra_fields[key] = value
@@ -247,7 +267,7 @@ class JobTypeDetailsView(GenericAPIView):
 
                 # Edit the job type
                 JobType.objects.edit_job_type(job_type_id, interface, trigger_rule, remove_trigger_rule, error_mapping,
-                                              **extra_fields)
+                                              custom_resources, **extra_fields)
         except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition,
                 ValueError) as ex:
             logger.exception('Unable to update job type: %i', job_type_id)
@@ -295,6 +315,14 @@ class JobTypesValidationView(APIView):
                 error_mapping = ErrorInterface(error_dict)
         except InvalidInterfaceDefinition as ex:
             raise BadParameter('Job type error mapping invalid: %s' % unicode(ex))
+
+        # Validate the custom resources
+        resources_dict = rest_util.parse_dict(request, 'custom_resources', required=False)
+        try:
+            if resources_dict:
+                Resources(resources_dict)
+        except InvalidResources as ex:
+            raise BadParameter('Job type custom resources invalid: %s' % unicode(ex))
 
         # Check for optional trigger rule parameters
         trigger_rule_dict = rest_util.parse_dict(request, 'trigger_rule', required=False)

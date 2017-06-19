@@ -1798,7 +1798,8 @@ class JobTypeManager(models.Manager):
     """
 
     @transaction.atomic
-    def create_job_type(self, name, version, interface, trigger_rule=None, error_mapping=None, **kwargs):
+    def create_job_type(self, name, version, interface, trigger_rule=None, error_mapping=None, custom_resources=None,
+                        **kwargs):
         """Creates a new non-system job type and saves it in the database. All database changes occur in an atomic
         transaction.
 
@@ -1812,6 +1813,8 @@ class JobTypeManager(models.Manager):
         :type trigger_rule: :class:`trigger.models.TriggerRule`
         :param error_mapping: Mapping for translating an exit code to an error type
         :type error_mapping: :class:`job.configuration.interface.error_interface.ErrorInterface`
+        :param custom_resources: Custom resources required by this job type
+        :type custom_resources: :class:`node.resources.json.resources.Resources`
         :returns: The new job type
         :rtype: :class:`job.models.JobType`
 
@@ -1845,6 +1848,8 @@ class JobTypeManager(models.Manager):
         if error_mapping:
             error_mapping.validate()
             job_type.error_mapping = error_mapping.get_dict()
+        if custom_resources:
+            job_type.custom_resources = custom_resources.get_dict()
         if 'is_active' in kwargs:
             job_type.archived = None if kwargs['is_active'] else timezone.now()
         if 'is_paused' in kwargs:
@@ -1858,7 +1863,7 @@ class JobTypeManager(models.Manager):
 
     @transaction.atomic
     def edit_job_type(self, job_type_id, interface=None, trigger_rule=None, remove_trigger_rule=False,
-                      error_mapping=None, **kwargs):
+                      error_mapping=None, custom_resources=None, **kwargs):
         """Edits the given job type and saves the changes in the database. The caller must provide the related
         trigger_rule model. All database changes occur in an atomic transaction. An argument of None for a field
         indicates that the field should not change. The remove_trigger_rule parameter indicates the difference between
@@ -1875,6 +1880,8 @@ class JobTypeManager(models.Manager):
         :type remove_trigger_rule: bool
         :param error_mapping: Mapping for translating an exit code to an error type
         :type error_mapping: :class:`job.configuration.interface.error_interface.ErrorInterface`
+        :param custom_resources: Custom resources required by this job type
+        :type custom_resources: :class:`node.resources.json.resources.Resources`
 
         :raises :class:`job.exceptions.InvalidJobField`: If a given job type field has an invalid value
         :raises :class:`trigger.configuration.exceptions.InvalidTriggerType`: If the given trigger rule is an invalid
@@ -1929,6 +1936,10 @@ class JobTypeManager(models.Manager):
         if error_mapping:
             error_mapping.validate()
             job_type.error_mapping = error_mapping.get_dict()
+
+        if custom_resources:
+            job_type.custom_resources = custom_resources.get_dict()
+
         if 'is_active' in kwargs and job_type.is_active != kwargs['is_active']:
             job_type.archived = None if kwargs['is_active'] else timezone.now()
         if 'is_paused' in kwargs and job_type.is_paused != kwargs['is_paused']:
@@ -2423,7 +2434,16 @@ class JobType(models.Model):
         :rtype: dict
         """
 
-        return Resources(self.custom_resources).get_dict()
+        return self.get_custom_resources().get_dict()
+
+    def get_custom_resources(self):
+        """Returns the custom resources required for jobs of this type
+
+        :returns: The custom resources
+        :rtype: :class:`node.resources.json.resources.Resources`
+        """
+
+        return Resources(self.custom_resources)
 
     def get_job_interface(self):
         """Returns the interface for running jobs of this type
