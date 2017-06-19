@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 
 import datetime
 
+from django.conf import settings
+
 from job.tasks.base_task import AtomicCounter, Task
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Cpus, Mem
@@ -47,6 +49,11 @@ class PullTask(Task):
         pull_cmd = 'docker pull %s' % self.image_name
         delete_cmd = 'for img in `docker images -q -f dangling=true`; do docker rmi $img; done'
         self._command = '%s && %s' % (pull_cmd, delete_cmd)
+
+        # Setting DOCKER_CONFIG env var is needed if CONFIG_URI is set for custom Docker configuration
+        if settings.CONFIG_URI:
+            export_cmd = 'export DOCKER_CONFIG=`pwd`/.docker'
+            self._command = '%s && %s' % (export_cmd, self._command)
 
     def get_resources(self):
         """See :meth:`job.tasks.base_task.Task.get_resources`
