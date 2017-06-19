@@ -112,6 +112,7 @@
         ];
 
         vm.getJobs = function () {
+            console.log($scope.$parent.jobsParams);
             jobService.getJobs(vm.jobsParams).then(null, null, function (data) {
                 vm.loading = false;
                 if (data.$resolved) {
@@ -185,7 +186,7 @@
                 vm.loading = false;
             });
         };
-        
+
         vm.filterResults = function () {
             poller.stopAll();
             stateService.setJobsParams(vm.jobsParams);

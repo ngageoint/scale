@@ -17,10 +17,15 @@
         };
 
         var initialize = function() {
+            $scope.jobsParams = { just: 'testing' };
             navService.updateLocation('data');
             getSourceFileDetails();
         };
 
         initialize();
+
+        vm.showGrid = function (gridType) {
+
+        };
     });
 })();
