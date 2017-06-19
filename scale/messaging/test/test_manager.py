@@ -74,10 +74,10 @@ class TestCommandMessageManager(TestCase):
         message = {'type': 'test', 'body': 'payload'}
 
         manager = CommandMessageManager()
-        command = Mock()
-        command.execute = Mock(return_value=True)
-        command.new_messages = []
-        extract_command = manager._extract_command = Mock(return_value=command)
+        command = MagicMock(execute=MagicMock(return_value=True))
+        command.execute.return_value = True
+        command.new_messages.return_value = []
+        extract_command = manager._extract_command = MagicMock(return_value=command)
 
         manager._process_message(message)
 
@@ -107,7 +107,7 @@ class TestCommandMessageManager(TestCase):
         messages = ['one', 'two']
 
         manager = CommandMessageManager()
-        send_message = manager._send_message = Mock()
+        send_message = manager.send_message = MagicMock()
         manager._send_downstream(messages)
 
         calls = [call(x) for x in messages]
