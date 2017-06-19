@@ -11,6 +11,7 @@ from error.models import Error
 from job.execution.tasks.job_task import JobTask
 from job.execution.tasks.post_task import PostTask
 from job.execution.tasks.pre_task import PreTask
+from job.execution.tasks.pull_task import PullTask
 from job.models import JobExecution
 from job.tasks.update import TaskStatusUpdate
 from util.retry import retry_database_query
@@ -50,6 +51,7 @@ class RunningJobExecution(object):
 
         # Create tasks
         if not job_exe.is_system:
+            self._all_tasks.append(PullTask(job_exe))
             self._all_tasks.append(PreTask(job_exe))
         self._all_tasks.append(JobTask(job_exe))
         if not job_exe.is_system:
