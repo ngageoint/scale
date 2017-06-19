@@ -5,8 +5,9 @@ import datetime
 
 from django.conf import settings
 
-from job.resources import NodeResources
 from job.tasks.base_task import AtomicCounter, Task
+from node.resources.node_resources import NodeResources
+from node.resources.resource import Cpus, Disk, Mem
 
 
 HEALTH_TASK_ID_PREFIX = 'scale_health'
@@ -74,4 +75,4 @@ class HealthTask(Task):
         """See :meth:`job.tasks.base_task.Task.get_resources`
         """
 
-        return NodeResources(cpus=0.1, mem=32)
+        return NodeResources([Cpus(0.1), Mem(32.0)])

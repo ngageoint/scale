@@ -5,7 +5,8 @@ import datetime
 
 from error.exceptions import get_error_by_exit_code
 from job.execution.tasks.exe_task import JobExecutionTask
-from job.resources import NodeResources
+from node.resources.node_resources import NodeResources
+from node.resources.resource import Disk
 
 JOB_TYPE_TIMEOUT_ERRORS = {}  # {Job type name: error name}
 
@@ -78,7 +79,9 @@ class JobTask(JobExecutionTask):
 
         with self._lock:
             # Input files have already been written, only disk space for output files is required
-            return NodeResources(cpus=self._cpus, mem=self._mem, disk=self._disk_out)
+            resources_without_input_files = self._resources.copy()
+            resources_without_input_files.subtract(NodeResources([Disk(self._input_file_size)]))
+            return resources_without_input_files
 
     def populate_job_exe_model(self, job_exe):
         """See :meth:`job.execution.tasks.exe_task.JobExecutionTask.populate_job_exe_model`

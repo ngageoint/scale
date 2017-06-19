@@ -15,7 +15,7 @@ class ResourceOffer(object):
         :param framework_id: The scheduling framework ID
         :type framework_id: string
         :param node_resources: The resources offered by the node
-        :type node_resources: :class:`job.resources.NodeResources`
+        :type node_resources: :class:`node.resources.node_resources.NodeResources`
         :param when: When the offer was received
         :type when: :class:`datetime.datetime`
         """

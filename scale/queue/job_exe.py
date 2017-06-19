@@ -1,9 +1,6 @@
 """Defines the class that represents queued job executions being considered to be scheduled"""
 from __future__ import unicode_literals
 
-from job.resources import JobResources
-from job.resources import NodeResources
-
 
 class QueuedJobExecution(object):
     """This class represents a queued job execution that is being considered to be scheduled."""
@@ -17,14 +14,8 @@ class QueuedJobExecution(object):
 
         self._queue = queue
 
-        cpus = self._queue.cpus_required
-        mem = self._queue.mem_required
-        disk_total = self._queue.disk_total_required
-        self._required_resources = NodeResources(cpus=cpus, mem=mem, disk=disk_total)
-
-        self._required_node_ids = None
-        if self._queue.node_required_id:
-            self._required_node_ids = {self._queue.node_required_id}
+        self.input_file_size = queue.input_file_size
+        self._required_resources = queue.get_resources()
 
         self._provided_node_id = None
         self._provided_resources = None
@@ -54,7 +45,7 @@ class QueuedJobExecution(object):
         """Returns the resources that have been provided to run this job execution
 
         :returns: The resources that have been provided to run this job execution
-        :rtype: :class:`job.resources.JobResources`
+        :rtype: :class:`node.resources.node_resources.NodeResources`
         """
 
         return self._provided_resources
@@ -74,7 +65,7 @@ class QueuedJobExecution(object):
         """Returns the resources required by this job execution
 
         :returns: The resources required by this job execution
-        :rtype: :class:`job.resources.NodeResources`
+        :rtype: :class:`node.resources.node_resources.NodeResources`
         """
 
         return self._required_resources
@@ -86,21 +77,8 @@ class QueuedJobExecution(object):
         :param node_id: The node ID
         :type node_id: int
         :param resources: The provided resources
-        :type resources: :class:`job.resources.NodeResources`
+        :type resources: :class:`node.resources.node_resources.NodeResources`
         """
 
         self._provided_node_id = node_id
-        self._provided_resources = JobResources(cpus=resources.cpus, mem=resources.mem,
-                                                disk_in=self._queue.disk_in_required,
-                                                disk_out=self._queue.disk_out_required, disk_total=resources.disk)
-
-    def is_node_acceptable(self, node_id):
-        """Indicates whether the node with the given ID is acceptable to this job execution
-
-        :param node_id: The node ID
-        :type node_id: int
-        :returns: True if the node is acceptable, False otherwise
-        :rtype: bool
-        """
-
-        return self._required_node_ids is None or node_id in self._required_node_ids
+        self._provided_resources = resources

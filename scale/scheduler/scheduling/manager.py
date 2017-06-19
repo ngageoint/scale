@@ -9,14 +9,14 @@ from django.utils.timezone import now
 from mesos.interface import mesos_pb2
 
 from job.execution.manager import job_exe_mgr
-from job.resources import NodeResources
 from job.tasks.manager import task_mgr
 from mesos_api.tasks import create_mesos_task
+from node.resources.node_resources import NodeResources
 from queue.job_exe import QueuedJobExecution
 from queue.models import Queue
 from scheduler.node.manager import node_mgr
 from scheduler.resources.manager import resource_mgr
-from scheduler.scheduling.node import SchedulingNode
+from scheduler.scheduling.scheduling_node import SchedulingNode
 from scheduler.sync.job_type_manager import job_type_mgr
 from scheduler.sync.scheduler_manager import scheduler_mgr
 from scheduler.sync.workspace_manager import workspace_mgr

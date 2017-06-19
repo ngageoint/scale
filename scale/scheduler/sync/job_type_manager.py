@@ -4,7 +4,8 @@ from __future__ import unicode_literals
 import threading
 
 from job.models import JobType
-from job.resources import NodeResources
+from node.resources.node_resources import NodeResources
+from node.resources.resource import Cpus, Disk, Mem
 
 
 # TODO: when we calculate duration averages for job types, create a new job type class that contains model, resources,
@@ -78,8 +79,8 @@ class JobTypeManager(object):
         updated_job_types = {}
         for job_type in JobType.objects.all().iterator():
             updated_job_types[job_type.id] = job_type
-            resources = NodeResources(cpus=job_type.cpus_required, mem=job_type.mem_required,
-                                      disk=job_type.disk_out_const_required)
+            resources = NodeResources([Cpus(job_type.cpus_required), Mem(job_type.mem_required),
+                                       Disk(job_type.disk_out_const_required)])
             update_job_type_resources.append(resources)
 
         with self._lock:

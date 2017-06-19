@@ -9,6 +9,7 @@ from job.configuration.json.execution.exe_config import ExecutionConfiguration
 from job.models import Job, JobExecution, JobType, JobTypeRevision, TaskUpdate
 from job.tasks.update import TaskStatusUpdate
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
+from node.resources.node_resources import NodeResources
 from node.test import utils as node_utils
 from trigger.handler import TriggerRuleHandler, register_trigger_rule_handler
 
@@ -127,7 +128,7 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, data=Non
 def create_job_exe(job_type=None, job=None, status='RUNNING', configuration=None, error=None,
                    command_arguments='test_arg', timeout=None, node=None, created=None, queued=None, started=None,
                    pre_started=None, pre_completed=None, job_started=None, job_completed=None, post_started=None,
-                   post_completed=None, ended=None, last_modified=None):
+                   post_completed=None, ended=None, last_modified=None, input_file_size=0.0, resources=None):
     """Creates a job execution model for unit testing
 
     :returns: The job execution model
@@ -151,8 +152,11 @@ def create_job_exe(job_type=None, job=None, status='RUNNING', configuration=None
         started = when
     if not last_modified:
         last_modified = when
+    if not resources:
+        resources = NodeResources()
 
     job_exe = JobExecution.objects.create(job=job, status=status, error=error, configuration=configuration,
+                                          resources=resources.get_json().get_dict(), disk_in_scheduled=input_file_size,
                                           command_arguments=command_arguments, timeout=timeout, node=node,
                                           created=created, queued=queued, started=started, pre_started=pre_started,
                                           pre_completed=pre_completed, job_started=job_started,
