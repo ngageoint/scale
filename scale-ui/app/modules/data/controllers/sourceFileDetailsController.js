@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('sourceFileDetailsController', function($scope, $location, $routeParams, navService, feedService, SourceFile, Job, Product, Ingest) {
+    angular.module('scaleApp').controller('sourceFileDetailsController', function($scope, $location, $routeParams, navService, feedService, SourceFile) {
         var ctrl = this,
             sourceFileId = parseInt($routeParams.id);
 
@@ -10,8 +10,8 @@
         ctrl.activeTab = 'jobs';
 
         $scope.jobsData = null;
-        $scope.sourceProducts = null;
-        $scope.sourceIngests = null;
+        $scope.productsData = null;
+        $scope.ingestsData = null;
 
         var getSourceJobs = function () {
             feedService.getSourceDescendants(ctrl.sourceFile.id, 'jobs').then(function (data) {
@@ -21,13 +21,13 @@
 
         var getSourceProducts = function () {
             feedService.getSourceDescendants(ctrl.sourceFile.id, 'products').then(function (data) {
-                $scope.sourceProducts = Product.transformer(data.results);
+                $scope.productsData = data;
             });
         };
 
         var getSourceIngests = function () {
             feedService.getSourceDescendants(ctrl.sourceFile.id, 'ingests').then(function (data) {
-                $scope.sourceIngests = Ingest.transformer(data.results);
+                $scope.ingestsData = data;
             });
         };
 

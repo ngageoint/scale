@@ -29,7 +29,7 @@
     </div>
     <ais-grid-pagination></ais-grid-pagination>
 </div>
-<div ng-controller="ingestRecordsController as vm" ng-if="sourceIngests && ctrl.activeTab === 'ingests'">
+<div ng-controller="ingestRecordsController as vm" ng-if="ingestsData && ctrl.activeTab === 'ingests'">
     <div class="grid-container">
         <div ui-grid="vm.gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns class="scale-grid"></div>
     </div>
