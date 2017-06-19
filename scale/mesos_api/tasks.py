@@ -42,23 +42,12 @@ def _create_base_task(task):
     if settings.CONFIG_URI:
         mesos_task.command.uris.add().value = settings.CONFIG_URI
 
-    if resources.cpus > 0:
-        cpus = mesos_task.resources.add()
-        cpus.name = 'cpus'
-        cpus.type = mesos_pb2.Value.SCALAR
-        cpus.scalar.value = resources.cpus
-
-    if resources.mem > 0:
-        mem = mesos_task.resources.add()
-        mem.name = 'mem'
-        mem.type = mesos_pb2.Value.SCALAR
-        mem.scalar.value = resources.mem
-
-    if resources.disk > 0:
-        disk = mesos_task.resources.add()
-        disk.name = 'disk'
-        disk.type = mesos_pb2.Value.SCALAR
-        disk.scalar.value = resources.disk
+    for resource in resources.resources:
+        if resource.value > 0.0:
+            task_resource = mesos_task.resources.add()
+            task_resource.name = resource.name
+            task_resource.type = mesos_pb2.Value.SCALAR
+            task_resource.scalar.value = resource.value
 
     return mesos_task
 
