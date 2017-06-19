@@ -11,6 +11,9 @@ from messaging.manager import CommandMessageManager
 from mock import MagicMock, Mock
 from mock import call, patch
 
+# Stomp singleton for unit testing... really don't remove this if you value your sanity
+del CommandMessageManager.__new__
+
 
 class TestCommandMessageManager(TestCase):
     def setUp(self):
@@ -22,10 +25,12 @@ class TestCommandMessageManager(TestCase):
         command.to_json = MagicMock(return_value='body_content')
         manager = CommandMessageManager()
         send_message = MagicMock()
-        manager._backend = MagicMock(send_message=send_message)
+        backend = MagicMock(send_message=send_message)
+        manager._backend = backend
+
         manager.send_message(command)
 
-        send_message.assert_called_with(call({'type': 'test', 'body': 'body_content'}))
+        send_message.assert_called_with({'type': 'test', 'body': 'body_content'})
 
     def test_send_message_no_type(self):
         """Validate that send_message raises AttributeError when message_type is not available"""
@@ -59,16 +64,17 @@ class TestCommandMessageManager(TestCase):
         mocks = [MagicMock() for _ in range(10)]
         manager = CommandMessageManager()
         manager._backend = MagicMock()
-        process_message = manager._process_message = Mock()
-        manager._backend.receive_messages = Mock(return_value=mocks)
+        process_message = manager._process_message = MagicMock()
+        manager._backend.receive_messages = MagicMock(return_value=mocks)
         manager.receive_messages()
 
         calls = [call(x) for x in mocks]
         process_message.assert_has_calls(calls)
         self.assertEquals(process_message.call_count, 10)
 
+    @patch('messaging.manager.CommandMessageManager._extract_command')
     @patch('messaging.manager.CommandMessageManager._send_downstream')
-    def test_successful_process_message(self, send_downstream):
+    def test_successful_process_message(self, send_downstream, extract_command):
         """Validate logic for a successful command process """
 
         message = {'type': 'test', 'body': 'payload'}
@@ -76,29 +82,28 @@ class TestCommandMessageManager(TestCase):
         manager = CommandMessageManager()
         command = MagicMock(execute=MagicMock(return_value=True))
         command.execute.return_value = True
-        command.new_messages.return_value = []
-        extract_command = manager._extract_command = MagicMock(return_value=command)
+        command.new_messages = []
+        extract_command.return_value = command
 
         manager._process_message(message)
 
-        extract_command.assert_called_once()
         send_downstream.assert_called_with([])
 
+    @patch('messaging.manager.CommandMessageManager._extract_command')
     @patch('messaging.manager.CommandMessageManager._send_downstream')
-    def test_failing_process_message(self, send_downstream):
-        """Validate logic for a successful command process """
+    def test_failing_process_message(self, send_downstream, extract_command):
+        """Validate logic for a process message failing in process execution"""
 
         message = {'type': 'test', 'body': 'payload'}
 
         manager = CommandMessageManager()
-        command = Mock()
-        command.execute = Mock(return_value=False)
-        extract_command = manager._extract_command = Mock(return_value=command)
+        command = MagicMock()
+        command.execute = MagicMock(return_value=False)
+        extract_command.return_value = command
 
         with self.assertRaises(CommandMessageExecuteFailure):
             manager._process_message(message)
 
-        extract_command.assert_called_once()
         self.assertFalse(send_downstream.called)
 
     def test_successful_send_downstream(self):
@@ -117,7 +122,7 @@ class TestCommandMessageManager(TestCase):
         """Validate send_message is not called when messages is empty"""
 
         manager = CommandMessageManager()
-        send_message = manager.send_message = Mock()
+        send_message = manager.send_message = MagicMock()
         manager._send_downstream([])
 
         self.assertFalse(send_message.called)

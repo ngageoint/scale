@@ -24,12 +24,9 @@ class CommandMessageManager(object):
         return cls.instance
 
     def __init__(self):
-        """Instantiate CommandMessageManager based on setting values
+        """Instantiate CommandMessageManager based on setting values"""
 
-        :return:
-        """
-
-        # Set up the bakend message passing... right now its just RabbitMQ or SQS
+        # Set up the backend message passing... right now its just RabbitMQ or SQS
         broker_type = BrokerDetails.from_broker_url(settings.BROKER_URL).get_type()
 
         self._backend = get_message_backend(broker_type)
@@ -48,13 +45,13 @@ class CommandMessageManager(object):
 
     def receive_messages(self):
         """Main entry point to message processing.
-        
+
         This will process up to a batch of 10 messages at a time. Behavior may
         differ slightly based on message backend. RabbitMQ will immediately
         iterate over up to 10 messages, process and return. SQS will long-poll
         up to 20 seconds or until 10 messages have been processed, process and
         then return.
-        
+
         New messages will potentially be sent within this method, if CommandMessage populates
         the new_messages list.
         """
@@ -94,11 +91,11 @@ class CommandMessageManager(object):
 
     def _process_message(self, message):
         """Inspects message for type and then attempts to launch execution
-        
-        This function will potentially fire off new messages as required by 
+
+        This function will potentially fire off new messages as required by
         execution logic within CommandMessage extending class. These messages
         will only be sent if command execution is successful.
-    
+
         :param message: message payload
         :type message: dict
         :raises InvalidCommandMessage:

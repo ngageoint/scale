@@ -87,8 +87,8 @@ class TestAMQPBackend(TestCase):
         results = backend.receive_messages(10)
         results = list(results)
         self.assertEqual(len(results), 2)
-        self.assertTrue(message1.ack.assert_called())
-        self.assertTrue(message2.ack.assert_callse())
+        message1.ack.assert_called()
+        message2.ack.assert_called()
 
 
 class TestSQSBackend(TestCase):
