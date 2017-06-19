@@ -6,7 +6,7 @@ from __future__ import unicode_literals
 import django
 from django.test import TestCase
 from messaging.exceptions import CommandMessageExecuteFailure, InvalidCommandMessage
-from messaging.message import CommandMessage
+from messaging.messages.message import CommandMessage
 from messaging.messages import CommandMessageManager
 from mock import MagicMock, Mock
 from mock import call, patch

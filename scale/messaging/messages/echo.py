@@ -6,7 +6,7 @@ from __future__ import unicode_literals
 import logging
 import random
 
-from . import CommandMessage
+from messaging.messages.message import CommandMessage
 
 logger = logging.getLogger(__name__)
 

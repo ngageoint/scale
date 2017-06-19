@@ -6,11 +6,11 @@ from __future__ import unicode_literals
 import logging
 
 from django.conf import settings
+from messaging.messages.factory import get_message_type
 from six import raise_from
 from util.broker import BrokerDetails
 from .backends.factory import get_message_backend
 from .exceptions import CommandMessageExecuteFailure, InvalidCommandMessage
-from .message.factory import get_message_type
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +41,7 @@ class CommandMessageManager(object):
         serialized form of CommandMessage for transmission across the wire.
 
         :param command: CommandMessage to be sent via configured broker
-        :type command: `messaging.message.CommandMessage`
+        :type command: `messaging.messages.message.CommandMessage`
         """
 
         self._backend.send_message({"type": command.message_type, "body": command.to_json()})
@@ -76,7 +76,7 @@ class CommandMessageManager(object):
         :param message: Incoming message payload
         :type message: dict
         :return: Instantiated CommendMessage
-        :rtype: `messaging.message.CommandMessage`
+        :rtype: `messaging.messages.message.CommandMessage`
         """
         if 'type' not in message:
             raise InvalidCommandMessage('Invalid message missing type: %s', message)

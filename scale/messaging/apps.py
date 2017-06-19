@@ -7,10 +7,10 @@ from __future__ import unicode_literals
 from django.apps import AppConfig
 
 """Registers the messaging factory methods."""
-from .message.factory import add_message_type
+from messaging.messages.factory import add_message_type
 from .backends.factory import add_message_backend
 
-from .message.echo import EchoCommandMessage
+from messaging.messages.echo import EchoCommandMessage
 from .backends.amqp import AMQPMessagingBackend
 from .backends.sqs import SQSMessagingBackend
 

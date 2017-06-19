@@ -8,8 +8,8 @@ import logging
 from datetime import datetime
 
 from django.core.management.base import BaseCommand
-from messaging.message.echo import EchoCommandMessage
 from messaging.messages import CommandMessageManager
+from messaging.messages.echo import EchoCommandMessage
 
 logger = logging.getLogger(__name__)
 

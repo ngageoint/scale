@@ -9,7 +9,7 @@ from contextlib import closing
 
 import Queue
 from kombu import Connection
-from . import MessagingBackend
+from messaging.backends.backend import MessagingBackend
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +41,7 @@ class AMQPMessagingBackend(MessagingBackend):
                         try:
                             yield message.payload
                             message.ack()
-                        except Exception as ex:
+                        except Exception:
                             logger.exception('Failure during message processing.')
                     except Queue.Empty:
                         # We've reached the end of the queue... exit loop

@@ -1,11 +1,9 @@
-from __future__ import unicode_literals
-
 from abc import ABCMeta, abstractmethod
 
 
 class CommandMessage(object):
     """This ABC defines the interface all CommandMessage classes should implement.
-    
+
     If a CommandMessage needs to chain processing together, it should define this via
     the new_messages array.
     """
