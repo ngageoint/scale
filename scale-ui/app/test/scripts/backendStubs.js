@@ -130,6 +130,14 @@
         var sourceDetailsOverrideUrl = 'test/data/sourceDetails.json';
         var sourceDetailsRegex = new RegExp('^' + scaleConfig.getUrlPrefix('sources') + 'sources/.*/', 'i');
         $httpBackend.whenGET(sourceDetailsRegex).respond(function (method, url) {
+            var type = _.last(_.without(url.split('/'), ''));
+            if (type === 'jobs') {
+                return getSync('test/data/jobs.json');
+            } else if (type === 'products') {
+                return [200, {}, {}];
+            } else if (type === 'ingests') {
+                return getSync('test/data/ingests.json');
+            }
             // // get the jobType.id from the url
             // url = url.toString();
             // var filename = url.substring(url.substring(0,url.lastIndexOf('/')).lastIndexOf('/')+1,url.length-1);

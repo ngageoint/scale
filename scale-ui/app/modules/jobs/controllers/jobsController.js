@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('jobsController', function ($scope, $location, $uibModal, scaleConfig, scaleService, stateService, navService, subnavService, userService, jobService, jobExecutionService, jobTypeService, loadService, gridFactory, toastr, poller) {
+    angular.module('scaleApp').controller('jobsController', function ($scope, $location, $uibModal, scaleConfig, scaleService, stateService, navService, subnavService, userService, jobService, jobExecutionService, jobTypeService, loadService, Job, gridFactory, toastr, poller) {
         subnavService.setCurrentPath('jobs');
 
         var vm = this,
@@ -112,20 +112,29 @@
         ];
 
         vm.getJobs = function () {
-            console.log($scope.$parent.jobsParams);
-            jobService.getJobs(vm.jobsParams).then(null, null, function (data) {
+            if ($scope.$parent.jobsData) {
                 vm.loading = false;
-                if (data.$resolved) {
-                    vm.gridOptions.totalItems = data.count;
-                    vm.gridOptions.minRowsToShow = data.results.length;
-                    vm.gridOptions.virtualizationThreshold = data.results.length;
-                    vm.gridOptions.data = data.results;
-                    vm.gridOptions.paginationCurrentPage = vm.jobsParams.page;
-                    vm.gridOptions.paginationPageSize = vm.jobsParams.page_size;
-                } else {
-                    console.log(error);
-                }
-            });
+                vm.gridOptions.totalItems = $scope.$parent.jobsData.count;
+                vm.gridOptions.minRowsToShow = $scope.$parent.jobsData.results.length;
+                vm.gridOptions.virtualizationThreshold = $scope.$parent.jobsData.results.length;
+                vm.gridOptions.data = Job.transformer($scope.$parent.jobsData.results);
+                vm.gridOptions.paginationCurrentPage = vm.jobsParams.page;
+                vm.gridOptions.paginationPageSize = vm.jobsParams.page_size;
+            } else {
+                jobService.getJobs(vm.jobsParams).then(null, null, function (data) {
+                    vm.loading = false;
+                    if (data.$resolved) {
+                        vm.gridOptions.totalItems = data.count;
+                        vm.gridOptions.minRowsToShow = data.results.length;
+                        vm.gridOptions.virtualizationThreshold = data.results.length;
+                        vm.gridOptions.data = data.results;
+                        vm.gridOptions.paginationCurrentPage = vm.jobsParams.page;
+                        vm.gridOptions.paginationPageSize = vm.jobsParams.page_size;
+                    } else {
+                        console.log(error);
+                    }
+                });
+            }
         };
 
         vm.getJobTypes = function () {

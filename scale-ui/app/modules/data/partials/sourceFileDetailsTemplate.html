@@ -1,31 +1,37 @@
-<ais-header name="'Source File Details'" show-subnav="false" loading="vm.loading"></ais-header>
+<ais-header name="'Source File Details'" show-subnav="false" loading="ctrl.loading"></ais-header>
 <h3>
-    <a ng-href="{{ vm.sourceFile.url }}" ng-show="vm.sourceFile.url"><i class="fa fa-download"></i></a> {{ vm.sourceFile.file_name }}
-    <small>{{ vm.sourceFile.file_size_formatted }}</small>
+    <a ng-href="{{ ctrl.sourceFile.url }}" ng-show="ctrl.sourceFile.url"><i class="fa fa-download"></i></a> {{ ctrl.sourceFile.file_name }}
+    <small>{{ ctrl.sourceFile.file_size_formatted }}</small>
 </h3>
 <div class="source-file-details-container">
     <table class="table table-hover table-condensed table-striped">
         <tbody>
-        <tr><td class="left">Workspace:</td><td class="right">{{ vm.sourceFile.workspace.name }}</td></tr>
-        <tr><td class="left">Media Type:</td><td class="right">{{ vm.sourceFile.media_type }}</td></tr>
-        <tr><td class="left">Created:</td><td class="right">{{ vm.sourceFile.created_formatted }}</td></tr>
-        <tr><td class="left">Deleted:</td><td class="right">{{ vm.sourceFile.deleted_formatted }}</td></tr>
-        <tr><td class="left">Data Started:</td><td class="right">{{ vm.sourceFile.data_started_formatted }}</td></tr>
-        <tr><td class="left">Data Ended:</td><td class="right">{{ vm.sourceFile.data_ended_formatted }}</td></tr>
-        <tr><td class="left">Last Modified:</td><td class="right">{{ vm.sourceFile.last_modified_formatted }}</td></tr>
-        <tr><td class="left">Parsed:</td><td class="right">{{ vm.sourceFile.parsed_formatted }}</td></tr>
+        <tr><td class="left">Workspace:</td><td class="right">{{ ctrl.sourceFile.workspace.name }}</td></tr>
+        <tr><td class="left">Media Type:</td><td class="right">{{ ctrl.sourceFile.media_type }}</td></tr>
+        <tr><td class="left">Created:</td><td class="right">{{ ctrl.sourceFile.created_formatted }}</td></tr>
+        <tr><td class="left">Deleted:</td><td class="right">{{ ctrl.sourceFile.deleted_formatted }}</td></tr>
+        <tr><td class="left">Data Started:</td><td class="right">{{ ctrl.sourceFile.data_started_formatted }}</td></tr>
+        <tr><td class="left">Data Ended:</td><td class="right">{{ ctrl.sourceFile.data_ended_formatted }}</td></tr>
+        <tr><td class="left">Last Modified:</td><td class="right">{{ ctrl.sourceFile.last_modified_formatted }}</td></tr>
+        <tr><td class="left">Parsed:</td><td class="right">{{ ctrl.sourceFile.parsed_formatted }}</td></tr>
         </tbody>
     </table>
 </div>
 <hr />
 <ul class="nav nav-pills margin-bottom-md">
-    <li role="presentation" class="active"><a ng-click="vm.showGrid('jobs')">Jobs</a></li>
-    <li role="presentation"><a ng-click="vm.showGrid('ingests')">Ingests</a></li>
-    <li role="presentation"><a ng-click="vm.showGrid('products')">Products</a></li>
+    <li role="presentation" ng-class="{ active: ctrl.activeTab === 'jobs' }"><a ng-click="ctrl.showGrid('jobs')">Jobs</a></li>
+    <li role="presentation" ng-class="{ active: ctrl.activeTab === 'ingests' }"><a ng-click="ctrl.showGrid('ingests')">Ingests</a></li>
+    <li role="presentation" ng-class="{ active: ctrl.activeTab === 'products' }"><a ng-click="ctrl.showGrid('products')">Products</a></li>
 </ul>
-<div ng-controller="jobsController as jc">
+<div ng-controller="jobsController as vm" ng-if="jobsData && ctrl.activeTab === 'jobs'">
     <div class="grid-container">
-        <div ui-grid="jc.gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns class="scale-grid"></div>
+        <div ui-grid="vm.gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns class="scale-grid"></div>
+    </div>
+    <ais-grid-pagination></ais-grid-pagination>
+</div>
+<div ng-controller="ingestRecordsController as vm" ng-if="sourceIngests && ctrl.activeTab === 'ingests'">
+    <div class="grid-container">
+        <div ui-grid="vm.gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns class="scale-grid"></div>
     </div>
     <ais-grid-pagination></ais-grid-pagination>
 </div>

@@ -84,6 +84,18 @@
                     d.reject(error);
                 });
                 return d.promise;
+            },
+            getSourceDescendants: function (id, type) {
+                var d = $q.defer();
+                $http({
+                    url: scaleConfig.getUrlPrefix('sources') + 'sources/' + id + '/' + type + '/',
+                    method: 'GET'
+                }).success(function (data) {
+                    d.resolve(data);
+                }).error(function (error) {
+                    d.reject(error);
+                });
+                return d.promise;
             }
         };
     });

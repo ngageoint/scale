@@ -65,7 +65,7 @@
             })
             .when('/data/source/file/:id', {
                 controller: 'sourceFileDetailsController',
-                controllerAs: 'vm',
+                controllerAs: 'ctrl',
                 templateUrl: 'modules/data/partials/sourceFileDetailsTemplate.html'
             })
             .when('/feed', {
