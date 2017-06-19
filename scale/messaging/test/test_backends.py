@@ -3,19 +3,17 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import Queue
-
 from mock import patch
 from mock import Mock
 
 import django
 from django.conf import settings
 from django.test import TestCase
+from kombu import Queue
 
 from messaging.backends.amqp import AMQPMessagingBackend
 from messaging.backends.backend import MessagingBackend
 from messaging.backends.sqs import SQSMessagingBackend
-
 
 
 # Dummy class for ABC __init__ testing

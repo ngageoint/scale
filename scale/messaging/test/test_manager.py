@@ -7,7 +7,7 @@ import django
 from django.test import TestCase
 from messaging.exceptions import CommandMessageExecuteFailure, InvalidCommandMessage
 from messaging.messages.message import CommandMessage
-from messaging.messages import CommandMessageManager
+from messaging.manager import CommandMessageManager
 from mock import MagicMock, Mock
 from mock import call, patch
 
@@ -21,10 +21,11 @@ class TestCommandMessageManager(TestCase):
         command = MagicMock(message_type='test')
         command.to_json = MagicMock(return_value='body_content')
         manager = CommandMessageManager()
-        manager._backend = MagicMock()
+        send_message = MagicMock()
+        manager._backend = MagicMock(send_message=send_message)
         manager.send_message(command)
 
-        manager._backend.send_message.assert_called_with({'type': 'test', 'body': 'body_content'})
+        send_message.assert_called_with(call({'type': 'test', 'body': 'body_content'}))
 
     def test_send_message_no_type(self):
         """Validate that send_message raises AttributeError when message_type is not available"""
@@ -66,7 +67,7 @@ class TestCommandMessageManager(TestCase):
         process_message.assert_has_calls(calls)
         self.assertEquals(process_message.call_count, 10)
 
-    @patch('messaging.messages.CommandMessageManager._send_downstream')
+    @patch('messaging.manager.CommandMessageManager._send_downstream')
     def test_successful_process_message(self, send_downstream):
         """Validate logic for a successful command process """
 
@@ -83,7 +84,7 @@ class TestCommandMessageManager(TestCase):
         extract_command.assert_called_once()
         send_downstream.assert_called_with([])
 
-    @patch('messaging.messages.CommandMessageManager._send_downstream')
+    @patch('messaging.manager.CommandMessageManager._send_downstream')
     def test_failing_process_message(self, send_downstream):
         """Validate logic for a successful command process """
 
@@ -121,17 +122,19 @@ class TestCommandMessageManager(TestCase):
 
         self.assertFalse(send_message.called)
 
-    @patch('message.message.factory.get_message_type')
+    @patch('messaging.manager.get_message_type')
     def test_valid_extract_command(self, get_message_type):
         """Validate a successful _extract_command call instantiation of CommandMessage class from payload"""
         message = {'type': 'test', 'body': 'payload'}
 
-        message_class = Mock(spec=CommandMessage)
-        get_message_type = Mock(return_value=message_class)
+        from_json = MagicMock(return_value=MagicMock(spec=CommandMessage))
+        message_class = MagicMock(from_json=from_json)
+        get_message_type.return_value = message_class
         result = CommandMessageManager._extract_command(message)
 
         get_message_type.assert_called_once()
-        self.assertEquals(result, message_class)
+        message_class.from_json.assert_called_with(message['body'])
+        self.assertTrue(isinstance(result, CommandMessage))
 
     def test_missing_type_extract_command(self):
         """Validate InvalidCommandMessage is raised when missing type key"""
@@ -147,10 +150,11 @@ class TestCommandMessageManager(TestCase):
         with self.assertRaises(InvalidCommandMessage):
             CommandMessageManager._extract_command(message)
 
-    def test_no_registered_type_extract_command(self):
+    @patch('messaging.manager.get_message_type')
+    def test_no_registered_type_extract_command(self, get_message_type):
         """Validate InvalidCommandMessage is raised when no type matches"""
         message = {'type': 'test', 'body': 'payload'}
 
-        get_message_type = Mock(side_effect=KeyError)
+        get_message_type.side_effect = KeyError
         with self.assertRaises(InvalidCommandMessage):
             CommandMessageManager._extract_command(message)
