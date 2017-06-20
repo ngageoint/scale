@@ -3,8 +3,8 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-from mock import patch
-from mock import Mock
+from mock import call, patch
+from mock import Mock       , MagicMock
 
 import django
 from django.conf import settings
@@ -21,16 +21,23 @@ class ShadowBackend(MessagingBackend):
     def __init__(self, type):
         super(ShadowBackend, self).__init__(type)
 
+    def send_message(self, message):
+        pass
+
+    def receive_messages(self, batch_size):
+        pass
+
 
 class TestMessagingBackend(TestCase):
     def setUp(self):
         django.setup()
 
-    @patch('util.broker.BrokerDetails.from_broker_url')
-    def TestValidInit(self, from_broker_url):
+    @patch('messaging.backends.backend.BrokerDetails')
+    def test_valid_init(self, broker_details):
         """Validate correct initialization of backend internal properties"""
 
         from_broker_url = Mock(return_value='unreal')
+        broker_details.from_broker_url = from_broker_url
 
         backend = ShadowBackend('shadow')
         self.assertEquals(backend.type, 'shadow')
@@ -39,48 +46,36 @@ class TestMessagingBackend(TestCase):
         self.assertEqual(backend._queue_name, settings.QUEUE_NAME)
         from_broker_url.assert_called_with(settings.BROKER_URL)
 
-    def TestNotImplementedErrorSendMessage(self):
-        backend = ShadowBackend('shadow')
-        backend.send_message('test')
-
-    def TestNotImplementedErrorReceiveMessage(self):
-        backend = ShadowBackend('shadow')
-        backend.receive_messages(10)
-
 
 class TestAMQPBackend(TestCase):
     def setUp(self):
         django.setup()
 
-    def TestValidInit(self):
+    def test_valid_init(self):
         """Validate initialization specific to AMQP backend is completed"""
         backend = AMQPMessagingBackend()
         self.assertEqual(backend.type, 'amqp')
         self.assertEqual(backend._timeout, 1)
 
     @patch('messaging.backends.amqp.Connection')
-    def TestValidSendMessage(self, connection):
+    def test_valid_send_message(self, connection):
         """Validate message is sent via the backend"""
 
         message = {'type': 'echo', 'body': 'yes'}
 
-        put_func = Mock()
-        simple_queue = Mock(put_func=put_func)
-        connection.SimpleQueue = Mock(return_value=simple_queue)
-
         backend = AMQPMessagingBackend()
         backend.send_message(message)
 
-        put_func.assert_called_with(message)
+        connection.assert_any_call(call(message))
 
     @patch('messaging.backends.amqp.Connection')
-    def TestValidReceiveMessages(self, connection):
+    def test_valid_receive_message(self, connection):
         """Validate successful message retrieval via AMQP backend"""
 
         message1 = Mock(payload={'type': 'echo', 'body': '1'})
         message2 = Mock(payload={'type': 'echo', 'body': '2'})
         get_func = Mock(return_value=[message1, message2, Queue.Empty])
-        simple_queue = Mock(put_func=get_func)
+        simple_queue = Mock(get=get_func)
         connection.SimpleQueue = Mock(return_value=simple_queue)
 
         backend = AMQPMessagingBackend()
