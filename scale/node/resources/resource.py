@@ -30,8 +30,6 @@ class Resource(object):
         :rtype: :class:`node.resources.resource.Resource`
         """
 
-        return
-
 
 class ScalarResource(Resource):
     """A type of resource represented by a scalar floating point value
