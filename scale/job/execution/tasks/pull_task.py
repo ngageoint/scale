@@ -6,8 +6,6 @@ import datetime
 from error.models import Error
 from job.execution.tasks.exe_task import JobExecutionTask
 from job.tasks.pull_task import create_pull_command
-from node.resources.node_resources import NodeResources
-from node.resources.resource import Cpus, Mem
 
 
 class PullTask(JobExecutionTask):
@@ -49,4 +47,4 @@ class PullTask(JobExecutionTask):
         """See :meth:`job.tasks.base_task.Task.get_resources`
         """
 
-        return NodeResources([Cpus(0.1), Mem(32.0)])
+        return self._resources
