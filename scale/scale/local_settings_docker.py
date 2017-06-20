@@ -40,6 +40,7 @@ if ELASTICSEARCH_URLS:
 
 # Broker URL for connection to messaging backend. Bootstrap must populate.
 BROKER_URL = os.environ.get('SCALE_BROKER_URL', '')
+QUEUE_NAME = os.environ.get('SCALE_QUEUE_NAME', 'scale-command-messages')
 
 DB_HOST = os.environ.get('SCALE_DB_HOST', '')
 if DB_HOST == '':
