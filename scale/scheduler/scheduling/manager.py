@@ -214,8 +214,8 @@ class SchedulingManager(object):
         declined_resources.subtract(total_task_resources)
         if total_offer_count:
             logger.info('Accepted %d offer(s) from %d node(s), launched %d task(s) with %s on %d node(s), declined %s',
-                        total_offer_count, total_node_count, total_task_count, total_task_resources.to_logging_string(),
-                        node_count, declined_resources.to_logging_string())
+                        total_offer_count, total_node_count, total_task_count, total_task_resources, node_count,
+                        declined_resources)
         return total_task_count
 
     def _prepare_nodes(self, tasks, running_job_exes, when):
@@ -415,8 +415,8 @@ class SchedulingManager(object):
                 else:
                     logger.error('Scheduled jobs on an unknown node')
             if job_exe_count:
-                logger.info('Scheduled %d new job(s) with %s on %d node(s)', job_exe_count,
-                            scheduled_resources.to_logging_string(), len(node_ids))
+                logger.info('Scheduled %d new job(s) with %s on %d node(s)', job_exe_count, scheduled_resources,
+                            len(node_ids))
         except DatabaseError:
             logger.exception('Error occurred while scheduling new jobs from the queue')
             job_exe_count = 0

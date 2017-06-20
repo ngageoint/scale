@@ -216,8 +216,8 @@ class ScaleScheduler(MesosScheduler):
         else:
             logger.debug(msg, duration.total_seconds())
 
-        logger.info('Received %d offer(s) with %s from %d node(s)', len(resource_offers),
-                    total_resources.to_logging_string(), len(agent_ids))
+        logger.info('Received %d offer(s) with %s from %d node(s)', len(resource_offers), total_resources,
+                    len(agent_ids))
 
     def offerRescinded(self, driver, offerId):
         """

@@ -284,7 +284,7 @@ class Task(object):
         :rtype: :class:`node.resources.node_resources.NodeResources`
         """
 
-        raise NotImplementedError()
+        return
 
     def needs_reconciliation(self, when):
         """Indicates whether this task needs to be reconciled due to its latest status update being stale

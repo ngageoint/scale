@@ -1,7 +1,7 @@
 """Defines the node resource classes"""
 from __future__ import unicode_literals
 
-from abc import ABCMeta
+from abc import ABCMeta, abstractmethod
 
 
 class Resource(object):
@@ -22,6 +22,7 @@ class Resource(object):
         self.name = name
         self.resource_type = resource_type
 
+    @abstractmethod
     def copy(self):
         """Returns a deep copy of this resource. Editing one of the resource objects will not affect the other.
 
@@ -29,7 +30,7 @@ class Resource(object):
         :rtype: :class:`node.resources.resource.Resource`
         """
 
-        raise NotImplementedError
+        return
 
 
 class ScalarResource(Resource):
