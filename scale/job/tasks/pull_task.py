@@ -43,7 +43,6 @@ class PullTask(Task):
         self._docker_params = []
         self._is_docker_privileged = False
         self._running_timeout_threshold = datetime.timedelta(minutes=15)
-        self._staging_timeout_threshold = datetime.timedelta(minutes=2)
 
         # Create command that pulls image and deletes any dangling images
         pull_cmd = 'docker pull %s' % self.image_name

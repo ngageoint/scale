@@ -40,7 +40,6 @@ class HealthTask(Task):
         self._docker_params = []
         self._is_docker_privileged = False
         self._running_timeout_threshold = datetime.timedelta(minutes=15)
-        self._staging_timeout_threshold = datetime.timedelta(minutes=5)
 
         health_check_commands = []
 
