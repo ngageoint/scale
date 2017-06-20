@@ -15,37 +15,19 @@ from django.test import TestCase
 from messaging.backends.amqp import AMQPMessagingBackend
 from messaging.backends.backend import MessagingBackend
 from messaging.backends.sqs import SQSMessagingBackend
+import messaging.backends.factory as backend_factory
 
 
 # Dummy class for ABC __init__ testing
-class ShadowBackend(MessagingBackend):
-    def __init__(self, type):
-        super(ShadowBackend, self).__init__(type)
+class DummyBackend(MessagingBackend):
+    def __init__(self):
+        super(DummyBackend, self).__init__('dummy')
 
     def send_message(self, message):
         pass
 
     def receive_messages(self, batch_size):
         pass
-
-
-class TestMessagingBackend(TestCase):
-    def setUp(self):
-        django.setup()
-
-    @patch('messaging.backends.backend.BrokerDetails')
-    def test_valid_init(self, broker_details):
-        """Validate correct initialization of backend internal properties"""
-
-        from_broker_url = MagicMock(return_value='unreal')
-        broker_details.from_broker_url = from_broker_url
-
-        backend = ShadowBackend('shadow')
-        self.assertEquals(backend.type, 'shadow')
-        self.assertEqual(backend._broker_url, settings.BROKER_URL)
-        self.assertEqual(backend._broker, 'unreal')
-        self.assertEqual(backend._queue_name, settings.QUEUE_NAME)
-        from_broker_url.assert_called_with(settings.BROKER_URL)
 
 
 class TestAMQPBackend(TestCase):
@@ -128,7 +110,58 @@ class TestAMQPBackend(TestCase):
             pass
         
         message.ack.assert_not_called()
+
+
+class TestMessageFactory(TestCase):
+    def setUp(self):
+        django.setup()
+
+    def test_add_message_backend(self):
+        """Validate add message backend functionality"""
+        backend = DummyBackend
         
+        backend_factory._MESSAGE_BACKENDS = {}
+        backend_factory.add_message_backend(backend)
+        self.assertEqual(backend_factory._MESSAGE_BACKENDS.keys(), ['dummy'])
+    
+    def test_successfully_get_message_backend(self):
+        """Validate successful retrieval of message backend from factory"""
+        backend_factory._MESSAGE_BACKENDS = {'key1': 'value1', 'key2': 'value2'}
+        
+        self.assertEqual(backend_factory.get_message_backend('key1'), 'value1')
+        
+    def test_unmatched_get_message_backend(self):
+        """Validate missing message backend behavior from factory"""
+        backend_factory._MESSAGE_BACKENDS = {'key1': 'value1', 'key2': 'value2'}
+        
+        with self.assertRaises(KeyError):
+            backend_factory.get_message_backend('key3')
+    
+    def test_get_message_backends(self):
+        """Validate listing behavior of backends from factory"""
+        backend_factory._MESSAGE_BACKENDS = {'key1': 'value', 'key2': 'value'}
+        
+        self.assertEqual(backend_factory.get_message_backends(), backend_factory._MESSAGE_BACKENDS.keys())
+
+
+class TestMessagingBackend(TestCase):
+    def setUp(self):
+        django.setup()
+
+    @patch('messaging.backends.backend.BrokerDetails')
+    def test_valid_init(self, broker_details):
+        """Validate correct initialization of backend internal properties"""
+
+        from_broker_url = MagicMock(return_value='unreal')
+        broker_details.from_broker_url = from_broker_url
+
+        backend = DummyBackend()
+        self.assertEquals(backend.type, 'dummy')
+        self.assertEqual(backend._broker_url, settings.BROKER_URL)
+        self.assertEqual(backend._broker, 'unreal')
+        self.assertEqual(backend._queue_name, settings.QUEUE_NAME)
+        from_broker_url.assert_called_with(settings.BROKER_URL)
+
 
 class TestSQSBackend(TestCase):
     def setUp(self):
