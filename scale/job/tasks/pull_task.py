@@ -57,7 +57,6 @@ class PullTask(Task):
         self._docker_params = []
         self._is_docker_privileged = False
         self._running_timeout_threshold = datetime.timedelta(minutes=15)
-        self._staging_timeout_threshold = datetime.timedelta(minutes=2)
 
         self._command = create_pull_command(self._create_scale_image_name())
 

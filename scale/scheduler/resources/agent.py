@@ -167,5 +167,5 @@ class AgentResources(object):
         """
 
         if shortage_resources:
-            logger.warning('Agent %s has a shortage of %s', self.agent_id, shortage_resources.to_logging_string())
+            logger.warning('Agent %s has a shortage of %s', self.agent_id, shortage_resources)
         self._shortage_resources = shortage_resources
