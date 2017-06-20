@@ -87,14 +87,9 @@ def _create_docker_task(task):
     if task.is_docker_privileged:
         mesos_task.container.docker.privileged = True
 
-    # TODO: Determine whether or not there is an entry point within
-    # the docker image in order to pass in the docker container
-    # command arguments correctly.
-    # Right now we assume an entry point
+    # Use Docker image entrypoint
     mesos_task.command.shell = False
 
-    # parse through the docker arguments and add them
-    # to the CommandInfo 'arguments' list
     arguments = task.command_arguments.split(" ")
     for argument in arguments:
         mesos_task.command.arguments.append(argument)
