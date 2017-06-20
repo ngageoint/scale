@@ -39,23 +39,15 @@ def _create_base_task(task):
     mesos_task.name = task.name
     resources = task.get_resources()
 
-    if resources.cpus > 0:
-        cpus = mesos_task.resources.add()
-        cpus.name = 'cpus'
-        cpus.type = mesos_pb2.Value.SCALAR
-        cpus.scalar.value = resources.cpus
+    if settings.CONFIG_URI:
+        mesos_task.command.uris.add().value = settings.CONFIG_URI
 
-    if resources.mem > 0:
-        mem = mesos_task.resources.add()
-        mem.name = 'mem'
-        mem.type = mesos_pb2.Value.SCALAR
-        mem.scalar.value = resources.mem
-
-    if resources.disk > 0:
-        disk = mesos_task.resources.add()
-        disk.name = 'disk'
-        disk.type = mesos_pb2.Value.SCALAR
-        disk.scalar.value = resources.disk
+    for resource in resources.resources:
+        if resource.value > 0.0:
+            task_resource = mesos_task.resources.add()
+            task_resource.name = resource.name
+            task_resource.type = mesos_pb2.Value.SCALAR
+            task_resource.scalar.value = resource.value
 
     return mesos_task
 
@@ -106,9 +98,6 @@ def _create_docker_task(task):
     arguments = task.command_arguments.split(" ")
     for argument in arguments:
         mesos_task.command.arguments.append(argument)
-
-    if settings.CONFIG_URI:
-        mesos_task.command.uris.add().value = settings.CONFIG_URI
 
     mesos_task.container.docker.network = mesos_pb2.ContainerInfo.DockerInfo.Network.Value('BRIDGE')
     mesos_task.container.docker.force_pull_image = task.force_docker_pull
