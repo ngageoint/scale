@@ -71,10 +71,7 @@ class TaskHandlingThread(BaseSchedulerThread):
         :type when: :class:`datetime.datetime`
         """
 
-        task_ids = []
-        for task in task_mgr.get_tasks_to_reconcile(when):
-            task_ids.append(task.id)
-        recon_mgr.add_task_ids(task_ids)
+        recon_mgr.add_tasks(task_mgr.get_tasks_to_reconcile(when))
 
     def _timeout_tasks(self, when):
         """Handles any tasks that have exceeded their time out thresholds

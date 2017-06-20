@@ -291,7 +291,9 @@ class ScaleScheduler(MesosScheduler):
                 job_exe_id = JobExecution.get_job_exe_id(task_id)
                 logger.exception('Error handling status update for job execution: %s', job_exe_id)
                 # Error handling status update, add task so it can be reconciled
-                recon_mgr.add_task_ids([task_id])
+                task = task_mgr.get_task(task_id)
+                if task:
+                    recon_mgr.add_tasks([task])
         else:
             # Not a job task, so must be a node task
             node_mgr.handle_task_update(task_update)
@@ -354,14 +356,15 @@ class ScaleScheduler(MesosScheduler):
         # Fail job executions that were running on the lost node
         if node:
             lost_exes = job_exe_mgr.lost_node(node.id, started)
-            task_ids_to_reconcile = []
+            tasks_to_reconcile = []
             for lost_exe in lost_exes:
                 # Reconcile lost tasks
-                if lost_exe.current_task:
-                    task_ids_to_reconcile.append(lost_exe.current_task.id)
+                lost_task = lost_exe.current_task
+                if lost_task:
+                    tasks_to_reconcile.append(lost_task)
                 cleanup_mgr.add_job_execution(lost_exe)
-            if task_ids_to_reconcile:
-                recon_mgr.add_task_ids(task_ids_to_reconcile)
+            if tasks_to_reconcile:
+                recon_mgr.add_tasks(tasks_to_reconcile)
 
         duration = now() - started
         msg = 'Scheduler slaveLost() took %.3f seconds'
@@ -423,23 +426,23 @@ class ScaleScheduler(MesosScheduler):
     def _reconcile_running_jobs(self):
         """Looks up all currently running jobs in the database and sets them up to be reconciled with Mesos"""
 
-        # List of task IDs to reconcile
-        task_ids = []
+        # List of tasks to reconcile
+        tasks_to_reconcile = []
 
         # Query for job executions that are running
         job_exes = JobExecution.objects.get_running_job_exes()
 
-        # Find current task IDs for running executions
+        # Find current tasks for running executions
         for job_exe in job_exes:
             running_job_exe = job_exe_mgr.get_running_job_exe(job_exe.id)
             if running_job_exe:
                 task = running_job_exe.current_task
                 if task:
-                    task_ids.append(task.id)
+                    tasks_to_reconcile.append(task)
             else:
                 # Fail any executions that the scheduler has lost
                 Queue.objects.handle_job_failure(job_exe.id, now(), [],
                                                  Error.objects.get_builtin_error('scheduler-lost'))
 
-        # Send task IDs to reconciliation thread
-        recon_mgr.add_task_ids(task_ids)
+        # Send tasks to reconciliation thread
+        recon_mgr.add_tasks(tasks_to_reconcile)
