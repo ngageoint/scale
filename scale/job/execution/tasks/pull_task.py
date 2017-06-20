@@ -20,7 +20,7 @@ class PullTask(JobExecutionTask):
         :type job_exe: :class:`job.models.JobExecution`
         """
 
-        super(PullTask, self).__init__(job_exe.get_pre_task_id(), job_exe)
+        super(PullTask, self).__init__(job_exe.get_pull_task_id(), job_exe)
 
         self._uses_docker = False
         self._docker_image = None
