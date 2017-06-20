@@ -100,6 +100,6 @@ def _create_docker_task(task):
         mesos_task.command.arguments.append(argument)
 
     mesos_task.container.docker.network = mesos_pb2.ContainerInfo.DockerInfo.Network.Value('BRIDGE')
-    mesos_task.container.docker.force_pull_image = task.force_docker_pull
+    mesos_task.container.docker.force_pull_image = False
 
     return mesos_task

@@ -36,7 +36,6 @@ class HealthTask(Task):
 
         self._uses_docker = False
         self._docker_image = None
-        self._force_docker_pull = False
         self._docker_params = []
         self._is_docker_privileged = False
         self._running_timeout_threshold = datetime.timedelta(minutes=15)
