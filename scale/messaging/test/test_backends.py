@@ -3,6 +3,7 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import json
 import Queue
 from mock import call, patch
 from mock import MagicMock
@@ -132,4 +133,68 @@ class TestAMQPBackend(TestCase):
 class TestSQSBackend(TestCase):
     def setUp(self):
         django.setup()
+    
+    @patch('messaging.backends.backend.BrokerDetails.from_broker_url')
+    def test_valid_init(self, details):
+        """Validate initialization specific to SQS backend is completed"""
+        region_name = 'us-east-1'
+        user_name = 'user'
+        password = 'pass'
+        
+        details.return_value.get_broker.return_value = region_name = 'us-east-1'
+        details.return_value.get_user_name.return_value = user_name = 'user'
+        details.return_value.get_password.return_value = password = 'pass'
+        
+        backend = SQSMessagingBackend()
+        self.assertEqual(backend.type, 'sqs')
+        self.assertEqual(backend._region_name, region_name)
+        self.assertEqual(backend._credentials.access_key_id, user_name)
+        self.assertEqual(backend._credentials.secret_access_key, password)
 
+    @patch('messaging.backends.sqs.SQSClient')
+    def test_valid_send_message(self, client):
+        """Validate message is sent via the SQS backend"""
+
+        message = {'type': 'echo', 'body': 'yes'}
+
+        backend = SQSMessagingBackend()
+        backend.send_message(message)
+
+        put = client.return_value.__enter__.return_value.send_message
+        put.assert_called_with(backend._queue_name, json.dumps(message))
+
+    @patch('messaging.backends.sqs.SQSClient')
+    def test_valid_receive_message(self, client):
+        """Validate successful message retrieval via SQS backend"""
+
+        message1 = MagicMock(body=json.dumps({'type': 'echo', 'body': '1'}))
+        message2 = MagicMock(body=json.dumps({'type': 'echo', 'body': '2'}))
+        get_func = MagicMock(return_value=[message1, message2])
+        
+        client.return_value.__enter__.return_value.receive_messages = get_func
+
+        backend = SQSMessagingBackend()
+        results = backend.receive_messages(5)
+        # wrap result in list to force generator iteration
+        results = list(results)
+        self.assertEqual(len(results), 2)
+        message1.delete.assert_called()
+        message2.delete.assert_called()
+
+    @patch('messaging.backends.sqs.SQSClient')
+    def test_exception_during_receive_message(self, client):
+        """Validate exception handling during message consumption from SQS backend"""
+
+        message = MagicMock()
+        message.body.side_effect = Exception
+        get_func = MagicMock(return_value=[message])
+        
+        client.return_value.__enter__.return_value.receive_messages = get_func
+
+        backend = SQSMessagingBackend()
+        
+        for _ in backend.receive_messages(10):
+            pass
+        
+        message.delete.assert_not_called()
+        
