@@ -3,13 +3,13 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import Queue
 from mock import call, patch
-from mock import Mock       , MagicMock
+from mock import MagicMock
 
 import django
 from django.conf import settings
 from django.test import TestCase
-from kombu import Queue
 
 from messaging.backends.amqp import AMQPMessagingBackend
 from messaging.backends.backend import MessagingBackend
@@ -36,7 +36,7 @@ class TestMessagingBackend(TestCase):
     def test_valid_init(self, broker_details):
         """Validate correct initialization of backend internal properties"""
 
-        from_broker_url = Mock(return_value='unreal')
+        from_broker_url = MagicMock(return_value='unreal')
         broker_details.from_broker_url = from_broker_url
 
         backend = ShadowBackend('shadow')
@@ -59,32 +59,75 @@ class TestAMQPBackend(TestCase):
 
     @patch('messaging.backends.amqp.Connection')
     def test_valid_send_message(self, connection):
-        """Validate message is sent via the backend"""
+        """Validate message is sent via the AMQP backend"""
 
         message = {'type': 'echo', 'body': 'yes'}
 
         backend = AMQPMessagingBackend()
         backend.send_message(message)
 
-        connection.assert_any_call(call(message))
+        # Deep diving through context managers to assert put call
+        put = connection.return_value.__enter__.return_value.SimpleQueue.return_value.put
+        put.assert_called_with(message)
 
     @patch('messaging.backends.amqp.Connection')
     def test_valid_receive_message(self, connection):
         """Validate successful message retrieval via AMQP backend"""
 
-        message1 = Mock(payload={'type': 'echo', 'body': '1'})
-        message2 = Mock(payload={'type': 'echo', 'body': '2'})
-        get_func = Mock(return_value=[message1, message2, Queue.Empty])
-        simple_queue = Mock(get=get_func)
-        connection.SimpleQueue = Mock(return_value=simple_queue)
+        message1 = MagicMock(payload={'type': 'echo', 'body': '1'})
+        message2 = MagicMock(payload={'type': 'echo', 'body': '2'})
+        get_func = MagicMock(side_effect=[message1, message2, Queue.Empty])
+        
+        # Deep diving through context managers to patch get call
+        connection.return_value.__enter__.return_value.SimpleQueue.return_value.get = get_func
 
         backend = AMQPMessagingBackend()
-        results = backend.receive_messages(10)
+        results = backend.receive_messages(5)
+        # wrap result in list to force generator iteration
         results = list(results)
         self.assertEqual(len(results), 2)
         message1.ack.assert_called()
         message2.ack.assert_called()
+        
+    @patch('messaging.backends.amqp.Connection')
+    def test_valid_single_batch_receive_message(self, connection):
+        """Validate successful message retrieval via AMQP backend of first 2 messages"""
 
+        message1 = MagicMock(payload={'type': 'echo', 'body': '1'})
+        message2 = MagicMock(payload={'type': 'echo', 'body': '2'})
+        message3 = MagicMock(payload={'type': 'echo', 'body': '3'})
+        get_func = MagicMock(side_effect=[message1, message2, Queue.Empty])
+        
+        # Deep diving through context managers to patch get call
+        connection.return_value.__enter__.return_value.SimpleQueue.return_value.get = get_func
+
+        backend = AMQPMessagingBackend()
+        results = backend.receive_messages(2)
+        # wrap result in list to force generator iteration
+        results = list(results)
+        self.assertEqual(len(results), 2)
+        message1.ack.assert_called()
+        message2.ack.assert_called()
+        message3.ack.assert_not_called()
+
+    @patch('messaging.backends.amqp.Connection')
+    def test_exception_during_receive_message(self, connection):
+        """Validate exception handling during message consumption from AMQP backend"""
+
+        message = MagicMock()
+        message.payload.side_effect = Exception
+        get_func = MagicMock(return_value=[message])
+        
+        # Deep diving through context managers to patch get call
+        connection.return_value.__enter__.return_value.SimpleQueue.return_value.get = get_func
+
+        backend = AMQPMessagingBackend()
+        
+        for _ in backend.receive_messages(10):
+            pass
+        
+        message.ack.assert_not_called()
+        
 
 class TestSQSBackend(TestCase):
     def setUp(self):
