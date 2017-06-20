@@ -32,6 +32,16 @@ class NodeResources(object):
         if 'disk' not in self._resources:
             self._resources['disk'] = Disk(0.0)
 
+    def __str__(self):
+        """Converts the resource to a readable logging string
+
+        :returns: A readable string for logging
+        :rtype: string
+        """
+
+        logging_str = ', '.join(['%.2f %s' % (resource.value, resource.name) for resource in self._resources.values()])
+        return '[%s]' % logging_str
+
     @property
     def cpus(self):
         """The number of CPUs
@@ -198,13 +208,3 @@ class NodeResources(object):
         for resource in node_resources.resources:
             if resource.name in self._resources:
                 self._resources[resource.name].value -= resource.value  # Assumes SCALAR type
-
-    def to_logging_string(self):
-        """Converts the resource to a readable logging string
-
-        :returns: A readable string for logging
-        :rtype: string
-        """
-
-        logging_str = ', '.join(['%.2f %s' % (resource.value, resource.name) for resource in self._resources.values()])
-        return '[%s]' % logging_str
