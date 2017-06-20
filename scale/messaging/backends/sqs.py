@@ -1,4 +1,4 @@
-"""Backend supporting AMQP 0.9.1, specifically targeting RabbitMQ message broker"""
+"""Backend supporting Amazon SQS"""
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
@@ -14,6 +14,8 @@ logger = logging.getLogger(__name__)
 
 
 class SQSMessagingBackend(MessagingBackend):
+    """Backend supporting message passing via Amazon SQS"""
+    
     def __init__(self):
         super(SQSMessagingBackend, self).__init__('sqs')
 
@@ -23,17 +25,17 @@ class SQSMessagingBackend(MessagingBackend):
                                            self._broker.get_password())
 
     def send_message(self, message):
-        """See :meth:`messaging.backends.MessagingBackend.send_message`
+        """See :meth:`messaging.backends.backend.MessagingBackend.send_message`
         """
         with SQSClient(self._credentials, self._region_name) as client:
             logger.debug('Sending message of type: %s', message['type'])
             client.send_message(self._queue_name, json.dumps(message))
 
     def receive_messages(self, batch_size):
-        """See :meth:`messaging.backends.MessagingBackend.receive_messages`
+        """See :meth:`messaging.backends.backend.MessagingBackend.receive_messages`
         """
         with SQSClient(self._credentials, self._region_name) as client:
-            for message in client.receive_messages(self._queue_name):
+            for message in client.receive_messages(self._queue_name, messages_per_request=batch_size):
                 try:
                     yield json.loads(message.body)
                     message.delete()
