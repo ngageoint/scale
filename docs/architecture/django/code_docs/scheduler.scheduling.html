@@ -262,17 +262,17 @@ thread.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-scheduler.scheduling.node">
-<span id="scheduler-scheduling-node-module"></span><h2>scheduler.scheduling.node module<a class="headerlink" href="#module-scheduler.scheduling.node" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-scheduler.scheduling.scheduling_node">
+<span id="scheduler-scheduling-scheduling-node-module"></span><h2>scheduler.scheduling.scheduling_node module<a class="headerlink" href="#module-scheduler.scheduling.scheduling_node" title="Permalink to this headline">¶</a></h2>
 <p>Defines the class that manages scheduling for a node</p>
 <dl class="class">
-<dt id="scheduler.scheduling.node.SchedulingNode">
-<em class="property">class </em><code class="descclassname">scheduler.scheduling.node.</code><code class="descname">SchedulingNode</code><span class="sig-paren">(</span><em>agent_id</em>, <em>node</em>, <em>tasks</em>, <em>running_job_exes</em>, <em>resource_set</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scheduling.node.SchedulingNode" title="Permalink to this definition">¶</a></dt>
+<dt id="scheduler.scheduling.scheduling_node.SchedulingNode">
+<em class="property">class </em><code class="descclassname">scheduler.scheduling.scheduling_node.</code><code class="descname">SchedulingNode</code><span class="sig-paren">(</span><em>agent_id</em>, <em>node</em>, <em>tasks</em>, <em>running_job_exes</em>, <em>resource_set</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scheduling.scheduling_node.SchedulingNode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>This class manages scheduling for a node.</p>
 <dl class="method">
-<dt id="scheduler.scheduling.node.SchedulingNode.accept_job_exe_next_task">
-<code class="descname">accept_job_exe_next_task</code><span class="sig-paren">(</span><em>job_exe</em>, <em>waiting_tasks</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scheduling.node.SchedulingNode.accept_job_exe_next_task" title="Permalink to this definition">¶</a></dt>
+<dt id="scheduler.scheduling.scheduling_node.SchedulingNode.accept_job_exe_next_task">
+<code class="descname">accept_job_exe_next_task</code><span class="sig-paren">(</span><em>job_exe</em>, <em>waiting_tasks</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scheduling.scheduling_node.SchedulingNode.accept_job_exe_next_task" title="Permalink to this definition">¶</a></dt>
 <dd><p>Asks the node if it can accept the next task for the given job execution. If the next task is waiting on
 resources, the task is added to the given waiting list. This should be used for job executions that have already
 been scheduled on this node, not new job executions.</p>
@@ -297,8 +297,8 @@ been scheduled on this node, not new job executions.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="scheduler.scheduling.node.SchedulingNode.accept_new_job_exe">
-<code class="descname">accept_new_job_exe</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scheduling.node.SchedulingNode.accept_new_job_exe" title="Permalink to this definition">¶</a></dt>
+<dt id="scheduler.scheduling.scheduling_node.SchedulingNode.accept_new_job_exe">
+<code class="descname">accept_new_job_exe</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scheduling.scheduling_node.SchedulingNode.accept_new_job_exe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Asks the node if it can accept the given new job execution</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -315,8 +315,8 @@ been scheduled on this node, not new job executions.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="scheduler.scheduling.node.SchedulingNode.accept_node_tasks">
-<code class="descname">accept_node_tasks</code><span class="sig-paren">(</span><em>when</em>, <em>waiting_tasks</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scheduling.node.SchedulingNode.accept_node_tasks" title="Permalink to this definition">¶</a></dt>
+<dt id="scheduler.scheduling.scheduling_node.SchedulingNode.accept_node_tasks">
+<code class="descname">accept_node_tasks</code><span class="sig-paren">(</span><em>when</em>, <em>waiting_tasks</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scheduling.scheduling_node.SchedulingNode.accept_node_tasks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Asks the node to accept any node tasks that need to be scheduled. If any node tasks are waiting on resources,
 those tasks are added to the given waiting list.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -340,8 +340,8 @@ those tasks are added to the given waiting list.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="scheduler.scheduling.node.SchedulingNode.add_allocated_offers">
-<code class="descname">add_allocated_offers</code><span class="sig-paren">(</span><em>offers</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scheduling.node.SchedulingNode.add_allocated_offers" title="Permalink to this definition">¶</a></dt>
+<dt id="scheduler.scheduling.scheduling_node.SchedulingNode.add_allocated_offers">
+<code class="descname">add_allocated_offers</code><span class="sig-paren">(</span><em>offers</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scheduling.scheduling_node.SchedulingNode.add_allocated_offers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds the resource offers that have been allocated to run this node&#8217;s tasks. If the offer resources are not
 enough to cover the current allocation, job executions and tasks are removed as necessary.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -355,8 +355,8 @@ enough to cover the current allocation, job executions and tasks are removed as 
 </dd></dl>
 
 <dl class="method">
-<dt id="scheduler.scheduling.node.SchedulingNode.add_scheduled_job_exes">
-<code class="descname">add_scheduled_job_exes</code><span class="sig-paren">(</span><em>job_exes</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scheduling.node.SchedulingNode.add_scheduled_job_exes" title="Permalink to this definition">¶</a></dt>
+<dt id="scheduler.scheduling.scheduling_node.SchedulingNode.add_scheduled_job_exes">
+<code class="descname">add_scheduled_job_exes</code><span class="sig-paren">(</span><em>job_exes</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scheduling.scheduling_node.SchedulingNode.add_scheduled_job_exes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hands the node its queued job executions that have now been scheduled in the database and are now running</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -369,14 +369,14 @@ enough to cover the current allocation, job executions and tasks are removed as 
 </dd></dl>
 
 <dl class="method">
-<dt id="scheduler.scheduling.node.SchedulingNode.reset_new_job_exes">
-<code class="descname">reset_new_job_exes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scheduling.node.SchedulingNode.reset_new_job_exes" title="Permalink to this definition">¶</a></dt>
+<dt id="scheduler.scheduling.scheduling_node.SchedulingNode.reset_new_job_exes">
+<code class="descname">reset_new_job_exes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scheduling.scheduling_node.SchedulingNode.reset_new_job_exes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resets the allocated new job executions and deallocates any resources associated with them</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="scheduler.scheduling.node.SchedulingNode.score_job_exe_for_reservation">
-<code class="descname">score_job_exe_for_reservation</code><span class="sig-paren">(</span><em>job_exe</em>, <em>job_type_resources</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scheduling.node.SchedulingNode.score_job_exe_for_reservation" title="Permalink to this definition">¶</a></dt>
+<dt id="scheduler.scheduling.scheduling_node.SchedulingNode.score_job_exe_for_reservation">
+<code class="descname">score_job_exe_for_reservation</code><span class="sig-paren">(</span><em>job_exe</em>, <em>job_type_resources</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scheduling.scheduling_node.SchedulingNode.score_job_exe_for_reservation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns an integer score (lower is better) indicating how well this node is a fit for reserving (temporarily
 blocking additional job executions of lower priority) for the given job execution. If the job execution cannot
 reserve this node, None is returned.</p>
@@ -402,8 +402,8 @@ None</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="scheduler.scheduling.node.SchedulingNode.score_job_exe_for_scheduling">
-<code class="descname">score_job_exe_for_scheduling</code><span class="sig-paren">(</span><em>job_exe</em>, <em>job_type_resources</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scheduling.node.SchedulingNode.score_job_exe_for_scheduling" title="Permalink to this definition">¶</a></dt>
+<dt id="scheduler.scheduling.scheduling_node.SchedulingNode.score_job_exe_for_scheduling">
+<code class="descname">score_job_exe_for_scheduling</code><span class="sig-paren">(</span><em>job_exe</em>, <em>job_type_resources</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scheduling.scheduling_node.SchedulingNode.score_job_exe_for_scheduling" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns an integer score (lower is better) indicating how well the given job execution fits on this node for
 scheduling. If the job execution cannot be scheduled on this node, None is returned.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -427,8 +427,8 @@ scheduling. If the job execution cannot be scheduled on this node, None is retur
 </dd></dl>
 
 <dl class="method">
-<dt id="scheduler.scheduling.node.SchedulingNode.start_job_exe_tasks">
-<code class="descname">start_job_exe_tasks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scheduling.node.SchedulingNode.start_job_exe_tasks" title="Permalink to this definition">¶</a></dt>
+<dt id="scheduler.scheduling.scheduling_node.SchedulingNode.start_job_exe_tasks">
+<code class="descname">start_job_exe_tasks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scheduling.scheduling_node.SchedulingNode.start_job_exe_tasks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tells the node to start the next task on all scheduled job executions</p>
 </dd></dl>
 

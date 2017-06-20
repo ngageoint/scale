@@ -1,0 +1,22 @@
+node\.test\.resources\.json package
+===================================
+
+Submodules
+----------
+
+node\.test\.resources\.json\.test\_resources module
+---------------------------------------------------
+
+.. automodule:: node.test.resources.json.test_resources
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: node.test.resources.json
+    :members:
+    :undoc-members:
+    :show-inheritance:

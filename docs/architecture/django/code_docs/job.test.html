@@ -123,7 +123,6 @@
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.errors">job.errors module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.exceptions">job.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.models">job.models module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.resources">job.resources module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.serializers">job.serializers module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.urls">job.urls module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.html#module-job.views">job.views module</a></li>
@@ -1044,6 +1043,12 @@ for input and output</p>
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="job.test.test_views.TestJobTypeDetailsView.test_edit_bad_custom_resources">
+<code class="descname">test_edit_bad_custom_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_edit_bad_custom_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests attempting to edit a job type using an invalid custom resources</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.test.test_views.TestJobTypeDetailsView.test_edit_bad_error_mapping">
 <code class="descname">test_edit_bad_error_mapping</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_edit_bad_error_mapping" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests attempting to edit a job type using an invalid error mapping</p>
@@ -1059,6 +1064,12 @@ for input and output</p>
 <dt id="job.test.test_views.TestJobTypeDetailsView.test_edit_bad_trigger">
 <code class="descname">test_edit_bad_trigger</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_edit_bad_trigger" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests attempting to edit a job type using an invalid trigger rule</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypeDetailsView.test_edit_custom_resources">
+<code class="descname">test_edit_custom_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_edit_custom_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests editing the custom resources of a job type</p>
 </dd></dl>
 
 <dl class="method">
@@ -1220,6 +1231,12 @@ for input and output</p>
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="job.test.test_views.TestJobTypesValidationView.test_bad_custom_resources">
+<code class="descname">test_bad_custom_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_bad_custom_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new job type with invalid custom resources.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.test.test_views.TestJobTypesValidationView.test_bad_error">
 <code class="descname">test_bad_error</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_bad_error" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests validating a new job type with an invalid error relationship.</p>
@@ -1282,6 +1299,12 @@ for input and output</p>
 <dt id="job.test.test_views.TestJobTypesView.test_create">
 <code class="descname">test_create</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_create" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests creating a new job type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypesView.test_create_bad_custom_resources">
+<code class="descname">test_create_bad_custom_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_create_bad_custom_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating a new job type with an invalid custom resources</p>
 </dd></dl>
 
 <dl class="method">
@@ -1638,7 +1661,7 @@ for input and output</p>
 
 <dl class="function">
 <dt id="job.test.utils.create_job_exe">
-<code class="descclassname">job.test.utils.</code><code class="descname">create_job_exe</code><span class="sig-paren">(</span><em>job_type=None</em>, <em>job=None</em>, <em>status=u'RUNNING'</em>, <em>configuration=None</em>, <em>error=None</em>, <em>command_arguments=u'test_arg'</em>, <em>timeout=None</em>, <em>node=None</em>, <em>created=None</em>, <em>queued=None</em>, <em>started=None</em>, <em>pre_started=None</em>, <em>pre_completed=None</em>, <em>job_started=None</em>, <em>job_completed=None</em>, <em>post_started=None</em>, <em>post_completed=None</em>, <em>ended=None</em>, <em>last_modified=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.create_job_exe" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">job.test.utils.</code><code class="descname">create_job_exe</code><span class="sig-paren">(</span><em>job_type=None</em>, <em>job=None</em>, <em>status=u'RUNNING'</em>, <em>configuration=None</em>, <em>error=None</em>, <em>command_arguments=u'test_arg'</em>, <em>timeout=None</em>, <em>node=None</em>, <em>created=None</em>, <em>queued=None</em>, <em>started=None</em>, <em>pre_started=None</em>, <em>pre_completed=None</em>, <em>job_started=None</em>, <em>job_completed=None</em>, <em>post_started=None</em>, <em>post_completed=None</em>, <em>ended=None</em>, <em>last_modified=None</em>, <em>input_file_size=0.0</em>, <em>resources=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.create_job_exe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a job execution model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

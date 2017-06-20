@@ -234,6 +234,9 @@
 <li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations.0007_auto_20160421_1643">queue.migrations.0007_auto_20160421_1643 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations.0008_auto_20160421_1648">queue.migrations.0008_auto_20160421_1648 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations.0009_auto_20170412_1225">queue.migrations.0009_auto_20170412_1225 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations.0010_auto_20170615_1704">queue.migrations.0010_auto_20170615_1704 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations.0011_auto_20170616_1052">queue.migrations.0011_auto_20170616_1052 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations.0012_auto_20170616_1101">queue.migrations.0012_auto_20170616_1101 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="queue.migrations.html#module-queue.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -303,7 +306,7 @@ provided</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>node_id</strong> (<em>int</em>) &#8211; The node ID</li>
-<li><strong>resources</strong> (<a class="reference internal" href="job.html#job.resources.NodeResources" title="job.resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">job.resources.NodeResources</span></code></a>) &#8211; The provided resources</li>
+<li><strong>resources</strong> (<a class="reference internal" href="node.resources.html#node.resources.node_resources.NodeResources" title="node.resources.node_resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.node_resources.NodeResources</span></code></a>) &#8211; The provided resources</li>
 </ul>
 </td>
 </tr>
@@ -322,24 +325,6 @@ provided</p>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The ID of this job execution</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="queue.job_exe.QueuedJobExecution.is_node_acceptable">
-<code class="descname">is_node_acceptable</code><span class="sig-paren">(</span><em>node_id</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.job_exe.QueuedJobExecution.is_node_acceptable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Indicates whether the node with the given ID is acceptable to this job execution</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node_id</strong> (<em>int</em>) &#8211; The node ID</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if the node is acceptable, False otherwise</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
 </tr>
 </tbody>
 </table>
@@ -371,7 +356,7 @@ provided</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The resources that have been provided to run this job execution</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.html#job.resources.JobResources" title="job.resources.JobResources"><code class="xref py py-class docutils literal"><span class="pre">job.resources.JobResources</span></code></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="node.resources.html#node.resources.node_resources.NodeResources" title="node.resources.node_resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.node_resources.NodeResources</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -403,7 +388,7 @@ provided</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The resources required by this job execution</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.html#job.resources.NodeResources" title="job.resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">job.resources.NodeResources</span></code></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="node.resources.html#node.resources.node_resources.NodeResources" title="node.resources.node_resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.node_resources.NodeResources</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -640,14 +625,9 @@ object the first time, the query is executed.</p>
 <li><strong>job</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The job that has been queued</li>
 <li><strong>job_type</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The type of this job execution</li>
 <li><strong>priority</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The priority of the job (lower number is higher priority)</li>
-<li><strong>node_required</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The specific node on which this job is required to run</li>
-<li><strong>cpus_required</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; The number of CPUs required for this job</li>
-<li><strong>mem_required</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; The amount of RAM in MiB required for this job</li>
-<li><strong>disk_in_required</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; The amount of disk space in MiB required for input files for this job</li>
-<li><strong>disk_out_required</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; The amount of disk space in MiB required for output (temp work and products) for this
-job</li>
-<li><strong>disk_total_required</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; The total amount of disk space in MiB required for this job</li>
+<li><strong>input_file_size</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; The amount of disk space in MiB required for input files for this job</li>
 <li><strong>configuration</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.contrib.postgres.fields.JSONField</span></code>) &#8211; JSON description describing the configuration for how the job should be run</li>
+<li><strong>resources</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.contrib.postgres.fields.JSONField</span></code>) &#8211; JSON description describing the resources required for this job</li>
 <li><strong>created</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the queue model was created</li>
 <li><strong>queued</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the job execution was placed onto the queue</li>
 <li><strong>last_modified</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the queue model was last modified</li>
@@ -676,36 +656,8 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="queue.models.Queue.cpus_required">
-<code class="descname">cpus_required</code><a class="headerlink" href="#queue.models.Queue.cpus_required" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="queue.models.Queue.created">
 <code class="descname">created</code><a class="headerlink" href="#queue.models.Queue.created" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="queue.models.Queue.disk_in_required">
-<code class="descname">disk_in_required</code><a class="headerlink" href="#queue.models.Queue.disk_in_required" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="queue.models.Queue.disk_out_required">
-<code class="descname">disk_out_required</code><a class="headerlink" href="#queue.models.Queue.disk_out_required" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="queue.models.Queue.disk_total_required">
-<code class="descname">disk_total_required</code><a class="headerlink" href="#queue.models.Queue.disk_total_required" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -739,6 +691,29 @@ object the first time, the query is executed.</p>
 <dt id="queue.models.Queue.get_previous_by_queued">
 <code class="descname">get_previous_by_queued</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.Queue.get_previous_by_queued" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="queue.models.Queue.get_resources">
+<code class="descname">get_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.models.Queue.get_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the resources required by this job execution</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The required resources</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="node.resources.html#node.resources.node_resources.NodeResources" title="node.resources.node_resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.node_resources.NodeResources</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="queue.models.Queue.input_file_size">
+<code class="descname">input_file_size</code><a class="headerlink" href="#queue.models.Queue.input_file_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="queue.models.Queue.job">
@@ -807,33 +782,6 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="queue.models.Queue.mem_required">
-<code class="descname">mem_required</code><a class="headerlink" href="#queue.models.Queue.mem_required" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="queue.models.Queue.node_required">
-<code class="descname">node_required</code><a class="headerlink" href="#queue.models.Queue.node_required" title="Permalink to this definition">¶</a></dt>
-<dd><p>Accessor to the related object on the forward side of a many-to-one or
-one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
-<p>In the example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p><code class="docutils literal"><span class="pre">child.parent</span></code> is a <code class="docutils literal"><span class="pre">ForwardManyToOneDescriptor</span></code> instance.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="queue.models.Queue.node_required_id">
-<code class="descname">node_required_id</code><a class="headerlink" href="#queue.models.Queue.node_required_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>A wrapper for a deferred-loading field. When the value is read from this
-object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
 <dt id="queue.models.Queue.objects">
 <code class="descname">objects</code><em class="property"> = &lt;queue.models.QueueManager object&gt;</em><a class="headerlink" href="#queue.models.Queue.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -848,6 +796,13 @@ object the first time, the query is executed.</p>
 <dl class="attribute">
 <dt id="queue.models.Queue.queued">
 <code class="descname">queued</code><a class="headerlink" href="#queue.models.Queue.queued" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="queue.models.Queue.resources">
+<code class="descname">resources</code><a class="headerlink" href="#queue.models.Queue.resources" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>

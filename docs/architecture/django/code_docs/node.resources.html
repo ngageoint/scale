@@ -1,0 +1,602 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>node.resources package &mdash; Scale 5.0.0-snapshot documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="Scale 5.0.0-snapshot documentation" href="../../../index.html"/>
+        <link rel="up" title="node package" href="node.html"/>
+        <link rel="next" title="node.resources.json package" href="node.resources.json.html"/>
+        <link rel="prev" title="node.migrations package" href="node.migrations.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../../../_static/scale3-transparent-128.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../logs.html">ElasticSearch Logs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../scan.html">Scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../workspaces.html">Workspaces</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Django/Code Base</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="batch.html">batch package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cli.html">cli package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diagnostic.html">diagnostic package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="node.html">node package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="node.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="node.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="node.html#module-node.admin">node.admin module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="node.html#module-node.apps">node.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="node.html#module-node.models">node.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="node.html#module-node.serializers">node.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="node.html#module-node.serializers_extra">node.serializers_extra module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="node.html#module-node.urls">node.urls module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="node.html#module-node.views">node.views module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="node.html#module-node">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe.html">recipe package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.html">scheduler package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shared_resource.html">shared_resource package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="source.html">source package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="storage.html">storage package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="trigger.html">trigger package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="util.html">util package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vault.html">vault package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manage.html">manage module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rest/index.html">REST API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Scale</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Architecture</a> &raquo;</li>
+        
+          <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
+        
+          <li><a href="node.html">node package</a> &raquo;</li>
+        
+      <li>node.resources package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/architecture/django/code_docs/node.resources.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="node-resources-package">
+<h1>node.resources package<a class="headerlink" href="#node-resources-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="node.resources.json.html">node.resources.json package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="node.resources.json.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="node.resources.json.html#module-node.resources.json.resources">node.resources.json.resources module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="node.resources.json.html#module-node.resources.json">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-node.resources.exceptions">
+<span id="node-resources-exceptions-module"></span><h2>node.resources.exceptions module<a class="headerlink" href="#module-node.resources.exceptions" title="Permalink to this headline">¶</a></h2>
+<p>Defines exceptions that can occur when interacting with resources</p>
+<dl class="exception">
+<dt id="node.resources.exceptions.InvalidResources">
+<em class="property">exception </em><code class="descclassname">node.resources.exceptions.</code><code class="descname">InvalidResources</code><a class="headerlink" href="#node.resources.exceptions.InvalidResources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Exception indicating that the provided resources schema was invalid</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-node.resources.node_resources">
+<span id="node-resources-node-resources-module"></span><h2>node.resources.node_resources module<a class="headerlink" href="#module-node.resources.node_resources" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class that represents a set of resources on a node</p>
+<dl class="class">
+<dt id="node.resources.node_resources.NodeResources">
+<em class="property">class </em><code class="descclassname">node.resources.node_resources.</code><code class="descname">NodeResources</code><span class="sig-paren">(</span><em>resources=None</em><span class="sig-paren">)</span><a class="headerlink" href="#node.resources.node_resources.NodeResources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This class encapsulates a set of node resources</p>
+<dl class="method">
+<dt id="node.resources.node_resources.NodeResources.add">
+<code class="descname">add</code><span class="sig-paren">(</span><em>node_resources</em><span class="sig-paren">)</span><a class="headerlink" href="#node.resources.node_resources.NodeResources.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given resources</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node_resources</strong> (<code class="xref py py-class docutils literal"><span class="pre">node.resources.NodeResources</span></code>) &#8211; The resources to add</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.resources.node_resources.NodeResources.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.resources.node_resources.NodeResources.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a deep copy of these resources. Editing one of the resources objects will not affect the other.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A copy of these resources</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#node.resources.node_resources.NodeResources" title="node.resources.node_resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.node_resources.NodeResources</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="node.resources.node_resources.NodeResources.cpus">
+<code class="descname">cpus</code><a class="headerlink" href="#node.resources.node_resources.NodeResources.cpus" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of CPUs</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The number of CPUs</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="node.resources.node_resources.NodeResources.disk">
+<code class="descname">disk</code><a class="headerlink" href="#node.resources.node_resources.NodeResources.disk" title="Permalink to this definition">¶</a></dt>
+<dd><p>The amount of disk space in MiB</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The amount of disk space</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.resources.node_resources.NodeResources.generate_status_json">
+<code class="descname">generate_status_json</code><span class="sig-paren">(</span><em>resource_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#node.resources.node_resources.NodeResources.generate_status_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the portion of the status JSON that describes these resources</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>resource_dict</strong> (<em>dict</em>) &#8211; The dict for these resources</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.resources.node_resources.NodeResources.get_json">
+<code class="descname">get_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.resources.node_resources.NodeResources.get_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns these resources as a JSON schema</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The resources as a JSON schema</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">node.resources.json.Resources</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.resources.node_resources.NodeResources.increase_up_to">
+<code class="descname">increase_up_to</code><span class="sig-paren">(</span><em>node_resources</em><span class="sig-paren">)</span><a class="headerlink" href="#node.resources.node_resources.NodeResources.increase_up_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increases each resource up to the value in the given node resources</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node_resources</strong> (<code class="xref py py-class docutils literal"><span class="pre">node.resources.NodeResources</span></code>) &#8211; The resources</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.resources.node_resources.NodeResources.is_equal">
+<code class="descname">is_equal</code><span class="sig-paren">(</span><em>node_resources</em><span class="sig-paren">)</span><a class="headerlink" href="#node.resources.node_resources.NodeResources.is_equal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates if these resources are equal. This should be used for testing only.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node_resources</strong> (<code class="xref py py-class docutils literal"><span class="pre">node.resources.NodeResources</span></code>) &#8211; The resources to compare</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if these resources are equal, False otherwise</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.resources.node_resources.NodeResources.is_sufficient_to_meet">
+<code class="descname">is_sufficient_to_meet</code><span class="sig-paren">(</span><em>node_resources</em><span class="sig-paren">)</span><a class="headerlink" href="#node.resources.node_resources.NodeResources.is_sufficient_to_meet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates if these resources are sufficient to meet the requested resources</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node_resources</strong> (<code class="xref py py-class docutils literal"><span class="pre">node.resources.NodeResources</span></code>) &#8211; The requested resources</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if these resources are sufficient for the request, False otherwise</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="node.resources.node_resources.NodeResources.mem">
+<code class="descname">mem</code><a class="headerlink" href="#node.resources.node_resources.NodeResources.mem" title="Permalink to this definition">¶</a></dt>
+<dd><p>The amount of memory in MiB</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The amount of memory</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.resources.node_resources.NodeResources.remove_resource">
+<code class="descname">remove_resource</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#node.resources.node_resources.NodeResources.remove_resource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes the resource with the given name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>string</em>) &#8211; The name of the resource to remove</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="node.resources.node_resources.NodeResources.resources">
+<code class="descname">resources</code><a class="headerlink" href="#node.resources.node_resources.NodeResources.resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>The list of resources</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of resources</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.resources.node_resources.NodeResources.subtract">
+<code class="descname">subtract</code><span class="sig-paren">(</span><em>node_resources</em><span class="sig-paren">)</span><a class="headerlink" href="#node.resources.node_resources.NodeResources.subtract" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subtracts the given resources</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node_resources</strong> (<code class="xref py py-class docutils literal"><span class="pre">node.resources.NodeResources</span></code>) &#8211; The resources to subtract</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-node.resources.resource">
+<span id="node-resources-resource-module"></span><h2>node.resources.resource module<a class="headerlink" href="#module-node.resources.resource" title="Permalink to this headline">¶</a></h2>
+<p>Defines the node resource classes</p>
+<dl class="class">
+<dt id="node.resources.resource.Cpus">
+<em class="property">class </em><code class="descclassname">node.resources.resource.</code><code class="descname">Cpus</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#node.resources.resource.Cpus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#node.resources.resource.ScalarResource" title="node.resources.resource.ScalarResource"><code class="xref py py-class docutils literal"><span class="pre">node.resources.resource.ScalarResource</span></code></a></p>
+<p>A scalar resource representing the number of CPUs</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="node.resources.resource.Disk">
+<em class="property">class </em><code class="descclassname">node.resources.resource.</code><code class="descname">Disk</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#node.resources.resource.Disk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#node.resources.resource.ScalarResource" title="node.resources.resource.ScalarResource"><code class="xref py py-class docutils literal"><span class="pre">node.resources.resource.ScalarResource</span></code></a></p>
+<p>A scalar resource representing the amount of disk space in MiB</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="node.resources.resource.Mem">
+<em class="property">class </em><code class="descclassname">node.resources.resource.</code><code class="descname">Mem</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#node.resources.resource.Mem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#node.resources.resource.ScalarResource" title="node.resources.resource.ScalarResource"><code class="xref py py-class docutils literal"><span class="pre">node.resources.resource.ScalarResource</span></code></a></p>
+<p>A scalar resource representing the amount of memory in MiB</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="node.resources.resource.Resource">
+<em class="property">class </em><code class="descclassname">node.resources.resource.</code><code class="descname">Resource</code><span class="sig-paren">(</span><em>name</em>, <em>resource_type</em><span class="sig-paren">)</span><a class="headerlink" href="#node.resources.resource.Resource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Abstract class for a node resource</p>
+<dl class="method">
+<dt id="node.resources.resource.Resource.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.resources.resource.Resource.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a deep copy of this resource. Editing one of the resource objects will not affect the other.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A copy of this resource</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#node.resources.resource.Resource" title="node.resources.resource.Resource"><code class="xref py py-class docutils literal"><span class="pre">node.resources.resource.Resource</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="node.resources.resource.ScalarResource">
+<em class="property">class </em><code class="descclassname">node.resources.resource.</code><code class="descname">ScalarResource</code><span class="sig-paren">(</span><em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#node.resources.resource.ScalarResource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#node.resources.resource.Resource" title="node.resources.resource.Resource"><code class="xref py py-class docutils literal"><span class="pre">node.resources.resource.Resource</span></code></a></p>
+<p>A type of resource represented by a scalar floating point value</p>
+<dl class="method">
+<dt id="node.resources.resource.ScalarResource.copy">
+<code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.resources.resource.ScalarResource.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#node.resources.resource.Resource.copy" title="node.resources.resource.Resource.copy"><code class="xref py py-meth docutils literal"><span class="pre">node.resources.resource.Resource.copy()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-node.resources">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-node.resources" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="node.resources.json.html" class="btn btn-neutral float-right" title="node.resources.json package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="node.migrations.html" class="btn btn-neutral" title="node.migrations package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'5.0.0-snapshot',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

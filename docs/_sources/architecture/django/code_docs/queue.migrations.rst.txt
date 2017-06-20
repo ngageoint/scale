@@ -76,6 +76,30 @@ queue\.migrations\.0009\_auto\_20170412\_1225 module
     :undoc-members:
     :show-inheritance:
 
+queue\.migrations\.0010\_auto\_20170615\_1704 module
+----------------------------------------------------
+
+.. automodule:: queue.migrations.0010_auto_20170615_1704
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+queue\.migrations\.0011\_auto\_20170616\_1052 module
+----------------------------------------------------
+
+.. automodule:: queue.migrations.0011_auto_20170616_1052
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+queue\.migrations\.0012\_auto\_20170616\_1101 module
+----------------------------------------------------
+
+.. automodule:: queue.migrations.0012_auto_20170616_1101
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

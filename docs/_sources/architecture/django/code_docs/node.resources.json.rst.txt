@@ -1,0 +1,22 @@
+node\.resources\.json package
+=============================
+
+Submodules
+----------
+
+node\.resources\.json\.resources module
+---------------------------------------
+
+.. automodule:: node.resources.json.resources
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: node.resources.json
+    :members:
+    :undoc-members:
+    :show-inheritance:

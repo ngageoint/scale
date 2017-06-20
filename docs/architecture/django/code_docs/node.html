@@ -232,7 +232,40 @@
 <li class="toctree-l2"><a class="reference internal" href="node.migrations.html#module-node.migrations">Module contents</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="node.resources.html">node.resources package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="node.resources.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="node.resources.json.html">node.resources.json package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="node.resources.json.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="node.resources.json.html#module-node.resources.json.resources">node.resources.json.resources module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="node.resources.json.html#module-node.resources.json">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="node.resources.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="node.resources.html#module-node.resources.exceptions">node.resources.exceptions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="node.resources.html#module-node.resources.node_resources">node.resources.node_resources module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="node.resources.html#module-node.resources.resource">node.resources.resource module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="node.resources.html#module-node.resources">Module contents</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="node.test.html">node.test package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="node.test.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="node.test.resources.html">node.test.resources package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="node.test.resources.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="node.test.resources.json.html">node.test.resources.json package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="node.test.resources.json.html#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="node.test.resources.json.html#module-node.test.resources.json.test_resources">node.test.resources.json.test_resources module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="node.test.resources.json.html#module-node.test.resources.json">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="node.test.resources.html#module-node.test.resources">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="node.test.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="node.test.html#module-node.test.test_views">node.test.test_views module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="node.test.html#module-node.test.utils">node.test.utils module</a></li>
@@ -445,21 +478,6 @@ object the first time, the query is executed.</p>
 <code class="descname">port</code><a class="headerlink" href="#node.models.Node.port" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="node.models.Node.queue_set">
-<code class="descname">queue_set</code><a class="headerlink" href="#node.models.Node.queue_set" title="Permalink to this definition">¶</a></dt>
-<dd><p>Accessor to the related objects manager on the reverse side of a
-many-to-one relation.</p>
-<p>In the example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
-    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
-<p>Most of the implementation is delegated to a dynamically defined manager
-class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
 </dd></dl>
 
 <dl class="attribute">

@@ -123,7 +123,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#module-job.errors">job.errors module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-job.exceptions">job.exceptions module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-job.models">job.models module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-job.resources">job.resources module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-job.serializers">job.serializers module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-job.urls">job.urls module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-job.views">job.views module</a></li>
@@ -377,6 +376,7 @@
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0024_auto_20170412_1225">job.migrations.0024_auto_20170412_1225 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0025_auto_20170504_1534">job.migrations.0025_auto_20170504_1534 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0026_auto_20170510_1151">job.migrations.0026_auto_20170510_1151 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations.0027_auto_20170615_1652">job.migrations.0027_auto_20170615_1652 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.migrations.html#module-job.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -971,6 +971,22 @@ object the first time, the query is executed.</p>
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="job.models.Job.get_resources">
+<code class="descname">get_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.Job.get_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the resources required for this job</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The required resources</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="node.resources.html#node.resources.node_resources.NodeResources" title="node.resources.node_resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.node_resources.NodeResources</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.models.Job.get_status_display">
 <code class="descname">get_status_display</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.Job.get_status_display" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -1365,6 +1381,7 @@ populated when the job execution is scheduled to run on a node and is updated wh
 run.</li>
 <li><strong>timeout</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.IntegerField</span></code>) &#8211; The maximum amount of time to allow this job to run before being killed (in seconds)</li>
 <li><strong>configuration</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.contrib.postgres.fields.JSONField</span></code>) &#8211; JSON description describing the configuration for how the job execution should be run</li>
+<li><strong>resources</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.contrib.postgres.fields.JSONField</span></code>) &#8211; JSON description describing the resources allocated to this job execution</li>
 <li><strong>cluster_id</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; This is an ID for the job execution that is unique in the context of the cluster, allowing
 Scale components (task IDs, Docker volume names, etc) to have unique names within the cluster</li>
 <li><strong>node</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The node on which the job execution is being run</li>
@@ -1862,6 +1879,22 @@ scheduled (is no longer queued) and if this is not a system job type.</p>
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="job.models.JobExecution.get_resources">
+<code class="descname">get_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobExecution.get_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the resources allocated to this job execution</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The allocated resources</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="node.resources.html#node.resources.node_resources.NodeResources" title="node.resources.node_resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.node_resources.NodeResources</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.models.JobExecution.get_status_display">
 <code class="descname">get_status_display</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobExecution.get_status_display" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -2081,6 +2114,13 @@ relation.</p>
 <dl class="attribute">
 <dt id="job.models.JobExecution.queued">
 <code class="descname">queued</code><a class="headerlink" href="#job.models.JobExecution.queued" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.models.JobExecution.resources">
+<code class="descname">resources</code><a class="headerlink" href="#job.models.JobExecution.resources" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -2433,8 +2473,9 @@ related job, job_type, job_type_rev and node_id models populated.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>framework_id</strong> (<em>string</em>) &#8211; The scheduling framework ID</li>
-<li><strong>job_executions</strong> ([(<a class="reference internal" href="#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>, int, <a class="reference internal" href="#job.resources.JobResources" title="job.resources.JobResources"><code class="xref py py-class docutils literal"><span class="pre">job.resources.JobResources</span></code></a>)]) &#8211; A list of tuples where each tuple contains the job_exe model to schedule, the node ID to
-schedule it on, and the resources it will be given</li>
+<li><strong>job_executions</strong> ([(<a class="reference internal" href="#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>, int,
+<a class="reference internal" href="node.resources.html#node.resources.node_resources.NodeResources" title="node.resources.node_resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.node_resources.NodeResources</span></code></a>, int)]) &#8211; A list of tuples where each tuple contains the job_exe model to schedule, the node ID to
+schedule it on, the resources it will be given, and the input file size</li>
 <li><strong>workspaces</strong> ({string: <a class="reference internal" href="storage.html#storage.models.Workspace" title="storage.models.Workspace"><code class="xref py py-class docutils literal"><span class="pre">storage.models.Workspace</span></code></a>}) &#8211; A dict of all workspaces stored by name</li>
 </ul>
 </td>
@@ -2854,6 +2895,7 @@ See the mesos prototype file for further information.</li>
 products) for a job of this type</li>
 <li><strong>disk_out_mult_required</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.FloatField</span></code>) &#8211; A multiplier (2x = 2.0) applied to the size of the input files to determine
 additional disk space in MiB required for job output (temp work and products) for a job of this type</li>
+<li><strong>custom_resources</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.contrib.postgres.fields.JSONField</span></code>) &#8211; JSON describing the custom resources required for jobs of this type</li>
 <li><strong>icon_code</strong> (<em>string of a FontAwesome icon code</em>) &#8211; A font-awesome icon code (like &#8216;f013&#8217; for gear) to use when representing this job type</li>
 <li><strong>created</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the job type was created</li>
 <li><strong>archived</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the job type was archived (no longer active)</li>
@@ -2921,6 +2963,23 @@ object the first time, the query is executed.</p>
 object the first time, the query is executed.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="job.models.JobType.convert_custom_resources">
+<code class="descname">convert_custom_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobType.convert_custom_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes the raw custom_resources dict and performs the Scale version conversion on it so that the REST API
+always returns the latest version of the JSON schema</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The custom resources dict converted to the latest version of the JSON schema</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="job.models.JobType.cpus_required">
 <code class="descname">cpus_required</code><a class="headerlink" href="#job.models.JobType.cpus_required" title="Permalink to this definition">¶</a></dt>
@@ -2931,6 +2990,13 @@ object the first time, the query is executed.</p>
 <dl class="attribute">
 <dt id="job.models.JobType.created">
 <code class="descname">created</code><a class="headerlink" href="#job.models.JobType.created" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.models.JobType.custom_resources">
+<code class="descname">custom_resources</code><a class="headerlink" href="#job.models.JobType.custom_resources" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -2982,6 +3048,22 @@ object the first time, the query is executed.</p>
 <code class="descname">error_mapping</code><a class="headerlink" href="#job.models.JobType.error_mapping" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.models.JobType.get_custom_resources">
+<code class="descname">get_custom_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobType.get_custom_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the custom resources required for jobs of this type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The custom resources</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="node.resources.json.html#node.resources.json.resources.Resources" title="node.resources.json.resources.Resources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.json.resources.Resources</span></code></a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -3042,6 +3124,22 @@ stderr/stdout expression to an error type</p>
 <dt id="job.models.JobType.get_previous_by_last_modified">
 <code class="descname">get_previous_by_last_modified</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobType.get_previous_by_last_modified" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="job.models.JobType.get_resources">
+<code class="descname">get_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobType.get_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the resources required for jobs of this type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The required resources</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="node.resources.html#node.resources.node_resources.NodeResources" title="node.resources.node_resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.node_resources.NodeResources</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="job.models.JobType.icon_code">
@@ -3365,6 +3463,7 @@ transaction.</p>
 <li><strong>interface</strong> (<a class="reference internal" href="job.configuration.interface.html#job.configuration.interface.job_interface.JobInterface" title="job.configuration.interface.job_interface.JobInterface"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.job_interface.JobInterface</span></code></a>) &#8211; The interface for running a job of this type</li>
 <li><strong>trigger_rule</strong> (<a class="reference internal" href="trigger.html#trigger.models.TriggerRule" title="trigger.models.TriggerRule"><code class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerRule</span></code></a>) &#8211; The trigger rule that creates jobs of this type, possibly None</li>
 <li><strong>error_mapping</strong> (<a class="reference internal" href="job.configuration.interface.html#job.configuration.interface.error_interface.ErrorInterface" title="job.configuration.interface.error_interface.ErrorInterface"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.error_interface.ErrorInterface</span></code></a>) &#8211; Mapping for translating an exit code to an error type</li>
+<li><strong>custom_resources</strong> (<a class="reference internal" href="node.resources.json.html#node.resources.json.resources.Resources" title="node.resources.json.resources.Resources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.json.resources.Resources</span></code></a>) &#8211; Custom resources required by this job type</li>
 </ul>
 </td>
 </tr>
@@ -3403,6 +3502,7 @@ no change to the trigger rule (False) and removing the trigger rule (True) when 
 <li><strong>remove_trigger_rule</strong> (<em>bool</em>) &#8211; Indicates whether the trigger rule should be unchanged (False) or removed (True)
 when trigger_rule is None</li>
 <li><strong>error_mapping</strong> (<a class="reference internal" href="job.configuration.interface.html#job.configuration.interface.error_interface.ErrorInterface" title="job.configuration.interface.error_interface.ErrorInterface"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.error_interface.ErrorInterface</span></code></a>) &#8211; Mapping for translating an exit code to an error type</li>
+<li><strong>custom_resources</strong> (<a class="reference internal" href="node.resources.json.html#node.resources.json.resources.Resources" title="node.resources.json.resources.Resources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.json.resources.Resources</span></code></a>) &#8211; Custom resources required by this job type</li>
 </ul>
 </td>
 </tr>
@@ -4072,132 +4172,6 @@ object the first time, the query is executed.</p>
 <code class="descname">timestamp</code><a class="headerlink" href="#job.models.TaskUpdate.timestamp" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-job.resources">
-<span id="job-resources-module"></span><h2>job.resources module<a class="headerlink" href="#module-job.resources" title="Permalink to this headline">¶</a></h2>
-<p>Defines classes for encapsulating sets of resources</p>
-<dl class="class">
-<dt id="job.resources.JobResources">
-<em class="property">class </em><code class="descclassname">job.resources.</code><code class="descname">JobResources</code><span class="sig-paren">(</span><em>cpus=0.0</em>, <em>mem=0.0</em>, <em>disk_in=0.0</em>, <em>disk_out=0.0</em>, <em>disk_total=0.0</em><span class="sig-paren">)</span><a class="headerlink" href="#job.resources.JobResources" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>This class encapsulates a set of resources used for executing jobs</p>
-</dd></dl>
-
-<dl class="class">
-<dt id="job.resources.NodeResources">
-<em class="property">class </em><code class="descclassname">job.resources.</code><code class="descname">NodeResources</code><span class="sig-paren">(</span><em>cpus=0.0</em>, <em>mem=0.0</em>, <em>disk=0.0</em><span class="sig-paren">)</span><a class="headerlink" href="#job.resources.NodeResources" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>This class encapsulates a set of resources available on a node</p>
-<dl class="method">
-<dt id="job.resources.NodeResources.add">
-<code class="descname">add</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="headerlink" href="#job.resources.NodeResources.add" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds the given resources</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>resources</strong> (<a class="reference internal" href="#job.resources.NodeResources" title="job.resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">job.resources.NodeResources</span></code></a>) &#8211; The resources to add</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.resources.NodeResources.generate_status_json">
-<code class="descname">generate_status_json</code><span class="sig-paren">(</span><em>resource_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#job.resources.NodeResources.generate_status_json" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates the portion of the status JSON that describes these resources</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>resource_dict</strong> (<em>dict</em>) &#8211; The dict for these resources</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.resources.NodeResources.increase_up_to">
-<code class="descname">increase_up_to</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="headerlink" href="#job.resources.NodeResources.increase_up_to" title="Permalink to this definition">¶</a></dt>
-<dd><p>Increases each resource up to the value in the given resources</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>resources</strong> (<a class="reference internal" href="#job.resources.NodeResources" title="job.resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">job.resources.NodeResources</span></code></a>) &#8211; The resources</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.resources.NodeResources.is_equal">
-<code class="descname">is_equal</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="headerlink" href="#job.resources.NodeResources.is_equal" title="Permalink to this definition">¶</a></dt>
-<dd><p>Indicates if these resources are equal. This should be used for testing only.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>resources</strong> (<a class="reference internal" href="#job.resources.NodeResources" title="job.resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">job.resources.NodeResources</span></code></a>) &#8211; The resources to compare</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if these resources are equal, False otherwise</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.resources.NodeResources.is_sufficient_to_meet">
-<code class="descname">is_sufficient_to_meet</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="headerlink" href="#job.resources.NodeResources.is_sufficient_to_meet" title="Permalink to this definition">¶</a></dt>
-<dd><p>Indicates if these resources are sufficient to meet the requested resources</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>resources</strong> (<a class="reference internal" href="#job.resources.NodeResources" title="job.resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">job.resources.NodeResources</span></code></a>) &#8211; The requested resources</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if these resources are sufficient for the request, False otherwise</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.resources.NodeResources.subtract">
-<code class="descname">subtract</code><span class="sig-paren">(</span><em>resources</em><span class="sig-paren">)</span><a class="headerlink" href="#job.resources.NodeResources.subtract" title="Permalink to this definition">¶</a></dt>
-<dd><p>Subtracts the given resources</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>resources</strong> (<a class="reference internal" href="#job.resources.NodeResources" title="job.resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">job.resources.NodeResources</span></code></a>) &#8211; The resources to subtract</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.resources.NodeResources.to_logging_string">
-<code class="descname">to_logging_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.resources.NodeResources.to_logging_string" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts the resource to a readable logging string</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A readable string for logging</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 </dd></dl>

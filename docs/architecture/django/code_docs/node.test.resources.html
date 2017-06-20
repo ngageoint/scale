@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>job.configuration.json package &mdash; Scale 5.0.0-snapshot documentation</title>
+  <title>node.test.resources package &mdash; Scale 5.0.0-snapshot documentation</title>
   
 
   
@@ -38,9 +38,9 @@
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="Scale 5.0.0-snapshot documentation" href="../../../index.html"/>
-        <link rel="up" title="job.configuration package" href="job.configuration.html"/>
-        <link rel="next" title="job.configuration.json.execution package" href="job.configuration.json.execution.html"/>
-        <link rel="prev" title="job.configuration.interface package" href="job.configuration.interface.html"/> 
+        <link rel="up" title="node.test package" href="node.test.html"/>
+        <link rel="next" title="node.test.resources.json package" href="node.test.resources.json.html"/>
+        <link rel="prev" title="node.test package" href="node.test.html"/> 
 
   
   <script src="../../../_static/js/modernizr.min.js"></script>
@@ -115,23 +115,22 @@
 <li class="toctree-l3"><a class="reference internal" href="diagnostic.html">diagnostic package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="job.html">job package</a><ul class="current">
-<li class="toctree-l4 current"><a class="reference internal" href="job.html#subpackages">Subpackages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.apps">job.apps module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.clock">job.clock module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.errors">job.errors module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.exceptions">job.exceptions module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.models">job.models module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.serializers">job.serializers module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.urls">job.urls module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job.views">job.views module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="job.html#module-job">Module contents</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="node.html">node package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="node.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="node.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="node.html#module-node.admin">node.admin module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="node.html#module-node.apps">node.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="node.html#module-node.models">node.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="node.html#module-node.serializers">node.serializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="node.html#module-node.serializers_extra">node.serializers_extra module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="node.html#module-node.urls">node.urls module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="node.html#module-node.views">node.views module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="node.html#module-node">Module contents</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
@@ -199,17 +198,17 @@
         
           <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
         
-          <li><a href="job.html">job package</a> &raquo;</li>
+          <li><a href="node.html">node package</a> &raquo;</li>
         
-          <li><a href="job.configuration.html">job.configuration package</a> &raquo;</li>
+          <li><a href="node.test.html">node.test package</a> &raquo;</li>
         
-      <li>job.configuration.json package</li>
+      <li>node.test.resources package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/job.configuration.json.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/node.test.resources.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -222,31 +221,23 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="job-configuration-json-package">
-<h1>job.configuration.json package<a class="headerlink" href="#job-configuration-json-package" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="node-test-resources-package">
+<h1>node.test.resources package<a class="headerlink" href="#node-test-resources-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="subpackages">
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="job.configuration.json.execution.html">job.configuration.json.execution package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="job.configuration.json.execution.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="job.configuration.json.execution.html#module-job.configuration.json.execution.exe_config">job.configuration.json.execution.exe_config module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="job.configuration.json.execution.html#module-job.configuration.json.execution.exe_config_1_0">job.configuration.json.execution.exe_config_1_0 module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="job.configuration.json.execution.html#module-job.configuration.json.execution">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="job.configuration.json.job.html">job.configuration.json.job package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="job.configuration.json.job.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="job.configuration.json.job.html#module-job.configuration.json.job.job_config">job.configuration.json.job.job_config module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="job.configuration.json.job.html#module-job.configuration.json.job.job_config_1_0">job.configuration.json.job.job_config_1_0 module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="job.configuration.json.job.html#module-job.configuration.json.job">Module contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="node.test.resources.json.html">node.test.resources.json package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="node.test.resources.json.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="node.test.resources.json.html#module-node.test.resources.json.test_resources">node.test.resources.json.test_resources module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="node.test.resources.json.html#module-node.test.resources.json">Module contents</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div class="section" id="module-job.configuration.json">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-job.configuration.json" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-node.test.resources">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-node.test.resources" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -260,10 +251,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="job.configuration.json.execution.html" class="btn btn-neutral float-right" title="job.configuration.json.execution package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="node.test.resources.json.html" class="btn btn-neutral float-right" title="node.test.resources.json package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="job.configuration.interface.html" class="btn btn-neutral" title="job.configuration.interface package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="node.test.html" class="btn btn-neutral" title="node.test package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

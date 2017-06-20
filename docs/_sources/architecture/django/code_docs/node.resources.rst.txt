@@ -1,0 +1,45 @@
+node\.resources package
+=======================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    node.resources.json
+
+Submodules
+----------
+
+node\.resources\.exceptions module
+----------------------------------
+
+.. automodule:: node.resources.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+node\.resources\.node\_resources module
+---------------------------------------
+
+.. automodule:: node.resources.node_resources
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+node\.resources\.resource module
+--------------------------------
+
+.. automodule:: node.resources.resource
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: node.resources
+    :members:
+    :undoc-members:
+    :show-inheritance:

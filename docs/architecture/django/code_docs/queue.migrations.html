@@ -400,6 +400,68 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-queue.migrations.0010_auto_20170615_1704">
+<span id="queue-migrations-0010-auto-20170615-1704-module"></span><h2>queue.migrations.0010_auto_20170615_1704 module<a class="headerlink" href="#module-queue.migrations.0010_auto_20170615_1704" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="queue.migrations.0010_auto_20170615_1704.Migration">
+<em class="property">class </em><code class="descclassname">queue.migrations.0010_auto_20170615_1704.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.migrations.0010_auto_20170615_1704.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="queue.migrations.0010_auto_20170615_1704.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'queue', u'0009_auto_20170412_1225')]</em><a class="headerlink" href="#queue.migrations.0010_auto_20170615_1704.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="queue.migrations.0010_auto_20170615_1704.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;RenameField  new_name=u'input_file_size', model_name=u'queue', old_name=u'disk_in_required'&gt;, &lt;RemoveField  name=u'node_required', model_name=u'queue'&gt;, &lt;AddField  field=&lt;django.contrib.postgres.fields.jsonb.JSONField&gt;, name=u'resources', model_name=u'queue'&gt;]</em><a class="headerlink" href="#queue.migrations.0010_auto_20170615_1704.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-queue.migrations.0011_auto_20170616_1052">
+<span id="queue-migrations-0011-auto-20170616-1052-module"></span><h2>queue.migrations.0011_auto_20170616_1052 module<a class="headerlink" href="#module-queue.migrations.0011_auto_20170616_1052" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="queue.migrations.0011_auto_20170616_1052.Migration">
+<em class="property">class </em><code class="descclassname">queue.migrations.0011_auto_20170616_1052.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.migrations.0011_auto_20170616_1052.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="queue.migrations.0011_auto_20170616_1052.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'queue', u'0010_auto_20170615_1704')]</em><a class="headerlink" href="#queue.migrations.0011_auto_20170616_1052.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="queue.migrations.0011_auto_20170616_1052.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;RunPython &lt;function populate_queue_resources&gt;&gt;]</em><a class="headerlink" href="#queue.migrations.0011_auto_20170616_1052.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="queue.migrations.0011_auto_20170616_1052.Migration.populate_queue_resources">
+<code class="descname">populate_queue_resources</code><span class="sig-paren">(</span><em>apps</em>, <em>schema_editor</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.migrations.0011_auto_20170616_1052.Migration.populate_queue_resources" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-queue.migrations.0012_auto_20170616_1101">
+<span id="queue-migrations-0012-auto-20170616-1101-module"></span><h2>queue.migrations.0012_auto_20170616_1101 module<a class="headerlink" href="#module-queue.migrations.0012_auto_20170616_1101" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="queue.migrations.0012_auto_20170616_1101.Migration">
+<em class="property">class </em><code class="descclassname">queue.migrations.0012_auto_20170616_1101.</code><code class="descname">Migration</code><span class="sig-paren">(</span><em>name</em>, <em>app_label</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.migrations.0012_auto_20170616_1101.Migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.migrations.migration.Migration</span></code></p>
+<dl class="attribute">
+<dt id="queue.migrations.0012_auto_20170616_1101.Migration.dependencies">
+<code class="descname">dependencies</code><em class="property"> = [(u'queue', u'0011_auto_20170616_1052')]</em><a class="headerlink" href="#queue.migrations.0012_auto_20170616_1101.Migration.dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="queue.migrations.0012_auto_20170616_1101.Migration.operations">
+<code class="descname">operations</code><em class="property"> = [&lt;RemoveField  name=u'cpus_required', model_name=u'queue'&gt;, &lt;RemoveField  name=u'disk_out_required', model_name=u'queue'&gt;, &lt;RemoveField  name=u'disk_total_required', model_name=u'queue'&gt;, &lt;RemoveField  name=u'mem_required', model_name=u'queue'&gt;]</em><a class="headerlink" href="#queue.migrations.0012_auto_20170616_1101.Migration.operations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-queue.migrations">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-queue.migrations" title="Permalink to this headline">¶</a></h2>
 </div>

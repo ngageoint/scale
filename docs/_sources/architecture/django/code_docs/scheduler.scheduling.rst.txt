@@ -12,10 +12,10 @@ scheduler\.scheduling\.manager module
     :undoc-members:
     :show-inheritance:
 
-scheduler\.scheduling\.node module
-----------------------------------
+scheduler\.scheduling\.scheduling\_node module
+----------------------------------------------
 
-.. automodule:: scheduler.scheduling.node
+.. automodule:: scheduler.scheduling.scheduling_node
     :members:
     :undoc-members:
     :show-inheritance:

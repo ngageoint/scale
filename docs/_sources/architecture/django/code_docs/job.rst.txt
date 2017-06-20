@@ -58,14 +58,6 @@ job\.models module
     :undoc-members:
     :show-inheritance:
 
-job\.resources module
----------------------
-
-.. automodule:: job.resources
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 job\.serializers module
 -----------------------
 

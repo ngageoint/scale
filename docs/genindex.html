@@ -199,11 +199,11 @@
 </li>
       <li><a href="architecture/django/code_docs/job.configuration.data.html#job.configuration.data.data_file.AbstractDataFileStore">AbstractDataFileStore (class in job.configuration.data.data_file)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.node.SchedulingNode.accept_job_exe_next_task">accept_job_exe_next_task() (scheduler.scheduling.node.SchedulingNode method)</a>
+      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.scheduling_node.SchedulingNode.accept_job_exe_next_task">accept_job_exe_next_task() (scheduler.scheduling.scheduling_node.SchedulingNode method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.node.SchedulingNode.accept_new_job_exe">accept_new_job_exe() (scheduler.scheduling.node.SchedulingNode method)</a>
+      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.scheduling_node.SchedulingNode.accept_new_job_exe">accept_new_job_exe() (scheduler.scheduling.scheduling_node.SchedulingNode method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.node.SchedulingNode.accept_node_tasks">accept_node_tasks() (scheduler.scheduling.node.SchedulingNode method)</a>
+      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.scheduling_node.SchedulingNode.accept_node_tasks">accept_node_tasks() (scheduler.scheduling.scheduling_node.SchedulingNode method)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.html#queue.job_exe.QueuedJobExecution.accepted">accepted() (queue.job_exe.QueuedJobExecution method)</a>
 </li>
@@ -215,9 +215,9 @@
 </li>
       <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.ActiveWarning">ActiveWarning (class in scheduler.node.conditions)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.resources.NodeResources.add">add() (job.resources.NodeResources method)</a>
+      <li><a href="architecture/django/code_docs/node.resources.html#node.resources.node_resources.NodeResources.add">add() (node.resources.node_resources.NodeResources method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.node.SchedulingNode.add_allocated_offers">add_allocated_offers() (scheduler.scheduling.node.SchedulingNode method)</a>
+      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.scheduling_node.SchedulingNode.add_allocated_offers">add_allocated_offers() (scheduler.scheduling.scheduling_node.SchedulingNode method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.configuration.interface.html#job.configuration.interface.scale_file.ScaleFileDescription.add_allowed_media_type">add_allowed_media_type() (job.configuration.interface.scale_file.ScaleFileDescription method)</a>
 </li>
@@ -381,7 +381,7 @@
 </li>
       <li><a href="architecture/django/code_docs/ingest.scan.scanners.html#ingest.scan.scanners.factory.add_scanner_type">add_scanner_type() (in module ingest.scan.scanners.factory)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.node.SchedulingNode.add_scheduled_job_exes">add_scheduled_job_exes() (scheduler.scheduling.node.SchedulingNode method)</a>
+      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.scheduling_node.SchedulingNode.add_scheduled_job_exes">add_scheduled_job_exes() (scheduler.scheduling.scheduling_node.SchedulingNode method)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.sync.html#scheduler.sync.scheduler_manager.SchedulerManager.add_scheduling_counts">add_scheduling_counts() (scheduler.sync.scheduler_manager.SchedulerManager method)</a>
 </li>
@@ -855,6 +855,8 @@
 </li>
       <li><a href="architecture/django/code_docs/job.configuration.json.execution.html#job.configuration.json.execution.exe_config.ExecutionConfiguration.convert_configuration">convert_configuration() (job.configuration.json.execution.exe_config.ExecutionConfiguration static method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.html#job.models.JobType.convert_custom_resources">convert_custom_resources() (job.models.JobType method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.configuration.interface.html#job.configuration.interface.job_interface.JobInterface.convert_interface">convert_interface() (job.configuration.interface.job_interface.JobInterface static method)</a>
 
       <ul>
@@ -865,6 +867,14 @@
         <li><a href="architecture/django/code_docs/job.configuration.interface.html#job.configuration.interface.job_interface_1_2.JobInterface.convert_interface">(job.configuration.interface.job_interface_1_2.JobInterface static method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.configuration.interface.html#job.configuration.interface.job_interface_1_3.JobInterface.convert_interface">(job.configuration.interface.job_interface_1_3.JobInterface static method)</a>
+</li>
+      </ul></li>
+      <li><a href="architecture/django/code_docs/node.resources.html#node.resources.node_resources.NodeResources.copy">copy() (node.resources.node_resources.NodeResources method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/node.resources.html#node.resources.resource.Resource.copy">(node.resources.resource.Resource method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/node.resources.html#node.resources.resource.ScalarResource.copy">(node.resources.resource.ScalarResource method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/product.migrations.html#product.migrations.0005_auto_20170127_1344.copy_product_file">copy_product_file() (in module product.migrations.0005_auto_20170127_1344)</a>
@@ -885,18 +895,20 @@
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.DoesNotExist">CountryData.DoesNotExist</a>
 </li>
-      <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.MultipleObjectsReturned">CountryData.MultipleObjectsReturned</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.MultipleObjectsReturned">CountryData.MultipleObjectsReturned</a>
+</li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryDataManager">CountryDataManager (class in storage.models)</a>
+</li>
+      <li><a href="architecture/django/code_docs/node.resources.html#node.resources.resource.Cpus">Cpus (class in node.resources.resource)</a>
+</li>
+      <li><a href="architecture/django/code_docs/node.resources.html#node.resources.node_resources.NodeResources.cpus">cpus (node.resources.node_resources.NodeResources attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.cpus_required">cpus_required (job.models.Job attribute)</a>
 
       <ul>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobType.cpus_required">(job.models.JobType attribute)</a>
-</li>
-        <li><a href="architecture/django/code_docs/queue.html#queue.models.Queue.cpus_required">(queue.models.Queue attribute)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.cpus_scheduled">cpus_scheduled (job.models.JobExecution attribute)</a>
@@ -1125,6 +1137,8 @@
 </li>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.job_exe.RunningJobExecution.current_task">current_task (job.execution.job_exe.RunningJobExecution attribute)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.html#job.models.JobType.custom_resources">custom_resources (job.models.JobType attribute)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -1322,6 +1336,8 @@
 </li>
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0026_auto_20170510_1151.Migration.dependencies">(job.migrations.0026_auto_20170510_1151.Migration attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0027_auto_20170615_1652.Migration.dependencies">(job.migrations.0027_auto_20170615_1652.Migration attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0001_initial.Migration.dependencies">(metrics.migrations.0001_initial.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0002_auto_20151007_1352.Migration.dependencies">(metrics.migrations.0002_auto_20151007_1352.Migration attribute)</a>
@@ -1379,6 +1395,12 @@
         <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0008_auto_20160421_1648.Migration.dependencies">(queue.migrations.0008_auto_20160421_1648.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0009_auto_20170412_1225.Migration.dependencies">(queue.migrations.0009_auto_20170412_1225.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0010_auto_20170615_1704.Migration.dependencies">(queue.migrations.0010_auto_20170615_1704.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0011_auto_20170616_1052.Migration.dependencies">(queue.migrations.0011_auto_20170616_1052.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0012_auto_20170616_1101.Migration.dependencies">(queue.migrations.0012_auto_20170616_1101.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.migrations.html#recipe.migrations.0001_initial.Migration.dependencies">(recipe.migrations.0001_initial.Migration attribute)</a>
 </li>
@@ -1545,12 +1567,12 @@
 </li>
       <li><a href="architecture/django/code_docs/scheduler.html#scheduler.scale_scheduler.ScaleScheduler.disconnected">disconnected() (scheduler.scale_scheduler.ScaleScheduler method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.models.Job.disk_in_required">disk_in_required (job.models.Job attribute)</a>
-
-      <ul>
-        <li><a href="architecture/django/code_docs/queue.html#queue.models.Queue.disk_in_required">(queue.models.Queue attribute)</a>
+      <li><a href="architecture/django/code_docs/node.resources.html#node.resources.resource.Disk">Disk (class in node.resources.resource)</a>
 </li>
-      </ul></li>
+      <li><a href="architecture/django/code_docs/node.resources.html#node.resources.node_resources.NodeResources.disk">disk (node.resources.node_resources.NodeResources attribute)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.models.Job.disk_in_required">disk_in_required (job.models.Job attribute)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.disk_in_scheduled">disk_in_scheduled (job.models.JobExecution attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobType.disk_out_const_required">disk_out_const_required (job.models.JobType attribute)</a>
@@ -1558,14 +1580,8 @@
       <li><a href="architecture/django/code_docs/job.html#job.models.JobType.disk_out_mult_required">disk_out_mult_required (job.models.JobType attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.disk_out_required">disk_out_required (job.models.Job attribute)</a>
-
-      <ul>
-        <li><a href="architecture/django/code_docs/queue.html#queue.models.Queue.disk_out_required">(queue.models.Queue attribute)</a>
 </li>
-      </ul></li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.disk_out_scheduled">disk_out_scheduled (job.models.JobExecution attribute)</a>
-</li>
-      <li><a href="architecture/django/code_docs/queue.html#queue.models.Queue.disk_total_required">disk_total_required (queue.models.Queue attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.disk_total_scheduled">disk_total_scheduled (job.models.JobExecution attribute)</a>
 </li>
@@ -2038,7 +2054,7 @@
 </li>
         <li><a href="architecture/django/code_docs/job.execution.html#job.execution.metrics.TotalJobExeMetrics.generate_status_json">(job.execution.metrics.TotalJobExeMetrics method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/job.html#job.resources.NodeResources.generate_status_json">(job.resources.NodeResources method)</a>
+        <li><a href="architecture/django/code_docs/node.resources.html#node.resources.node_resources.NodeResources.generate_status_json">(node.resources.node_resources.NodeResources method)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeConditions.generate_status_json">(scheduler.node.conditions.NodeConditions method)</a>
 </li>
@@ -2161,6 +2177,8 @@
 </li>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.job_exe.RunningJobExecution.get_container_names">get_container_names() (job.execution.job_exe.RunningJobExecution method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.html#job.models.JobType.get_custom_resources">get_custom_resources() (job.models.JobType method)</a>
+</li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.get_data_type_tags">get_data_type_tags() (ingest.models.Ingest method)</a>
 
       <ul>
@@ -2227,6 +2245,8 @@
         <li><a href="architecture/django/code_docs/job.configuration.json.job.html#job.configuration.json.job.job_config_1_0.JobConfiguration.get_dict">(job.configuration.json.job.job_config_1_0.JobConfiguration method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.configuration.results.html#job.configuration.results.job_results.JobResults.get_dict">(job.configuration.results.job_results.JobResults method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/node.resources.json.html#node.resources.json.resources.Resources.get_dict">(node.resources.json.resources.Resources method)</a>
 </li>
         <li><a href="architecture/django/code_docs/port.html#port.schema.Configuration.get_dict">(port.schema.Configuration method)</a>
 </li>
@@ -2406,6 +2426,8 @@
       <li><a href="architecture/django/code_docs/job.html#job.models.JobManager.get_jobs">get_jobs() (job.models.JobManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.configuration.definition.html#recipe.configuration.definition.recipe_definition.RecipeDefinition.get_jobs_to_create">get_jobs_to_create() (recipe.configuration.definition.recipe_definition.RecipeDefinition method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/node.resources.html#node.resources.node_resources.NodeResources.get_json">get_json() (node.resources.node_resources.NodeResources method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.configuration.results.results_manifest.html#job.configuration.results.results_manifest.results_manifest.ResultsManifest.get_json_dict">get_json_dict() (job.configuration.results.results_manifest.results_manifest.ResultsManifest method)</a>
 
@@ -2627,6 +2649,8 @@
         <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.manager.NodeManager.get_node">(scheduler.node.manager.NodeManager method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/node.resources.json.html#node.resources.json.resources.Resources.get_node_resources">get_node_resources() (node.resources.json.resources.Resources method)</a>
+</li>
       <li><a href="architecture/django/code_docs/node.html#node.models.NodeManager.get_nodes">get_nodes() (node.models.NodeManager method)</a>
 
       <ul>
@@ -2840,6 +2864,12 @@
 </li>
         <li><a href="architecture/django/code_docs/job.execution.tasks.html#job.execution.tasks.pre_task.PreTask.get_resources">(job.execution.tasks.pre_task.PreTask method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.html#job.models.Job.get_resources">(job.models.Job method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.get_resources">(job.models.JobExecution method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.html#job.models.JobType.get_resources">(job.models.JobType method)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.base_task.Task.get_resources">(job.tasks.base_task.Task method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.health_task.HealthTask.get_resources">(job.tasks.health_task.HealthTask method)</a>
@@ -2849,6 +2879,8 @@
         <li><a href="architecture/django/code_docs/job.test.tasks.html#job.test.tasks.test_base_task.ImplementedTask.get_resources">(job.test.tasks.test_base_task.ImplementedTask method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.tasks.html#job.test.tasks.test_manager.ImplementedTask.get_resources">(job.test.tasks.test_manager.ImplementedTask method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/queue.html#queue.models.Queue.get_resources">(queue.models.Queue method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeRevisionManager.get_revision">get_revision() (job.models.JobTypeRevisionManager method)</a>
@@ -3309,7 +3341,7 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.increase_max_tries">increase_max_tries() (job.models.Job method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.resources.NodeResources.increase_up_to">increase_up_to() (job.resources.NodeResources method)</a>
+      <li><a href="architecture/django/code_docs/node.resources.html#node.resources.node_resources.NodeResources.increase_up_to">increase_up_to() (node.resources.node_resources.NodeResources method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobManager.increment_max_tries">increment_max_tries() (job.models.JobManager method)</a>
 </li>
@@ -3549,6 +3581,8 @@
 </li>
       <li><a href="architecture/django/code_docs/job.handlers.inputs.html#job.handlers.inputs.base_input.Input">Input (class in job.handlers.inputs.base_input)</a>
 </li>
+      <li><a href="architecture/django/code_docs/queue.html#queue.models.Queue.input_file_size">input_file_size (queue.models.Queue attribute)</a>
+</li>
       <li><a href="architecture/django/code_docs/util.html#util.aws.AWSClient.instantiate_credentials_from_config">instantiate_credentials_from_config() (util.aws.AWSClient static method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobType.interface">interface (job.models.JobType attribute)</a>
@@ -3586,6 +3620,8 @@
       <li><a href="architecture/django/code_docs/recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeConnection">InvalidRecipeConnection</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.configuration.data.html#recipe.configuration.data.exceptions.InvalidRecipeData">InvalidRecipeData</a>
+</li>
+      <li><a href="architecture/django/code_docs/node.resources.html#node.resources.exceptions.InvalidResources">InvalidResources</a>
 </li>
       <li><a href="architecture/django/code_docs/job.configuration.results.html#job.configuration.results.exceptions.InvalidResultsManifest">InvalidResultsManifest</a>
 </li>
@@ -3645,7 +3681,7 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.is_docker_privileged">is_docker_privileged() (job.models.JobExecution method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.resources.NodeResources.is_equal">is_equal() (job.resources.NodeResources method)</a>
+      <li><a href="architecture/django/code_docs/node.resources.html#node.resources.node_resources.NodeResources.is_equal">is_equal() (node.resources.node_resources.NodeResources method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.connection.DependencyInputConnection.is_equal_to">is_equal_to() (recipe.handlers.connection.DependencyInputConnection method)</a>
 
@@ -3670,8 +3706,6 @@
       <li><a href="architecture/django/code_docs/storage.html#storage.models.Workspace.is_move_enabled">is_move_enabled (storage.models.Workspace attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.job_exe.RunningJobExecution.is_next_task_ready">is_next_task_ready() (job.execution.job_exe.RunningJobExecution method)</a>
-</li>
-      <li><a href="architecture/django/code_docs/queue.html#queue.job_exe.QueuedJobExecution.is_node_acceptable">is_node_acceptable() (queue.job_exe.QueuedJobExecution method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobType.is_operational">is_operational (job.models.JobType attribute)</a>
 
@@ -3705,7 +3739,7 @@
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.is_ready_to_requeue">is_ready_to_requeue (job.models.Job attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.resources.NodeResources.is_sufficient_to_meet">is_sufficient_to_meet() (job.resources.NodeResources method)</a>
+      <li><a href="architecture/django/code_docs/node.resources.html#node.resources.node_resources.NodeResources.is_sufficient_to_meet">is_sufficient_to_meet() (node.resources.node_resources.NodeResources method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.is_superseded">is_superseded (job.models.Job attribute)</a>
 
@@ -3929,11 +3963,11 @@
 </li>
       <li><a href="architecture/django/code_docs/job.migrations.html#module-job.migrations.0026_auto_20170510_1151">job.migrations.0026_auto_20170510_1151 (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.migrations.html#module-job.migrations.0027_auto_20170615_1652">job.migrations.0027_auto_20170615_1652 (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.html#module-job.models">job.models (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.MultipleObjectsReturned">Job.MultipleObjectsReturned</a>
-</li>
-      <li><a href="architecture/django/code_docs/job.html#module-job.resources">job.resources (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#module-job.serializers">job.serializers (module)</a>
 </li>
@@ -4045,10 +4079,10 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.job_exe_file_links">job_exe_file_links (job.models.JobExecution attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.execution.html#job.execution.metrics.TotalJobExeMetrics.job_exe_finished">job_exe_finished() (job.execution.metrics.TotalJobExeMetrics method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="architecture/django/code_docs/job.execution.html#job.execution.metrics.TotalJobExeMetrics.job_exe_finished">job_exe_finished() (job.execution.metrics.TotalJobExeMetrics method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.execution.tasks.html#job.execution.tasks.exe_task.JobExecutionTask.job_exe_id">job_exe_id (job.execution.tasks.exe_task.JobExecutionTask attribute)</a>
 
       <ul>
@@ -4270,8 +4304,6 @@
       <li><a href="architecture/django/code_docs/queue.html#queue.views.JobLoadView">JobLoadView (class in queue.views)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobManager">JobManager (class in job.models)</a>
-</li>
-      <li><a href="architecture/django/code_docs/job.html#job.resources.JobResources">JobResources (class in job.resources)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.configuration.results.html#job.configuration.results.job_results.JobResults">JobResults (class in job.configuration.results.job_results)</a>
 </li>
@@ -4663,12 +4695,14 @@
         <li><a href="architecture/django/code_docs/util.html#util.rest.PlainTextRenderer.media_type">(util.rest.PlainTextRenderer attribute)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/node.resources.html#node.resources.resource.Mem">Mem (class in node.resources.resource)</a>
+</li>
+      <li><a href="architecture/django/code_docs/node.resources.html#node.resources.node_resources.NodeResources.mem">mem (node.resources.node_resources.NodeResources attribute)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.mem_required">mem_required (job.models.Job attribute)</a>
 
       <ul>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobType.mem_required">(job.models.JobType attribute)</a>
-</li>
-        <li><a href="architecture/django/code_docs/queue.html#queue.models.Queue.mem_required">(queue.models.Queue attribute)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.mem_scheduled">mem_scheduled (job.models.JobExecution attribute)</a>
@@ -4936,6 +4970,8 @@
 </li>
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0026_auto_20170510_1151.Migration">(class in job.migrations.0026_auto_20170510_1151)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0027_auto_20170615_1652.Migration">(class in job.migrations.0027_auto_20170615_1652)</a>
+</li>
         <li><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0001_initial.Migration">(class in metrics.migrations.0001_initial)</a>
 </li>
         <li><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0002_auto_20151007_1352.Migration">(class in metrics.migrations.0002_auto_20151007_1352)</a>
@@ -4993,6 +5029,12 @@
         <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0008_auto_20160421_1648.Migration">(class in queue.migrations.0008_auto_20160421_1648)</a>
 </li>
         <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0009_auto_20170412_1225.Migration">(class in queue.migrations.0009_auto_20170412_1225)</a>
+</li>
+        <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0010_auto_20170615_1704.Migration">(class in queue.migrations.0010_auto_20170615_1704)</a>
+</li>
+        <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0011_auto_20170616_1052.Migration">(class in queue.migrations.0011_auto_20170616_1052)</a>
+</li>
+        <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0012_auto_20170616_1101.Migration">(class in queue.migrations.0012_auto_20170616_1101)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.migrations.html#recipe.migrations.0001_initial.Migration">(class in recipe.migrations.0001_initial)</a>
 </li>
@@ -5279,8 +5321,6 @@
 </li>
       <li><a href="architecture/django/code_docs/node.migrations.html#module-node.migrations">node.migrations (module)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/node.migrations.html#module-node.migrations.0001_initial">node.migrations.0001_initial (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.migrations.html#module-node.migrations.0002_node_pause_reason">node.migrations.0002_node_pause_reason (module)</a>
@@ -5289,15 +5329,35 @@
 </li>
       <li><a href="architecture/django/code_docs/node.migrations.html#module-node.migrations.0004_auto_20170524_1639">node.migrations.0004_auto_20170524_1639 (module)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/node.html#module-node.models">node.models (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.html#node.models.Node.MultipleObjectsReturned">Node.MultipleObjectsReturned</a>
+</li>
+      <li><a href="architecture/django/code_docs/node.resources.html#module-node.resources">node.resources (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/node.resources.html#module-node.resources.exceptions">node.resources.exceptions (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/node.resources.json.html#module-node.resources.json">node.resources.json (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/node.resources.json.html#module-node.resources.json.resources">node.resources.json.resources (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/node.resources.html#module-node.resources.node_resources">node.resources.node_resources (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/node.resources.html#module-node.resources.resource">node.resources.resource (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.html#module-node.serializers">node.serializers (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.html#module-node.serializers_extra">node.serializers_extra (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.test.html#module-node.test">node.test (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/node.test.resources.html#module-node.test.resources">node.test.resources (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/node.test.resources.json.html#module-node.test.resources.json">node.test.resources.json (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/node.test.resources.json.html#module-node.test.resources.json.test_resources">node.test.resources.json.test_resources (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.test.html#module-node.test.test_views">node.test.test_views (module)</a>
 </li>
@@ -5313,10 +5373,6 @@
         <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.node_id">(job.models.JobExecution attribute)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/queue.html#queue.models.Queue.node_required">node_required (queue.models.Queue attribute)</a>
-</li>
-      <li><a href="architecture/django/code_docs/queue.html#queue.models.Queue.node_required_id">node_required_id (queue.models.Queue attribute)</a>
-</li>
       <li><a href="architecture/django/code_docs/node.html#node.admin.NodeAdmin">NodeAdmin (class in node.admin)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.html#node.serializers.NodeBaseSerializer">NodeBaseSerializer (class in node.serializers)</a>
@@ -5353,7 +5409,7 @@
         <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.manager.NodeManager">(class in scheduler.node.manager)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/job.html#job.resources.NodeResources">NodeResources (class in job.resources)</a>
+      <li><a href="architecture/django/code_docs/node.resources.html#node.resources.node_resources.NodeResources">NodeResources (class in node.resources.node_resources)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.html#node.serializers.NodeSerializer">NodeSerializer (class in node.serializers)</a>
 </li>
@@ -5572,6 +5628,8 @@
 </li>
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0026_auto_20170510_1151.Migration.operations">(job.migrations.0026_auto_20170510_1151.Migration attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0027_auto_20170615_1652.Migration.operations">(job.migrations.0027_auto_20170615_1652.Migration attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0001_initial.Migration.operations">(metrics.migrations.0001_initial.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0002_auto_20151007_1352.Migration.operations">(metrics.migrations.0002_auto_20151007_1352.Migration attribute)</a>
@@ -5629,6 +5687,12 @@
         <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0008_auto_20160421_1648.Migration.operations">(queue.migrations.0008_auto_20160421_1648.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0009_auto_20170412_1225.Migration.operations">(queue.migrations.0009_auto_20170412_1225.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0010_auto_20170615_1704.Migration.operations">(queue.migrations.0010_auto_20170615_1704.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0011_auto_20170616_1052.Migration.operations">(queue.migrations.0011_auto_20170616_1052.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0012_auto_20170616_1101.Migration.operations">(queue.migrations.0012_auto_20170616_1101.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.migrations.html#recipe.migrations.0001_initial.Migration.operations">(recipe.migrations.0001_initial.Migration attribute)</a>
 </li>
@@ -5894,6 +5958,8 @@
       <li><a href="architecture/django/code_docs/job.configuration.json.execution.html#job.configuration.json.execution.exe_config.ExecutionConfiguration.populate_mounts">populate_mounts() (job.configuration.json.execution.exe_config.ExecutionConfiguration method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.migrations.html#ingest.migrations.0004_auto_20160711_1058.Migration.populate_new_workspace">populate_new_workspace() (ingest.migrations.0004_auto_20160711_1058.Migration method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/queue.migrations.html#queue.migrations.0011_auto_20170616_1052.Migration.populate_queue_resources">populate_queue_resources() (queue.migrations.0011_auto_20170616_1052.Migration method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.migrations.html#recipe.migrations.0016_recipefile_data.Migration.populate_recipe_file">populate_recipe_file() (recipe.migrations.0016_recipefile_data.Migration method)</a>
 </li>
@@ -6287,10 +6353,10 @@
         <li><a href="architecture/django/code_docs/storage.html#storage.views.WorkspacesView.queryset">(storage.views.WorkspacesView attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/queue.html#queue.models.Queue">Queue (class in queue.models)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.queue">queue (job.models.JobExecution attribute)</a>
 
       <ul>
@@ -6326,6 +6392,12 @@
       <li><a href="architecture/django/code_docs/queue.migrations.html#module-queue.migrations.0008_auto_20160421_1648">queue.migrations.0008_auto_20160421_1648 (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.migrations.html#module-queue.migrations.0009_auto_20170412_1225">queue.migrations.0009_auto_20170412_1225 (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/queue.migrations.html#module-queue.migrations.0010_auto_20170615_1704">queue.migrations.0010_auto_20170615_1704 (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/queue.migrations.html#module-queue.migrations.0011_auto_20170616_1052">queue.migrations.0011_auto_20170616_1052 (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/queue.migrations.html#module-queue.migrations.0012_auto_20170616_1101">queue.migrations.0012_auto_20170616_1101 (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.html#module-queue.models">queue.models (module)</a>
 </li>
@@ -6371,8 +6443,6 @@
 
       <ul>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobType.queue_set">(job.models.JobType attribute)</a>
-</li>
-        <li><a href="architecture/django/code_docs/node.html#node.models.Node.queue_set">(node.models.Node attribute)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsJobType.queue_time_avg">queue_time_avg (metrics.models.MetricsJobType attribute)</a>
@@ -6675,14 +6745,14 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeJobManager">RecipeJobManager (class in recipe.models)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsDetailsSerializer">RecipeJobsDetailsSerializer (class in recipe.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsDetailsSerializer.JobRevisionSerializer">RecipeJobsDetailsSerializer.JobRevisionSerializer (class in recipe.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializer">RecipeJobsSerializer (class in recipe.serializers)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializer.JobSerializer">RecipeJobsSerializer.JobSerializer (class in recipe.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsSerializer.JobSerializer.ErrorBaseSerializer">RecipeJobsSerializer.JobSerializer.ErrorBaseSerializer (class in recipe.serializers)</a>
@@ -6789,6 +6859,8 @@
         <li><a href="architecture/django/code_docs/job.execution.html#job.execution.metrics.RunningJobExeMetricsByNode.remove_job_execution">(job.execution.metrics.RunningJobExeMetricsByNode method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/node.resources.html#node.resources.node_resources.NodeResources.remove_resource">remove_resource() (node.resources.node_resources.NodeResources method)</a>
+</li>
       <li><a href="architecture/django/code_docs/scheduler.recon.html#scheduler.recon.manager.ReconciliationManager.remove_task_id">remove_task_id() (scheduler.recon.manager.ReconciliationManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/port.html#port.views.DownloadRenderer.render">render() (port.views.DownloadRenderer method)</a>
@@ -6827,9 +6899,11 @@
         <li><a href="architecture/django/code_docs/scheduler.resources.html#scheduler.resources.manager.ResourceManager.rescind_offers">(scheduler.resources.manager.ResourceManager method)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.node.SchedulingNode.reset_new_job_exes">reset_new_job_exes() (scheduler.scheduling.node.SchedulingNode method)</a>
+      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.scheduling_node.SchedulingNode.reset_new_job_exes">reset_new_job_exes() (scheduler.scheduling.scheduling_node.SchedulingNode method)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.resources.html#scheduler.resources.agent.AgentResources.reset_watermark">reset_watermark() (scheduler.resources.agent.AgentResources method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/node.resources.html#node.resources.resource.Resource">Resource (class in node.resources.resource)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.resources.html#scheduler.resources.manager.ResourceManager">ResourceManager (class in scheduler.resources.manager)</a>
 </li>
@@ -6837,6 +6911,16 @@
 </li>
       <li><a href="architecture/django/code_docs/scheduler.html#scheduler.scale_scheduler.ScaleScheduler.resourceOffers">resourceOffers() (scheduler.scale_scheduler.ScaleScheduler method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/node.resources.json.html#node.resources.json.resources.Resources">Resources (class in node.resources.json.resources)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.resources">resources (job.models.JobExecution attribute)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/node.resources.html#node.resources.node_resources.NodeResources.resources">(node.resources.node_resources.NodeResources attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/queue.html#queue.models.Queue.resources">(queue.models.Queue attribute)</a>
+</li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/scheduler.resources.html#scheduler.resources.agent.ResourceSet">ResourceSet (class in scheduler.resources.agent)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.results">results (job.models.Job attribute)</a>
@@ -6961,6 +7045,8 @@
         <li><a href="architecture/django/code_docs/source.html#source.models.SourceFileManager.save_parse_results">(source.models.SourceFileManager method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/node.resources.html#node.resources.resource.ScalarResource">ScalarResource (class in node.resources.resource)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeFile.scale_file">scale_file (recipe.models.RecipeFile attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeFile.scale_file_id">scale_file_id (recipe.models.RecipeFile attribute)</a>
@@ -7121,7 +7207,7 @@
 </li>
       <li><a href="architecture/django/code_docs/scheduler.scheduling.html#module-scheduler.scheduling.manager">scheduler.scheduling.manager (module)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#module-scheduler.scheduling.node">scheduler.scheduling.node (module)</a>
+      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#module-scheduler.scheduling.scheduling_node">scheduler.scheduling.scheduling_node (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.html#module-scheduler.serializers">scheduler.serializers (module)</a>
 </li>
@@ -7211,13 +7297,13 @@
 </li>
       <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.manager.SchedulingManager">SchedulingManager (class in scheduler.scheduling.manager)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.node.SchedulingNode">SchedulingNode (class in scheduler.scheduling.node)</a>
+      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.scheduling_node.SchedulingNode">SchedulingNode (class in scheduler.scheduling.scheduling_node)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.schedule.SchedulingThread">SchedulingThread (class in scheduler.threads.schedule)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.node.SchedulingNode.score_job_exe_for_reservation">score_job_exe_for_reservation() (scheduler.scheduling.node.SchedulingNode method)</a>
+      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.scheduling_node.SchedulingNode.score_job_exe_for_reservation">score_job_exe_for_reservation() (scheduler.scheduling.scheduling_node.SchedulingNode method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.node.SchedulingNode.score_job_exe_for_scheduling">score_job_exe_for_scheduling() (scheduler.scheduling.node.SchedulingNode method)</a>
+      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.scheduling_node.SchedulingNode.score_job_exe_for_scheduling">score_job_exe_for_scheduling() (scheduler.scheduling.scheduling_node.SchedulingNode method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.html#util.aws.AWSCredentials.secret_access_key">secret_access_key (util.aws.AWSCredentials attribute)</a>
 </li>
@@ -7573,6 +7659,8 @@
         <li><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_views.TestMetricPlotView.setUp">(metrics.test.test_views.TestMetricPlotView method)</a>
 </li>
         <li><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_views.TestMetricsView.setUp">(metrics.test.test_views.TestMetricsView method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/node.test.resources.json.html#node.test.resources.json.test_resources.TestResources.setUp">(node.test.resources.json.test_resources.TestResources method)</a>
 </li>
         <li><a href="architecture/django/code_docs/node.test.html#node.test.test_views.TestNodeDetailsView.setUp">(node.test.test_views.TestNodeDetailsView method)</a>
 </li>
@@ -8009,7 +8097,7 @@
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.IngestManager.start_ingest_tasks">start_ingest_tasks() (ingest.models.IngestManager method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.node.SchedulingNode.start_job_exe_tasks">start_job_exe_tasks() (scheduler.scheduling.node.SchedulingNode method)</a>
+      <li><a href="architecture/django/code_docs/scheduler.scheduling.html#scheduler.scheduling.scheduling_node.SchedulingNode.start_job_exe_tasks">start_job_exe_tasks() (scheduler.scheduling.scheduling_node.SchedulingNode method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.job_exe.RunningJobExecution.start_next_task">start_next_task() (job.execution.job_exe.RunningJobExecution method)</a>
 </li>
@@ -8221,7 +8309,7 @@
 </li>
       <li><a href="architecture/django/code_docs/mesos_api.html#mesos_api.utils.string_to_TaskStatusCode">string_to_TaskStatusCode() (in module mesos_api.utils)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.resources.NodeResources.subtract">subtract() (job.resources.NodeResources method)</a>
+      <li><a href="architecture/django/code_docs/node.resources.html#node.resources.node_resources.NodeResources.subtract">subtract() (node.resources.node_resources.NodeResources method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.metrics.FinishedJobExeMetrics.subtract_metrics">subtract_metrics() (job.execution.metrics.FinishedJobExeMetrics method)</a>
 
@@ -8430,6 +8518,8 @@
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_retry.TestRetry.test_always_fail_10_times">test_always_fail_10_times() (util.test.test_retry.TestRetry method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_retry.TestRetry.test_always_fail_no_decorator_args">test_always_fail_no_decorator_args() (util.test.test_retry.TestRetry method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesValidationView.test_bad_custom_resources">test_bad_custom_resources() (job.test.test_views.TestJobTypesValidationView method)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesValidationView.test_bad_definition">test_bad_definition() (batch.test.test_views.TestBatchesValidationView method)</a>
 </li>
@@ -8769,6 +8859,8 @@
         <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypesView.test_create">(recipe.test.test_views.TestRecipeTypesView method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesView.test_create_bad_custom_resources">test_create_bad_custom_resources() (job.test.test_views.TestJobTypesView method)</a>
+</li>
       <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesView.test_create_bad_definition">test_create_bad_definition() (batch.test.test_views.TestBatchesView method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesView.test_create_bad_error">test_create_bad_error() (job.test.test_views.TestJobTypesView method)</a>
@@ -8901,6 +8993,8 @@
         <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_views.TestWorkspaceDetailsView.test_edit_bad_config">(storage.test.test_views.TestWorkspaceDetailsView method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsView.test_edit_bad_custom_resources">test_edit_bad_custom_resources() (job.test.test_views.TestJobTypeDetailsView method)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsView.test_edit_bad_definition">test_edit_bad_definition() (recipe.test.test_views.TestRecipeTypeDetailsView method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsView.test_edit_bad_error_mapping">test_edit_bad_error_mapping() (job.test.test_views.TestJobTypeDetailsView method)</a>
@@ -8922,6 +9016,8 @@
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScanDetailsView.test_edit_config_conflict">test_edit_config_conflict() (ingest.test.test_views.TestScanDetailsView method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsView.test_edit_custom_resources">test_edit_custom_resources() (job.test.test_views.TestJobTypeDetailsView method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipeTypeDetailsView.test_edit_definition">test_edit_definition() (recipe.test.test_views.TestRecipeTypeDetailsView method)</a>
 </li>
@@ -9470,6 +9566,8 @@
       <li><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_invalid_output_file">test_invalid_output_file() (job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_invalid_output_files">test_invalid_output_files() (job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/node.test.resources.json.html#node.test.resources.json.test_resources.TestResources.test_invalid_resources">test_invalid_resources() (node.test.resources.json.test_resources.TestResources method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.configuration.results.html#job.test.configuration.results.test_results_manifest.TestResultsManifestConstructor.test_invalid_results_manifest">test_invalid_results_manifest() (job.test.configuration.results.test_results_manifest.TestResultsManifestConstructor method)</a>
 </li>
@@ -10139,12 +10237,12 @@
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_string_accepted_none">test_parse_string_accepted_none() (util.test.test_rest.TestRest method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_string_default">test_parse_string_default() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_string_list">test_parse_string_list() (util.test.test_rest.TestRest method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_string_list_accepted_all">test_parse_string_list_accepted_all() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_string_list_accepted_none">test_parse_string_list_accepted_none() (util.test.test_rest.TestRest method)</a>
@@ -10834,7 +10932,11 @@
       <li><a href="architecture/django/code_docs/scheduler.test.sync.html#scheduler.test.sync.test_job_type_manager.TestJobTypeManager.test_successful_update_and_create_json">test_successful_update_and_create_json() (scheduler.test.sync.test_job_type_manager.TestJobTypeManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.configuration.json.job.html#job.test.configuration.json.job.test_job_config.TestJobConfiguration.test_successful_validation">test_successful_validation() (job.test.configuration.json.job.test_job_config.TestJobConfiguration method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/node.test.resources.json.html#node.test.resources.json.test_resources.TestResources.test_successful_validation">(node.test.resources.json.test_resources.TestResources method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_models.TestQueueManagerHandleJobCancellation.test_successful_with_blocked_job">test_successful_with_blocked_job() (queue.test.test_models.TestQueueManagerHandleJobCancellation method)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_models.TestQueueManagerHandleJobCancellation.test_successful_with_failed_job">test_successful_with_failed_job() (queue.test.test_models.TestQueueManagerHandleJobCancellation method)</a>
@@ -11555,6 +11657,8 @@
 </li>
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_views.TestRequeueJobsView">TestRequeueJobsView (class in queue.test.test_views)</a>
 </li>
+      <li><a href="architecture/django/code_docs/node.test.resources.json.html#node.test.resources.json.test_resources.TestResources">TestResources (class in node.test.resources.json.test_resources)</a>
+</li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest">TestRest (class in util.test.test_rest)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.configuration.results.html#job.test.configuration.results.test_results_manifest.TestResultsManifestConstructor">TestResultsManifestConstructor (class in job.test.configuration.results.test_results_manifest)</a>
@@ -11720,8 +11824,6 @@
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.configuration.html#job.configuration.volume.Volume.to_docker_param">to_docker_param() (job.configuration.volume.Volume method)</a>
-</li>
-      <li><a href="architecture/django/code_docs/job.html#job.resources.NodeResources.to_logging_string">to_logging_string() (job.resources.NodeResources method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.serializers.JobDetailsInputSerializer.to_representation">to_representation() (job.serializers.JobDetailsInputSerializer method)</a>
 

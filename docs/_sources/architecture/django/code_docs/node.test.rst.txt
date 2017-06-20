@@ -1,6 +1,13 @@
 node\.test package
 ==================
 
+Subpackages
+-----------
+
+.. toctree::
+
+    node.test.resources
+
 Submodules
 ----------
 

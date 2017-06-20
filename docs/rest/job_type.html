@@ -614,20 +614,26 @@ determine additional disk space in MiB required for job output.</td>
 <td>JSON description of the interface for running the job.
 (See <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span class="std std-ref">Job Interface Specification Version 1.4</span></a>)</td>
 </tr>
-<tr class="row-odd"><td colspan="2">error_mapping</td>
+<tr class="row-odd"><td colspan="2">custom_resources</td>
+<td colspan="2">JSON Object</td>
+<td>Optional</td>
+<td>JSON description for any custom resources needed for running a
+job of this type. (See <a class="reference internal" href="../architecture/jobs/resources.html#architecture-jobs-resources"><span class="std std-ref">Resources</span></a>)</td>
+</tr>
+<tr class="row-even"><td colspan="2">error_mapping</td>
 <td colspan="2">JSON Object</td>
 <td>Optional</td>
 <td>JSON description that maps exit codes to known error models.
 (See <a class="reference internal" href="../architecture/jobs/error_interface.html#architecture-errors-interface-spec"><span class="std std-ref">Error Interface Specification Version 1.0</span></a>)</td>
 </tr>
-<tr class="row-even"><td colspan="2">trigger_rule</td>
+<tr class="row-odd"><td colspan="2">trigger_rule</td>
 <td colspan="2">JSON Object</td>
 <td>Optional</td>
 <td>A linked trigger rule that automatically invokes the job type.
 Type and configuration fields are required if setting a rule.
 The is_active field is optional and can be used to pause.</td>
 </tr>
-<tr class="row-odd"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-even"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job&quot;</span><span class="p">,</span>
     <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
     <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Job&quot;</span><span class="p">,</span>
@@ -663,6 +669,12 @@ The is_active field is optional and can be used to pause.</td>
         <span class="s2">&quot;output_data&quot;</span><span class="o">:</span> <span class="p">[],</span>
         <span class="s2">&quot;shared_resources&quot;</span><span class="o">:</span> <span class="p">[]</span>
     <span class="p">},</span>
+    <span class="s2">&quot;custom_resources&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;resources&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;foo&quot;</span><span class="o">:</span> <span class="mf">10.0</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
     <span class="s2">&quot;error_mapping&quot;</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
         <span class="s2">&quot;exit_codes&quot;</span><span class="o">:</span> <span class="p">{</span>
@@ -689,25 +701,25 @@ The is_active field is optional and can be used to pause.</td>
 </div>
 </td>
 </tr>
-<tr class="row-even"><td colspan="6"><strong>Successful Response</strong></td>
+<tr class="row-odd"><td colspan="6"><strong>Successful Response</strong></td>
 </tr>
-<tr class="row-odd"><td><strong>Status</strong></td>
+<tr class="row-even"><td><strong>Status</strong></td>
 <td colspan="5">201 CREATED</td>
 </tr>
-<tr class="row-even"><td><strong>Location</strong></td>
+<tr class="row-odd"><td><strong>Location</strong></td>
 <td colspan="5">URL pointing to the details for the newly created job type</td>
 </tr>
-<tr class="row-odd"><td><strong>Content Type</strong></td>
+<tr class="row-even"><td><strong>Content Type</strong></td>
 <td colspan="5"><em>application/json</em></td>
 </tr>
-<tr class="row-even"><td colspan="6"><strong>JSON Fields</strong></td>
+<tr class="row-odd"><td colspan="6"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-odd"><td>&#160;</td>
+<tr class="row-even"><td>&#160;</td>
 <td colspan="2">JSON Object</td>
 <td colspan="3">All fields are the same as the job type details model.
 (See <a class="reference internal" href="#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-odd"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
     <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job&quot;</span><span class="p">,</span>
     <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
@@ -740,6 +752,7 @@ The is_active field is optional and can be used to pause.</td>
     <span class="s2">&quot;paused&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
     <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span><span class="p">,</span>
     <span class="s2">&quot;interface&quot;</span><span class="o">:</span> <span class="p">{...},</span>
+    <span class="s2">&quot;custom_resources&quot;</span><span class="o">:</span> <span class="p">{...},</span>
     <span class="s2">&quot;error_mapping&quot;</span><span class="o">:</span> <span class="p">{...},</span>
     <span class="s2">&quot;errors&quot;</span><span class="o">:</span> <span class="p">[...],</span>
     <span class="s2">&quot;job_counts_6h&quot;</span><span class="o">:</span> <span class="p">[...],</span>
@@ -889,20 +902,26 @@ determine additional disk space in MiB required for job output.</td>
 <td>JSON description of the interface for running the job.
 (See <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span class="std std-ref">Job Interface Specification Version 1.4</span></a>)</td>
 </tr>
-<tr class="row-odd"><td colspan="2">error_mapping</td>
+<tr class="row-odd"><td colspan="2">custom_resources</td>
+<td colspan="2">JSON Object</td>
+<td>Optional</td>
+<td>JSON description for any custom resources needed for running a
+job of this type. (See <a class="reference internal" href="../architecture/jobs/resources.html#architecture-jobs-resources"><span class="std std-ref">Resources</span></a>)</td>
+</tr>
+<tr class="row-even"><td colspan="2">error_mapping</td>
 <td colspan="2">JSON Object</td>
 <td>Optional</td>
 <td>JSON description that maps exit codes to known error models.
 (See <a class="reference internal" href="../architecture/jobs/error_interface.html#architecture-errors-interface-spec"><span class="std std-ref">Error Interface Specification Version 1.0</span></a>)</td>
 </tr>
-<tr class="row-even"><td colspan="2">trigger_rule</td>
+<tr class="row-odd"><td colspan="2">trigger_rule</td>
 <td colspan="2">JSON Object</td>
 <td>Optional</td>
 <td>A linked trigger rule that automatically invokes the job type.
 Type and configuration fields are required if setting a rule.
 The is_active field is optional and can be used to pause.</td>
 </tr>
-<tr class="row-odd"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-even"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job&quot;</span><span class="p">,</span>
     <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
     <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Job&quot;</span><span class="p">,</span>
@@ -938,6 +957,12 @@ The is_active field is optional and can be used to pause.</td>
         <span class="s2">&quot;output_data&quot;</span><span class="o">:</span> <span class="p">[],</span>
         <span class="s2">&quot;shared_resources&quot;</span><span class="o">:</span> <span class="p">[]</span>
     <span class="p">},</span>
+    <span class="s2">&quot;custom_resources&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;resources&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;foo&quot;</span><span class="o">:</span> <span class="mf">10.0</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
     <span class="s2">&quot;error_mapping&quot;</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
         <span class="s2">&quot;exit_codes&quot;</span><span class="o">:</span> <span class="p">{</span>
@@ -964,29 +989,29 @@ The is_active field is optional and can be used to pause.</td>
 </div>
 </td>
 </tr>
-<tr class="row-even"><td colspan="6"><strong>Successful Response</strong></td>
+<tr class="row-odd"><td colspan="6"><strong>Successful Response</strong></td>
 </tr>
-<tr class="row-odd"><td><strong>Status</strong></td>
+<tr class="row-even"><td><strong>Status</strong></td>
 <td colspan="5">200 OK</td>
 </tr>
-<tr class="row-even"><td><strong>Content Type</strong></td>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
 <td colspan="5"><em>application/json</em></td>
 </tr>
-<tr class="row-odd"><td colspan="6"><strong>JSON Fields</strong></td>
+<tr class="row-even"><td colspan="6"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-even"><td>warnings</td>
+<tr class="row-odd"><td>warnings</td>
 <td colspan="2">Array</td>
 <td colspan="3">A list of warnings discovered during validation.</td>
 </tr>
-<tr class="row-odd"><td>.id</td>
+<tr class="row-even"><td>.id</td>
 <td colspan="2">String</td>
 <td colspan="3">An identifier for the warning.</td>
 </tr>
-<tr class="row-even"><td>.details</td>
+<tr class="row-odd"><td>.details</td>
 <td colspan="2">String</td>
 <td colspan="3">A human-readable description of the problem.</td>
 </tr>
-<tr class="row-odd"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-even"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;warnings&quot;</span><span class="o">:</span> <span class="p">[</span>
         <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="s2">&quot;media_type&quot;</span><span class="p">,</span>
         <span class="s2">&quot;details&quot;</span><span class="o">:</span> <span class="s2">&quot;Invalid media type for data input: input_file -&gt; image/png&quot;</span>
@@ -1161,45 +1186,30 @@ determine additional disk space in MiB required for job output.</td>
 <td colspan="2">JSON description defining the interface for running a job of this type.
 (See <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span class="std std-ref">Job Interface Specification Version 1.4</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>error_mapping</td>
+<tr class="row-odd"><td>custom_resources</td>
+<td>JSON Object</td>
+<td colspan="2">JSON description for any custom resources needed for running a job of
+this type. (See <a class="reference internal" href="../architecture/jobs/resources.html#architecture-jobs-resources"><span class="std std-ref">Resources</span></a>)</td>
+</tr>
+<tr class="row-even"><td>error_mapping</td>
 <td>JSON Object</td>
 <td colspan="2">JSON description defining the error mappings for a job of this type.
 (See <a class="reference internal" href="../architecture/jobs/error_interface.html#architecture-errors-interface-spec"><span class="std std-ref">Error Interface Specification Version 1.0</span></a>)</td>
 </tr>
-<tr class="row-even"><td>trigger_rule</td>
+<tr class="row-odd"><td>trigger_rule</td>
 <td>JSON Object</td>
 <td colspan="2">A linked trigger rule that automatically invokes the job type.
 Type and configuration fields are required if setting a rule.
 The is_active field is optional and can be used to pause.</td>
 </tr>
-<tr class="row-odd"><td>errors</td>
+<tr class="row-even"><td>errors</td>
 <td>Array</td>
 <td colspan="2">List of all errors that are referenced by this job type&#8217;s error mapping.
 (See <a class="reference internal" href="error.html#rest-error-details"><span class="std std-ref">Error Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td>.job_counts_6h</td>
+<tr class="row-odd"><td>.job_counts_6h</td>
 <td>Array</td>
 <td colspan="2">List of job counts for the job type, grouped by status the past 6 hours.</td>
-</tr>
-<tr class="row-odd"><td>..status</td>
-<td>String</td>
-<td colspan="2">The type of job status the count represents.</td>
-</tr>
-<tr class="row-even"><td>..count</td>
-<td>Integer</td>
-<td colspan="2">The number of jobs with that status.</td>
-</tr>
-<tr class="row-odd"><td>..most_recent</td>
-<td>ISO-8601 Datetime</td>
-<td colspan="2">The date/time when a job was last in that status.</td>
-</tr>
-<tr class="row-even"><td>..category</td>
-<td>String</td>
-<td colspan="2">The category of the status, which is only used by a FAILED status.</td>
-</tr>
-<tr class="row-odd"><td>.job_counts_12h</td>
-<td>Array</td>
-<td colspan="2">List of job counts for the job type, grouped by status the past 12 hours.</td>
 </tr>
 <tr class="row-even"><td>..status</td>
 <td>String</td>
@@ -1217,9 +1227,9 @@ The is_active field is optional and can be used to pause.</td>
 <td>String</td>
 <td colspan="2">The category of the status, which is only used by a FAILED status.</td>
 </tr>
-<tr class="row-even"><td>.job_counts_24h</td>
+<tr class="row-even"><td>.job_counts_12h</td>
 <td>Array</td>
-<td colspan="2">List of job counts for the job type, grouped by status the past 24 hours.</td>
+<td colspan="2">List of job counts for the job type, grouped by status the past 12 hours.</td>
 </tr>
 <tr class="row-odd"><td>..status</td>
 <td>String</td>
@@ -1237,7 +1247,27 @@ The is_active field is optional and can be used to pause.</td>
 <td>String</td>
 <td colspan="2">The category of the status, which is only used by a FAILED status.</td>
 </tr>
-<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-odd"><td>.job_counts_24h</td>
+<td>Array</td>
+<td colspan="2">List of job counts for the job type, grouped by status the past 24 hours.</td>
+</tr>
+<tr class="row-even"><td>..status</td>
+<td>String</td>
+<td colspan="2">The type of job status the count represents.</td>
+</tr>
+<tr class="row-odd"><td>..count</td>
+<td>Integer</td>
+<td colspan="2">The number of jobs with that status.</td>
+</tr>
+<tr class="row-even"><td>..most_recent</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">The date/time when a job was last in that status.</td>
+</tr>
+<tr class="row-odd"><td>..category</td>
+<td>String</td>
+<td colspan="2">The category of the status, which is only used by a FAILED status.</td>
+</tr>
+<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
     <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;scale-clock&quot;</span><span class="p">,</span>
     <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
@@ -1270,6 +1300,7 @@ The is_active field is optional and can be used to pause.</td>
     <span class="s2">&quot;paused&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
     <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-03-11T00:00:00Z&quot;</span>
     <span class="s2">&quot;interface&quot;</span><span class="o">:</span> <span class="p">{...},</span>
+    <span class="s2">&quot;custom_resources&quot;</span><span class="o">:</span> <span class="p">{...},</span>
     <span class="s2">&quot;error_mapping&quot;</span><span class="o">:</span> <span class="p">{...},</span>
     <span class="s2">&quot;trigger_rule&quot;</span><span class="o">:</span> <span class="p">{...},</span>
     <span class="s2">&quot;errors&quot;</span><span class="o">:</span> <span class="p">[...],</span>
@@ -1454,20 +1485,26 @@ determine additional disk space in MiB required for job output.</td>
 <td>JSON description of the interface for running the job.
 (See <a class="reference internal" href="../architecture/jobs/job_interface.html#architecture-jobs-interface-spec"><span class="std std-ref">Job Interface Specification Version 1.4</span></a>)</td>
 </tr>
-<tr class="row-odd"><td colspan="2">error_mapping</td>
+<tr class="row-odd"><td colspan="2">custom_resources</td>
+<td colspan="2">JSON Object</td>
+<td>Optional</td>
+<td>JSON description for any custom resources needed for running a
+job of this type. (See <a class="reference internal" href="../architecture/jobs/resources.html#architecture-jobs-resources"><span class="std std-ref">Resources</span></a>)</td>
+</tr>
+<tr class="row-even"><td colspan="2">error_mapping</td>
 <td colspan="2">JSON Object</td>
 <td>Optional</td>
 <td>JSON description that maps exit codes to known error models.
 (See <a class="reference internal" href="../architecture/jobs/error_interface.html#architecture-errors-interface-spec"><span class="std std-ref">Error Interface Specification Version 1.0</span></a>)</td>
 </tr>
-<tr class="row-even"><td colspan="2">trigger_rule</td>
+<tr class="row-odd"><td colspan="2">trigger_rule</td>
 <td colspan="2">JSON Object</td>
 <td>Optional</td>
 <td>A linked trigger rule that automatically invokes the job type.
 Type and configuration fields are required if setting a rule.
 The is_active field is optional and can be used to pause.</td>
 </tr>
-<tr class="row-odd"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-even"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Job&quot;</span><span class="p">,</span>
     <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;This is a description of the job&quot;</span><span class="p">,</span>
     <span class="s2">&quot;category&quot;</span><span class="o">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
@@ -1502,6 +1539,12 @@ The is_active field is optional and can be used to pause.</td>
         <span class="s2">&quot;output_data&quot;</span><span class="o">:</span> <span class="p">[],</span>
         <span class="s2">&quot;shared_resources&quot;</span><span class="o">:</span> <span class="p">[]</span>
     <span class="p">},</span>
+    <span class="s2">&quot;custom_resources&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;resources&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;foo&quot;</span><span class="o">:</span> <span class="mf">10.0</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
     <span class="s2">&quot;error_mapping&quot;</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
         <span class="s2">&quot;exit_codes&quot;</span><span class="o">:</span> <span class="p">{</span>
@@ -1528,22 +1571,22 @@ The is_active field is optional and can be used to pause.</td>
 </div>
 </td>
 </tr>
-<tr class="row-even"><td colspan="6"><strong>Successful Response</strong></td>
+<tr class="row-odd"><td colspan="6"><strong>Successful Response</strong></td>
 </tr>
-<tr class="row-odd"><td><strong>Status</strong></td>
+<tr class="row-even"><td><strong>Status</strong></td>
 <td colspan="5">200 OK</td>
 </tr>
-<tr class="row-even"><td><strong>Content Type</strong></td>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
 <td colspan="5"><em>application/json</em></td>
 </tr>
-<tr class="row-odd"><td colspan="6"><strong>JSON Fields</strong></td>
+<tr class="row-even"><td colspan="6"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-even"><td>&#160;</td>
+<tr class="row-odd"><td>&#160;</td>
 <td colspan="2">JSON Object</td>
 <td colspan="3">All fields are the same as the job type details model.
 (See <a class="reference internal" href="#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-even"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
     <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-job&quot;</span><span class="p">,</span>
     <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>

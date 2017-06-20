@@ -1,0 +1,17 @@
+node\.test\.resources package
+=============================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    node.test.resources.json
+
+Module contents
+---------------
+
+.. automodule:: node.test.resources
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -7,6 +7,7 @@ Subpackages
 .. toctree::
 
     node.migrations
+    node.resources
     node.test
 
 Submodules
