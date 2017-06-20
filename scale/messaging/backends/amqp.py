@@ -15,6 +15,8 @@ logger = logging.getLogger(__name__)
 
 
 class AMQPMessagingBackend(MessagingBackend):
+    """Backend supporting message passing via AMQP 0.9.1 broker, targeting RabbitMQ"""
+    
     def __init__(self):
         super(AMQPMessagingBackend, self).__init__('amqp')
 
@@ -22,7 +24,7 @@ class AMQPMessagingBackend(MessagingBackend):
         self._timeout = 1
 
     def send_message(self, message):
-        """See :meth:`messaging.backends.MessagingBackend.send_message`
+        """See :meth:`messaging.backends.backend.MessagingBackend.send_message`
         """
         with Connection(self._broker_url) as connection:
             with closing(connection.SimpleQueue(self._queue_name)) as simple_queue:
@@ -30,7 +32,7 @@ class AMQPMessagingBackend(MessagingBackend):
                 simple_queue.put(message)
 
     def receive_messages(self, batch_size):
-        """See :meth:`messaging.backends.MessagingBackend.receive_messages`
+        """See :meth:`messaging.backends.backend.MessagingBackend.receive_messages`
         """
         with Connection(self._broker_url) as connection:
             with closing(connection.SimpleQueue(self._queue_name)) as simple_queue:
