@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 import datetime
 import threading
 
-from job.resources import NodeResources
+from node.resources.node_resources import NodeResources
 from scheduler.resources.agent import AgentResources
 
 # Amount of time between rolling watermark resets

@@ -27,6 +27,9 @@ from job.exceptions import InvalidJobField
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
 from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
+from node.resources.json.resources import Resources
+from node.resources.node_resources import NodeResources
+from node.resources.resource import Cpus, Disk, Mem
 from storage.models import ScaleFile, Workspace
 from trigger.configuration.exceptions import InvalidTriggerType
 from trigger.models import TriggerRule
@@ -709,6 +712,8 @@ class Job(models.Model):
     timeout = models.IntegerField()
     max_tries = models.IntegerField()
     num_exes = models.IntegerField(default=0)
+    # TODO: remove cpus_required, mem_required, and disk_out_required, will cause breaking REST API changes
+    # TODO: rename disk_in_required to input_file_size, will cause breaking REST API changes
     cpus_required = models.FloatField(blank=True, null=True)
     mem_required = models.FloatField(blank=True, null=True)
     disk_in_required = models.FloatField(blank=True, null=True)
@@ -766,6 +771,27 @@ class Job(models.Model):
         """
 
         return JobResults(self.results)
+
+    def get_resources(self):
+        """Returns the resources required for this job
+
+        :returns: The required resources
+        :rtype: :class:`node.resources.node_resources.NodeResources`
+        """
+
+        resources = self.job_type.get_resources()
+
+        # Calculate output space required in MiB rounded up to the nearest whole MiB
+        multiplier = self.job_type.disk_out_mult_required
+        const = self.job_type.disk_out_const_required
+        disk_in_required = self.disk_in_required
+        if not disk_in_required:
+            disk_in_required = 0.0
+        output_size_mb = long(math.ceil(multiplier * disk_in_required + const))
+        disk_out_required = max(output_size_mb, MIN_DISK)
+
+        resources.add(NodeResources([Disk(disk_out_required + disk_in_required)]))
+        return resources
 
     def increase_max_tries(self):
         """Increase the total max_tries based on the current number of executions and job type max_tries.
@@ -1040,8 +1066,9 @@ class JobExecutionManager(models.Manager):
         :param framework_id: The scheduling framework ID
         :type framework_id: string
         :param job_executions: A list of tuples where each tuple contains the job_exe model to schedule, the node ID to
-            schedule it on, and the resources it will be given
-        :type job_executions: [(:class:`job.models.JobExecution`, int, :class:`job.resources.JobResources`)]
+            schedule it on, the resources it will be given, and the input file size
+        :type job_executions: [(:class:`job.models.JobExecution`, int,
+            :class:`node.resources.node_resources.NodeResources`, int)]
         :param workspaces: A dict of all workspaces stored by name
         :type workspaces: {string: :class:`storage.models.Workspace`}
         :returns: The scheduled job_exe models with related job, job_type, job_type_rev and node models populated
@@ -1068,6 +1095,7 @@ class JobExecutionManager(models.Manager):
                 job_exe = job_execution[0]
                 node_id = job_execution[1]
                 resources = job_execution[2]
+                input_file_size = job_execution[3]
 
                 if job_exe.status != 'QUEUED':
                     continue
@@ -1090,11 +1118,12 @@ class JobExecutionManager(models.Manager):
                 docker_volumes = []
                 job_exe.configure_docker_params(workspaces, docker_volumes)
                 job_exe.environment = {}
+                job_exe.resources = resources.get_json().get_dict()
                 job_exe.cpus_scheduled = resources.cpus
                 job_exe.mem_scheduled = resources.mem
-                job_exe.disk_in_scheduled = resources.disk_in
-                job_exe.disk_out_scheduled = resources.disk_out
-                job_exe.disk_total_scheduled = resources.disk_total
+                job_exe.disk_in_scheduled = input_file_size
+                job_exe.disk_out_scheduled = resources.disk - input_file_size
+                job_exe.disk_total_scheduled = resources.disk
                 job_exe.save()
                 job_exe.docker_volumes = docker_volumes
                 job_exes.append(job_exe)
@@ -1169,6 +1198,8 @@ class JobExecution(models.Model):
     :type timeout: :class:`django.db.models.IntegerField`
     :keyword configuration: JSON description describing the configuration for how the job execution should be run
     :type configuration: :class:`django.contrib.postgres.fields.JSONField`
+    :keyword resources: JSON description describing the resources allocated to this job execution
+    :type resources: :class:`django.contrib.postgres.fields.JSONField`
 
     :keyword cluster_id: This is an ID for the job execution that is unique in the context of the cluster, allowing
         Scale components (task IDs, Docker volume names, etc) to have unique names within the cluster
@@ -1252,6 +1283,7 @@ class JobExecution(models.Model):
     command_arguments = models.CharField(max_length=1000)
     timeout = models.IntegerField()
     configuration = django.contrib.postgres.fields.JSONField(default=dict)
+    resources = django.contrib.postgres.fields.JSONField(default=dict)
 
     cluster_id = models.CharField(blank=True, max_length=100, null=True)
     node = models.ForeignKey('node.Node', blank=True, null=True, on_delete=models.PROTECT)
@@ -1259,6 +1291,7 @@ class JobExecution(models.Model):
     environment = django.contrib.postgres.fields.JSONField(default=dict)
     cpus_scheduled = models.FloatField(blank=True, null=True)
     mem_scheduled = models.FloatField(blank=True, null=True)
+    # disk_in_scheduled represents the job's total input size
     disk_in_scheduled = models.FloatField(blank=True, null=True)
     disk_out_scheduled = models.FloatField(blank=True, null=True)
     disk_total_scheduled = models.FloatField(blank=True, null=True)
@@ -1614,6 +1647,15 @@ class JobExecution(models.Model):
 
         return '%s_pre' % self.get_cluster_id()
 
+    def get_resources(self):
+        """Returns the resources allocated to this job execution
+
+        :returns: The allocated resources
+        :rtype: :class:`node.resources.node_resources.NodeResources`
+        """
+
+        return Resources(self.resources).get_node_resources()
+
     def is_docker_privileged(self):
         """Indicates whether this job execution uses Docker in privileged mode
 
@@ -1756,7 +1798,8 @@ class JobTypeManager(models.Manager):
     """
 
     @transaction.atomic
-    def create_job_type(self, name, version, interface, trigger_rule=None, error_mapping=None, **kwargs):
+    def create_job_type(self, name, version, interface, trigger_rule=None, error_mapping=None, custom_resources=None,
+                        **kwargs):
         """Creates a new non-system job type and saves it in the database. All database changes occur in an atomic
         transaction.
 
@@ -1770,6 +1813,8 @@ class JobTypeManager(models.Manager):
         :type trigger_rule: :class:`trigger.models.TriggerRule`
         :param error_mapping: Mapping for translating an exit code to an error type
         :type error_mapping: :class:`job.configuration.interface.error_interface.ErrorInterface`
+        :param custom_resources: Custom resources required by this job type
+        :type custom_resources: :class:`node.resources.json.resources.Resources`
         :returns: The new job type
         :rtype: :class:`job.models.JobType`
 
@@ -1803,6 +1848,8 @@ class JobTypeManager(models.Manager):
         if error_mapping:
             error_mapping.validate()
             job_type.error_mapping = error_mapping.get_dict()
+        if custom_resources:
+            job_type.custom_resources = custom_resources.get_dict()
         if 'is_active' in kwargs:
             job_type.archived = None if kwargs['is_active'] else timezone.now()
         if 'is_paused' in kwargs:
@@ -1816,7 +1863,7 @@ class JobTypeManager(models.Manager):
 
     @transaction.atomic
     def edit_job_type(self, job_type_id, interface=None, trigger_rule=None, remove_trigger_rule=False,
-                      error_mapping=None, **kwargs):
+                      error_mapping=None, custom_resources=None, **kwargs):
         """Edits the given job type and saves the changes in the database. The caller must provide the related
         trigger_rule model. All database changes occur in an atomic transaction. An argument of None for a field
         indicates that the field should not change. The remove_trigger_rule parameter indicates the difference between
@@ -1833,6 +1880,8 @@ class JobTypeManager(models.Manager):
         :type remove_trigger_rule: bool
         :param error_mapping: Mapping for translating an exit code to an error type
         :type error_mapping: :class:`job.configuration.interface.error_interface.ErrorInterface`
+        :param custom_resources: Custom resources required by this job type
+        :type custom_resources: :class:`node.resources.json.resources.Resources`
 
         :raises :class:`job.exceptions.InvalidJobField`: If a given job type field has an invalid value
         :raises :class:`trigger.configuration.exceptions.InvalidTriggerType`: If the given trigger rule is an invalid
@@ -1887,6 +1936,10 @@ class JobTypeManager(models.Manager):
         if error_mapping:
             error_mapping.validate()
             job_type.error_mapping = error_mapping.get_dict()
+
+        if custom_resources:
+            job_type.custom_resources = custom_resources.get_dict()
+
         if 'is_active' in kwargs and job_type.is_active != kwargs['is_active']:
             job_type.archived = None if kwargs['is_active'] else timezone.now()
         if 'is_paused' in kwargs and job_type.is_paused != kwargs['is_paused']:
@@ -2306,6 +2359,8 @@ class JobType(models.Model):
     :keyword disk_out_mult_required: A multiplier (2x = 2.0) applied to the size of the input files to determine
         additional disk space in MiB required for job output (temp work and products) for a job of this type
     :type disk_out_mult_required: :class:`django.db.models.FloatField`
+    :keyword custom_resources: JSON describing the custom resources required for jobs of this type
+    :type custom_resources: :class:`django.contrib.postgres.fields.JSONField`
 
     :keyword icon_code: A font-awesome icon code (like 'f013' for gear) to use when representing this job type
     :type icon_code: string of a FontAwesome icon code
@@ -2360,6 +2415,7 @@ class JobType(models.Model):
     shared_mem_required = models.FloatField(default=0.0)
     disk_out_const_required = models.FloatField(default=64.0)
     disk_out_mult_required = models.FloatField(default=0.0)
+    custom_resources = django.contrib.postgres.fields.JSONField(default=dict)
 
     icon_code = models.CharField(max_length=20, null=True, blank=True)
 
@@ -2369,6 +2425,25 @@ class JobType(models.Model):
     last_modified = models.DateTimeField(auto_now=True)
 
     objects = JobTypeManager()
+
+    def convert_custom_resources(self):
+        """Takes the raw custom_resources dict and performs the Scale version conversion on it so that the REST API
+        always returns the latest version of the JSON schema
+
+        :returns: The custom resources dict converted to the latest version of the JSON schema
+        :rtype: dict
+        """
+
+        return self.get_custom_resources().get_dict()
+
+    def get_custom_resources(self):
+        """Returns the custom resources required for jobs of this type
+
+        :returns: The custom resources
+        :rtype: :class:`node.resources.json.resources.Resources`
+        """
+
+        return Resources(self.custom_resources)
 
     def get_job_interface(self):
         """Returns the interface for running jobs of this type
@@ -2393,6 +2468,22 @@ class JobType(models.Model):
         """
 
         return JobConfiguration(self.configuration)
+
+    def get_resources(self):
+        """Returns the resources required for jobs of this type
+
+        :returns: The required resources
+        :rtype: :class:`node.resources.node_resources.NodeResources`
+        """
+
+        resources = Resources(self.custom_resources).get_node_resources()
+        resources.remove_resource('cpus')
+        resources.remove_resource('mem')
+        resources.remove_resource('disk')
+        cpus = max(self.cpus_required, MIN_CPUS)
+        mem = max(self.mem_required, MIN_MEM)
+        resources.add(NodeResources([Cpus(cpus), Mem(mem)]))
+        return resources
 
     def natural_key(self):
         """Django method to define the natural key for a job type as the

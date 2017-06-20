@@ -648,6 +648,12 @@ class TestJobTypesView(TestCase):
                     '1': self.error.name,
                 },
             },
+            'custom_resources': {
+                'version': '1.0',
+                'resources': {
+                    'foo': 10.0
+                }
+            }
         }
 
         response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
@@ -660,6 +666,7 @@ class TestJobTypesView(TestCase):
         self.assertEqual(results['priority'], 1)
         self.assertIsNotNone(results['error_mapping'])
         self.assertEqual(results['error_mapping']['exit_codes']['1'], self.error.name)
+        self.assertEqual(results['custom_resources']['resources']['foo'], 10.0)
         self.assertIsNone(results['trigger_rule'])
         self.assertIsNone(results['max_scheduled'])
 
@@ -797,6 +804,32 @@ class TestJobTypesView(TestCase):
                 'version': '1.0',
                 'exit_codes': {
                     '1': 'BAD',
+                },
+            },
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_create_bad_custom_resources(self):
+        """Tests creating a new job type with an invalid custom resources"""
+        url = rest_util.get_url('/job-types/')
+        json_data = {
+            'name': 'job-type-post-test',
+            'version': '1.0.0',
+            'description': 'This is a test.',
+            'interface': {
+                'version': '1.0',
+                'command': 'test_cmd',
+                'command_arguments': 'test_arg',
+                'input_data': [],
+                'output_data': [],
+                'shared_resources': [],
+            },
+            'custom_resources': {
+                'version': '1.0',
+                'resources': {
+                    'foo': 'BAD',
                 },
             },
         }
@@ -991,6 +1024,22 @@ class TestJobTypeDetailsView(TestCase):
         self.assertEqual(result['error_mapping']['exit_codes']['10'], error.name)
         self.assertEqual(result['trigger_rule']['id'], self.trigger_rule.id)
 
+    def test_edit_custom_resources(self):
+        """Tests editing the custom resources of a job type"""
+
+        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
+        json_data = {
+            'custom_resources': {'resources': {'foo': 10.0}},
+        }
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(result['id'], self.job_type.id)
+        self.assertEqual(result['title'], self.job_type.title)
+        self.assertEqual(result['revision_num'], 1)
+        self.assertEqual(result['custom_resources']['resources']['foo'], 10.0)
+
     def test_edit_trigger_rule(self):
         """Tests editing the trigger rule of a job type"""
         trigger_config = self.trigger_config.copy()
@@ -1103,6 +1152,17 @@ class TestJobTypeDetailsView(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
 
+    def test_edit_bad_custom_resources(self):
+        """Tests attempting to edit a job type using an invalid custom resources"""
+
+        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
+        json_data = {
+            'custom_resources': {'version': '1.0', 'resources': {'foo': 'BAD'}},
+        }
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
     def test_edit_bad_trigger(self):
         """Tests attempting to edit a job type using an invalid trigger rule"""
         trigger_config = self.trigger_config.copy()
@@ -1181,6 +1241,12 @@ class TestJobTypesValidationView(TransactionTestCase):
                     '1': self.error.name,
                 },
             },
+            'custom_resources': {
+                'version': '1.0',
+                'resources': {
+                    'foo': 50.0,
+                },
+            },
         }
 
         url = rest_util.get_url('/job-types/validation/')
@@ -1248,6 +1314,24 @@ class TestJobTypesValidationView(TransactionTestCase):
                 'version': '1.0',
                 'exit_codes': {
                     '1': 'BAD',
+                },
+            },
+        }
+
+        url = rest_util.get_url('/job-types/validation/')
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_bad_custom_resources(self):
+        """Tests validating a new job type with invalid custom resources."""
+        json_data = {
+            'name': 'job-type-post-test',
+            'version': '1.0.0',
+            'description': 'This is a test.',
+            'custom_resources': {
+                'version': '1.0',
+                'resources': {
+                    'foo': 'BAD',
                 },
             },
         }

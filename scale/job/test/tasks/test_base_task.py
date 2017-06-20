@@ -7,9 +7,9 @@ from django.test import TestCase
 from django.utils.timezone import now
 
 import job.test.utils as job_test_utils
-from job.resources import NodeResources
 from job.tasks.base_task import Task
 from job.tasks.update import TaskStatusUpdate
+from node.resources.node_resources import NodeResources
 
 
 # Non-abstract class to test implementation of base Task class
@@ -19,7 +19,7 @@ class ImplementedTask(Task):
         """Returns the resources that are required/have been scheduled for this task
 
         :returns: The scheduled resources for this task
-        :rtype: :class:`job.resources.NodeResources`
+        :rtype: :class:`node.resources.node_resources.NodeResources`
         """
 
         return NodeResources()

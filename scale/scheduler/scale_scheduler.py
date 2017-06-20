@@ -1,4 +1,5 @@
 """The Scale Mesos scheduler"""
+from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import datetime
@@ -12,10 +13,11 @@ from error.models import Error
 from job.execution.manager import job_exe_mgr
 from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
 from job.models import JobExecution
-from job.resources import NodeResources
 from job.tasks.manager import task_mgr
 from job.tasks.update import TaskStatusUpdate
 from mesos_api import utils
+from node.resources.node_resources import NodeResources
+from node.resources.resource import ScalarResource
 from queue.models import Queue
 from scheduler.cleanup.manager import cleanup_mgr
 from scheduler.initialize import initialize_system
@@ -195,17 +197,11 @@ class ScaleScheduler(MesosScheduler):
             offer_id = offer.id.value
             agent_id = offer.slave_id.value
             framework_id = offer.framework_id.value
-            disk = 0
-            mem = 0
-            cpus = 0
+            resource_list = []
             for resource in offer.resources:
-                if resource.name == 'disk':
-                    disk = resource.scalar.value
-                elif resource.name == 'mem':
-                    mem = resource.scalar.value
-                elif resource.name == 'cpus':
-                    cpus = resource.scalar.value
-            resources = NodeResources(cpus=cpus, mem=mem, disk=disk)
+                if resource.type == 0:  # This is the SCALAR type
+                    resource_list.append(ScalarResource(resource.name, resource.scalar.value))
+            resources = NodeResources(resource_list)
             total_resources.add(resources)
             agent_ids.add(agent_id)
             resource_offers.append(ResourceOffer(offer_id, agent_id, framework_id, resources, started))
@@ -220,8 +216,8 @@ class ScaleScheduler(MesosScheduler):
         else:
             logger.debug(msg, duration.total_seconds())
 
-        logger.info('Received %d offer(s) with %s from %d node(s)', len(resource_offers),
-                    total_resources.to_logging_string(), len(agent_ids))
+        logger.info('Received %d offer(s) with %s from %d node(s)', len(resource_offers), total_resources,
+                    len(agent_ids))
 
     def offerRescinded(self, driver, offerId):
         """

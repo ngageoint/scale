@@ -8,13 +8,14 @@ from mock import MagicMock
 import job.test.utils as job_test_utils
 import queue.test.utils as queue_test_utils
 from job.execution.job_exe import RunningJobExecution
-from job.resources import NodeResources
 from job.tasks.health_task import HealthTask
 from job.tasks.pull_task import PullTask
+from node.resources.node_resources import NodeResources
+from node.resources.resource import Cpus, Disk, Mem
 from queue.job_exe import QueuedJobExecution
 from scheduler.resources.agent import ResourceSet
 from scheduler.resources.offer import ResourceOffer
-from scheduler.scheduling.node import SchedulingNode
+from scheduler.scheduling.scheduling_node import SchedulingNode
 
 
 class TestSchedulingNode(TestCase):
@@ -32,26 +33,21 @@ class TestSchedulingNode(TestCase):
         node.is_ready_for_new_job.return_value = True
         node.is_ready_for_next_job_task = MagicMock()
         node.is_ready_for_next_job_task.return_value = True
-        offered_resources = NodeResources(cpus=10.0, mem=50.0)
+        offered_resources = NodeResources([Cpus(10.0), Mem(50.0)])
         task_resources = NodeResources()
-        watermark_resources = NodeResources(cpus=100.0, mem=500.0)
+        watermark_resources = NodeResources([Cpus(100.0), Mem(500.0)])
         resource_set = ResourceSet(offered_resources, task_resources, watermark_resources)
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
 
-        job_exe_model = job_test_utils.create_job_exe()
-        job_exe_model.cpus_scheduled = 1.0
-        job_exe_model.mem_scheduled = 10.0
-        job_exe_model.disk_in_scheduled = 0.0
-        job_exe_model.disk_out_scheduled = 0.0
-        job_exe_model.disk_total_scheduled = 0.0
+        job_exe_model = job_test_utils.create_job_exe(resources=NodeResources([Cpus(1.0), Mem(10.0)]))
         job_exe = RunningJobExecution(job_exe_model)
         waiting_tasks = []
 
         had_waiting_task = scheduling_node.accept_job_exe_next_task(job_exe, waiting_tasks)
         self.assertFalse(had_waiting_task)
         self.assertEqual(len(scheduling_node._allocated_running_job_exes), 1)
-        self.assertTrue(scheduling_node.allocated_resources.is_equal(NodeResources(cpus=1.0, mem=10.0)))
-        self.assertTrue(scheduling_node._remaining_resources.is_equal(NodeResources(cpus=9.0, mem=40.0)))
+        self.assertTrue(scheduling_node.allocated_resources.is_equal(NodeResources([Cpus(1.0), Mem(10.0)])))
+        self.assertTrue(scheduling_node._remaining_resources.is_equal(NodeResources([Cpus(9.0), Mem(40.0)])))
         self.assertListEqual(waiting_tasks, [])
 
     def test_accept_job_exe_next_task_no_jobs(self):
@@ -64,18 +60,13 @@ class TestSchedulingNode(TestCase):
         node.is_ready_for_new_job.return_value = True
         node.is_ready_for_next_job_task = MagicMock()
         node.is_ready_for_next_job_task.return_value = False
-        offered_resources = NodeResources(cpus=10.0, mem=50.0)
+        offered_resources = NodeResources([Cpus(10.0), Mem(50.0)])
         task_resources = NodeResources()
-        watermark_resources = NodeResources(cpus=100.0, mem=500.0)
+        watermark_resources = NodeResources([Cpus(100.0), Mem(500.0)])
         resource_set = ResourceSet(offered_resources, task_resources, watermark_resources)
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
 
-        job_exe_model = job_test_utils.create_job_exe()
-        job_exe_model.cpus_scheduled = 1.0
-        job_exe_model.mem_scheduled = 10.0
-        job_exe_model.disk_in_scheduled = 0.0
-        job_exe_model.disk_out_scheduled = 0.0
-        job_exe_model.disk_total_scheduled = 0.0
+        job_exe_model = job_test_utils.create_job_exe(resources=NodeResources([Cpus(1.0), Mem(10.0)]))
         job_exe = RunningJobExecution(job_exe_model)
         waiting_tasks = []
 
@@ -83,7 +74,7 @@ class TestSchedulingNode(TestCase):
         self.assertFalse(had_waiting_task)
         self.assertEqual(len(scheduling_node._allocated_running_job_exes), 0)
         self.assertTrue(scheduling_node.allocated_resources.is_equal(NodeResources()))
-        self.assertTrue(scheduling_node._remaining_resources.is_equal(NodeResources(cpus=10.0, mem=50.0)))
+        self.assertTrue(scheduling_node._remaining_resources.is_equal(NodeResources([Cpus(10.0), Mem(50.0)])))
         self.assertListEqual(waiting_tasks, [])
 
     def test_accept_job_exe_next_task_canceled(self):
@@ -96,18 +87,13 @@ class TestSchedulingNode(TestCase):
         node.is_ready_for_new_job.return_value = True
         node.is_ready_for_next_job_task = MagicMock()
         node.is_ready_for_next_job_task.return_value = True
-        offered_resources = NodeResources(cpus=10.0, mem=50.0)
+        offered_resources = NodeResources([Cpus(10.0), Mem(50.0)])
         task_resources = NodeResources()
-        watermark_resources = NodeResources(cpus=100.0, mem=500.0)
+        watermark_resources = NodeResources([Cpus(100.0), Mem(500.0)])
         resource_set = ResourceSet(offered_resources, task_resources, watermark_resources)
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
 
-        job_exe_model = job_test_utils.create_job_exe()
-        job_exe_model.cpus_scheduled = 1.0
-        job_exe_model.mem_scheduled = 10.0
-        job_exe_model.disk_in_scheduled = 0.0
-        job_exe_model.disk_out_scheduled = 0.0
-        job_exe_model.disk_total_scheduled = 0.0
+        job_exe_model = job_test_utils.create_job_exe(resources=NodeResources([Cpus(1.0), Mem(10.0)]))
         job_exe = RunningJobExecution(job_exe_model)
         waiting_tasks = []
 
@@ -116,7 +102,7 @@ class TestSchedulingNode(TestCase):
         self.assertFalse(had_waiting_task)
         self.assertEqual(len(scheduling_node._allocated_running_job_exes), 0)
         self.assertTrue(scheduling_node.allocated_resources.is_equal(NodeResources()))
-        self.assertTrue(scheduling_node._remaining_resources.is_equal(NodeResources(cpus=10.0, mem=50.0)))
+        self.assertTrue(scheduling_node._remaining_resources.is_equal(NodeResources([Cpus(10.0), Mem(50.0)])))
         self.assertListEqual(waiting_tasks, [])
 
     def test_accept_job_exe_next_task_insufficient_resources(self):
@@ -129,18 +115,13 @@ class TestSchedulingNode(TestCase):
         node.is_ready_for_new_job.return_value = True
         node.is_ready_for_next_job_task = MagicMock()
         node.is_ready_for_next_job_task.return_value = True
-        offered_resources = NodeResources(cpus=10.0, mem=50.0)
+        offered_resources = NodeResources([Cpus(10.0), Mem(50.0)])
         task_resources = NodeResources()
-        watermark_resources = NodeResources(cpus=100.0, mem=500.0)
+        watermark_resources = NodeResources([Cpus(100.0), Mem(500.0)])
         resource_set = ResourceSet(offered_resources, task_resources, watermark_resources)
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
 
-        job_exe_model = job_test_utils.create_job_exe()
-        job_exe_model.cpus_scheduled = 11.0
-        job_exe_model.mem_scheduled = 10.0
-        job_exe_model.disk_in_scheduled = 0.0
-        job_exe_model.disk_out_scheduled = 0.0
-        job_exe_model.disk_total_scheduled = 0.0
+        job_exe_model = job_test_utils.create_job_exe(resources=NodeResources([Cpus(11.0), Mem(10.0)]))
         job_exe = RunningJobExecution(job_exe_model)
         waiting_tasks = []
 
@@ -148,7 +129,7 @@ class TestSchedulingNode(TestCase):
         self.assertTrue(had_waiting_task)
         self.assertEqual(len(scheduling_node._allocated_running_job_exes), 0)
         self.assertTrue(scheduling_node.allocated_resources.is_equal(NodeResources()))
-        self.assertTrue(scheduling_node._remaining_resources.is_equal(NodeResources(cpus=10.0, mem=50.0)))
+        self.assertTrue(scheduling_node._remaining_resources.is_equal(NodeResources([Cpus(10.0), Mem(50.0)])))
         self.assertListEqual(waiting_tasks, [job_exe.next_task()])
 
     def test_accept_new_job_exe(self):
@@ -161,9 +142,9 @@ class TestSchedulingNode(TestCase):
         node.is_ready_for_new_job.return_value = True
         node.is_ready_for_next_job_task = MagicMock()
         node.is_ready_for_next_job_task.return_value = True
-        offered_resources = NodeResources(cpus=10.0, mem=50.0)
+        offered_resources = NodeResources([Cpus(10.0), Mem(50.0)])
         task_resources = NodeResources()
-        watermark_resources = NodeResources(cpus=100.0, mem=500.0)
+        watermark_resources = NodeResources([Cpus(100.0), Mem(500.0)])
         resource_set = ResourceSet(offered_resources, task_resources, watermark_resources)
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
 
@@ -174,8 +155,8 @@ class TestSchedulingNode(TestCase):
         accepted = scheduling_node.accept_new_job_exe(job_exe)
         self.assertTrue(accepted)
         self.assertEqual(len(scheduling_node._allocated_queued_job_exes), 1)
-        self.assertTrue(scheduling_node.allocated_resources.is_equal(NodeResources(cpus=1.0, mem=10.0)))
-        self.assertTrue(scheduling_node._remaining_resources.is_equal(NodeResources(cpus=9.0, mem=40.0)))
+        self.assertTrue(scheduling_node.allocated_resources.is_equal(NodeResources([Cpus(1.0), Mem(10.0)])))
+        self.assertTrue(scheduling_node._remaining_resources.is_equal(NodeResources([Cpus(9.0), Mem(40.0)])))
         self.assertEqual(job_exe.provided_node_id, node.id)
 
     def test_accept_new_job_exe_insufficient_resources(self):
@@ -188,9 +169,9 @@ class TestSchedulingNode(TestCase):
         node.is_ready_for_new_job.return_value = True
         node.is_ready_for_next_job_task = MagicMock()
         node.is_ready_for_next_job_task.return_value = True
-        offered_resources = NodeResources(cpus=10.0, mem=50.0)
+        offered_resources = NodeResources([Cpus(10.0), Mem(50.0)])
         task_resources = NodeResources()
-        watermark_resources = NodeResources(cpus=100.0, mem=500.0)
+        watermark_resources = NodeResources([Cpus(100.0), Mem(500.0)])
         resource_set = ResourceSet(offered_resources, task_resources, watermark_resources)
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
 
@@ -202,7 +183,7 @@ class TestSchedulingNode(TestCase):
         self.assertFalse(accepted)
         self.assertEqual(len(scheduling_node._allocated_queued_job_exes), 0)
         self.assertTrue(scheduling_node.allocated_resources.is_equal(NodeResources()))
-        self.assertTrue(scheduling_node._remaining_resources.is_equal(NodeResources(cpus=10.0, mem=50.0)))
+        self.assertTrue(scheduling_node._remaining_resources.is_equal(NodeResources([Cpus(10.0), Mem(50.0)])))
         self.assertIsNone(job_exe.provided_node_id)
 
     def test_accept_new_job_exe_no_jobs(self):
@@ -215,9 +196,9 @@ class TestSchedulingNode(TestCase):
         node.is_ready_for_new_job.return_value = False
         node.is_ready_for_next_job_task = MagicMock()
         node.is_ready_for_next_job_task.return_value = True
-        offered_resources = NodeResources(cpus=10.0, mem=50.0)
+        offered_resources = NodeResources([Cpus(10.0), Mem(50.0)])
         task_resources = NodeResources()
-        watermark_resources = NodeResources(cpus=100.0, mem=500.0)
+        watermark_resources = NodeResources([Cpus(100.0), Mem(500.0)])
         resource_set = ResourceSet(offered_resources, task_resources, watermark_resources)
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
 
@@ -229,7 +210,7 @@ class TestSchedulingNode(TestCase):
         self.assertFalse(accepted)
         self.assertEqual(len(scheduling_node._allocated_queued_job_exes), 0)
         self.assertTrue(scheduling_node.allocated_resources.is_equal(NodeResources()))
-        self.assertTrue(scheduling_node._remaining_resources.is_equal(NodeResources(cpus=10.0, mem=50.0)))
+        self.assertTrue(scheduling_node._remaining_resources.is_equal(NodeResources([Cpus(10.0), Mem(50.0)])))
         self.assertIsNone(job_exe.provided_node_id)
 
     def test_accept_node_tasks(self):
@@ -249,12 +230,12 @@ class TestSchedulingNode(TestCase):
         node_task_resources = NodeResources()
         node_task_resources.add(health_task.get_resources())
         node_task_resources.add(pull_task.get_resources())
-        offered_resources = NodeResources(cpus=100.0, mem=5000.0)
+        offered_resources = NodeResources([Cpus(100.0), Mem(5000.0)])
         expected_remaining_resources = NodeResources()
         expected_remaining_resources.add(offered_resources)
         expected_remaining_resources.subtract(node_task_resources)
         task_resources = NodeResources()
-        watermark_resources = NodeResources(cpus=100.0, mem=5000.0)
+        watermark_resources = NodeResources([Cpus(100.0), Mem(5000.0)])
         resource_set = ResourceSet(offered_resources, task_resources, watermark_resources)
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
         waiting_tasks = []
@@ -280,9 +261,9 @@ class TestSchedulingNode(TestCase):
         node.is_ready_for_next_job_task.return_value = True
         node.get_next_tasks = MagicMock()
         node.get_next_tasks.return_value = [health_task, pull_task]
-        offered_resources = NodeResources(cpus=0.0, mem=50.0)
+        offered_resources = NodeResources([Cpus(0.0), Mem(50.0)])
         task_resources = NodeResources()
-        watermark_resources = NodeResources(cpus=100.0, mem=500.0)
+        watermark_resources = NodeResources([Cpus(100.0), Mem(500.0)])
         resource_set = ResourceSet(offered_resources, task_resources, watermark_resources)
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
         waiting_tasks = []
@@ -308,23 +289,13 @@ class TestSchedulingNode(TestCase):
         node.is_ready_for_next_job_task.return_value = True
         node.get_next_tasks = MagicMock()
         node.get_next_tasks.return_value = [health_task, pull_task]
-        offered_resources = NodeResources(cpus=100.0, mem=500.0)
-        watermark_resources = NodeResources(cpus=100.0, mem=500.0)
+        offered_resources = NodeResources([Cpus(100.0), Mem(500.0)])
+        watermark_resources = NodeResources([Cpus(100.0), Mem(500.0)])
         resource_set = ResourceSet(offered_resources, NodeResources(), watermark_resources)
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
-        job_exe_model_1 = job_test_utils.create_job_exe()
-        job_exe_model_1.cpus_scheduled = 1.0
-        job_exe_model_1.mem_scheduled = 10.0
-        job_exe_model_1.disk_in_scheduled = 0.0
-        job_exe_model_1.disk_out_scheduled = 0.0
-        job_exe_model_1.disk_total_scheduled = 0.0
+        job_exe_model_1 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(1.0), Mem(10.0)]))
         running_job_exe_1 = RunningJobExecution(job_exe_model_1)
-        job_exe_model_2 = job_test_utils.create_job_exe()
-        job_exe_model_2.cpus_scheduled = 2.0
-        job_exe_model_2.mem_scheduled = 20.0
-        job_exe_model_2.disk_in_scheduled = 0.0
-        job_exe_model_2.disk_out_scheduled = 0.0
-        job_exe_model_2.disk_total_scheduled = 0.0
+        job_exe_model_2 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(2.0), Mem(20.0)]))
         running_job_exe_2 = RunningJobExecution(job_exe_model_2)
         node_task_resources = NodeResources()
         node_task_resources.add(health_task.get_resources())
@@ -348,9 +319,10 @@ class TestSchedulingNode(TestCase):
         self.assertTrue(scheduling_node.allocated_resources.is_equal(all_required_resources))
 
         # Set up offers (we get back more than we need)
-        offer_1 = ResourceOffer('offer_1', 'agent_1', '1234', NodeResources(cpus=1.0), now())
+        offer_1 = ResourceOffer('offer_1', 'agent_1', '1234', NodeResources([Cpus(1.0)]), now())
         offer_2 = ResourceOffer('offer_2', 'agent_1', '1234', all_required_resources, now())
-        offer_3 = ResourceOffer('offer_3', 'agent_1', '1234', NodeResources(cpus=7.5, mem=600.0, disk=800.0), now())
+        offer_3 = ResourceOffer('offer_3', 'agent_1', '1234', NodeResources([Cpus(7.5), Mem(600.0), Disk(800.0)]),
+                                now())
 
         scheduling_node.add_allocated_offers([offer_1, offer_2, offer_3])
         self.assertListEqual(scheduling_node.allocated_offers, [offer_1, offer_2, offer_3])
@@ -375,23 +347,13 @@ class TestSchedulingNode(TestCase):
         node.is_ready_for_next_job_task.return_value = True
         node.get_next_tasks = MagicMock()
         node.get_next_tasks.return_value = [health_task, pull_task]
-        offered_resources = NodeResources(cpus=100.0, mem=500.0)
-        watermark_resources = NodeResources(cpus=100.0, mem=500.0)
+        offered_resources = NodeResources([Cpus(100.0), Mem(500.0)])
+        watermark_resources = NodeResources([Cpus(100.0), Mem(500.0)])
         resource_set = ResourceSet(offered_resources, NodeResources(), watermark_resources)
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
-        job_exe_model_1 = job_test_utils.create_job_exe()
-        job_exe_model_1.cpus_scheduled = 1.0
-        job_exe_model_1.mem_scheduled = 10.0
-        job_exe_model_1.disk_in_scheduled = 0.0
-        job_exe_model_1.disk_out_scheduled = 0.0
-        job_exe_model_1.disk_total_scheduled = 0.0
+        job_exe_model_1 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(1.0), Mem(10.0)]))
         running_job_exe_1 = RunningJobExecution(job_exe_model_1)
-        job_exe_model_2 = job_test_utils.create_job_exe()
-        job_exe_model_2.cpus_scheduled = 2.0
-        job_exe_model_2.mem_scheduled = 20.0
-        job_exe_model_2.disk_in_scheduled = 0.0
-        job_exe_model_2.disk_out_scheduled = 0.0
-        job_exe_model_2.disk_total_scheduled = 0.0
+        job_exe_model_2 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(2.0), Mem(20.0)]))
         running_job_exe_2 = RunningJobExecution(job_exe_model_2)
         node_task_resources = NodeResources()
         node_task_resources.add(health_task.get_resources())
@@ -415,7 +377,7 @@ class TestSchedulingNode(TestCase):
         self.assertTrue(scheduling_node.allocated_resources.is_equal(all_required_resources))
 
         # Set up offers (enough for node tasks but not enough for job exes)
-        offer_1 = ResourceOffer('offer_1', 'agent_1', '1234', NodeResources(cpus=0.5), now())
+        offer_1 = ResourceOffer('offer_1', 'agent_1', '1234', NodeResources([Cpus(0.5)]), now())
         offer_2 = ResourceOffer('offer_2', 'agent_1', '1234', node_task_resources, now())
 
         scheduling_node.add_allocated_offers([offer_1, offer_2])
@@ -441,23 +403,13 @@ class TestSchedulingNode(TestCase):
         node.is_ready_for_next_job_task.return_value = True
         node.get_next_tasks = MagicMock()
         node.get_next_tasks.return_value = [health_task, pull_task]
-        offered_resources = NodeResources(cpus=100.0, mem=500.0)
-        watermark_resources = NodeResources(cpus=100.0, mem=500.0)
+        offered_resources = NodeResources([Cpus(100.0), Mem(500.0)])
+        watermark_resources = NodeResources([Cpus(100.0), Mem(500.0)])
         resource_set = ResourceSet(offered_resources, NodeResources(), watermark_resources)
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
-        job_exe_model_1 = job_test_utils.create_job_exe()
-        job_exe_model_1.cpus_scheduled = 1.0
-        job_exe_model_1.mem_scheduled = 10.0
-        job_exe_model_1.disk_in_scheduled = 0.0
-        job_exe_model_1.disk_out_scheduled = 0.0
-        job_exe_model_1.disk_total_scheduled = 0.0
+        job_exe_model_1 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(1.0), Mem(10.0)]))
         running_job_exe_1 = RunningJobExecution(job_exe_model_1)
-        job_exe_model_2 = job_test_utils.create_job_exe()
-        job_exe_model_2.cpus_scheduled = 2.0
-        job_exe_model_2.mem_scheduled = 20.0
-        job_exe_model_2.disk_in_scheduled = 0.0
-        job_exe_model_2.disk_out_scheduled = 0.0
-        job_exe_model_2.disk_total_scheduled = 0.0
+        job_exe_model_2 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(2.0), Mem(20.0)]))
         running_job_exe_2 = RunningJobExecution(job_exe_model_2)
         node_task_resources = NodeResources()
         node_task_resources.add(health_task.get_resources())
@@ -481,7 +433,7 @@ class TestSchedulingNode(TestCase):
         self.assertTrue(scheduling_node.allocated_resources.is_equal(all_required_resources))
 
         # Set up offers (not enough for job exes or node tasks)
-        offer_1 = ResourceOffer('offer_1', 'agent_1', '1234', NodeResources(cpus=0.1, mem=600.0), now())
+        offer_1 = ResourceOffer('offer_1', 'agent_1', '1234', NodeResources([Cpus(0.1), Mem(600.0)]), now())
 
         scheduling_node.add_allocated_offers([offer_1])
         self.assertListEqual(scheduling_node.allocated_offers, [offer_1])
@@ -502,8 +454,8 @@ class TestSchedulingNode(TestCase):
         node.is_ready_for_new_job.return_value = True
         node.is_ready_for_next_job_task = MagicMock()
         node.is_ready_for_next_job_task.return_value = True
-        offered_resources = NodeResources(cpus=100.0, mem=500.0)
-        watermark_resources = NodeResources(cpus=100.0, mem=500.0)
+        offered_resources = NodeResources([Cpus(100.0), Mem(500.0)])
+        watermark_resources = NodeResources([Cpus(100.0), Mem(500.0)])
         resource_set = ResourceSet(offered_resources, NodeResources(), watermark_resources)
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
         queue_model_1 = queue_test_utils.create_queue(cpus_required=2.0, mem_required=60.0, disk_in_required=0.0,
@@ -538,25 +490,15 @@ class TestSchedulingNode(TestCase):
         node.is_ready_for_new_job.return_value = True
         node.is_ready_for_next_job_task = MagicMock()
         node.is_ready_for_next_job_task.return_value = True
-        offered_resources = NodeResources(cpus=20.0, mem=100.0)
-        watermark_resources = NodeResources(cpus=200.0, mem=700.0)
+        offered_resources = NodeResources([Cpus(20.0), Mem(100.0)])
+        watermark_resources = NodeResources([Cpus(200.0), Mem(700.0)])
         resource_set = ResourceSet(offered_resources, NodeResources(), watermark_resources)
         task = HealthTask('1234', 'agent_1')  # Resources are 0.1 CPUs and 32 MiB memory
-        job_exe_model_1 = job_test_utils.create_job_exe()
+        job_exe_model_1 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(10.0), Mem(50.0)]))
         job_exe_model_1.job.priority = 1000
-        job_exe_model_1.cpus_scheduled = 10.0
-        job_exe_model_1.mem_scheduled = 50.0
-        job_exe_model_1.disk_in_scheduled = 0.0
-        job_exe_model_1.disk_out_scheduled = 0.0
-        job_exe_model_1.disk_total_scheduled = 0.0
         job_exe_1 = RunningJobExecution(job_exe_model_1)
-        job_exe_model_2 = job_test_utils.create_job_exe()
+        job_exe_model_2 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(56.0), Mem(15.0)]))
         job_exe_model_2.job.priority = 100
-        job_exe_model_2.cpus_scheduled = 56.0
-        job_exe_model_2.mem_scheduled = 15.0
-        job_exe_model_2.disk_in_scheduled = 0.0
-        job_exe_model_2.disk_out_scheduled = 0.0
-        job_exe_model_2.disk_total_scheduled = 0.0
         job_exe_2 = RunningJobExecution(job_exe_model_2)
         scheduling_node = SchedulingNode('agent_1', node, [task], [job_exe_1, job_exe_2], resource_set)
         queue_model_1 = queue_test_utils.create_queue(priority=100, cpus_required=8.0, mem_required=40.0,
@@ -582,10 +524,10 @@ class TestSchedulingNode(TestCase):
         # Expected available 5.9 CPUs and 13 MiB memory "left" on node
         # (available above - new job we are scoring)
         # First 2 job types should fit, next 2 are too big, so score should be 2
-        job_type_resource_1 = NodeResources(cpus=2.0, mem=10.0)
-        job_type_resource_2 = NodeResources(cpus=5.5, mem=12.0)
-        job_type_resource_3 = NodeResources(cpus=6.0, mem=10.0)
-        job_type_resource_4 = NodeResources(cpus=2.0, mem=14.0)
+        job_type_resource_1 = NodeResources([Cpus(2.0), Mem(10.0)])
+        job_type_resource_2 = NodeResources([Cpus(5.5), Mem(12.0)])
+        job_type_resource_3 = NodeResources([Cpus(6.0), Mem(10.0)])
+        job_type_resource_4 = NodeResources([Cpus(2.0), Mem(14.0)])
 
         score = scheduling_node.score_job_exe_for_reservation(job_exe, [job_type_resource_1, job_type_resource_2,
                                                                         job_type_resource_3, job_type_resource_4])
@@ -601,25 +543,15 @@ class TestSchedulingNode(TestCase):
         node.is_ready_for_new_job.return_value = True
         node.is_ready_for_next_job_task = MagicMock()
         node.is_ready_for_next_job_task.return_value = True
-        offered_resources = NodeResources(cpus=20.0, mem=100.0)
-        watermark_resources = NodeResources(cpus=200.0, mem=700.0)
+        offered_resources = NodeResources([Cpus(20.0), Mem(100.0)])
+        watermark_resources = NodeResources([Cpus(200.0), Mem(700.0)])
         resource_set = ResourceSet(offered_resources, NodeResources(), watermark_resources)
         task = HealthTask('1234', 'agent_1')  # Resources are 0.1 CPUs and 32 MiB memory
-        job_exe_model_1 = job_test_utils.create_job_exe()
+        job_exe_model_1 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(10.0), Mem(50.0)]))
         job_exe_model_1.job.priority = 1000
-        job_exe_model_1.cpus_scheduled = 10.0
-        job_exe_model_1.mem_scheduled = 50.0
-        job_exe_model_1.disk_in_scheduled = 0.0
-        job_exe_model_1.disk_out_scheduled = 0.0
-        job_exe_model_1.disk_total_scheduled = 0.0
         job_exe_1 = RunningJobExecution(job_exe_model_1)
-        job_exe_model_2 = job_test_utils.create_job_exe()
+        job_exe_model_2 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(56.0), Mem(15.0)]))
         job_exe_model_2.job.priority = 100
-        job_exe_model_2.cpus_scheduled = 56.0
-        job_exe_model_2.mem_scheduled = 15.0
-        job_exe_model_2.disk_in_scheduled = 0.0
-        job_exe_model_2.disk_out_scheduled = 0.0
-        job_exe_model_2.disk_total_scheduled = 0.0
         job_exe_2 = RunningJobExecution(job_exe_model_2)
         scheduling_node = SchedulingNode('agent_1', node, [task], [job_exe_1, job_exe_2], resource_set)
         queue_model_1 = queue_test_utils.create_queue(priority=100, cpus_required=8.0, mem_required=40.0,
@@ -642,7 +574,7 @@ class TestSchedulingNode(TestCase):
                                                     disk_in_required=0.0, disk_out_required=0.0,
                                                     disk_total_required=0.0)
         job_exe = QueuedJobExecution(queue_model)
-        job_type_resource_1 = NodeResources(cpus=2.0, mem=10.0)
+        job_type_resource_1 = NodeResources([Cpus(2.0), Mem(10.0)])
 
         score = scheduling_node.score_job_exe_for_reservation(job_exe, [job_type_resource_1])
         self.assertIsNone(score)
@@ -657,18 +589,13 @@ class TestSchedulingNode(TestCase):
         node.is_ready_for_new_job.return_value = True
         node.is_ready_for_next_job_task = MagicMock()
         node.is_ready_for_next_job_task.return_value = True
-        offered_resources = NodeResources(cpus=20.0, mem=100.0)
-        task_resources = NodeResources(cpus=100.0, mem=500.0)
-        watermark_resources = NodeResources(cpus=200.0, mem=700.0)
+        offered_resources = NodeResources([Cpus(20.0), Mem(100.0)])
+        task_resources = NodeResources([Cpus(100.0), Mem(500.0)])
+        watermark_resources = NodeResources([Cpus(200.0), Mem(700.0)])
         resource_set = ResourceSet(offered_resources, task_resources, watermark_resources)
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
         # Allocate 10 CPUs and 50 MiB memory to existing job execution
-        job_exe_model = job_test_utils.create_job_exe()
-        job_exe_model.cpus_scheduled = 10.0
-        job_exe_model.mem_scheduled = 50.0
-        job_exe_model.disk_in_scheduled = 0.0
-        job_exe_model.disk_out_scheduled = 0.0
-        job_exe_model.disk_total_scheduled = 0.0
+        job_exe_model = job_test_utils.create_job_exe(resources=NodeResources([Cpus(10.0), Mem(50.0)]))
         job_exe = RunningJobExecution(job_exe_model)
         scheduling_node.accept_job_exe_next_task(job_exe, [])
 
@@ -679,10 +606,10 @@ class TestSchedulingNode(TestCase):
         # Expected available 85 CPUs and 110 MiB memory "left" on node
         # (watermark - current tasks - allocated - new job we are scoring)
         # First 2 job types should fit, next 2 are too big, so score should be 2
-        job_type_resource_1 = NodeResources(cpus=2.0, mem=10.0)
-        job_type_resource_2 = NodeResources(cpus=85.0, mem=109.0)
-        job_type_resource_3 = NodeResources(cpus=86.0, mem=10.0)
-        job_type_resource_4 = NodeResources(cpus=2.0, mem=111.0)
+        job_type_resource_1 = NodeResources([Cpus(2.0), Mem(10.0)])
+        job_type_resource_2 = NodeResources([Cpus(85.0), Mem(109.0)])
+        job_type_resource_3 = NodeResources([Cpus(86.0), Mem(10.0)])
+        job_type_resource_4 = NodeResources([Cpus(2.0), Mem(111.0)])
 
         score = scheduling_node.score_job_exe_for_scheduling(job_exe, [job_type_resource_1, job_type_resource_2,
                                                                        job_type_resource_3, job_type_resource_4])
@@ -698,18 +625,13 @@ class TestSchedulingNode(TestCase):
         node.is_ready_for_new_job.return_value = True
         node.is_ready_for_next_job_task = MagicMock()
         node.is_ready_for_next_job_task.return_value = True
-        offered_resources = NodeResources(cpus=20.0, mem=100.0)
-        task_resources = NodeResources(cpus=100.0, mem=500.0)
-        watermark_resources = NodeResources(cpus=200.0, mem=700.0)
+        offered_resources = NodeResources([Cpus(20.0), Mem(100.0)])
+        task_resources = NodeResources([Cpus(100.0), Mem(500.0)])
+        watermark_resources = NodeResources([Cpus(200.0), Mem(700.0)])
         resource_set = ResourceSet(offered_resources, task_resources, watermark_resources)
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
         # Allocate 10 CPUs and 50 MiB memory to existing job execution
-        job_exe_model = job_test_utils.create_job_exe()
-        job_exe_model.cpus_scheduled = 10.0
-        job_exe_model.mem_scheduled = 50.0
-        job_exe_model.disk_in_scheduled = 0.0
-        job_exe_model.disk_out_scheduled = 0.0
-        job_exe_model.disk_total_scheduled = 0.0
+        job_exe_model = job_test_utils.create_job_exe(resources=NodeResources([Cpus(10.0), Mem(50.0)]))
         job_exe = RunningJobExecution(job_exe_model)
         scheduling_node.accept_job_exe_next_task(job_exe, [])
 
@@ -731,23 +653,13 @@ class TestSchedulingNode(TestCase):
         node.is_ready_for_new_job.return_value = True
         node.is_ready_for_next_job_task = MagicMock()
         node.is_ready_for_next_job_task.return_value = True
-        offered_resources = NodeResources(cpus=20.0, mem=100.0)
-        watermark_resources = NodeResources(cpus=200.0, mem=700.0)
+        offered_resources = NodeResources([Cpus(20.0), Mem(100.0)])
+        watermark_resources = NodeResources([Cpus(200.0), Mem(700.0)])
         resource_set = ResourceSet(offered_resources, NodeResources(), watermark_resources)
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
-        job_exe_model_1 = job_test_utils.create_job_exe()
-        job_exe_model_1.cpus_scheduled = 10.0
-        job_exe_model_1.mem_scheduled = 50.0
-        job_exe_model_1.disk_in_scheduled = 0.0
-        job_exe_model_1.disk_out_scheduled = 0.0
-        job_exe_model_1.disk_total_scheduled = 0.0
+        job_exe_model_1 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(10.0), Mem(50.0)]))
         job_exe_1 = RunningJobExecution(job_exe_model_1)
-        job_exe_model_2 = job_test_utils.create_job_exe()
-        job_exe_model_2.cpus_scheduled = 5.0
-        job_exe_model_2.mem_scheduled = 25.0
-        job_exe_model_2.disk_in_scheduled = 0.0
-        job_exe_model_2.disk_out_scheduled = 0.0
-        job_exe_model_2.disk_total_scheduled = 0.0
+        job_exe_model_2 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(5.0), Mem(25.0)]))
         job_exe_2 = RunningJobExecution(job_exe_model_2)
         scheduling_node.accept_job_exe_next_task(job_exe_1, [])
         scheduling_node.accept_job_exe_next_task(job_exe_2, [])

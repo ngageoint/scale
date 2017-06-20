@@ -5,7 +5,6 @@ import datetime
 
 from error.exceptions import get_error_by_exit_code
 from job.execution.tasks.exe_task import JobExecutionTask
-from job.resources import NodeResources
 
 
 class PreTask(JobExecutionTask):
@@ -72,7 +71,7 @@ class PreTask(JobExecutionTask):
         """
 
         with self._lock:
-            return NodeResources(cpus=self._cpus, mem=self._mem, disk=self._disk_total)
+            return self._resources
 
     def populate_job_exe_model(self, job_exe):
         """See :meth:`job.execution.tasks.exe_task.JobExecutionTask.populate_job_exe_model`

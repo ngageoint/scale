@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from job.execution.tasks.exe_task import JobExecutionTask
-from job.resources import NodeResources
+from node.resources.node_resources import NodeResources
 
 
 class SchedulingNode(object):
@@ -193,9 +193,6 @@ class SchedulingNode(object):
         :rtype: int
         """
 
-        if not job_exe.is_node_acceptable(self.node_id):
-            return None
-
         # Calculate available resources for lower priority jobs
         available_resources = NodeResources()
         available_resources.add(self._watermark_resources)
@@ -240,8 +237,6 @@ class SchedulingNode(object):
         :rtype: int
         """
 
-        if not job_exe.is_node_acceptable(self.node_id):
-            return None
         if not self._remaining_resources.is_sufficient_to_meet(job_exe.required_resources):
             return None
 

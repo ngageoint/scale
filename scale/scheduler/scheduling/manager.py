@@ -9,14 +9,14 @@ from django.utils.timezone import now
 from mesos.interface import mesos_pb2
 
 from job.execution.manager import job_exe_mgr
-from job.resources import NodeResources
 from job.tasks.manager import task_mgr
 from mesos_api.tasks import create_mesos_task
+from node.resources.node_resources import NodeResources
 from queue.job_exe import QueuedJobExecution
 from queue.models import Queue
 from scheduler.node.manager import node_mgr
 from scheduler.resources.manager import resource_mgr
-from scheduler.scheduling.node import SchedulingNode
+from scheduler.scheduling.scheduling_node import SchedulingNode
 from scheduler.sync.job_type_manager import job_type_mgr
 from scheduler.sync.scheduler_manager import scheduler_mgr
 from scheduler.sync.workspace_manager import workspace_mgr
@@ -214,8 +214,8 @@ class SchedulingManager(object):
         declined_resources.subtract(total_task_resources)
         if total_offer_count:
             logger.info('Accepted %d offer(s) from %d node(s), launched %d task(s) with %s on %d node(s), declined %s',
-                        total_offer_count, total_node_count, total_task_count, total_task_resources.to_logging_string(),
-                        node_count, declined_resources.to_logging_string())
+                        total_offer_count, total_node_count, total_task_count, total_task_resources, node_count,
+                        declined_resources)
         return total_task_count
 
     def _prepare_nodes(self, tasks, running_job_exes, when):
@@ -415,8 +415,8 @@ class SchedulingManager(object):
                 else:
                     logger.error('Scheduled jobs on an unknown node')
             if job_exe_count:
-                logger.info('Scheduled %d new job(s) with %s on %d node(s)', job_exe_count,
-                            scheduled_resources.to_logging_string(), len(node_ids))
+                logger.info('Scheduled %d new job(s) with %s on %d node(s)', job_exe_count, scheduled_resources,
+                            len(node_ids))
         except DatabaseError:
             logger.exception('Error occurred while scheduling new jobs from the queue')
             job_exe_count = 0

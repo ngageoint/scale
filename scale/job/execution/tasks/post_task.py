@@ -5,7 +5,6 @@ import datetime
 
 from error.exceptions import get_error_by_exit_code
 from job.execution.tasks.exe_task import JobExecutionTask
-from job.resources import NodeResources
 
 
 class PostTask(JobExecutionTask):
@@ -55,7 +54,9 @@ class PostTask(JobExecutionTask):
 
         with self._lock:
             # Post task does not require any local disk space
-            return NodeResources(cpus=self._cpus, mem=self._mem)
+            resources_without_disk = self._resources.copy()
+            resources_without_disk.remove_resource('disk')
+            return resources_without_disk
 
     def populate_job_exe_model(self, job_exe):
         """See :meth:`job.execution.tasks.exe_task.JobExecutionTask.populate_job_exe_model`
