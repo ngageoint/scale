@@ -122,6 +122,8 @@ class TestMessageFactory(TestCase):
         
         backend_factory._MESSAGE_BACKENDS = {}
         backend_factory.add_message_backend(backend)
+        # Yeah, not a typo... coverage
+        backend_factory.add_message_backend(backend)
         self.assertEqual(backend_factory._MESSAGE_BACKENDS.keys(), ['dummy'])
     
     def test_successfully_get_message_backend(self):

@@ -11,13 +11,23 @@ from messaging.manager import CommandMessageManager
 from mock import MagicMock, Mock
 from mock import call, patch
 
-# Stomp singleton for unit testing... really don't remove this if you value your sanity
-del CommandMessageManager.__new__
-
 
 class TestCommandMessageManager(TestCase):
     def setUp(self):
         django.setup()
+        
+        # Stomp singleton for unit testing.
+        @classmethod
+        def instance_new(self, cls):
+            """Removed Singleton from manager"""
+        
+            return super(CommandMessageManager, cls).__new__(cls)
+            
+        self.patcher = patch('messaging.manager.CommandMessageManager.__new__', instance_new)
+        self.patcher.start()
+        
+    def tearDown(self):
+        self.patcher.stop()
 
     def test_send_message(self):
         """Validate that send_message composes dict with `type` and `body` keys for backend"""
