@@ -19,16 +19,23 @@ class TestCommandMessageManager(TestCase):
 
         # Stomp singleton for unit testing.
         @classmethod
-        def instance_new(self, cls):
+        def manager_new(self, cls):
             """Removed Singleton from manager"""
 
             return super(CommandMessageManager, cls).__new__(cls)
+            
+        def manager_init(self):
+            pass
+            
 
-        self.patcher = patch('messaging.manager.CommandMessageManager.__new__', instance_new)
-        self.patcher.start()
+        self.new_patcher = patch('messaging.manager.CommandMessageManager.__new__', manager_new)
+        self.init_patcher = patch('messaging.manager.CommandMessageManager.__init__', manager_init)
+        self.new_patcher.start()
+        self.init_patcher.start()
 
     def tearDown(self):
-        self.patcher.stop()
+        self.new_patcher.stop()
+        self.init_patcher.stop()
 
     def test_send_message(self):
         """Validate that send_message composes dict with `type` and `body` keys for backend"""
