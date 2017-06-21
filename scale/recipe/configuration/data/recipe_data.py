@@ -123,12 +123,12 @@ class RecipeData(object):
                 file_ids.update(data_input['file_ids'])
         return file_ids
 
-    def get_input_file_name(self, file_id):
-        """Returns the file name associated with the given file id.
+    def get_input_data_name(self, file_id):
+        """Returns the name on an input associated with the given file id.
 
-        :param file_id: The id used to find an associated name
+        :param file_id: The id used to find an associated input
         :type file_id: int
-        :returns: The file name associated with the provided file id
+        :returns: The name associated with the provided file id
         :rtype: str
         """
 

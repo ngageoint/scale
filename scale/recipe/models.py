@@ -116,7 +116,7 @@ class RecipeManager(models.Manager):
             recipe_file = RecipeInputFile()
             recipe_file.recipe_id = recipe.id
             recipe_file.scale_file_id = input_file_id
-            recipe_file.recipe_input = data.get_input_file_name(input_file_id)
+            recipe_file.recipe_input = data.get_input_data_name(input_file_id)
             recipe_file.created = recipe.created
             recipe_files.append(recipe_file)
         RecipeInputFile.objects.bulk_create(recipe_files)
