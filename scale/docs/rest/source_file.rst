@@ -754,8 +754,8 @@ These services provide access to information about source files that Scale has i
 | time_field         | String            | Optional | Indicates the time field(s) that *started* and *ended* will use for |
 |                    |                   |          | time filtering. Valid values are:                                   |
 |                    |                   |          |                                                                     |
-|                    |                   |          | - *last_modified* - last modification of source file meta-data      |
-|                    |                   |          | - *data* - data time of source file (*data_started*, *data_ended*)  |
+|                    |                   |          | - *last_modified* - last modification of product file meta-data     |
+|                    |                   |          | - *data* - data time of product file (*data_started*, *data_ended*) |
 |                    |                   |          | - *source* - overall time for all associated source files           |
 |                    |                   |          |              (*source_started*, *source_ended*)                     |
 |                    |                   |          |                                                                     |
