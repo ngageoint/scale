@@ -43,7 +43,7 @@ class CommandMessage(object):
         It is critical that execution of messages is idempotent - no side effects as result of repeated executions.
         Without idempotency we cannot support messaging backends such as SQS which guarantee 'at least once' delivery.
         No assurances are provided for message ordering, due to the asynchronous nature of messaging system with many
-        potential message producers.
+        potential message producers and consumers.
 
         :return: Success or failure of execute operation
         :rtype: bool
