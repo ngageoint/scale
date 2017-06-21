@@ -357,9 +357,9 @@ class JobData(object):
                     params_by_file_path[file_path] = name
                     # Adjust file path to be relative to upload_dir
                     if len(file_tuple) == 2:
-                        new_tuple = (file_path, file_tuple[1])
+                        new_tuple = (file_path, file_tuple[1], name)
                     else:
-                        new_tuple = (file_path, file_tuple[1], file_tuple[2])
+                        new_tuple = (file_path, file_tuple[1], name, file_tuple[2])
                     workspace_file_list.append(new_tuple)
             else:
                 file_path = os.path.normpath(data_file_entry[0])
@@ -368,9 +368,9 @@ class JobData(object):
                 params_by_file_path[file_path] = name
                 # Adjust file path to be relative to upload_dir
                 if len(data_file_entry) == 2:
-                    new_tuple = (file_path, data_file_entry[1])
+                    new_tuple = (file_path, data_file_entry[1], name)
                 else:
-                    new_tuple = (file_path, data_file_entry[1], data_file_entry[2])
+                    new_tuple = (file_path, data_file_entry[1], name, data_file_entry[2])
                 workspace_file_list.append(new_tuple)
 
         data_file_store = DATA_FILE_STORE['DATA_FILE_STORE']
