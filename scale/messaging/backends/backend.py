@@ -23,26 +23,23 @@ class MessagingBackend(object):
         self._queue_name = settings.QUEUE_NAME
 
     @abstractmethod
-    def send_message(self, message):
-        """Send a single message to the backend
+    def send_messages(self, messages):
+        """Send a collection of messages to the backend
+        
+        Connections are not persisted across send_messages calls. It is recommended that if a large
+        number of messages are to be sent it be done directly in a single function call.
 
-        Presently connections are not persisted across send_message calls.
-        We could greatly improve message throughput if we managed this at the
-        class instance level. This isn't really a major concern as bottlenecks are
-        not from the sender perspective.
-
-        :param message: JSON payload
-        :type message: dict
+        :param messages: JSON payload of messages
+        :type messages: [dict]
         """
 
     @abstractmethod
     def receive_messages(self, batch_size):
         """Receive a batch of messages from the backend
 
-        TODO: Presently connections are not persisted across receive_message calls.
-        We could greatly improve message throughput if we managed this at the
-        class instance level. This isn't a huge concern as we are sharing the
-        connection across the batch_size.
+
+        Connections are not persisted across receive_messages calls. It is recommended that if a large
+        number of messages are to be retrieved it be done directly in a single function call.
 
         Implementing function must yield messages from backend. Messages must be
         in dict.
@@ -50,5 +47,5 @@ class MessagingBackend(object):
         :param batch_size: Number of messages to be processed
         :type batch_size: int
         :return: Yielded list of messages
-        :rtype: [dict]
+        :rtype: Generator[dict]
         """

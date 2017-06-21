@@ -10,7 +10,7 @@ import django
 from django.conf import settings
 from django.test import TestCase
 from mock import MagicMock
-from mock import patch
+from mock import call, patch
 
 import messaging.backends.factory as backend_factory
 from messaging.backends.amqp import AMQPMessagingBackend
@@ -41,20 +41,38 @@ class TestAMQPBackend(TestCase):
         self.assertEqual(backend._timeout, 1)
 
     @patch('messaging.backends.amqp.Connection')
-    def test_valid_send_message(self, connection):
+    def test_valid_send_messages(self, connection):
         """Validate message is sent via the AMQP backend"""
 
-        message = {'type': 'echo', 'body': 'yes'}
+        messages = [{'type': 'echo', 'body': 'yes'}]
 
         backend = AMQPMessagingBackend()
-        backend.send_message(message)
+        backend.send_messages(messages)
 
         # Deep diving through context managers to assert put call
         put = connection.return_value.__enter__.return_value.SimpleQueue.return_value.put
-        put.assert_called_with(message)
+        put.assert_called_with(messages[0])
+        self.assertEquals(put.call_count, 1)
 
     @patch('messaging.backends.amqp.Connection')
-    def test_valid_receive_message(self, connection):
+    def test_valid_send_messages(self, connection):
+        """Validate message is sent via the AMQP backend"""
+
+        messages = [
+            {'type': 'echo', 'body': '1'},
+            {'type': 'echo', 'body': '2'}
+        ]
+
+        backend = AMQPMessagingBackend()
+        backend.send_messages(messages)
+
+        # Deep diving through context managers to assert put call
+        put = connection.return_value.__enter__.return_value.SimpleQueue.return_value.put
+        put.assert_has_calls([call(x) for x in messages])
+        self.assertEquals(put.call_count, 2)
+
+    @patch('messaging.backends.amqp.Connection')
+    def test_valid_receive_messages(self, connection):
         """Validate successful message retrieval via AMQP backend"""
 
         message1 = MagicMock(payload={'type': 'echo', 'body': '1'})
@@ -187,19 +205,37 @@ class TestSQSBackend(TestCase):
         self.assertEqual(backend._credentials.secret_access_key, password)
 
     @patch('messaging.backends.sqs.SQSClient')
-    def test_valid_send_message(self, client):
+    def test_valid_send_messages(self, client):
         """Validate message is sent via the SQS backend"""
 
-        message = {'type': 'echo', 'body': 'yes'}
+        messages = [{'type': 'echo', 'body': 'yes'}]
 
         backend = SQSMessagingBackend()
-        backend.send_message(message)
+        backend.send_messages(messages)
 
         put = client.return_value.__enter__.return_value.send_message
-        put.assert_called_with(backend._queue_name, json.dumps(message))
+        put.assert_called_with(backend._queue_name, json.dumps(messages[0]))
+        self.assertEquals(put.call_count, 1)
 
     @patch('messaging.backends.sqs.SQSClient')
-    def test_valid_receive_message(self, client):
+    def test_valid_send_messages(self, client):
+        """Validate message is sent via the SQS backend"""
+
+        messages = [
+            {'type': 'echo', 'body': '1'},
+            {'type': 'echo', 'body': '2'}
+        ]
+
+        backend = SQSMessagingBackend()
+        backend.send_messages(messages)
+
+        put = client.return_value.__enter__.return_value.send_message
+        put.assert_called_with(backend._queue_name, json.dumps(messages[0]))
+        put.assert_has_calls([call(backend._queue_name, json.dumps(x)) for x in messages])
+        self.assertEquals(put.call_count, 2)
+
+    @patch('messaging.backends.sqs.SQSClient')
+    def test_valid_receive_messages(self, client):
         """Validate successful message retrieval via SQS backend"""
 
         message1 = MagicMock(body=json.dumps({'type': 'echo', 'body': '1'}))
@@ -217,7 +253,7 @@ class TestSQSBackend(TestCase):
         message2.delete.assert_called()
 
     @patch('messaging.backends.sqs.SQSClient')
-    def test_exception_during_receive_message(self, client):
+    def test_exception_during_receive_messages(self, client):
         """Validate exception handling during message consumption from SQS backend"""
 
         message = MagicMock()

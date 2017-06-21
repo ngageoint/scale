@@ -24,17 +24,16 @@ class AMQPMessagingBackend(MessagingBackend):
         # Message retrieval timeout
         self._timeout = 1
 
-    def send_message(self, message):
-        """See :meth:`messaging.backends.backend.MessagingBackend.send_message`
-        """
+    def send_messages(self, messages):
+        """See :meth:`messaging.backends.backend.MessagingBackend.send_messages`"""
         with Connection(self._broker_url) as connection:
             with closing(connection.SimpleQueue(self._queue_name)) as simple_queue:
-                logger.debug('Sending message of type: %s', message['type'])
-                simple_queue.put(message)
+                for message in messages:
+                    logger.debug('Sending message of type: %s', message['type'])
+                    simple_queue.put(message)
 
     def receive_messages(self, batch_size):
-        """See :meth:`messaging.backends.backend.MessagingBackend.receive_messages`
-        """
+        """See :meth:`messaging.backends.backend.MessagingBackend.receive_messages`"""
         with Connection(self._broker_url) as connection:
             with closing(connection.SimpleQueue(self._queue_name)) as simple_queue:
                 for _ in range(batch_size):
