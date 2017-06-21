@@ -454,8 +454,8 @@ class ProductFileManager(models.GeoManager):
         """Uploads the given local product files into the workspace.
 
         :param file_entries: List of files where each file is a tuple of (absolute local path, workspace path for
-            storing the file, media_type)
-        :type file_entries: list of tuple(str, str, str)
+            storing the file, media_type, output_name)
+        :type file_entries: list of tuple(str, str, str, str)
         :param input_file_ids: List of identifiers for files used to produce the given file entries
         :type input_file_ids: list of int
         :param job_exe: The job_exe model with the related job and job_type fields
@@ -494,6 +494,7 @@ class ProductFileManager(models.GeoManager):
             local_path = entry[0]
             remote_path = entry[1]
             media_type = entry[2]
+            output_name = entry[3]
 
             product = ProductFile.create()
             product.job_exe = job_exe
@@ -510,8 +511,8 @@ class ProductFileManager(models.GeoManager):
             product.update_uuid(job_exe.job.job_type.id, file_name, *input_strings)
 
             # Add geospatial info to product if available
-            if len(entry) > 3:
-                geo_metadata = entry[3]
+            if len(entry) > 4:
+                geo_metadata = entry[4]
                 target_date = None
                 if 'data_started' in geo_metadata:
                     product.data_started = parse_datetime(geo_metadata['data_started'])
@@ -535,10 +536,7 @@ class ProductFileManager(models.GeoManager):
                 product.recipe_id = job_recipe.recipe.id
                 product.recipe_type = job_recipe.recipe.recipe_type
                 product.recipe_job = job_exe.get_job_type_name()
-
-                job_manager = JobManager()
-                job_details = job_manager.get_details(job_exe.job_id)
-                product.job_output = str(job_details.outputs)
+                product.job_output = output_name
 
                 # Add batch info to product if available.
                 try:
