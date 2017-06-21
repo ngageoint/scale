@@ -113,7 +113,7 @@ class SourceFileManager(models.GeoManager):
     def get_source_products(self, source_file_id, started=None, ended=None, time_field=None, batch_ids=None,
                             job_type_ids=None, job_type_names=None, job_type_categories=None, is_operational=None,
                             is_published=None, is_superseded=None, file_name=None, job_output=None, recipe_ids=None,
-                            recipe_type=None, recipe_job=None, order=None):
+                            recipe_type_ids=None, recipe_job=None, order=None):
         """Returns a query for the list of products produced by the given source file ID. The returned query includes
         the related  workspace, job_type, and job fields, except for the workspace.json_config field. The related
         countries are set to be pre-fetched as part of the query.
@@ -148,8 +148,8 @@ class SourceFileManager(models.GeoManager):
         :type recipe_ids: list[int]
         :keyword recipe_job: Query product files produced by a given recipe name
         :type recipe_job: str
-        :keyword recipe_type: Query product files produced by a given recipe type
-        :type recipe_type: str
+        :keyword recipe_type_ids: Query product files produced by a given recipe types
+        :type recipe_type_ids: list[int]
         :param order: A list of fields to control the sort order.
         :type order: list[str]
         :returns: The product file query
@@ -163,7 +163,7 @@ class SourceFileManager(models.GeoManager):
                                                        is_operational=is_operational, is_published=is_published,
                                                        is_superseded=None, file_name=file_name, job_output=job_output,
                                                        recipe_ids=recipe_ids, recipe_job=recipe_job,
-                                                       recipe_type=recipe_type, order=order)
+                                                       recipe_type_ids=recipe_type_ids, order=order)
         products = products.filter(ancestors__ancestor_id=source_file_id)
         if batch_ids:
             products = products.filter(ancestors__batch_id__in=batch_ids)

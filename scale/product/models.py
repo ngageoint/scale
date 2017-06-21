@@ -192,7 +192,7 @@ class ProductFileManager(models.GeoManager):
 
     def filter_products(self, started=None, ended=None, time_field=None, job_type_ids=None, job_type_names=None,
                         job_type_categories=None, is_operational=None, is_published=None, is_superseded=None,
-                        file_name=None, job_output=None, recipe_ids=None, recipe_type=None, recipe_job=None,
+                        file_name=None, job_output=None, recipe_ids=None, recipe_type_ids=None, recipe_job=None,
                         batch_ids=None, order=None):
         """Returns a query for product models that filters on the given fields. The returned query includes the related
         workspace, job_type, and job fields, except for the workspace.json_config field. The related countries are set
@@ -224,8 +224,8 @@ class ProductFileManager(models.GeoManager):
         :type recipe_ids: list[int]
         :keyword recipe_job: Query product files produced by a given recipe name
         :type recipe_job: str
-        :keyword recipe_type: Query product files produced by a given recipe type
-        :type recipe_type: str
+        :keyword recipe_type_ids: Query product files produced by a given recipe types
+        :type recipe_type_ids: list[int]
         :keyword batch_ids: Query product files produced by batches with the given identifiers.
         :type batch_ids: list[int]
         :param order: A list of fields to control the sort order.
@@ -233,9 +233,6 @@ class ProductFileManager(models.GeoManager):
         :returns: The product file query
         :rtype: :class:`django.db.models.QuerySet`
         """
-
-        if time_field and time_field not in ProductFile.VALID_TIME_FIELDS:
-            raise Exception('Invalid time field: %s' % time_field)
 
         # Fetch a list of product files
         products = ScaleFile.objects.filter(file_type='PRODUCT', has_been_published=True)
@@ -257,9 +254,9 @@ class ProductFileManager(models.GeoManager):
                 products = products.filter(last_modified__gte=started)
         if ended:
             if time_field == 'source':
-                products = products.filter(source_ended__gte=ended)
+                products = products.filter(source_ended__lte=ended)
             elif time_field == 'data':
-                products = products.filter(data_ended__gte=ended)
+                products = products.filter(data_ended__lte=ended)
             else:
                 products = products.filter(last_modified__lte=ended)
 
@@ -283,8 +280,8 @@ class ProductFileManager(models.GeoManager):
             products = products.filter(recipe_id__in=recipe_ids)
         if recipe_job:
             products = products.filter(recipe_job=recipe_job)
-        if recipe_type:
-            products = products.filter(recipe_type=recipe_type)
+        if recipe_type_ids:
+            products = products.filter(recipe_type__in=recipe_type_ids)
         if batch_ids:
             products = products.filter(batch_id__in=batch_ids)
 
@@ -298,7 +295,7 @@ class ProductFileManager(models.GeoManager):
 
     def get_products(self, started=None, ended=None, time_field=None, job_type_ids=None, job_type_names=None,
                      job_type_categories=None, is_operational=None, is_published=None, file_name=None, job_output=None,
-                     recipe_ids=None, recipe_type=None, recipe_job=None, batch_ids=None, order=None):
+                     recipe_ids=None, recipe_type_ids=None, recipe_job=None, batch_ids=None, order=None):
         """Returns a list of product files within the given time range.
 
         :param started: Query product files updated after this amount of time.
@@ -325,8 +322,8 @@ class ProductFileManager(models.GeoManager):
         :type recipe_ids: list[int]
         :keyword recipe_job: Query product files produced by a given recipe name
         :type recipe_job: str
-        :keyword recipe_type: Query product files produced by a given recipe type
-        :type recipe_type: str
+        :keyword recipe_type_ids: Query product files produced by a given recipe types
+        :type recipe_type_ids: list[int]
         :keyword batch_ids: Query product files produced by batches with the given identifiers.
         :type batch_ids: list[int]
         :param order: A list of fields to control the sort order.
@@ -339,7 +336,7 @@ class ProductFileManager(models.GeoManager):
                                     job_type_names=job_type_names, job_type_categories=job_type_categories,
                                     is_operational=is_operational, is_published=is_published, is_superseded=False,
                                     file_name=file_name, job_output=job_output, recipe_ids=recipe_ids,
-                                    recipe_type=recipe_type, recipe_job=recipe_job, batch_ids=batch_ids,
+                                    recipe_type_ids=recipe_type_ids, recipe_job=recipe_job, batch_ids=batch_ids,
                                     order=order)
 
     def get_details(self, product_id):
@@ -563,7 +560,7 @@ class ProductFile(ScaleFile):
     functionality specific to product files.
     """
 
-    VALID_TIME_FIELDS = ['source_time', 'data_time', 'last_modified']
+    VALID_TIME_FIELDS = ['source', 'data', 'last_modified']
 
     @classmethod
     def create(cls):
