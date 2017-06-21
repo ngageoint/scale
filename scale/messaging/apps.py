@@ -16,9 +16,9 @@ from .backends.sqs import SQSMessagingBackend
 
 
 class MessagingConfig(AppConfig):
-    """Configuration for the metrics app"""
+    """Configuration for the messaging app"""
     name = 'messaging'
-    label = 'messaging'
+    label = 'Messaging'
     verbose_name = 'Message passing'
 
     def ready(self):
