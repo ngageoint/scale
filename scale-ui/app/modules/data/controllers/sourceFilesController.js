@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('sourceFilesController', function ($scope, $location, $timeout, scaleConfig, scaleService, stateService, feedService, navService, subnavService, SourceFile, gridFactory, poller) {
+    angular.module('scaleApp').controller('sourceFilesController', function ($scope, $location, $timeout, scaleConfig, scaleService, stateService, feedService, navService, subnavService, SourceFile, gridFactory) {
         subnavService.setCurrentPath('data/source');
         var vm = this;
         vm.sourceFilesParams = stateService.getSourceFilesParams();
@@ -172,7 +172,7 @@
             }
             vm.sourceFilesParams.time_field = newValue;
             vm.filterResults();
-        })
+        });
 
         $scope.$watchCollection('vm.stateService.getSourceFilesColDefs()', function (newValue, oldValue) {
             if (angular.equals(newValue, oldValue)) {

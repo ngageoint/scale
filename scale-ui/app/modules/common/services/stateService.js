@@ -19,6 +19,8 @@
             batchesParams = {},
             sourceFilesColDefs = [],
             sourceFilesParams = {},
+            sourceFileProductsColDefs = [],
+            sourceFileProductsParams = {},
             showActiveWorkspaces = true,
             nodesParams = {},
             logArgs = [],
@@ -165,6 +167,23 @@
                 order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['-last_modified'],
                 is_parsed: data.is_parsed ? data.is_parsed : null,
                 file_name: data.file_name ? data.file_name : null
+            };
+        };
+
+        var initSourceFileProductsParams = function (data) {
+            return {
+                page: data.page ? parseInt(data.page) : 1,
+                page_size: data.page_size ? parseInt(data.page_size) : 25,
+                started: data.started ? data.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
+                ended: data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
+                order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['-last_modified'],
+                batch_id: data.batch_id || null,
+                job_type_id: data.job_type_id || null,
+                job_type_name: data.job_type_name || null,
+                job_type_category: data.job_type_category || null,
+                is_operational: data.is_operational || null,
+                is_published: data.is_published || null,
+                file_name: data.file_name || null
             };
         };
 
@@ -322,6 +341,12 @@
                 batchesParams = initBatchesParams(data);
                 updateQuerystring(batchesParams);
             },
+            getSourceFilesColDefs: function () {
+                return sourceFilesColDefs;
+            },
+            setSourceFilesColDefs: function (data) {
+                sourceFilesColDefs = data;
+            },
             getSourceFilesParams: function () {
                 if (_.keys(sourceFilesParams).length === 0) {
                     return initSourceFilesParams($location.search());
@@ -331,6 +356,22 @@
             setSourceFilesParams: function (data) {
                 sourceFilesParams = initSourceFilesParams(data);
                 updateQuerystring(sourceFilesParams);
+            },
+            getSourceFileProductsColDefs: function () {
+                return sourceFileProductsColDefs;
+            },
+            setSourceFileProductsColDefs: function (data) {
+                sourceFileProductsColDefs = data;
+            },
+            getSourceFileProductsParams: function () {
+                if (_.keys(sourceFileProductsParams).length === 0) {
+                    return initSourceFileProductsParams($location.search());
+                }
+                return sourceFileProductsParams;
+            },
+            setSourceFileProductsParams: function (data) {
+                sourceFileProductsParams = initSourceFileProductsParams(data);
+                updateQuerystring(sourceFileProductsParams);
             }
         };
     });

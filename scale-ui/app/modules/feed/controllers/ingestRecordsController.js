@@ -217,7 +217,9 @@
             stateService.setIngestsParams(vm.ingestsParams);
             vm.updateColDefs();
             vm.getStrikes();
-            navService.updateLocation('feed');
+            if (!$scope.$parent.hasParentCtrl) {
+                navService.updateLocation('feed');
+            }
         };
 
         vm.initialize();

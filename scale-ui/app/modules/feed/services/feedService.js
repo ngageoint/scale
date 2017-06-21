@@ -85,11 +85,13 @@
                 });
                 return d.promise;
             },
-            getSourceDescendants: function (id, type) {
+            getSourceDescendants: function (id, type, params) {
+                params = params || {};
                 var d = $q.defer();
                 $http({
                     url: scaleConfig.getUrlPrefix('sources') + 'sources/' + id + '/' + type + '/',
-                    method: 'GET'
+                    method: 'GET',
+                    params: params
                 }).success(function (data) {
                     d.resolve(data);
                 }).error(function (error) {

@@ -280,7 +280,9 @@
             var user = userService.getUserCreds();
             vm.readonly = !(user && user.is_admin);
             vm.getJobTypes();
-            navService.updateLocation('jobs');
+            if (!$scope.$parent.hasParentCtrl) {
+                navService.updateLocation('jobs');
+            }
         };
 
         vm.initialize();

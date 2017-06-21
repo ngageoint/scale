@@ -35,3 +35,9 @@
     </div>
     <ais-grid-pagination></ais-grid-pagination>
 </div>
+<div ng-if="productsData && ctrl.activeTab === 'products'">
+    <div class="grid-container">
+        <div ui-grid="ctrl.gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns class="scale-grid"></div>
+    </div>
+    <ais-grid-pagination></ais-grid-pagination>
+</div>

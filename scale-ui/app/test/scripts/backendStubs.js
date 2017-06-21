@@ -130,12 +130,11 @@
         var sourceDetailsOverrideUrl = 'test/data/sourceDetails.json';
         var sourceDetailsRegex = new RegExp('^' + scaleConfig.getUrlPrefix('sources') + 'sources/.*/', 'i');
         $httpBackend.whenGET(sourceDetailsRegex).respond(function (method, url) {
-            var type = _.last(_.without(url.split('/'), ''));
-            if (type === 'jobs') {
+            if (_.contains(url, 'jobs')) {
                 return getSync('test/data/jobs.json');
-            } else if (type === 'products') {
-                return [200, {}, {}];
-            } else if (type === 'ingests') {
+            } else if (_.contains(url, 'products')) {
+                return getSync('test/data/sourceProducts.json');
+            } else if (_.contains(url, 'ingests')) {
                 return getSync('test/data/ingests.json');
             }
             // // get the jobType.id from the url
