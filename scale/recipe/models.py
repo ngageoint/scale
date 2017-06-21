@@ -213,17 +213,15 @@ class RecipeManager(models.Manager):
         :param job_id: The job ID
         :type job_id: int
         :returns: The recipe model with related recipe_type and recipe_type-rev, possibly None
-        :rtype: :class:`recipe.models.Recipe`
+        :rtype: :class:`recipe.models.RecipeJob`
         """
 
-        job_recipe = []
-        for recipe_job in RecipeJob.objects.filter(job_id=job_id, is_original=True):
-            # This should match at most one RecipeJob object
-            job_recipe.append(recipe_job)
-
-        if not job_recipe:
+        recipe_job_qry = RecipeJob.objects.select_related('recipe__recipe_type', 'recipe__recipe_type_rev')
+        try:
+            recipe_job = recipe_job_qry.get(job_id=job_id, is_original=True)
+        except RecipeJob.DoesNotExist:
             return None
-        return job_recipe[0]
+        return recipe_job
 
     def get_recipe_handler_for_job(self, job_id):
         """Returns the recipe handler (possibly None) for the recipe containing the job with the given ID. The caller
