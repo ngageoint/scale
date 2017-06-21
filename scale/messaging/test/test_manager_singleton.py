@@ -5,11 +5,12 @@ from __future__ import unicode_literals
 
 import django
 from django.test import TestCase
+from mock import MagicMock
+from mock import patch
+
 from messaging.exceptions import CommandMessageExecuteFailure, InvalidCommandMessage
-from messaging.messages.message import CommandMessage
 from messaging.manager import CommandMessageManager
-from mock import MagicMock, Mock
-from mock import call, patch
+
 
 ################################################################################
 # WARNING this file is specifically testing with singleton CommandMessageManager
@@ -24,7 +25,7 @@ class TestSingletonCommandMessageManager(TestCase):
     @patch('messaging.manager.BrokerDetails')
     def test_verify_singleton(self, broker_details, get_message_backend):
         """Validate that multiple instantiation attempts result in single instance"""
-        
+
         self.assertEquals(CommandMessageManager(), CommandMessageManager())
 
     @patch('messaging.manager.get_message_backend')

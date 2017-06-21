@@ -4,11 +4,12 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import Queue
 import logging
 from contextlib import closing
 
-import Queue
 from kombu import Connection
+
 from messaging.backends.backend import MessagingBackend
 
 logger = logging.getLogger(__name__)
@@ -16,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 class AMQPMessagingBackend(MessagingBackend):
     """Backend supporting message passing via AMQP 0.9.1 broker, targeting RabbitMQ"""
-    
+
     def __init__(self):
         super(AMQPMessagingBackend, self).__init__('amqp')
 

@@ -3,16 +3,13 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-from mock import MagicMock, Mock
-from mock import call, patch
-
 import django
 from django.test import TestCase
+from mock import patch
 
-from messaging.exceptions import CommandMessageExecuteFailure, InvalidCommandMessage
+import messaging.messages.factory as message_factory
 from messaging.messages.echo import EchoCommandMessage
 from messaging.messages.message import CommandMessage
-import messaging.messages.factory as message_factory
 
 
 # Dummy class for ABC __init__ testing
@@ -22,7 +19,7 @@ class DummyMessage(CommandMessage):
 
     def to_json(self):
         pass
-    
+
     @staticmethod
     def from_json(self, message):
         pass
@@ -46,14 +43,13 @@ class TestCommandMessage(TestCase):
 class TestEchoCommandMessage(TestCase):
     def setUp(self):
         django.setup()
-        
+
     def test_valid_init(self):
         """Validate correct initialization of messages internal properties"""
 
         message = EchoCommandMessage()
         self.assertEquals(message.type, 'echo')
         self.assertEqual(message.new_messages, [])
-        
 
     @patch('random.choice')
     def test_valid_execute_no_downstream(self, choice):
@@ -74,22 +70,22 @@ class TestEchoCommandMessage(TestCase):
         message = EchoCommandMessage()
         self.assertTrue(message.execute())
         self.assertEquals(len(message.new_messages), 1)
-        
+
     def test_valid_from_json(self):
         """Validate instantiation of echo command message from json"""
-        
-        payload = {'test':'value'}
+
+        payload = {'test': 'value'}
         message = EchoCommandMessage.from_json()
         self.assertEquals(message._payload, payload)
-        
+
     def test_valid_from_json(self):
         """Validate serialization of echo command message to json"""
-        
-        payload = {'test':'value'}
+
+        payload = {'test': 'value'}
         message = EchoCommandMessage()
         message._payload = payload
         self.assertEquals(message.to_json(), payload)
-        
+
 
 class TestMessagesFactory(TestCase):
     def setUp(self):
@@ -98,30 +94,28 @@ class TestMessagesFactory(TestCase):
     def test_add_message_type(self):
         """Validate add message type functionality"""
         message = DummyMessage
-        
+
         message_factory._MESSAGE_TYPES = {}
         message_factory.add_message_type(message)
         # Yeah, not a typo... coverage
         message_factory.add_message_type(message)
         self.assertEqual(message_factory._MESSAGE_TYPES.keys(), ['dummy'])
-    
+
     def test_successfully_get_message_backend(self):
         """Validate successful retrieval of message type from factory"""
         message_factory._MESSAGE_TYPES = {'key1': 'value1', 'key2': 'value2'}
-        
+
         self.assertEqual(message_factory.get_message_type('key1'), 'value1')
-        
+
     def test_unmatched_get_message_backend(self):
         """Validate missing message type behavior of factory"""
         message_factory._MESSAGE_TYPES = {'key1': 'value1', 'key2': 'value2'}
-        
+
         with self.assertRaises(KeyError):
             message_factory.get_message_type('key3')
-    
+
     def test_get_message_backends(self):
         """Validate listing behavior of types from factory"""
         message_factory._MESSAGE_TYPES = {'key1': 'value', 'key2': 'value'}
-        
+
         self.assertEqual(message_factory.get_message_types(), message_factory._MESSAGE_TYPES.keys())
-
-

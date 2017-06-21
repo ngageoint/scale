@@ -7,15 +7,15 @@ from __future__ import unicode_literals
 import json
 import logging
 
-from util.aws import AWSCredentials, SQSClient
 from messaging.backends.backend import MessagingBackend
+from util.aws import AWSCredentials, SQSClient
 
 logger = logging.getLogger(__name__)
 
 
 class SQSMessagingBackend(MessagingBackend):
     """Backend supporting message passing via Amazon SQS"""
-    
+
     def __init__(self):
         super(SQSMessagingBackend, self).__init__('sqs')
 

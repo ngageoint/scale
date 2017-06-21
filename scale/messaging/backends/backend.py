@@ -1,5 +1,7 @@
 from abc import ABCMeta, abstractmethod
+
 from django.conf import settings
+
 from util.broker import BrokerDetails
 
 

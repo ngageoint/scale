@@ -5,8 +5,9 @@ from __future__ import unicode_literals
 
 import django
 from django.test import TestCase
-from messaging.apps import MessagingConfig
 from mock import patch, Mock
+
+from messaging.apps import MessagingConfig
 
 
 class TestMessagingConfig(TestCase):

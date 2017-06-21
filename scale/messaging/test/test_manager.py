@@ -5,27 +5,28 @@ from __future__ import unicode_literals
 
 import django
 from django.test import TestCase
-from messaging.exceptions import CommandMessageExecuteFailure, InvalidCommandMessage
-from messaging.messages.message import CommandMessage
-from messaging.manager import CommandMessageManager
-from mock import MagicMock, Mock
+from mock import MagicMock
 from mock import call, patch
+
+from messaging.exceptions import CommandMessageExecuteFailure, InvalidCommandMessage
+from messaging.manager import CommandMessageManager
+from messaging.messages.message import CommandMessage
 
 
 class TestCommandMessageManager(TestCase):
     def setUp(self):
         django.setup()
-        
+
         # Stomp singleton for unit testing.
         @classmethod
         def instance_new(self, cls):
             """Removed Singleton from manager"""
-        
+
             return super(CommandMessageManager, cls).__new__(cls)
-            
+
         self.patcher = patch('messaging.manager.CommandMessageManager.__new__', instance_new)
         self.patcher.start()
-        
+
     def tearDown(self):
         self.patcher.stop()
 

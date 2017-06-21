@@ -8,6 +8,7 @@ import logging
 import signal
 
 from django.core.management.base import BaseCommand
+
 from messaging.manager import CommandMessageManager
 
 logger = logging.getLogger(__name__)

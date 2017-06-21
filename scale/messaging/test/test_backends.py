@@ -3,19 +3,19 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import json
 import Queue
-from mock import call, patch
-from mock import MagicMock
+import json
 
 import django
 from django.conf import settings
 from django.test import TestCase
+from mock import MagicMock
+from mock import patch
 
+import messaging.backends.factory as backend_factory
 from messaging.backends.amqp import AMQPMessagingBackend
 from messaging.backends.backend import MessagingBackend
 from messaging.backends.sqs import SQSMessagingBackend
-import messaging.backends.factory as backend_factory
 
 
 # Dummy class for ABC __init__ testing
@@ -60,7 +60,7 @@ class TestAMQPBackend(TestCase):
         message1 = MagicMock(payload={'type': 'echo', 'body': '1'})
         message2 = MagicMock(payload={'type': 'echo', 'body': '2'})
         get_func = MagicMock(side_effect=[message1, message2, Queue.Empty])
-        
+
         # Deep diving through context managers to patch get call
         connection.return_value.__enter__.return_value.SimpleQueue.return_value.get = get_func
 
@@ -71,7 +71,7 @@ class TestAMQPBackend(TestCase):
         self.assertEqual(len(results), 2)
         message1.ack.assert_called()
         message2.ack.assert_called()
-        
+
     @patch('messaging.backends.amqp.Connection')
     def test_valid_single_batch_receive_message(self, connection):
         """Validate successful message retrieval via AMQP backend of first 2 messages"""
@@ -80,7 +80,7 @@ class TestAMQPBackend(TestCase):
         message2 = MagicMock(payload={'type': 'echo', 'body': '2'})
         message3 = MagicMock(payload={'type': 'echo', 'body': '3'})
         get_func = MagicMock(side_effect=[message1, message2, Queue.Empty])
-        
+
         # Deep diving through context managers to patch get call
         connection.return_value.__enter__.return_value.SimpleQueue.return_value.get = get_func
 
@@ -100,15 +100,15 @@ class TestAMQPBackend(TestCase):
         message = MagicMock()
         message.payload.side_effect = Exception
         get_func = MagicMock(return_value=[message])
-        
+
         # Deep diving through context managers to patch get call
         connection.return_value.__enter__.return_value.SimpleQueue.return_value.get = get_func
 
         backend = AMQPMessagingBackend()
-        
+
         for _ in backend.receive_messages(10):
             pass
-        
+
         message.ack.assert_not_called()
 
 
@@ -119,30 +119,30 @@ class TestBackendsFactory(TestCase):
     def test_add_message_backend(self):
         """Validate add message backend functionality"""
         backend = DummyBackend
-        
+
         backend_factory._MESSAGE_BACKENDS = {}
         backend_factory.add_message_backend(backend)
         # Yeah, not a typo... coverage
         backend_factory.add_message_backend(backend)
         self.assertEqual(backend_factory._MESSAGE_BACKENDS.keys(), ['dummy'])
-    
+
     def test_successfully_get_message_backend(self):
         """Validate successful retrieval of message backend from factory"""
         backend_factory._MESSAGE_BACKENDS = {'key1': 'value1', 'key2': 'value2'}
-        
+
         self.assertEqual(backend_factory.get_message_backend('key1'), 'value1')
-        
+
     def test_unmatched_get_message_backend(self):
         """Validate missing message backend behavior from factory"""
         backend_factory._MESSAGE_BACKENDS = {'key1': 'value1', 'key2': 'value2'}
-        
+
         with self.assertRaises(KeyError):
             backend_factory.get_message_backend('key3')
-    
+
     def test_get_message_backends(self):
         """Validate listing behavior of backends from factory"""
         backend_factory._MESSAGE_BACKENDS = {'key1': 'value', 'key2': 'value'}
-        
+
         self.assertEqual(backend_factory.get_message_backends(), backend_factory._MESSAGE_BACKENDS.keys())
 
 
@@ -168,18 +168,18 @@ class TestMessagingBackend(TestCase):
 class TestSQSBackend(TestCase):
     def setUp(self):
         django.setup()
-    
+
     @patch('messaging.backends.backend.BrokerDetails.from_broker_url')
     def test_valid_init(self, details):
         """Validate initialization specific to SQS backend is completed"""
         region_name = 'us-east-1'
         user_name = 'user'
         password = 'pass'
-        
+
         details.return_value.get_broker.return_value = region_name = 'us-east-1'
         details.return_value.get_user_name.return_value = user_name = 'user'
         details.return_value.get_password.return_value = password = 'pass'
-        
+
         backend = SQSMessagingBackend()
         self.assertEqual(backend.type, 'sqs')
         self.assertEqual(backend._region_name, region_name)
@@ -205,7 +205,7 @@ class TestSQSBackend(TestCase):
         message1 = MagicMock(body=json.dumps({'type': 'echo', 'body': '1'}))
         message2 = MagicMock(body=json.dumps({'type': 'echo', 'body': '2'}))
         get_func = MagicMock(return_value=[message1, message2])
-        
+
         client.return_value.__enter__.return_value.receive_messages = get_func
 
         backend = SQSMessagingBackend()
@@ -223,13 +223,12 @@ class TestSQSBackend(TestCase):
         message = MagicMock()
         message.body.side_effect = Exception
         get_func = MagicMock(return_value=[message])
-        
+
         client.return_value.__enter__.return_value.receive_messages = get_func
 
         backend = SQSMessagingBackend()
-        
+
         for _ in backend.receive_messages(10):
             pass
-        
+
         message.delete.assert_not_called()
-        

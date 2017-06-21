@@ -6,8 +6,9 @@ from __future__ import unicode_literals
 import logging
 
 from django.conf import settings
-from messaging.messages.factory import get_message_type
 from six import raise_from
+
+from messaging.messages.factory import get_message_type
 from util.broker import BrokerDetails
 from .backends.factory import get_message_backend
 from .exceptions import CommandMessageExecuteFailure, InvalidCommandMessage
