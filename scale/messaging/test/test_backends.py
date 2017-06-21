@@ -23,7 +23,7 @@ class DummyBackend(MessagingBackend):
     def __init__(self):
         super(DummyBackend, self).__init__('dummy')
 
-    def send_message(self, message):
+    def send_messages(self, message):
         pass
 
     def receive_messages(self, batch_size):
@@ -205,7 +205,7 @@ class TestSQSBackend(TestCase):
         self.assertEqual(backend._credentials.secret_access_key, password)
 
     @patch('messaging.backends.sqs.SQSClient')
-    def test_valid_send_messages(self, client):
+    def test_valid_single_send_messages(self, client):
         """Validate message is sent via the SQS backend"""
 
         messages = [{'type': 'echo', 'body': 'yes'}]
@@ -213,12 +213,12 @@ class TestSQSBackend(TestCase):
         backend = SQSMessagingBackend()
         backend.send_messages(messages)
 
-        put = client.return_value.__enter__.return_value.send_message
-        put.assert_called_with(backend._queue_name, json.dumps(messages[0]))
+        put = client.return_value.__enter__.return_value.send_messages
+        self.assertIn(json.dumps(messages[0]), str(put.mock_calls[0]))
         self.assertEquals(put.call_count, 1)
 
     @patch('messaging.backends.sqs.SQSClient')
-    def test_valid_send_messages(self, client):
+    def test_valid_multiple_send_messages(self, client):
         """Validate message is sent via the SQS backend"""
 
         messages = [
@@ -229,10 +229,10 @@ class TestSQSBackend(TestCase):
         backend = SQSMessagingBackend()
         backend.send_messages(messages)
 
-        put = client.return_value.__enter__.return_value.send_message
-        put.assert_called_with(backend._queue_name, json.dumps(messages[0]))
-        put.assert_has_calls([call(backend._queue_name, json.dumps(x)) for x in messages])
-        self.assertEquals(put.call_count, 2)
+        put = client.return_value.__enter__.return_value.send_messages
+        for message in messages:
+            self.assertIn(json.dumps(message), str(put.mock_calls[0]))
+        self.assertEquals(put.call_count, 1)
 
     @patch('messaging.backends.sqs.SQSClient')
     def test_valid_receive_messages(self, client):

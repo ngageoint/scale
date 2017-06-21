@@ -38,9 +38,12 @@ class Command(BaseCommand):
         logger.info('Command starting: scale_echo_message - sending {} message(s)'.format(count))
 
         manager = CommandMessageManager()
+        messages = []
         for x in range(count):
-            message = EchoCommandMessage.from_json(
-                {'message': 'Greetings, this is echo #{} at {}!'.format(x + 1, datetime.utcnow())})
-            manager.send_message(message)
+            messages.append(EchoCommandMessage.from_json(
+                {'message': 'Greetings, this is echo #{} at {}!'.format(x + 1, datetime.utcnow())}))
+                
+        
+        manager.send_messages(messages)
 
         logger.info('Command completed: scale_echo_message')

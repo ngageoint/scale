@@ -39,19 +39,19 @@ class TestCommandMessageManager(TestCase):
 
     def test_send_message(self):
         """Validate that send_message composes dict with `type` and `body` keys for backend"""
-        command = MagicMock(message_type='test')
-        command.to_json = MagicMock(return_value='body_content')
+        command = MagicMock(type='test')
+        command.to_json.return_value = 'body_content'
         manager = CommandMessageManager()
-        send_message = MagicMock()
-        backend = MagicMock(send_message=send_message)
+        send_messages = MagicMock()
+        backend = MagicMock(send_messages=send_messages)
         manager._backend = backend
 
-        manager.send_message(command)
+        manager.send_messages([command])
 
-        send_message.assert_called_with({'type': 'test', 'body': 'body_content'})
+        send_messages.assert_called_with([{'type': 'test', 'body': 'body_content'}])
 
-    def test_send_message_no_type(self):
-        """Validate that send_message raises AttributeError when message_type is not available"""
+    def test_send_messages_no_type(self):
+        """Validate that send_message raises AttributeError when message type is not available"""
 
         class InvalidCommand(object):
             def to_json(self):
@@ -61,20 +61,20 @@ class TestCommandMessageManager(TestCase):
         manager = CommandMessageManager()
 
         with self.assertRaises(AttributeError):
-            manager.send_message(message)
+            manager.send_messages([message])
 
     def test_send_message_no_serializer(self):
         """Validate that send_message raises AttributeError when to_json is not available"""
 
         class InvalidCommand(object):
             def __init__(self):
-                self.message_type = 'test'
+                self.type = 'test'
 
         message = InvalidCommand()
         manager = CommandMessageManager()
 
         with self.assertRaises(AttributeError):
-            manager.send_message(message)
+            manager.send_messages([message])
 
     def test_receive_message(self):
         """Validate the receive_message calls _process_message with each result"""
@@ -124,26 +124,25 @@ class TestCommandMessageManager(TestCase):
 
         self.assertFalse(send_downstream.called)
 
-    def test_successful_send_downstream(self):
+    @patch('messaging.manager.CommandMessageManager.send_messages')
+    def test_successful_send_downstream(self, send_messages):
         """Validate call of send_message for each downstream message"""
 
         messages = ['one', 'two']
 
         manager = CommandMessageManager()
-        send_message = manager.send_message = MagicMock()
         manager._send_downstream(messages)
 
-        calls = [call(x) for x in messages]
-        send_message.assert_has_calls(calls)
+        send_messages.assert_called_with(messages)
 
-    def test_no_message_send_downstream(self):
+    @patch('messaging.manager.CommandMessageManager.send_messages')
+    def test_no_message_send_downstream(self, send_messages):
         """Validate send_message is not called when messages is empty"""
 
         manager = CommandMessageManager()
-        send_message = manager.send_message = MagicMock()
         manager._send_downstream([])
 
-        self.assertFalse(send_message.called)
+        self.assertFalse(send_messages.called)
 
     @patch('messaging.manager.get_message_type')
     def test_valid_extract_command(self, get_message_type):

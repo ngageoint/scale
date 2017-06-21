@@ -32,17 +32,18 @@ class CommandMessageManager(object):
 
         self._backend = get_message_backend(broker_type)
 
-    def send_message(self, command):
-        """Serialize CommandMessage and send via configured message broker
+    def send_messages(self, commands):
+        """Serialize CommandMessages and send via configured message broker
 
         The command.to_json() and command.message_type will be used to generate
         serialized form of CommandMessage for transmission across the wire.
 
-        :param command: CommandMessage to be sent via configured broker
-        :type command: `messaging.messages.message.CommandMessage`
+        :param command: CommandMessages to be sent via configured broker
+        :type command: [`messaging.messages.message.CommandMessage`]
         """
 
-        self._backend.send_message({"type": command.message_type, "body": command.to_json()})
+        messages = [{"type": x.type, "body": x.to_json()} for x in commands]
+        self._backend.send_messages(messages)
 
     def receive_messages(self):
         """Main entry point to message processing.
@@ -119,5 +120,4 @@ class CommandMessageManager(object):
         """
         if len(messages):
             logger.info('Sending %i downstream CommandMessage(s).', len(messages))
-            for message in messages:
-                self.send_message(message)
+            self.send_messages(messages)
