@@ -1,4 +1,5 @@
 """Defines the class that manages scheduling for a node"""
+from __future__ import absolute_import
 from __future__ import unicode_literals
 
 from job.execution.tasks.exe_task import JobExecutionTask
