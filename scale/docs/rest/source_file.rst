@@ -767,13 +767,11 @@ These services provide access to information about source files that Scale has i
 |                    |                   |          | Prefix fields with a dash to reverse the sort, (ex: order=-created).|
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | job_output         | String            | Optional | Return only products for the given job output.                      |
-|                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | recipe_id          | Integer           | Optional | Return only products produced by the given recipe identifier.       |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | recipe_job         | String            | Optional | Return only products produced by the given recipe job.              |
-|                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | recipe_type_id     | Integer           | Optional | Return only products produced by the given recipe type identifier.  |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |

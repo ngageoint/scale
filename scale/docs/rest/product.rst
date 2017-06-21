@@ -44,7 +44,6 @@ These services provide access to information about products that Scale has produ
 |                    |                   |          | Prefix fields with a dash to reverse the sort, (ex: order=-created).|
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | job_output         | String            | Optional | Return only products for the given job output.                      |
-|                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | job_type_id        | Integer           | Optional | Return only products associated with a given job type identifier.   |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
@@ -59,7 +58,6 @@ These services provide access to information about products that Scale has produ
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | recipe_job         | String            | Optional | Return only products produced by the given recipe job.              |
-|                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | recipe_type_id     | Integer           | Optional | Return only products produced by the given recipe type identifier.  |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
