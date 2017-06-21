@@ -19,9 +19,9 @@ def add_message_type(message_class):
     """
 
     message_clazz = message_class()
-    if message_clazz.message_type in _MESSAGE_TYPES:
-        logger.warning('Duplicate message type registration: %s', message_clazz.message_type)
-    _MESSAGE_TYPES[message_clazz.message_type] = message_clazz
+    if message_clazz.type in _MESSAGE_TYPES:
+        logger.warning('Duplicate message type registration: %s', message_clazz.type)
+    _MESSAGE_TYPES[message_clazz.type] = message_clazz
 
 
 def get_message_type(message_type):

@@ -15,7 +15,7 @@ class CommandMessage(object):
         self.new_messages = []
 
         # Unique type of CommandMessage, each type must be registered in apps.py
-        self.message_type = message_type
+        self.type = message_type
 
     @abstractmethod
     def to_json(self):

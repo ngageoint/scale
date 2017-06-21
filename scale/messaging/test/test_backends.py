@@ -112,7 +112,7 @@ class TestAMQPBackend(TestCase):
         message.ack.assert_not_called()
 
 
-class TestMessageFactory(TestCase):
+class TestBackendsFactory(TestCase):
     def setUp(self):
         django.setup()
 

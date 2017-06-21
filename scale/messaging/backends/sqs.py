@@ -25,15 +25,13 @@ class SQSMessagingBackend(MessagingBackend):
                                            self._broker.get_password())
 
     def send_message(self, message):
-        """See :meth:`messaging.backends.backend.MessagingBackend.send_message`
-        """
+        """See :meth:`messaging.backends.backend.MessagingBackend.send_message`"""
         with SQSClient(self._credentials, self._region_name) as client:
             logger.debug('Sending message of type: %s', message['type'])
             client.send_message(self._queue_name, json.dumps(message))
 
     def receive_messages(self, batch_size):
-        """See :meth:`messaging.backends.backend.MessagingBackend.receive_messages`
-        """
+        """See :meth:`messaging.backends.backend.MessagingBackend.receive_messages`"""
         with SQSClient(self._credentials, self._region_name) as client:
             for message in client.receive_messages(self._queue_name, messages_per_request=batch_size):
                 try:
