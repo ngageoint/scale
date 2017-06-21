@@ -79,7 +79,7 @@ def run(client):
     # Determine if Web Server should be deployed.
     if DEPLOY_WEBSERVER.lower() == 'true':
         app_name = '%s-webserver' % FRAMEWORK_NAME
-        webserver_port = deploy_webserver(client, app_name, es_urls, db_host, db_port)
+        webserver_port = deploy_webserver(client, app_name, es_urls, db_host, db_port, broker_url)
         print("WEBSERVER_ADDRESS=http://%s.marathon.mesos:%s" % (app_name, webserver_port))
 
 
@@ -145,7 +145,7 @@ def wait_app_healthy(client, app_name, sleep_secs=5):
         time.sleep(sleep_secs)
 
 
-def deploy_webserver(client, app_name, es_urls, db_host, db_port):
+def deploy_webserver(client, app_name, es_urls, db_host, db_port, broker_url):
     # attempt to delete an old instance..if it doesn't exists it will error but we don't care so we ignore it
     delete_marathon_app(client, app_name)
 
@@ -156,7 +156,7 @@ def deploy_webserver(client, app_name, es_urls, db_host, db_port):
     db_user = os.getenv('SCALE_DB_USER', 'scale')
     db_pass = os.getenv('SCALE_DB_PASS', 'scale')
     docker_image = os.getenv('MARATHON_APP_DOCKER_IMAGE')
-    optional_envs = ['SCALE_SECRET_KEY', 'SCALE_ALLOWED_HOSTS']
+    optional_envs = ['SCALE_SECRET_KEY', 'SCALE_ALLOWED_HOSTS', 'SCALE_QUEUE_NAME']
 
     marathon = {
         'id': app_name,
@@ -180,6 +180,7 @@ def deploy_webserver(client, app_name, es_urls, db_host, db_port):
         'env': {
             "DCOS_PACKAGE_FRAMEWORK_NAME": FRAMEWORK_NAME,
             "ENABLE_WEBSERVER": 'true',
+            "SCALE_BROKER_URL": broker_url,
             "SCALE_DB_HOST": db_host,
             "SCALE_DB_NAME": db_name,
             "SCALE_DB_PORT": str(db_port),
@@ -296,6 +297,7 @@ def get_elasticsearch_urls():
     es_urls = ','.join(endpoints)
     return es_urls
 
+
 def deploy_rabbitmq(client, app_name):
     # Check if scale-db is already running
     if not check_app_exists(client, app_name):
@@ -361,6 +363,7 @@ def deploy_rabbitmq(client, app_name):
             marathon['uris'].append(CONFIG_URI)
 
         deploy_marathon_app(client, marathon)
+
 
 def deploy_logstash(client, app_name, es_urls):
     # attempt to delete an old instance..if it doesn't exists it will error but we don't care so we ignore it
