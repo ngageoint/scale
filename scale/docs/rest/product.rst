@@ -32,7 +32,7 @@ These services provide access to information about products that Scale has produ
 |                    |                   |          | time filtering. Valid values are:                                   |
 |                    |                   |          |                                                                     |
 |                    |                   |          | - *last_modified* - last modification of source file meta-data      |
-|                    |                   |          | - *data* - data time of source file (*data_started*, *data_ended*)  |
+|                    |                   |          | - *data* - data time of product file (*data_started*, *data_ended*) |
 |                    |                   |          | - *source* - overall time for all associated source files           |
 |                    |                   |          |              (*source_started*, *source_ended*)                     |
 |                    |                   |          |                                                                     |
