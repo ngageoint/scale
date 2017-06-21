@@ -141,11 +141,11 @@ class SQSClient(AWSClient):
         batches = [messages[i:i + 10] for i in xrange(0, len(messages), 10)]
 
         for batch in batches:
-            queue.send_message_batch(batch)
+            queue.send_messages(Entries=batch)
 
     def receive_messages(self,
                          queue_name,
-                         batch_size,
+                         batch_size=100,
                          wait_time_seconds=20,
                          visibility_timeout_seconds=30):
         """Receive a batch of messages from an SQS queue
@@ -162,12 +162,15 @@ class SQSClient(AWSClient):
         """
         queue = self.get_queue_by_name(queue_name)
 
-        count = 0
-        while count < batch_size:
-            for message in queue.receive_messages(MaxNumberOfMessages=batch_size % 10,
+        # Generate individual batch sizes up to given size, capped at 10
+        if batch_size > 10:
+            batches = [i % 10 for i in range(10, batch_size, 10) if i > 0]
+        else:
+            batches = [batch_size]
+        for batch in batches:
+            for message in queue.receive_messages(MaxNumberOfMessages=batch,
                                                   WaitTimeSeconds=wait_time_seconds,
                                                   VisibilityTimeout=visibility_timeout_seconds):
-                count += 1
                 yield message
 
 

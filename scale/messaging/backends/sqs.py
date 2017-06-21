@@ -30,9 +30,9 @@ class SQSMessagingBackend(MessagingBackend):
         with SQSClient(self._credentials, self._region_name) as client:
             encoded_messages = []
             for message in messages:
-                encoded_messages.append({'MessageId': uuid.uuid4(), 'MessageBody': json.dumps(message)})
+                encoded_messages.append({'Id': str(uuid.uuid4()), 'MessageBody': json.dumps(message)})
 
-            client.send_messages(client, encoded_messages)
+            client.send_messages(self._queue_name, encoded_messages)
 
     def receive_messages(self, batch_size):
         """See :meth:`messaging.backends.backend.MessagingBackend.receive_messages`"""
