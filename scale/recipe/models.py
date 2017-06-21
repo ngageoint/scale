@@ -573,7 +573,7 @@ class RecipeInputFile(models.Model):
     :type recipe: :class:`django.db.models.ForeignKey`
     :keyword scale_file: The input file that the recipe is linked to
     :type scale_file: :class:`django.db.models.ForeignKey`
-    :keyword recipe_input: The name of the input file
+    :keyword recipe_input: The name of the recipe input parameter
     :type recipe_input: :class:`django.db.models.CharField`
     :keyword created: When the recipe was created
     :type created: :class:`django.db.models.DateTimeField`
