@@ -47,7 +47,7 @@ ELASTICSEARCH_URLS = None
 ELASTICSEARCH = None
 
 # Broker URL for connection to messaging backend
-BROKER_URL = None
+BROKER_URL = 'amqp://guest:guest@localhost:5672//'
 QUEUE_NAME = 'scale-command-messages'
 
 # Base URL of vault or DCOS secrets store, or None to disable secrets
