@@ -242,7 +242,7 @@ class SourceProductsView(ListAPIView):
         file_name = rest_util.parse_string(request, 'file_name', required=False)
         job_output = rest_util.parse_string(request, 'job_output', required=False)
         recipe_ids = rest_util.parse_int_list(request, 'recipe_id', required=False)
-        recipe_type = rest_util.parse_string(request, 'recipe_type', required=False)
+        recipe_type_ids = rest_util.parse_int_list(request, 'recipe_type_ids', required=False)
         recipe_job = rest_util.parse_string(request, 'recipe_job', required=False)
 
         order = rest_util.parse_string_list(request, 'order', required=False)
@@ -253,7 +253,7 @@ class SourceProductsView(ListAPIView):
                                                           job_type_categories=job_type_categories,
                                                           is_operational=is_operational, is_published=is_published,
                                                           file_name=file_name, job_output=job_output,
-                                                          recipe_ids=recipe_ids, recipe_type=recipe_type,
+                                                          recipe_ids=recipe_ids, recipe_type_ids=recipe_type_ids,
                                                           recipe_job=recipe_job, order=order)
 
         page = self.paginate_queryset(products)
