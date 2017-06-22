@@ -42,8 +42,8 @@ def create_pull_command(image_name, check_exists=False):
     if check_exists and not image_name.endswith(':latest'):
         exists_echo_cmd = 'echo \'Checking if image is already pulled...\''
         image_search_cmd = 'docker images --format \'{{.Repository}}:{{.Tag}}\' | grep %s' % image_name
-        exists_cmd = '(%s; if [[ $? = 0 ]]; then echo \'Image already pulled\'; exit 1; fi;)' % image_search_cmd
-        command = '%s && %s && %s' % (exists_echo_cmd, exists_cmd, command)
+        exists_cmd = '(%s; if [[ $? = 0 ]]; then echo \'Image already pulled\'; else exit 1; fi;)' % image_search_cmd
+        command = '%s && %s || %s' % (exists_echo_cmd, exists_cmd, command)
 
     return command
 
