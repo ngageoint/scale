@@ -36,6 +36,8 @@
         };
         ctrl.searchText = ctrl.sourceFileProductsParams.file_name || '';
         ctrl.gridOptions = gridFactory.defaultGridOptions();
+        ctrl.gridOptions.paginationCurrentPage = ctrl.sourceFileProductsParams.page || 1;
+        ctrl.gridOptions.paginationPageSize = ctrl.sourceFileProductsParams.page_size || ctrl.gridOptions.paginationPageSize;
         ctrl.gridOptions.data = [];
 
         $timeout(function () {
@@ -93,14 +95,15 @@
                 enableFiltering: false
             },
             {
-                field: 'file_size_readable',
+                field: 'file_size',
                 displayName: 'File Size',
-                enableFiltering: false
+                enableFiltering: false,
+                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.file_size_readable }}</div>'
             },
             {
                 field: 'job_type',
                 enableFiltering: false,
-                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.job_type.title }} {{ row.entity.job_type.version }}</div>'
+                cellTemplate: '<div class="ui-grid-cell-contents"><a ng-href="/#/jobs/job/{{ row.entity.job.id }}">{{ row.entity.job_type.title }} {{ row.entity.job_type.version }}</a></div>'
             },
             {
                 field: 'data_started',
