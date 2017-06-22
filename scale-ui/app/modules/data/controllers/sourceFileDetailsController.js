@@ -3,7 +3,8 @@
 
     angular.module('scaleApp').controller('sourceFileDetailsController', function($scope, $location, $routeParams, $timeout, stateService, navService, dataService, gridFactory, SourceFile, Product) {
         var ctrl = this,
-            sourceFileId = parseInt($routeParams.id);
+            sourceFileId = parseInt($routeParams.id),
+            qs = $location.search();
 
         $scope.jobsData = null;
         $scope.productsData = null;
@@ -12,7 +13,7 @@
 
         ctrl.loading = true;
         ctrl.sourceFile = null;
-        ctrl.activeTab = 'jobs';
+        ctrl.activeTab = qs.tab || 'jobs';
         ctrl.sourceFileProductsParams = stateService.getSourceFileProductsParams();
         ctrl.startDate = moment.utc(ctrl.sourceFileProductsParams.started).toDate();
         ctrl.startDatePopup = {
@@ -172,12 +173,18 @@
             navService.updateLocation('data');
             ctrl.updateColDefs();
             getSourceFileDetails();
+            if (!qs.tab) {
+                qs.tab = ctrl.activeTab;
+                $location.search(qs);
+            }
         };
 
         initialize();
 
         ctrl.showGrid = function (gridType) {
+            qs.tab = gridType;
             ctrl.activeTab = gridType;
+            $location.search(qs);
         };
 
         $scope.$watch('ctrl.startDate', function (value) {
