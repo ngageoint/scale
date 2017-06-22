@@ -18,7 +18,7 @@ class TestBroker(TestCase):
         self.assertEqual(broker.get_type(), 'sqs')
         self.assertEqual(broker.get_user_name(), 'access')
         self.assertEqual(broker.get_password(), 'secret')
-        self.assertEqual(broker.get_broker(), 'us-east-1')
+        self.assertEqual(broker.get_address(), 'us-east-1')
 
     def test_valid_sqs_broker_url_no_credentials(self):
         """Tests instantiating broker from URL for SQS without keys."""
@@ -28,7 +28,7 @@ class TestBroker(TestCase):
         self.assertEqual(broker.get_type(), 'sqs')
         self.assertIsNone(broker.get_user_name())
         self.assertIsNone(broker.get_password())
-        self.assertEqual(broker.get_broker(), 'us-east-1')
+        self.assertEqual(broker.get_address(), 'us-east-1')
 
     def test_valid_rabbitmq_broker_url(self):
         """Tests instantiating broker from URL for RabbitMQ."""
@@ -38,7 +38,7 @@ class TestBroker(TestCase):
         self.assertEqual(broker.get_type(), 'amqp')
         self.assertEqual(broker.get_user_name(), 'guest')
         self.assertEqual(broker.get_password(), 'pass')
-        self.assertEqual(broker.get_broker(), 'localhost:5672')
+        self.assertEqual(broker.get_address(), 'localhost:5672')
 
     def test_bad_credentials_broker_url(self):
         """Tests instantiating broker from invalid URL with credential delimiter."""

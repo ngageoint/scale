@@ -5,7 +5,7 @@
 Messaging System
 ================================================================================
 
-Scale uses a message passing interface to minimize direct communication between internal support processes (pre and post tasks)
+Scale uses a message passing interface to minimize direct communication between internal support processes
 and the authoritative PostgreSQL database. This enables high job volume while limiting database connections
 to a small number of workers responsible for persisting system state.
 

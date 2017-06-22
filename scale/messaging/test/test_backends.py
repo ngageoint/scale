@@ -194,7 +194,7 @@ class TestSQSBackend(TestCase):
         user_name = 'user'
         password = 'pass'
 
-        details.return_value.get_broker.return_value = region_name = 'us-east-1'
+        details.return_value.get_address.return_value = region_name = 'us-east-1'
         details.return_value.get_user_name.return_value = user_name = 'user'
         details.return_value.get_password.return_value = password = 'pass'
 

@@ -4,14 +4,14 @@ import re
 
 from .exceptions import InvalidBrokerUrl
 
-REGEX_PATTERN = r'^(?P<type>[a-zA-Z]+):\/\/((?P<user_name>[^@:]+):(?P<password>[^@:]+)@)?(?P<broker>[^@]+(:[0-9]+)?)\/\/$'
+REGEX_PATTERN = r'^(?P<type>[a-zA-Z]+):\/\/((?P<user_name>[^@:]+):(?P<password>[^@:]+)@)?(?P<address>[^@]+(:[0-9]+)?)\/\/$'
 
 
 class BrokerDetails(object):
     def __init__(self):
         self.user_name = None
         self.password = None
-        self.broker = None
+        self.address = None
         self.type = None
 
     @staticmethod
@@ -29,7 +29,7 @@ class BrokerDetails(object):
             groups = match.groupdict()
             this = BrokerDetails()
             this.type = groups['type']
-            this.broker = groups['broker']
+            this.address = groups['address']
 
             if 'user_name' in groups and 'password' in groups:
                 this.user_name = groups['user_name']
@@ -39,13 +39,13 @@ class BrokerDetails(object):
 
         raise InvalidBrokerUrl
 
-    def get_broker(self):
+    def get_address(self):
         """Get extracted broker host and port or region depending on backend type
         
         :return: Broker host and port or region of backend
         :rtype: string
         """
-        return self.broker
+        return self.address
 
     def get_password(self):
         """Get extracted password for broker authentication.

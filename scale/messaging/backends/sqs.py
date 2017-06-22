@@ -20,7 +20,7 @@ class SQSMessagingBackend(MessagingBackend):
     def __init__(self):
         super(SQSMessagingBackend, self).__init__('sqs')
 
-        self._region_name = self._broker.get_broker()
+        self._region_name = self._broker.get_address()
 
         self._credentials = AWSCredentials(self._broker.get_user_name(),
                                            self._broker.get_password())
