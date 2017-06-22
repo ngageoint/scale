@@ -469,6 +469,17 @@ class JobManager(models.Manager):
         job.disk_out_required = disk_out_required
         job.last_modified = modified
 
+        # Query JobInputFile model and if empty, populate the model
+        if not JobInputFile.objects.filter(job__id=job.id).values('input_file'):
+            job_inputs = []
+            job_input = JobInputFile()
+            job_input.job_id = job.id
+            for input_file in input_files:           
+                job_input.input_file_id = input_file.id
+                job_input.job_input = input_file.name
+                job_inputs.append(job_input)
+            JobInputFile.objects.bulk_create(job_inputs)
+
         # Update job model in database with single query
         self.filter(id=job.id).update(data=data.get_dict(), configuration=configuration.get_dict(),
                                       disk_in_required=disk_in_required, disk_out_required=disk_out_required,
@@ -499,19 +510,12 @@ class JobManager(models.Manager):
         # Build a mapping of input file identifiers to input file
         input_file_map = {input_file.id: input_file for input_file in input_files}
 
-        # Update each job with source file models and populate the JobInputFile model
-        job_inputs = []
+        # Update each job with source file models
         for job in jobs:
-            job_input = JobInputFile()
             input_file_ids = job_file_map[job.id]
-            job_input.job_id = job.id
             for input_file_id in input_file_ids:
                 if input_file_id in input_file_map:
                     job.input_files.append(input_file_map[input_file_id])
-                    job_input.input_file_id = input_file_id
-                    job_input.job_input = input_file_map[input_file_id]
-                    job_inputs.append(job_input)
-        JobInputFile.objects.bulk_create(job_inputs)
 
     def supersede_jobs(self, jobs, when):
         """Updates the given jobs to be superseded. The caller must have obtained model locks on the job models.
