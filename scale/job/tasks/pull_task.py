@@ -30,20 +30,20 @@ def create_pull_command(image_name, check_exists=False):
     pull_cmd = 'docker pull %s' % image_name
     delete_echo_cmd = 'echo \'Cleaning up dangling images...\''
     delete_cmd = 'for img in `docker images -q -f dangling=true`; do docker rmi $img; done'
-    command = '%s && %s && %s && %s' % (pull_echo_cmd, pull_cmd, delete_echo_cmd, delete_cmd)
+    command = '(%s && %s) && (%s && %s)' % (pull_echo_cmd, pull_cmd, delete_echo_cmd, delete_cmd)
 
     # Setting DOCKER_CONFIG env var is needed if CONFIG_URI is set for custom Docker configuration
     if settings.CONFIG_URI:
         export_echo_cmd = 'echo \'Setting Docker configuration\''
         export_cmd = 'export DOCKER_CONFIG=`pwd`/.docker'
-        command = '%s && %s && %s' % (export_echo_cmd, export_cmd, command)
+        command = '(%s && %s) && %s' % (export_echo_cmd, export_cmd, command)
 
     # If check_exists and the image does not have a "latest" tag, check for image locally before pulling
     if check_exists and not image_name.endswith(':latest'):
         exists_echo_cmd = 'echo \'Checking if image is already pulled...\''
         image_search_cmd = 'docker images --format \'{{.Repository}}:{{.Tag}}\' | grep %s' % image_name
         exists_cmd = '(%s; if [[ $? = 0 ]]; then echo \'Image already pulled\'; else exit 1; fi;)' % image_search_cmd
-        command = '%s && %s || %s' % (exists_echo_cmd, exists_cmd, command)
+        command = '(%s && %s) || %s' % (exists_echo_cmd, exists_cmd, command)
 
     return command
 
