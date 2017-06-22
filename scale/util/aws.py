@@ -174,8 +174,8 @@ class SQSClient(AWSClient):
                 count += 1
                 yield message
 
-            # If count isn't evenly divisible by ten we're done
-            if count % 10 != 0:
+            # If count isn't evenly divisible by ten or nothing came back, we're done
+            if count % 10 != 0 or not count:
                 break
 
 
