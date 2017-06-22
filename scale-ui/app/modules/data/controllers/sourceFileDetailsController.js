@@ -43,7 +43,7 @@
         });
 
         var getSourceJobs = function () {
-            dataService.getSourceDescendants(ctrl.sourceFile.id, 'jobs').then(function (data) {
+            dataService.getSourceDescendants(ctrl.sourceFile.id, 'jobs', stateService.getJobsParams()).then(function (data) {
                 $scope.jobsData = data;
             });
         };
@@ -59,7 +59,7 @@
         };
 
         var getSourceIngests = function () {
-            dataService.getSourceDescendants(ctrl.sourceFile.id, 'ingests').then(function (data) {
+            dataService.getSourceDescendants(ctrl.sourceFile.id, 'ingests', stateService.getIngestsParams()).then(function (data) {
                 $scope.ingestsData = data;
             });
         };

@@ -101,8 +101,8 @@
         ];
 
         vm.getIngests = function () {
-            vm.loading = true;
             if ($scope.$parent.ingestsData) {
+                vm.loading = false;
                 vm.ingestData = $scope.$parent.ingestsData.results;
                 vm.gridOptions.minRowsToShow = $scope.$parent.ingestsData.results.length;
                 vm.gridOptions.virtualizationThreshold = $scope.$parent.ingestsData.results.length;
@@ -126,6 +126,7 @@
         vm.filterResults = function () {
             poller.stopAll();
             stateService.setIngestsParams(vm.ingestsParams);
+            vm.loading = true;
             vm.getIngests();
         };
 
