@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('sourceFilesController', function ($scope, $location, $timeout, scaleConfig, scaleService, stateService, feedService, navService, subnavService, SourceFile, gridFactory) {
+    angular.module('scaleApp').controller('sourceFilesController', function ($scope, $location, $timeout, scaleConfig, scaleService, stateService, dataService, navService, subnavService, SourceFile, gridFactory) {
         subnavService.setCurrentPath('data/source');
         var vm = this;
         vm.sourceFilesParams = stateService.getSourceFilesParams();
@@ -84,7 +84,7 @@
 
         vm.getSourceFiles = function () {
             vm.loading = true;
-            feedService.getSources(vm.sourceFilesParams).then(function (data) {
+            dataService.getSources(vm.sourceFilesParams).then(function (data) {
                 vm.sourceFileData = SourceFile.transformer(data.results);
                 vm.gridOptions.minRowsToShow = vm.sourceFileData.length;
                 vm.gridOptions.virtualizationThreshold = vm.sourceFileData.length;

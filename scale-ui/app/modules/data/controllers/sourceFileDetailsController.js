@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('sourceFileDetailsController', function($scope, $location, $routeParams, $timeout, stateService, navService, feedService, gridFactory, SourceFile, Product) {
+    angular.module('scaleApp').controller('sourceFileDetailsController', function($scope, $location, $routeParams, $timeout, stateService, navService, dataService, gridFactory, SourceFile, Product) {
         var ctrl = this,
             sourceFileId = parseInt($routeParams.id);
 
@@ -43,13 +43,13 @@
         });
 
         var getSourceJobs = function () {
-            feedService.getSourceDescendants(ctrl.sourceFile.id, 'jobs').then(function (data) {
+            dataService.getSourceDescendants(ctrl.sourceFile.id, 'jobs').then(function (data) {
                 $scope.jobsData = data;
             });
         };
 
         var getSourceProducts = function () {
-            feedService.getSourceDescendants(ctrl.sourceFile.id, 'products', ctrl.sourceFileProductsParams).then(function (data) {
+            dataService.getSourceDescendants(ctrl.sourceFile.id, 'products', ctrl.sourceFileProductsParams).then(function (data) {
                 $scope.productsData = data;
                 ctrl.gridOptions.minRowsToShow = data.results.length;
                 ctrl.gridOptions.virtualizationThreshold = data.results.length;
@@ -59,13 +59,13 @@
         };
 
         var getSourceIngests = function () {
-            feedService.getSourceDescendants(ctrl.sourceFile.id, 'ingests').then(function (data) {
+            dataService.getSourceDescendants(ctrl.sourceFile.id, 'ingests').then(function (data) {
                 $scope.ingestsData = data;
             });
         };
 
         var getSourceFileDetails = function () {
-            feedService.getSourceDetails(sourceFileId).then(function (data) {
+            dataService.getSourceDetails(sourceFileId).then(function (data) {
                 ctrl.sourceFile = SourceFile.transformer(data);
                 getSourceIngests();
                 getSourceProducts();

@@ -41,3 +41,17 @@
     </div>
     <ais-grid-pagination></ais-grid-pagination>
 </div>
+
+<script type="text/ng-template" id="showLog.html">
+    <div>
+        <div class="modal-header">
+            <h3>{{ vm.selectedJob }}</h3>
+        </div>
+        <div class="modal-body">
+            <job-execution-log execution="vm.jobExecution"></job-execution-log>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-default" ng-click="$dismiss()">Close</button>
+        </div>
+    </div>
+</script>

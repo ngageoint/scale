@@ -204,7 +204,8 @@
             "apiPrefix": "./api/v5/",
             "overrides": {
                 "status": "./api/v4/",
-                "sources": "./api/v4/"
+                "sources": "./api/v4/",
+                "data": "./api/v5"
             },
             "documentation": "./docs"
         },
