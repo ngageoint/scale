@@ -162,16 +162,21 @@ class SQSClient(AWSClient):
         """
         queue = self.get_queue_by_name(queue_name)
 
+        # Set max_messages to lesser of 10 or batch_size
+        max_messages = batch_size if batch_size < 10 else 10
+
         # Generate individual batch sizes up to given size, capped at 10
-        if batch_size > 10:
-            batches = [i % 10 for i in range(10, batch_size, 10) if i > 0]
-        else:
-            batches = [batch_size]
-        for batch in batches:
-            for message in queue.receive_messages(MaxNumberOfMessages=batch,
+        count = 0
+        while count < batch_size:
+            for message in queue.receive_messages(MaxNumberOfMessages=max_messages,
                                                   WaitTimeSeconds=wait_time_seconds,
                                                   VisibilityTimeout=visibility_timeout_seconds):
+                count += 1
                 yield message
+
+            # If count isn't evenly divisible by ten we're done
+            if count % 10 != 0:
+                break
 
 
 class S3Client(AWSClient):
