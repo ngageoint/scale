@@ -10,21 +10,21 @@ from messaging.messages.message import CommandMessage
 logger = logging.getLogger(__name__)
 
 
-class EchoCommandMessage(CommandMessage):
+class FailCommandMessage(CommandMessage):
     def __init__(self):
-        super(EchoCommandMessage, self).__init__('echo')
+        super(FailCommandMessage, self).__init__('failing')
 
         self._payload = None
 
     def execute(self):
         """See :meth:`messaging.messages.message.CommandMessage.execute`"""
-        logger.info(self._payload)
-        return True
+        logger.info("I'm going to fail now...")
+        return False
 
     @staticmethod
     def from_json(json_dict):
         """See :meth:`messaging.messages.message.CommandMessage.from_json`"""
-        this = EchoCommandMessage()
+        this = FailCommandMessage()
         this._payload = json_dict
         return this
 

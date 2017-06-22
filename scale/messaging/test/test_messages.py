@@ -5,6 +5,8 @@ from __future__ import unicode_literals
 
 import django
 from django.test import TestCase
+from messaging.messages.chain import ChainCommandMessage
+from messaging.messages.fail import FailCommandMessage
 from mock import patch
 
 import messaging.messages.factory as message_factory
@@ -40,6 +42,41 @@ class TestCommandMessage(TestCase):
         self.assertEqual(message.new_messages, [])
 
 
+class TestChainedCommandMessage(TestCase):
+    def setUp(self):
+        django.setup()
+
+    def test_valid_init(self):
+        """Validate correct initialization of messages internal properties"""
+
+        message = ChainCommandMessage()
+        self.assertEquals(message.type, 'chain')
+        self.assertEqual(message.new_messages, [])
+
+
+    def test_valid_execute(self):
+        """Validate message execution logic with downstream messages for echo command"""
+
+        message = ChainCommandMessage()
+        self.assertTrue(message.execute())
+        self.assertEquals(len(message.new_messages), 1)
+
+    def test_valid_from_json(self):
+        """Validate instantiation of echo command message from json"""
+
+        payload = {'test': 'value'}
+        message = ChainCommandMessage.from_json(payload)
+        self.assertEquals(message._payload, payload)
+
+    def test_valid_to_json(self):
+        """Validate serialization of echo command message to json"""
+
+        payload = {'test': 'value'}
+        message = EchoCommandMessage()
+        message._payload = payload
+        self.assertEquals(message.to_json(), payload)
+
+
 class TestEchoCommandMessage(TestCase):
     def setUp(self):
         django.setup()
@@ -51,38 +88,56 @@ class TestEchoCommandMessage(TestCase):
         self.assertEquals(message.type, 'echo')
         self.assertEqual(message.new_messages, [])
 
-    @patch('random.choice')
-    def test_valid_execute_no_downstream(self, choice):
-        """Validate message execution logic without downstream messages for echo command"""
-
-        choice.return_value = False
-
-        message = EchoCommandMessage()
-        self.assertTrue(message.execute())
-        self.assertEquals(len(message.new_messages), 0)
-
-    @patch('random.choice')
-    def test_valid_execute_with_downstream(self, choice):
+    def test_valid_execute(self):
         """Validate message execution logic with downstream messages for echo command"""
 
-        choice.return_value = True
-
         message = EchoCommandMessage()
         self.assertTrue(message.execute())
-        self.assertEquals(len(message.new_messages), 1)
 
     def test_valid_from_json(self):
         """Validate instantiation of echo command message from json"""
 
         payload = {'test': 'value'}
-        message = EchoCommandMessage.from_json()
+        message = EchoCommandMessage.from_json(payload)
         self.assertEquals(message._payload, payload)
 
-    def test_valid_from_json(self):
+    def test_valid_to_json(self):
         """Validate serialization of echo command message to json"""
 
         payload = {'test': 'value'}
         message = EchoCommandMessage()
+        message._payload = payload
+        self.assertEquals(message.to_json(), payload)
+
+class TestFailingCommandMessage(TestCase):
+    def setUp(self):
+        django.setup()
+
+    def test_valid_init(self):
+        """Validate correct initialization of messages internal properties"""
+
+        message = FailCommandMessage()
+        self.assertEquals(message.type, 'failing')
+        self.assertEqual(message.new_messages, [])
+
+    def test_valid_execute(self):
+        """Validate message execution logic with downstream messages for echo command"""
+
+        message = FailCommandMessage()
+        self.assertFalse(message.execute())
+
+    def test_valid_from_json(self):
+        """Validate instantiation of echo command message from json"""
+
+        payload = {'test': 'value'}
+        message = FailCommandMessage.from_json(payload)
+        self.assertEquals(message._payload, payload)
+
+    def test_valid_to_json(self):
+        """Validate serialization of echo command message to json"""
+
+        payload = {'test': 'value'}
+        message = FailCommandMessage()
         message._payload = payload
         self.assertEquals(message.to_json(), payload)
 

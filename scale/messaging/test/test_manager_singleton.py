@@ -31,11 +31,28 @@ class TestSingletonCommandMessageManager(TestCase):
     @patch('messaging.manager.get_message_backend')
     @patch('messaging.manager.BrokerDetails')
     @patch('messaging.manager.CommandMessageManager._process_message')
-    def test_receive_message(self, process, broker_details, get_message_backend):
+    def test_receive_message_invalid_message(self, process, broker_details, get_message_backend):
         """Exercise all exception code paths within recieve_message"""
 
-        process.side_effect = [InvalidCommandMessage, CommandMessageExecuteFailure]
+        process.side_effect = InvalidCommandMessage
         manager = CommandMessageManager()
         manager._backend = MagicMock()
-        manager._backend.receive_messages.return_value = [MagicMock(), MagicMock()]
-        manager.receive_messages()
+        manager._backend.receive_messages.return_value = [MagicMock()]
+
+        with self.assertRaises(InvalidCommandMessage):
+            manager.receive_messages()
+
+
+    @patch('messaging.manager.get_message_backend')
+    @patch('messaging.manager.BrokerDetails')
+    @patch('messaging.manager.CommandMessageManager._process_message')
+    def test_receive_message_execute_failure(self, process, broker_details, get_message_backend):
+        """Exercise all exception code paths within recieve_message"""
+
+        process.side_effect = CommandMessageExecuteFailure
+        manager = CommandMessageManager()
+        manager._backend = MagicMock()
+        manager._backend.receive_messages.return_value = [MagicMock()]
+
+        with self.assertRaises(CommandMessageExecuteFailure):
+            manager.receive_messages()

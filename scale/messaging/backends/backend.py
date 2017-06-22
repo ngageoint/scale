@@ -49,3 +49,7 @@ class MessagingBackend(object):
         :return: Yielded list of messages
         :rtype: Generator[dict]
         """
+
+    @abstractmethod
+    def delete_message(self, message):
+    # TODO: Implement backend specific acknowledgement

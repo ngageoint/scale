@@ -64,9 +64,12 @@ class CommandMessageManager(object):
             try:
                 self._process_message(message)
             except InvalidCommandMessage:
-                logger.exception('Exception encountered processing message payload.')
+                logger.exception('Exception encountered processing message payload. Message remains on queue.')
+                raise
+
             except CommandMessageExecuteFailure:
-                logger.exception('CommandMessage failure during execute call.')
+                logger.exception('CommandMessage failure during execute call. Message remains on queue.')
+                raise
 
     @staticmethod
     def _extract_command(message):

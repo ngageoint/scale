@@ -6,25 +6,28 @@ from __future__ import unicode_literals
 import logging
 
 from messaging.messages.message import CommandMessage
+from messaging.messages.echo import EchoCommandMessage
 
 logger = logging.getLogger(__name__)
 
 
-class EchoCommandMessage(CommandMessage):
+class ChainCommandMessage(CommandMessage):
     def __init__(self):
-        super(EchoCommandMessage, self).__init__('echo')
+        super(ChainCommandMessage, self).__init__('chain')
 
         self._payload = None
 
     def execute(self):
         """See :meth:`messaging.messages.message.CommandMessage.execute`"""
         logger.info(self._payload)
+        self.new_messages = [
+            EchoCommandMessage.from_json({'message': "This is a chained EchoCommandMessage via new_messages."})]
         return True
 
     @staticmethod
     def from_json(json_dict):
         """See :meth:`messaging.messages.message.CommandMessage.from_json`"""
-        this = EchoCommandMessage()
+        this = ChainCommandMessage()
         this._payload = json_dict
         return this
 

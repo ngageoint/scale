@@ -5,6 +5,8 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 from django.apps import AppConfig
+from messaging.messages.chain import ChainCommandMessage
+from messaging.messages.fail import FailCommandMessage
 
 """Registers the messaging factory methods."""
 from messaging.messages.factory import add_message_type
@@ -23,7 +25,9 @@ class MessagingConfig(AppConfig):
 
     def ready(self):
         # # Register message types
+        add_message_type(ChainCommandMessage)
         add_message_type(EchoCommandMessage)
+        add_message_type(FailCommandMessage)
 
         # Register message backends
         add_message_backend(AMQPMessagingBackend)
