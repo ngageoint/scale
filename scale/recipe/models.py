@@ -112,11 +112,11 @@ class RecipeManager(models.Manager):
 
         # Save models for each recipe input file
         recipe_files = []
-        for input_file_id in data.get_input_file_ids():
+        for input_file_info in data.get_input_file_info():
             recipe_file = RecipeInputFile()
             recipe_file.recipe_id = recipe.id
-            recipe_file.scale_file_id = input_file_id
-            recipe_file.recipe_input = data.get_input_data_name(input_file_id)
+            recipe_file.scale_file_id = input_file_info[0]
+            recipe_file.recipe_input = input_file_info[1]
             recipe_file.created = recipe.created
             recipe_files.append(recipe_file)
         RecipeInputFile.objects.bulk_create(recipe_files)
@@ -212,7 +212,7 @@ class RecipeManager(models.Manager):
 
         :param job_id: The job ID
         :type job_id: int
-        :returns: The recipe model with related recipe_type and recipe_type-rev, possibly None
+        :returns: The recipe_job model with related recipe_type and recipe_type-rev, possibly None
         :rtype: :class:`recipe.models.RecipeJob`
         """
 
