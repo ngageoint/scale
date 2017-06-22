@@ -148,37 +148,7 @@ class TestS3Client(TestCase):
 class TestSQSClient(TestCase):
     def setUp(self):
         self.credentials = AWSCredentials('ACCCESSKEY', 'SECRETKEY')
-
-        self.sample_content = {
-            'Key': 'test/string',
-            'LastModified': datetime(2015, 1, 1),
-            'ETag': 'string',
-            'Size': 123,
-            'StorageClass': 'STANDARD',
-            'Owner': {
-                'DisplayName': 'string',
-                'ID': 'string'
-            }
-        }
-
-        self.sample_response = {
-            'IsTruncated': False,
-            'Marker': 'string',
-            'NextMarker': 'string',
-            'Contents': [
-                self.sample_content
-            ],
-            'Name': 'string',
-            'Prefix': 'string',
-            'Delimiter': 'string',
-            'MaxKeys': 123,
-            'CommonPrefixes': [
-                {
-                    'Prefix': 'string'
-                },
-            ],
-            'EncodingType': 'url'
-        }
+        self.region_name = 'us-east-1'
 
         django.setup()
 
@@ -192,7 +162,7 @@ class TestSQSClient(TestCase):
         send_messages = MagicMock()
         get_queue_by_name.return_value.send_messages = send_messages
 
-        with SQSClient(self.credentials) as client:
+        with SQSClient(self.credentials, self.region_name) as client:
             client.send_messages('queue', inputs)
 
         send_messages.assert_has_calls(calls)
@@ -204,7 +174,7 @@ class TestSQSClient(TestCase):
         receive_messages = MagicMock(return_value=outputs)
         get_queue_by_name.return_value.receive_messages = receive_messages
 
-        with SQSClient(self.credentials) as client:
+        with SQSClient(self.credentials, self.region_name) as client:
             results = list(client.receive_messages('queue', batch_size=1))
             self.assertEquals(results, outputs)
 
@@ -218,7 +188,7 @@ class TestSQSClient(TestCase):
         receive_messages = MagicMock(return_value=outputs)
         get_queue_by_name.return_value.receive_messages = receive_messages
 
-        with SQSClient(self.credentials) as client:
+        with SQSClient(self.credentials, self.region_name) as client:
             results = list(client.receive_messages('queue', batch_size=100))
             self.assertEquals(results, outputs)
 
@@ -232,7 +202,7 @@ class TestSQSClient(TestCase):
         receive_messages = MagicMock(return_value=outputs)
         get_queue_by_name.return_value.receive_messages = receive_messages
 
-        with SQSClient(self.credentials) as client:
+        with SQSClient(self.credentials, self.region_name) as client:
             results = list(client.receive_messages('queue'))
             self.assertEquals(results, outputs)
 
@@ -247,7 +217,7 @@ class TestSQSClient(TestCase):
         receive_messages = MagicMock(side_effect=inputs)
         get_queue_by_name.return_value.receive_messages = receive_messages
 
-        with SQSClient(self.credentials) as client:
+        with SQSClient(self.credentials, self.region_name) as client:
             results = list(client.receive_messages('queue'))
             self.assertEquals(results, outputs)
 
