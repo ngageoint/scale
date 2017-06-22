@@ -95,6 +95,24 @@ class TestSchedulingManager(TestCase):
         self.assertEqual(num_tasks, 0)
 
     @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
+    def test_paused_job_type(self, mock_taskinfo):
+        """Tests calling perform_scheduling() when a job type is paused"""
+        mock_taskinfo.return_value = MagicMock()
+
+        offer_1 = ResourceOffer('offer_1', self.node_agent_1, self.framework_id,
+                                NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now())
+        offer_2 = ResourceOffer('offer_2', self.node_agent_2, self.framework_id,
+                                NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now())
+        resource_mgr.add_new_offers([offer_1, offer_2])
+        self.queue_1.job_type.is_paused = True
+        self.queue_1.job_type.save()
+        job_type_mgr.sync_with_database()
+
+        scheduling_manager = SchedulingManager()
+        num_tasks = scheduling_manager.perform_scheduling(self._driver, now())
+        self.assertEqual(num_tasks, 1)  # Schedule queued job execution that is not paused
+
+    @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
     def test_job_type_limit(self, mock_taskinfo):
         """Tests calling perform_scheduling() with a job type limit"""
         mock_taskinfo.return_value = MagicMock()

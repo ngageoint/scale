@@ -266,7 +266,7 @@ class QueueManager(models.Manager):
         query = self.all()
 
         if ignore_job_type_ids:
-            query.exclude(job_type_id__in=ignore_job_type_ids)
+            query = query.exclude(job_type_id__in=ignore_job_type_ids)
 
         if order_mode == QUEUE_ORDER_FIFO:
             return query.order_by('priority', 'queued')
