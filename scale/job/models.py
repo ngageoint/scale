@@ -471,9 +471,9 @@ class JobManager(models.Manager):
 
         # Configure and populate JobInputFile
         job_inputs = []
-        job_input = JobInputFile()
-        job_input.job_id = job.id
-        for input_file in data.get_input_file_info():           
+        for input_file in data.get_input_file_info():
+            job_input = JobInputFile()
+            job_input.job_id = job.id
             job_input.input_file_id = input_file[0]
             job_input.job_input = input_file[1]
             job_inputs.append(job_input)
