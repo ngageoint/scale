@@ -42,14 +42,11 @@ class MessagingBackend(object):
         number of messages are to be retrieved it be done directly in a single function call.
 
         Implementing function must yield messages from backend. Messages must be
-        in dict.
+        in dict form. It is also the responsibility of the function to handle a boolean response
+        and appropriately acknowledge / delete message on True
 
         :param batch_size: Number of messages to be processed
         :type batch_size: int
         :return: Yielded list of messages
         :rtype: Generator[dict]
         """
-
-    @abstractmethod
-    def delete_message(self, message):
-    # TODO: Implement backend specific acknowledgement

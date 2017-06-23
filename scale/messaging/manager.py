@@ -58,18 +58,25 @@ class CommandMessageManager(object):
         the new_messages list.
         """
 
-        messages = self._backend.receive_messages(10)
+        message_generator = self._backend.receive_messages(10)
 
-        for message in messages:
-            try:
-                self._process_message(message)
-            except InvalidCommandMessage:
-                logger.exception('Exception encountered processing message payload. Message remains on queue.')
-                raise
+        # Manually control iteration, so we can pass back success/failure to co-routine
+        try:
+            # Seed message to start processing
+            message = message_generator.next()
+            while True:
+                success = False
+                try:
+                    self._process_message(message)
+                    success = True
+                except InvalidCommandMessage:
+                    logger.exception('Exception encountered processing message payload. Message remains on queue.')
+                except CommandMessageExecuteFailure:
+                    logger.exception('CommandMessage failure during execute call. Message remains on queue.')
 
-            except CommandMessageExecuteFailure:
-                logger.exception('CommandMessage failure during execute call. Message remains on queue.')
-                raise
+                message = message_generator.send(success)
+        except StopIteration:
+            pass
 
     @staticmethod
     def _extract_command(message):

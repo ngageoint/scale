@@ -40,11 +40,10 @@ class AMQPMessagingBackend(MessagingBackend):
                     try:
                         message = simple_queue.get(timeout=self._timeout)
 
-                        try:
-                            yield message.payload
+                        # Accept success back via generator send
+                        success = yield message.payload
+                        if success:
                             message.ack()
-                        except Exception:
-                            logger.exception('Failure during message processing.')
                     except Queue.Empty:
                         # We've reached the end of the queue... exit loop
                         break

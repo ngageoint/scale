@@ -39,8 +39,8 @@ class SQSMessagingBackend(MessagingBackend):
 
         with SQSClient(self._credentials, self._region_name) as client:
             for message in client.receive_messages(self._queue_name, batch_size=batch_size):
-                try:
-                    yield json.loads(message.body)
+                # Accept success back via generator send
+                success = yield json.loads(message.body)
+                if success:
                     message.delete()
-                except Exception:
-                    logger.exception('Failure during message processing.')
+
