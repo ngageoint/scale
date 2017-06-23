@@ -357,6 +357,20 @@ class ScaleFile(models.Model):
     :type job: :class:`django.db.models.ForeignKey`
     :keyword job_type: The type of the job that created this product
     :type job_type: :class:`django.db.models.ForeignKey`
+    :keyword job_output: The output name from the job interface
+    :type job_output: :class:`django.db.models.CharField`
+    :keyword recipe: The identifier of a recipe this file is associated with
+    :type recipe: :class:`django.db.models.ForeignKey`
+    :keyword recipe_job: The name of the job within the recipe
+    :type recipe_job: :class:`django.db.models.CharField`
+    :keyword recipe_type: The type of recipe that the file is associated with
+    :type recipe_type: :class:`django.db.models.ForeignKey`
+    :keyword batch: The identifier of the batch this file is associated with
+    :type batch: :class:`django.db.models.ForeignKey`
+    :keyword source_started: The earliest start time from all source files
+    :type source_started: :class:`django.db.models.DateTimeField`
+    :keyword source_ended: The latest end time from all source files
+    :type source_ended: :class:`django.db.models.DateTimeField`
     :keyword is_operational: Whether this product was produced by an operational job type (True) or by a job type that
         is still in a research & development (R&D) phase (False)
     :type is_operational: :class:`django.db.models.BooleanField`
@@ -412,6 +426,13 @@ class ScaleFile(models.Model):
     job_exe = models.ForeignKey('job.JobExecution', blank=True, null=True, on_delete=models.PROTECT)
     job = models.ForeignKey('job.Job', blank=True, null=True, on_delete=models.PROTECT)
     job_type = models.ForeignKey('job.JobType', blank=True, null=True, on_delete=models.PROTECT)
+    job_output = models.CharField(null=True, blank=True, max_length=250)
+    recipe = models.ForeignKey('recipe.Recipe', blank=True, null=True, on_delete=models.PROTECT)
+    recipe_job = models.CharField(null=True, blank=True, max_length=250)
+    recipe_type = models.ForeignKey('recipe.RecipeType', blank=True, null=True, on_delete=models.PROTECT)
+    batch = models.ForeignKey('batch.Batch', blank=True, null=True, on_delete=models.PROTECT)
+    source_started = models.DateTimeField(blank=True, null=True, db_index=True)
+    source_ended = models.DateTimeField(blank=True, null=True, db_index=True)
     is_operational = models.BooleanField(default=True)
     has_been_published = models.BooleanField(default=False)
     is_published = models.BooleanField(default=False)

@@ -19,7 +19,7 @@ from recipe.configuration.definition.exceptions import InvalidDefinition
 from recipe.configuration.definition.recipe_definition import RecipeDefinition
 from recipe.exceptions import ReprocessError
 from recipe.handlers.graph_delta import RecipeGraphDelta
-from recipe.models import Recipe, RecipeFile, RecipeJob, RecipeType, RecipeTypeRevision
+from recipe.models import Recipe, RecipeInputFile, RecipeJob, RecipeType, RecipeTypeRevision
 from storage.models import ScaleFile
 from trigger.models import TriggerRule
 
@@ -447,7 +447,7 @@ class TestRecipeManagerCreateRecipe(TransactionTestCase):
         # Make sure the recipe jobs get created in the correct order
         self.assertLess(recipe_job_1.job_id, recipe_job_2.job_id)
 
-        recipe_files = RecipeFile.objects.filter(recipe=handler.recipe)
+        recipe_files = RecipeInputFile.objects.filter(recipe=handler.recipe)
         self.assertEqual(len(recipe_files), 1)
         self.assertEqual(recipe_files[0].scale_file_id, self.file.id)
 

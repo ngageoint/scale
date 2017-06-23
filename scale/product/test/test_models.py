@@ -17,14 +17,16 @@ import recipe.test.utils as recipe_test_utils
 import source.test.utils as source_test_utils
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
+from batch.models import BatchRecipe, BatchJob
+from batch.test import utils as batch_test_utils
 from job.execution.container import SCALE_JOB_EXE_OUTPUT_PATH
-from job.models import Job
+from job.models import Job, JobManager
 from product.models import FileAncestryLink, ProductFile
+from recipe.models import RecipeManager
 from storage.models import ScaleFile
 
 
 class TestFileAncestryLinkManagerCreateFileAncestryLinks(TestCase):
-
     fixtures = ['batch_job_types.json']
 
     def setUp(self):
@@ -77,8 +79,6 @@ class TestFileAncestryLinkManagerCreateFileAncestryLinks(TestCase):
     def test_batch_recipe(self):
         """Tests creating a link that has a recipe and batch."""
 
-        from batch.models import BatchRecipe, BatchJob
-        from batch.test import utils as batch_test_utils
         parent_ids = [self.file_1.id]
         job_exe = job_test_utils.create_job_exe()
         recipe_job = recipe_test_utils.create_recipe_job(job=job_exe.job)
@@ -169,7 +169,6 @@ class TestFileAncestryLinkManagerCreateFileAncestryLinks(TestCase):
 
 
 class TestFileAncestryLinkManagerGetSourceAncestors(TestCase):
-
     def setUp(self):
         django.setup()
 
@@ -405,7 +404,8 @@ class TestProductFileManagerGetProductUpdatesQuery(TestCase):
     def test_no_job_types(self):
         """Tests calling ProductFileManager.get_updates() without a "job_type_ids" argument value"""
 
-        updates_qry = ProductFile.objects.get_products(self.last_modified_start, self.last_modified_end)
+        updates_qry = ProductFile.objects.get_products(started=self.last_modified_start, ended=self.last_modified_end,
+                                                       time_field='last_modified')
         list_of_ids = []
         for product in updates_qry:
             list_of_ids.append(product.id)
@@ -417,7 +417,8 @@ class TestProductFileManagerGetProductUpdatesQuery(TestCase):
         """Tests calling ProductFileManager.get_updates() with a "job_type_ids" argument value"""
 
         job_type_ids = [self.job_type_1_id, self.job_type_2_id]
-        updates_qry = ProductFile.objects.get_products(self.last_modified_start, self.last_modified_end, job_type_ids)
+        updates_qry = ProductFile.objects.get_products(started=self.last_modified_start, ended=self.last_modified_end,
+                                                       time_field='last_modified', job_type_ids=job_type_ids)
         list_of_ids = []
         for product in updates_qry:
             list_of_ids.append(product.id)
@@ -475,7 +476,6 @@ class TestProductFileManagerPopulateSourceAncestors(TestCase):
 
 
 class TestProductFileManagerUploadFiles(TestCase):
-
     def setUp(self):
         django.setup()
 
@@ -511,11 +511,11 @@ class TestProductFileManagerUploadFiles(TestCase):
         self.local_path_3 = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, 'local/3/file.h5')
 
         self.files = [
-            (self.local_path_1, 'remote/1/file.txt', None),
-            (self.local_path_2, 'remote/2/file.json', 'application/x-custom-json'),
+            (self.local_path_1, 'remote/1/file.txt', None, 'output_name_1'),
+            (self.local_path_2, 'remote/2/file.json', 'application/x-custom-json', 'output_name_2'),
         ]
         self.files_no = [
-            (self.local_path_3, 'remote/3/file.h5', 'image/x-hdf5-image'),
+            (self.local_path_3, 'remote/3/file.h5', 'image/x-hdf5-image', 'output_name_3'),
         ]
 
     @patch('storage.models.os.path.getsize', lambda path: 100)
@@ -565,7 +565,7 @@ class TestProductFileManagerUploadFiles(TestCase):
             }
         }
         files = [(os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, 'local/1/file.txt'), 'remote/1/file.txt', 'text/plain',
-                  geo_metadata)]
+                  'output_1', geo_metadata)]
 
         products = ProductFile.objects.upload_files(files, [self.source_file.id], self.job_exe, self.workspace)
 
@@ -578,6 +578,43 @@ class TestProductFileManagerUploadFiles(TestCase):
         self.assertEqual(datetime.datetime(2015, 5, 15, 10, 34, 12, tzinfo=utc), products[0].data_started)
         self.assertEqual(datetime.datetime(2015, 5, 15, 10, 36, 12, tzinfo=utc), products[0].data_ended)
         self.assertIsNotNone(products[0].uuid)
+
+    @patch('storage.models.os.path.getsize', lambda path: 100)
+    def test_batch_link(self):
+        """Tests calling ProductFileManager.upload_files() successfully when associated with a batch"""
+
+        job_type = job_test_utils.create_job_type(name='scale-batch-creator')
+        job_exe = job_test_utils.create_job_exe(job_type=job_type)
+        recipe_job = recipe_test_utils.create_recipe_job(job=job_exe.job)
+        batch = batch_test_utils.create_batch()
+        BatchRecipe.objects.create(batch_id=batch.id, recipe_id=recipe_job.recipe.id)
+        BatchJob.objects.create(batch_id=batch.id, job_id=job_exe.job_id)
+
+        products_no = ProductFile.objects.upload_files(self.files_no, [self.source_file.id], self.job_exe_no,
+                                                       self.workspace)
+        products = ProductFile.objects.upload_files(self.files, [self.source_file.id, products_no[0].id],
+                                                    job_exe, self.workspace)
+
+        self.assertEqual(batch.id, products[0].batch_id)
+
+    @patch('storage.models.os.path.getsize', lambda path: 100)
+    def test_recipe_link(self):
+        """Tests calling ProductFileManager.upload_files() successfully when associated with a recipe"""
+        test_recipe = recipe_test_utils.create_recipe()
+        recipe_job = recipe_test_utils.create_recipe_job(job=self.job_exe.job, recipe=test_recipe)
+
+        products_no = ProductFile.objects.upload_files(self.files_no, [self.source_file.id], self.job_exe_no,
+                                                       self.workspace)
+        products = ProductFile.objects.upload_files(self.files, [self.source_file.id, products_no[0].id],
+                                                    self.job_exe, self.workspace)
+
+        self.assertEqual(recipe_job.recipe.id, products[0].recipe_id)
+        self.assertEqual(recipe_job.job_name, products[0].recipe_job)
+
+        self.assertEqual(self.files[0][3], products[0].job_output)
+
+        recipe_manager = RecipeManager()
+        self.assertEqual(recipe_manager.get_details(recipe_job.recipe.id).recipe_type, products[0].recipe_type)
 
     @patch('storage.models.os.path.getsize', lambda path: 100)
     def test_uuid(self):

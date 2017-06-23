@@ -195,6 +195,22 @@ class JobData(object):
                 file_ids.update(data_input['file_ids'])
         return file_ids
 
+    def get_input_file_info(self):
+        """Returns a set of scale file identifiers and input names for each file in the job input data.
+
+        :returns: Set of scale file identifiers and names
+        :rtype: set[tuple]
+        """
+
+        file_info = set()
+        for data_input in self.data_dict['input_data']:
+            if 'file_id' in data_input:
+                file_info.add((data_input['file_id'], data_input['name']))
+            elif 'file_ids' in data_input:
+                for file_id in data_input['file_ids']:
+                    file_info.add((file_id, data_input['name']))
+        return file_info
+
     def get_output_workspace_ids(self):
         """Returns a list of the IDs for every workspace used to store the output files for this data
 
@@ -357,9 +373,9 @@ class JobData(object):
                     params_by_file_path[file_path] = name
                     # Adjust file path to be relative to upload_dir
                     if len(file_tuple) == 2:
-                        new_tuple = (file_path, file_tuple[1])
+                        new_tuple = (file_path, file_tuple[1], name)
                     else:
-                        new_tuple = (file_path, file_tuple[1], file_tuple[2])
+                        new_tuple = (file_path, file_tuple[1], name, file_tuple[2])
                     workspace_file_list.append(new_tuple)
             else:
                 file_path = os.path.normpath(data_file_entry[0])
@@ -368,9 +384,9 @@ class JobData(object):
                 params_by_file_path[file_path] = name
                 # Adjust file path to be relative to upload_dir
                 if len(data_file_entry) == 2:
-                    new_tuple = (file_path, data_file_entry[1])
+                    new_tuple = (file_path, data_file_entry[1], name)
                 else:
-                    new_tuple = (file_path, data_file_entry[1], data_file_entry[2])
+                    new_tuple = (file_path, data_file_entry[1], name, data_file_entry[2])
                 workspace_file_list.append(new_tuple)
 
         data_file_store = DATA_FILE_STORE['DATA_FILE_STORE']

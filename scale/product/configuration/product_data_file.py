@@ -47,6 +47,7 @@ class ProductDataFileStore(AbstractDataFileStore):
                 for file_tuple in file_list:
                     local_path = file_tuple[0]
                     media_type = file_tuple[1]
+                    output_name = file_tuple[2]
                     if local_path.startswith(SCALE_JOB_EXE_OUTPUT_PATH):
                         rel_local_path = os.path.relpath(local_path, SCALE_JOB_EXE_OUTPUT_PATH)
                     else:
@@ -54,10 +55,10 @@ class ProductDataFileStore(AbstractDataFileStore):
                     remote_file_path = os.path.join(remote_path, rel_local_path)
 
                     # Pass along geospatial information if available
-                    if len(file_tuple) > 2:
-                        file_to_store = (local_path, remote_file_path, media_type, file_tuple[2])
+                    if len(file_tuple) > 3:
+                        file_to_store = (local_path, remote_file_path, media_type, output_name, file_tuple[3])
                     else:
-                        file_to_store = (local_path, remote_file_path, media_type)
+                        file_to_store = (local_path, remote_file_path, media_type, output_name)
                     files_to_store.append(file_to_store)
 
                 product_files = ProductFile.objects.upload_files(files_to_store, input_file_ids, job_exe, workspace)
@@ -83,8 +84,9 @@ class ProductDataFileStore(AbstractDataFileStore):
         """
 
         remote_path = ''
-        recipe = Recipe.objects.get_recipe_for_job(job_exe.job_id)
-        if recipe:
+        job_recipe = Recipe.objects.get_recipe_for_job(job_exe.job_id)
+        if job_recipe:
+            recipe = job_recipe.recipe
             recipe_type_path = get_valid_filename(recipe.recipe_type.name)
             recipe_version_path = get_valid_filename(recipe.recipe_type.version)
             remote_path = os.path.join(remote_path, 'recipes', recipe_type_path, recipe_version_path)

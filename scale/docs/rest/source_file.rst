@@ -751,10 +751,30 @@ These services provide access to information about source files that Scale has i
 |                    |                   |          | Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z). |
 |                    |                   |          | Supports the ISO-8601 duration format, (ex: PT3H0M0S).              |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
+| time_field         | String            | Optional | Indicates the time field(s) that *started* and *ended* will use for |
+|                    |                   |          | time filtering. Valid values are:                                   |
+|                    |                   |          |                                                                     |
+|                    |                   |          | - *last_modified* - last modification of product file meta-data     |
+|                    |                   |          | - *data* - data time of product file (*data_started*, *data_ended*) |
+|                    |                   |          | - *source* - overall time for all associated source files           |
+|                    |                   |          |              (*source_started*, *source_ended*)                     |
+|                    |                   |          |                                                                     |
+|                    |                   |          | The default value is *last_modified*.                               |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
 | order              | String            | Optional | One or more fields to use when ordering the results.                |
 |                    |                   |          | Duplicate it to multi-sort, (ex: order=file_name&order=created).    |
 |                    |                   |          | Nested objects require a delimiter (ex: order=job_type__name).      |
 |                    |                   |          | Prefix fields with a dash to reverse the sort, (ex: order=-created).|
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| job_output         | String            | Optional | Return only products for the given job output.                      |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| recipe_id          | Integer           | Optional | Return only products produced by the given recipe identifier.       |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| recipe_job         | String            | Optional | Return only products produced by the given recipe job.              |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| recipe_type_id     | Integer           | Optional | Return only products produced by the given recipe type identifier.  |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | batch_id           | Integer           | Optional | Return only products produced by the given batch identifier.        |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
@@ -766,6 +786,9 @@ These services provide access to information about source files that Scale has i
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | job_type_category  | String            | Optional | Return only jobs with a given job type category.                    |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
+| job_id             | Integer           | Optional | Return only products produced by the given job identifier.          |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | is_operational     | Boolean           | Optional | Return only products flagged as operational status versus R&D.      |
@@ -842,6 +865,10 @@ These services provide access to information about source files that Scale has i
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .unpublished       | ISO-8601 Datetime | When the product file was unpublished by Scale.                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
+| .source_started    | ISO-8601 Datetime | When collection of the underlying source file started.                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .source_ended      | ISO-8601 Datetime | When collection of the underlying source file ended.                           |
++--------------------+-------------------+--------------------------------------------------------------------------------+
 | .job_type          | JSON Object       | The type of job that generated the product.                                    |
 |                    |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -850,6 +877,15 @@ These services provide access to information about source files that Scale has i
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .job_exe           | JSON Object       | The specific job execution that generated the product.                         |
 |                    |                   | (See :ref:`Job Execution Details <rest_job_execution_details>`)                |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .recipe_type       | JSON Object       | The type of recipe that generated the product.                                 |
+|                    |                   | (See :ref:`Recipe Type Details <rest_recipe_type_details>`)                    |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .recipe            | JSON Object       | The recipe instance that generated the product.                                |
+|                    |                   | (See :ref:`Recipe Details <rest_recipe_details>`)                              |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .batch             | JSON Object       | The batch instance that generated the product.                                 |
+|                    |                   | (See :ref:`Batch Details <rest_batch_details>`)                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
@@ -885,6 +921,8 @@ These services provide access to information about source files that Scale has i
 |                "has_been_published": true,                                                                              |
 |                "published": "1970-01-01T00:00:00Z",                                                                     |
 |                "unpublished": null,                                                                                     |
+|                "source_started": "1970-01-01T00:00:00Z",                                                                |
+|                "source_ended": "1970-01-02T00:00:00Z",                                                                  |
 |                "job_type": {                                                                                            |
 |                    "id": 8,                                                                                             |
 |                    "name": "kml-footprint",                                                                             |
@@ -906,7 +944,26 @@ These services provide access to information about source files that Scale has i
 |                },                                                                                                       |
 |                "job_exe": {                                                                                             |
 |                    "id": 49                                                                                             |
-|                }                                                                                                        |
+|                },                                                                                                       |
+|                "recipe_type": {                                                                                         |
+|                    "id": 6,                                                                                             |
+|                    "name": "my-recipe",                                                                                 |
+|                    "version": "1.0.0",                                                                                  |
+|                    "title": "My Recipe",                                                                                |
+|                    "description": "Processes some data",                                                                |
+|                },                                                                                                       |
+|                "recipe": {                                                                                              |
+|                    "id": 60                                                                                             |
+|                },                                                                                                       |
+|                "batch": {                                                                                               |
+|                    "id": 15,                                                                                            |
+|                    "title": "My Batch",                                                                                 |
+|                    "description": "My batch of recipes",                                                                |
+|                    "status": "SUBMITTED",                                                                               |
+|                    "recipe_type": 6,                                                                                    |
+|                    "event": 19,                                                                                         |
+|                    "creator_job": 62,                                                                                   |
+|                },                                                                                                       |
 |            },                                                                                                           |
 |            ...                                                                                                          |
 |        ]                                                                                                                |

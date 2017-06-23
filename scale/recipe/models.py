@@ -112,13 +112,14 @@ class RecipeManager(models.Manager):
 
         # Save models for each recipe input file
         recipe_files = []
-        for input_file_id in data.get_input_file_ids():
-            recipe_file = RecipeFile()
+        for input_file_info in data.get_input_file_info():
+            recipe_file = RecipeInputFile()
             recipe_file.recipe_id = recipe.id
-            recipe_file.scale_file_id = input_file_id
+            recipe_file.scale_file_id = input_file_info[0]
+            recipe_file.recipe_input = input_file_info[1]
             recipe_file.created = recipe.created
             recipe_files.append(recipe_file)
-        RecipeFile.objects.bulk_create(recipe_files)
+        RecipeInputFile.objects.bulk_create(recipe_files)
 
         # Create recipe jobs and link them to the recipe
         recipe_jobs = self._create_recipe_jobs(recipe, event, when, delta, superseded_jobs)
@@ -211,8 +212,8 @@ class RecipeManager(models.Manager):
 
         :param job_id: The job ID
         :type job_id: int
-        :returns: The recipe model with related recipe_type and recipe_type-rev, possibly None
-        :rtype: :class:`recipe.models.Recipe`
+        :returns: The recipe_job model with related recipe_type and recipe_type-rev, possibly None
+        :rtype: :class:`recipe.models.RecipeJob`
         """
 
         recipe_job_qry = RecipeJob.objects.select_related('recipe__recipe_type', 'recipe__recipe_type_rev')
@@ -220,7 +221,7 @@ class RecipeManager(models.Manager):
             recipe_job = recipe_job_qry.get(job_id=job_id, is_original=True)
         except RecipeJob.DoesNotExist:
             return None
-        return recipe_job.recipe
+        return recipe_job
 
     def get_recipe_handler_for_job(self, job_id):
         """Returns the recipe handler (possibly None) for the recipe containing the job with the given ID. The caller
@@ -562,7 +563,7 @@ class Recipe(models.Model):
         index_together = ['last_modified', 'recipe_type']
 
 
-class RecipeFile(models.Model):
+class RecipeInputFile(models.Model):
     """Links a recipe and its input files together. A file can be used as input to multiple recipes and a recipe can
     accept multiple input files. This model is useful for determining relevant recipes to run during re-processing.
 
@@ -570,17 +571,20 @@ class RecipeFile(models.Model):
     :type recipe: :class:`django.db.models.ForeignKey`
     :keyword scale_file: The input file that the recipe is linked to
     :type scale_file: :class:`django.db.models.ForeignKey`
+    :keyword recipe_input: The name of the recipe input parameter
+    :type recipe_input: :class:`django.db.models.CharField`
     :keyword created: When the recipe was created
     :type created: :class:`django.db.models.DateTimeField`
     """
 
     recipe = models.ForeignKey('recipe.Recipe', on_delete=models.PROTECT)
     scale_file = models.ForeignKey('storage.ScaleFile', on_delete=models.PROTECT)
+    recipe_input = models.CharField(blank=True, null=True, max_length=250)
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta(object):
         """meta information for the db"""
-        db_table = 'recipe_file'
+        db_table = 'recipe_input_file'
 
 
 class RecipeJobManager(models.Manager):

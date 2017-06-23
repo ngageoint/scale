@@ -4,6 +4,8 @@ from __future__ import unicode_literals
 import rest_framework.fields as fields
 import rest_framework.serializers as serializers
 
+from batch.serializers import BatchBaseSerializer
+from recipe.serializers import RecipeTypeBaseSerializer
 from storage.serializers import ScaleFileBaseSerializer
 from util.rest import ModelIdSerializer
 
@@ -13,13 +15,22 @@ class ProductFileBaseSerializer(ScaleFileBaseSerializer):
     is_operational = serializers.BooleanField()
     is_published = serializers.BooleanField()
     has_been_published = serializers.BooleanField()
+    is_superseded = serializers.BooleanField()
 
     published = serializers.DateTimeField()
     unpublished = serializers.DateTimeField()
+    superseded = serializers.DateTimeField()
+
+    source_started =  serializers.DateTimeField()
+    source_ended = serializers.DateTimeField()
 
     job_type = ModelIdSerializer()
     job = ModelIdSerializer()
     job_exe = ModelIdSerializer()
+
+    recipe_type = ModelIdSerializer()
+    recipe = ModelIdSerializer()
+    batch = ModelIdSerializer()
 
 
 class ProductFileSerializer(ProductFileBaseSerializer):
@@ -27,6 +38,8 @@ class ProductFileSerializer(ProductFileBaseSerializer):
     from job.serializers import JobTypeBaseSerializer
 
     job_type = JobTypeBaseSerializer()
+    batch = BatchBaseSerializer()
+    recipe_type = RecipeTypeBaseSerializer()
 
 
 class ProductFileDetailsSerializer(ProductFileSerializer):

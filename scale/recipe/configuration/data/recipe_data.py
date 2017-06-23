@@ -123,6 +123,22 @@ class RecipeData(object):
                 file_ids.update(data_input['file_ids'])
         return file_ids
 
+    def get_input_file_info(self):
+        """Returns a set of file_id and name for each file in recipe input data
+
+        :returns: Set of scale file identifiers and names
+        :rtype: set[tuple]
+        """
+
+        file_info = set()
+        for data_input in self.data_dict['input_data']:
+            if 'file_id' in data_input:
+                file_info.add((data_input['file_id'], data_input['name']))
+            elif 'file_ids' in data_input:
+                for file_id in data_input['file_ids']:
+                    file_info.add((file_id, data_input['name']))
+        return file_info
+
     def get_workspace_id(self):
         """Returns the workspace ID in the recipe data
 

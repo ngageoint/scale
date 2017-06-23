@@ -60,12 +60,16 @@ class TestProductDataFileStoreStoreFiles(TransactionTestCase):
 
         local_path_1 = os.path.join('my', 'path', 'one', 'my_test.txt')
         media_type_1 = 'text/plain'
+        job_output_1 = 'mock_output_1'
         local_path_2 = os.path.join('my', 'path', 'one', 'my_test.json')
         media_type_2 = 'application/json'
+        job_output_2 = 'mock_output_2'
         local_path_3 = os.path.join('my', 'path', 'three', 'my_test.png')
         media_type_3 = 'image/png'
+        job_output_3 = 'mock_output_3'
         local_path_4 = os.path.join('my', 'path', 'four', 'my_test.xml')
         media_type_4 = None
+        job_output_4 = 'mock_output_4'
 
         # Set up mocks
         def new_upload_files(file_entries, input_file_ids, job_exe, workspace):
@@ -92,8 +96,8 @@ class TestProductDataFileStoreStoreFiles(TransactionTestCase):
             return results
         mock_upload_files.side_effect = new_upload_files
 
-        data_files = {self.workspace_1.id: [(local_path_1, media_type_1), (local_path_2, media_type_2)],
-                      self.workspace_2.id: [(local_path_3, media_type_3), (local_path_4, media_type_4)]}
+        data_files = {self.workspace_1.id: [(local_path_1, media_type_1, job_output_1), (local_path_2, media_type_2, job_output_2)],
+                      self.workspace_2.id: [(local_path_3, media_type_3, job_output_3), (local_path_4, media_type_4, job_output_4)]}
 
         parent_ids = {98, 99}
 
@@ -118,12 +122,16 @@ class TestProductDataFileStoreStoreFiles(TransactionTestCase):
 
         local_path_1 = os.path.join('my', 'path', 'one', 'my_test.txt')
         media_type_1 = 'text/plain'
+        job_output_1 = 'mock_output_1'
         local_path_2 = os.path.join('my', 'path', 'one', 'my_test.json')
         media_type_2 = 'application/json'
+        job_output_2 = 'mock_output_2'
         local_path_3 = os.path.join('my', 'path', 'three', 'my_test.png')
         media_type_3 = 'image/png'
+        job_output_3 = 'mock_output_3'
         local_path_4 = os.path.join('my', 'path', 'four', 'my_test.xml')
         media_type_4 = None
+        job_output_4 = 'mock_output_4'
 
         # Set up mocks
         def new_upload_files(file_entries, input_file_ids, job_exe, workspace):
@@ -150,8 +158,8 @@ class TestProductDataFileStoreStoreFiles(TransactionTestCase):
             return results
         mock_upload_files.side_effect = new_upload_files
 
-        data_files = {self.workspace_1.id: [(local_path_1, media_type_1), (local_path_2, media_type_2)],
-                      self.workspace_2.id: [(local_path_3, media_type_3), (local_path_4, media_type_4)]}
+        data_files = {self.workspace_1.id: [(local_path_1, media_type_1, job_output_1), (local_path_2, media_type_2, job_output_2)],
+                      self.workspace_2.id: [(local_path_3, media_type_3, job_output_3), (local_path_4, media_type_4, job_output_4)]}
 
         parent_ids = {98, 99}  # Dummy values
 
@@ -177,14 +185,16 @@ class TestProductDataFileStoreStoreFiles(TransactionTestCase):
         full_local_path_1 = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, local_path_1)
         remote_path_1 = os.path.join(ProductDataFileStore()._calculate_remote_path(self.job_exe, parent_ids), local_path_1)
         media_type_1 = 'text/plain'
+        job_output_1 = 'mock_output_1'
         local_path_2 = os.path.join('my', 'path', 'one', 'my_test.json')
         full_local_path_2 = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, local_path_2)
         remote_path_2 = os.path.join(ProductDataFileStore()._calculate_remote_path(self.job_exe, parent_ids), local_path_2)
         media_type_2 = 'application/json'
+        job_output_2 = 'mock_output_2'
 
-        data_files = {self.workspace_1.id: [(full_local_path_1, media_type_1, geo_metadata),
-                                            (full_local_path_2, media_type_2)]}
+        data_files = {self.workspace_1.id: [(full_local_path_1, media_type_1, job_output_1, geo_metadata),
+                                            (full_local_path_2, media_type_2, job_output_2)]}
         ProductDataFileStore().store_files(data_files, parent_ids, self.job_exe)
-        files_to_store = [(full_local_path_1, remote_path_1, media_type_1, geo_metadata),
-                          (full_local_path_2, remote_path_2, media_type_2)]
+        files_to_store = [(full_local_path_1, remote_path_1, media_type_1, job_output_1, geo_metadata),
+                          (full_local_path_2, remote_path_2, media_type_2, job_output_2)]
         mock_upload_files.assert_called_with(files_to_store, parent_ids, self.job_exe, self.workspace_1)

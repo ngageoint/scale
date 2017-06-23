@@ -89,7 +89,6 @@ class JobManager(models.Manager):
         :returns: The new job
         :rtype: :class:`job.models.Job`
         """
-
         if not job_type.is_active:
             raise Exception('Job type is no longer active')
         if event is None:
@@ -469,6 +468,16 @@ class JobManager(models.Manager):
         job.disk_in_required = disk_in_required
         job.disk_out_required = disk_out_required
         job.last_modified = modified
+
+        # Configure and populate JobInputFile
+        job_inputs = []
+        for input_file in data.get_input_file_info():
+            job_input = JobInputFile()
+            job_input.job_id = job.id
+            job_input.input_file_id = input_file[0]
+            job_input.job_input = input_file[1]
+            job_inputs.append(job_input)
+        JobInputFile.objects.bulk_create(job_inputs)
 
         # Update job model in database with single query
         self.filter(id=job.id).update(data=data.get_dict(), configuration=configuration.get_dict(),
@@ -1721,6 +1730,30 @@ class JobExecution(models.Model):
     class Meta(object):
         """Meta information for the database"""
         db_table = 'job_exe'
+
+
+class JobInputFile(models.Model):
+    """Links a job and its input files together. A file can be used as input to multiple jobs and a job can
+    accept multiple input files.
+
+    :keyword job: The job that the input file is linked to
+    :type job: :class:`django.db.models.ForeignKey`
+    :keyword input_file: The input file that is linked to the job
+    :type input_file: :class:`django.db.models.ForeignKey`
+    :keyword job_input: The name of the job input that the file was passed into
+    :type job_input: :class:`django.db.models.CharField`
+    :keyword created: When this link was created
+    :type created: :class:`django.db.models.DateTimeField`
+    """
+
+    job = models.ForeignKey('job.Job', on_delete=models.PROTECT)
+    input_file = models.ForeignKey('storage.ScaleFile', on_delete=models.PROTECT)
+    job_input = models.CharField(max_length=250)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta(object):
+        """meta information for the db"""
+        db_table = 'job_input_file'
 
 
 class JobTypeStatusCounts(object):
