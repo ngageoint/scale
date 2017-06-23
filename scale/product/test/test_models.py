@@ -609,7 +609,7 @@ class TestProductFileManagerUploadFiles(TestCase):
                                                     self.job_exe, self.workspace)
 
         self.assertEqual(recipe_job.recipe.id, products[0].recipe_id)
-        self.assertEqual(self.job_exe.get_job_type_name(), products[0].recipe_job)
+        self.assertEqual(recipe_job.job_name, products[0].recipe_job)
 
         self.assertEqual(self.files[0][3], products[0].job_output)
 
