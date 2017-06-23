@@ -86,7 +86,6 @@ class JobExecutionTask(Task):
 
         raise NotImplementedError()
 
-    @abstractmethod
     def populate_job_exe_model(self, job_exe):
         """Populates the job execution model with the relevant information from this task
 
@@ -94,7 +93,7 @@ class JobExecutionTask(Task):
         :type job_exe: :class:`job.models.JobExecution`
         """
 
-        raise NotImplementedError()
+        pass
 
     def refresh_cached_values(self, job_exe):
         """Refreshes the task's cached job execution values with the given model

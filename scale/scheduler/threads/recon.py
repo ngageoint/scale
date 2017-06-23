@@ -7,8 +7,8 @@ from scheduler.recon.manager import recon_mgr
 from scheduler.threads.base_thread import BaseSchedulerThread
 
 
-THROTTLE = datetime.timedelta(seconds=60)
-WARN_THRESHOLD = datetime.timedelta(seconds=1)
+THROTTLE = datetime.timedelta(seconds=1)
+WARN_THRESHOLD = datetime.timedelta(milliseconds=500)
 
 
 class ReconciliationThread(BaseSchedulerThread):

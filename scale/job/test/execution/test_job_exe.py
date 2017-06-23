@@ -40,6 +40,31 @@ class TestRunningJobExecution(TestCase):
         self.assertFalse(running_job_exe.is_finished())
         self.assertTrue(running_job_exe.is_next_task_ready())
 
+        # Start pull-task
+        task = running_job_exe.start_next_task()
+        self.task_mgr.launch_tasks([task], now())
+        pull_task_id = task.id
+        self.assertFalse(running_job_exe.is_finished())
+        self.assertFalse(running_job_exe.is_next_task_ready())
+
+        # Pull-task running
+        pull_task_started = now() - timedelta(minutes=5)  # Lots of time so now() called at completion is in future
+        update = job_test_utils.create_task_status_update(pull_task_id, 'agent', TaskStatusUpdate.RUNNING,
+                                                          pull_task_started)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+        self.assertFalse(running_job_exe.is_finished())
+        self.assertFalse(running_job_exe.is_next_task_ready())
+
+        # Complete pull-task
+        pull_task_completed = pull_task_started + timedelta(seconds=1)
+        update = job_test_utils.create_task_status_update(pull_task_id, 'agent', TaskStatusUpdate.FINISHED,
+                                                          pull_task_completed)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+        self.assertFalse(running_job_exe.is_finished())
+        self.assertTrue(running_job_exe.is_next_task_ready())
+
         # Start pre-task
         task = running_job_exe.start_next_task()
         self.task_mgr.launch_tasks([task], now())
@@ -48,7 +73,7 @@ class TestRunningJobExecution(TestCase):
         self.assertFalse(running_job_exe.is_next_task_ready())
 
         # Pre-task running
-        pre_task_started = now() - timedelta(minutes=5)  # Lots of time so now() called at completion is in future
+        pre_task_started = pull_task_completed + timedelta(seconds=1)
         update = job_test_utils.create_task_status_update(pre_task_id, 'agent', TaskStatusUpdate.RUNNING,
                                                           pre_task_started)
         self.task_mgr.handle_task_update(update)
@@ -142,6 +167,31 @@ class TestRunningJobExecution(TestCase):
         self.assertFalse(running_job_exe.is_finished())
         self.assertTrue(running_job_exe.is_next_task_ready())
 
+        # Start pull-task
+        task = running_job_exe.start_next_task()
+        self.task_mgr.launch_tasks([task], now())
+        pull_task_id = task.id
+        self.assertFalse(running_job_exe.is_finished())
+        self.assertFalse(running_job_exe.is_next_task_ready())
+
+        # Pull-task running
+        pull_task_started = now() - timedelta(minutes=5)  # Lots of time so now() called at completion is in future
+        update = job_test_utils.create_task_status_update(pull_task_id, 'agent', TaskStatusUpdate.RUNNING,
+                                                          pull_task_started)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+        self.assertFalse(running_job_exe.is_finished())
+        self.assertFalse(running_job_exe.is_next_task_ready())
+
+        # Complete pull-task
+        pull_task_completed = pull_task_started + timedelta(seconds=1)
+        update = job_test_utils.create_task_status_update(pull_task_id, 'agent', TaskStatusUpdate.FINISHED,
+                                                          pull_task_completed)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+        self.assertFalse(running_job_exe.is_finished())
+        self.assertTrue(running_job_exe.is_next_task_ready())
+
         # Start pre-task
         task = running_job_exe.start_next_task()
         self.task_mgr.launch_tasks([task], now())
@@ -150,7 +200,7 @@ class TestRunningJobExecution(TestCase):
         self.assertFalse(running_job_exe.is_next_task_ready())
 
         # Pre-task running
-        pre_task_started = now() - timedelta(minutes=5)  # Lots of time so now() called at completion is in future
+        pre_task_started = pull_task_completed + timedelta(seconds=1)
         update = job_test_utils.create_task_status_update(pre_task_id, 'agent', TaskStatusUpdate.RUNNING,
                                                           pre_task_started)
         self.task_mgr.handle_task_update(update)
@@ -182,6 +232,19 @@ class TestRunningJobExecution(TestCase):
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
         running_job_exe = RunningJobExecution(job_exe)
 
+        # Start, run, and complete pull-task
+        task = running_job_exe.start_next_task()
+        self.task_mgr.launch_tasks([task], now())
+        pull_task_started = now()
+        update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.RUNNING, pull_task_started)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+        pull_task_completed = pull_task_started + timedelta(seconds=1)
+        update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.FINISHED,
+                                                          pull_task_completed)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+
         # Start, run, and complete pre-task
         task = running_job_exe.start_next_task()
         self.task_mgr.launch_tasks([task], now())
@@ -212,14 +275,53 @@ class TestRunningJobExecution(TestCase):
         self.assertEqual('launch-timeout', job_exe.error.name)
         self.assertEqual(when_timed_out, job_exe.ended)
 
+    def test_timed_out_pull_task(self):
+        """Tests running through a job execution where the pull task times out"""
+
+        job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
+        running_job_exe = RunningJobExecution(job_exe)
+
+        # Start pull-task and then task times out
+        when_launched = now()
+        pull_task_started = when_launched + timedelta(seconds=1)
+        when_timed_out = pull_task_started + timedelta(seconds=1)
+        task = running_job_exe.start_next_task()
+        self.task_mgr.launch_tasks([task], when_launched)
+        update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.RUNNING, pull_task_started)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+        running_job_exe.execution_timed_out(task, when_timed_out)
+        self.assertTrue(running_job_exe.is_finished())
+        self.assertEqual(running_job_exe.status, 'FAILED')
+        self.assertEqual(running_job_exe.error_category, 'SYSTEM')
+        self.assertFalse(running_job_exe.is_next_task_ready())
+
+        job_exe = JobExecution.objects.get(id=self._job_exe_id)
+        self.assertEqual('FAILED', job_exe.status)
+        self.assertEqual('pull-timeout', job_exe.error.name)
+        self.assertEqual(when_timed_out, job_exe.ended)
+
     def test_timed_out_pre_task(self):
         """Tests running through a job execution where the pre task times out"""
 
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
         running_job_exe = RunningJobExecution(job_exe)
 
+        # Start, run, and complete pull-task
+        task = running_job_exe.start_next_task()
+        self.task_mgr.launch_tasks([task], now())
+        pull_task_started = now()
+        update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.RUNNING, pull_task_started)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+        pull_task_completed = pull_task_started + timedelta(seconds=1)
+        update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.FINISHED,
+                                                          pull_task_completed)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+
         # Start pre-task and then task times out
-        when_launched = now()
+        when_launched = pull_task_completed + timedelta(seconds=1)
         pre_task_started = when_launched + timedelta(seconds=1)
         when_timed_out = pre_task_started + timedelta(seconds=1)
         task = running_job_exe.start_next_task()
@@ -244,10 +346,23 @@ class TestRunningJobExecution(TestCase):
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
         running_job_exe = RunningJobExecution(job_exe)
 
+        # Start, run, and complete pull-task
+        task = running_job_exe.start_next_task()
+        self.task_mgr.launch_tasks([task], now())
+        pull_task_started = now()
+        update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.RUNNING, pull_task_started)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+        pull_task_completed = pull_task_started + timedelta(seconds=1)
+        update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.FINISHED,
+                                                          pull_task_completed)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+
         # Start, run, and complete pre-task
         task = running_job_exe.start_next_task()
         self.task_mgr.launch_tasks([task], now())
-        pre_task_started = now()
+        pre_task_started = pull_task_completed + timedelta(seconds=1)
         update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.RUNNING, pre_task_started)
         self.task_mgr.handle_task_update(update)
         running_job_exe.task_update(update)
@@ -314,10 +429,23 @@ class TestRunningJobExecution(TestCase):
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
         running_job_exe = RunningJobExecution(job_exe)
 
+        # Start, run, and complete pull-task
+        task = running_job_exe.start_next_task()
+        self.task_mgr.launch_tasks([task], now())
+        pull_task_started = now()
+        update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.RUNNING, pull_task_started)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+        pull_task_completed = pull_task_started + timedelta(seconds=1)
+        update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.FINISHED,
+                                                          pull_task_completed)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+
         # Start, run, and complete pre-task
         task = running_job_exe.start_next_task()
         self.task_mgr.launch_tasks([task], now())
-        pre_task_started = now()
+        pre_task_started = pull_task_completed + timedelta(seconds=1)
         update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.RUNNING, pre_task_started)
         self.task_mgr.handle_task_update(update)
         running_job_exe.task_update(update)
@@ -369,10 +497,23 @@ class TestRunningJobExecution(TestCase):
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
         running_job_exe = RunningJobExecution(job_exe)
 
+        # Start, run, and complete pull-task
+        task = running_job_exe.start_next_task()
+        self.task_mgr.launch_tasks([task], now())
+        pull_task_started = now()
+        update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.RUNNING, pull_task_started)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+        pull_task_completed = pull_task_started + timedelta(seconds=1)
+        update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.FINISHED,
+                                                          pull_task_completed)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+
         # Start, run, and complete pre-task
         task = running_job_exe.start_next_task()
         self.task_mgr.launch_tasks([task], now())
-        pre_task_started = now()
+        pre_task_started = pull_task_completed + timedelta(seconds=1)
         update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.RUNNING, pre_task_started)
         self.task_mgr.handle_task_update(update)
         running_job_exe.task_update(update)
@@ -403,10 +544,23 @@ class TestRunningJobExecution(TestCase):
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
         running_job_exe = RunningJobExecution(job_exe)
 
+        # Start, run, and complete pull-task
+        task = running_job_exe.start_next_task()
+        self.task_mgr.launch_tasks([task], now())
+        pull_task_started = now()
+        update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.RUNNING, pull_task_started)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+        pull_task_completed = pull_task_started + timedelta(seconds=1)
+        update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.FINISHED,
+                                                          pull_task_completed)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+
         # Start, run, and complete pre-task
         task = running_job_exe.start_next_task()
         self.task_mgr.launch_tasks([task], now())
-        pre_task_started = now()
+        pre_task_started = pull_task_completed + timedelta(seconds=1)
         update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.RUNNING, pre_task_started)
         self.task_mgr.handle_task_update(update)
         running_job_exe.task_update(update)
@@ -443,10 +597,23 @@ class TestRunningJobExecution(TestCase):
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
         running_job_exe = RunningJobExecution(job_exe)
 
+        # Start, run, and complete pull-task
+        task = running_job_exe.start_next_task()
+        self.task_mgr.launch_tasks([task], now())
+        pull_task_started = now()
+        update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.RUNNING, pull_task_started)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+        pull_task_completed = pull_task_started + timedelta(seconds=1)
+        update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.FINISHED,
+                                                          pull_task_completed)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+
         # Start, run, and complete pre-task
         task = running_job_exe.start_next_task()
         self.task_mgr.launch_tasks([task], now())
-        pre_task_started = now()
+        pre_task_started = pull_task_completed + timedelta(seconds=1)
         update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.RUNNING, pre_task_started)
         self.task_mgr.handle_task_update(update)
         running_job_exe.task_update(update)
@@ -474,6 +641,19 @@ class TestRunningJobExecution(TestCase):
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
         running_job_exe = RunningJobExecution(job_exe)
 
+        # Start, run, and complete pull-task
+        task = running_job_exe.start_next_task()
+        self.task_mgr.launch_tasks([task], now())
+        pull_task_started = now()
+        update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.RUNNING, pull_task_started)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+        pull_task_completed = pull_task_started + timedelta(seconds=1)
+        update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.FINISHED,
+                                                          pull_task_completed)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+
         # Start pre-task
         task = running_job_exe.start_next_task()
         self.task_mgr.launch_tasks([task], now())
@@ -498,13 +678,26 @@ class TestRunningJobExecution(TestCase):
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
         running_job_exe = RunningJobExecution(job_exe)
 
+        # Start, run, and complete pull-task
+        task = running_job_exe.start_next_task()
+        self.task_mgr.launch_tasks([task], now())
+        pull_task_started = now()
+        update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.RUNNING, pull_task_started)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+        pull_task_completed = pull_task_started + timedelta(seconds=1)
+        update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.FINISHED,
+                                                          pull_task_completed)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+
         # Start pre-task
         task = running_job_exe.start_next_task()
         self.task_mgr.launch_tasks([task], now())
         pre_task_id = task.id
 
         # Pre-task running
-        pre_task_started = now()
+        pre_task_started = pull_task_completed + timedelta(seconds=1)
         update = job_test_utils.create_task_status_update(pre_task_id, 'agent', TaskStatusUpdate.RUNNING,
                                                           pre_task_started)
         self.task_mgr.handle_task_update(update)
@@ -541,13 +734,26 @@ class TestRunningJobExecution(TestCase):
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
         running_job_exe = RunningJobExecution(job_exe)
 
+        # Start, run, and complete pull-task
+        task = running_job_exe.start_next_task()
+        self.task_mgr.launch_tasks([task], now())
+        pull_task_started = now()
+        update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.RUNNING, pull_task_started)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+        pull_task_completed = pull_task_started + timedelta(seconds=1)
+        update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.FINISHED,
+                                                          pull_task_completed)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+
         # Start pre-task
         task = running_job_exe.start_next_task()
         self.task_mgr.launch_tasks([task], now())
         pre_task_id = task.id
 
         # Pre-task running
-        pre_task_started = now()
+        pre_task_started = pull_task_completed + timedelta(seconds=1)
         update = job_test_utils.create_task_status_update(pre_task_id, 'agent', TaskStatusUpdate.RUNNING,
                                                           pre_task_started)
         self.task_mgr.handle_task_update(update)
@@ -594,6 +800,37 @@ class TestRunningJobExecution(TestCase):
         self.assertEqual(job_exe.status, 'FAILED')
         self.assertEqual(job_exe.error.name, 'docker-task-launch')
 
+    def test_docker_pull_error(self):
+        """Tests running through a job execution where the Docker image pull fails"""
+
+        # Clear error cache so test works correctly
+        CACHED_BUILTIN_ERRORS.clear()
+
+        job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
+        running_job_exe = RunningJobExecution(job_exe)
+
+        # Start pull-task
+        task = running_job_exe.start_next_task()
+        self.task_mgr.launch_tasks([task], now())
+        pull_task_id = task.id
+
+        # Pull-task running
+        pull_task_started = now()
+        update = job_test_utils.create_task_status_update(pull_task_id, 'agent', TaskStatusUpdate.RUNNING,
+                                                          pull_task_started)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+
+        # Pull-task fails
+        update = job_test_utils.create_task_status_update(pull_task_id, 'agent', TaskStatusUpdate.FAILED, now())
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+
+        # Check results
+        job_exe = JobExecution.objects.select_related().get(id=self._job_exe_id)
+        self.assertEqual(job_exe.status, 'FAILED')
+        self.assertEqual(job_exe.error.name, 'pull')
+
     def test_general_algorithm_error(self):
         """Tests running through a job execution where the job-task has a general algorithm error (non-zero exit code)
         """
@@ -603,6 +840,19 @@ class TestRunningJobExecution(TestCase):
 
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
         running_job_exe = RunningJobExecution(job_exe)
+
+        # Start, run, and complete pull-task
+        task = running_job_exe.start_next_task()
+        self.task_mgr.launch_tasks([task], now())
+        pull_task_started = now()
+        update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.RUNNING, pull_task_started)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+        pull_task_completed = pull_task_started + timedelta(seconds=1)
+        update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.FINISHED,
+                                                          pull_task_completed)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
 
         # Start pre-task
         task = running_job_exe.start_next_task()
@@ -655,6 +905,19 @@ class TestRunningJobExecution(TestCase):
 
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
         running_job_exe = RunningJobExecution(job_exe)
+
+        # Start, run, and complete pull-task
+        task = running_job_exe.start_next_task()
+        self.task_mgr.launch_tasks([task], now())
+        pull_task_started = now()
+        update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.RUNNING, pull_task_started)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
+        pull_task_completed = pull_task_started + timedelta(seconds=1)
+        update = job_test_utils.create_task_status_update(task.id, 'agent', TaskStatusUpdate.FINISHED,
+                                                          pull_task_completed)
+        self.task_mgr.handle_task_update(update)
+        running_job_exe.task_update(update)
 
         # Start pre-task
         task = running_job_exe.start_next_task()

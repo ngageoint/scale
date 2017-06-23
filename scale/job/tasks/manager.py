@@ -30,6 +30,18 @@ class TaskManager(object):
         with self._lock:
             return list(self._tasks.values())
 
+    def get_task(self, task_id):
+        """Returns the task with the given ID, possibly None
+
+        :param task_id: The task ID
+        :type task_id: int
+        :returns: The task with the given ID
+        :rtype: :class:`job.tasks.base_task.Task`
+        """
+
+        with self._lock:
+            return self._tasks[task_id] if task_id in self._tasks else None
+
     def get_tasks_to_reconcile(self, when):
         """Returns all of the tasks that need to be reconciled
 

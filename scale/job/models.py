@@ -1647,6 +1647,21 @@ class JobExecution(models.Model):
 
         return '%s_pre' % self.get_cluster_id()
 
+    def get_pull_task_id(self):
+        """Gets the pull-task ID for this job execution. This call is only valid after the job execution has been
+        scheduled (is no longer queued) and if this is not a system job type.
+
+        :returns: The pull-task ID for the job execution
+        :rtype: string
+
+        :raises :class:`util.exceptions.ScaleLogicBug`: If the job execution is still queued or is a system job type
+        """
+
+        if self.is_system:
+            raise ScaleLogicBug('System jobs do not have a pull-task')
+
+        return '%s_pull' % self.get_cluster_id()
+
     def get_resources(self):
         """Returns the resources allocated to this job execution
 

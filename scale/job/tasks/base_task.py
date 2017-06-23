@@ -10,15 +10,11 @@ from django.conf import settings
 
 from job.tasks.update import TaskStatusUpdate
 
-
 # Default timeout thresholds for tasks (None means no timeout)
 BASE_RUNNING_TIMEOUT_THRESHOLD = datetime.timedelta(hours=1)
-# TODO: Staging timeout threshold can be lowered once Docker pulls are not performed during task staging
-# TODO: also check all tasks to lower their staging and running times to appropriate values
-BASE_STAGING_TIMEOUT_THRESHOLD = datetime.timedelta(minutes=20)
+BASE_STAGING_TIMEOUT_THRESHOLD = datetime.timedelta(minutes=2)
 
-
-# Default reconciliation thresholds for tasks
+# Reconciliation thresholds for tasks
 RUNNING_RECON_THRESHOLD = datetime.timedelta(minutes=10)
 STAGING_RECON_THRESHOLD = datetime.timedelta(seconds=30)
 
@@ -85,7 +81,6 @@ class Task(object):
         # These values will vary by different task subclasses
         self._uses_docker = False
         self._docker_image = None
-        self._force_docker_pull = False
         self._docker_params = []
         self._is_docker_privileged = False
         self._command = 'echo "Hello Scale"'
@@ -152,16 +147,6 @@ class Task(object):
         """
 
         return self._docker_params
-
-    @property
-    def force_docker_pull(self):
-        """Indicates if a force pull of the Docker image should be done
-
-        :returns: True if force pull should be used, False otherwise
-        :rtype: bool
-        """
-
-        return self._force_docker_pull
 
     @property
     def has_been_launched(self):

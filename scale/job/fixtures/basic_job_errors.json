@@ -73,6 +73,20 @@
         "model": "error.Error",
         "pk": null,
         "fields": {
+            "name": "pull-timeout",
+            "title": "Pull-task Timeout",
+            "description": "The pull-task did not finish within a reasonable amount of time. This is likely due to excessive time downloading the algorithm's Docker image.",
+            "category": "SYSTEM",
+            "is_builtin": true,
+            "should_be_retried": false,
+            "created": "2017-06-19T00:00:00.0Z",
+            "last_modified": "2017-06-19T00:00:00.0Z"
+        }
+    },
+    {
+        "model": "error.Error",
+        "pk": null,
+        "fields": {
             "name": "pre-timeout",
             "title": "Pre-task Timeout",
             "description": "The pre-task did not finish within a reasonable amount of time. This is likely due to excessive time downloading the algorithm's input data from their workspace(s).",
@@ -123,6 +137,20 @@
             "should_be_retried": false,
             "created": "2015-03-11T00:00:00.0Z",
             "last_modified": "2015-03-11T00:00:00.0Z"
+        }
+    },
+    {
+        "model": "error.Error",
+        "pk": null,
+        "fields": {
+            "name": "pull",
+            "title": "Docker Pull Failed",
+            "description": "Scale was unable to pull the algorithm's Docker image. Please ensure the image name is correct and the Docker registry is available.",
+            "category": "SYSTEM",
+            "is_builtin": true,
+            "should_be_retried": false,
+            "created": "2017-06-19T00:00:00.0Z",
+            "last_modified": "2017-06-19T00:00:00.0Z"
         }
     },
     {
