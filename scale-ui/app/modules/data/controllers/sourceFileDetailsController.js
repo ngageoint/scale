@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('sourceFileDetailsController', function($scope, $location, $routeParams, $timeout, stateService, navService, dataService, gridFactory, SourceFile, Product) {
+    angular.module('scaleApp').controller('sourceFileDetailsController', function($scope, $location, $routeParams, $timeout, $uibModal, scaleConfig, stateService, navService, dataService, gridFactory, SourceFile, Product, moment) {
         var ctrl = this,
             sourceFileId = parseInt($routeParams.id),
             qs = $location.search();
@@ -12,6 +12,7 @@
         $scope.hasParentCtrl = true;
 
         ctrl.loading = true;
+        ctrl._ = _;
         ctrl.sourceFile = null;
         ctrl.activeTab = qs.tab || 'jobs';
         ctrl.sourceFileProductsParams = stateService.getSourceFileProductsParams();
@@ -85,6 +86,13 @@
             ctrl.gridOptions.data = filteredData.length > 0 ? filteredData : ctrl.gridOptions.data;
         };
 
+        ctrl.getFormattedDate = function (date) {
+            if (date) {
+                return _.capitalize(moment.utc(date).from(moment.utc())) + ' <small>' + moment.utc(date).format(scaleConfig.dateFormats.day_second_utc_nolabel) + '</small>';
+            }
+            return '';
+        };
+
         var filteredByOrder = ctrl.sourceFileProductsParams.order ? true : false;
 
         ctrl.colDefs = [
@@ -108,16 +116,17 @@
             {
                 field: 'data_started',
                 enableFiltering: false,
-                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.data_started_formatted }}</div>'
+                cellTemplate: '<div class="ui-grid-cell-contents"><span ng-bind-html="grid.appScope.ctrl.getFormattedDate(row.entity.data_started)"></span></div>'
             },
             {
                 field: 'data_ended',
                 enableFiltering: false,
-                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.data_ended_formatted }}</div>'
+                cellTemplate: '<div class="ui-grid-cell-contents"><span ng-bind-html="grid.appScope.ctrl.getFormattedDate(row.entity.data_ended)"></span></div>'
             },
             {
                 field: 'countries',
-                enableFiltering: false
+                enableFiltering: false,
+                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.countries.join(\', \') }}</div>'
             },
             {
                 field: 'last_modified',
@@ -188,6 +197,16 @@
             qs.tab = gridType;
             ctrl.activeTab = gridType;
             $location.search(qs);
+        };
+
+        ctrl.showMetadata = function () {
+            // show modal
+            $uibModal.open({
+                animation: true,
+                templateUrl: 'showMetadata.html',
+                scope: $scope,
+                windowClass: 'metadata-modal-window'
+            });
         };
 
         $scope.$watch('ctrl.startDate', function (value) {

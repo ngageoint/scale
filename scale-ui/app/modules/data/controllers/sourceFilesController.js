@@ -73,7 +73,8 @@
             },
             {
                 field: 'countries',
-                enableFiltering: false
+                enableFiltering: false,
+                cellTemplate: '<div class="ui-grid-cell-contents">{{ row.entity.countries.join(\', \') }}</div>'
             },
             {
                 field: 'last_modified',
