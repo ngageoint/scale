@@ -514,6 +514,8 @@
       <ul>
         <li><a href="architecture/django/code_docs/product.html#product.models.FileAncestryLink.batch">(product.models.FileAncestryLink attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.batch">(storage.models.ScaleFile attribute)</a>
+</li>
       </ul></li>
       <li><a href="architecture/django/code_docs/batch.html#module-batch.apps">batch.apps (module)</a>
 </li>
@@ -577,6 +579,8 @@
         <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchRecipe.batch_id">(batch.models.BatchRecipe attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/product.html#product.models.FileAncestryLink.batch_id">(product.models.FileAncestryLink attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.batch_id">(storage.models.ScaleFile attribute)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -1116,6 +1120,8 @@
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.created">(job.models.JobExecution attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.html#job.models.JobInputFile.created">(job.models.JobInputFile attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobType.created">(job.models.JobType attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeRevision.created">(job.models.JobTypeRevision attribute)</a>
@@ -1136,7 +1142,7 @@
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.created">(recipe.models.Recipe attribute)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeFile.created">(recipe.models.RecipeFile attribute)</a>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeInputFile.created">(recipe.models.RecipeInputFile attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeType.created">(recipe.models.RecipeType attribute)</a>
 </li>
@@ -1362,6 +1368,8 @@
 </li>
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0027_auto_20170615_1652.Migration.dependencies">(job.migrations.0027_auto_20170615_1652.Migration attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0028_jobinputfile.Migration.dependencies">(job.migrations.0028_jobinputfile.Migration attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0001_initial.Migration.dependencies">(metrics.migrations.0001_initial.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0002_auto_20151007_1352.Migration.dependencies">(metrics.migrations.0002_auto_20151007_1352.Migration attribute)</a>
@@ -1460,6 +1468,8 @@
 </li>
         <li><a href="architecture/django/code_docs/recipe.migrations.html#recipe.migrations.0017_auto_20170412_1225.Migration.dependencies">(recipe.migrations.0017_auto_20170412_1225.Migration attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/recipe.migrations.html#recipe.migrations.0018_recipefile_recipe_input.Migration.dependencies">(recipe.migrations.0018_recipefile_recipe_input.Migration attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/scheduler.migrations.html#scheduler.migrations.0001_initial.Migration.dependencies">(scheduler.migrations.0001_initial.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.migrations.html#scheduler.migrations.0002_auto_20151007_1352.Migration.dependencies">(scheduler.migrations.0002_auto_20151007_1352.Migration attribute)</a>
@@ -1497,6 +1507,8 @@
         <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0006_auto_20170127_1423.Migration.dependencies">(storage.migrations.0006_auto_20170127_1423.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0007_auto_20170412_1225.Migration.dependencies">(storage.migrations.0007_auto_20170412_1225.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0008_auto_20170609_1443.Migration.dependencies">(storage.migrations.0008_auto_20170609_1443.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/trigger.migrations.html#trigger.migrations.0001_initial.Migration.dependencies">(trigger.migrations.0001_initial.Migration attribute)</a>
 </li>
@@ -2409,6 +2421,12 @@
         <li><a href="architecture/django/code_docs/recipe.configuration.data.html#recipe.configuration.data.recipe_data.RecipeData.get_input_file_ids">(recipe.configuration.data.recipe_data.RecipeData method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/job.configuration.data.html#job.configuration.data.job_data.JobData.get_input_file_info">get_input_file_info() (job.configuration.data.job_data.JobData method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/recipe.configuration.data.html#recipe.configuration.data.recipe_data.RecipeData.get_input_file_info">(recipe.configuration.data.recipe_data.RecipeData method)</a>
+</li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryDataManager.get_intersects">get_intersects() (storage.models.CountryDataManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.errors.get_invalid_manifest_error">get_invalid_manifest_error() (in module job.errors)</a>
@@ -2614,6 +2632,8 @@
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.get_next_by_created">(job.models.JobExecution method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.html#job.models.JobInputFile.get_next_by_created">(job.models.JobInputFile method)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobType.get_next_by_created">(job.models.JobType method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeRevision.get_next_by_created">(job.models.JobTypeRevision method)</a>
@@ -2634,7 +2654,7 @@
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.get_next_by_created">(recipe.models.Recipe method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeFile.get_next_by_created">(recipe.models.RecipeFile method)</a>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeInputFile.get_next_by_created">(recipe.models.RecipeInputFile method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeType.get_next_by_created">(recipe.models.RecipeType method)</a>
 </li>
@@ -2792,6 +2812,8 @@
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.get_previous_by_created">(job.models.JobExecution method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.html#job.models.JobInputFile.get_previous_by_created">(job.models.JobInputFile method)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobType.get_previous_by_created">(job.models.JobType method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeRevision.get_previous_by_created">(job.models.JobTypeRevision method)</a>
@@ -2812,7 +2834,7 @@
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.get_previous_by_created">(recipe.models.Recipe method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeFile.get_previous_by_created">(recipe.models.RecipeFile method)</a>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeInputFile.get_previous_by_created">(recipe.models.RecipeInputFile method)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeType.get_previous_by_created">(recipe.models.RecipeType method)</a>
 </li>
@@ -3370,6 +3392,8 @@
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.id">(job.models.JobExecution attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.html#job.models.JobInputFile.id">(job.models.JobInputFile attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobType.id">(job.models.JobType attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeRevision.id">(job.models.JobTypeRevision attribute)</a>
@@ -3394,7 +3418,7 @@
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.id">(recipe.models.Recipe attribute)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeFile.id">(recipe.models.RecipeFile attribute)</a>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeInputFile.id">(recipe.models.RecipeInputFile attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeJob.id">(recipe.models.RecipeJob attribute)</a>
 </li>
@@ -3673,6 +3697,10 @@
 </li>
       <li><a href="architecture/django/code_docs/job.handlers.inputs.html#job.handlers.inputs.base_input.Input">Input (class in job.handlers.inputs.base_input)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.html#job.models.JobInputFile.input_file">input_file (job.models.JobInputFile attribute)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.models.JobInputFile.input_file_id">input_file_id (job.models.JobInputFile attribute)</a>
+</li>
       <li><a href="architecture/django/code_docs/queue.html#queue.models.Queue.input_file_size">input_file_size (queue.models.Queue attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.html#util.aws.AWSClient.instantiate_credentials_from_config">instantiate_credentials_from_config() (util.aws.AWSClient static method)</a>
@@ -3880,6 +3908,8 @@
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.job">(job.models.JobExecution attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.html#job.models.JobInputFile.job">(job.models.JobInputFile attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.html#module-job">(module)</a>
 </li>
         <li><a href="architecture/django/code_docs/product.html#product.models.FileAncestryLink.job">(product.models.FileAncestryLink attribute)</a>
@@ -4065,6 +4095,8 @@
 </li>
       <li><a href="architecture/django/code_docs/job.migrations.html#module-job.migrations.0027_auto_20170615_1652">job.migrations.0027_auto_20170615_1652 (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.migrations.html#module-job.migrations.0028_jobinputfile">job.migrations.0028_jobinputfile (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.html#module-job.models">job.models (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.MultipleObjectsReturned">Job.MultipleObjectsReturned</a>
@@ -4179,8 +4211,6 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.job_exe_file_links">job_exe_file_links (job.models.JobExecution attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.metrics.TotalJobExeMetrics.job_exe_finished">job_exe_finished() (job.execution.metrics.TotalJobExeMetrics method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.execution.tasks.html#job.execution.tasks.exe_task.JobExecutionTask.job_exe_id">job_exe_id (job.execution.tasks.exe_task.JobExecutionTask attribute)</a>
@@ -4195,6 +4225,8 @@
         <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.job_exe_id">(storage.models.ScaleFile attribute)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.JOB_EXE_STATUSES">JOB_EXE_STATUSES (job.models.JobExecution attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.execution.tasks.html#job.execution.tasks.cleanup_task.CleanupTask.job_exes">job_exes (job.execution.tasks.cleanup_task.CleanupTask attribute)</a>
@@ -4216,6 +4248,8 @@
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.job_id">(job.models.JobExecution attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.html#job.models.JobInputFile.job_id">(job.models.JobInputFile attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/product.html#product.models.FileAncestryLink.job_id">(product.models.FileAncestryLink attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/queue.html#queue.models.Queue.job_id">(queue.models.Queue attribute)</a>
@@ -4225,9 +4259,13 @@
         <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.job_id">(storage.models.ScaleFile attribute)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/job.html#job.models.JobInputFile.job_input">job_input (job.models.JobInputFile attribute)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.job_metrics">job_metrics (job.models.JobExecution attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeJob.job_name">job_name (recipe.models.RecipeJob attribute)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.job_output">job_output (storage.models.ScaleFile attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/error.html#error.models.Error.job_set">job_set (error.models.Error attribute)</a>
 
@@ -4373,6 +4411,18 @@
 </li>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.metrics.JobExeMetricsByType">JobExeMetricsByType (class in job.execution.metrics)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.html#job.models.JobInputFile">JobInputFile (class in job.models)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.models.JobInputFile.DoesNotExist">JobInputFile.DoesNotExist</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.models.JobInputFile.MultipleObjectsReturned">JobInputFile.MultipleObjectsReturned</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.html#job.models.Job.jobinputfile_set">jobinputfile_set (job.models.Job attribute)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.jobinputfile_set">(storage.models.ScaleFile attribute)</a>
+</li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/job.configuration.interface.html#job.configuration.interface.job_interface.JobInterface">JobInterface (class in job.configuration.interface.job_interface)</a>
 
       <ul>
@@ -5130,6 +5180,8 @@
 </li>
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0027_auto_20170615_1652.Migration">(class in job.migrations.0027_auto_20170615_1652)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0028_jobinputfile.Migration">(class in job.migrations.0028_jobinputfile)</a>
+</li>
         <li><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0001_initial.Migration">(class in metrics.migrations.0001_initial)</a>
 </li>
         <li><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0002_auto_20151007_1352.Migration">(class in metrics.migrations.0002_auto_20151007_1352)</a>
@@ -5228,6 +5280,8 @@
 </li>
         <li><a href="architecture/django/code_docs/recipe.migrations.html#recipe.migrations.0017_auto_20170412_1225.Migration">(class in recipe.migrations.0017_auto_20170412_1225)</a>
 </li>
+        <li><a href="architecture/django/code_docs/recipe.migrations.html#recipe.migrations.0018_recipefile_recipe_input.Migration">(class in recipe.migrations.0018_recipefile_recipe_input)</a>
+</li>
         <li><a href="architecture/django/code_docs/scheduler.migrations.html#scheduler.migrations.0001_initial.Migration">(class in scheduler.migrations.0001_initial)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.migrations.html#scheduler.migrations.0002_auto_20151007_1352.Migration">(class in scheduler.migrations.0002_auto_20151007_1352)</a>
@@ -5265,6 +5319,8 @@
         <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0006_auto_20170127_1423.Migration">(class in storage.migrations.0006_auto_20170127_1423)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0007_auto_20170412_1225.Migration">(class in storage.migrations.0007_auto_20170412_1225)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0008_auto_20170609_1443.Migration">(class in storage.migrations.0008_auto_20170609_1443)</a>
 </li>
         <li><a href="architecture/django/code_docs/trigger.migrations.html#trigger.migrations.0001_initial.Migration">(class in trigger.migrations.0001_initial)</a>
 </li>
@@ -5632,6 +5688,8 @@
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.objects">(job.models.JobExecution attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.html#job.models.JobInputFile.objects">(job.models.JobInputFile attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobType.objects">(job.models.JobType attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeRevision.objects">(job.models.JobTypeRevision attribute)</a>
@@ -5656,7 +5714,7 @@
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.objects">(recipe.models.Recipe attribute)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeFile.objects">(recipe.models.RecipeFile attribute)</a>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeInputFile.objects">(recipe.models.RecipeInputFile attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeJob.objects">(recipe.models.RecipeJob attribute)</a>
 </li>
@@ -5790,6 +5848,8 @@
 </li>
         <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0027_auto_20170615_1652.Migration.operations">(job.migrations.0027_auto_20170615_1652.Migration attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.migrations.html#job.migrations.0028_jobinputfile.Migration.operations">(job.migrations.0028_jobinputfile.Migration attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0001_initial.Migration.operations">(metrics.migrations.0001_initial.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/metrics.migrations.html#metrics.migrations.0002_auto_20151007_1352.Migration.operations">(metrics.migrations.0002_auto_20151007_1352.Migration attribute)</a>
@@ -5888,6 +5948,8 @@
 </li>
         <li><a href="architecture/django/code_docs/recipe.migrations.html#recipe.migrations.0017_auto_20170412_1225.Migration.operations">(recipe.migrations.0017_auto_20170412_1225.Migration attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/recipe.migrations.html#recipe.migrations.0018_recipefile_recipe_input.Migration.operations">(recipe.migrations.0018_recipefile_recipe_input.Migration attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/scheduler.migrations.html#scheduler.migrations.0001_initial.Migration.operations">(scheduler.migrations.0001_initial.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.migrations.html#scheduler.migrations.0002_auto_20151007_1352.Migration.operations">(scheduler.migrations.0002_auto_20151007_1352.Migration attribute)</a>
@@ -5925,6 +5987,8 @@
         <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0006_auto_20170127_1423.Migration.operations">(storage.migrations.0006_auto_20170127_1423.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0007_auto_20170412_1225.Migration.operations">(storage.migrations.0007_auto_20170412_1225.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.migrations.html#storage.migrations.0008_auto_20170609_1443.Migration.operations">(storage.migrations.0008_auto_20170609_1443.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/trigger.migrations.html#trigger.migrations.0001_initial.Migration.operations">(trigger.migrations.0001_initial.Migration attribute)</a>
 </li>
@@ -6710,9 +6774,11 @@
       <ul>
         <li><a href="architecture/django/code_docs/product.html#product.models.FileAncestryLink.recipe">(product.models.FileAncestryLink attribute)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeFile.recipe">(recipe.models.RecipeFile attribute)</a>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeInputFile.recipe">(recipe.models.RecipeInputFile attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeJob.recipe">(recipe.models.RecipeJob attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.recipe">(storage.models.ScaleFile attribute)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/recipe.html#module-recipe.apps">recipe.apps (module)</a>
@@ -6785,6 +6851,8 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.migrations.html#module-recipe.migrations.0017_auto_20170412_1225">recipe.migrations.0017_auto_20170412_1225 (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.migrations.html#module-recipe.migrations.0018_recipefile_recipe_input">recipe.migrations.0018_recipefile_recipe_input (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.html#module-recipe.models">recipe.models (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.MultipleObjectsReturned">Recipe.MultipleObjectsReturned</a>
@@ -6834,11 +6902,17 @@
       <ul>
         <li><a href="architecture/django/code_docs/product.html#product.models.FileAncestryLink.recipe_id">(product.models.FileAncestryLink attribute)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeFile.recipe_id">(recipe.models.RecipeFile attribute)</a>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeInputFile.recipe_id">(recipe.models.RecipeInputFile attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeJob.recipe_id">(recipe.models.RecipeJob attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.recipe_id">(storage.models.ScaleFile attribute)</a>
+</li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeInputFile.recipe_input">recipe_input (recipe.models.RecipeInputFile attribute)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.recipe_job">recipe_job (storage.models.ScaleFile attribute)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeType.recipe_set">recipe_set (recipe.models.RecipeType attribute)</a>
 
       <ul>
@@ -6854,6 +6928,8 @@
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeTypeRevision.recipe_type">(recipe.models.RecipeTypeRevision attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.recipe_type">(storage.models.ScaleFile attribute)</a>
+</li>
       </ul></li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.recipe_type_id">recipe_type_id (batch.models.Batch attribute)</a>
 
@@ -6861,6 +6937,8 @@
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.recipe_type_id">(recipe.models.Recipe attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeTypeRevision.recipe_type_id">(recipe.models.RecipeTypeRevision attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.recipe_type_id">(storage.models.ScaleFile attribute)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.recipe_type_rev">recipe_type_rev (recipe.models.Recipe attribute)</a>
@@ -6891,18 +6969,6 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.views.RecipeDetailsView">RecipeDetailsView (class in recipe.views)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeFile">RecipeFile (class in recipe.models)</a>
-</li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeFile.DoesNotExist">RecipeFile.DoesNotExist</a>
-</li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeFile.MultipleObjectsReturned">RecipeFile.MultipleObjectsReturned</a>
-</li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.recipefile_set">recipefile_set (recipe.models.Recipe attribute)</a>
-
-      <ul>
-        <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.recipefile_set">(storage.models.ScaleFile attribute)</a>
-</li>
-      </ul></li>
       <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.graph.RecipeGraph">RecipeGraph (class in recipe.handlers.graph)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.graph_delta.RecipeGraphDelta">RecipeGraphDelta (class in recipe.handlers.graph_delta)</a>
@@ -6911,10 +6977,24 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.connection.RecipeInputConnection">RecipeInputConnection (class in recipe.handlers.connection)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeInputFile">RecipeInputFile (class in recipe.models)</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeInputFile.DoesNotExist">RecipeInputFile.DoesNotExist</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeInputFile.MultipleObjectsReturned">RecipeInputFile.MultipleObjectsReturned</a>
+</li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.recipeinputfile_set">recipeinputfile_set (recipe.models.Recipe attribute)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.recipeinputfile_set">(storage.models.ScaleFile attribute)</a>
+</li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeJob">RecipeJob (class in recipe.models)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeJob.DoesNotExist">RecipeJob.DoesNotExist</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeJob.MultipleObjectsReturned">RecipeJob.MultipleObjectsReturned</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.recipejob_set">recipejob_set (job.models.Job attribute)</a>
@@ -6925,8 +7005,6 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeJobManager">RecipeJobManager (class in recipe.models)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsDetailsSerializer">RecipeJobsDetailsSerializer (class in recipe.serializers)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.serializers.RecipeJobsDetailsSerializer.JobRevisionSerializer">RecipeJobsDetailsSerializer.JobRevisionSerializer (class in recipe.serializers)</a>
@@ -7227,9 +7305,9 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/node.resources.html#node.resources.resource.ScalarResource">ScalarResource (class in node.resources.resource)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeFile.scale_file">scale_file (recipe.models.RecipeFile attribute)</a>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeInputFile.scale_file">scale_file (recipe.models.RecipeInputFile attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeFile.scale_file_id">scale_file_id (recipe.models.RecipeFile attribute)</a>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeInputFile.scale_file_id">scale_file_id (recipe.models.RecipeInputFile attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/error.html#error.exceptions.ScaleDatabaseError">ScaleDatabaseError</a>
 </li>
@@ -7241,12 +7319,18 @@
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.MultipleObjectsReturned">ScaleFile.MultipleObjectsReturned</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.html#job.models.Job.scalefile_set">scalefile_set (job.models.Job attribute)</a>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.scalefile_set">scalefile_set (batch.models.Batch attribute)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/job.html#job.models.Job.scalefile_set">(job.models.Job attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.scalefile_set">(job.models.JobExecution attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.models.JobType.scalefile_set">(job.models.JobType attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.scalefile_set">(recipe.models.Recipe attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeType.scalefile_set">(recipe.models.RecipeType attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.scalefile_set">(storage.models.CountryData attribute)</a>
 </li>
@@ -8251,9 +8335,13 @@
 </li>
       <li><a href="architecture/django/code_docs/source.html#module-source.views">source.views (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.source_ended">source_ended (storage.models.ScaleFile attribute)</a>
+</li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.source_file">source_file (ingest.models.Ingest attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.source_file_id">source_file_id (ingest.models.Ingest attribute)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.source_started">source_started (storage.models.ScaleFile attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/source.html#source.apps.SourceConfig">SourceConfig (class in source.apps)</a>
 </li>
@@ -8444,6 +8532,8 @@
       <li><a href="architecture/django/code_docs/storage.migrations.html#module-storage.migrations.0006_auto_20170127_1423">storage.migrations.0006_auto_20170127_1423 (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.migrations.html#module-storage.migrations.0007_auto_20170412_1225">storage.migrations.0007_auto_20170412_1225 (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/storage.migrations.html#module-storage.migrations.0008_auto_20170609_1443">storage.migrations.0008_auto_20170609_1443 (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#module-storage.models">storage.models (module)</a>
 </li>
@@ -8858,6 +8948,8 @@
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/source.test.html#source.test.test_views.TestSourceProductsView.test_batch_id">test_batch_id() (source.test.test_views.TestSourceProductsView method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/product.test.html#product.test.test_models.TestProductFileManagerUploadFiles.test_batch_link">test_batch_link() (product.test.test_models.TestProductFileManagerUploadFiles method)</a>
 </li>
       <li><a href="architecture/django/code_docs/product.test.html#product.test.test_models.TestFileAncestryLinkManagerCreateFileAncestryLinks.test_batch_recipe">test_batch_recipe() (product.test.test_models.TestFileAncestryLinkManagerCreateFileAncestryLinks method)</a>
 </li>
@@ -10644,6 +10736,8 @@
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_aws.TestSQSClient.test_receive_messages_1_batch_size_1">test_receive_messages_1_batch_size_1() (util.test.test_aws.TestSQSClient method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_aws.TestSQSClient.test_receive_messages_1_batch_size_100">test_receive_messages_1_batch_size_100() (util.test.test_aws.TestSQSClient method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/product.test.html#product.test.test_models.TestProductFileManagerUploadFiles.test_recipe_link">test_recipe_link() (product.test.test_models.TestProductFileManagerUploadFiles method)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesView.test_recipe_type_id">test_recipe_type_id() (batch.test.test_views.TestBatchesView method)</a>
 </li>
@@ -12535,8 +12629,12 @@
 <h2 id="V">V</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="architecture/django/code_docs/source.html#source.models.SourceFile.VALID_TIME_FIELDS">VALID_TIME_FIELDS (source.models.SourceFile attribute)</a>
+      <li><a href="architecture/django/code_docs/product.html#product.models.ProductFile.VALID_TIME_FIELDS">VALID_TIME_FIELDS (product.models.ProductFile attribute)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/source.html#source.models.SourceFile.VALID_TIME_FIELDS">(source.models.SourceFile attribute)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/batch.configuration.definition.html#batch.configuration.definition.batch_definition.BatchDefinition.validate">validate() (batch.configuration.definition.batch_definition.BatchDefinition method)</a>
 
       <ul>

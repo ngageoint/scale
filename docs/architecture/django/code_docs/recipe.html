@@ -274,6 +274,7 @@
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0015_recipefile">recipe.migrations.0015_recipefile module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0016_recipefile_data">recipe.migrations.0016_recipefile_data module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0017_auto_20170412_1225">recipe.migrations.0017_auto_20170412_1225 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations.0018_recipefile_recipe_input">recipe.migrations.0018_recipefile_recipe_input module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recipe.migrations.html#module-recipe.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -620,8 +621,8 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="recipe.models.Recipe.recipefile_set">
-<code class="descname">recipefile_set</code><a class="headerlink" href="#recipe.models.Recipe.recipefile_set" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.models.Recipe.recipeinputfile_set">
+<code class="descname">recipeinputfile_set</code><a class="headerlink" href="#recipe.models.Recipe.recipeinputfile_set" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accessor to the related objects manager on the reverse side of a
 many-to-one relation.</p>
 <p>In the example:</p>
@@ -667,6 +668,21 @@ one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
 <code class="descname">root_superseded_recipe_id</code><a class="headerlink" href="#recipe.models.Recipe.root_superseded_recipe_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.Recipe.scalefile_set">
+<code class="descname">scalefile_set</code><a class="headerlink" href="#recipe.models.Recipe.scalefile_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -741,8 +757,8 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="recipe.models.RecipeFile">
-<em class="property">class </em><code class="descclassname">recipe.models.</code><code class="descname">RecipeFile</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeFile" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.models.RecipeInputFile">
+<em class="property">class </em><code class="descclassname">recipe.models.</code><code class="descname">RecipeInputFile</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeInputFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.base.Model</span></code></p>
 <p>Links a recipe and its input files together. A file can be used as input to multiple recipes and a recipe can
 accept multiple input files. This model is useful for determining relevant recipes to run during re-processing.</p>
@@ -753,6 +769,7 @@ accept multiple input files. This model is useful for determining relevant recip
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>recipe</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The recipe that the input file is linked to</li>
 <li><strong>scale_file</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.ForeignKey</span></code>) &#8211; The input file that the recipe is linked to</li>
+<li><strong>recipe_input</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.CharField</span></code>) &#8211; The name of the recipe input parameter</li>
 <li><strong>created</strong> (<code class="xref py py-class docutils literal"><span class="pre">django.db.models.DateTimeField</span></code>) &#8211; When the recipe was created</li>
 </ul>
 </td>
@@ -760,49 +777,49 @@ accept multiple input files. This model is useful for determining relevant recip
 </tbody>
 </table>
 <dl class="exception">
-<dt id="recipe.models.RecipeFile.DoesNotExist">
-<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#recipe.models.RecipeFile.DoesNotExist" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.models.RecipeInputFile.DoesNotExist">
+<em class="property">exception </em><code class="descname">DoesNotExist</code><a class="headerlink" href="#recipe.models.RecipeInputFile.DoesNotExist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.ObjectDoesNotExist</span></code></p>
 </dd></dl>
 
 <dl class="exception">
-<dt id="recipe.models.RecipeFile.MultipleObjectsReturned">
-<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#recipe.models.RecipeFile.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.models.RecipeInputFile.MultipleObjectsReturned">
+<em class="property">exception </em><code class="descname">MultipleObjectsReturned</code><a class="headerlink" href="#recipe.models.RecipeInputFile.MultipleObjectsReturned" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.core.exceptions.MultipleObjectsReturned</span></code></p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="recipe.models.RecipeFile.created">
-<code class="descname">created</code><a class="headerlink" href="#recipe.models.RecipeFile.created" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.models.RecipeInputFile.created">
+<code class="descname">created</code><a class="headerlink" href="#recipe.models.RecipeInputFile.created" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="recipe.models.RecipeFile.get_next_by_created">
-<code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeFile.get_next_by_created" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.models.RecipeInputFile.get_next_by_created">
+<code class="descname">get_next_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeInputFile.get_next_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="recipe.models.RecipeFile.get_previous_by_created">
-<code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeFile.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.models.RecipeInputFile.get_previous_by_created">
+<code class="descname">get_previous_by_created</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeInputFile.get_previous_by_created" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="recipe.models.RecipeFile.id">
-<code class="descname">id</code><a class="headerlink" href="#recipe.models.RecipeFile.id" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.models.RecipeInputFile.id">
+<code class="descname">id</code><a class="headerlink" href="#recipe.models.RecipeInputFile.id" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="recipe.models.RecipeFile.objects">
-<code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#recipe.models.RecipeFile.objects" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.models.RecipeInputFile.objects">
+<code class="descname">objects</code><em class="property"> = &lt;django.db.models.manager.Manager object&gt;</em><a class="headerlink" href="#recipe.models.RecipeInputFile.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="recipe.models.RecipeFile.recipe">
-<code class="descname">recipe</code><a class="headerlink" href="#recipe.models.RecipeFile.recipe" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.models.RecipeInputFile.recipe">
+<code class="descname">recipe</code><a class="headerlink" href="#recipe.models.RecipeInputFile.recipe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accessor to the related object on the forward side of a many-to-one or
 one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
 <p>In the example:</p>
@@ -814,15 +831,22 @@ one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="recipe.models.RecipeFile.recipe_id">
-<code class="descname">recipe_id</code><a class="headerlink" href="#recipe.models.RecipeFile.recipe_id" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.models.RecipeInputFile.recipe_id">
+<code class="descname">recipe_id</code><a class="headerlink" href="#recipe.models.RecipeInputFile.recipe_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="recipe.models.RecipeFile.scale_file">
-<code class="descname">scale_file</code><a class="headerlink" href="#recipe.models.RecipeFile.scale_file" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.models.RecipeInputFile.recipe_input">
+<code class="descname">recipe_input</code><a class="headerlink" href="#recipe.models.RecipeInputFile.recipe_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.RecipeInputFile.scale_file">
+<code class="descname">scale_file</code><a class="headerlink" href="#recipe.models.RecipeInputFile.scale_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accessor to the related object on the forward side of a many-to-one or
 one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
 <p>In the example:</p>
@@ -834,8 +858,8 @@ one-to-one (via ForwardOneToOneDescriptor subclass) relation.</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="recipe.models.RecipeFile.scale_file_id">
-<code class="descname">scale_file_id</code><a class="headerlink" href="#recipe.models.RecipeFile.scale_file_id" title="Permalink to this definition">¶</a></dt>
+<dt id="recipe.models.RecipeInputFile.scale_file_id">
+<code class="descname">scale_file_id</code><a class="headerlink" href="#recipe.models.RecipeInputFile.scale_file_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
 </dd></dl>
@@ -1060,9 +1084,9 @@ multiple recipes due to superseding, the original (first) recipe is returned.</p
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_id</strong> (<em>int</em>) &#8211; The job ID</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The recipe model with related recipe_type and recipe_type-rev, possibly None</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The recipe_job model with related recipe_type and recipe_type-rev, possibly None</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#recipe.models.Recipe" title="recipe.models.Recipe"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.Recipe</span></code></a></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#recipe.models.RecipeJob" title="recipe.models.RecipeJob"><code class="xref py py-class docutils literal"><span class="pre">recipe.models.RecipeJob</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -1358,6 +1382,21 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 <code class="descname">revision_num</code><a class="headerlink" href="#recipe.models.RecipeType.revision_num" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
 object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="recipe.models.RecipeType.scalefile_set">
+<code class="descname">scalefile_set</code><a class="headerlink" href="#recipe.models.RecipeType.scalefile_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
 </dd></dl>
 
 <dl class="attribute">

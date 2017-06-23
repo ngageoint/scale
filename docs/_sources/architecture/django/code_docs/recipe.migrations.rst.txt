@@ -140,6 +140,14 @@ recipe\.migrations\.0017\_auto\_20170412\_1225 module
     :undoc-members:
     :show-inheritance:
 
+recipe\.migrations\.0018\_recipefile\_recipe\_input module
+----------------------------------------------------------
+
+.. automodule:: recipe.migrations.0018_recipefile_recipe_input
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

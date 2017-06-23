@@ -603,6 +603,11 @@ functionality specific to product files.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">storage.models.MultipleObjectsReturned</span></code></p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="product.models.ProductFile.VALID_TIME_FIELDS">
+<code class="descname">VALID_TIME_FIELDS</code><em class="property"> = [u'source', u'data', u'last_modified']</em><a class="headerlink" href="#product.models.ProductFile.VALID_TIME_FIELDS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="classmethod">
 <dt id="product.models.ProductFile.create">
 <em class="property">classmethod </em><code class="descname">create</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.models.ProductFile.create" title="Permalink to this definition">¶</a></dt>
@@ -633,7 +638,7 @@ functionality specific to product files.</p>
 <p>Provides additional methods for handling product files</p>
 <dl class="method">
 <dt id="product.models.ProductFileManager.filter_products">
-<code class="descname">filter_products</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>is_operational=None</em>, <em>is_published=None</em>, <em>is_superseded=None</em>, <em>file_name=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#product.models.ProductFileManager.filter_products" title="Permalink to this definition">¶</a></dt>
+<code class="descname">filter_products</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>time_field=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>job_ids=None</em>, <em>is_operational=None</em>, <em>is_published=None</em>, <em>is_superseded=None</em>, <em>file_name=None</em>, <em>job_output=None</em>, <em>recipe_ids=None</em>, <em>recipe_type_ids=None</em>, <em>recipe_job=None</em>, <em>batch_ids=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#product.models.ProductFileManager.filter_products" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a query for product models that filters on the given fields. The returned query includes the related
 workspace, job_type, and job fields, except for the workspace.json_config field. The related countries are set
 to be pre-fetched as part of the query.</p>
@@ -644,13 +649,20 @@ to be pre-fetched as part of the query.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query product files updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query product files updated before this amount of time.</li>
+<li><strong>time_field</strong> (<em>string</em>) &#8211; The time field to use for filtering.</li>
 <li><strong>job_type_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em>) &#8211; Query product files produced by jobs with the given type identifier.</li>
 <li><strong>job_type_names</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em>) &#8211; Query product files produced by jobs with the given type name.</li>
 <li><strong>job_type_categories</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em>) &#8211; Query product files produced by jobs with the given type category.</li>
+<li><strong>job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em>) &#8211; Query product files produced by a given job id</li>
 <li><strong>is_operational</strong> (<em>bool</em>) &#8211; Query product files flagged as operational or R&amp;D only.</li>
 <li><strong>is_published</strong> (<em>bool</em>) &#8211; Query product files flagged as currently exposed for publication.</li>
 <li><strong>is_superseded</strong> (<em>bool</em>) &#8211; Query product files that have/have not been superseded.</li>
 <li><strong>file_name</strong> (<em>str</em>) &#8211; Query product files with the given file name.</li>
+<li><strong>job_output</strong> (<em>str</em>) &#8211; Query product files with the given job output</li>
+<li><strong>recipe_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em>) &#8211; Query product files produced by a given recipe id</li>
+<li><strong>recipe_job</strong> (<em>str</em>) &#8211; Query product files produced by a given recipe name</li>
+<li><strong>recipe_type_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em>) &#8211; Query product files produced by a given recipe types</li>
+<li><strong>batch_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em>) &#8211; Query product files produced by batches with the given identifiers.</li>
 <li><strong>order</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
@@ -686,7 +698,7 @@ to be pre-fetched as part of the query.</p>
 
 <dl class="method">
 <dt id="product.models.ProductFileManager.get_products">
-<code class="descname">get_products</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>is_operational=None</em>, <em>is_published=None</em>, <em>file_name=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#product.models.ProductFileManager.get_products" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_products</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>time_field=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>job_ids=None</em>, <em>is_operational=None</em>, <em>is_published=None</em>, <em>file_name=None</em>, <em>job_output=None</em>, <em>recipe_ids=None</em>, <em>recipe_type_ids=None</em>, <em>recipe_job=None</em>, <em>batch_ids=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#product.models.ProductFileManager.get_products" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of product files within the given time range.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -695,12 +707,19 @@ to be pre-fetched as part of the query.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query product files updated after this amount of time.</li>
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query product files updated before this amount of time.</li>
+<li><strong>time_field</strong> (<em>string</em>) &#8211; The time field to use for filtering.</li>
 <li><strong>job_type_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em>) &#8211; Query product files produced by jobs with the given type identifier.</li>
 <li><strong>job_type_names</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em>) &#8211; Query product files produced by jobs with the given type name.</li>
 <li><strong>job_type_categories</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em>) &#8211; Query product files produced by jobs with the given type category.</li>
+<li><strong>job_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em>) &#8211; Query product files produced by a given job id</li>
 <li><strong>is_operational</strong> (<em>bool</em>) &#8211; Query product files flagged as operational or R&amp;D only.</li>
 <li><strong>is_published</strong> (<em>bool</em>) &#8211; Query product files flagged as currently exposed for publication.</li>
 <li><strong>file_name</strong> (<em>str</em>) &#8211; Query product files with the given file name.</li>
+<li><strong>job_output</strong> (<em>str</em>) &#8211; Query product files with the given job output</li>
+<li><strong>recipe_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em>) &#8211; Query product files produced by a given recipe id</li>
+<li><strong>recipe_job</strong> (<em>str</em>) &#8211; Query product files produced by a given recipe name</li>
+<li><strong>recipe_type_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em>) &#8211; Query product files produced by a given recipe types</li>
+<li><strong>batch_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em>) &#8211; Query product files produced by batches with the given identifiers.</li>
 <li><strong>order</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
 </ul>
 </td>
@@ -775,8 +794,8 @@ atomic transaction.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>file_entries</strong> (<em>list of tuple</em><em>(</em><em>str</em><em>, </em><em>str</em><em>, </em><em>str</em><em>)</em>) &#8211; List of files where each file is a tuple of (absolute local path, workspace path for
-storing the file, media_type)</li>
+<li><strong>file_entries</strong> (<em>list of tuple</em><em>(</em><em>str</em><em>, </em><em>str</em><em>, </em><em>str</em><em>, </em><em>str</em><em>)</em>) &#8211; List of files where each file is a tuple of (absolute local path, workspace path for
+storing the file, media_type, output_name)</li>
 <li><strong>input_file_ids</strong> (<em>list of int</em>) &#8211; List of identifiers for files used to produce the given file entries</li>
 <li><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>) &#8211; The job_exe model with the related job and job_type fields</li>
 <li><strong>workspace</strong> (<a class="reference internal" href="storage.html#storage.models.Workspace" title="storage.models.Workspace"><code class="xref py py-class docutils literal"><span class="pre">storage.models.Workspace</span></code></a>) &#8211; The workspace to use for storing the product files</li>
