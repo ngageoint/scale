@@ -54,6 +54,9 @@ These services provide access to information about products that Scale has produ
 | job_type_category  | String            | Optional | Return only products with a given job type category.                |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
+| job_id             | Integer           | Optional | Return only products produced by the given job identifier.          |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
 | recipe_id          | Integer           | Optional | Return only products produced by the given recipe identifier.       |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
@@ -139,6 +142,10 @@ These services provide access to information about products that Scale has produ
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .unpublished       | ISO-8601 Datetime | When the product file was unpublished by Scale.                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
+| .source_started    | ISO-8601 Datetime | When collection of the underlying source file started.                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .source_ended      | ISO-8601 Datetime | When collection of the underlying source file ended.                           |
++--------------------+-------------------+--------------------------------------------------------------------------------+
 | .job_type          | JSON Object       | The type of job that generated the product.                                    |
 |                    |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -191,6 +198,8 @@ These services provide access to information about products that Scale has produ
 |                "has_been_published": true,                                                                              |
 |                "published": "1970-01-01T00:00:00Z",                                                                     |
 |                "unpublished": null,                                                                                     |
+|                "source_started": "1970-01-01T00:00:00Z",                                                                |
+|                "source_ended": "1970-01-02T00:00:00Z",                                                                  |
 |                "job_type": {                                                                                            |
 |                    "id": 8,                                                                                             |
 |                    "name": "kml-footprint",                                                                             |
