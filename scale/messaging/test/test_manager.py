@@ -54,7 +54,7 @@ class TestCommandMessageManager(TestCase):
         """Validate that send_message raises AttributeError when message type is not available"""
 
         class InvalidCommand(object):
-            def to_json(self):
+            def to_json(self):  # pragma: no cover
                 pass
 
         message = InvalidCommand()
@@ -80,10 +80,15 @@ class TestCommandMessageManager(TestCase):
         """Validate the receive_message calls _process_message with each result"""
 
         mocks = [MagicMock() for _ in range(10)]
+
+        def gen():
+            for mock in mocks:
+                yield mock
+
         manager = CommandMessageManager()
         manager._backend = MagicMock()
         process_message = manager._process_message = MagicMock()
-        manager._backend.receive_messages = MagicMock(return_value=mocks)
+        manager._backend.receive_messages = MagicMock(return_value=gen())
         manager.receive_messages()
 
         calls = [call(x) for x in mocks]

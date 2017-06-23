@@ -37,7 +37,6 @@ class MessagingBackend(object):
     def receive_messages(self, batch_size):
         """Receive a batch of messages from the backend
 
-
         Connections are not persisted across receive_messages calls. It is recommended that if a large
         number of messages are to be retrieved it be done directly in a single function call.
 

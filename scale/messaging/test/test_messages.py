@@ -19,14 +19,14 @@ class DummyMessage(CommandMessage):
     def __init__(self):
         super(DummyMessage, self).__init__('dummy')
 
-    def to_json(self):
+    def to_json(self):  # pragma: no cover
         pass
 
     @staticmethod
-    def from_json(self, message):
+    def from_json(self, message):  # pragma: no cover
         pass
 
-    def execute(self):
+    def execute(self):  # pragma: no cover
         pass
 
 
@@ -72,7 +72,7 @@ class TestChainedCommandMessage(TestCase):
         """Validate serialization of echo command message to json"""
 
         payload = {'test': 'value'}
-        message = EchoCommandMessage()
+        message = ChainCommandMessage()
         message._payload = payload
         self.assertEquals(message.to_json(), payload)
 

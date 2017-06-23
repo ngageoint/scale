@@ -23,10 +23,10 @@ class DummyBackend(MessagingBackend):
     def __init__(self):
         super(DummyBackend, self).__init__('dummy')
 
-    def send_messages(self, message):
+    def send_messages(self, message):  # pragma: no cover
         pass
 
-    def receive_messages(self, batch_size):
+    def receive_messages(self, batch_size):  # pragma: no cover
         pass
 
 
@@ -41,7 +41,7 @@ class TestAMQPBackend(TestCase):
         self.assertEqual(backend._timeout, 1)
 
     @patch('messaging.backends.amqp.Connection')
-    def test_valid_send_messages(self, connection):
+    def test_valid_send_message(self, connection):
         """Validate message is sent via the AMQP backend"""
 
         messages = [{'type': 'echo', 'body': 'yes'}]
@@ -83,9 +83,15 @@ class TestAMQPBackend(TestCase):
         connection.return_value.__enter__.return_value.SimpleQueue.return_value.get = get_func
 
         backend = AMQPMessagingBackend()
-        results = backend.receive_messages(5)
-        # wrap result in list to force generator iteration
-        results = list(results)
+        generator = backend.receive_messages(5)
+        results = []
+        try:
+            results = [generator.next()]
+            while True:
+                results.append(generator.send(True))
+        except StopIteration:
+            pass
+
         self.assertEqual(len(results), 2)
         message1.ack.assert_called()
         message2.ack.assert_called()
@@ -103,28 +109,39 @@ class TestAMQPBackend(TestCase):
         connection.return_value.__enter__.return_value.SimpleQueue.return_value.get = get_func
 
         backend = AMQPMessagingBackend()
-        results = backend.receive_messages(2)
+        generator = backend.receive_messages(2)
+        result = []
+        try:
+            results = [generator.next()]
+            while True:
+                results.append(generator.send(True))
+        except StopIteration:
+            pass
+
         # wrap result in list to force generator iteration
-        results = list(results)
         self.assertEqual(len(results), 2)
         message1.ack.assert_called()
         message2.ack.assert_called()
         message3.ack.assert_not_called()
 
     @patch('messaging.backends.amqp.Connection')
-    def test_exception_during_receive_message(self, connection):
-        """Validate exception handling during message consumption from AMQP backend"""
+    def test_false_result_during_receive_message_yield(self, connection):
+        """Validate message ack is not done with yield returns False in AMQP backend"""
 
         message = MagicMock()
-        message.payload.side_effect = Exception
-        get_func = MagicMock(return_value=[message])
+        message.payload = 'test'
+        get_func = MagicMock(return_value=message)
 
         # Deep diving through context managers to patch get call
         connection.return_value.__enter__.return_value.SimpleQueue.return_value.get = get_func
 
         backend = AMQPMessagingBackend()
 
-        for _ in backend.receive_messages(10):
+        generator = backend.receive_messages(10)
+        try:
+            for _ in generator:
+                generator.send(False)
+        except StopIteration:  # pragma: no cover
             pass
 
         message.ack.assert_not_called()
@@ -245,9 +262,16 @@ class TestSQSBackend(TestCase):
         client.return_value.__enter__.return_value.receive_messages = get_func
 
         backend = SQSMessagingBackend()
-        results = backend.receive_messages(5)
+        generator = backend.receive_messages(5)
+        results = []
+        try:
+            results = [generator.next()]
+            while True:
+                results.append(generator.send(True))
+        except StopIteration:
+            pass
+
         # wrap result in list to force generator iteration
-        results = list(results)
         self.assertEqual(len(results), 2)
         message1.delete.assert_called()
         message2.delete.assert_called()
@@ -257,14 +281,22 @@ class TestSQSBackend(TestCase):
         """Validate exception handling during message consumption from SQS backend"""
 
         message = MagicMock()
-        message.body.side_effect = Exception
+        value = {'test': 'thing'}
+        message.body = json.dumps(value)
         get_func = MagicMock(return_value=[message])
 
         client.return_value.__enter__.return_value.receive_messages = get_func
 
         backend = SQSMessagingBackend()
 
-        for _ in backend.receive_messages(10):
+        generator = backend.receive_messages(10)
+        results = []
+        try:
+            results = [generator.next()]
+            while True:
+                results.append(generator.send(False))
+        except StopIteration:
             pass
 
+        self.assertEquals(results, [value])
         message.delete.assert_not_called()

@@ -74,6 +74,7 @@ class CommandMessageManager(object):
                 except CommandMessageExecuteFailure:
                     logger.exception('CommandMessage failure during execute call. Message remains on queue.')
 
+                # Feed boolean to backend generator and grab next message
                 message = message_generator.send(success)
         except StopIteration:
             pass
