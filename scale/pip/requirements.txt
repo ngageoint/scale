@@ -8,6 +8,7 @@ Django>=1.11.0,<1.12.0
 djangorestframework>=3.6.2,<3.7.0
 elasticsearch>=2.4.0,<2.5
 jsonschema>=2.3,<2.4
+kombu>=4.0.2,<4.1
 mesos.interface>=0.21.1,<=0.25
 psycopg2>=2.7.1,<2.8.0
 PyJWT>=1.4,<=1.5

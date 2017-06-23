@@ -114,6 +114,70 @@ class SQSClient(AWSClient):
 
         return self._resource.get_queue_by_name(QueueName=queue_name)
 
+    def send_message(self, queue_name, message):
+        """Send a message to SQS queue.
+
+        :param queue_name: The unique name of the SQS queue
+        :type queue_name: string
+        :param message: Message to send to SQS queue
+        :type message: string
+        """
+
+        queue = self.get_queue_by_name(queue_name)
+
+        queue.send_message(MessageBody=message)
+
+    def send_messages(self, queue_name, messages):
+        """Send a batch of messages to SQS queue.
+
+        :param queue_name: The unique name of the SQS queue
+        :type queue_name: string
+        :param messages: Messages to send to SQS queue
+        :type messages: [`SendMessageBatchRequestEntry`]
+        """
+
+        queue = self.get_queue_by_name(queue_name)
+
+        batches = [messages[i:i + 10] for i in xrange(0, len(messages), 10)]
+
+        for batch in batches:
+            queue.send_messages(Entries=batch)
+
+    def receive_messages(self,
+                         queue_name,
+                         batch_size=100,
+                         wait_time_seconds=20,
+                         visibility_timeout_seconds=30):
+        """Receive a batch of messages from an SQS queue
+
+        :param queue_name:
+        :param batch_size: Number of messages to retrieve in a single pass
+        :type batch_size: int
+        :param wait_time_seconds: Long-poll duration of request (max of 20). Ends immediately when message published.
+        :type wait_time_seconds: int
+        :param visibility_timeout_seconds: Duration for a message to be hidden after retrieved from the queue.
+        :type visibility_timeout_seconds: int
+        :return: Generator of messages
+        :rtype: Generator[`boto3.sqs.Message`]
+        """
+        queue = self.get_queue_by_name(queue_name)
+
+        # Set max_messages to lesser of 10 or batch_size
+        max_messages = batch_size if batch_size < 10 else 10
+
+        # Generate individual batch sizes up to given size, capped at 10
+        count = 0
+        while count < batch_size:
+            for message in queue.receive_messages(MaxNumberOfMessages=max_messages,
+                                                  WaitTimeSeconds=wait_time_seconds,
+                                                  VisibilityTimeout=visibility_timeout_seconds):
+                count += 1
+                yield message
+
+            # If count isn't evenly divisible by ten or nothing came back, we're done
+            if count % 10 != 0 or not count:
+                break
+
 
 class S3Client(AWSClient):
     def __init__(self, credentials=None, region_name=None):

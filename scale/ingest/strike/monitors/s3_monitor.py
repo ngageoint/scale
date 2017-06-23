@@ -75,13 +75,12 @@ class S3Monitor(Monitor):
             self.reload_configuration()
 
             with SQSClient(self._credentials, self._region_name) as client:
-                queue = client.get_queue_by_name(self._sqs_name)
-
                 # For each new file we receive a notification about:
                 logger.debug('Beginning long-poll against queue with wait time of %s seconds.' % self.wait_time)
-                messages = queue.receive_messages(MaxNumberOfMessages=self.messages_per_request,
-                                                  WaitTimeSeconds=self.wait_time,
-                                                  VisibilityTimeout=self.visibility_timeout)
+                messages = client.receive_messages(self._sqs_name,
+                                                   batch_size=10,
+                                                   wait_time=self.wait_time,
+                                                   visibility_timeout=self.visibility_timeout)
 
                 for message in messages:
                     try:
@@ -124,7 +123,7 @@ class S3Monitor(Monitor):
 
         region_name = configuration.get('region_name')
 
-        # Check whether the bucket can actually be accessed
+        # Check whether the queue can actually be accessed
         with SQSClient(credentials, region_name) as client:
             try:
                 client.get_queue_by_name(configuration['sqs_name'])

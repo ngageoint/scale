@@ -47,7 +47,8 @@ ELASTICSEARCH_URLS = None
 ELASTICSEARCH = None
 
 # Broker URL for connection to messaging backend
-BROKER_URL = None
+BROKER_URL = 'amqp://guest:guest@localhost:5672//'
+QUEUE_NAME = 'scale-command-messages'
 
 # Base URL of vault or DCOS secrets store, or None to disable secrets
 SECRETS_URL = None
@@ -90,25 +91,27 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.gis',
     'rest_framework',
-    'util',
-    'mesos_api',
-    'error',
-    'trigger',
-    'node',
-    'storage',
-    'job',
-    'diagnostic',
-    'source',
-    'product',
-    'shared_resource',
-    'recipe',
-    'queue',
-    'ingest',
-    'scheduler',
-    'metrics',
-    'port',
-    'cli',
+    # Scale apps
     'batch',
+    'cli',
+    'diagnostic',
+    'error',
+    'ingest',
+    'job',
+    'mesos_api',
+    'messaging',
+    'metrics',
+    'node',
+    'port',
+    'product',
+    'queue',
+    'recipe',
+    'scheduler',
+    'shared_resource',
+    'source',
+    'storage',
+    'trigger',
+    'util',
     'vault'
 )
 

@@ -11,6 +11,7 @@ Architecture
    overview
    jobs/index
    logs
+   messaging
    port
    scan
    strike

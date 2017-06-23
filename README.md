@@ -59,6 +59,7 @@ Alternatively, your own local_settings.py can be volume mounted into `/opt/scale
 | LOGSTASH_DOCKER_IMAGE       | 'geoint/logstash-elastic-ha'    | Docker image for logstash                  |
 | MARATHON_APP_DOCKER_IMAGE   | 'geoint/scale'                  | Scale docker image name                    |
 | MESOS_MASTER_URL            | 'zk://localhost:2181/scale'     | Mesos master location                      |
+| SCALE_BROKER_URL            | None                            | broker configuration for messaging         |
 | SCALE_DB_HOST               | use link to `db` or 'localhost' | database host name                         |
 | SCALE_DB_NAME               | 'scale'                         | database name for scale                    |
 | SCALE_DB_PASS               | 'scale'                         | database login password                    |
@@ -68,6 +69,7 @@ Alternatively, your own local_settings.py can be volume mounted into `/opt/scale
 | SCALE_DOCKER_IMAGE          | 'geoint/scale'                  | Scale docker image name                    |
 | SCALE_ELASTICSEARCH_URLS    | None (auto-detected in DCOS)    | Comma-delimited Elasticsearch node URLs    |
 | SCALE_LOGGING_ADDRESS       | None                            | Logstash URL. By default set by bootstrap  |
+| SCALE_QUEUE_NAME            | 'scale-command-messages'        | Queue name for messaging backend           |
 | SCALE_WEBSERVER_CPU         | 1                               | UI/API CPU allocation during bootstrap     |
 | SCALE_WEBSERVER_MEMORY      | 2048                            | UI/API memory allocation during bootstrap  |
 | SCALE_ZK_URL                | None                            | Scale master location                      |
@@ -79,17 +81,20 @@ Scale Dependencies
 ==================
 Scale requires several external components to run as intended. PostgreSQL is used to store all internal system state
 and must be accessible to both the scheduler and web server processes. Logstash along with Elasticsearch are used to
-collect and store all algorithm logs. The following versions of these services are required to support Scale:
+collect and store all algorithm logs. A message broker is required for in-flight storage of internal Scale messages
+and must be accessible to all system components. The following versions of these services are required to support Scale:
 
 - Elasticsearch 2.4
 - Logstash 2.4
 - PostgreSQL 9.4+
 - PostGIS 2.0+
+- Message Broker (RabbitMQ 3.6+ or Amazon SQS)
 
 
-Note: We strongly recommend using managed services for both PostgreSQL (AWS RDS) and Elasticsearch (AWS Elasticsearch
-Service), if available to you. Use of these services in Docker containers should be avoided in all but development
-environments.
+Note: We strongly recommend using managed services for PostgreSQL (AWS RDS), Messaging (AWS SQS) and Elasticsearch 
+(AWS Elasticsearch Service), if available to you. Use of these services in Docker containers should be avoided
+in all but development environments. Reference the Architecture documentation for additional details on configuring
+supporting services.
 
 Quick Start
 ===========
