@@ -135,7 +135,8 @@ class RecipeData(object):
             if 'file_id' in data_input:
                 file_info.add((data_input['file_id'], data_input['name']))
             elif 'file_ids' in data_input:
-                file_info.update((data_input['file_ids'], data_input['name']))
+                for file_id in data_input['file_ids']:
+                    file_info.add((file_id, data_input['name']))
         return file_info
 
     def get_workspace_id(self):
