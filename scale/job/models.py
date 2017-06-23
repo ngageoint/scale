@@ -474,8 +474,8 @@ class JobManager(models.Manager):
         job_input = JobInputFile()
         job_input.job_id = job.id
         for input_file in data.get_input_file_info():           
-            job_input.input_file_id = input_file(0)
-            job_input.job_input = input_file(1)
+            job_input.input_file_id = input_file[0]
+            job_input.job_input = input_file[1]
             job_inputs.append(job_input)
         JobInputFile.objects.bulk_create(job_inputs)
 
