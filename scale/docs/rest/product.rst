@@ -148,6 +148,15 @@ These services provide access to information about products that Scale has produ
 | .job_exe           | JSON Object       | The specific job execution that generated the product.                         |
 |                    |                   | (See :ref:`Job Execution Details <rest_job_execution_details>`)                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
+| .recipe_type       | JSON Object       | The type of recipe that generated the product.                                 |
+|                    |                   | (See :ref:`Recipe Type Details <rest_recipe_type_details>`)                    |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .recipe            | JSON Object       | The recipe instance that generated the product.                                |
+|                    |                   | (See :ref:`Recipe Details <rest_recipe_details>`)                              |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .batch             | JSON Object       | The batch instance that generated the product.                                 |
+|                    |                   | (See :ref:`Batch Details <rest_batch_details>`)                                |
++--------------------+-------------------+--------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
 |    {                                                                                                                    |
@@ -156,32 +165,32 @@ These services provide access to information about products that Scale has produ
 |        "previous": null,                                                                                                |
 |        "results": [                                                                                                     |
 |            {                                                                                                            |
-|                "id": 465,                                                                                               | 
+|                "id": 465,                                                                                               |
 |                "workspace": {                                                                                           |
 |                    "id": 2,                                                                                             |
 |                    "name": "Products"                                                                                   |
 |                },                                                                                                       |
-|                "file_name": "my_file.kml",                                                                              | 
-|                "media_type": "application/vnd.google-earth.kml+xml",                                                    | 
-|                "file_size": 100,                                                                                        | 
+|                "file_name": "my_file.kml",                                                                              |
+|                "media_type": "application/vnd.google-earth.kml+xml",                                                    |
+|                "file_size": 100,                                                                                        |
 |                "data_type": [],                                                                                         |
 |                "is_deleted": false,                                                                                     |
-|                "uuid": "c8928d9183fc99122948e7840ec9a0fd",                                                              | 
-|                "url": "http://host.com/file/path/my_file.kml",                                                          | 
-|                "created": "1970-01-01T00:00:00Z",                                                                       | 
-|                "deleted": null,                                                                                         | 
-|                "data_started": null,                                                                                    | 
-|                "data_ended": null,                                                                                      | 
-|                "geometry": null,                                                                                        | 
-|                "center_point": null,                                                                                    | 
-|                "meta_data": {...},                                                                                      | 
-|                "countries": ["TCY", "TCT"],                                                                             | 
-|                "last_modified": "1970-01-01T00:00:00Z",                                                                 | 
-|                "is_operational": true,                                                                                  | 
-|                "is_published": true,                                                                                    | 
+|                "uuid": "c8928d9183fc99122948e7840ec9a0fd",                                                              |
+|                "url": "http://host.com/file/path/my_file.kml",                                                          |
+|                "created": "1970-01-01T00:00:00Z",                                                                       |
+|                "deleted": null,                                                                                         |
+|                "data_started": null,                                                                                    |
+|                "data_ended": null,                                                                                      |
+|                "geometry": null,                                                                                        |
+|                "center_point": null,                                                                                    |
+|                "meta_data": {...},                                                                                      |
+|                "countries": ["TCY", "TCT"],                                                                             |
+|                "last_modified": "1970-01-01T00:00:00Z",                                                                 |
+|                "is_operational": true,                                                                                  |
+|                "is_published": true,                                                                                    |
 |                "has_been_published": true,                                                                              |
 |                "published": "1970-01-01T00:00:00Z",                                                                     |
-|                "unpublished": null,                                                                                     | 
+|                "unpublished": null,                                                                                     |
 |                "job_type": {                                                                                            |
 |                    "id": 8,                                                                                             |
 |                    "name": "kml-footprint",                                                                             |
@@ -199,11 +208,30 @@ These services provide access to information about products that Scale has produ
 |                    "icon_code": "f0ac"                                                                                  |
 |                },                                                                                                       |
 |                "job": {                                                                                                 |
-|                    "id": 47                                                                                             | 
+|                    "id": 47                                                                                             |
 |                },                                                                                                       |
 |                "job_exe": {                                                                                             |
-|                    "id": 49                                                                                             | 
-|                }                                                                                                        |
+|                    "id": 49                                                                                             |
+|                },                                                                                                       |
+|                "recipe_type": {                                                                                         |
+|                    "id": 6,                                                                                             |
+|                    "name": "my-recipe",                                                                                 |
+|                    "version": "1.0.0",                                                                                  |
+|                    "title": "My Recipe",                                                                                |
+|                    "description": "Processes some data",                                                                |
+|                },                                                                                                       |
+|                "recipe": {                                                                                              |
+|                    "id": 60                                                                                             |
+|                },                                                                                                       |
+|                "batch": {                                                                                               |
+|                    "id": 15,                                                                                            |
+|                    "title": "My Batch",                                                                                 |
+|                    "description": "My batch of recipes",                                                                |
+|                    "status": "SUBMITTED",                                                                               |
+|                    "recipe_type": 6,                                                                                    |
+|                    "event": 19,                                                                                         |
+|                    "creator_job": 62,                                                                                   |
+|                },                                                                                                       |
 |            },                                                                                                           |
 |            ...                                                                                                          |
 |        ]                                                                                                                |
@@ -622,32 +650,32 @@ These services provide access to information about products that Scale has produ
 |        "previous": null,                                                                                                |
 |        "results": [                                                                                                     |
 |            {                                                                                                            |
-|                "id": 465,                                                                                               | 
+|                "id": 465,                                                                                               |
 |                "workspace": {                                                                                           |
 |                    "id": 2,                                                                                             |
 |                    "name": "Products"                                                                                   |
 |                },                                                                                                       |
-|                "file_name": "my_file.kml",                                                                              | 
-|                "media_type": "application/vnd.google-earth.kml+xml",                                                    | 
-|                "file_size": 100,                                                                                        | 
+|                "file_name": "my_file.kml",                                                                              |
+|                "media_type": "application/vnd.google-earth.kml+xml",                                                    |
+|                "file_size": 100,                                                                                        |
 |                "data_type": [],                                                                                         |
 |                "is_deleted": false,                                                                                     |
-|                "uuid": "c8928d9183fc99122948e7840ec9a0fd",                                                              | 
-|                "url": "http://host.com/file/path/my_file.kml",                                                          | 
-|                "created": "1970-01-01T00:00:00Z",                                                                       | 
-|                "deleted": null,                                                                                         | 
-|                "data_started": null,                                                                                    | 
-|                "data_ended": null,                                                                                      | 
-|                "geometry": null,                                                                                        | 
-|                "center_point": null,                                                                                    | 
-|                "meta_data": {...},                                                                                      | 
-|                "countries": ["TCY", "TCT"],                                                                             | 
-|                "last_modified": "1970-01-01T00:00:00Z",                                                                 | 
-|                "is_operational": true,                                                                                  | 
-|                "is_published": true,                                                                                    | 
+|                "uuid": "c8928d9183fc99122948e7840ec9a0fd",                                                              |
+|                "url": "http://host.com/file/path/my_file.kml",                                                          |
+|                "created": "1970-01-01T00:00:00Z",                                                                       |
+|                "deleted": null,                                                                                         |
+|                "data_started": null,                                                                                    |
+|                "data_ended": null,                                                                                      |
+|                "geometry": null,                                                                                        |
+|                "center_point": null,                                                                                    |
+|                "meta_data": {...},                                                                                      |
+|                "countries": ["TCY", "TCT"],                                                                             |
+|                "last_modified": "1970-01-01T00:00:00Z",                                                                 |
+|                "is_operational": true,                                                                                  |
+|                "is_published": true,                                                                                    |
 |                "has_been_published": true,                                                                              |
 |                "published": "1970-01-01T00:00:00Z",                                                                     |
-|                "unpublished": null,                                                                                     | 
+|                "unpublished": null,                                                                                     |
 |                "job_type": {                                                                                            |
 |                    "id": 8,                                                                                             |
 |                    "name": "kml-footprint",                                                                             |
@@ -665,39 +693,39 @@ These services provide access to information about products that Scale has produ
 |                    "icon_code": "f0ac"                                                                                  |
 |                },                                                                                                       |
 |                "job": {                                                                                                 |
-|                    "id": 47                                                                                             | 
+|                    "id": 47                                                                                             |
 |                },                                                                                                       |
 |                "job_exe": {                                                                                             |
-|                    "id": 49                                                                                             | 
+|                    "id": 49                                                                                             |
 |                },                                                                                                       |
 |                "update": {                                                                                              |
-|                    "action": "PUBLISHED",                                                                               | 
+|                    "action": "PUBLISHED",                                                                               |
 |                    "when": "1970-01-01T00:00:00Z"                                                                       |
 |                },                                                                                                       |
 |                "source_files": [                                                                                        |
 |                    {                                                                                                    |
-|                        "id": 464,                                                                                       | 
+|                        "id": 464,                                                                                       |
 |                        "workspace": {                                                                                   |
 |                            "id": 2,                                                                                     |
 |                            "name": "Raw Source"                                                                         |
 |                        },                                                                                               |
 |                        "file_name": "my_file.h5",                                                                       |
-|                        "media_type": "image/x-hdf5-image",                                                              | 
-|                        "file_size": 100,                                                                                | 
+|                        "media_type": "image/x-hdf5-image",                                                              |
+|                        "file_size": 100,                                                                                |
 |                        "data_type": [],                                                                                 |
-|                        "is_deleted": false,                                                                             | 
-|                        "uuid": "3d8e577bddb17db339eae0b3d9bcf180",                                                      | 
-|                        "url": "http://host.com/file/path/my_file.h5",                                                   | 
+|                        "is_deleted": false,                                                                             |
+|                        "uuid": "3d8e577bddb17db339eae0b3d9bcf180",                                                      |
+|                        "url": "http://host.com/file/path/my_file.h5",                                                   |
 |                        "created": "1970-01-01T00:00:00Z",                                                               |
-|                        "deleted": null,                                                                                 | 
-|                        "data_started": null,                                                                            | 
-|                        "data_ended": null,                                                                              | 
-|                        "geometry": null,                                                                                | 
-|                        "center_point": null,                                                                            | 
-|                        "meta_data": {...},                                                                              | 
-|                        "countries": ["TCY", "TCT"],                                                                     | 
+|                        "deleted": null,                                                                                 |
+|                        "data_started": null,                                                                            |
+|                        "data_ended": null,                                                                              |
+|                        "geometry": null,                                                                                |
+|                        "center_point": null,                                                                            |
+|                        "meta_data": {...},                                                                              |
+|                        "countries": ["TCY", "TCT"],                                                                     |
 |                        "last_modified": "1970-01-01T00:00:00Z",                                                         |
-|                        "is_parsed": true,                                                                               | 
+|                        "is_parsed": true,                                                                               |
 |                        "parsed": "1970-01-01T00:00:00Z"                                                                 |
 |                    }                                                                                                    |
 |                ]                                                                                                        |
