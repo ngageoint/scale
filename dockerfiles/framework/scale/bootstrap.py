@@ -341,14 +341,6 @@ def deploy_rabbitmq(client, app_name):
                     "timeoutSeconds": 20,
                     "maxConsecutiveFailures": 3,
                     "portIndex": 0
-                },
-                {
-                    "protocol": "TCP",
-                    "gracePeriodSeconds": 300,
-                    "intervalSeconds": 60,
-                    "timeoutSeconds": 20,
-                    "maxConsecutiveFailures": 3,
-                    "portIndex": 1
                 }
             ],
             'uris': []
