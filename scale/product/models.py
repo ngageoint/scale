@@ -480,7 +480,7 @@ class ProductFileManager(models.GeoManager):
         input_products_operational = all([f.is_operational for f in input_products])
 
         # Compute the overall start and stop times for all file_entries
-        source_files = ScaleFile.objects.filter(id__in=[f['id'] for f in input_files], file_type='SOURCE')
+        source_files = FileAncestryLink.objects.get_source_ancestors([f['id'] for f in input_files])
         start_times = [f.data_started for f in source_files]
         end_times = [f.data_ended for f in source_files]
         start_times.sort()
