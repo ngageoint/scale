@@ -1,0 +1,17 @@
+messaging\.management package
+=============================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    messaging.management.commands
+
+Module contents
+---------------
+
+.. automodule:: messaging.management
+    :members:
+    :undoc-members:
+    :show-inheritance:

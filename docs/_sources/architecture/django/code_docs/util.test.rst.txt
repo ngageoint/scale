@@ -12,6 +12,14 @@ util\.test\.test\_aws module
     :undoc-members:
     :show-inheritance:
 
+util\.test\.test\_broker module
+-------------------------------
+
+.. automodule:: util.test.test_broker
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 util\.test\.test\_parse module
 ------------------------------
 

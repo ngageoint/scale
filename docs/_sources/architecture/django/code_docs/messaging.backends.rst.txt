@@ -1,0 +1,46 @@
+messaging\.backends package
+===========================
+
+Submodules
+----------
+
+messaging\.backends\.amqp module
+--------------------------------
+
+.. automodule:: messaging.backends.amqp
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+messaging\.backends\.backend module
+-----------------------------------
+
+.. automodule:: messaging.backends.backend
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+messaging\.backends\.factory module
+-----------------------------------
+
+.. automodule:: messaging.backends.factory
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+messaging\.backends\.sqs module
+-------------------------------
+
+.. automodule:: messaging.backends.sqs
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: messaging.backends
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,0 +1,310 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Messaging System &mdash; Scale 5.0.0-snapshot documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="Scale 5.0.0-snapshot documentation" href="../index.html"/>
+        <link rel="up" title="Architecture" href="index.html"/>
+        <link rel="next" title="Import/Export" href="port.html"/>
+        <link rel="prev" title="ElasticSearch Logs" href="logs.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../_static/scale3-transparent-128.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jobs/index.html">Jobs and Recipes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logs.html">ElasticSearch Logs</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Messaging System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#amazon-sqs">Amazon SQS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rabbitmq">RabbitMQ</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scan.html">Scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="strike.html">Strike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workspaces.html">Workspaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="django/index.html">Django/Code Base</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../rest/index.html">REST API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Scale</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Architecture</a> &raquo;</li>
+        
+      <li>Messaging System</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/architecture/messaging.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="messaging-system">
+<span id="architecture-messaging"></span><h1>Messaging System<a class="headerlink" href="#messaging-system" title="Permalink to this headline">¶</a></h1>
+<p>Scale uses a message passing interface to minimize direct communication between internal support processes
+and the authoritative PostgreSQL database. This enables high job volume while limiting database connections
+to a small number of workers responsible for persisting system state.</p>
+<p>We presently support two message brokers within Scale: Amazon SQS and RabbitMQ. RabbitMQ is deployed by default when installing
+from the DCOS Universe package. While this will get you up and running quickly, it should never be relied on for a production cluster.
+Our general recommendation is to use Amazon SQS, as this will require the least maintenence.</p>
+<p><em>SCALE_BROKER_URL</em> environment variable is used by Scale to configure your chosen message broker. When left unset, RabbitMQ will be deployed alongside.
+Specific examples of this format will be given for each message broker below. This variable is provided in the format:</p>
+<p><code class="docutils literal"><span class="pre">transport://[userid:password&#64;]hostname[:port]//</span></code></p>
+<p><em>SCALE_QUEUE_NAME</em> environment variable is used to modify the default queue name of <code class="docutils literal"><span class="pre">scale-command-messages</span></code>. It applies to all message brokers.</p>
+<div class="section" id="amazon-sqs">
+<h2>Amazon SQS<a class="headerlink" href="#amazon-sqs" title="Permalink to this headline">¶</a></h2>
+<p>Using Amazon SQS requires the following prerequisites to use within Scale:</p>
+<ul class="simple">
+<li>Identified region for SQS (us-east-1, us-west-1, etc.)</li>
+<li>SQS queue created within the above region</li>
+<li>IAM Policy with full access to above queue</li>
+<li>Either API Keys or an EC2 instance with IAM Role that have above IAM Policy attached</li>
+</ul>
+<p>The following sample IAM Policy file would provide complete access to the scale-command-messages SQS:</p>
+<p>If you are using API keys the Access Key ID and Secret Access Key will be placed in the SCALE_BROKER_URL userid and password placeholders respectively. When using IAM roles,
+this section can be entirely omitted. Based on the above examples your environment variables passed to Scale should be set as follows:</p>
+<p><strong>API Keys:</strong></p>
+<p>SCALE_BROKER_URL: <code class="docutils literal"><span class="pre">sqs://accesskeyid:secretaccesskey&#64;us-east-1//</span></code>
+SCALE_QUEUE_NAME: <code class="docutils literal"><span class="pre">scale-command-message</span></code></p>
+<p><strong>IAM Roles:</strong></p>
+<p>SCALE_BROKER_URL: <code class="docutils literal"><span class="pre">sqs://us-east-1//</span></code>
+SCALE_QUEUE_NAME: <code class="docutils literal"><span class="pre">scale-command-message</span></code></p>
+</div>
+<div class="section" id="rabbitmq">
+<h2>RabbitMQ<a class="headerlink" href="#rabbitmq" title="Permalink to this headline">¶</a></h2>
+<p>Using RabbitMQ is the current option for on-premise Scale deployments. While Scale will deploy RabbitMQ automatically during launch if <em>SCALE_BROKER_URL</em> is unset,
+this should never be relied on for anything beyond demonstration purposes. The default RabbitMQ deployment has no mounted persistent storage, so all messages in the
+broker will be lost if there is a container restart.</p>
+<p>Using RabbitMQ requires the following prerequisites to use within Scale:</p>
+<ul class="simple">
+<li>Running RabbitMQ 3.6+ instance</li>
+<li>User name and password to authenticate to RabbitMQ</li>
+</ul>
+<p>The easiest route to RabbitMQ deployment would just be to deploy into Marathon alongside Scale. The following sample marathon.json would be a reasonable starting point:</p>
+<p>The above configuration will generate a persistent storage volume (1GiB) and pin RabbitMQ to that node. This will protect you from data loss
+as long as that node remains in your cluster. Setting up a truly fault tolerant RabbitMQ cluster is outside the scope of this guide.</p>
+<p>To configure Scale to use the RabbitMQ deployed as described above we need to set environment variables as below:</p>
+<p>SCALE_BROKER_URL: <code class="docutils literal"><span class="pre">amqp://guest:guest&#64;rabbitmq.marathon.mesos:5672</span></code></p>
+<p><em>SCALE_QUEUE_NAME</em> can be left unset if the default <code class="docutils literal"><span class="pre">scale-command-messages</span></code> value is satisfactory.</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="port.html" class="btn btn-neutral float-right" title="Import/Export" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="logs.html" class="btn btn-neutral" title="ElasticSearch Logs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'5.0.0-snapshot',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

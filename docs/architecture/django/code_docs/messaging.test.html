@@ -1,0 +1,735 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>messaging.test package &mdash; Scale 5.0.0-snapshot documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="Scale 5.0.0-snapshot documentation" href="../../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../../../_static/scale3-transparent-128.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rest/index.html">REST API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Scale</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>messaging.test package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/architecture/django/code_docs/messaging.test.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="messaging-test-package">
+<h1>messaging.test package<a class="headerlink" href="#messaging-test-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-messaging.test.test_apps">
+<span id="messaging-test-test-apps-module"></span><h2>messaging.test.test_apps module<a class="headerlink" href="#module-messaging.test.test_apps" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="messaging.test.test_apps.TestMessagingConfig">
+<em class="property">class </em><code class="descclassname">messaging.test.test_apps.</code><code class="descname">TestMessagingConfig</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_apps.TestMessagingConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="messaging.test.test_apps.TestMessagingConfig.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_apps.TestMessagingConfig.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_apps.TestMessagingConfig.test_ready">
+<code class="descname">test_ready</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_apps.TestMessagingConfig.test_ready" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate backends and message type registration has been done.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>add_message_type</strong> &#8211; mock for adding message types</li>
+<li><strong>add_message_backends</strong> &#8211; mock for adding messaging backends</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-messaging.test.test_backends">
+<span id="messaging-test-test-backends-module"></span><h2>messaging.test.test_backends module<a class="headerlink" href="#module-messaging.test.test_backends" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="messaging.test.test_backends.DummyBackend">
+<em class="property">class </em><code class="descclassname">messaging.test.test_backends.</code><code class="descname">DummyBackend</code><a class="headerlink" href="#messaging.test.test_backends.DummyBackend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="messaging.backends.html#messaging.backends.backend.MessagingBackend" title="messaging.backends.backend.MessagingBackend"><code class="xref py py-class docutils literal"><span class="pre">messaging.backends.backend.MessagingBackend</span></code></a></p>
+<dl class="method">
+<dt id="messaging.test.test_backends.DummyBackend.receive_messages">
+<code class="descname">receive_messages</code><span class="sig-paren">(</span><em>batch_size</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_backends.DummyBackend.receive_messages" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_backends.DummyBackend.send_messages">
+<code class="descname">send_messages</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_backends.DummyBackend.send_messages" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="messaging.test.test_backends.TestAMQPBackend">
+<em class="property">class </em><code class="descclassname">messaging.test.test_backends.</code><code class="descname">TestAMQPBackend</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_backends.TestAMQPBackend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="messaging.test.test_backends.TestAMQPBackend.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_backends.TestAMQPBackend.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_backends.TestAMQPBackend.test_false_result_during_receive_message_yield">
+<code class="descname">test_false_result_during_receive_message_yield</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_backends.TestAMQPBackend.test_false_result_during_receive_message_yield" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate message ack is not done with yield returns False in AMQP backend</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_backends.TestAMQPBackend.test_valid_init">
+<code class="descname">test_valid_init</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_backends.TestAMQPBackend.test_valid_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate initialization specific to AMQP backend is completed</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_backends.TestAMQPBackend.test_valid_receive_messages">
+<code class="descname">test_valid_receive_messages</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_backends.TestAMQPBackend.test_valid_receive_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate successful message retrieval via AMQP backend</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_backends.TestAMQPBackend.test_valid_send_message">
+<code class="descname">test_valid_send_message</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_backends.TestAMQPBackend.test_valid_send_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate message is sent via the AMQP backend</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_backends.TestAMQPBackend.test_valid_send_messages">
+<code class="descname">test_valid_send_messages</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_backends.TestAMQPBackend.test_valid_send_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate message is sent via the AMQP backend</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_backends.TestAMQPBackend.test_valid_single_batch_receive_message">
+<code class="descname">test_valid_single_batch_receive_message</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_backends.TestAMQPBackend.test_valid_single_batch_receive_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate successful message retrieval via AMQP backend of first 2 messages</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="messaging.test.test_backends.TestBackendsFactory">
+<em class="property">class </em><code class="descclassname">messaging.test.test_backends.</code><code class="descname">TestBackendsFactory</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_backends.TestBackendsFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="messaging.test.test_backends.TestBackendsFactory.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_backends.TestBackendsFactory.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_backends.TestBackendsFactory.test_add_message_backend">
+<code class="descname">test_add_message_backend</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_backends.TestBackendsFactory.test_add_message_backend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate add message backend functionality</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_backends.TestBackendsFactory.test_get_message_backends">
+<code class="descname">test_get_message_backends</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_backends.TestBackendsFactory.test_get_message_backends" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate listing behavior of backends from factory</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_backends.TestBackendsFactory.test_successfully_get_message_backend">
+<code class="descname">test_successfully_get_message_backend</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_backends.TestBackendsFactory.test_successfully_get_message_backend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate successful retrieval of message backend from factory</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_backends.TestBackendsFactory.test_unmatched_get_message_backend">
+<code class="descname">test_unmatched_get_message_backend</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_backends.TestBackendsFactory.test_unmatched_get_message_backend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate missing message backend behavior from factory</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="messaging.test.test_backends.TestMessagingBackend">
+<em class="property">class </em><code class="descclassname">messaging.test.test_backends.</code><code class="descname">TestMessagingBackend</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_backends.TestMessagingBackend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="messaging.test.test_backends.TestMessagingBackend.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_backends.TestMessagingBackend.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_backends.TestMessagingBackend.test_valid_init">
+<code class="descname">test_valid_init</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_backends.TestMessagingBackend.test_valid_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate correct initialization of backend internal properties</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="messaging.test.test_backends.TestSQSBackend">
+<em class="property">class </em><code class="descclassname">messaging.test.test_backends.</code><code class="descname">TestSQSBackend</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_backends.TestSQSBackend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="messaging.test.test_backends.TestSQSBackend.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_backends.TestSQSBackend.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_backends.TestSQSBackend.test_exception_during_receive_messages">
+<code class="descname">test_exception_during_receive_messages</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_backends.TestSQSBackend.test_exception_during_receive_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate exception handling during message consumption from SQS backend</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_backends.TestSQSBackend.test_valid_init">
+<code class="descname">test_valid_init</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_backends.TestSQSBackend.test_valid_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate initialization specific to SQS backend is completed</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_backends.TestSQSBackend.test_valid_multiple_send_messages">
+<code class="descname">test_valid_multiple_send_messages</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_backends.TestSQSBackend.test_valid_multiple_send_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate message is sent via the SQS backend</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_backends.TestSQSBackend.test_valid_receive_messages">
+<code class="descname">test_valid_receive_messages</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_backends.TestSQSBackend.test_valid_receive_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate successful message retrieval via SQS backend</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_backends.TestSQSBackend.test_valid_single_send_messages">
+<code class="descname">test_valid_single_send_messages</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_backends.TestSQSBackend.test_valid_single_send_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate message is sent via the SQS backend</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-messaging.test.test_manager">
+<span id="messaging-test-test-manager-module"></span><h2>messaging.test.test_manager module<a class="headerlink" href="#module-messaging.test.test_manager" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="messaging.test.test_manager.TestCommandMessageManager">
+<em class="property">class </em><code class="descclassname">messaging.test.test_manager.</code><code class="descname">TestCommandMessageManager</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_manager.TestCommandMessageManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="messaging.test.test_manager.TestCommandMessageManager.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_manager.TestCommandMessageManager.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_manager.TestCommandMessageManager.tearDown">
+<code class="descname">tearDown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_manager.TestCommandMessageManager.tearDown" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_manager.TestCommandMessageManager.test_failing_process_message">
+<code class="descname">test_failing_process_message</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_manager.TestCommandMessageManager.test_failing_process_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate logic for a process message failing in process execution</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_manager.TestCommandMessageManager.test_missing_body_extract_command">
+<code class="descname">test_missing_body_extract_command</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_manager.TestCommandMessageManager.test_missing_body_extract_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate InvalidCommandMessage is raised when missing body key</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_manager.TestCommandMessageManager.test_missing_type_extract_command">
+<code class="descname">test_missing_type_extract_command</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_manager.TestCommandMessageManager.test_missing_type_extract_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate InvalidCommandMessage is raised when missing type key</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_manager.TestCommandMessageManager.test_no_message_send_downstream">
+<code class="descname">test_no_message_send_downstream</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_manager.TestCommandMessageManager.test_no_message_send_downstream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate send_message is not called when messages is empty</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_manager.TestCommandMessageManager.test_no_registered_type_extract_command">
+<code class="descname">test_no_registered_type_extract_command</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_manager.TestCommandMessageManager.test_no_registered_type_extract_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate InvalidCommandMessage is raised when no type matches</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_manager.TestCommandMessageManager.test_receive_message">
+<code class="descname">test_receive_message</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_manager.TestCommandMessageManager.test_receive_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate the receive_message calls _process_message with each result</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_manager.TestCommandMessageManager.test_send_message">
+<code class="descname">test_send_message</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_manager.TestCommandMessageManager.test_send_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate that send_message composes dict with <cite>type</cite> and <cite>body</cite> keys for backend</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_manager.TestCommandMessageManager.test_send_message_no_serializer">
+<code class="descname">test_send_message_no_serializer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_manager.TestCommandMessageManager.test_send_message_no_serializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate that send_message raises AttributeError when to_json is not available</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_manager.TestCommandMessageManager.test_send_messages_no_type">
+<code class="descname">test_send_messages_no_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_manager.TestCommandMessageManager.test_send_messages_no_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate that send_message raises AttributeError when message type is not available</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_manager.TestCommandMessageManager.test_successful_process_message">
+<code class="descname">test_successful_process_message</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_manager.TestCommandMessageManager.test_successful_process_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate logic for a successful command process</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_manager.TestCommandMessageManager.test_successful_send_downstream">
+<code class="descname">test_successful_send_downstream</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_manager.TestCommandMessageManager.test_successful_send_downstream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate call of send_message for each downstream message</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_manager.TestCommandMessageManager.test_valid_extract_command">
+<code class="descname">test_valid_extract_command</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_manager.TestCommandMessageManager.test_valid_extract_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate a successful _extract_command call instantiation of CommandMessage class from payload</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-messaging.test.test_manager_singleton">
+<span id="messaging-test-test-manager-singleton-module"></span><h2>messaging.test.test_manager_singleton module<a class="headerlink" href="#module-messaging.test.test_manager_singleton" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="messaging.test.test_manager_singleton.TestSingletonCommandMessageManager">
+<em class="property">class </em><code class="descclassname">messaging.test.test_manager_singleton.</code><code class="descname">TestSingletonCommandMessageManager</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_manager_singleton.TestSingletonCommandMessageManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="messaging.test.test_manager_singleton.TestSingletonCommandMessageManager.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_manager_singleton.TestSingletonCommandMessageManager.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_manager_singleton.TestSingletonCommandMessageManager.test_receive_message_execute_failure">
+<code class="descname">test_receive_message_execute_failure</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_manager_singleton.TestSingletonCommandMessageManager.test_receive_message_execute_failure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exercise all exception code paths within receive_message</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_manager_singleton.TestSingletonCommandMessageManager.test_receive_message_invalid_message">
+<code class="descname">test_receive_message_invalid_message</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_manager_singleton.TestSingletonCommandMessageManager.test_receive_message_invalid_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exercise all exception code paths within receive_message</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_manager_singleton.TestSingletonCommandMessageManager.test_verify_singleton">
+<code class="descname">test_verify_singleton</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_manager_singleton.TestSingletonCommandMessageManager.test_verify_singleton" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate that multiple instantiation attempts result in single instance</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-messaging.test.test_messages">
+<span id="messaging-test-test-messages-module"></span><h2>messaging.test.test_messages module<a class="headerlink" href="#module-messaging.test.test_messages" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="messaging.test.test_messages.DummyMessage">
+<em class="property">class </em><code class="descclassname">messaging.test.test_messages.</code><code class="descname">DummyMessage</code><a class="headerlink" href="#messaging.test.test_messages.DummyMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="messaging.messages.html#messaging.messages.message.CommandMessage" title="messaging.messages.message.CommandMessage"><code class="xref py py-class docutils literal"><span class="pre">messaging.messages.message.CommandMessage</span></code></a></p>
+<dl class="method">
+<dt id="messaging.test.test_messages.DummyMessage.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_messages.DummyMessage.execute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="messaging.test.test_messages.DummyMessage.from_json">
+<em class="property">static </em><code class="descname">from_json</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_messages.DummyMessage.from_json" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_messages.DummyMessage.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_messages.DummyMessage.to_json" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="messaging.test.test_messages.TestChainedCommandMessage">
+<em class="property">class </em><code class="descclassname">messaging.test.test_messages.</code><code class="descname">TestChainedCommandMessage</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_messages.TestChainedCommandMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="messaging.test.test_messages.TestChainedCommandMessage.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_messages.TestChainedCommandMessage.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_messages.TestChainedCommandMessage.test_valid_execute">
+<code class="descname">test_valid_execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_messages.TestChainedCommandMessage.test_valid_execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate message execution logic with downstream messages for echo command</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_messages.TestChainedCommandMessage.test_valid_from_json">
+<code class="descname">test_valid_from_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_messages.TestChainedCommandMessage.test_valid_from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate instantiation of echo command message from json</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_messages.TestChainedCommandMessage.test_valid_init">
+<code class="descname">test_valid_init</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_messages.TestChainedCommandMessage.test_valid_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate correct initialization of messages internal properties</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_messages.TestChainedCommandMessage.test_valid_to_json">
+<code class="descname">test_valid_to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_messages.TestChainedCommandMessage.test_valid_to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate serialization of echo command message to json</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="messaging.test.test_messages.TestCommandMessage">
+<em class="property">class </em><code class="descclassname">messaging.test.test_messages.</code><code class="descname">TestCommandMessage</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_messages.TestCommandMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="messaging.test.test_messages.TestCommandMessage.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_messages.TestCommandMessage.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_messages.TestCommandMessage.test_valid_init">
+<code class="descname">test_valid_init</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_messages.TestCommandMessage.test_valid_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate correct initialization of messages internal properties</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="messaging.test.test_messages.TestEchoCommandMessage">
+<em class="property">class </em><code class="descclassname">messaging.test.test_messages.</code><code class="descname">TestEchoCommandMessage</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_messages.TestEchoCommandMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="messaging.test.test_messages.TestEchoCommandMessage.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_messages.TestEchoCommandMessage.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_messages.TestEchoCommandMessage.test_valid_execute">
+<code class="descname">test_valid_execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_messages.TestEchoCommandMessage.test_valid_execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate message execution logic with downstream messages for echo command</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_messages.TestEchoCommandMessage.test_valid_from_json">
+<code class="descname">test_valid_from_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_messages.TestEchoCommandMessage.test_valid_from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate instantiation of echo command message from json</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_messages.TestEchoCommandMessage.test_valid_init">
+<code class="descname">test_valid_init</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_messages.TestEchoCommandMessage.test_valid_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate correct initialization of messages internal properties</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_messages.TestEchoCommandMessage.test_valid_to_json">
+<code class="descname">test_valid_to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_messages.TestEchoCommandMessage.test_valid_to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate serialization of echo command message to json</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="messaging.test.test_messages.TestFailingCommandMessage">
+<em class="property">class </em><code class="descclassname">messaging.test.test_messages.</code><code class="descname">TestFailingCommandMessage</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_messages.TestFailingCommandMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="messaging.test.test_messages.TestFailingCommandMessage.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_messages.TestFailingCommandMessage.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_messages.TestFailingCommandMessage.test_valid_execute">
+<code class="descname">test_valid_execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_messages.TestFailingCommandMessage.test_valid_execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate message execution logic with downstream messages for echo command</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_messages.TestFailingCommandMessage.test_valid_from_json">
+<code class="descname">test_valid_from_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_messages.TestFailingCommandMessage.test_valid_from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate instantiation of echo command message from json</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_messages.TestFailingCommandMessage.test_valid_init">
+<code class="descname">test_valid_init</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_messages.TestFailingCommandMessage.test_valid_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate correct initialization of messages internal properties</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_messages.TestFailingCommandMessage.test_valid_to_json">
+<code class="descname">test_valid_to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_messages.TestFailingCommandMessage.test_valid_to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate serialization of echo command message to json</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="messaging.test.test_messages.TestMessagesFactory">
+<em class="property">class </em><code class="descclassname">messaging.test.test_messages.</code><code class="descname">TestMessagesFactory</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_messages.TestMessagesFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="messaging.test.test_messages.TestMessagesFactory.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_messages.TestMessagesFactory.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_messages.TestMessagesFactory.test_add_message_type">
+<code class="descname">test_add_message_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_messages.TestMessagesFactory.test_add_message_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate add message type functionality</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_messages.TestMessagesFactory.test_get_message_backends">
+<code class="descname">test_get_message_backends</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_messages.TestMessagesFactory.test_get_message_backends" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate listing behavior of types from factory</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_messages.TestMessagesFactory.test_successfully_get_message_backend">
+<code class="descname">test_successfully_get_message_backend</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_messages.TestMessagesFactory.test_successfully_get_message_backend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate successful retrieval of message type from factory</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.test.test_messages.TestMessagesFactory.test_unmatched_get_message_backend">
+<code class="descname">test_unmatched_get_message_backend</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.test.test_messages.TestMessagesFactory.test_unmatched_get_message_backend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate missing message type behavior of factory</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-messaging.test">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-messaging.test" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'5.0.0-snapshot',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

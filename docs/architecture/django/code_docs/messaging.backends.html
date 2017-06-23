@@ -1,0 +1,382 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>messaging.backends package &mdash; Scale 5.0.0-snapshot documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="Scale 5.0.0-snapshot documentation" href="../../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../../../_static/scale3-transparent-128.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rest/index.html">REST API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Scale</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>messaging.backends package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/architecture/django/code_docs/messaging.backends.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="messaging-backends-package">
+<h1>messaging.backends package<a class="headerlink" href="#messaging-backends-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-messaging.backends.amqp">
+<span id="messaging-backends-amqp-module"></span><h2>messaging.backends.amqp module<a class="headerlink" href="#module-messaging.backends.amqp" title="Permalink to this headline">¶</a></h2>
+<p>Backend supporting AMQP 0.9.1, specifically targeting RabbitMQ message broker</p>
+<dl class="class">
+<dt id="messaging.backends.amqp.AMQPMessagingBackend">
+<em class="property">class </em><code class="descclassname">messaging.backends.amqp.</code><code class="descname">AMQPMessagingBackend</code><a class="headerlink" href="#messaging.backends.amqp.AMQPMessagingBackend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#messaging.backends.backend.MessagingBackend" title="messaging.backends.backend.MessagingBackend"><code class="xref py py-class docutils literal"><span class="pre">messaging.backends.backend.MessagingBackend</span></code></a></p>
+<p>Backend supporting message passing via AMQP 0.9.1 broker, targeting RabbitMQ</p>
+<dl class="method">
+<dt id="messaging.backends.amqp.AMQPMessagingBackend.receive_messages">
+<code class="descname">receive_messages</code><span class="sig-paren">(</span><em>batch_size</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.backends.amqp.AMQPMessagingBackend.receive_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#messaging.backends.backend.MessagingBackend.receive_messages" title="messaging.backends.backend.MessagingBackend.receive_messages"><code class="xref py py-meth docutils literal"><span class="pre">messaging.backends.backend.MessagingBackend.receive_messages()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.backends.amqp.AMQPMessagingBackend.send_messages">
+<code class="descname">send_messages</code><span class="sig-paren">(</span><em>messages</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.backends.amqp.AMQPMessagingBackend.send_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#messaging.backends.backend.MessagingBackend.send_messages" title="messaging.backends.backend.MessagingBackend.send_messages"><code class="xref py py-meth docutils literal"><span class="pre">messaging.backends.backend.MessagingBackend.send_messages()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-messaging.backends.backend">
+<span id="messaging-backends-backend-module"></span><h2>messaging.backends.backend module<a class="headerlink" href="#module-messaging.backends.backend" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="messaging.backends.backend.MessagingBackend">
+<em class="property">class </em><code class="descclassname">messaging.backends.backend.</code><code class="descname">MessagingBackend</code><span class="sig-paren">(</span><em>backend_type</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.backends.backend.MessagingBackend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="messaging.backends.backend.MessagingBackend.receive_messages">
+<code class="descname">receive_messages</code><span class="sig-paren">(</span><em>batch_size</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.backends.backend.MessagingBackend.receive_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Receive a batch of messages from the backend</p>
+<p>Connections are not persisted across receive_messages calls. It is recommended that if a large
+number of messages are to be retrieved it be done directly in a single function call.</p>
+<p>Implementing function must yield messages from backend. Messages must be
+in dict form. It is also the responsibility of the function to handle a boolean response
+and appropriately acknowledge / delete message on True</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>batch_size</strong> (<em>int</em>) &#8211; Number of messages to be processed</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Yielded list of messages</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Generator[dict]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.backends.backend.MessagingBackend.send_messages">
+<code class="descname">send_messages</code><span class="sig-paren">(</span><em>messages</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.backends.backend.MessagingBackend.send_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a collection of messages to the backend</p>
+<p>Connections are not persisted across send_messages calls. It is recommended that if a large
+number of messages are to be sent it be done directly in a single function call.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>messages</strong> (<em>[</em><em>dict</em><em>]</em>) &#8211; JSON payload of messages</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-messaging.backends.factory">
+<span id="messaging-backends-factory-module"></span><h2>messaging.backends.factory module<a class="headerlink" href="#module-messaging.backends.factory" title="Permalink to this headline">¶</a></h2>
+<p>Defines the factory for creating messaging backends</p>
+<dl class="function">
+<dt id="messaging.backends.factory.add_message_backend">
+<code class="descclassname">messaging.backends.factory.</code><code class="descname">add_message_backend</code><span class="sig-paren">(</span><em>backend_class</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.backends.factory.add_message_backend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers a backend so it can be used for Scale messaging</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>backend_class</strong> (class:<cite>messaging.backends.Backend</cite>) &#8211; The class definition for a backend</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="messaging.backends.factory.get_message_backend">
+<code class="descclassname">messaging.backends.factory.</code><code class="descname">get_message_backend</code><span class="sig-paren">(</span><em>backend_type</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.backends.factory.get_message_backend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a backend class of the given type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>backend_type</strong> (<em>string</em>) &#8211; The unique identifier of a registered message backend</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="messaging.backends.factory.get_message_backends">
+<code class="descclassname">messaging.backends.factory.</code><code class="descname">get_message_backends</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.backends.factory.get_message_backends" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of type identifiers for all registered message backends</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of messages backends</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[string]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-messaging.backends.sqs">
+<span id="messaging-backends-sqs-module"></span><h2>messaging.backends.sqs module<a class="headerlink" href="#module-messaging.backends.sqs" title="Permalink to this headline">¶</a></h2>
+<p>Backend supporting Amazon SQS</p>
+<dl class="class">
+<dt id="messaging.backends.sqs.SQSMessagingBackend">
+<em class="property">class </em><code class="descclassname">messaging.backends.sqs.</code><code class="descname">SQSMessagingBackend</code><a class="headerlink" href="#messaging.backends.sqs.SQSMessagingBackend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#messaging.backends.backend.MessagingBackend" title="messaging.backends.backend.MessagingBackend"><code class="xref py py-class docutils literal"><span class="pre">messaging.backends.backend.MessagingBackend</span></code></a></p>
+<p>Backend supporting message passing via Amazon SQS</p>
+<dl class="method">
+<dt id="messaging.backends.sqs.SQSMessagingBackend.receive_messages">
+<code class="descname">receive_messages</code><span class="sig-paren">(</span><em>batch_size</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.backends.sqs.SQSMessagingBackend.receive_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#messaging.backends.backend.MessagingBackend.receive_messages" title="messaging.backends.backend.MessagingBackend.receive_messages"><code class="xref py py-meth docutils literal"><span class="pre">messaging.backends.backend.MessagingBackend.receive_messages()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.backends.sqs.SQSMessagingBackend.send_messages">
+<code class="descname">send_messages</code><span class="sig-paren">(</span><em>messages</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.backends.sqs.SQSMessagingBackend.send_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>See:meth:<cite>messaging.backends.backend.MessagingBackend.send_messages</cite></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-messaging.backends">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-messaging.backends" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'5.0.0-snapshot',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

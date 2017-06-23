@@ -104,6 +104,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../logs.html">ElasticSearch Logs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../messaging.html">Messaging System</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../scan.html">Scan</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
@@ -133,6 +134,7 @@
 <li class="toctree-l4"><a class="reference internal" href="util.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="util.html#module-util.apps">util.apps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="util.html#module-util.aws">util.aws module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="util.html#module-util.broker">util.broker module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="util.html#module-util.command">util.command module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="util.html#module-util.deprecation">util.deprecation module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="util.html#module-util.exceptions">util.exceptions module</a></li>
@@ -310,6 +312,92 @@
 <dt id="util.test.test_aws.TestS3Client.test_list_objects_prefix_recursive">
 <code class="descname">test_list_objects_prefix_recursive</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_aws.TestS3Client.test_list_objects_prefix_recursive" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="util.test.test_aws.TestSQSClient">
+<em class="property">class </em><code class="descclassname">util.test.test_aws.</code><code class="descname">TestSQSClient</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_aws.TestSQSClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="util.test.test_aws.TestSQSClient.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_aws.TestSQSClient.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_aws.TestSQSClient.test_receive_messages_10">
+<code class="descname">test_receive_messages_10</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_aws.TestSQSClient.test_receive_messages_10" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_aws.TestSQSClient.test_receive_messages_15">
+<code class="descname">test_receive_messages_15</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_aws.TestSQSClient.test_receive_messages_15" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_aws.TestSQSClient.test_receive_messages_1_batch_size_1">
+<code class="descname">test_receive_messages_1_batch_size_1</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_aws.TestSQSClient.test_receive_messages_1_batch_size_1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_aws.TestSQSClient.test_receive_messages_1_batch_size_100">
+<code class="descname">test_receive_messages_1_batch_size_100</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_aws.TestSQSClient.test_receive_messages_1_batch_size_100" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_aws.TestSQSClient.test_send_messages">
+<code class="descname">test_send_messages</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_aws.TestSQSClient.test_send_messages" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-util.test.test_broker">
+<span id="util-test-test-broker-module"></span><h2>util.test.test_broker module<a class="headerlink" href="#module-util.test.test_broker" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="util.test.test_broker.TestBroker">
+<em class="property">class </em><code class="descclassname">util.test.test_broker.</code><code class="descname">TestBroker</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_broker.TestBroker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="method">
+<dt id="util.test.test_broker.TestBroker.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_broker.TestBroker.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_broker.TestBroker.test_bad_credentials_broker_url">
+<code class="descname">test_bad_credentials_broker_url</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_broker.TestBroker.test_bad_credentials_broker_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests instantiating broker from invalid URL with credential delimiter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_broker.TestBroker.test_missing_solidus_credentials_broker_url">
+<code class="descname">test_missing_solidus_credentials_broker_url</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_broker.TestBroker.test_missing_solidus_credentials_broker_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests instantiating broker from invalid URL missing double solidus delimiter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_broker.TestBroker.test_missing_terminators_credentials_broker_url">
+<code class="descname">test_missing_terminators_credentials_broker_url</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_broker.TestBroker.test_missing_terminators_credentials_broker_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests instantiating broker from invalid URL missing terminating double solidus.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_broker.TestBroker.test_valid_rabbitmq_broker_url">
+<code class="descname">test_valid_rabbitmq_broker_url</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_broker.TestBroker.test_valid_rabbitmq_broker_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests instantiating broker from URL for RabbitMQ.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_broker.TestBroker.test_valid_sqs_broker_url">
+<code class="descname">test_valid_sqs_broker_url</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_broker.TestBroker.test_valid_sqs_broker_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests instantiating broker from URL for SQS with Access and Secret Key.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.test.test_broker.TestBroker.test_valid_sqs_broker_url_no_credentials">
+<code class="descname">test_valid_sqs_broker_url_no_credentials</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#util.test.test_broker.TestBroker.test_valid_sqs_broker_url_no_credentials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests instantiating broker from URL for SQS without keys.</p>
+</dd></dl>
 
 </dd></dl>
 

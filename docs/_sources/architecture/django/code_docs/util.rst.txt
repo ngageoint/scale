@@ -27,6 +27,14 @@ util\.aws module
     :undoc-members:
     :show-inheritance:
 
+util\.broker module
+-------------------
+
+.. automodule:: util.broker
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 util\.command module
 --------------------
 

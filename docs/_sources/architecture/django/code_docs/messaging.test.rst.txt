@@ -1,0 +1,54 @@
+messaging\.test package
+=======================
+
+Submodules
+----------
+
+messaging\.test\.test\_apps module
+----------------------------------
+
+.. automodule:: messaging.test.test_apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+messaging\.test\.test\_backends module
+--------------------------------------
+
+.. automodule:: messaging.test.test_backends
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+messaging\.test\.test\_manager module
+-------------------------------------
+
+.. automodule:: messaging.test.test_manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+messaging\.test\.test\_manager\_singleton module
+------------------------------------------------
+
+.. automodule:: messaging.test.test_manager_singleton
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+messaging\.test\.test\_messages module
+--------------------------------------
+
+.. automodule:: messaging.test.test_messages
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: messaging.test
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,0 +1,48 @@
+messaging package
+=================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    messaging.backends
+    messaging.management
+    messaging.messages
+    messaging.test
+
+Submodules
+----------
+
+messaging\.apps module
+----------------------
+
+.. automodule:: messaging.apps
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+messaging\.exceptions module
+----------------------------
+
+.. automodule:: messaging.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+messaging\.manager module
+-------------------------
+
+.. automodule:: messaging.manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: messaging
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,0 +1,54 @@
+messaging\.messages package
+===========================
+
+Submodules
+----------
+
+messaging\.messages\.chain module
+---------------------------------
+
+.. automodule:: messaging.messages.chain
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+messaging\.messages\.echo module
+--------------------------------
+
+.. automodule:: messaging.messages.echo
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+messaging\.messages\.factory module
+-----------------------------------
+
+.. automodule:: messaging.messages.factory
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+messaging\.messages\.fail module
+--------------------------------
+
+.. automodule:: messaging.messages.fail
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+messaging\.messages\.message module
+-----------------------------------
+
+.. automodule:: messaging.messages.message
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: messaging.messages
+    :members:
+    :undoc-members:
+    :show-inheritance:

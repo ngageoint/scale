@@ -104,6 +104,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../jobs/index.html">Jobs and Recipes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../logs.html">ElasticSearch Logs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../messaging.html">Messaging System</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../port.html">Import/Export</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../scan.html">Scan</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../strike.html">Strike</a></li>
@@ -133,6 +134,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-util.apps">util.apps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-util.aws">util.aws module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-util.broker">util.broker module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-util.command">util.command module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-util.deprecation">util.deprecation module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-util.exceptions">util.exceptions module</a></li>
@@ -231,6 +233,7 @@
 <li class="toctree-l1"><a class="reference internal" href="util.test.html">util.test package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="util.test.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="util.test.html#module-util.test.test_aws">util.test.test_aws module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="util.test.html#module-util.test.test_broker">util.test.test_broker module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="util.test.html#module-util.test.test_parse">util.test.test_parse module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="util.test.html#module-util.test.test_rest">util.test.test_rest module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="util.test.html#module-util.test.test_retry">util.test.test_retry module</a></li>
@@ -428,6 +431,150 @@ This generator will contain objects of type <cite>storage.brokers.broker.FileDet
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="util.aws.SQSClient.receive_messages">
+<code class="descname">receive_messages</code><span class="sig-paren">(</span><em>queue_name</em>, <em>batch_size=100</em>, <em>wait_time_seconds=20</em>, <em>visibility_timeout_seconds=30</em><span class="sig-paren">)</span><a class="headerlink" href="#util.aws.SQSClient.receive_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Receive a batch of messages from an SQS queue</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>queue_name</strong> &#8211; </li>
+<li><strong>batch_size</strong> (<em>int</em>) &#8211; Number of messages to retrieve in a single pass</li>
+<li><strong>wait_time_seconds</strong> (<em>int</em>) &#8211; Long-poll duration of request (max of 20). Ends immediately when message published.</li>
+<li><strong>visibility_timeout_seconds</strong> (<em>int</em>) &#8211; Duration for a message to be hidden after retrieved from the queue.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Generator of messages</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Generator[<cite>boto3.sqs.Message</cite>]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.aws.SQSClient.send_message">
+<code class="descname">send_message</code><span class="sig-paren">(</span><em>queue_name</em>, <em>message</em><span class="sig-paren">)</span><a class="headerlink" href="#util.aws.SQSClient.send_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a message to SQS queue.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>queue_name</strong> (<em>string</em>) &#8211; The unique name of the SQS queue</li>
+<li><strong>message</strong> (<em>string</em>) &#8211; Message to send to SQS queue</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.aws.SQSClient.send_messages">
+<code class="descname">send_messages</code><span class="sig-paren">(</span><em>queue_name</em>, <em>messages</em><span class="sig-paren">)</span><a class="headerlink" href="#util.aws.SQSClient.send_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a batch of messages to SQS queue.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>queue_name</strong> (<em>string</em>) &#8211; The unique name of the SQS queue</li>
+<li><strong>messages</strong> ([<cite>SendMessageBatchRequestEntry</cite>]) &#8211; Messages to send to SQS queue</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-util.broker">
+<span id="util-broker-module"></span><h2>util.broker module<a class="headerlink" href="#module-util.broker" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="util.broker.BrokerDetails">
+<em class="property">class </em><code class="descclassname">util.broker.</code><code class="descname">BrokerDetails</code><a class="headerlink" href="#util.broker.BrokerDetails" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="staticmethod">
+<dt id="util.broker.BrokerDetails.from_broker_url">
+<em class="property">static </em><code class="descname">from_broker_url</code><span class="sig-paren">(</span><em>broker_url</em><span class="sig-paren">)</span><a class="headerlink" href="#util.broker.BrokerDetails.from_broker_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Construct a BrokerDetails object from a broker URL</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>broker_url</strong> (<em>string</em>) &#8211; URL containing connection information to message broker</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Instantiated object containing details within broker URL</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.broker.BrokerDetails.get_address">
+<code class="descname">get_address</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#util.broker.BrokerDetails.get_address" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get extracted broker host and port or region depending on backend type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Broker host and port or region of backend</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.broker.BrokerDetails.get_password">
+<code class="descname">get_password</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#util.broker.BrokerDetails.get_password" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get extracted password for broker authentication.</p>
+<p>May be None if credentials are not specified in broker URL.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Password for broker authentication</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string or None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="util.broker.BrokerDetails.get_type">
+<code class="descname">get_type</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#util.broker.BrokerDetails.get_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="util.broker.BrokerDetails.get_user_name">
+<code class="descname">get_user_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#util.broker.BrokerDetails.get_user_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get extracted user name for broker authentication.</p>
+<p>May be None if credentials are not specified in broker URL.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">User name for broker authentication</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string or None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -484,6 +631,13 @@ This generator will contain objects of type <cite>storage.brokers.broker.FileDet
 <em class="property">exception </em><code class="descclassname">util.exceptions.</code><code class="descname">InvalidAWSCredentials</code><a class="headerlink" href="#util.exceptions.InvalidAWSCredentials" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
 <p>Exception indicating missing credentials required to successfully authenticate to AWS</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="util.exceptions.InvalidBrokerUrl">
+<em class="property">exception </em><code class="descclassname">util.exceptions.</code><code class="descname">InvalidBrokerUrl</code><a class="headerlink" href="#util.exceptions.InvalidBrokerUrl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Exception indicating the broker URL does not meet the format requirements</p>
 </dd></dl>
 
 <dl class="exception">

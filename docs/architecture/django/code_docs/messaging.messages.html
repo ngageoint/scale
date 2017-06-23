@@ -1,0 +1,439 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>messaging.messages package &mdash; Scale 5.0.0-snapshot documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="Scale 5.0.0-snapshot documentation" href="../../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../../../_static/scale3-transparent-128.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../rest/index.html">REST API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Scale</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+      <li>messaging.messages package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/architecture/django/code_docs/messaging.messages.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="messaging-messages-package">
+<h1>messaging.messages package<a class="headerlink" href="#messaging-messages-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-messaging.messages.chain">
+<span id="messaging-messages-chain-module"></span><h2>messaging.messages.chain module<a class="headerlink" href="#module-messaging.messages.chain" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="messaging.messages.chain.ChainCommandMessage">
+<em class="property">class </em><code class="descclassname">messaging.messages.chain.</code><code class="descname">ChainCommandMessage</code><a class="headerlink" href="#messaging.messages.chain.ChainCommandMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#messaging.messages.message.CommandMessage" title="messaging.messages.message.CommandMessage"><code class="xref py py-class docutils literal"><span class="pre">messaging.messages.message.CommandMessage</span></code></a></p>
+<dl class="method">
+<dt id="messaging.messages.chain.ChainCommandMessage.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.messages.chain.ChainCommandMessage.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#messaging.messages.message.CommandMessage.execute" title="messaging.messages.message.CommandMessage.execute"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.execute()</span></code></a></p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="messaging.messages.chain.ChainCommandMessage.from_json">
+<em class="property">static </em><code class="descname">from_json</code><span class="sig-paren">(</span><em>json_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.messages.chain.ChainCommandMessage.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#messaging.messages.message.CommandMessage.from_json" title="messaging.messages.message.CommandMessage.from_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.from_json()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.messages.chain.ChainCommandMessage.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.messages.chain.ChainCommandMessage.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#messaging.messages.message.CommandMessage.to_json" title="messaging.messages.message.CommandMessage.to_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.to_json()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-messaging.messages.echo">
+<span id="messaging-messages-echo-module"></span><h2>messaging.messages.echo module<a class="headerlink" href="#module-messaging.messages.echo" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="messaging.messages.echo.EchoCommandMessage">
+<em class="property">class </em><code class="descclassname">messaging.messages.echo.</code><code class="descname">EchoCommandMessage</code><a class="headerlink" href="#messaging.messages.echo.EchoCommandMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#messaging.messages.message.CommandMessage" title="messaging.messages.message.CommandMessage"><code class="xref py py-class docutils literal"><span class="pre">messaging.messages.message.CommandMessage</span></code></a></p>
+<dl class="method">
+<dt id="messaging.messages.echo.EchoCommandMessage.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.messages.echo.EchoCommandMessage.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#messaging.messages.message.CommandMessage.execute" title="messaging.messages.message.CommandMessage.execute"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.execute()</span></code></a></p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="messaging.messages.echo.EchoCommandMessage.from_json">
+<em class="property">static </em><code class="descname">from_json</code><span class="sig-paren">(</span><em>json_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.messages.echo.EchoCommandMessage.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#messaging.messages.message.CommandMessage.from_json" title="messaging.messages.message.CommandMessage.from_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.from_json()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.messages.echo.EchoCommandMessage.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.messages.echo.EchoCommandMessage.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#messaging.messages.message.CommandMessage.to_json" title="messaging.messages.message.CommandMessage.to_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.to_json()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-messaging.messages.factory">
+<span id="messaging-messages-factory-module"></span><h2>messaging.messages.factory module<a class="headerlink" href="#module-messaging.messages.factory" title="Permalink to this headline">¶</a></h2>
+<p>Defines the factory for creating messages</p>
+<dl class="function">
+<dt id="messaging.messages.factory.add_message_type">
+<code class="descclassname">messaging.messages.factory.</code><code class="descname">add_message_type</code><span class="sig-paren">(</span><em>message_class</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.messages.factory.add_message_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers a message class so it can be used for Scale messaging</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>message_class</strong> (class:<cite>messaging.messages.CommandMessage</cite>) &#8211; The class definition for a message</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="messaging.messages.factory.get_message_type">
+<code class="descclassname">messaging.messages.factory.</code><code class="descname">get_message_type</code><span class="sig-paren">(</span><em>message_type</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.messages.factory.get_message_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a message class of the given type</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>message_type</strong> (<em>string</em>) &#8211; The unique identifier of a registered message type</li>
+<li><strong>message_class</strong> (class:<cite>messaging.messages.CommandMessage</cite>) &#8211; The class definition for a message</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="messaging.messages.factory.get_message_types">
+<code class="descclassname">messaging.messages.factory.</code><code class="descname">get_message_types</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.messages.factory.get_message_types" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of type identifiers for all registered message types</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of messages types</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[string]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-messaging.messages.fail">
+<span id="messaging-messages-fail-module"></span><h2>messaging.messages.fail module<a class="headerlink" href="#module-messaging.messages.fail" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="messaging.messages.fail.FailCommandMessage">
+<em class="property">class </em><code class="descclassname">messaging.messages.fail.</code><code class="descname">FailCommandMessage</code><a class="headerlink" href="#messaging.messages.fail.FailCommandMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#messaging.messages.message.CommandMessage" title="messaging.messages.message.CommandMessage"><code class="xref py py-class docutils literal"><span class="pre">messaging.messages.message.CommandMessage</span></code></a></p>
+<dl class="method">
+<dt id="messaging.messages.fail.FailCommandMessage.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.messages.fail.FailCommandMessage.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#messaging.messages.message.CommandMessage.execute" title="messaging.messages.message.CommandMessage.execute"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.execute()</span></code></a></p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="messaging.messages.fail.FailCommandMessage.from_json">
+<em class="property">static </em><code class="descname">from_json</code><span class="sig-paren">(</span><em>json_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.messages.fail.FailCommandMessage.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#messaging.messages.message.CommandMessage.from_json" title="messaging.messages.message.CommandMessage.from_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.from_json()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.messages.fail.FailCommandMessage.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.messages.fail.FailCommandMessage.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="#messaging.messages.message.CommandMessage.to_json" title="messaging.messages.message.CommandMessage.to_json"><code class="xref py py-meth docutils literal"><span class="pre">messaging.messages.message.CommandMessage.to_json()</span></code></a></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-messaging.messages.message">
+<span id="messaging-messages-message-module"></span><h2>messaging.messages.message module<a class="headerlink" href="#module-messaging.messages.message" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="messaging.messages.message.CommandMessage">
+<em class="property">class </em><code class="descclassname">messaging.messages.message.</code><code class="descname">CommandMessage</code><span class="sig-paren">(</span><em>message_type</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.messages.message.CommandMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This ABC defines the interface all CommandMessage classes should implement.</p>
+<p>If a CommandMessage needs to chain processing together, it should define this via
+the new_messages array.</p>
+<dl class="method">
+<dt id="messaging.messages.message.CommandMessage.execute">
+<code class="descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.messages.message.CommandMessage.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processing logic for all command messages should be implemented within this method.</p>
+<p>It is critical that execution of messages is idempotent - no side effects as result of repeated executions.
+Without idempotency we cannot support messaging backends such as SQS which guarantee &#8216;at least once&#8217; delivery.
+No assurances are provided for message ordering, due to the asynchronous nature of messaging system with many
+potential message producers and consumers.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Success or failure of execute operation</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="messaging.messages.message.CommandMessage.from_json">
+<em class="property">static </em><code class="descname">from_json</code><span class="sig-paren">(</span><em>json_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#messaging.messages.message.CommandMessage.from_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>JSON deserializer for CommandMessage subclasses. Must be implemented in all subclasses.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>json_dict</strong> (<em>dict</em>) &#8211; CommandMessage JSON representation to reconstitute into class instance.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Instantiated class from input JSON</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><cite>messaging.messages.CommandMessage</cite></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="messaging.messages.message.CommandMessage.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#messaging.messages.message.CommandMessage.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>JSON Serializer for CommandMessage subclasses. Must be implemented in all subclasses.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">JSON representation of CommandMessage class.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-messaging.messages">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-messaging.messages" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'5.0.0-snapshot',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
