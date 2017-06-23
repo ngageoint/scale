@@ -37,6 +37,7 @@ class ProductsView(ListAPIView):
         job_type_ids = rest_util.parse_int_list(request, 'job_type_id', required=False)
         job_type_names = rest_util.parse_string_list(request, 'job_type_name', required=False)
         job_type_categories = rest_util.parse_string_list(request, 'job_type_category', required=False)
+        job_ids = rest_util.parse_int_list(request, 'job_id', required=False)
         is_operational = rest_util.parse_bool(request, 'is_operational', required=False)
         is_published = rest_util.parse_bool(request, 'is_published', default_value=True)
         file_name = rest_util.parse_string(request, 'file_name', required=False)
@@ -50,9 +51,10 @@ class ProductsView(ListAPIView):
 
         products = ProductFile.objects.get_products(
             started=started, ended=ended, time_field=time_field, job_type_ids=job_type_ids,
-            job_type_names=job_type_names, job_type_categories=job_type_categories, is_operational=is_operational,
-            is_published=is_published, file_name=file_name, job_output=job_output, recipe_ids=recipe_ids,
-            recipe_type_ids=recipe_type_ids, recipe_job=recipe_job, batch_ids=batch_ids, order=order,
+            job_type_names=job_type_names, job_type_categories=job_type_categories, job_ids=job_ids,
+            is_operational=is_operational, is_published=is_published, file_name=file_name, 
+            job_output=job_output, recipe_ids=recipe_ids, recipe_type_ids=recipe_type_ids, 
+            recipe_job=recipe_job, batch_ids=batch_ids, order=order,
         )
 
         page = self.paginate_queryset(products)
