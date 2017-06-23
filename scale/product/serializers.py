@@ -21,6 +21,9 @@ class ProductFileBaseSerializer(ScaleFileBaseSerializer):
     unpublished = serializers.DateTimeField()
     superseded = serializers.DateTimeField()
 
+    source_started =  serializers.DateTimeField()
+    source_ended = serializers.DateTimeField()
+
     job_type = ModelIdSerializer()
     job = ModelIdSerializer()
     job_exe = ModelIdSerializer()
