@@ -195,6 +195,22 @@ class JobData(object):
                 file_ids.update(data_input['file_ids'])
         return file_ids
 
+    def get_input_file_info(self):
+        """Returns a set of scale file identifiers and input names for each file in the job input data.
+
+        :returns: Set of scale file identifiers and names
+        :rtype: set[tuple]
+        """
+
+        file_info = set()
+        for data_input in self.data_dict['input_data']:
+            if 'file_id' in data_input:
+                file_info.add((data_input['file_id'], data_input['name']))
+            elif 'file_ids' in data_input:
+                for file_id in data_input['file_ids']:
+                    file_info.add((file_id, data_input['name']))
+        return file_info
+
     def get_output_workspace_ids(self):
         """Returns a list of the IDs for every workspace used to store the output files for this data
 
