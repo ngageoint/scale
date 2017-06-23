@@ -305,6 +305,7 @@
 <li class="toctree-l4"><a class="reference internal" href="job.execution.tasks.html#module-job.execution.tasks.job_task">job.execution.tasks.job_task module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.execution.tasks.html#module-job.execution.tasks.post_task">job.execution.tasks.post_task module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.execution.tasks.html#module-job.execution.tasks.pre_task">job.execution.tasks.pre_task module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="job.execution.tasks.html#module-job.execution.tasks.pull_task">job.execution.tasks.pull_task module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.execution.tasks.html#module-job.execution.tasks">Module contents</a></li>
 </ul>
 </li>
@@ -1878,6 +1879,24 @@ scheduled (is no longer queued) and if this is not a system job type.</p>
 <dt id="job.models.JobExecution.get_previous_by_queued">
 <code class="descname">get_previous_by_queued</code><span class="sig-paren">(</span><em>*moreargs</em>, <em>**morekwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobExecution.get_previous_by_queued" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="job.models.JobExecution.get_pull_task_id">
+<code class="descname">get_pull_task_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobExecution.get_pull_task_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the pull-task ID for this job execution. This call is only valid after the job execution has been
+scheduled (is no longer queued) and if this is not a system job type.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The pull-task ID for the job execution</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+<p>:raises <a class="reference internal" href="util.html#util.exceptions.ScaleLogicBug" title="util.exceptions.ScaleLogicBug"><code class="xref py py-class docutils literal"><span class="pre">util.exceptions.ScaleLogicBug</span></code></a>: If the job execution is still queued or is a system job type</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="job.models.JobExecution.get_resources">

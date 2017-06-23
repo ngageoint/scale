@@ -229,26 +229,21 @@
 </div>
 <div class="section" id="module-scheduler.recon.manager">
 <span id="scheduler-recon-manager-module"></span><h2>scheduler.recon.manager module<a class="headerlink" href="#module-scheduler.recon.manager" title="Permalink to this headline">¶</a></h2>
-<p>Defines the class that manages pushing task status updates to the database</p>
+<p>Defines the class that manages reconciling tasks</p>
 <dl class="class">
 <dt id="scheduler.recon.manager.ReconciliationManager">
 <em class="property">class </em><code class="descclassname">scheduler.recon.manager.</code><code class="descname">ReconciliationManager</code><a class="headerlink" href="#scheduler.recon.manager.ReconciliationManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>This class manages tasks that needs to be reconciled with Mesos. This class is thread-safe.</p>
-<dl class="attribute">
-<dt id="scheduler.recon.manager.ReconciliationManager.COUNT_WARNING_THRESHOLD">
-<code class="descname">COUNT_WARNING_THRESHOLD</code><em class="property"> = 1000</em><a class="headerlink" href="#scheduler.recon.manager.ReconciliationManager.COUNT_WARNING_THRESHOLD" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
+<p>This class manages tasks that need to be reconciled. This class is thread-safe.</p>
 <dl class="method">
-<dt id="scheduler.recon.manager.ReconciliationManager.add_task_ids">
-<code class="descname">add_task_ids</code><span class="sig-paren">(</span><em>task_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.recon.manager.ReconciliationManager.add_task_ids" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds a list of task IDs that need to be reconciled</p>
+<dt id="scheduler.recon.manager.ReconciliationManager.add_tasks">
+<code class="descname">add_tasks</code><span class="sig-paren">(</span><em>tasks</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.recon.manager.ReconciliationManager.add_tasks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a list of tasks that need to be reconciled</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_ids</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; The list of task IDs to reconcile</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tasks</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The list of tasks to reconcile</td>
 </tr>
 </tbody>
 </table>

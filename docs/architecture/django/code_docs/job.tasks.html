@@ -372,22 +372,6 @@ timeout threshold</p>
 </table>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="job.tasks.base_task.Task.force_docker_pull">
-<code class="descname">force_docker_pull</code><a class="headerlink" href="#job.tasks.base_task.Task.force_docker_pull" title="Permalink to this definition">¶</a></dt>
-<dd><p>Indicates if a force pull of the Docker image should be done</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if force pull should be used, False otherwise</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 <dl class="method">
 <dt id="job.tasks.base_task.Task.get_resources">
 <code class="descname">get_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.tasks.base_task.Task.get_resources" title="Permalink to this definition">¶</a></dt>
@@ -638,6 +622,24 @@ timeout threshold</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="job.tasks.manager.TaskManager.get_task">
+<code class="descname">get_task</code><span class="sig-paren">(</span><em>task_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.tasks.manager.TaskManager.get_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the task with the given ID, possibly None</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_id</strong> (<em>int</em>) &#8211; The task ID</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The task with the given ID</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.tasks.manager.TaskManager.get_tasks_to_reconcile">
 <code class="descname">get_tasks_to_reconcile</code><span class="sig-paren">(</span><em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.tasks.manager.TaskManager.get_tasks_to_reconcile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns all of the tasks that need to be reconciled</p>
@@ -713,7 +715,7 @@ timeout threshold</p>
 <p>Defines the class for a Docker pull task</p>
 <dl class="class">
 <dt id="job.tasks.pull_task.PullTask">
-<em class="property">class </em><code class="descclassname">job.tasks.pull_task.</code><code class="descname">PullTask</code><span class="sig-paren">(</span><em>framework_id</em>, <em>agent_id</em>, <em>image_name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.tasks.pull_task.PullTask" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">job.tasks.pull_task.</code><code class="descname">PullTask</code><span class="sig-paren">(</span><em>framework_id</em>, <em>agent_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.tasks.pull_task.PullTask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a></p>
 <p>Represents a task that pulls Docker images from the registry. This class is thread-safe.</p>
 <dl class="method">
@@ -722,6 +724,30 @@ timeout threshold</p>
 <dd><p>See <a class="reference internal" href="#job.tasks.base_task.Task.get_resources" title="job.tasks.base_task.Task.get_resources"><code class="xref py py-meth docutils literal"><span class="pre">job.tasks.base_task.Task.get_resources()</span></code></a></p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="function">
+<dt id="job.tasks.pull_task.create_pull_command">
+<code class="descclassname">job.tasks.pull_task.</code><code class="descname">create_pull_command</code><span class="sig-paren">(</span><em>image_name</em>, <em>check_exists=False</em><span class="sig-paren">)</span><a class="headerlink" href="#job.tasks.pull_task.create_pull_command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the Docker pull command to pull the given image name</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>image_name</strong> (<em>string</em>) &#8211; The name of the Docker image to pull</li>
+<li><strong>check_exists</strong> (<em>bool</em>) &#8211; If True, skips pull if image already exists, False pulls image regardless</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The Docker pull command</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">string</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>

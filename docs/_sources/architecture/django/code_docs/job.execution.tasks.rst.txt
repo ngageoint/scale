@@ -44,6 +44,14 @@ job\.execution\.tasks\.pre\_task module
     :undoc-members:
     :show-inheritance:
 
+job\.execution\.tasks\.pull\_task module
+----------------------------------------
+
+.. automodule:: job.execution.tasks.pull_task
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

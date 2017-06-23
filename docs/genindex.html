@@ -393,9 +393,9 @@
 </li>
       <li><a href="architecture/django/code_docs/scheduler.sync.html#scheduler.sync.scheduler_manager.SchedulerManager.add_scheduling_counts">add_scheduling_counts() (scheduler.sync.scheduler_manager.SchedulerManager method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.recon.html#scheduler.recon.manager.ReconciliationManager.add_task_ids">add_task_ids() (scheduler.recon.manager.ReconciliationManager method)</a>
-</li>
       <li><a href="architecture/django/code_docs/scheduler.task.html#scheduler.task.manager.TaskUpdateManager.add_task_update">add_task_update() (scheduler.task.manager.TaskUpdateManager method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.recon.html#scheduler.recon.manager.ReconciliationManager.add_tasks">add_tasks() (scheduler.recon.manager.ReconciliationManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.configuration.data.html#job.configuration.data.job_connection.JobConnection.add_workspace">add_workspace() (job.configuration.data.job_connection.JobConnection method)</a>
 
@@ -909,16 +909,12 @@
 </li>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.metrics.FinishedJobExeMetrics.count">count (job.execution.metrics.FinishedJobExeMetrics attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.recon.html#scheduler.recon.manager.ReconciliationManager.COUNT_WARNING_THRESHOLD">COUNT_WARNING_THRESHOLD (scheduler.recon.manager.ReconciliationManager attribute)</a>
-
-      <ul>
-        <li><a href="architecture/django/code_docs/scheduler.task.html#scheduler.task.manager.TaskUpdateManager.COUNT_WARNING_THRESHOLD">(scheduler.task.manager.TaskUpdateManager attribute)</a>
+      <li><a href="architecture/django/code_docs/scheduler.task.html#scheduler.task.manager.TaskUpdateManager.COUNT_WARNING_THRESHOLD">COUNT_WARNING_THRESHOLD (scheduler.task.manager.TaskUpdateManager attribute)</a>
 </li>
-      </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.countries">countries (storage.models.ScaleFile attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData">CountryData (class in storage.models)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.DoesNotExist">CountryData.DoesNotExist</a>
@@ -1038,6 +1034,8 @@
       <li><a href="architecture/django/code_docs/node.test.html#node.test.utils.create_node">create_node() (in module node.test.utils)</a>
 </li>
       <li><a href="architecture/django/code_docs/product.test.html#product.test.utils.create_product">create_product() (in module product.test.utils)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.pull_task.create_pull_command">create_pull_command() (in module job.tasks.pull_task)</a>
 </li>
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.utils.create_queue">create_queue() (in module queue.test.utils)</a>
 </li>
@@ -1560,6 +1558,8 @@
 </li>
         <li><a href="architecture/django/code_docs/job.execution.tasks.html#job.execution.tasks.pre_task.PreTask.determine_error">(job.execution.tasks.pre_task.PreTask method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.execution.tasks.html#job.execution.tasks.pull_task.PullTask.determine_error">(job.execution.tasks.pull_task.PullTask method)</a>
+</li>
       </ul></li>
       <li><a href="architecture/django/code_docs/diagnostic.html#module-diagnostic">diagnostic (module)</a>
 </li>
@@ -2059,8 +2059,6 @@
         <li><a href="architecture/django/code_docs/source.test.html#source.test.test_views.TestSourceProductsView.fixtures">(source.test.test_views.TestSourceProductsView attribute)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.base_task.Task.force_docker_pull">force_docker_pull (job.tasks.base_task.Task attribute)</a>
-</li>
       <li><a href="architecture/django/code_docs/util.html#util.rest.PlainTextRenderer.format">format (util.rest.PlainTextRenderer attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.html#util.middleware.MultipleProxyMiddleware.FORWARDED_FOR_FIELDS">FORWARDED_FOR_FIELDS (util.middleware.MultipleProxyMiddleware attribute)</a>
@@ -2891,6 +2889,8 @@
 </li>
       <li><a href="architecture/django/code_docs/metrics.html#metrics.registry.get_providers">get_providers() (in module metrics.registry)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.html#job.models.JobExecution.get_pull_task_id">get_pull_task_id() (job.models.JobExecution method)</a>
+</li>
       <li><a href="architecture/django/code_docs/queue.html#queue.models.QueueManager.get_queue">get_queue() (queue.models.QueueManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.html#util.aws.SQSClient.get_queue_by_name">get_queue_by_name() (util.aws.SQSClient method)</a>
@@ -2935,6 +2935,8 @@
         <li><a href="architecture/django/code_docs/job.execution.tasks.html#job.execution.tasks.post_task.PostTask.get_resources">(job.execution.tasks.post_task.PostTask method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.execution.tasks.html#job.execution.tasks.pre_task.PreTask.get_resources">(job.execution.tasks.pre_task.PreTask method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.execution.tasks.html#job.execution.tasks.pull_task.PullTask.get_resources">(job.execution.tasks.pull_task.PullTask method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.html#job.models.Job.get_resources">(job.models.Job method)</a>
 </li>
@@ -3066,6 +3068,8 @@
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.StrikeManager.get_strike_job_type">get_strike_job_type() (ingest.models.StrikeManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.StrikeManager.get_strikes">get_strikes() (ingest.models.StrikeManager method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.manager.TaskManager.get_task">get_task() (job.tasks.manager.TaskManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.manager.TaskManager.get_tasks_to_reconcile">get_tasks_to_reconcile() (job.tasks.manager.TaskManager method)</a>
 </li>
@@ -3980,6 +3984,8 @@
       <li><a href="architecture/django/code_docs/job.execution.tasks.html#module-job.execution.tasks.post_task">job.execution.tasks.post_task (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.execution.tasks.html#module-job.execution.tasks.pre_task">job.execution.tasks.pre_task (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.execution.tasks.html#module-job.execution.tasks.pull_task">job.execution.tasks.pull_task (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.handlers.html#module-job.handlers">job.handlers (module)</a>
 </li>
@@ -6373,8 +6379,12 @@
 </li>
       <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.Node.pull_desc">pull_desc (scheduler.node.node_class.Node attribute)</a>
 </li>
-      <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.pull_task.PullTask">PullTask (class in job.tasks.pull_task)</a>
+      <li><a href="architecture/django/code_docs/job.execution.tasks.html#job.execution.tasks.pull_task.PullTask">PullTask (class in job.execution.tasks.pull_task)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.pull_task.PullTask">(class in job.tasks.pull_task)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/scheduler.task.html#scheduler.task.manager.TaskUpdateManager.push_to_database">push_to_database() (scheduler.task.manager.TaskUpdateManager method)</a>
 </li>
   </ul></td>
@@ -9193,6 +9203,8 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_models.TestRecipeManagerReprocessRecipe.test_different_recipe_type">test_different_recipe_type() (recipe.test.test_models.TestRecipeManagerReprocessRecipe method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.test.execution.html#job.test.execution.test_job_exe.TestRunningJobExecution.test_docker_pull_error">test_docker_pull_error() (job.test.execution.test_job_exe.TestRunningJobExecution method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.test.execution.html#job.test.execution.test_job_exe.TestRunningJobExecution.test_docker_terminated_error">test_docker_terminated_error() (job.test.execution.test_job_exe.TestRunningJobExecution method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.triggers.html#ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.test_does_not_have_data_types">test_does_not_have_data_types() (ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet method)</a>
@@ -11320,6 +11332,8 @@
       <li><a href="architecture/django/code_docs/job.test.execution.html#job.test.execution.test_job_exe.TestRunningJobExecution.test_timed_out_post_task">test_timed_out_post_task() (job.test.execution.test_job_exe.TestRunningJobExecution method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.execution.html#job.test.execution.test_job_exe.TestRunningJobExecution.test_timed_out_pre_task">test_timed_out_pre_task() (job.test.execution.test_job_exe.TestRunningJobExecution method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.test.execution.html#job.test.execution.test_job_exe.TestRunningJobExecution.test_timed_out_pull_task">test_timed_out_pull_task() (job.test.execution.test_job_exe.TestRunningJobExecution method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_app.TestIngestJobType.test_timed_out_system_job_task">test_timed_out_system_job_task() (ingest.test.test_app.TestIngestJobType method)</a>
 
