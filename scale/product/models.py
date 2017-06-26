@@ -510,6 +510,7 @@ class ProductFileManager(models.GeoManager):
             file_size = os.path.getsize(local_path)
             product.set_basic_fields(file_name, file_size, media_type)
             product.file_path = remote_path
+            product.job_output = output_name
 
             # Add a stable identifier based on the job type, input files, input properties, and file name
             # This is designed to remain stable across re-processing the same type of job on the same inputs
@@ -541,7 +542,6 @@ class ProductFileManager(models.GeoManager):
                 product.recipe_id = job_recipe.recipe.id
                 product.recipe_type = job_recipe.recipe.recipe_type
                 product.recipe_job = job_recipe.job_name
-                product.job_output = output_name
 
                 # Add batch info to product if available.
                 try:
