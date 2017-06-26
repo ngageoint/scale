@@ -83,7 +83,7 @@ def run(client):
     # Determine if Web Server should be deployed.
     if DEPLOY_WEBSERVER.lower() == 'true':
         app_name = '%s-webserver' % FRAMEWORK_NAME
-        webserver_port = deploy_webserver(client, app_name, es_urls, db_host, db_port, broker_url)
+        webserver_port = deploy_webserver(client, app_name, es_urls, es_lb, db_host, db_port, broker_url)
         print("WEBSERVER_ADDRESS=http://%s.marathon.mesos:%s" % (app_name, webserver_port))
 
 
@@ -149,7 +149,7 @@ def wait_app_healthy(client, app_name, sleep_secs=5):
         time.sleep(sleep_secs)
 
 
-def deploy_webserver(client, app_name, es_urls, db_host, db_port, broker_url):
+def deploy_webserver(client, app_name, es_urls, es_lb, db_host, db_port, broker_url):
     # attempt to delete an old instance..if it doesn't exists it will error but we don't care so we ignore it
     delete_marathon_app(client, app_name)
 
@@ -193,7 +193,8 @@ def deploy_webserver(client, app_name, es_urls, db_host, db_port, broker_url):
             "SCALE_STATIC_URL": "/service/%s/static/" % FRAMEWORK_NAME,
             "SCALE_WEBSERVER_CPU": str(cpu),
             "SCALE_WEBSERVER_MEMORY": str(memory),
-            "SCALE_ELASTICSEARCH_URLS": es_urls
+            "SCALE_ELASTICSEARCH_URLS": es_urls,
+            "SCALE_ELASTICSEARCH_LB": es_lb
         },
         'labels': {
             "HAPROXY_GROUP": "internal,external",
