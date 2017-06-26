@@ -1,6 +1,7 @@
 import filecmp
 import json
 import os
+import sys
 import time
 import traceback
 import urllib
@@ -30,6 +31,14 @@ def update_endpoints(endpoints):
         os.rename('%s_tmp' % CONF_FILE, CONF_FILE)
     else:
         print('No update needed. Present config is up-to-date.')
+        
+def check_for_life(endpoints):
+    for endpoint in endpoints:
+        response = requests.get(endpoint)
+        if json.loads(response.text)['version']['number']:
+            return True
+            
+    return False
 
 # ensure this doesn't try and run if imported
 if __name__ == '__main__':
@@ -40,11 +49,18 @@ if __name__ == '__main__':
 
     # If behind a load balancer, we can skip all the ES cluster settings retrieval and just apply given endpoints
     if ES_LB:
-        update_endpoints(ES_URLS)
+        print('Starting up load balancer mode. No changes will be made to the given URLs...')
+        if check_for_life(ES_URLS):
+            update_endpoints(ES_URLS)
+        else:
+            print('No valid elasticsearch endpoints detected. Shutting down...')
+            sys.exit()
         
         # Supervisor will SIGKILL us if container stops, so we can sleep wait forever
         while True:
             time.sleep(SLEEP_TIME)
+            
+    print('Starting up in HA sniffing mode. We will be regularly inspecting _nodes API for additional nodes...')
 
     # Loop endlessly monitoring Elasticsearch cluster. Supervisor will SIGKILL us if container stops
     while True:
