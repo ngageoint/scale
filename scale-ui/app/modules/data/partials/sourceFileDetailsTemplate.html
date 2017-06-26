@@ -9,15 +9,15 @@
             <h4>Details</h4>
             <table class="table table-hover table-condensed table-striped">
                 <tbody>
-                <tr><td class="left">Workspace:</td><td class="right"><a ng-href="/#/workspaces/{{ ctrl.sourceFile.workspace.id }}">{{ ctrl.sourceFile.workspace.name }}</a></td></tr>
                 <tr><td class="left">Media Type:</td><td class="right">{{ ctrl.sourceFile.media_type }}</td></tr>
                 <tr><td class="left">Countries:</td><td class="right">{{ ctrl.sourceFile.countries.join(', ') }}</td></tr>
-                <tr><td class="left">Created:</td><td class="right"><span ng-bind-html="ctrl.getFormattedDate(ctrl.sourceFile.created)"></span></td></tr>
-                <tr><td class="left">Deleted:</td><td class="right"><span ng-bind-html="ctrl.getFormattedDate(ctrl.sourceFile.deleted)"></span></td></tr>
                 <tr><td class="left">Data Started:</td><td class="right"><span ng-bind-html="ctrl.getFormattedDate(ctrl.sourceFile.data_started)"></span></td></tr>
                 <tr><td class="left">Data Ended:</td><td class="right"><span ng-bind-html="ctrl.getFormattedDate(ctrl.sourceFile.data_ended)"></span></td></tr>
-                <tr><td class="left">Last Modified:</td><td class="right"><span ng-bind-html="ctrl.getFormattedDate(ctrl.sourceFile.last_modified)"></span></td></tr>
+                <tr><td class="left">Workspace:</td><td class="right"><a ng-href="/#/workspaces/{{ ctrl.sourceFile.workspace.id }}">{{ ctrl.sourceFile.workspace.name }}</a></td></tr>
+                <tr><td class="left">Created:</td><td class="right"><span ng-bind-html="ctrl.getFormattedDate(ctrl.sourceFile.created)"></span></td></tr>
                 <tr><td class="left">Parsed:</td><td class="right"><span ng-bind-html="ctrl.getFormattedDate(ctrl.sourceFile.parsed)"></span></td></tr>
+                <tr><td class="left">Deleted:</td><td class="right"><span ng-bind-html="ctrl.getFormattedDate(ctrl.sourceFile.deleted)"></span></td></tr>
+                <tr><td class="left">Last Modified:</td><td class="right"><span ng-bind-html="ctrl.getFormattedDate(ctrl.sourceFile.last_modified)"></span></td></tr>
                 </tbody>
             </table>
         </div>
@@ -40,16 +40,10 @@
 <hr />
 <ul class="nav nav-pills margin-bottom-md">
     <li role="presentation" ng-class="{ active: ctrl.activeTab === 'jobs' }"><a ng-click="ctrl.showGrid('jobs')">Jobs</a></li>
-    <li role="presentation" ng-class="{ active: ctrl.activeTab === 'ingests' }"><a ng-click="ctrl.showGrid('ingests')">Ingests</a></li>
     <li role="presentation" ng-class="{ active: ctrl.activeTab === 'products' }"><a ng-click="ctrl.showGrid('products')">Products</a></li>
+    <li role="presentation" ng-class="{ active: ctrl.activeTab === 'ingests' }"><a ng-click="ctrl.showGrid('ingests')">Ingests</a></li>
 </ul>
 <div ng-controller="jobsController as vm" ng-if="jobsData && ctrl.activeTab === 'jobs'">
-    <div class="grid-container">
-        <div ui-grid="vm.gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns class="scale-grid"></div>
-    </div>
-    <ais-grid-pagination grid-options="vm.gridOptions"></ais-grid-pagination>
-</div>
-<div ng-controller="ingestRecordsController as vm" ng-if="ingestsData && ctrl.activeTab === 'ingests'">
     <div class="grid-container">
         <div ui-grid="vm.gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns class="scale-grid"></div>
     </div>
@@ -60,6 +54,12 @@
         <div ui-grid="ctrl.gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns class="scale-grid products-grid"></div>
     </div>
     <ais-grid-pagination grid-options="ctrl.gridOptions"></ais-grid-pagination>
+</div>
+<div ng-controller="ingestRecordsController as vm" ng-if="ingestsData && ctrl.activeTab === 'ingests'">
+    <div class="grid-container">
+        <div ui-grid="vm.gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns class="scale-grid"></div>
+    </div>
+    <ais-grid-pagination grid-options="vm.gridOptions"></ais-grid-pagination>
 </div>
 
 <script type="text/ng-template" id="showLog.html">

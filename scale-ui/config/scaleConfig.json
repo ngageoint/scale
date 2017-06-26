@@ -259,8 +259,8 @@
         "paginationOffset": 35,
         "batchDefinitionVersion": "1.0",
         "sourceFileDateFields": [
-            { "name": "last_modified", "title": "Last Modified" },
-            { "name": "data", "title": "Data" }
+            { "name": "data", "title": "Data" },
+            { "name": "last_modified", "title": "Last Modified" }
         ]
     }
 }

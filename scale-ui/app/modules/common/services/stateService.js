@@ -163,7 +163,7 @@
                 page_size: data.page_size ? parseInt(data.page_size) : 25,
                 started: data.started ? data.started : moment.utc().subtract(1, 'weeks').startOf('d').toISOString(),
                 ended: data.ended ? data.ended : moment.utc().endOf('d').toISOString(),
-                time_field: data.time_field ? data.time_field : 'last_modified',
+                time_field: data.time_field ? data.time_field : 'data',
                 order: data.order ? Array.isArray(data.order) ? data.order : [data.order] : ['-last_modified'],
                 is_parsed: data.is_parsed ? data.is_parsed : null,
                 file_name: data.file_name ? data.file_name : null
