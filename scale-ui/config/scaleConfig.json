@@ -204,7 +204,8 @@
             "apiPrefix": "./api/v5/",
             "overrides": {
                 "status": "./api/v4/",
-                "sources": "./api/v4/"
+                "sources": "./api/v4/",
+                "data": "./api/v5"
             },
             "documentation": "./docs"
         },
@@ -248,11 +249,18 @@
             "batch": [
                 { "path": "batch", "label": "Batches" },
                 { "path": "batch/0", "label": "Create Batch" }
+            ],
+            "data": [
+                { "path": "data/source", "label": "Source Files" }
             ]
         },
         "headerOffset": 165,
         "dateFilterOffset": 45,
         "paginationOffset": 35,
-        "batchDefinitionVersion": "1.0"
+        "batchDefinitionVersion": "1.0",
+        "sourceFileDateFields": [
+            { "name": "data", "title": "Data" },
+            { "name": "last_modified", "title": "Last Modified" }
+        ]
     }
 }

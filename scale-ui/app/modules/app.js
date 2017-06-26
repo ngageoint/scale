@@ -57,6 +57,17 @@
                 controllerAs: 'vm',
                 templateUrl: 'modules/about/partials/aboutTemplate.html'
             })
+            .when('/data/source', {
+                controller: 'sourceFilesController',
+                controllerAs: 'vm',
+                templateUrl: 'modules/data/partials/sourceFilesTemplate.html',
+                reloadOnSearch: false
+            })
+            .when('/data/source/file/:id', {
+                controller: 'sourceFileDetailsController',
+                controllerAs: 'ctrl',
+                templateUrl: 'modules/data/partials/sourceFileDetailsTemplate.html'
+            })
             .when('/feed', {
                 controller: 'feedDetailsController',
                 controllerAs: 'vm',

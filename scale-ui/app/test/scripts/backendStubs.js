@@ -128,8 +128,15 @@
 
         // Source details
         var sourceDetailsOverrideUrl = 'test/data/sourceDetails.json';
-        var sourceDetailsRegex = new RegExp('^' + scaleConfig.getUrlPrefix('sources') + 'sources/.*/', 'i');
+        var sourceDetailsRegex = new RegExp('^' + scaleConfig.getUrlPrefix('data') + 'sources/.*/', 'i');
         $httpBackend.whenGET(sourceDetailsRegex).respond(function (method, url) {
+            if (_.contains(url, 'jobs')) {
+                return getSync('test/data/jobs.json');
+            } else if (_.contains(url, 'products')) {
+                return getSync('test/data/sourceProducts.json');
+            } else if (_.contains(url, 'ingests')) {
+                return getSync('test/data/ingests.json');
+            }
             // // get the jobType.id from the url
             // url = url.toString();
             // var filename = url.substring(url.substring(0,url.lastIndexOf('/')).lastIndexOf('/')+1,url.length-1);
@@ -139,7 +146,7 @@
 
         // Sources
         var sourcesOverrideUrl = 'test/data/sources.json';
-        var sourcesRegex = new RegExp('^' + scaleConfig.getUrlPrefix('sources') + 'sources/', 'i');
+        var sourcesRegex = new RegExp('^' + scaleConfig.getUrlPrefix('data') + 'sources/', 'i');
         $httpBackend.whenGET(sourcesRegex).respond(function (method, url) {
             //return getSync(sourcesOverrideUrl);
             var urlParams = getUrlParams(url),

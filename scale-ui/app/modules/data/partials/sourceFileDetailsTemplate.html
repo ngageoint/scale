@@ -1,0 +1,98 @@
+<ais-header name="'Source File Details'" show-subnav="false" loading="ctrl.loading"></ais-header>
+<div class="source-file-details-container">
+    <h3>
+        {{ ctrl.sourceFile.file_name }}
+        <small><a class="btn btn-primary" ng-href="{{ ctrl.sourceFile.url }}"><i class="fa fa-download"></i> {{ ctrl.sourceFile.file_size_formatted }}</a></small>
+    </h3>
+    <div class="row">
+        <div class="col-xs-6">
+            <h4>Details</h4>
+            <table class="table table-hover table-condensed table-striped">
+                <tbody>
+                <tr><td class="left">Media Type:</td><td class="right">{{ ctrl.sourceFile.media_type }}</td></tr>
+                <tr><td class="left">Countries:</td><td class="right">{{ ctrl.sourceFile.countries.join(', ') }}</td></tr>
+                <tr><td class="left">Data Started:</td><td class="right"><span ng-bind-html="ctrl.getFormattedDate(ctrl.sourceFile.data_started)"></span></td></tr>
+                <tr><td class="left">Data Ended:</td><td class="right"><span ng-bind-html="ctrl.getFormattedDate(ctrl.sourceFile.data_ended)"></span></td></tr>
+                <tr><td class="left">Workspace:</td><td class="right"><a ng-href="/#/workspaces/{{ ctrl.sourceFile.workspace.id }}">{{ ctrl.sourceFile.workspace.name }}</a></td></tr>
+                <tr><td class="left">Created:</td><td class="right"><span ng-bind-html="ctrl.getFormattedDate(ctrl.sourceFile.created)"></span></td></tr>
+                <tr><td class="left">Parsed:</td><td class="right"><span ng-bind-html="ctrl.getFormattedDate(ctrl.sourceFile.parsed)"></span></td></tr>
+                <tr><td class="left">Deleted:</td><td class="right"><span ng-bind-html="ctrl.getFormattedDate(ctrl.sourceFile.deleted)"></span></td></tr>
+                <tr><td class="left">Last Modified:</td><td class="right"><span ng-bind-html="ctrl.getFormattedDate(ctrl.sourceFile.last_modified)"></span></td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-xs-6">
+            <h4>
+                Metadata
+                <small><button class="btn btn-xs btn-default" ng-show="ctrl._.keys(ctrl.sourceFile.meta_data).length > 9" ng-click="ctrl.showMetadata()">View All</button></small>
+            </h4>
+            <table class="table table-hover table-condensed table-striped">
+                <tbody>
+                <tr class="map-event" ng-repeat="(key, value) in ctrl.sourceFile.meta_data" ng-show="$index < 9">
+                    <td>{{ key }}</td>
+                    <td>{{ value }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<hr />
+<ul class="nav nav-pills margin-bottom-md">
+    <li role="presentation" ng-class="{ active: ctrl.activeTab === 'jobs' }"><a ng-click="ctrl.showGrid('jobs')">Jobs</a></li>
+    <li role="presentation" ng-class="{ active: ctrl.activeTab === 'products' }"><a ng-click="ctrl.showGrid('products')">Products</a></li>
+    <li role="presentation" ng-class="{ active: ctrl.activeTab === 'ingests' }"><a ng-click="ctrl.showGrid('ingests')">Ingests</a></li>
+</ul>
+<div ng-controller="jobsController as vm" ng-if="jobsData && ctrl.activeTab === 'jobs'">
+    <div class="grid-container">
+        <div ui-grid="vm.gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns class="scale-grid"></div>
+    </div>
+    <ais-grid-pagination grid-options="vm.gridOptions"></ais-grid-pagination>
+</div>
+<div ng-if="productsData && ctrl.activeTab === 'products'">
+    <div class="grid-container">
+        <div ui-grid="ctrl.gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns class="scale-grid products-grid"></div>
+    </div>
+    <ais-grid-pagination grid-options="ctrl.gridOptions"></ais-grid-pagination>
+</div>
+<div ng-controller="ingestRecordsController as vm" ng-if="ingestsData && ctrl.activeTab === 'ingests'">
+    <div class="grid-container">
+        <div ui-grid="vm.gridOptions" ui-grid-selection ui-grid-pagination ui-grid-resize-columns class="scale-grid"></div>
+    </div>
+    <ais-grid-pagination grid-options="vm.gridOptions"></ais-grid-pagination>
+</div>
+
+<script type="text/ng-template" id="showLog.html">
+    <div>
+        <div class="modal-header">
+            <h3>{{ vm.selectedJob }}</h3>
+        </div>
+        <div class="modal-body">
+            <job-execution-log execution="vm.jobExecution"></job-execution-log>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-default" ng-click="$dismiss()">Close</button>
+        </div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="showMetadata.html">
+    <div>
+        <div class="modal-header">
+            <h3>Metadata</h3>
+        </div>
+        <div class="modal-body">
+            <table class="table table-hover table-condensed table-striped">
+                <tbody>
+                <tr class="map-event" ng-repeat="(key, value) in ctrl.sourceFile.meta_data">
+                    <td>{{ key }}</td>
+                    <td>{{ value }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-default" ng-click="$dismiss()">Close</button>
+        </div>
+    </div>
+</script>

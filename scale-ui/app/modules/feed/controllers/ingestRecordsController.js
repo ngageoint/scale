@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').controller('ingestRecordsController', function ($scope, $location, $timeout, scaleConfig, scaleService, stateService, feedService, strikeService, navService, subnavService, gridFactory, poller) {
+    angular.module('scaleApp').controller('ingestRecordsController', function ($scope, $location, $timeout, scaleConfig, scaleService, stateService, feedService, strikeService, navService, subnavService, Ingest, gridFactory, poller) {
         subnavService.setCurrentPath('feed/ingests');
 
         var vm = this;
@@ -101,23 +101,32 @@
         ];
 
         vm.getIngests = function () {
-            vm.loading = true;
-            feedService.getIngestsOnce(vm.ingestsParams).then(function (data) {
-                vm.ingestData = data.results;
-                vm.gridOptions.minRowsToShow = data.results.length;
-                vm.gridOptions.virtualizationThreshold = data.results.length;
-                vm.gridOptions.totalItems = data.count;
-                vm.gridOptions.data = data.results;
-            }).catch(function (error) {
-                console.log(error);
-            }).finally(function () {
+            if ($scope.$parent.ingestsData) {
                 vm.loading = false;
-            });
+                vm.ingestData = $scope.$parent.ingestsData.results;
+                vm.gridOptions.minRowsToShow = $scope.$parent.ingestsData.results.length;
+                vm.gridOptions.virtualizationThreshold = $scope.$parent.ingestsData.results.length;
+                vm.gridOptions.totalItems = $scope.$parent.ingestsData.count;
+                vm.gridOptions.data = Ingest.transformer($scope.$parent.ingestsData.results);
+            } else {
+                feedService.getIngestsOnce(vm.ingestsParams).then(function (data) {
+                    vm.ingestData = data.results;
+                    vm.gridOptions.minRowsToShow = data.results.length;
+                    vm.gridOptions.virtualizationThreshold = data.results.length;
+                    vm.gridOptions.totalItems = data.count;
+                    vm.gridOptions.data = data.results;
+                }).catch(function (error) {
+                    console.log(error);
+                }).finally(function () {
+                    vm.loading = false;
+                });
+            }
         };
 
         vm.filterResults = function () {
             poller.stopAll();
             stateService.setIngestsParams(vm.ingestsParams);
+            vm.loading = true;
             vm.getIngests();
         };
 
@@ -209,7 +218,9 @@
             stateService.setIngestsParams(vm.ingestsParams);
             vm.updateColDefs();
             vm.getStrikes();
-            navService.updateLocation('feed');
+            if (!$scope.$parent.hasParentCtrl) {
+                navService.updateLocation('feed');
+            }
         };
 
         vm.initialize();
