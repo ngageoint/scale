@@ -68,6 +68,7 @@ Alternatively, your own local_settings.py can be volume mounted into `/opt/scale
 | SCALE_DEBUG                 | ''                              | Change to '1' for debugging                |
 | SCALE_DOCKER_IMAGE          | 'geoint/scale'                  | Scale docker image name                    |
 | SCALE_ELASTICSEARCH_URLS    | None (auto-detected in DCOS)    | Comma-delimited Elasticsearch node URLs    |
+| SCALE_ELASTICSEARCH_LB      | 'true'                          | Is Elasticsearch behind a load balancer?   |
 | SCALE_LOGGING_ADDRESS       | None                            | Logstash URL. By default set by bootstrap  |
 | SCALE_QUEUE_NAME            | 'scale-command-messages'        | Queue name for messaging backend           |
 | SCALE_WEBSERVER_CPU         | 1                               | UI/API CPU allocation during bootstrap     |

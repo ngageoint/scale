@@ -3,7 +3,11 @@ Image to support Scale log capture with Logstash failover between Elasticsearch 
 
 This image is primarily intended to mitigate issues when Elasticsearch cluster nodes fail and are instantiated
 elsewhere. Barring all nodes moving to other addresses, the watchdog process will discover the new locations from
-Elasticsearch APIs and update the logstash pipeline to all available nodes.
+Elasticsearch APIs and update the logstash pipeline to all available nodes. 
+
+If your Elasticsearch cluster is configured behind a load balancer(s), as it should be, you can disable the
+watchdog functionality. This will still provide the template injection capability, but no introspection of
+Elasticsearch cluster state APIs will be performed.
 
 ## Configuration
 This image provides a number of environment variables that can be used to tweak the behavior of logstash.
@@ -11,6 +15,8 @@ This image provides a number of environment variables that can be used to tweak 
 * ELASTICSEARCH_URLS: One or more comma delimited full URLs to Elasticsearch nodes to bootstrap watchdog. For example,
  "http://node01:9200,http://node02:9200". The watchdog will continually update Logstash configuration as nodes are 
  added or removed.
+* ELASTICSEARCH_LB: Boolean value indicating whether we are behind a load balancer (`true`) or not (`false`). If this
+ value is set to `false`, watchdog functionality will be activated, otherwise it will be skipped.
 * LOGSTASH_ARGS: String of any arbitrary command-line arguments to pass to Logstash.
 * SLEEP_TIME: Time in seconds to sleep between watchdog checks of Elasticsearch nodes.
 * TEMPLATE_URI: URL to container accessible location of Logstash template config. See below for example.
