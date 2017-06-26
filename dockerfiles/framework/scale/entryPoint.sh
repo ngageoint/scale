@@ -60,6 +60,7 @@ then
         export SCALE_LOGGING_ADDRESS=`cat bootstrap.log | grep LOGGING_ADDRESS | cut -d '=' -f2`
         export SCALE_LOGGING_HEALTH_ADDRESS=`cat bootstrap.log | grep LOGGING_HEALTH_ADDRESS | cut -d '=' -f2`
         export SCALE_ELASTICSEARCH_URLS=`cat bootstrap.log | grep ELASTICSEARCH_URLS | cut -d '=' -f2`
+        export SCALE_ELASTICSEARCH_LB=`cat bootstrap.log | grep ELASTICSEARCH_LB | cut -d '=' -f2`
     fi
 
     if [[ "${SCALE_BROKER_URL}x" == "x" ]]

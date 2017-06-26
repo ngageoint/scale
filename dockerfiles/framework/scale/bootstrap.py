@@ -34,12 +34,16 @@ def dcos_login():
 
 def run(client):
     es_urls = os.getenv('SCALE_ELASTICSEARCH_URLS')
+    es_lb = os.getenv('SCALE_ELASTICSEARCH_LB', 'true')
 
     # if SCALE_ELASTICSEARCH_URLS is not set, assume we are running within DCOS and attempt to query Elastic scheduler
+    # Also default es_lb to false in this case
     if not es_urls or not len(es_urls.strip()):
         es_urls = get_elasticsearch_urls()
+        es_lb = 'false'
 
     print("ELASTICSEARCH_URLS=" + es_urls)
+    print("ELASTICSEARCH_LB=" + es_lb)
     rabbitmq_app_name = '%s-rabbitmq' % FRAMEWORK_NAME
     log_app_name = '%s-logstash' % FRAMEWORK_NAME
     db_app_name = '%s-db' % FRAMEWORK_NAME
@@ -57,7 +61,7 @@ def run(client):
 
     # Determine if logstash should be deployed.
     if not len(SCALE_LOGGING_ADDRESS):
-        deploy_logstash(client, log_app_name, es_urls)
+        deploy_logstash(client, log_app_name, es_urls, es_lb)
 
     # Wait for all needed apps to be healthy
     if not len(broker_url):
@@ -357,12 +361,12 @@ def deploy_rabbitmq(client, app_name):
         deploy_marathon_app(client, marathon)
 
 
-def deploy_logstash(client, app_name, es_urls):
+def deploy_logstash(client, app_name, es_urls, es_lb):
     # attempt to delete an old instance..if it doesn't exists it will error but we don't care so we ignore it
     delete_marathon_app(client, app_name)
 
     # get the Logstash container API endpoints
-    logstash_image = os.getenv('LOGSTASH_DOCKER_IMAGE', 'geoint/logstash-elastic-ha')
+    logstash_image = os.getenv('LOGSTASH_DOCKER_IMAGE', 'geoint/scale-logstash')
     marathon = {
         'id': app_name,
         'cpus': 0.5,
@@ -397,7 +401,8 @@ def deploy_logstash(client, app_name, es_urls):
         },
         'env': {
             'LOGSTASH_ARGS': '-w 1',
-            'ELASTICSEARCH_URLS': es_urls
+            'ELASTICSEARCH_URLS': es_urls,
+            'ELASTICSEARCH_LB': es_lb,
         },
         'labels': {},
         'healthChecks': [

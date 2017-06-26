@@ -9,6 +9,7 @@ import requests
 from requests.exceptions import RequestException
 
 
+ES_LB = os.getenv('ELASTICSEARCH_LB', 'false').lower() in ['true', '1', 't']
 ES_URLS = os.getenv('ELASTICSEARCH_URLS').split(',')
 SLEEP_TIME = float(os.getenv('SLEEP_TIME', 30))
 TEMPLATE_URI = os.getenv('TEMPLATE_URI', None)
@@ -36,6 +37,14 @@ if __name__ == '__main__':
         print('Attempting template update from %s...' % TEMPLATE_URI)
         urllib.urlretrieve(TEMPLATE_URI, '%s-template' % CONF_FILE)
         print('Template update complete.')
+
+    # If behind a load balancer, we can skip all the ES cluster settings retrieval and just apply given endpoints
+    if ES_LB:
+        update_endpoints(ES_URLS)
+        
+        # Supervisor will SIGKILL us if container stops, so we can sleep wait forever
+        while True:
+            time.sleep(SLEEP_TIME)
 
     # Loop endlessly monitoring Elasticsearch cluster. Supervisor will SIGKILL us if container stops
     while True:
