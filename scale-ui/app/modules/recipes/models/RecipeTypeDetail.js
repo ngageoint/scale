@@ -1,8 +1,8 @@
 (function () {
     'use strict';
 
-    angular.module('scaleApp').factory('RecipeTypeDetail', function (scaleConfig, RecipeTypeDefinition, JobTypeDetails) {
-        var RecipeTypeDetail = function (id, name, version, title, description, is_active, definition, created, last_modified, archived, trigger_rule, job_types) {
+    angular.module('scaleApp').factory('RecipeTypeDetail', function (scaleConfig, RecipeType, RecipeTypeDefinition, JobTypeDetails) {
+        var RecipeTypeDetail = function (id, name, version, title, description, is_active, definition, created, last_modified, archived, trigger_rule, job_types, recipe_type) {
             this.id = id;
             this.name = name;
             this.version = version;
@@ -16,6 +16,7 @@
             this.trigger_rule = trigger_rule;
             this.job_types = JobTypeDetails.transformer(job_types);
             this.modified = false;
+            this.recipe_type = RecipeType.transformer(recipe_type);
         };
 
         // static methods, assigned to class
@@ -33,7 +34,8 @@
                     data.last_modified,
                     data.archived,
                     data.trigger_rule,
-                    data.job_types
+                    data.job_types,
+                    data.recipe_type
                 );
             }
             return new RecipeTypeDetail();
