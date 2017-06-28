@@ -134,7 +134,7 @@
                 if (vm.actionClicked) {
                     vm.actionClicked = false;
                 } else {
-                    $location.search({});
+                    $location.search({}).replace();
                     $location.path('/nodes/' + row.entity.id);
                 }
             });
