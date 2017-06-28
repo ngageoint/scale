@@ -90,36 +90,64 @@ class AgentResources(object):
         self._update_resources()
         return allocated_offers.values()
 
-    def generate_status_json(self, node_dict, total_running, total_offered, total_watermark):
+    def generate_status_json(self, node_dict, total_running=None, total_offered=None, total_watermark=None, total=None):
         """Generates the portion of the status JSON that describes the resources for this agent
 
         :param node_dict: The dict for this agent's node within the status JSON
         :type node_dict: dict
-        :param total_running: The total running resources to add up
+        :param total_running: The total running resources to add up, possibly None
         :type total_running: :class:`node.resources.node_resources.NodeResources`
-        :param total_offered: The total offered resources to add up
+        :param total_offered: The total offered resources to add up, possibly None
         :type total_offered: :class:`node.resources.node_resources.NodeResources`
-        :param total_watermark: The total watermark resources to add up
+        :param total_watermark: The total watermark resources to add up, possibly None
         :type total_watermark: :class:`node.resources.node_resources.NodeResources`
+        :param total: The total resources to add up, possibly None
+        :type total: :class:`node.resources.node_resources.NodeResources`
+        :returns: The total number of offers this agent has
+        :rtype: int
         """
 
-        running_dict = {}
-        self._task_resources.generate_status_json(running_dict)
-        total_running.add(self._task_resources)
-        offered_dict = {}
-        self._offer_resources.generate_status_json(offered_dict)
-        total_offered.add(self._offer_resources)
-        watermark_dict = {}
-        self._watermark_resources.generate_status_json(watermark_dict)
-        total_watermark.add(self._watermark_resources)
+        if self._total_resources:
+            total_resources = self._total_resources
+        else:
+            total_resources = self._watermark_resources
+        free_resources = self._watermark_resources.copy()
+        free_resources.subtract(self._task_resources)
+        free_resources.subtract(self._offer_resources)
+        unavailable_resources = total_resources.copy()
+        unavailable_resources.subtract(self._watermark_resources)
+        resources_dict = {}
 
-        node_dict['resources'] = {'num_offers': len(self._offers), 'running': running_dict, 'offered': offered_dict,
-                                  'watermark': watermark_dict}
+        if total_running:
+            total_running.add(self._task_resources)
+        if total_offered:
+            total_offered.add(self._offer_resources)
+        if total_watermark:
+            total_watermark.add(self._watermark_resources)
+        if total:
+            total.add(total_resources)
+        self._task_resources.generate_status_json(resources_dict, 'running', total_resources)
+        self._offer_resources.generate_status_json(resources_dict, 'offered', total_resources)
+        free_resources.generate_status_json(resources_dict, 'free', total_resources)
+        unavailable_resources.generate_status_json(resources_dict, 'unavailable', total_resources)
+        total_resources.generate_status_json(resources_dict, 'total', None)
 
-        if self._shortage_resources:
-            shortage_dict = {}
-            self._shortage_resources.generate_status_json(shortage_dict)
-            node_dict['resources']['shortage'] = shortage_dict
+        # Fill in any missing values
+        for resource in total_resources.resources:
+            resource_dict = resources_dict[resource.name]
+            if 'running' not in resource_dict:
+                resource_dict['running'] = {'value': 0.0, 'percentage': 0.0}
+            if 'offered' not in resource_dict:
+                resource_dict['offered'] = {'value': 0.0, 'percentage': 0.0}
+            if 'free' not in resource_dict:
+                resource_dict['free'] = {'value': 0.0, 'percentage': 0.0}
+            if 'unavailable' not in resource_dict:
+                resource_dict['unavailable'] = {'value': 0.0, 'percentage': 0.0}
+
+        num_offers = len(self._offers)
+        node_dict['num_offers'] = num_offers
+        node_dict['resources'] = resources_dict
+        return num_offers
 
     def has_total_resources(self):
         """Indicates whether this agent knows its total resources or not

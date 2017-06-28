@@ -82,24 +82,51 @@ class ResourceManager(object):
         :type status_dict: dict
         """
 
+        num_offers = 0
         total_running = NodeResources()
         total_offered = NodeResources()
         total_watermark = NodeResources()
+        total_resources = NodeResources()
 
         with self._agent_resources_lock:
             for node_dict in status_dict['nodes']:
                 agent_id = node_dict['agent_id']
+                is_active = node_dict['is_active']
                 if agent_id in self._agent_resources:
                     agent_resources = self._agent_resources[agent_id]
-                    agent_resources.generate_status_json(node_dict, total_running, total_offered, total_watermark)
+                    if is_active:
+                        num_offers += agent_resources.generate_status_json(node_dict, total_running, total_offered,
+                                                                           total_watermark, total_resources)
+                    else:
+                        agent_resources.generate_status_json(node_dict)
 
-        running_dict = {}
-        total_running.generate_status_json(running_dict)
-        offered_dict = {}
-        total_offered.generate_status_json(offered_dict)
-        watermark_dict = {}
-        total_watermark.generate_status_json(watermark_dict)
-        status_dict['resources'] = {'running': running_dict, 'offered': offered_dict, 'watermark': watermark_dict}
+        free_resources = total_watermark.copy()
+        free_resources.subtract(total_running)
+        free_resources.subtract(total_offered)
+        unavailable_resources = total_resources.copy()
+        unavailable_resources.subtract(total_watermark)
+        resources_dict = {}
+
+        total_running.generate_status_json(resources_dict, 'running', total_resources)
+        total_offered.generate_status_json(resources_dict, 'offered', total_resources)
+        free_resources.generate_status_json(resources_dict, 'free', total_resources)
+        unavailable_resources.generate_status_json(resources_dict, 'unavailable', total_resources)
+        total_resources.generate_status_json(resources_dict, 'total', None)
+
+        # Fill in any missing values
+        for resource in total_resources.resources:
+            resource_dict = resources_dict[resource.name]
+            if 'running' not in resource_dict:
+                resource_dict['running'] = {'value': 0.0, 'percentage': 0.0}
+            if 'offered' not in resource_dict:
+                resource_dict['offered'] = {'value': 0.0, 'percentage': 0.0}
+            if 'free' not in resource_dict:
+                resource_dict['free'] = {'value': 0.0, 'percentage': 0.0}
+            if 'unavailable' not in resource_dict:
+                resource_dict['unavailable'] = {'value': 0.0, 'percentage': 0.0}
+
+        status_dict['num_offers'] = num_offers
+        status_dict['resources'] = resources_dict
 
     def lost_agent(self, agent_id):
         """Informs the manager that the agent with the given ID was lost and has gone offline

@@ -106,15 +106,28 @@ class NodeResources(object):
         resources_copy.add(self)
         return resources_copy
 
-    def generate_status_json(self, resource_dict):
+    def generate_status_json(self, resource_dict, key_name, total_resources=None):
         """Generates the portion of the status JSON that describes these resources
 
         :param resource_dict: The dict for these resources
         :type resource_dict: dict
+        :param key_name: The key name for describing these resources
+        :type key_name: string
+        :param total_resources: The total amount of the resources (for percentages), possibly None
+        :type total_resources: :class:`node.resources.NodeResources`
         """
 
         for resource in self._resources.values():
-            resource_dict[resource.name] = resource.value  # Assumes SCALAR type
+            # Assumes SCALAR type
+            results = {key_name: {'value': resource.value}}
+            if total_resources:
+                total_value = total_resources._resources[resource.name].value
+                if total_value:
+                    percentage = int(round(resource.value / total_value, 0))
+                else:
+                    percentage = 0.0
+                results[key_name]['percentage'] = percentage
+            resource_dict[resource.name] = results
 
     def get_json(self):
         """Returns these resources as a JSON schema
@@ -192,11 +205,10 @@ class NodeResources(object):
         :type node_resources: :class:`node.resources.NodeResources`
         """
 
-        resource_limits = {resource.name: resource for resource in node_resources.resources}
         for resource in self._resources.values():
-            if resource.name in resource_limits:
-                if resource.value > resource_limits[resource.name].value:  # Assumes SCALAR type
-                    resource.value = resource_limits[resource.name].value
+            if resource.name in node_resources._resources:
+                if resource.value > node_resources._resources[resource.name].value:  # Assumes SCALAR type
+                    resource.value = node_resources._resources[resource.name].value
             else:
                 self.remove_resource(resource.name)
 
