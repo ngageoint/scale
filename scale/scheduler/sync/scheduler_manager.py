@@ -134,11 +134,11 @@ class SchedulerManager(object):
         :param number: The number to round
         :type number: float
         :returns: The number rounded to the appropriate number of digits
-        :rtype: float
+        :rtype: float/int
         """
 
         if number > 100.0:
-            return round(number, 0)
+            return int(round(number, 0))
         elif number > 10.0:
             return round(number, 1)
         return round(number, 2)

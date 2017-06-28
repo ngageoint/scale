@@ -185,6 +185,21 @@ class NodeResources(object):
 
         return True
 
+    def limit_to(self, node_resources):
+        """Limits each resource, subtracting any amount that goes over the amount in the given node resources
+
+        :param node_resources: The resources
+        :type node_resources: :class:`node.resources.NodeResources`
+        """
+
+        resource_limits = {resource.name: resource for resource in node_resources.resources}
+        for resource in self._resources.values():
+            if resource.name in resource_limits:
+                if resource.value > resource_limits[resource.name].value:  # Assumes SCALAR type
+                    resource.value = resource_limits[resource.name].value
+            else:
+                self.remove_resource(resource.name)
+
     def remove_resource(self, name):
         """Removes the resource with the given name
 
@@ -197,6 +212,13 @@ class NodeResources(object):
                 self._resources[name].value = 0.0
             else:
                 del self._resources[name]
+
+    def round_values(self):
+        """Rounds all of the resource values
+        """
+
+        for resource in self._resources.values():
+            resource.value = round(resource.value, 2)  # Assumes SCALAR type
 
     def subtract(self, node_resources):
         """Subtracts the given resources

@@ -221,9 +221,9 @@ class TestNode(TestCase):
         """Tests not returning cleanup task when its node is paused"""
 
         when = now()
-        paused_node = node_test_utils.create_node(hostname='host_1', slave_id=self.node_agent)
+        paused_node = node_test_utils.create_node(hostname='host_1_paused', slave_id='agent_paused')
         paused_node.is_paused = True
-        node = Node(self.node_agent, paused_node, self.scheduler)
+        node = Node('agent_paused', paused_node, self.scheduler)
         # Turn off health task
         node._last_heath_task = when
         # No task due to paused node
@@ -584,9 +584,9 @@ class TestNode(TestCase):
         """Tests not returning pull task when its node is paused"""
 
         when = now()
-        paused_node = node_test_utils.create_node(hostname='host_1', slave_id=self.node_agent)
+        paused_node = node_test_utils.create_node(hostname='host_1_paused', slave_id='agent_paused')
         paused_node.is_paused = True
-        node = Node(self.node_agent, paused_node, self.scheduler)
+        node = Node('agent_paused', paused_node, self.scheduler)
         node._last_heath_task = when
         node._initial_cleanup_completed()
         node._update_state()

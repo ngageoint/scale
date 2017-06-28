@@ -2,13 +2,18 @@
 from __future__ import unicode_literals
 
 import datetime
+import logging
 import threading
 
+from mesos_api.unversioned.agent import get_agent_resources
 from node.resources.node_resources import NodeResources
 from scheduler.resources.agent import AgentResources
 
 # Amount of time between rolling watermark resets
 WATERMARK_RESET_PERIOD = datetime.timedelta(minutes=5)
+
+
+logger = logging.getLogger(__name__)
 
 
 class ResourceManager(object):
@@ -196,5 +201,29 @@ class ResourceManager(object):
                 else:
                     agent_resources.set_shortage()
 
+    def sync_with_mesos(self, master_hostname, master_port):
+        """Syncs with Mesos to retrieve the resouce totals needed by any agents
+
+        :param master_hostname: The name of the Mesos master host
+        :type master_hostname: string
+        :param master_port: The port used by the Mesos master
+        :type master_port: int
+        """
+
+        agents_needing_totals = set()
+        with self._agent_resources_lock:
+            for agent_resources in self._agent_resources.values():
+                if not agent_resources.has_total_resources():
+                    agents_needing_totals.add(agent_resources.agent_id)
+
+        resources = {}
+        try:
+            resources = get_agent_resources(master_hostname, master_port, agents_needing_totals)
+        except:
+            logger.exception('Error getting agent resource totals from Mesos')
+
+        with self._agent_resources_lock:
+            for agent_id in resources:
+                self._agent_resources[agent_id].set_total(resources[agent_id])
 
 resource_mgr = ResourceManager()

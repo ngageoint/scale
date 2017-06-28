@@ -16,6 +16,7 @@ from node.resources.node_resources import NodeResources
 from queue.job_exe import QueuedJobExecution
 from queue.models import Queue
 from scheduler.node.manager import node_mgr
+from scheduler.resources.agent import ResourceSet
 from scheduler.resources.manager import resource_mgr
 from scheduler.scheduling.scheduling_node import SchedulingNode
 from scheduler.sync.job_type_manager import job_type_mgr
@@ -267,7 +268,7 @@ class SchedulingManager(object):
             if agent_id in agent_resources:
                 resource_set = agent_resources[agent_id]
             else:
-                resource_set = None
+                resource_set = ResourceSet()
 
             scheduling_node = SchedulingNode(agent_id, node, node_tasks, node_exes, resource_set)
             scheduling_nodes[scheduling_node.node_id] = scheduling_node

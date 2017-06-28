@@ -9,6 +9,7 @@ from django.utils.timezone import now
 logger = logging.getLogger(__name__)
 
 
+# TODO: remove when REST API v4 is removed
 class NodeStatusCounts(object):
     """Represents job execution counts for a node.
 
@@ -29,6 +30,7 @@ class NodeStatusCounts(object):
         self.category = category
 
 
+# TODO: remove when REST API v4 is removed
 class NodeStatus(object):
     """Represents node statistics.
 
@@ -51,6 +53,53 @@ class NodeStatus(object):
 class NodeManager(models.Manager):
     """Provides additional methods for handling nodes
     """
+
+    # TODO: remove port and agent_ids when REST API v4 is removed
+    def create_nodes(self, hostnames, agent_ids):
+        """Creates and returns new nodes with the given host names
+
+        :param hostnames: The list of host names
+        :type hostnames: list
+        :param agent_ids: The list of agent IDs
+        :type agent_ids: list
+        :returns: The list of new nodes
+        :rtype: list
+        """
+
+        nodes = []
+        for i in range(len(hostnames)):
+            node = Node(hostname=hostnames[i], port=5051, slave_id=agent_ids[i])
+            nodes.append(node)
+        self.bulk_create(nodes)
+        return nodes
+
+    def get_details(self, node_id):
+        """Gets additional details for the given node model based on related model attributes.
+
+        The additional fields include: job executions.
+
+        :param node_id: The unique identifier of the node.
+        :type node_id: int
+        :returns: The node with extra related attributes.
+        :rtype: :class:`node.models.Node`
+        """
+
+        node = Node.objects.get(pk=node_id)
+
+        # TODO: remove when REST API v4 is removed
+        # Lazy load the the execution model since it is an optional lower level dependency
+        try:
+            from job.models import JobExecution
+        except:
+            node.job_exes_running = []
+            return node
+
+        # TODO: remove when REST API v4 is removed
+        # Augment the node with running job executions
+        running_exes = JobExecution.objects.filter(node_id=node_id, status='RUNNING').order_by('last_modified')
+        running_exes = running_exes.select_related('job').defer('stdout', 'stderr')
+        node.job_exes_running = running_exes
+        return node
 
     def get_nodes(self, started=None, ended=None, order=None, include_inactive=True):
         """Returns a list of nodes within the given time range.
@@ -86,49 +135,16 @@ class NodeManager(models.Manager):
             nodes = nodes.order_by('last_modified')
         return nodes
 
-    def get_details(self, node_id):
-        """Gets additional details for the given node model based on related model attributes.
+    def get_scheduler_nodes(self, hostnames):
+        """Returns a list of all nodes that either have one of the given host names or is active.
 
-        The additional fields include: job executions.
-
-        :param node_id: The unique identifier of the node.
-        :type node_id: int
-        :returns: The node with extra related attributes.
-        :rtype: :class:`node.models.Node`
-        """
-        node = Node.objects.get(pk=node_id)
-
-        # Lazy load the the execution model since it is an optional lower level dependency
-        try:
-            from job.models import JobExecution
-        except:
-            node.job_exes_running = []
-            return node
-
-        # Augment the node with running job executions
-        running_exes = JobExecution.objects.filter(node_id=node_id, status='RUNNING').order_by('last_modified')
-        running_exes = running_exes.select_related('job').defer('stdout', 'stderr')
-        node.job_exes_running = running_exes
-        return node
-
-    def register_node(self, hostname, port, slave_id):
-        """Registers a node with the given properties and saves the properties
-        in the database. If a node with the given hostname does not exist it is
-        created, else the existing node is updated.
-
-        :param hostname: The full domain-qualified hostname of the node
-        :type hostname: str
-        :param port: The port being used by the executor on this node
-        :type port: int
-        :param slave_id: The slave ID used by Mesos for the node
-        :type slave_id: str
-        :returns: The node model
-        :rtype: :class:`node.models.Node`
+        :param hostnames: The list of host names
+        :type hostnames: list
+        :returns: The list of nodes for the scheduler
+        :rtype: list
         """
 
-        props = {'port': port, 'slave_id': slave_id}
-        node, _created = Node.objects.update_or_create(hostname=hostname, defaults=props)
-        return node
+        return Node.objects.filter(models.Q(hostname__in=hostnames) | models.Q(is_active=True))
 
     @transaction.atomic
     def update_node(self, new_data, node_id=None):
@@ -147,6 +163,7 @@ class NodeManager(models.Manager):
                 new_data['deprecated'] = now()
             else:
                 new_data['deprecated'] = None
+        # TODO: remove when REST API v4 is removed
         if 'is_paused' in new_data:
             # always clear the high error rate field when changing pause state
             # the scheduler will explicitly set this flag when necessary
@@ -156,6 +173,7 @@ class NodeManager(models.Manager):
             new_data['pause_reason'] = None
         node_query.update(**new_data)
 
+    # TODO: remove when REST API v4 is removed
     def get_status(self, started, ended=None):
         """Returns a list of nodes with job execution counts broken down by status.
 
@@ -241,7 +259,7 @@ class NodeManager(models.Manager):
         node.last_offer = now()
 
 
-# TODO: remove the slave_id, is_paused_errors, and last_offer fields when REST API v4 is removed
+# TODO: remove the port, slave_id, is_paused_errors, and last_offer fields when REST API v4 is removed
 class Node(models.Model):
     """Represents a cluster node on which jobs can be run
 

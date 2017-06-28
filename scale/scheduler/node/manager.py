@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 import logging
 import threading
 
-from mesos_api import api
 from node.models import Node
 from scheduler.node.node_class import Node as SchedulerNode
 
@@ -19,8 +18,8 @@ class NodeManager(object):
         """Constructor
         """
 
-        self._agent_ids = {}  # {Agent ID: Hostname}
-        self._new_agent_ids = set()
+        self._agents = {}  # {Agent ID: Agent}
+        self._new_agents = {}  # {Agent ID: Agent}
         self._nodes = {}  # {Hostname: SchedulerNode}
         self._lock = threading.Lock()
 
@@ -29,8 +28,8 @@ class NodeManager(object):
         """
 
         with self._lock:
-            self._agent_ids = {}
-            self._new_agent_ids = set()
+            self._agents = {}
+            self._new_agents = {}
             self._nodes = {}
 
     def generate_status_json(self, status_dict):
@@ -71,9 +70,9 @@ class NodeManager(object):
         """
 
         with self._lock:
-            if agent_id not in self._agent_ids:
+            if agent_id not in self._agents:
                 return None
-            hostname = self._agent_ids[agent_id]
+            hostname = self._agents[agent_id].hostname
             return self._nodes[hostname]
 
     def get_nodes(self):
@@ -94,10 +93,10 @@ class NodeManager(object):
         """
 
         with self._lock:
-            if task.agent_id not in self._agent_ids:
+            if task.agent_id not in self._agents:
                 return
-            node_id = self._agent_ids[task.agent_id]
-            self._nodes[node_id].handle_task_timeout(task)
+            hostname = self._agents[task.agent_id].hostname
+            self._nodes[hostname].handle_task_timeout(task)
 
     def handle_task_update(self, task_update):
         """Handles the given task update for a task
@@ -107,10 +106,10 @@ class NodeManager(object):
         """
 
         with self._lock:
-            if task_update.agent_id not in self._agent_ids:
+            if task_update.agent_id not in self._agents:
                 return
-            node_id = self._agent_ids[task_update.agent_id]
-            self._nodes[node_id].handle_task_update(task_update)
+            hostname = self._agents[task_update.agent_id].hostname
+            self._nodes[hostname].handle_task_update(task_update)
 
     def lost_node(self, agent_id):
         """Informs the manager that the node with the given agent ID was lost and has gone offline
@@ -120,94 +119,105 @@ class NodeManager(object):
         """
 
         with self._lock:
-            if agent_id in self._agent_ids:
-                hostname = self._agent_ids[agent_id]
+            if agent_id in self._agents:
+                hostname = self._agents[agent_id].hostname
                 self._nodes[hostname].update_from_mesos(is_online=False)
                 logger.warning('Node %s has gone offline', hostname)
-            if agent_id in self._new_agent_ids:
-                self._new_agent_ids.discard(agent_id)
+            if agent_id in self._new_agents:
+                del self._new_agents[agent_id]
 
-    def register_agent_ids(self, agent_ids):
-        """Adds the set of online agent IDs to the manager so they can be registered
+    def register_agents(self, agents):
+        """Adds the list of online agents to the manager so they can be registered
 
-        :param agent_ids: The set of online agent IDs to add
-        :type agent_ids: set
+        :param agents: The list of online agents to register
+        :type agents: list
         """
 
         with self._lock:
-            for agent_id in agent_ids:
-                if agent_id in self._agent_ids:
-                    # Agent ID already known, mark its node as online
-                    hostname = self._agent_ids[agent_id]
+            for agent in agents:
+                agent_id = agent.agent_id
+                if agent_id in self._agents:
+                    # Agent already known, mark its node as online
+                    hostname = self._agents[agent_id].hostname
                     self._nodes[hostname].update_from_mesos(is_online=True)
                 else:
                     # Unknown agent ID, save it to be registered as a node
-                    self._new_agent_ids.add(agent_id)
+                    self._new_agents[agent_id] = agent
 
-    def sync_with_database(self, master_hostname, master_port, scheduler):
+    def sync_with_database(self, scheduler):
         """Syncs with the database to retrieve updated node models and queries Mesos for unknown agent IDs
 
-        :param master_hostname: The name of the Mesos master host
-        :type master_hostname: string
-        :param master_port: The port used by the Mesos master
-        :type master_port: int
         :param scheduler: The scheduler model
         :type scheduler: :class:`scheduler.models.Scheduler`
         """
 
-        # Get existing node IDs and hostnames, and new/unknown agent IDs
         with self._lock:
-            new_agent_ids = set(self._new_agent_ids)
-            node_ids = []
-            node_hostnames = self._nodes.keys()
-            for node in self._nodes.values():
-                node_ids.append(node.id)
+            # Gather up all host names and new agents
+            hostnames = set(self._nodes.keys())
+            new_agents = {}  # {Agent ID: Agent}
+            for agent in self._new_agents.values():
+                new_agents[agent.agent_id] = agent
+                hostnames.add(agent.hostname)
 
-        # Query Mesos to get node details for unknown agent IDs
-        # Unknown agent IDs are either existing nodes with a new agent ID or entirely new nodes
-        # TODO: refactor register_node() to handle multiple nodes at once
-        # TODO: consider refactoring node model to remove port and agent/slave ID
-        nodes_with_new_agent_id = {}  # {hostname: slave_info}
-        new_node_models = []
-        for slave_info in api.get_slaves(master_hostname, master_port):
-            if slave_info.slave_id in new_agent_ids:
-                node_model = Node.objects.register_node(slave_info.hostname, slave_info.port, slave_info.slave_id)
-                if slave_info.hostname in node_hostnames:
-                    # New agent ID for existing node
-                    nodes_with_new_agent_id[slave_info.hostname] = slave_info
-                else:
-                    # Entirely new node
-                    new_node_models.append(node_model)
-
-        # Query database for existing node details
-        existing_node_models = list(Node.objects.filter(id__in=node_ids).iterator())
+        # Get all existing node models needed (online and/or active)
+        node_models = {}
+        for node_model in Node.objects.get_scheduler_nodes(hostnames):
+            node_models[node_model.hostname] = node_model
+        # Create new nodes for host names that have never been seen before
+        new_hostnames = []
+        new_agent_ids = []
+        for agent in new_agents.values():
+            if agent.hostname not in node_models:
+                new_hostnames.append(agent.hostname)
+                new_agent_ids.append(agent.agent_id)
+        logger.info('Creating %d new node(s) in the database', len(new_hostnames))
+        for node_model in Node.objects.create_nodes(new_hostnames, new_agent_ids):
+            node_models[node_model.hostname] = node_model
 
         with self._lock:
-            # Add new nodes
-            for node_model in new_node_models:
-                logger.info('New node %s registered with agent ID %s', node_model.hostname, node_model.slave_id)
-                self._nodes[node_model.hostname] = SchedulerNode(node_model.slave_id, node_model, scheduler)
-                self._agent_ids[node_model.slave_id] = node_model.hostname
-            # Update nodes with new agent IDs
-            for hostname, slave_info in nodes_with_new_agent_id.items():
-                old_agent_id = self._nodes[hostname].agent_id
+            # Handle new agents
+            for new_agent in new_agents.values():
+                agent_id = new_agent.agent_id
+                hostname = new_agent.hostname
                 # For is_online, check if new agent ID is still in set or gone (i.e. removed by lost_node())
-                self._nodes[hostname].update_from_mesos(agent_id=slave_info.slave_id, port=slave_info.port,
-                                                        is_online=(slave_info.slave_id in self._new_agent_ids))
-                del self._agent_ids[old_agent_id]
-                self._agent_ids[slave_info.slave_id] = hostname
-                logger.info('Node %s registered with new agent ID %s', hostname, slave_info.slave_id)
+                is_online = agent_id in self._new_agents
+                if hostname in self._nodes:
+                    # Host name already exists, must be a new agent ID
+                    old_agent_id = self._nodes[hostname].agent_id
+                    self._nodes[hostname].update_from_mesos(agent_id=agent_id, is_online=is_online)
+                    if old_agent_id in self._agents:
+                        del self._agents[old_agent_id]
+                else:
+                    # Host name does not exist, register a new node
+                    node_model = node_models[hostname]
+                    self._nodes[hostname] = SchedulerNode(agent_id, node_model, scheduler)
+                    self._nodes[hostname].update_from_mesos(is_online=is_online)
+                self._agents[agent_id] = new_agent
+                if is_online:
+                    logger.info('Node %s online with new agent ID %s', hostname, agent_id)
+                else:
+                    logger.warning('Node %s received new agent ID %s, but quickly went  offline', hostname, agent_id)
             # Update nodes from database models
-            for node_model in existing_node_models:
-                if node_model.hostname in self._nodes:
-                    node = self._nodes[node_model.hostname]
+            for node_model in node_models.values():
+                hostname = node_model.hostname
+                if hostname in self._nodes:
+                    # Host name already exists, update model information
+                    node = self._nodes[hostname]
                     node.update_from_model(node_model, scheduler)
                     if node.should_be_removed():
-                        del self._agent_ids[node.agent_id]
-                        del self._nodes[node_model.hostname]
+                        logger.info('Node %s removed since it is both offline and deprecated', hostname)
+                        del self._nodes[hostname]
+                        if node.agent_id in self._agents:
+                            del self._agents[node.agent_id]
                 else:
-                    logger.error('Node %s appears to have been removed from the database', node_model.hostname)
-            self._new_agent_ids -= new_agent_ids  # Batch of new agent IDs has been processed
+                    # Host name does not exist, must be an active node with no agent ID yet
+                    self._nodes[hostname] = SchedulerNode('', node_model, scheduler)
+                    self._nodes[hostname].update_from_mesos(is_online=False)
+                    logger.info('Active node %s registered from the database (currently offline)', hostname)
+            # Finished this batch of new agents
+            for new_agent in new_agents.values():
+                if new_agent.agent_id in self._new_agents:
+                    del self._new_agents[new_agent.agent_id]
 
 
 node_mgr = NodeManager()

@@ -1,4 +1,4 @@
-"""Defines the class that manages the database sync background thread"""
+"""Defines the class that manages the synchronization background thread"""
 from __future__ import unicode_literals
 
 import datetime
@@ -10,6 +10,7 @@ from mesos.interface import mesos_pb2
 from job.execution.manager import job_exe_mgr
 from scheduler.cleanup.manager import cleanup_mgr
 from scheduler.node.manager import node_mgr
+from scheduler.resources.manager import resource_mgr
 from scheduler.sync.job_type_manager import job_type_mgr
 from scheduler.sync.scheduler_manager import scheduler_mgr
 from scheduler.sync.workspace_manager import workspace_mgr
@@ -24,8 +25,8 @@ WARN_THRESHOLD = datetime.timedelta(seconds=5)
 logger = logging.getLogger(__name__)
 
 
-class DatabaseSyncThread(BaseSchedulerThread):
-    """This class manages the database sync background thread for the scheduler"""
+class SyncThread(BaseSchedulerThread):
+    """This class manages the synchronization background thread for the scheduler"""
 
     def __init__(self, driver):
         """Constructor
@@ -34,7 +35,7 @@ class DatabaseSyncThread(BaseSchedulerThread):
         :type driver: :class:`mesos_api.mesos.SchedulerDriver`
         """
 
-        super(DatabaseSyncThread, self).__init__('Database sync', THROTTLE, WARN_THRESHOLD)
+        super(SyncThread, self).__init__('Synchronization', THROTTLE, WARN_THRESHOLD)
         self._driver = driver
 
     @property
@@ -65,9 +66,10 @@ class DatabaseSyncThread(BaseSchedulerThread):
         job_type_mgr.sync_with_database()
         workspace_mgr.sync_with_database()
 
-        mesos_master = scheduler_mgr.mesos_address
-        node_mgr.sync_with_database(mesos_master.hostname, mesos_master.port, scheduler_mgr.scheduler)
+        node_mgr.sync_with_database(scheduler_mgr.scheduler)
         cleanup_mgr.update_nodes(node_mgr.get_nodes())
+        mesos_master = scheduler_mgr.mesos_address
+        resource_mgr.sync_with_mesos(mesos_master.hostname, mesos_master.port)
 
         # Kill running tasks for canceled job executions
         for task_to_kill in job_exe_mgr.sync_with_database():
