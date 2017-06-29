@@ -170,9 +170,10 @@ class NodeManager(object):
             if agent.hostname not in node_models:
                 new_hostnames.append(agent.hostname)
                 new_agent_ids.append(agent.agent_id)
-        logger.info('Creating %d new node(s) in the database', len(new_hostnames))
-        for node_model in Node.objects.create_nodes(new_hostnames, new_agent_ids):
-            node_models[node_model.hostname] = node_model
+        if new_hostnames:
+            logger.info('Creating %d new node(s) in the database', len(new_hostnames))
+            for node_model in Node.objects.create_nodes(new_hostnames, new_agent_ids):
+                node_models[node_model.hostname] = node_model
 
         with self._lock:
             # Handle new agents
