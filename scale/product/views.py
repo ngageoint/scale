@@ -129,7 +129,8 @@ class ProductSourcesView(ListAPIView):
 
         order = rest_util.parse_string_list(request, 'order', required=False)
 
-        sources = ProductFile.objects.get_sources(product_id, started, ended, time_field, is_parsed, file_name, order)
+        sources = ProductFile.objects.get_product_sources(product_id, started, ended, time_field, is_parsed,
+                                                          file_name, order)
 
         page = self.paginate_queryset(sources)
         serializer = self.get_serializer(page, many=True)
