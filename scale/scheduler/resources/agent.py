@@ -133,16 +133,15 @@ class AgentResources(object):
         total_resources.generate_status_json(resources_dict, 'total', None)
 
         # Fill in any missing values
-        # TODO:
-        #for resource in total_resources.resources:
-        #    resource_dict = resources_dict[resource.name]
-        #    if 'running' not in resource_dict:
-        #        resource_dict['running'] = {'value': 0.0, 'percentage': 0.0}
-        #    if 'offered' not in resource_dict:
-        #        resource_dict['offered'] = {'value': 0.0, 'percentage': 0.0}
-        #    if 'free' not in resource_dict:
-        #        resource_dict['free'] = {'value': 0.0, 'percentage': 0.0}
-        #    if 'unavailable' not in resource_dict:
+        for resource in total_resources.resources:
+            resource_dict = resources_dict[resource.name]
+            if 'running' not in resource_dict:
+                resource_dict['running'] = {'value': 0.0, 'percentage': 0.0}
+            if 'offered' not in resource_dict:
+                resource_dict['offered'] = {'value': 0.0, 'percentage': 0.0}
+            if 'free' not in resource_dict:
+                resource_dict['free'] = {'value': 0.0, 'percentage': 0.0}
+            if 'unavailable' not in resource_dict:
         #        resource_dict['unavailable'] = {'value': 0.0, 'percentage': 0.0}
 
         num_offers = len(self._offers)

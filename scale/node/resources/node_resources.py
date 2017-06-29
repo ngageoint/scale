@@ -129,7 +129,7 @@ class NodeResources(object):
             if total_resources:
                 total_value = total_resources._resources[resource.name].value
                 if total_value:
-                    percentage = int(round(resource.value / total_value, 0))
+                    percentage = int(round(resource.value * 100 / total_value, 0))
                 else:
                     percentage = 0.0
                 resource_dict[key_name]['percentage'] = percentage
