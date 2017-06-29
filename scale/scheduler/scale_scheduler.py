@@ -208,7 +208,7 @@ class ScaleScheduler(MesosScheduler):
             agents[agent_id] = Agent(agent_id, hostname)
             resource_offers.append(ResourceOffer(offer_id, agent_id, framework_id, resources, started))
 
-        node_mgr.register_agents(agents.values)
+        node_mgr.register_agents(agents.values())
         resource_mgr.add_new_offers(resource_offers)
 
         duration = now() - started
