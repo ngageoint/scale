@@ -114,8 +114,10 @@ class AgentResources(object):
         free_resources = self._watermark_resources.copy()
         free_resources.subtract(self._task_resources)
         free_resources.subtract(self._offer_resources)
+        free_resources.round_values()
         unavailable_resources = total_resources.copy()
         unavailable_resources.subtract(self._watermark_resources)
+        unavailable_resources.round_values()
         resources_dict = {}
 
         if total_running:

@@ -182,6 +182,10 @@ class NodeManager(object):
                 hostname = new_agent.hostname
                 # For is_online, check if new agent ID is still in set or gone (i.e. removed by lost_node())
                 is_online = agent_id in self._new_agents
+                if is_online:
+                    logger.info('Node %s online with new agent ID %s', hostname, agent_id)
+                else:
+                    logger.warning('Node %s received new agent ID %s, but quickly went offline', hostname, agent_id)
                 if hostname in self._nodes:
                     # Host name already exists, must be a new agent ID
                     old_agent_id = self._nodes[hostname].agent_id
@@ -194,10 +198,6 @@ class NodeManager(object):
                     self._nodes[hostname] = SchedulerNode(agent_id, node_model, scheduler)
                     self._nodes[hostname].update_from_mesos(is_online=is_online)
                 self._agents[agent_id] = new_agent
-                if is_online:
-                    logger.info('Node %s online with new agent ID %s', hostname, agent_id)
-                else:
-                    logger.warning('Node %s received new agent ID %s, but quickly went  offline', hostname, agent_id)
             # Update nodes from database models
             for node_model in node_models.values():
                 hostname = node_model.hostname
@@ -212,9 +212,9 @@ class NodeManager(object):
                             del self._agents[node.agent_id]
                 else:
                     # Host name does not exist, must be an active node with no agent ID yet
+                    logger.info('Active node %s registered from the database (currently offline)', hostname)
                     self._nodes[hostname] = SchedulerNode('', node_model, scheduler)
                     self._nodes[hostname].update_from_mesos(is_online=False)
-                    logger.info('Active node %s registered from the database (currently offline)', hostname)
             # Finished this batch of new agents
             for new_agent in new_agents.values():
                 if new_agent.agent_id in self._new_agents:
