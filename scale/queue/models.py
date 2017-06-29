@@ -23,6 +23,7 @@ logger = logging.getLogger(__name__)
 
 QUEUE_ORDER_FIFO = 'FIFO'
 QUEUE_ORDER_LIFO = 'LIFO'
+DEFAULT_QUEUE_ORDER = QUEUE_ORDER_FIFO
 
 # IMPORTANT NOTE: Locking order
 # Always adhere to the following model order for obtaining row locks via select_for_update() in order to prevent

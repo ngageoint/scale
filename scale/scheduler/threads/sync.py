@@ -9,10 +9,10 @@ from mesos.interface import mesos_pb2
 
 from job.execution.manager import job_exe_mgr
 from scheduler.cleanup.manager import cleanup_mgr
+from scheduler.manager import scheduler_mgr
 from scheduler.node.manager import node_mgr
 from scheduler.resources.manager import resource_mgr
 from scheduler.sync.job_type_manager import job_type_mgr
-from scheduler.sync.scheduler_manager import scheduler_mgr
 from scheduler.sync.workspace_manager import workspace_mgr
 from scheduler.threads.base_thread import BaseSchedulerThread
 from scheduler.vault.manager import secrets_mgr
@@ -66,7 +66,7 @@ class SyncThread(BaseSchedulerThread):
         job_type_mgr.sync_with_database()
         workspace_mgr.sync_with_database()
 
-        node_mgr.sync_with_database(scheduler_mgr.scheduler)
+        node_mgr.sync_with_database(scheduler_mgr.config)
         cleanup_mgr.update_nodes(node_mgr.get_nodes())
         mesos_master = scheduler_mgr.mesos_address
         resource_mgr.sync_with_mesos(mesos_master.hostname, mesos_master.port)

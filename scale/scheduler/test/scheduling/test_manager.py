@@ -13,6 +13,7 @@ from node.resources.node_resources import NodeResources
 from node.resources.resource import Cpus, Disk, Mem
 from queue.models import Queue
 from queue.test import utils as queue_test_utils
+from scheduler.manager import scheduler_mgr
 from scheduler.models import Scheduler
 from scheduler.node.agent import Agent
 from scheduler.node.manager import node_mgr
@@ -20,7 +21,6 @@ from scheduler.resources.manager import resource_mgr
 from scheduler.resources.offer import ResourceOffer
 from scheduler.scheduling.manager import SchedulingManager
 from scheduler.sync.job_type_manager import job_type_mgr
-from scheduler.sync.scheduler_manager import scheduler_mgr
 
 
 class TestSchedulingManager(TestCase):
@@ -41,7 +41,7 @@ class TestSchedulingManager(TestCase):
         self.agent_2 = Agent('agent_2', 'host_2')
         node_mgr.clear()
         node_mgr.register_agents([self.agent_1, self.agent_2])
-        node_mgr.sync_with_database(scheduler_mgr.scheduler)
+        node_mgr.sync_with_database(scheduler_mgr.config)
         # Ignore initial cleanup, health check, and image pull tasks
         for node in node_mgr.get_nodes():
             node._last_heath_task = now()
@@ -82,7 +82,7 @@ class TestSchedulingManager(TestCase):
         resource_mgr.add_new_offers([offer_1, offer_2])
         Scheduler.objects.update(is_paused=True)
         scheduler_mgr.sync_with_database()
-        node_mgr.sync_with_database(scheduler_mgr.scheduler)  # Updates nodes with paused scheduler
+        node_mgr.sync_with_database(scheduler_mgr.config)  # Updates nodes with paused scheduler
 
         scheduling_manager = SchedulingManager()
         num_tasks = scheduling_manager.perform_scheduling(self._driver, now())

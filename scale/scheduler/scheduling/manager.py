@@ -15,12 +15,12 @@ from mesos_api.tasks import create_mesos_task
 from node.resources.node_resources import NodeResources
 from queue.job_exe import QueuedJobExecution
 from queue.models import Queue
+from scheduler.manager import scheduler_mgr
 from scheduler.node.manager import node_mgr
 from scheduler.resources.agent import ResourceSet
 from scheduler.resources.manager import resource_mgr
 from scheduler.scheduling.scheduling_node import SchedulingNode
 from scheduler.sync.job_type_manager import job_type_mgr
-from scheduler.sync.scheduler_manager import scheduler_mgr
 from scheduler.sync.workspace_manager import workspace_mgr
 from util.retry import retry_database_query
 
@@ -294,7 +294,7 @@ class SchedulingManager(object):
         ignore_job_type_ids = self._calculate_job_types_to_ignore(job_types, job_type_limits)
         started = now()
 
-        for queue in Queue.objects.get_queue(scheduler_mgr.queue_mode(), ignore_job_type_ids)[:QUEUE_LIMIT]:
+        for queue in Queue.objects.get_queue(scheduler_mgr.config.queue_mode, ignore_job_type_ids)[:QUEUE_LIMIT]:
             # If there are no longer any available nodes, break
             if not nodes:
                 break

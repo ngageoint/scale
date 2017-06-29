@@ -144,11 +144,11 @@ class NodeManager(object):
                     # Unknown agent ID, save it to be registered as a node
                     self._new_agents[agent_id] = agent
 
-    def sync_with_database(self, scheduler):
+    def sync_with_database(self, scheduler_config):
         """Syncs with the database to retrieve updated node models and queries Mesos for unknown agent IDs
 
-        :param scheduler: The scheduler model
-        :type scheduler: :class:`scheduler.models.Scheduler`
+        :param scheduler_config: The scheduler configuration
+        :type scheduler_config: :class:`scheduler.configuration.SchedulerConfiguration`
         """
 
         with self._lock:
@@ -195,7 +195,7 @@ class NodeManager(object):
                 else:
                     # Host name does not exist, register a new node
                     node_model = node_models[hostname]
-                    self._nodes[hostname] = SchedulerNode(agent_id, node_model, scheduler)
+                    self._nodes[hostname] = SchedulerNode(agent_id, node_model, scheduler_config)
                     self._nodes[hostname].update_from_mesos(is_online=is_online)
                 self._agents[agent_id] = new_agent
             # Update nodes from database models
@@ -204,7 +204,7 @@ class NodeManager(object):
                 if hostname in self._nodes:
                     # Host name already exists, update model information
                     node = self._nodes[hostname]
-                    node.update_from_model(node_model, scheduler)
+                    node.update_from_model(node_model, scheduler_config)
                     if node.should_be_removed():
                         logger.info('Node %s removed since it is both offline and deprecated', hostname)
                         del self._nodes[hostname]
@@ -213,7 +213,7 @@ class NodeManager(object):
                 else:
                     # Host name does not exist, must be an active node with no agent ID yet
                     logger.info('Active node %s registered from the database (currently offline)', hostname)
-                    self._nodes[hostname] = SchedulerNode('', node_model, scheduler)
+                    self._nodes[hostname] = SchedulerNode('', node_model, scheduler_config)
                     self._nodes[hostname].update_from_mesos(is_online=False)
             # Finished this batch of new agents
             for new_agent in new_agents.values():

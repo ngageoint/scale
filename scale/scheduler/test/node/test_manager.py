@@ -13,6 +13,7 @@ from job.test import utils as job_test_utils
 from node.models import Node
 from node.test import utils as node_test_utils
 from scheduler.cleanup.manager import CleanupManager
+from scheduler.manager import scheduler_mgr
 from scheduler.models import Scheduler
 from scheduler.node.agent import Agent
 from scheduler.node.manager import NodeManager
@@ -23,7 +24,6 @@ class TestNodeManager(TestCase):
     def setUp(self):
         django.setup()
 
-        self.scheduler = Scheduler()
         self.agent_1 = Agent('agent_1', 'host_1')
         self.agent_2 = Agent('agent_2', 'host_2')
         self.agent_3 = Agent('agent_3', 'host_2')  # Will represent a new agent ID for host 2
@@ -34,7 +34,7 @@ class TestNodeManager(TestCase):
 
         manager = NodeManager()
         manager.register_agents([self.agent_1, self.agent_2])
-        manager.sync_with_database(self.scheduler)
+        manager.sync_with_database(scheduler_mgr.config)
 
         nodes = manager.get_nodes()
         self.assertEqual(len(nodes), 2)
@@ -45,14 +45,14 @@ class TestNodeManager(TestCase):
         # Initial sync
         manager = NodeManager()
         manager.register_agents([self.agent_1, self.agent_2])
-        manager.sync_with_database(self.scheduler)
+        manager.sync_with_database(scheduler_mgr.config)
 
         # Database model changes to inactive
         self.node_1.is_active = False
         self.node_1.save()
 
         # Sync with database
-        manager.sync_with_database(self.scheduler)
+        manager.sync_with_database(scheduler_mgr.config)
 
         found_node_1 = False
         for node in manager.get_nodes():
@@ -67,7 +67,7 @@ class TestNodeManager(TestCase):
         # Initial sync
         manager = NodeManager()
         manager.register_agents([self.agent_1, self.agent_2])
-        manager.sync_with_database(self.scheduler)
+        manager.sync_with_database(scheduler_mgr.config)
 
         # Database model changes to inactive
         self.node_1.is_active = False
@@ -77,7 +77,7 @@ class TestNodeManager(TestCase):
         manager.lost_node(self.agent_1.agent_id)
 
         # Sync with database
-        manager.sync_with_database(self.scheduler)
+        manager.sync_with_database(scheduler_mgr.config)
 
         # Make sure node 1 is gone
         found_node_1 = False
@@ -92,20 +92,20 @@ class TestNodeManager(TestCase):
         # Initial sync
         manager = NodeManager()
         manager.register_agents([self.agent_1, self.agent_2])
-        manager.sync_with_database(self.scheduler)
+        manager.sync_with_database(scheduler_mgr.config)
 
         self.node_1.hostname = 'new_host_1'
         self.node_1.save()
 
         # No exception is success
-        manager.sync_with_database(self.scheduler)
+        manager.sync_with_database(scheduler_mgr.config)
 
     def test_lost_known_node(self):
         """Tests the NodeManager where a known node was lost"""
 
         manager = NodeManager()
         manager.register_agents([self.agent_1, self.agent_2])
-        manager.sync_with_database(self.scheduler)
+        manager.sync_with_database(scheduler_mgr.config)
         manager.lost_node(self.agent_2.agent_id)
 
         nodes = manager.get_nodes()
@@ -121,7 +121,7 @@ class TestNodeManager(TestCase):
         manager = NodeManager()
         manager.register_agents([self.agent_1, self.agent_2])
         manager.lost_node(self.agent_2.agent_id)
-        manager.sync_with_database(self.scheduler)
+        manager.sync_with_database(scheduler_mgr.config)
 
         # Unknown node 2 was lost before syncing with database, it should not appear in the manager
         nodes = manager.get_nodes()
@@ -136,11 +136,11 @@ class TestNodeManager(TestCase):
 
         manager = NodeManager()
         manager.register_agents([self.agent_1, self.agent_2])
-        manager.sync_with_database(self.scheduler)
+        manager.sync_with_database(scheduler_mgr.config)
 
         manager.lost_node(self.agent_2.agent_id)
         manager.register_agents([self.agent_3])
-        manager.sync_with_database(self.scheduler)
+        manager.sync_with_database(scheduler_mgr.config)
 
         # Make sure two nodes are registered, one for agent 1 and one for agent 3, and both are online
         nodes = manager.get_nodes()
@@ -158,15 +158,15 @@ class TestNodeManager(TestCase):
 
         manager = NodeManager()
         manager.register_agents([self.agent_1, self.agent_2])
-        manager.sync_with_database(self.scheduler)
+        manager.sync_with_database(scheduler_mgr.config)
 
         # Node 2 is now inactive
         Node.objects.filter(id=manager.get_node(self.agent_2.agent_id).id).update(is_active=False)
-        manager.sync_with_database(self.scheduler)
+        manager.sync_with_database(scheduler_mgr.config)
 
         manager.lost_node(self.agent_2.agent_id)
         manager.register_agents([self.agent_3])
-        manager.sync_with_database(self.scheduler)
+        manager.sync_with_database(scheduler_mgr.config)
 
         # Make sure two nodes are registered, one for agent 1 and one for agent 3, and both are online
         nodes = manager.get_nodes()
@@ -186,7 +186,7 @@ class TestNodeManager(TestCase):
         when = now()
         manager = NodeManager()
         manager.register_agents([self.agent_1, self.agent_2])
-        manager.sync_with_database(self.scheduler)
+        manager.sync_with_database(scheduler_mgr.config)
         for node in manager.get_nodes():
             node._last_heath_task = when
             node._initial_cleanup_completed()
@@ -203,7 +203,7 @@ class TestNodeManager(TestCase):
         when = now()
         manager = NodeManager()
         manager.register_agents([self.agent_1, self.agent_2])
-        manager.sync_with_database(self.scheduler)
+        manager.sync_with_database(scheduler_mgr.config)
         for node in manager.get_nodes():
             node._last_heath_task = when
             node._initial_cleanup_completed()
@@ -220,7 +220,7 @@ class TestNodeManager(TestCase):
         # Node 2 changes agent ID to 3
         manager.lost_node(self.agent_2.agent_id)
         manager.register_agents([self.agent_3])
-        manager.sync_with_database(self.scheduler)
+        manager.sync_with_database(scheduler_mgr.config)
 
         # Should get new Docker pull task for node 2
         tasks = manager.get_next_tasks(when)
@@ -242,7 +242,7 @@ class TestNodeManager(TestCase):
         self.assertListEqual(tasks, [])  # No tasks yet due to no nodes
 
         manager.register_agents([self.agent_1, self.agent_2])
-        manager.sync_with_database(self.scheduler)
+        manager.sync_with_database(scheduler_mgr.config)
         for node in manager.get_nodes():
             node._last_heath_task = when
 
@@ -257,7 +257,7 @@ class TestNodeManager(TestCase):
         when = now()
         node_mgr = NodeManager()
         node_mgr.register_agents([self.agent_1, self.agent_2])
-        node_mgr.sync_with_database(self.scheduler)
+        node_mgr.sync_with_database(scheduler_mgr.config)
         cleanup_mgr = CleanupManager()
         cleanup_mgr.update_nodes(node_mgr.get_nodes())
         tasks = node_mgr.get_next_tasks(when)

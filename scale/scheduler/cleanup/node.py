@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 import logging
 
 from job.execution.tasks.cleanup_task import CleanupTask
-from scheduler.sync.scheduler_manager import scheduler_mgr
+from scheduler.manager import scheduler_mgr
 
 
 JOB_EXES_WARNING_THRESHOLD = 100

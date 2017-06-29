@@ -21,6 +21,7 @@ from node.resources.resource import ScalarResource
 from queue.models import Queue
 from scheduler.cleanup.manager import cleanup_mgr
 from scheduler.initialize import initialize_system
+from scheduler.manager import scheduler_mgr
 from scheduler.models import Scheduler
 from scheduler.node.agent import Agent
 from scheduler.node.manager import node_mgr
@@ -28,7 +29,6 @@ from scheduler.recon.manager import recon_mgr
 from scheduler.resources.manager import resource_mgr
 from scheduler.resources.offer import ResourceOffer
 from scheduler.sync.job_type_manager import job_type_mgr
-from scheduler.sync.scheduler_manager import scheduler_mgr
 from scheduler.sync.workspace_manager import workspace_mgr
 from scheduler.task.manager import task_update_mgr
 from scheduler.threads.recon import ReconciliationThread
