@@ -369,8 +369,8 @@ class ProductFileManager(models.GeoManager):
         :rtype: list[:class:`storage.models.ScaleFile`]
         """
 
-        from source.models import SourceFileManager
-        sources = SourceFileManager.filter_sources(started=started, ended=ended, time_field=time_field,
+        from source.models import SourceFile
+        sources = SourceFile.objects.filter_sources(started=started, ended=ended, time_field=time_field,
                                                    is_parsed=is_parsed, file_name=file_name, order=order)
         sources = sources.filter(ancestors__descendant_id=product_file_id)
 
