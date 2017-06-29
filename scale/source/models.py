@@ -71,7 +71,7 @@ class SourceFileManager(models.GeoManager):
             sources = sources.order_by('last_modified')
 
         return sources
-    
+
     def get_sources(self, started=None, ended=None, time_field=None, is_parsed=None, file_name=None, order=None):
         """Returns a list of source files within the given time range.
 
@@ -93,7 +93,7 @@ class SourceFileManager(models.GeoManager):
 
         return self.filter_sources(started=started, ended=ended, time_field=time_field, is_parsed=is_parsed,
                                    file_name=file_name, order=order)
-    
+
     def get_source_file_by_name(self, file_name):
         """Returns the source file with the given file name
 
