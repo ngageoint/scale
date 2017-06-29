@@ -143,7 +143,7 @@ class AgentResources(object):
         #    if 'free' not in resource_dict:
         #        resource_dict['free'] = {'value': 0.0, 'percentage': 0.0}
         #    if 'unavailable' not in resource_dict:
-                resource_dict['unavailable'] = {'value': 0.0, 'percentage': 0.0}
+        #        resource_dict['unavailable'] = {'value': 0.0, 'percentage': 0.0}
 
         num_offers = len(self._offers)
         node_dict['num_offers'] = num_offers
