@@ -126,23 +126,23 @@ class AgentResources(object):
             total_watermark.add(self._watermark_resources)
         if total:
             total.add(total_resources)
-        self._task_resources.generate_status_json(resources_dict, 'running', total_resources)
-        self._offer_resources.generate_status_json(resources_dict, 'offered', total_resources)
-        free_resources.generate_status_json(resources_dict, 'free', total_resources)
-        unavailable_resources.generate_status_json(resources_dict, 'unavailable', total_resources)
-        total_resources.generate_status_json(resources_dict, 'total', None)
+        self._task_resources.generate_status_json(resources_dict, 'running')
+        self._offer_resources.generate_status_json(resources_dict, 'offered')
+        free_resources.generate_status_json(resources_dict, 'free')
+        unavailable_resources.generate_status_json(resources_dict, 'unavailable')
+        total_resources.generate_status_json(resources_dict, 'total')
 
         # Fill in any missing values
         for resource in total_resources.resources:
             resource_dict = resources_dict[resource.name]
             if 'running' not in resource_dict:
-                resource_dict['running'] = {'value': 0.0, 'percentage': 0.0}
+                resource_dict['running'] = 0.0
             if 'offered' not in resource_dict:
-                resource_dict['offered'] = {'value': 0.0, 'percentage': 0.0}
+                resource_dict['offered'] = 0.0
             if 'free' not in resource_dict:
-                resource_dict['free'] = {'value': 0.0, 'percentage': 0.0}
+                resource_dict['free'] = 0.0
             if 'unavailable' not in resource_dict:
-                resource_dict['unavailable'] = {'value': 0.0, 'percentage': 0.0}
+                resource_dict['unavailable'] = 0.0
 
         num_offers = len(self._offers)
         node_dict['num_offers'] = num_offers

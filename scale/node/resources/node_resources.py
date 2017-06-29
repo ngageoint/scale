@@ -106,15 +106,13 @@ class NodeResources(object):
         resources_copy.add(self)
         return resources_copy
 
-    def generate_status_json(self, resources_dict, key_name, total_resources=None):
+    def generate_status_json(self, resources_dict, key_name):
         """Generates the portion of the status JSON that describes these resources
 
         :param resources_dict: The dict for all resources
         :type resources_dict: dict
         :param key_name: The key name for describing these resources
         :type key_name: string
-        :param total_resources: The total amount of the resources (for percentages), possibly None
-        :type total_resources: :class:`node.resources.NodeResources`
         """
 
         for resource in self._resources.values():
@@ -125,14 +123,7 @@ class NodeResources(object):
                 resources_dict[resource.name] = resource_dict
 
             # Assumes SCALAR type
-            resource_dict[key_name] = {'value': resource.value}
-            if total_resources:
-                total_value = total_resources._resources[resource.name].value
-                if total_value:
-                    percentage = int(round(resource.value * 100 / total_value, 0))
-                else:
-                    percentage = 0.0
-                resource_dict[key_name]['percentage'] = percentage
+            resource_dict[key_name] = resource.value
 
     def get_json(self):
         """Returns these resources as a JSON schema
