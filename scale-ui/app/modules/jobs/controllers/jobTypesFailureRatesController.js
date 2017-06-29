@@ -169,7 +169,7 @@
         vm.filterResults = function (skipInit, skipSort) {
             stateService.setJobTypesFailureRatesParams(vm.jobTypesParams);
             _.forEach(_.pairs(vm.jobTypesParams), function (param) {
-                $location.search(param[0], param[1]);
+                $location.search(param[0], param[1]).replace();
             });
             if (!skipInit) {
                 vm.gridOptions.data = [];

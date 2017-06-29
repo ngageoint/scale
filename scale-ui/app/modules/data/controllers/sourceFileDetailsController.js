@@ -187,7 +187,7 @@
             getSourceFileDetails();
             if (!qs.tab) {
                 qs.tab = ctrl.activeTab;
-                $location.search(qs);
+                $location.search(qs).replace();
             }
         };
 
@@ -196,7 +196,7 @@
         ctrl.showGrid = function (gridType) {
             qs.tab = gridType;
             ctrl.activeTab = gridType;
-            $location.search(qs);
+            $location.search(qs).replace();
         };
 
         ctrl.showMetadata = function () {

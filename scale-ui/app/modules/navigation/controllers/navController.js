@@ -11,7 +11,7 @@
         vm.docsUrl = scaleConfig.urls.documentation;
 
         vm.goto = function(loc) {
-            $location.search('');
+            $location.search('').replace();
             $location.path(loc);
         };
 

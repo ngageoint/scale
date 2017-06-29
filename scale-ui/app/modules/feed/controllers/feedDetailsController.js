@@ -51,7 +51,7 @@
                 vm.useIngestTime = $location.search().use_ingest_time;
             }
             var feedParams = getFeedParams();
-            $location.search(feedParams);
+            $location.search(feedParams).replace();
             feedService.getFeed(feedParams).then(function (data) {
                 vm.allFeeds = _.sortByOrder(data.results, ['strike.name'], ['asc']);
                 var strikeId = $location.search().strike_id;
@@ -86,7 +86,7 @@
         var setFeedUrl = function (){
             // set param in URL
             var params = getFeedParams();
-            $location.search(params);
+            $location.search(params).replace();
         };
 
         var initialize = function () {
