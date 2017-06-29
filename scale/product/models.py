@@ -370,9 +370,9 @@ class ProductFileManager(models.GeoManager):
         """
 
         from source.models import SourceFileManager
-        sources = SourceFileManager.filter_sources(started=None, ended=None, time_field=None, is_parsed=None,
-                                                   file_name=None, order=None)
-        sources = sources.filter(=product_file_id)
+        sources = SourceFileManager.filter_sources(started=started, ended=ended, time_field=time_field,
+                                                   is_parsed=is_parsed, file_name=file_name, order=order)
+        sources = sources.filter(ancestors__descendant_id=product_file_id)
 
         return sources 
 
