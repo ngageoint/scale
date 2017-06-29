@@ -18,6 +18,8 @@
             recipeService.getRecipeDetails(recipeId).then(function (data) {
                 vm.recipe = data;
                 recipeService.getRecipeTypeDetail(data.recipe_type_rev.recipe_type.id).then(function(recipeType){
+                    // use definition from recipe type revision
+                    recipeType.definition = vm.recipe.recipe_type_rev.definition;
                     vm.recipeType = recipeType;
                 }).catch(function(error){
                    console.log(error);
