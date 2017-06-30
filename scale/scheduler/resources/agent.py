@@ -3,16 +3,33 @@ from __future__ import unicode_literals
 
 import datetime
 import logging
-from collections import namedtuple
 
 from node.resources.node_resources import NodeResources
 
 # Maximum time that each offer should be held
 MAX_OFFER_HOLD_DURATION = datetime.timedelta(seconds=10)
 
-ResourceSet = namedtuple('ResourceSet', ['offered_resources', 'task_resources', 'watermark_resources'])
 
 logger = logging.getLogger(__name__)
+
+
+class ResourceSet(object):
+    """This class represents a set of resources on an agent"""
+
+    def __init__(self, offered_resources=None, task_resources=None, watermark_resources=None):
+        """Constructor
+
+        :param offered_resources: The offered resources
+        :type offered_resources: :class:`node.resources.node_resources.NodeResources`
+        :param task_resources: The resources used by currently running tasks
+        :type task_resources: :class:`node.resources.node_resources.NodeResources`
+        :param watermark_resources: The watermark resources
+        :type watermark_resources: :class:`node.resources.node_resources.NodeResources`
+        """
+
+        self.offered_resources = offered_resources if offered_resources else NodeResources()
+        self.task_resources = task_resources if task_resources else NodeResources()
+        self.watermark_resources = watermark_resources if watermark_resources else NodeResources()
 
 
 class AgentResources(object):
@@ -27,11 +44,14 @@ class AgentResources(object):
 
         self.agent_id = agent_id
         self._offers = {}  # {Offer ID: ResourceOffer}
-        self._offer_resources = NodeResources()  # Total resources from offers
-        self._shortage_resources = NodeResources()  # Resources that agent needs to fulfill current obligations
+        self._recent_watermark_resources = NodeResources()  # Recent watermark, used to provide a rolling watermark
         self._task_resources = NodeResources()  # Total resources for current tasks
         self._watermark_resources = NodeResources()  # Highest level of offer + task resources
-        self._recent_watermark_resources = NodeResources()  # Recent watermark, used to provide a rolling watermark
+
+        self._offer_resources = None  # Resources from offers
+        self._shortage_resources = None  # Resources that agent needs to fulfill current obligations
+        self._total_resources = None
+        self._update_resources()
 
     def allocate_offers(self, resources, when):
         """Directs the agent to allocate offers sufficient to match the given resources. Any offers that have been held
@@ -67,39 +87,78 @@ class AgentResources(object):
         # Remove allocated offers and return them
         for offer in allocated_offers.values():
             del self._offers[offer.id]
-        self._offer_resources.subtract(allocated_resources)
+        self._update_resources()
         return allocated_offers.values()
 
-    def generate_status_json(self, node_dict, total_running, total_offered, total_watermark):
+    def generate_status_json(self, node_dict, total_running=None, total_offered=None, total_watermark=None, total=None):
         """Generates the portion of the status JSON that describes the resources for this agent
 
         :param node_dict: The dict for this agent's node within the status JSON
         :type node_dict: dict
-        :param total_running: The total running resources to add up
+        :param total_running: The total running resources to add up, possibly None
         :type total_running: :class:`node.resources.node_resources.NodeResources`
-        :param total_offered: The total offered resources to add up
+        :param total_offered: The total offered resources to add up, possibly None
         :type total_offered: :class:`node.resources.node_resources.NodeResources`
-        :param total_watermark: The total watermark resources to add up
+        :param total_watermark: The total watermark resources to add up, possibly None
         :type total_watermark: :class:`node.resources.node_resources.NodeResources`
+        :param total: The total resources to add up, possibly None
+        :type total: :class:`node.resources.node_resources.NodeResources`
+        :returns: The total number of offers this agent has
+        :rtype: int
         """
 
-        running_dict = {}
-        self._task_resources.generate_status_json(running_dict)
-        total_running.add(self._task_resources)
-        offered_dict = {}
-        self._offer_resources.generate_status_json(offered_dict)
-        total_offered.add(self._offer_resources)
-        watermark_dict = {}
-        self._watermark_resources.generate_status_json(watermark_dict)
-        total_watermark.add(self._watermark_resources)
+        if self._total_resources:
+            total_resources = self._total_resources
+        else:
+            total_resources = self._watermark_resources
+        free_resources = self._watermark_resources.copy()
+        free_resources.subtract(self._task_resources)
+        free_resources.subtract(self._offer_resources)
+        free_resources.round_values()
+        unavailable_resources = total_resources.copy()
+        unavailable_resources.subtract(self._watermark_resources)
+        unavailable_resources.round_values()
+        resources_dict = {}
 
-        node_dict['resources'] = {'num_offers': len(self._offers), 'running': running_dict, 'offered': offered_dict,
-                                  'watermark': watermark_dict}
+        if total_running:
+            total_running.add(self._task_resources)
+        if total_offered:
+            total_offered.add(self._offer_resources)
+        if total_watermark:
+            total_watermark.add(self._watermark_resources)
+        if total:
+            total.add(total_resources)
+        self._task_resources.generate_status_json(resources_dict, 'running')
+        self._offer_resources.generate_status_json(resources_dict, 'offered')
+        free_resources.generate_status_json(resources_dict, 'free')
+        unavailable_resources.generate_status_json(resources_dict, 'unavailable')
+        total_resources.generate_status_json(resources_dict, 'total')
 
-        if self._shortage_resources:
-            shortage_dict = {}
-            self._shortage_resources.generate_status_json(shortage_dict)
-            node_dict['resources']['shortage'] = shortage_dict
+        # Fill in any missing values
+        for resource in total_resources.resources:
+            resource_dict = resources_dict[resource.name]
+            if 'running' not in resource_dict:
+                resource_dict['running'] = 0.0
+            if 'offered' not in resource_dict:
+                resource_dict['offered'] = 0.0
+            if 'free' not in resource_dict:
+                resource_dict['free'] = 0.0
+            if 'unavailable' not in resource_dict:
+                resource_dict['unavailable'] = 0.0
+
+        num_offers = len(self._offers)
+        node_dict['num_offers'] = num_offers
+        node_dict['resources'] = resources_dict
+        return num_offers
+
+    def has_total_resources(self):
+        """Indicates whether this agent knows its total resources or not
+
+        :returns: True if agent knows its total resources, False otherwise
+        :rtype: bool
+        """
+
+        return self._total_resources is not None
 
     def refresh_resources(self, offers, tasks):
         """Refreshes the agent's resources by setting the current running tasks and adding new resource offers. Returns
@@ -117,26 +176,12 @@ class AgentResources(object):
         for offer in offers:
             if offer.id not in self._offers:
                 self._offers[offer.id] = offer
-                self._offer_resources.add(offer.resources)
 
-        # Recalculate task resources
-        self._task_resources = NodeResources()
-        for task in tasks:
-            self._task_resources.add(task.get_resources())
+        self._update_resources(tasks)
 
-        # Increase watermark if needed
-        total_resources = NodeResources()
-        total_resources.add(self._offer_resources)
-        total_resources.add(self._task_resources)
-        self._watermark_resources.increase_up_to(total_resources)
-        self._recent_watermark_resources.increase_up_to(total_resources)
-
-        offered_resources = NodeResources()
-        task_resources = NodeResources()
-        watermark_resources = NodeResources()
-        offered_resources.add(self._offer_resources)
-        task_resources.add(self._task_resources)
-        watermark_resources.add(self._watermark_resources)
+        offered_resources = self._offer_resources.copy()
+        task_resources = self._task_resources.copy()
+        watermark_resources = self._watermark_resources.copy()
         return ResourceSet(offered_resources, task_resources, watermark_resources)
 
     def rescind_offers(self, offer_ids):
@@ -149,8 +194,8 @@ class AgentResources(object):
         for offer_id in offer_ids:
             if offer_id in self._offers:
                 offer = self._offers[offer_id]
-                self._offer_resources.subtract(offer.resources)
                 del self._offers[offer_id]
+        self._update_resources()
 
     def reset_watermark(self):
         """Resets the agent's watermark to the highest recent value
@@ -158,6 +203,7 @@ class AgentResources(object):
 
         self._watermark_resources = self._recent_watermark_resources
         self._recent_watermark_resources = NodeResources()
+        self._update_resources()
 
     def set_shortage(self, shortage_resources=None):
         """Sets the resource shortage for the agent, if any
@@ -168,4 +214,53 @@ class AgentResources(object):
 
         if shortage_resources:
             logger.warning('Agent %s has a shortage of %s', self.agent_id, shortage_resources)
+            shortage_resources.round_values()
         self._shortage_resources = shortage_resources
+
+    def set_total(self, total_resources):
+        """Sets the total resources for the agent
+
+        :param total_resources: The total resources
+        :type total_resources: :class:`node.resources.node_resources.NodeResources`
+        """
+
+        self._total_resources = total_resources
+
+    def _update_resources(self, tasks=None):
+        """Updates the agent's resources from its current offers and tasks
+
+        :param tasks: The new list of current tasks running on the agent, possibly None
+        :type tasks: list
+        """
+
+        # Add up offered resources
+        self._offer_resources = NodeResources()
+        for offer in self._offers.values():
+            self._offer_resources.add(offer.resources)
+
+        # Recalculate task resources if needed
+        if tasks is not None:
+            self._task_resources = NodeResources()
+            for task in tasks:
+                self._task_resources.add(task.get_resources())
+
+        # Increase watermark if needed
+        available_resources = self._offer_resources.copy()
+        available_resources.add(self._task_resources)
+        self._watermark_resources.increase_up_to(available_resources)
+        self._recent_watermark_resources.increase_up_to(available_resources)
+
+        # Make sure watermark does not exceed total (can happen when we get task resources back before task update)
+        if self._total_resources and not self._total_resources.is_sufficient_to_meet(self._watermark_resources):
+            self._watermark_resources.limit_to(self._total_resources)
+            self._recent_watermark_resources.limit_to(self._total_resources)
+            # Since watermark was limited to not be higher than total, we're going to limit offered resources so that
+            # offered + task = watermark
+            max_offered = self._watermark_resources.copy()
+            max_offered.subtract(self._task_resources)
+            self._offer_resources.limit_to(max_offered)
+
+        # Round values to deal with float precision issues
+        self._offer_resources.round_values()
+        self._task_resources.round_values()
+        self._watermark_resources.round_values()

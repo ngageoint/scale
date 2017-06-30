@@ -106,15 +106,24 @@ class NodeResources(object):
         resources_copy.add(self)
         return resources_copy
 
-    def generate_status_json(self, resource_dict):
+    def generate_status_json(self, resources_dict, key_name):
         """Generates the portion of the status JSON that describes these resources
 
-        :param resource_dict: The dict for these resources
-        :type resource_dict: dict
+        :param resources_dict: The dict for all resources
+        :type resources_dict: dict
+        :param key_name: The key name for describing these resources
+        :type key_name: string
         """
 
         for resource in self._resources.values():
-            resource_dict[resource.name] = resource.value  # Assumes SCALAR type
+            if resource.name in resources_dict:
+                resource_dict = resources_dict[resource.name]
+            else:
+                resource_dict = {}
+                resources_dict[resource.name] = resource_dict
+
+            # Assumes SCALAR type
+            resource_dict[key_name] = resource.value
 
     def get_json(self):
         """Returns these resources as a JSON schema
@@ -185,6 +194,20 @@ class NodeResources(object):
 
         return True
 
+    def limit_to(self, node_resources):
+        """Limits each resource, subtracting any amount that goes over the amount in the given node resources
+
+        :param node_resources: The resources
+        :type node_resources: :class:`node.resources.NodeResources`
+        """
+
+        for resource in self._resources.values():
+            if resource.name in node_resources._resources:
+                if resource.value > node_resources._resources[resource.name].value:  # Assumes SCALAR type
+                    resource.value = node_resources._resources[resource.name].value
+            else:
+                self.remove_resource(resource.name)
+
     def remove_resource(self, name):
         """Removes the resource with the given name
 
@@ -197,6 +220,13 @@ class NodeResources(object):
                 self._resources[name].value = 0.0
             else:
                 del self._resources[name]
+
+    def round_values(self):
+        """Rounds all of the resource values
+        """
+
+        for resource in self._resources.values():
+            resource.value = round(resource.value, 2)  # Assumes SCALAR type
 
     def subtract(self, node_resources):
         """Subtracts the given resources

@@ -3,8 +3,8 @@ from __future__ import unicode_literals
 import django
 from django.test import TestCase
 
+from scheduler.manager import SchedulerManager
 from scheduler.models import Scheduler
-from scheduler.sync.scheduler_manager import SchedulerManager
 
 
 class TestSchedulerManager(TestCase):

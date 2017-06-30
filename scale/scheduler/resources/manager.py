@@ -2,13 +2,18 @@
 from __future__ import unicode_literals
 
 import datetime
+import logging
 import threading
 
+from mesos_api.unversioned.agent import get_agent_resources
 from node.resources.node_resources import NodeResources
 from scheduler.resources.agent import AgentResources
 
 # Amount of time between rolling watermark resets
 WATERMARK_RESET_PERIOD = datetime.timedelta(minutes=5)
+
+
+logger = logging.getLogger(__name__)
 
 
 class ResourceManager(object):
@@ -77,24 +82,56 @@ class ResourceManager(object):
         :type status_dict: dict
         """
 
+        num_offers = 0
         total_running = NodeResources()
         total_offered = NodeResources()
         total_watermark = NodeResources()
+        total_resources = NodeResources()
 
         with self._agent_resources_lock:
             for node_dict in status_dict['nodes']:
                 agent_id = node_dict['agent_id']
+                is_active = node_dict['is_active']
                 if agent_id in self._agent_resources:
                     agent_resources = self._agent_resources[agent_id]
-                    agent_resources.generate_status_json(node_dict, total_running, total_offered, total_watermark)
+                    if is_active:
+                        num_offers += agent_resources.generate_status_json(node_dict, total_running, total_offered,
+                                                                           total_watermark, total_resources)
+                    else:
+                        agent_resources.generate_status_json(node_dict)
 
-        running_dict = {}
-        total_running.generate_status_json(running_dict)
-        offered_dict = {}
-        total_offered.generate_status_json(offered_dict)
-        watermark_dict = {}
-        total_watermark.generate_status_json(watermark_dict)
-        status_dict['resources'] = {'running': running_dict, 'offered': offered_dict, 'watermark': watermark_dict}
+        free_resources = total_watermark.copy()
+        free_resources.subtract(total_running)
+        free_resources.subtract(total_offered)
+        unavailable_resources = total_resources.copy()
+        unavailable_resources.subtract(total_watermark)
+        resources_dict = {}
+
+        total_running.round_values()
+        total_offered.round_values()
+        free_resources.round_values()
+        unavailable_resources.round_values()
+        total_resources.round_values()
+        total_running.generate_status_json(resources_dict, 'running')
+        total_offered.generate_status_json(resources_dict, 'offered')
+        free_resources.generate_status_json(resources_dict, 'free')
+        unavailable_resources.generate_status_json(resources_dict, 'unavailable')
+        total_resources.generate_status_json(resources_dict, 'total')
+
+        # Fill in any missing values
+        for resource in total_resources.resources:
+            resource_dict = resources_dict[resource.name]
+            if 'running' not in resource_dict:
+                resource_dict['running'] = 0.0
+            if 'offered' not in resource_dict:
+                resource_dict['offered'] = 0.0
+            if 'free' not in resource_dict:
+                resource_dict['free'] = 0.0
+            if 'unavailable' not in resource_dict:
+                resource_dict['unavailable'] = 0.0
+
+        status_dict['num_offers'] = num_offers
+        status_dict['resources'] = resources_dict
 
     def lost_agent(self, agent_id):
         """Informs the manager that the agent with the given ID was lost and has gone offline
@@ -196,5 +233,29 @@ class ResourceManager(object):
                 else:
                     agent_resources.set_shortage()
 
+    def sync_with_mesos(self, master_hostname, master_port):
+        """Syncs with Mesos to retrieve the resouce totals needed by any agents
+
+        :param master_hostname: The name of the Mesos master host
+        :type master_hostname: string
+        :param master_port: The port used by the Mesos master
+        :type master_port: int
+        """
+
+        agents_needing_totals = set()
+        with self._agent_resources_lock:
+            for agent_resources in self._agent_resources.values():
+                if not agent_resources.has_total_resources():
+                    agents_needing_totals.add(agent_resources.agent_id)
+
+        resources = {}
+        try:
+            resources = get_agent_resources(master_hostname, master_port, agents_needing_totals)
+        except:
+            logger.exception('Error getting agent resource totals from Mesos')
+
+        with self._agent_resources_lock:
+            for agent_id in resources:
+                self._agent_resources[agent_id].set_total(resources[agent_id])
 
 resource_mgr = ResourceManager()

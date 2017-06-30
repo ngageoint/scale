@@ -21,19 +21,20 @@ from node.resources.resource import ScalarResource
 from queue.models import Queue
 from scheduler.cleanup.manager import cleanup_mgr
 from scheduler.initialize import initialize_system
+from scheduler.manager import scheduler_mgr
 from scheduler.models import Scheduler
+from scheduler.node.agent import Agent
 from scheduler.node.manager import node_mgr
 from scheduler.recon.manager import recon_mgr
 from scheduler.resources.manager import resource_mgr
 from scheduler.resources.offer import ResourceOffer
 from scheduler.sync.job_type_manager import job_type_mgr
-from scheduler.sync.scheduler_manager import scheduler_mgr
 from scheduler.sync.workspace_manager import workspace_mgr
 from scheduler.task.manager import task_update_mgr
-from scheduler.threads.db_sync import DatabaseSyncThread
 from scheduler.threads.recon import ReconciliationThread
 from scheduler.threads.schedule import SchedulingThread
 from scheduler.threads.scheduler_status import SchedulerStatusThread
+from scheduler.threads.sync import SyncThread
 from scheduler.threads.task_handling import TaskHandlingThread
 from scheduler.threads.task_update import TaskUpdateThread
 from util.host import HostAddress
@@ -60,10 +61,10 @@ class ScaleScheduler(MesosScheduler):
         self._master_hostname = None
         self._master_port = None
 
-        self._db_sync_thread = None
         self._recon_thread = None
         self._scheduler_status_thread = None
         self._scheduling_thread = None
+        self._sync_thread = None
         self._task_handling_thread = None
         self._task_update_thread = None
 
@@ -97,11 +98,6 @@ class ScaleScheduler(MesosScheduler):
         workspace_mgr.sync_with_database()
 
         # Start up background threads
-        self._db_sync_thread = DatabaseSyncThread(self._driver)
-        db_sync_thread = threading.Thread(target=self._db_sync_thread.run)
-        db_sync_thread.daemon = True
-        db_sync_thread.start()
-
         self._recon_thread = ReconciliationThread()
         recon_thread = threading.Thread(target=self._recon_thread.run)
         recon_thread.daemon = True
@@ -116,6 +112,11 @@ class ScaleScheduler(MesosScheduler):
         scheduling_thread = threading.Thread(target=self._scheduling_thread.run)
         scheduling_thread.daemon = True
         scheduling_thread.start()
+
+        self._sync_thread = SyncThread(self._driver)
+        sync_thread = threading.Thread(target=self._sync_thread.run)
+        sync_thread.daemon = True
+        sync_thread.start()
 
         self._task_handling_thread = TaskHandlingThread(self._driver)
         task_handling_thread = threading.Thread(target=self._task_handling_thread.run)
@@ -149,9 +150,9 @@ class ScaleScheduler(MesosScheduler):
         scheduler_mgr.update_from_mesos(mesos_address=HostAddress(self._master_hostname, self._master_port))
 
         # Update driver for background threads
-        self._db_sync_thread.driver = self._driver
         recon_mgr.driver = self._driver
         self._scheduling_thread.driver = self._driver
+        self._sync_thread.driver = self._driver
         self._task_handling_thread.driver = self._driver
 
         self._reconcile_running_jobs()
@@ -190,24 +191,29 @@ class ScaleScheduler(MesosScheduler):
 
         started = now()
 
-        agent_ids = set()
+        agents = {}
         resource_offers = []
         total_resources = NodeResources()
         for offer in offers:
             offer_id = offer.id.value
             agent_id = offer.slave_id.value
             framework_id = offer.framework_id.value
+            hostname = offer.hostname
             resource_list = []
             for resource in offer.resources:
                 if resource.type == 0:  # This is the SCALAR type
                     resource_list.append(ScalarResource(resource.name, resource.scalar.value))
             resources = NodeResources(resource_list)
             total_resources.add(resources)
-            agent_ids.add(agent_id)
+            agents[agent_id] = Agent(agent_id, hostname)
             resource_offers.append(ResourceOffer(offer_id, agent_id, framework_id, resources, started))
 
-        node_mgr.register_agent_ids(agent_ids)
+        node_mgr.register_agents(agents.values())
         resource_mgr.add_new_offers(resource_offers)
+
+        num_offers = len(resource_offers)
+        logger.info('Received %d offer(s) with %s from %d node(s)', num_offers, total_resources, len(agents))
+        scheduler_mgr.add_new_offer_count(num_offers)
 
         duration = now() - started
         msg = 'Scheduler resourceOffers() took %.3f seconds'
@@ -215,9 +221,6 @@ class ScaleScheduler(MesosScheduler):
             logger.warning(msg, duration.total_seconds())
         else:
             logger.debug(msg, duration.total_seconds())
-
-        logger.info('Received %d offer(s) with %s from %d node(s)', len(resource_offers), total_resources,
-                    len(agent_ids))
 
     def offerRescinded(self, driver, offerId):
         """
@@ -262,6 +265,8 @@ class ScaleScheduler(MesosScheduler):
         mesos_status = model.status
         task_update = TaskStatusUpdate(model, utils.get_status_agent_id(status), utils.get_status_data(status))
         task_id = task_update.task_id
+        was_task_finished = task_update.status in TaskStatusUpdate.TERMINAL_STATUSES
+        was_job_finished = False
 
         if mesos_status == 'TASK_ERROR':
             logger.error('Status update for task %s: %s', task_id, mesos_status)
@@ -286,6 +291,7 @@ class ScaleScheduler(MesosScheduler):
             try:
                 job_exe = job_exe_mgr.handle_task_update(task_update)
                 if job_exe and job_exe.is_finished():
+                    was_job_finished = True
                     cleanup_mgr.add_job_execution(job_exe)
             except Exception:
                 job_exe_id = JobExecution.get_job_exe_id(task_id)
@@ -297,6 +303,8 @@ class ScaleScheduler(MesosScheduler):
         else:
             # Not a job task, so must be a node task
             node_mgr.handle_task_update(task_update)
+
+        scheduler_mgr.add_task_update_counts(was_task_finished, was_job_finished)
 
         duration = now() - started
         msg = 'Scheduler statusUpdate() took %.3f seconds'
@@ -416,10 +424,10 @@ class ScaleScheduler(MesosScheduler):
         """
 
         logger.info('Scheduler shutdown invoked, stopping background threads')
-        self._db_sync_thread.shutdown()
         self._recon_thread.shutdown()
         self._scheduler_status_thread.shutdown()
         self._scheduling_thread.shutdown()
+        self._sync_thread.shutdown()
         self._task_handling_thread.shutdown()
         self._task_update_thread.shutdown()
 

@@ -15,11 +15,12 @@ from mesos_api.tasks import create_mesos_task
 from node.resources.node_resources import NodeResources
 from queue.job_exe import QueuedJobExecution
 from queue.models import Queue
+from scheduler.manager import scheduler_mgr
 from scheduler.node.manager import node_mgr
+from scheduler.resources.agent import ResourceSet
 from scheduler.resources.manager import resource_mgr
 from scheduler.scheduling.scheduling_node import SchedulingNode
 from scheduler.sync.job_type_manager import job_type_mgr
-from scheduler.sync.scheduler_manager import scheduler_mgr
 from scheduler.sync.workspace_manager import workspace_mgr
 from util.retry import retry_database_query
 
@@ -81,8 +82,8 @@ class SchedulingManager(object):
             return 0
 
         self._allocate_offers(nodes)
-        task_count = self._launch_tasks(driver, nodes)
-        scheduler_mgr.add_scheduling_counts(job_exe_count, task_count)
+        task_count, offer_count = self._launch_tasks(driver, nodes)
+        scheduler_mgr.add_scheduling_counts(job_exe_count, task_count, offer_count)
         return task_count
 
     def _allocate_offers(self, nodes):
@@ -158,8 +159,8 @@ class SchedulingManager(object):
         :type driver: :class:`mesos_api.mesos.SchedulerDriver`
         :param nodes: The dict of all scheduling nodes stored by node ID
         :type nodes: dict
-        :returns: The number of tasks that were launched
-        :rtype: int
+        :returns: The number of tasks that were launched and the number of offers accepted
+        :rtype: tuple
         """
 
         started = now()
@@ -217,7 +218,7 @@ class SchedulingManager(object):
             logger.info('Accepted %d offer(s) from %d node(s), launched %d task(s) with %s on %d node(s), declined %s',
                         total_offer_count, total_node_count, total_task_count, total_task_resources, node_count,
                         declined_resources)
-        return total_task_count
+        return total_task_count, total_offer_count
 
     def _prepare_nodes(self, tasks, running_job_exes, when):
         """Prepares the nodes to use for scheduling
@@ -267,7 +268,7 @@ class SchedulingManager(object):
             if agent_id in agent_resources:
                 resource_set = agent_resources[agent_id]
             else:
-                resource_set = None
+                resource_set = ResourceSet()
 
             scheduling_node = SchedulingNode(agent_id, node, node_tasks, node_exes, resource_set)
             scheduling_nodes[scheduling_node.node_id] = scheduling_node
@@ -293,7 +294,7 @@ class SchedulingManager(object):
         ignore_job_type_ids = self._calculate_job_types_to_ignore(job_types, job_type_limits)
         started = now()
 
-        for queue in Queue.objects.get_queue(scheduler_mgr.queue_mode(), ignore_job_type_ids)[:QUEUE_LIMIT]:
+        for queue in Queue.objects.get_queue(scheduler_mgr.config.queue_mode, ignore_job_type_ids)[:QUEUE_LIMIT]:
             # If there are no longer any available nodes, break
             if not nodes:
                 break

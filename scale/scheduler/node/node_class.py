@@ -12,8 +12,8 @@ from job.tasks.health_task import HealthTask
 from job.tasks.pull_task import PullTask
 from job.tasks.update import TaskStatusUpdate
 from scheduler.cleanup.node import NodeCleanup
+from scheduler.manager import scheduler_mgr
 from scheduler.node.conditions import NodeConditions
-from scheduler.sync.scheduler_manager import scheduler_mgr
 
 
 logger = logging.getLogger(__name__)
@@ -265,13 +265,13 @@ class Node(object):
                 self._is_online = is_online
             self._update_state()
 
-    def update_from_model(self, node, scheduler):
+    def update_from_model(self, node, scheduler_config):
         """Updates this node's data from the database models
 
         :param node: The node model
         :type node: :class:`node.models.Node`
-        :param scheduler: The scheduler model
-        :type scheduler: :class:`scheduler.models.Scheduler`
+        :param scheduler_config: The scheduler configuration
+        :type scheduler_config: :class:`scheduler.configuration.SchedulerConfiguration`
         """
 
         if self.id != node.id:
@@ -280,7 +280,7 @@ class Node(object):
         with self._lock:
             self._is_active = node.is_active
             self._is_paused = node.is_paused
-            self._is_scheduler_paused = scheduler.is_paused
+            self._is_scheduler_paused = scheduler_config.is_paused
             self._update_state()
 
     def _create_next_tasks(self, when):
@@ -493,7 +493,7 @@ class Node(object):
         else:
             self._state = self.READY
 
-        if old_state != self._state:
+        if old_state and old_state != self._state:
             if self._state == self.DEGRADED:
                 logger.warning('Node %s is now in %s state', self._hostname, self._state.state)
             else:

@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import logging
 import os
 import signal
+import socket
 import sys
 
 from optparse import make_option
@@ -18,6 +19,7 @@ except ImportError:
         def __init__(self, *args, **kargs):
             pass
 
+from scheduler.manager import scheduler_mgr
 from scheduler.scale_scheduler import ScaleScheduler
 
 logger = logging.getLogger(__name__)
@@ -60,7 +62,6 @@ class Command(BaseCommand):
             scheduler_zk = None
 
         if scheduler_zk is not None:
-            import socket
             from scheduler import cluster_utils
             my_id = socket.gethostname()
             cluster_utils.wait_for_leader(scheduler_zk, my_id, self.run_scheduler, mesos_master)
@@ -71,6 +72,7 @@ class Command(BaseCommand):
     def run_scheduler(self, mesos_master):
         logger.info("I am the leader")
         self.scheduler = ScaleScheduler()
+        scheduler_mgr.hostname = socket.getfqdn()
 
         framework = mesos_pb2.FrameworkInfo()
         framework.user = ''  # Have Mesos fill in the current user.

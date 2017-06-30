@@ -7,7 +7,7 @@ HOSTNAME_COUNTER = 1
 SLAVEID_COUNTER = 1
 
 
-def create_node(hostname=None, port=5051, slave_id=None):
+def create_node(hostname=None, slave_id=None):
     """Creates a node model for unit testing
 
     :returns: The node model
@@ -24,4 +24,4 @@ def create_node(hostname=None, port=5051, slave_id=None):
         slave_id = '123-456-789-%i' % SLAVEID_COUNTER
         SLAVEID_COUNTER = SLAVEID_COUNTER + 1
 
-    return Node.objects.register_node(hostname, port, slave_id)
+    return Node.objects.create_nodes([hostname], [slave_id])[0]

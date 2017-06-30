@@ -6,11 +6,11 @@ import datetime
 from django.utils.timezone import now
 
 from job.execution.manager import job_exe_mgr
+from scheduler.manager import scheduler_mgr
 from scheduler.models import Scheduler
 from scheduler.node.manager import node_mgr
 from scheduler.resources.manager import resource_mgr
 from scheduler.sync.job_type_manager import job_type_mgr
-from scheduler.sync.scheduler_manager import scheduler_mgr
 from scheduler.threads.base_thread import BaseSchedulerThread
 from util.parse import datetime_to_string
 
