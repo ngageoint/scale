@@ -45,7 +45,7 @@ These services provide access to general system information.
 |                          |                   | categories: *running* resources are used by current Scale tasks, *offered*     |
 |                          |                   | resources are currently offered to Scale, *free* resources are available on    |
 |                          |                   | the node and may be offered to Scale soon, *unavailable* resources are used by |
-|                          |                   | other tasks and cnnot be used by Scale, and *total* resources are the total    |
+|                          |                   | other tasks and cannot be used by Scale, and *total* resources are the total   |
 |                          |                   | amounts for the node.                                                          |
 +--------------------------+-------------------+--------------------------------------------------------------------------------+
 | job_types                | Array             | List of job type objects, with a few basic fields                              |
