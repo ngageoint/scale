@@ -39,7 +39,7 @@
             }
             // check for params in querystring, and update as necessary
             _.forEach(_.pairs(data), function (param) {
-                $location.search(param[0], param[1]);
+                $location.search(param[0], param[1]).replace();
             });
         };
 
@@ -240,7 +240,7 @@
             setJobTypesFailureRatesParams: function (data) {
                 jobTypesFailureRatesParams = initJobTypesFailureRatesParams(data);
                 _.forEach(_.pairs(jobTypesFailureRatesParams), function (param) {
-                    $location.search(param[0], param[1]);
+                    $location.search(param[0], param[1]).replace();
                 });
             },
             getRecipesColDefs: function () {

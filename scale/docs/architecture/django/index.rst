@@ -18,6 +18,7 @@ system. Source code documentation for every app is provided below:
    code_docs/ingest
    code_docs/job
    code_docs/mesos_api
+   code_docs/messaging
    code_docs/metrics
    code_docs/node
    code_docs/port

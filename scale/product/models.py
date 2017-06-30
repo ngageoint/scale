@@ -347,7 +347,50 @@ class ProductFileManager(models.GeoManager):
                                     recipe_ids=recipe_ids, recipe_type_ids=recipe_type_ids, recipe_job=recipe_job, 
                                     batch_ids=batch_ids, order=order)
 
+    def get_product_sources(self, product_file_id, started=None, ended=None, time_field=None, is_parsed=None, 
+                            file_name=None, order=None):
+        """Returns a query for the list of soruces that produced the given product file ID.
+
+        :param product_file_id: The product file ID.
+        :type product_file_id: int
+        :param started: Query source files updated after this amount of time.
+        :type started: :class:`datetime.datetime`
+        :param ended: Query source files updated before this amount of time.
+        :type ended: :class:`datetime.datetime`
+        :param time_field: The time field to use for filtering.
+        :type time_field: string
+        :param is_parsed: Query source files flagged as successfully parsed.
+        :type is_parsed: bool
+        :param file_name: Query source files with the given file name.
+        :type file_name: str
+        :param order: A list of fields to control the sort order.
+        :type order: list[str]
+        :returns: The list of source files that match the time range.
+        :rtype: list[:class:`storage.models.ScaleFile`]
+        """
+
+        from source.models import SourceFile
+        sources = SourceFile.objects.filter_sources(started=started, ended=ended, time_field=time_field,
+                                                    is_parsed=is_parsed, file_name=file_name, order=order)
+        sources = sources.filter(descendants__descendant_id=product_file_id)
+
+        return sources
+
     def get_details(self, product_id):
+        """Gets additional details for the given product model
+
+        :param product_id: The unique identifier of the product.
+        :type product_id: int
+        :returns: The product file model with related workspace
+        :rtype: :class:`storage.models.ScaleFile`
+
+        :raises :class:`storage.models.ScaleFile.DoesNotExist`: If the file does not exist
+        """
+
+        return ScaleFile.objects.all().select_related('workspace').get(pk=product_id, file_type='PRODUCT')
+
+    # TODO: remove when REST API v5 is removed
+    def get_details_v5(self, product_id):
         """Gets additional details for the given product model based on related model attributes.
 
         :param product_id: The unique identifier of the product.

@@ -153,6 +153,38 @@
                     "is_paused": false,
                     "icon_code": "f072"
                 },
+                "job_type_rev": {
+                    "id": 1,
+                    "job_type": {
+                        "id": 1
+                    },
+                    "revision_num": 1,
+                    "interface": {
+                        "output_data": [
+                            {
+                                "media_type": "image/tiff",
+                                "required": true,
+                                "type": "file",
+                                "name": "geotiff"
+                            }
+                        ],
+                        "shared_resources": [],
+                        "command_arguments": "",
+                        "input_data": [
+                            {
+                                "media_types": [
+                                    "image/tiff"
+                                ],
+                                "required": true,
+                                "type": "file",
+                                "name": "input_file"
+                            }
+                        ],
+                        "version": "1.0",
+                        "command": ""
+                    },
+                    "created": "2016-01-01T00:00:00.000Z"
+                },
                 "event": {
                     "id": 7,
                     "type": "INGEST",

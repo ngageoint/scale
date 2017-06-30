@@ -171,6 +171,44 @@ class TestProductDetailsView(TestCase):
     def setUp(self):
         django.setup()
 
+        self.country = storage_test_utils.create_country()
+        self.job_type1 = job_test_utils.create_job_type(name='test1', category='test-1', is_operational=True)
+        self.job1 = job_test_utils.create_job(job_type=self.job_type1)
+        self.job_exe1 = job_test_utils.create_job_exe(job=self.job1)
+        self.product = product_test_utils.create_product(job_exe=self.job_exe1, has_been_published=True,
+                                                          is_published=True, file_name='test.txt',
+                                                          countries=[self.country])
+
+    def test_id(self):
+        """Tests successfully calling the product files detail view by id"""
+        
+        # TODO: this can change to rest_util.get_url() once v6 is default instead of v5
+        url = '/v6/products/%i/' % self.product.id
+        #  url = rest_util.get_url('/products/%i/' % self.product.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(result['id'], self.product.id)
+        self.assertEqual(result['file_name'], self.product.file_name)
+        self.assertFalse('ancestors' in result)
+        self.assertFalse('descendants' in result)
+        self.assertFalse('sources' in result)
+    def test_missing(self):
+        """Tests calling the product files view with an invalid id"""
+
+        # TODO: this can change to rest_util.get_url() once v6 is default instead of v5
+        url = '/v6/products/12345/'
+        #  url = rest_util.get_url('/products/12345/')
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+
+# TODO: remove when REST API v5 is removed
+class TestProductDetailsViewV5(TestCase):
+
+    def setUp(self):
+        django.setup()
+
         self.source = source_test_utils.create_source()
         self.ancestor = product_test_utils.create_product(file_name='test_ancestor.txt')
         self.descendant = product_test_utils.create_product(file_name='test_descendant.txt')
@@ -375,3 +413,126 @@ class TestProductsUpdatesView(TransactionTestCase):
             self.assertIsNotNone(entry['update'])
             self.assertIsNotNone(entry['source_files'])
             self.assertEqual(entry['countries'][0], self.country.iso3)
+
+
+class TestProductSourcesView(TestCase):
+
+    def setUp(self):
+        django.setup()
+
+        from product.test import utils as product_test_utils
+        self.country = storage_test_utils.create_country()
+        self.job_type1 = job_test_utils.create_job_type(name='test1', category='test-1', is_operational=True)
+        self.job1 = job_test_utils.create_job(job_type=self.job_type1)
+        self.job_exe1 = job_test_utils.create_job_exe(job=self.job1)
+
+        self.src_file = source_test_utils.create_source(data_started='2016-01-01T00:00:00Z',
+                                                        data_ended='2016-01-01T00:00:00Z', file_name='test.txt',
+                                                        is_parsed=True)
+        self.product1 = product_test_utils.create_product(job_exe=self.job_exe1, has_been_published=True,
+                                                          is_published=True, file_name='test_prod.txt',
+                                                          countries=[self.country])
+        product_test_utils.create_file_link(ancestor=self.src_file, descendant=self.product1, job=self.job1,
+                                            job_exe=self.job_exe1)
+
+    def test_invalid_product_id(self):
+        """Tests calling the product file source products view when the source ID is invalid."""
+
+        url = rest_util.get_url('/products/12345678/sources/')
+        response = self.client.generic('GET', url)
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+
+    def test_invalid_started(self):
+        """Tests calling the product file source files view when the started parameter is invalid."""
+
+        url = rest_util.get_url('/products/%d/sources/?started=hello' % self.product1.id)
+        response = self.client.generic('GET', url)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_missing_tz_started(self):
+        """Tests calling the product file source files view when the started parameter is missing timezone."""
+
+        url = rest_util.get_url('/products/%d/sources/?started=1970-01-01T00:00:00' % self.product1.id)
+        response = self.client.generic('GET', url)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_invalid_ended(self):
+        """Tests calling the product file source files view when the ended parameter is invalid."""
+
+        url = rest_util.get_url('/products/%d/sources/?started=1970-01-01T00:00:00Z&ended=hello' % self.product1.id)
+        response = self.client.generic('GET', url)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_missing_tz_ended(self):
+        """Tests calling the product file source files view when the ended parameter is missing timezone."""
+
+        url = rest_util.get_url('/products/%d/sources/?started=1970-01-01T00:00:00Z&ended=1970-01-02T00:00:00' \
+                                % self.product1.id)
+        response = self.client.generic('GET', url)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_negative_time_range(self):
+        """Tests calling the product file source files view with a negative time range."""
+
+        url = rest_util.get_url('/products/%d/sources/?started=1970-01-02T00:00:00Z&ended=1970-01-01T00:00:00' \
+                                % self.product1.id)
+        response = self.client.generic('GET', url)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_invalid_time_field(self):
+        """Tests calling the product file source files view when the time_field parameter is invalid."""
+
+        url = rest_util.get_url('/products/%d/sources/?started=1970-01-01T00:00:00Z&time_field=hello' \
+                                % self.product1.id)
+        response = self.client.generic('GET', url)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, response.content)
+
+    def test_time_field(self):
+        """Tests successfully calling the product file source files view using the time_field parameter"""
+
+        url = rest_util.get_url('/products/%d/sources/?started=%s&time_field=data' \
+                                % (self.product1.id, self.src_file.data_started))
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+
+    def test_is_parsed(self):
+        """Tests successfully calling the product file source files view filtered by is_parsed flag."""
+
+        url = rest_util.get_url('/products/%d/sources/?is_parsed=true' % self.product1.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['is_parsed'], self.src_file.is_parsed)
+
+    def test_file_name(self):
+        """Tests successfully calling the product file source files view filtered by file name."""
+
+        url = rest_util.get_url('/products/%d/sources/?file_name=%s' % (self.product1.id, self.src_file.file_name))
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['file_name'], self.src_file.file_name)
+
+    def test_successful(self):
+        """Tests successfully calling the product file source files view."""
+
+        url = rest_util.get_url('/products/%d/sources/' % self.product1.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
