@@ -57,6 +57,7 @@ class SchedulerManager(object):
         with self._lock:
             self._job_launch_count += job_launch_count
             self._task_launch_count += task_launch_count
+            self._offer_launch_count = offer_launch_count
 
     def add_task_update_counts(self, was_task_finished, was_job_finished):
         """Add metric counts from a new task update
