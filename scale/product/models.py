@@ -381,7 +381,7 @@ class ProductFileManager(models.GeoManager):
 
         :param product_id: The unique identifier of the product.
         :type product_id: int
-        :returns: The product with extra related attributes: sources, ancestor/descendant products.
+        :returns: The product file model with related workspace
         :rtype: :class:`storage.models.ScaleFile`
 
         :raises :class:`storage.models.ScaleFile.DoesNotExist`: If the file does not exist
