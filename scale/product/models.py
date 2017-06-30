@@ -371,10 +371,10 @@ class ProductFileManager(models.GeoManager):
 
         from source.models import SourceFile
         sources = SourceFile.objects.filter_sources(started=started, ended=ended, time_field=time_field,
-                                                   is_parsed=is_parsed, file_name=file_name, order=order)
-        sources = sources.filter(ancestors__descendant_id=product_file_id)
+                                                    is_parsed=is_parsed, file_name=file_name, order=order)
+        sources = sources.filter(descendants__descendant_id=product_file_id)
 
-        return sources 
+        return sources
 
     def get_details(self, product_id):
         """Gets additional details for the given product model based on related model attributes.
