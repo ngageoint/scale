@@ -171,6 +171,44 @@ class TestProductDetailsView(TestCase):
     def setUp(self):
         django.setup()
 
+        self.country = storage_test_utils.create_country()
+        self.job_type1 = job_test_utils.create_job_type(name='test1', category='test-1', is_operational=True)
+        self.job1 = job_test_utils.create_job(job_type=self.job_type1)
+        self.job_exe1 = job_test_utils.create_job_exe(job=self.job1)
+        self.product = product_test_utils.create_product(job_exe=self.job_exe1, has_been_published=True,
+                                                          is_published=True, file_name='test.txt',
+                                                          countries=[self.country])
+
+    def test_id(self):
+        """Tests successfully calling the product files detail view by id"""
+        
+        # TODO: this can change to rest_util.get_url() once v6 is default instead of v5
+        url = '/v6/products/%i/' % self.product.id
+        #  url = rest_util.get_url('/products/%i/' % self.product.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(result['id'], self.product.id)
+        self.assertEqual(result['file_name'], self.product.file_name)
+        self.assertFalse('ancestors' in result)
+        self.assertFalse('descendants' in result)
+        self.assertFalse('sources' in result)
+    def test_missing(self):
+        """Tests calling the product files view with an invalid id"""
+
+        # TODO: this can change to rest_util.get_url() once v6 is default instead of v5
+        url = '/v6/products/12345/'
+        #  url = rest_util.get_url('/products/12345/')
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND, response.content)
+
+# TODO: remove when REST API v5 is removed
+class TestProductDetailsViewV5(TestCase):
+
+    def setUp(self):
+        django.setup()
+
         self.source = source_test_utils.create_source()
         self.ancestor = product_test_utils.create_product(file_name='test_ancestor.txt')
         self.descendant = product_test_utils.create_product(file_name='test_descendant.txt')
