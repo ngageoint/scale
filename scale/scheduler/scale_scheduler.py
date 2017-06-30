@@ -211,14 +211,16 @@ class ScaleScheduler(MesosScheduler):
         node_mgr.register_agents(agents.values())
         resource_mgr.add_new_offers(resource_offers)
 
+        num_offers = len(resource_offers)
+        logger.info('Received %d offer(s) with %s from %d node(s)', num_offers, total_resources, len(agents))
+        scheduler_mgr.add_new_offer_count(num_offers)
+
         duration = now() - started
         msg = 'Scheduler resourceOffers() took %.3f seconds'
         if duration > ScaleScheduler.NORMAL_WARN_THRESHOLD:
             logger.warning(msg, duration.total_seconds())
         else:
             logger.debug(msg, duration.total_seconds())
-
-        logger.info('Received %d offer(s) with %s from %d node(s)', len(resource_offers), total_resources, len(agents))
 
     def offerRescinded(self, driver, offerId):
         """
@@ -263,6 +265,8 @@ class ScaleScheduler(MesosScheduler):
         mesos_status = model.status
         task_update = TaskStatusUpdate(model, utils.get_status_agent_id(status), utils.get_status_data(status))
         task_id = task_update.task_id
+        was_task_finished = task_update.status in TaskStatusUpdate.TERMINAL_STATUSES
+        was_job_finished = False
 
         if mesos_status == 'TASK_ERROR':
             logger.error('Status update for task %s: %s', task_id, mesos_status)
@@ -287,6 +291,7 @@ class ScaleScheduler(MesosScheduler):
             try:
                 job_exe = job_exe_mgr.handle_task_update(task_update)
                 if job_exe and job_exe.is_finished():
+                    was_job_finished = True
                     cleanup_mgr.add_job_execution(job_exe)
             except Exception:
                 job_exe_id = JobExecution.get_job_exe_id(task_id)
@@ -298,6 +303,8 @@ class ScaleScheduler(MesosScheduler):
         else:
             # Not a job task, so must be a node task
             node_mgr.handle_task_update(task_update)
+
+        scheduler_mgr.add_task_update_counts(was_task_finished, was_job_finished)
 
         duration = now() - started
         msg = 'Scheduler statusUpdate() took %.3f seconds'

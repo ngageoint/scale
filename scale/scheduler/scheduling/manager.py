@@ -82,8 +82,8 @@ class SchedulingManager(object):
             return 0
 
         self._allocate_offers(nodes)
-        task_count = self._launch_tasks(driver, nodes)
-        scheduler_mgr.add_scheduling_counts(job_exe_count, task_count)
+        task_count, offer_count = self._launch_tasks(driver, nodes)
+        scheduler_mgr.add_scheduling_counts(job_exe_count, task_count, offer_count)
         return task_count
 
     def _allocate_offers(self, nodes):
@@ -159,8 +159,8 @@ class SchedulingManager(object):
         :type driver: :class:`mesos_api.mesos.SchedulerDriver`
         :param nodes: The dict of all scheduling nodes stored by node ID
         :type nodes: dict
-        :returns: The number of tasks that were launched
-        :rtype: int
+        :returns: The number of tasks that were launched and the number of offers accepted
+        :rtype: tuple
         """
 
         started = now()
@@ -218,7 +218,7 @@ class SchedulingManager(object):
             logger.info('Accepted %d offer(s) from %d node(s), launched %d task(s) with %s on %d node(s), declined %s',
                         total_offer_count, total_node_count, total_task_count, total_task_resources, node_count,
                         declined_resources)
-        return total_task_count
+        return total_task_count, total_offer_count
 
     def _prepare_nodes(self, tasks, running_job_exes, when):
         """Prepares the nodes to use for scheduling
