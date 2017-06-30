@@ -336,13 +336,13 @@ These services provide access to information about products that Scale has produ
 | job_exe            | JSON Object       | The job execution that created the product.                                    |
 |                    |                   | (See :ref:`Job Execution Details <rest_job_execution_details>`)                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .recipe_type       | JSON Object       | The type of recipe that generated the product.                                 |
+| recipe_type        | JSON Object       | The type of recipe that generated the product.                                 |
 |                    |                   | (See :ref:`Recipe Type Details <rest_recipe_type_details>`)                    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .recipe            | JSON Object       | The recipe instance that generated the product.                                |
+| recipe             | JSON Object       | The recipe instance that generated the product.                                |
 |                    |                   | (See :ref:`Recipe Details <rest_recipe_details>`)                              |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
-| .batch             | JSON Object       | The batch instance that generated the product.                                 |
+| batch              | JSON Object       | The batch instance that generated the product.                                 |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 |                    |                   | (See :ref:`Batch Details <rest_batch_details>`)                                |
 | sources            | Array             | A list of source files used to derive this product file during jobs.           |
