@@ -21,7 +21,7 @@ class ProductFileBaseSerializer(ScaleFileBaseSerializer):
     unpublished = serializers.DateTimeField()
     superseded = serializers.DateTimeField()
 
-    source_started =  serializers.DateTimeField()
+    source_started = serializers.DateTimeField()
     source_ended = serializers.DateTimeField()
 
     job_type = ModelIdSerializer()
@@ -43,6 +43,12 @@ class ProductFileSerializer(ProductFileBaseSerializer):
 
 
 class ProductFileDetailsSerializer(ProductFileSerializer):
+    """Converts product file model fields to REST output"""
+    pass
+
+
+# TODO: remove when REST API v5 is removed
+class ProductFileDetailsSerializerV5(ProductFileSerializer):
     """Converts product file model fields to REST output"""
     from source.serializers import SourceFileSerializer
 

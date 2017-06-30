@@ -377,6 +377,20 @@ class ProductFileManager(models.GeoManager):
         return sources
 
     def get_details(self, product_id):
+        """Gets additional details for the given product model
+
+        :param product_id: The unique identifier of the product.
+        :type product_id: int
+        :returns: The product file model with related workspace
+        :rtype: :class:`storage.models.ScaleFile`
+
+        :raises :class:`storage.models.ScaleFile.DoesNotExist`: If the file does not exist
+        """
+
+        return ScaleFile.objects.all().select_related('workspace').get(pk=product_id, file_type='PRODUCT')
+
+    # TODO: remove when REST API v5 is removed
+    def get_details_v5(self, product_id):
         """Gets additional details for the given product model based on related model attributes.
 
         :param product_id: The unique identifier of the product.
