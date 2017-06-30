@@ -87,7 +87,7 @@ class NodeManager(models.Manager):
         node = Node.objects.get(pk=node_id)
 
         # TODO: remove when REST API v4 is removed
-        # Lazy load the the execution model since it is an optional lower level dependency
+        # Lazy load the execution model since it is an optional lower level dependency
         try:
             from job.models import JobExecution
         except:
