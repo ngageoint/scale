@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 import django
 from django.test import TestCase
 from django.utils.timezone import now
-from mock import patch
 
 from job.execution.job_exe import RunningJobExecution
 from job.tasks.manager import TaskManager
@@ -14,7 +13,6 @@ from node.models import Node
 from node.test import utils as node_test_utils
 from scheduler.cleanup.manager import CleanupManager
 from scheduler.manager import scheduler_mgr
-from scheduler.models import Scheduler
 from scheduler.node.agent import Agent
 from scheduler.node.manager import NodeManager
 
@@ -24,6 +22,7 @@ class TestNodeManager(TestCase):
     def setUp(self):
         django.setup()
 
+        scheduler_mgr.config.is_paused = False
         self.agent_1 = Agent('agent_1', 'host_1')
         self.agent_2 = Agent('agent_2', 'host_2')
         self.agent_3 = Agent('agent_3', 'host_2')  # Will represent a new agent ID for host 2
