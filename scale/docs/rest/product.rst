@@ -254,6 +254,12 @@ These services provide access to information about products that Scale has produ
 +=========================================================================================================================+
 | Returns a specific product file and all its related model information including sources and derived products.           |
 +-------------------------------------------------------------------------------------------------------------------------+
+| **DEPRECATED**                                                                                                          |
+|                This table describes the current v5 version of the product file details API, which is now deprecated.    |
+|                The new v6 version of this API does not include the *sources*, *ancestors*, and *descendants* arrays     |
+|                in the response. The new v6 version also does not support the use of *file_name* in the URL (only        |
+|                product ID supported).                                                                                   |
++-------------------------------------------------------------------------------------------------------------------------+
 | **GET** /products/{id}/                                                                                                 |
 |         Where {id} is the unique identifier of an existing model.                                                       |
 +-------------------------------------------------------------------------------------------------------------------------+
@@ -317,6 +323,10 @@ These services provide access to information about products that Scale has produ
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | unpublished        | ISO-8601 Datetime | When the product file was unpublished by Scale.                                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
+| source_started     | ISO-8601 Datetime | When collection of the underlying source file started.                         |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| source_ended       | ISO-8601 Datetime | When collection of the underlying source file ended.                           |
++--------------------+-------------------+--------------------------------------------------------------------------------+
 | job_type           | JSON Object       | The type of job that created the product.                                      |
 |                    |                   | (See :ref:`Job Type Details <rest_job_type_details>`)                          |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -326,6 +336,15 @@ These services provide access to information about products that Scale has produ
 | job_exe            | JSON Object       | The job execution that created the product.                                    |
 |                    |                   | (See :ref:`Job Execution Details <rest_job_execution_details>`)                |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
+| .recipe_type       | JSON Object       | The type of recipe that generated the product.                                 |
+|                    |                   | (See :ref:`Recipe Type Details <rest_recipe_type_details>`)                    |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .recipe            | JSON Object       | The recipe instance that generated the product.                                |
+|                    |                   | (See :ref:`Recipe Details <rest_recipe_details>`)                              |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+| .batch             | JSON Object       | The batch instance that generated the product.                                 |
++--------------------+-------------------+--------------------------------------------------------------------------------+
+|                    |                   | (See :ref:`Batch Details <rest_batch_details>`)                                |
 | sources            | Array             | A list of source files used to derive this product file during jobs.           |
 |                    |                   | (See :ref:`Source File Details <rest_source_file_details>`)                    |
 +--------------------+-------------------+--------------------------------------------------------------------------------+
@@ -364,6 +383,8 @@ These services provide access to information about products that Scale has produ
 |        "has_been_published": true,                                                                                      |
 |        "published": "1970-01-01T00:00:00Z",                                                                             |
 |        "unpublished": null,                                                                                             |
+|        "source_started": "1970-01-01T00:00:00Z",                                                                        |
+|        "source_ended": "1970-01-02T00:00:00Z",                                                                          |
 |        "job_type": {                                                                                                    |
 |            "id": 4,                                                                                                     |
 |            "name": "png-filter",                                                                                        |
@@ -385,7 +406,26 @@ These services provide access to information about products that Scale has produ
 |        },                                                                                                               |
 |        "job_exe": {                                                                                                     |
 |            "id": 4                                                                                                      |
-|        }                                                                                                                |
+|        },                                                                                                               |
+|        "recipe_type": {                                                                                                 |
+|            "id": 6,                                                                                                     |
+|            "name": "my-recipe",                                                                                         |
+|            "version": "1.0.0",                                                                                          |
+|            "title": "My Recipe",                                                                                        |
+|            "description": "Processes some data",                                                                        |
+|        },                                                                                                               |
+|        "recipe": {                                                                                                      |
+|            "id": 60                                                                                                     |
+|        },                                                                                                               |
+|        "batch": {                                                                                                       |
+|            "id": 15,                                                                                                    |
+|            "title": "My Batch",                                                                                         |
+|            "description": "My batch of recipes",                                                                        |
+|            "status": "SUBMITTED",                                                                                       |
+|            "recipe_type": 6,                                                                                            |
+|            "event": 19,                                                                                                 |
+|            "creator_job": 62,                                                                                           |
+|        },                                                                                                               |
 |        "sources": [                                                                                                     |
 |            {                                                                                                            |
 |                "id": 1,                                                                                                 |
