@@ -4,7 +4,7 @@ machine:
       2.7.11
       
   environment:
-    COVERAGE_FILE: $CIRCLE_ARTIFACTS/
+    COVERAGE_FILE: $CIRCLE_ARTIFACTS/.coverage
 
 dependencies:
   cache_directories:
