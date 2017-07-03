@@ -1,0 +1,22 @@
+machine:
+  python:
+    version:
+      2.7.11
+      
+  environment:
+    COVERAGE_FILE: $CIRCLE_ARTIFACTS/
+
+dependencies:
+  cache_directories:
+   - ~/.cache/pip # Cache pip packages
+  pre:
+    - cp scale/scale/local_settings_TRAVIS-CI.py scale/scale/local_settings.py
+    - psql -c 'create database scale;' -U postgres
+    - psql -d scale -U postgres -c "create extension postgis;"
+
+  override:
+    - pip install -q -r scale/pip/requirements.txt
+
+test:
+  override:
+    - cd scale && coverage run --source='.' manage.py test && coverage xml -o $CIRCLE_ARTIFACTS/coverage.xml
