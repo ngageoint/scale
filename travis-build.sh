@@ -11,7 +11,7 @@ cd $root/scale-ui
 
 cd $root/scale
 export COVERAGE_FILE=$root/.coverage
-coverage run --source='.' manage.py test --parallel
+coverage run --source='.' manage.py test
 cd $root/scale/docs
 make code_docs html
 ./push-docs.sh
