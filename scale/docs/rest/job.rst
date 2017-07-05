@@ -50,6 +50,9 @@ These services provide access to information about "all", "currently running" an
 | job_type_category  | String            | Optional | Return only jobs with a given job type category.                    |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
+| batch_id           | Integer           | Optional | Return only jobs associated with the given batch identifier.        |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
 | error_category     | String            | Optional | Return only jobs that failed due to an error with a given category. |
 |                    |                   |          | Choices: [SYSTEM, DATA, ALGORITHM].                                 |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
