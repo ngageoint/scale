@@ -40,6 +40,9 @@ These services provide access to information about recipes.
 | type_name          | String            | Optional | Return only recipes with a given recipe type name.                  |
 |                    |                   |          | Duplicate it to filter by multiple values.                          |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
+| batch_id           | Integer           | Optional | Return only recipes associated with the given batch identifier.     |
+|                    |                   |          | Duplicate it to filter by multiple values.                          |
++--------------------+-------------------+----------+---------------------------------------------------------------------+
 | include_superseded | Boolean           | Optional | Whether to include superseded recipe instances. Defaults to false.  |
 +--------------------+-------------------+----------+---------------------------------------------------------------------+
 | **Successful Response**                                                                                                 |

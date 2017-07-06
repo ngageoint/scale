@@ -263,95 +263,101 @@ Duplicate it to filter by multiple values.</td>
 <td>Return only recipes with a given recipe type name.
 Duplicate it to filter by multiple values.</td>
 </tr>
-<tr class="row-even"><td>include_superseded</td>
+<tr class="row-even"><td>batch_id</td>
+<td colspan="2">Integer</td>
+<td colspan="2">Optional</td>
+<td>Return only recipes associated with the given batch identifier.
+Duplicate it to filter by multiple values.</td>
+</tr>
+<tr class="row-odd"><td>include_superseded</td>
 <td colspan="2">Boolean</td>
 <td colspan="2">Optional</td>
 <td>Whether to include superseded recipe instances. Defaults to false.</td>
 </tr>
-<tr class="row-odd"><td colspan="6"><strong>Successful Response</strong></td>
+<tr class="row-even"><td colspan="6"><strong>Successful Response</strong></td>
 </tr>
-<tr class="row-even"><td><strong>Status</strong></td>
+<tr class="row-odd"><td><strong>Status</strong></td>
 <td colspan="5">200 OK</td>
 </tr>
-<tr class="row-odd"><td><strong>Content Type</strong></td>
+<tr class="row-even"><td><strong>Content Type</strong></td>
 <td colspan="5"><em>application/json</em></td>
 </tr>
-<tr class="row-even"><td colspan="6"><strong>JSON Fields</strong></td>
+<tr class="row-odd"><td colspan="6"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-odd"><td colspan="2">count</td>
+<tr class="row-even"><td colspan="2">count</td>
 <td colspan="2">Integer</td>
 <td colspan="2">The total number of results that match the query parameters.</td>
 </tr>
-<tr class="row-even"><td colspan="2">next</td>
+<tr class="row-odd"><td colspan="2">next</td>
 <td colspan="2">URL</td>
 <td colspan="2">A URL to the next page of results.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">previous</td>
+<tr class="row-even"><td colspan="2">previous</td>
 <td colspan="2">URL</td>
 <td colspan="2">A URL to the previous page of results.</td>
 </tr>
-<tr class="row-even"><td colspan="2">results</td>
+<tr class="row-odd"><td colspan="2">results</td>
 <td colspan="2">Array</td>
 <td colspan="2">List of result JSON objects that match the query parameters.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.id</td>
+<tr class="row-even"><td colspan="2">.id</td>
 <td colspan="2">Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API call.
 (See <a class="reference internal" href="#rest-recipe-details"><span class="std std-ref">Recipe Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td colspan="2">.recipe_type</td>
+<tr class="row-odd"><td colspan="2">.recipe_type</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The recipe type that is associated with the recipe.
 This represents the latest version of the definition.
 (See <a class="reference internal" href="recipe_type.html#rest-recipe-type-details"><span class="std std-ref">Recipe Type Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.recipe_type_rev</td>
+<tr class="row-even"><td colspan="2">.recipe_type_rev</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The recipe type revision that is associated with the recipe.
 This represents the definition at the time the recipe was scheduled.
 (See <a class="reference internal" href="recipe_type.html#rest-recipe-type-rev-details"><span class="std std-ref">Recipe Type Revision Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td colspan="2">.event</td>
+<tr class="row-odd"><td colspan="2">.event</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The trigger event that is associated with the recipe.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.is_superseded</td>
+<tr class="row-even"><td colspan="2">.is_superseded</td>
 <td colspan="2">Boolean</td>
 <td colspan="2">Whether this recipe has been replaced and is now obsolete.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.root_superseded_recipe</td>
+<tr class="row-odd"><td colspan="2">.root_superseded_recipe</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The first recipe in the current chain of superseded recipes.
 (See <a class="reference internal" href="#rest-recipe-details"><span class="std std-ref">Recipe Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.superseded_recipe</td>
+<tr class="row-even"><td colspan="2">.superseded_recipe</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The previous recipe in the chain that was superseded by this recipe.
 (See <a class="reference internal" href="#rest-recipe-details"><span class="std std-ref">Recipe Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td colspan="2">.superseded_by_recipe</td>
+<tr class="row-odd"><td colspan="2">.superseded_by_recipe</td>
 <td colspan="2">JSON Object</td>
 <td colspan="2">The next recipe in the chain that superseded this recipe.
 (See <a class="reference internal" href="#rest-recipe-details"><span class="std std-ref">Recipe Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.created</td>
+<tr class="row-even"><td colspan="2">.created</td>
 <td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was initially created.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.completed</td>
+<tr class="row-odd"><td colspan="2">.completed</td>
 <td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When every job in the recipe was completed successfully.
 This field will remain null if a job in the recipe is blocked or failed.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.superseded</td>
+<tr class="row-even"><td colspan="2">.superseded</td>
 <td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the the recipe became superseded by another recipe.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.last_modified</td>
+<tr class="row-odd"><td colspan="2">.last_modified</td>
 <td colspan="2">ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was last saved.</td>
 </tr>
-<tr class="row-odd"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-even"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">15</span><span class="p">,</span>
     <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
     <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>

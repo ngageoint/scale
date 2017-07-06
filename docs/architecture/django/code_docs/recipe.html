@@ -1137,7 +1137,7 @@ Handlers will not be returned for jobs that are not in a recipe or for recipes t
 
 <dl class="method">
 <dt id="recipe.models.RecipeManager.get_recipes">
-<code class="descname">get_recipes</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>type_ids=None</em>, <em>type_names=None</em>, <em>include_superseded=False</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.get_recipes" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_recipes</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>type_ids=None</em>, <em>type_names=None</em>, <em>batch_ids=None</em>, <em>include_superseded=False</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#recipe.models.RecipeManager.get_recipes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of recipes within the given time range.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1148,6 +1148,7 @@ Handlers will not be returned for jobs that are not in a recipe or for recipes t
 <li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query recipes updated before this amount of time.</li>
 <li><strong>type_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; Query recipes of the type associated with the identifier.</li>
 <li><strong>type_names</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query recipes of the type associated with the name.</li>
+<li><strong>batch_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em>) &#8211; Query jobs associated with batches with the given identifiers.</li>
 <li><strong>include_superseded</strong> (<em>bool</em>) &#8211; Whether to include recipes that are superseded.</li>
 <li><strong>order</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
 </ul>

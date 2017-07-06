@@ -2714,7 +2714,7 @@ returned job model will have not yet been saved in the database.</p>
 
 <dl class="method">
 <dt id="job.models.JobManager.filter_jobs">
-<code class="descname">filter_jobs</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>statuses=None</em>, <em>job_ids=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>error_categories=None</em>, <em>include_superseded=False</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.filter_jobs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">filter_jobs</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>statuses=None</em>, <em>job_ids=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>batch_ids=None</em>, <em>error_categories=None</em>, <em>include_superseded=False</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.filter_jobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a query for job models that filters on the given fields. The returned query includes the related
 job_type, job_type_rev, event, and error fields, except for the job_type.interface and job_type_rev.interface
 fields.</p>
@@ -2730,6 +2730,7 @@ fields.</p>
 <li><strong>job_type_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; Query jobs of the type associated with the identifier.</li>
 <li><strong>job_type_names</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query jobs of the type associated with the name.</li>
 <li><strong>job_type_categories</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query jobs of the type associated with the category.</li>
+<li><strong>batch_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em>) &#8211; Query jobs associated with the given batch identifiers.</li>
 <li><strong>error_categories</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query jobs that failed due to errors associated with the category.</li>
 <li><strong>include_superseded</strong> (<em>bool</em>) &#8211; Whether to include jobs that are superseded.</li>
 <li><strong>order</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
@@ -2797,7 +2798,7 @@ fields.</p>
 
 <dl class="method">
 <dt id="job.models.JobManager.get_jobs">
-<code class="descname">get_jobs</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>statuses=None</em>, <em>job_ids=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>error_categories=None</em>, <em>include_superseded=False</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.get_jobs" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_jobs</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>statuses=None</em>, <em>job_ids=None</em>, <em>job_type_ids=None</em>, <em>job_type_names=None</em>, <em>job_type_categories=None</em>, <em>batch_ids=None</em>, <em>error_categories=None</em>, <em>include_superseded=False</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobManager.get_jobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of jobs within the given time range.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -2811,6 +2812,7 @@ fields.</p>
 <li><strong>job_type_ids</strong> (<em>[</em><em>int</em><em>]</em>) &#8211; Query jobs of the type associated with the identifier.</li>
 <li><strong>job_type_names</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query jobs of the type associated with the name.</li>
 <li><strong>job_type_categories</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query jobs of the type associated with the category.</li>
+<li><strong>batch_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em>) &#8211; Query jobs associated with batches with the given identifiers.</li>
 <li><strong>error_categories</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; Query jobs that failed due to errors associated with the category.</li>
 <li><strong>include_superseded</strong> (<em>bool</em>) &#8211; Whether to include jobs that are superseded.</li>
 <li><strong>order</strong> (<em>[</em><em>string</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
