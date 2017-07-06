@@ -17,4 +17,4 @@ cd gh-pages
 git config user.name "${GH_USER_NAME}"
 git config user.email "{GH_USER_EMAIL}"
 git add . ; git commit -m "Build updated by Travis"
-git push --quiet "https://${GH_TOKEN}@${GH_REF}" master:gh-pages > /dev/null 2>&1
+git push --quiet "https://${GH_TOKEN}@${GH_REF}" > /dev/null 2>&1
