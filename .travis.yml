@@ -22,7 +22,9 @@ before_script:
 install:
 - pip install -q -r scale/pip/requirements.txt
 - pip freeze
-script: ./travis-build.sh
+script: 
+- /travis-build.sh
+- /push-docs.sh
 
 branches:
   only:
