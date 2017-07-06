@@ -25,14 +25,22 @@ class BatchManager(models.Manager):
     """Provides additional methods for handling batches"""
 
     def count_completed_job(self, batch_id):
-        """Preforms a plus one count up on the completed job field of a Batch"""
+        """Preforms a count-plus-one on the completed job field of a Batch
+
+        :param batch_id: The unique identifier of the batch.
+        :type batch_id: int
+        """
 
         job_count = Batch.objects.filter(id=batch_id).values('completed_job_count')
         new_count = job_count.completed_job_count + 1
         job_count.update(completed_job_count=new_count)
 
     def count_completed_recipe(self, batch_id):
-        """Preforms a plus one count up on the completed recipe field of a Batch"""
+        """Preforms a count-plus-one on the completed recipe field of a Batch
+
+        :param batch_id: The unique identifier of the batch.
+        :type batch_id: int
+        """
 
         recipe_count = Batch.objects.filter(id=batch_id).values('completed_recipe_count')
         new_count = recipe_count.completed_recipe_count + 1
@@ -435,10 +443,9 @@ class Batch(models.Model):
 
     created_count = models.IntegerField(default=0)
     failed_count = models.IntegerField(default=0)
-    total_count = models.IntegerField(default=0)
-    
     completed_job_count = models.IntegerField(default=0)
     completed_recipe_count = models.IntegerField(default=0)
+    total_count = models.IntegerField(default=0)
 
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)

@@ -73,7 +73,7 @@ class JobManager(models.Manager):
         job.last_status_change = when
         job.save()
 
-        # Count the a completed job if part of a batch
+        # Count as a completed job if part of a batch
         from batch.models import Batch, BatchJob
         batch_job = BatchJob.objects.filter(job__id=job.id)
         if batch_job:

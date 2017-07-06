@@ -42,7 +42,7 @@ class RecipeManager(models.Manager):
         modified = timezone.now()
         self.filter(id=recipe_id).update(completed=when, last_modified=modified)
 
-        # Count the a completed recipe if part of a batch
+        # Count as a completed recipe if part of a batch
         from batch.models import Batch, BatchRecipe
         batch_recipe = BatchRecipe.objects.filter(recipe__id=recipe_id)
         if batch_recipe:
