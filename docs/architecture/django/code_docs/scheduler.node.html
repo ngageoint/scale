@@ -726,6 +726,11 @@ well as run-time information retrieved from Mesos. This class is thread-safe.</p
 <code class="descname">READY</code><em class="property"> = NodeState(state=u'READY', title=u'Ready', description=u'Node is ready to run new jobs.')</em><a class="headerlink" href="#scheduler.node.node_class.Node.READY" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="attribute">
+<dt id="scheduler.node.node_class.Node.SCHEDULER_STOPPED">
+<code class="descname">SCHEDULER_STOPPED</code><em class="property"> = NodeState(state=u'SCHEDULER_STOPPED', title=u'Scheduler Stopped', description=u'Scheduler is paused, so no new jobs will be scheduled. Existing jobs will continue to run.')</em><a class="headerlink" href="#scheduler.node.node_class.Node.SCHEDULER_STOPPED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="scheduler.node.node_class.Node.add_job_execution">
 <code class="descname">add_job_execution</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.node_class.Node.add_job_execution" title="Permalink to this definition">¶</a></dt>
@@ -937,6 +942,11 @@ no longer online, there&#8217;s no reason for the scheduler to continue to track
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.node.node_class.Node.stopped_desc">
+<code class="descname">stopped_desc</code><em class="property"> = u'Scheduler is paused, so no new jobs will be scheduled. Existing jobs will continue to run.'</em><a class="headerlink" href="#scheduler.node.node_class.Node.stopped_desc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="scheduler.node.node_class.Node.update_from_mesos">

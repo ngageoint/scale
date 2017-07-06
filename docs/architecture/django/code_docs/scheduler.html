@@ -443,6 +443,16 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>This class manages the high-level scheduler configuration and metrics. It is a combination of data from both the
 Scale database and the Mesos master. This class is thread-safe.</p>
+<dl class="attribute">
+<dt id="scheduler.manager.SchedulerManager.PAUSED">
+<code class="descname">PAUSED</code><em class="property"> = SchedulerState(state=u'PAUSED', title=u'Paused', description=u'Scheduler is paused, so no new jobs will be scheduled. Existing jobs will continue to run.')</em><a class="headerlink" href="#scheduler.manager.SchedulerManager.PAUSED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.manager.SchedulerManager.READY">
+<code class="descname">READY</code><em class="property"> = SchedulerState(state=u'READY', title=u'Ready', description=u'Scheduler is ready to run new jobs.')</em><a class="headerlink" href="#scheduler.manager.SchedulerManager.READY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="scheduler.manager.SchedulerManager.add_new_offer_count">
 <code class="descname">add_new_offer_count</code><span class="sig-paren">(</span><em>new_offer_count</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.manager.SchedulerManager.add_new_offer_count" title="Permalink to this definition">¶</a></dt>
@@ -508,6 +518,11 @@ Scale database and the Mesos master. This class is thread-safe.</p>
 </table>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="scheduler.manager.SchedulerManager.paused_desc">
+<code class="descname">paused_desc</code><em class="property"> = u'Scheduler is paused, so no new jobs will be scheduled. Existing jobs will continue to run.'</em><a class="headerlink" href="#scheduler.manager.SchedulerManager.paused_desc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="scheduler.manager.SchedulerManager.sync_with_database">
 <code class="descname">sync_with_database</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.manager.SchedulerManager.sync_with_database" title="Permalink to this definition">¶</a></dt>
@@ -530,6 +545,30 @@ Scale database and the Mesos master. This class is thread-safe.</p>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="scheduler.manager.SchedulerState">
+<em class="property">class </em><code class="descclassname">scheduler.manager.</code><code class="descname">SchedulerState</code><span class="sig-paren">(</span><em>state</em>, <em>title</em>, <em>description</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.manager.SchedulerState" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
+<dl class="attribute">
+<dt id="scheduler.manager.SchedulerState.description">
+<code class="descname">description</code><a class="headerlink" href="#scheduler.manager.SchedulerState.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.manager.SchedulerState.state">
+<code class="descname">state</code><a class="headerlink" href="#scheduler.manager.SchedulerState.state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="scheduler.manager.SchedulerState.title">
+<code class="descname">title</code><a class="headerlink" href="#scheduler.manager.SchedulerState.title" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
 </dd></dl>
 
 </dd></dl>

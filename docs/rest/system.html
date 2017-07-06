@@ -250,11 +250,15 @@ provide.</td>
 <td>JSON Object</td>
 <td>Contains Scale&#8217;s framework ID and hostname and port of the Mesos master</td>
 </tr>
-<tr class="row-odd"><td>num_offers</td>
+<tr class="row-odd"><td>scheduler.state</td>
+<td>JSON Object</td>
+<td>The current scheduler state, with a title and description</td>
+</tr>
+<tr class="row-even"><td>num_offers</td>
 <td>Integer</td>
 <td>Number of resource offers currently held by Scale</td>
 </tr>
-<tr class="row-even"><td>resources</td>
+<tr class="row-odd"><td>resources</td>
 <td>JSON Object</td>
 <td>Describes the resource totals across all of Scale&#8217;s nodes. Each resource name
 is a key and its corresponding object breaks down the resource into several
@@ -264,29 +268,29 @@ the node and may be offered to Scale soon, <em>unavailable</em> resources are us
 other tasks and cannot be used by Scale, and <em>total</em> resources are the total
 amounts for the node.</td>
 </tr>
-<tr class="row-odd"><td>job_types</td>
+<tr class="row-even"><td>job_types</td>
 <td>Array</td>
 <td>List of job type objects, with a few basic fields</td>
 </tr>
-<tr class="row-even"><td>nodes</td>
+<tr class="row-odd"><td>nodes</td>
 <td>Array</td>
 <td>List of node objects, with a few basic fields including the current node state</td>
 </tr>
-<tr class="row-odd"><td>nodes.state</td>
+<tr class="row-even"><td>nodes.state</td>
 <td>JSON Object</td>
 <td>The current node state, with a title and description</td>
 </tr>
-<tr class="row-even"><td>nodes.errors</td>
+<tr class="row-odd"><td>nodes.errors</td>
 <td>Array</td>
 <td>List of node error objects, with a title, description, and when the error
 began and was last updated</td>
 </tr>
-<tr class="row-odd"><td>nodes.warnings</td>
+<tr class="row-even"><td>nodes.warnings</td>
 <td>Array</td>
 <td>List of node warning objects, with a title, description, and when the warning
 began and was last updated</td>
 </tr>
-<tr class="row-even"><td>nodes.job_executions</td>
+<tr class="row-odd"><td>nodes.job_executions</td>
 <td>JSON Object</td>
 <td>The job executions related to this node. The <em>running</em> field describes the
 jobs currently running on the node, with a total count and count per job type.
@@ -295,7 +299,7 @@ in the last 3 hours, with a total count and count per job type. The <em>failed</
 field is similar to <em>completed</em>, just with failed executions grouped by error
 category.</td>
 </tr>
-<tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
    <span class="s2">&quot;timestamp&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
    <span class="s2">&quot;scheduler&quot;</span><span class="o">:</span> <span class="p">{</span>
       <span class="s2">&quot;metrics&quot;</span><span class="o">:</span> <span class="p">{</span>
@@ -312,6 +316,11 @@ category.</td>
          <span class="s2">&quot;framework_id&quot;</span><span class="o">:</span> <span class="s2">&quot;1234&quot;</span><span class="p">,</span>
          <span class="s2">&quot;master_hostname&quot;</span><span class="o">:</span> <span class="s2">&quot;192.168.1.1&quot;</span><span class="p">,</span>
          <span class="s2">&quot;master_port&quot;</span><span class="o">:</span> <span class="mi">5050</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;state&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;READY&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Ready&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Scheduler is ready to run new jobs.&quot;</span>
       <span class="p">}</span>
    <span class="p">},</span>
    <span class="s2">&quot;num_offers&quot;</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
