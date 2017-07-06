@@ -6,6 +6,9 @@ python:
 addons:
   postgresql: "9.4"
 
+# Travis team suggested fix for truncated log build failures
+filter_secrets: false
+
 before_script:
 - cp scale/scale/local_settings_TRAVIS-CI.py scale/scale/local_settings.py
 - psql -c 'create database scale;' -U postgres
