@@ -34,6 +34,7 @@ Using Amazon SQS requires the following prerequisites to use within Scale:
 The following sample IAM Policy file would provide complete access to the scale-command-messages SQS:
 
 .. code-block:: javascript
+
     {
         "Version": "2012-10-17",
         "Statement": [
@@ -79,6 +80,7 @@ Using RabbitMQ requires the following prerequisites to use within Scale:
 The easiest route to RabbitMQ deployment would just be to deploy into Marathon alongside Scale. The following sample marathon.json would be a reasonable starting point:
 
 .. code-block:: javascript
+
     {
       "id": "/rabbitmq",
       "cpus": 1,

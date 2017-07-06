@@ -118,6 +118,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
@@ -130,7 +131,9 @@
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.admin">scheduler.admin module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.apps">scheduler.apps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.cluster_utils">scheduler.cluster_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.configuration">scheduler.configuration module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.initialize">scheduler.initialize module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.manager">scheduler.manager module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.models">scheduler.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.scale_scheduler">scheduler.scale_scheduler module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.serializers">scheduler.serializers module</a></li>
@@ -250,33 +253,6 @@
 </dd></dl>
 
 </div>
-<div class="section" id="module-scheduler.threads.db_sync">
-<span id="scheduler-threads-db-sync-module"></span><h2>scheduler.threads.db_sync module<a class="headerlink" href="#module-scheduler.threads.db_sync" title="Permalink to this headline">¶</a></h2>
-<p>Defines the class that manages the database sync background thread</p>
-<dl class="class">
-<dt id="scheduler.threads.db_sync.DatabaseSyncThread">
-<em class="property">class </em><code class="descclassname">scheduler.threads.db_sync.</code><code class="descname">DatabaseSyncThread</code><span class="sig-paren">(</span><em>driver</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.threads.db_sync.DatabaseSyncThread" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#scheduler.threads.base_thread.BaseSchedulerThread" title="scheduler.threads.base_thread.BaseSchedulerThread"><code class="xref py py-class docutils literal"><span class="pre">scheduler.threads.base_thread.BaseSchedulerThread</span></code></a></p>
-<p>This class manages the database sync background thread for the scheduler</p>
-<dl class="attribute">
-<dt id="scheduler.threads.db_sync.DatabaseSyncThread.driver">
-<code class="descname">driver</code><a class="headerlink" href="#scheduler.threads.db_sync.DatabaseSyncThread.driver" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the driver</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The driver</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">mesos_api.mesos.SchedulerDriver</span></code></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
-</div>
 <div class="section" id="module-scheduler.threads.recon">
 <span id="scheduler-threads-recon-module"></span><h2>scheduler.threads.recon module<a class="headerlink" href="#module-scheduler.threads.recon" title="Permalink to this headline">¶</a></h2>
 <p>Defines the class that manages the reconciliation background thread</p>
@@ -323,6 +299,33 @@
 <em class="property">class </em><code class="descclassname">scheduler.threads.scheduler_status.</code><code class="descname">SchedulerStatusThread</code><a class="headerlink" href="#scheduler.threads.scheduler_status.SchedulerStatusThread" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#scheduler.threads.base_thread.BaseSchedulerThread" title="scheduler.threads.base_thread.BaseSchedulerThread"><code class="xref py py-class docutils literal"><span class="pre">scheduler.threads.base_thread.BaseSchedulerThread</span></code></a></p>
 <p>This class manages the scheduler status background thread for the scheduler</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-scheduler.threads.sync">
+<span id="scheduler-threads-sync-module"></span><h2>scheduler.threads.sync module<a class="headerlink" href="#module-scheduler.threads.sync" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class that manages the synchronization background thread</p>
+<dl class="class">
+<dt id="scheduler.threads.sync.SyncThread">
+<em class="property">class </em><code class="descclassname">scheduler.threads.sync.</code><code class="descname">SyncThread</code><span class="sig-paren">(</span><em>driver</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.threads.sync.SyncThread" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#scheduler.threads.base_thread.BaseSchedulerThread" title="scheduler.threads.base_thread.BaseSchedulerThread"><code class="xref py py-class docutils literal"><span class="pre">scheduler.threads.base_thread.BaseSchedulerThread</span></code></a></p>
+<p>This class manages the synchronization background thread for the scheduler</p>
+<dl class="attribute">
+<dt id="scheduler.threads.sync.SyncThread.driver">
+<code class="descname">driver</code><a class="headerlink" href="#scheduler.threads.sync.SyncThread.driver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the driver</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The driver</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">mesos_api.mesos.SchedulerDriver</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 </div>

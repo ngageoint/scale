@@ -118,6 +118,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="node.html">node package</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="node.html#subpackages">Subpackages</a></li>
@@ -321,13 +322,17 @@
 
 <dl class="method">
 <dt id="node.resources.node_resources.NodeResources.generate_status_json">
-<code class="descname">generate_status_json</code><span class="sig-paren">(</span><em>resource_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#node.resources.node_resources.NodeResources.generate_status_json" title="Permalink to this definition">¶</a></dt>
+<code class="descname">generate_status_json</code><span class="sig-paren">(</span><em>resources_dict</em>, <em>key_name</em><span class="sig-paren">)</span><a class="headerlink" href="#node.resources.node_resources.NodeResources.generate_status_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates the portion of the status JSON that describes these resources</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>resource_dict</strong> (<em>dict</em>) &#8211; The dict for these resources</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>resources_dict</strong> (<em>dict</em>) &#8211; The dict for all resources</li>
+<li><strong>key_name</strong> (<em>string</em>) &#8211; The key name for describing these resources</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -399,6 +404,20 @@
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="node.resources.node_resources.NodeResources.limit_to">
+<code class="descname">limit_to</code><span class="sig-paren">(</span><em>node_resources</em><span class="sig-paren">)</span><a class="headerlink" href="#node.resources.node_resources.NodeResources.limit_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>Limits each resource, subtracting any amount that goes over the amount in the given node resources</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>node_resources</strong> (<code class="xref py py-class docutils literal"><span class="pre">node.resources.NodeResources</span></code>) &#8211; The resources</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="node.resources.node_resources.NodeResources.mem">
 <code class="descname">mem</code><a class="headerlink" href="#node.resources.node_resources.NodeResources.mem" title="Permalink to this definition">¶</a></dt>
@@ -443,6 +462,12 @@
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="node.resources.node_resources.NodeResources.round_values">
+<code class="descname">round_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.resources.node_resources.NodeResources.round_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Rounds all of the resource values</p>
 </dd></dl>
 
 <dl class="method">

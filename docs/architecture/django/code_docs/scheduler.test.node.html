@@ -118,6 +118,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
@@ -130,7 +131,9 @@
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.admin">scheduler.admin module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.apps">scheduler.apps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.cluster_utils">scheduler.cluster_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.configuration">scheduler.configuration module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.initialize">scheduler.initialize module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.manager">scheduler.manager module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.models">scheduler.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.scale_scheduler">scheduler.scale_scheduler module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.serializers">scheduler.serializers module</a></li>
@@ -242,73 +245,73 @@
 
 <dl class="method">
 <dt id="scheduler.test.node.test_manager.TestNodeManager.test_change_agent_id">
-<code class="descname">test_change_agent_id</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_change_agent_id" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_change_agent_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_change_agent_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests the NodeManager where a registered node changes its agent ID</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scheduler.test.node.test_manager.TestNodeManager.test_change_agent_id_with_inactive_node">
-<code class="descname">test_change_agent_id_with_inactive_node</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_change_agent_id_with_inactive_node" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_change_agent_id_with_inactive_node</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_change_agent_id_with_inactive_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests the NodeManager where a registered node changes its agent ID, and the node is inactive</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scheduler.test.node.test_manager.TestNodeManager.test_get_initial_cleanup_tasks">
-<code class="descname">test_get_initial_cleanup_tasks</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_get_initial_cleanup_tasks" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_initial_cleanup_tasks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_get_initial_cleanup_tasks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests getting initial cleanup tasks from the manager</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scheduler.test.node.test_manager.TestNodeManager.test_get_pull_tasks">
-<code class="descname">test_get_pull_tasks</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_get_pull_tasks" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_get_pull_tasks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_get_pull_tasks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests getting Docker pull tasks from the manager</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scheduler.test.node.test_manager.TestNodeManager.test_job_exe_clean_task">
-<code class="descname">test_job_exe_clean_task</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_job_exe_clean_task" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_job_exe_clean_task</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_job_exe_clean_task" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests the NodeManager where a cleanup task is returned to clean up a job execution</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scheduler.test.node.test_manager.TestNodeManager.test_lost_known_node">
-<code class="descname">test_lost_known_node</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_lost_known_node" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_lost_known_node</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_lost_known_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests the NodeManager where a known node was lost</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scheduler.test.node.test_manager.TestNodeManager.test_lost_unknown_node">
-<code class="descname">test_lost_unknown_node</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_lost_unknown_node" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_lost_unknown_node</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_lost_unknown_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests the NodeManager where an unknown node was lost</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scheduler.test.node.test_manager.TestNodeManager.test_pull_task_change_agent_id">
-<code class="descname">test_pull_task_change_agent_id</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_pull_task_change_agent_id" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_pull_task_change_agent_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_pull_task_change_agent_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests the NodeManager where a node&#8217;s agent ID changes during a pull task</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scheduler.test.node.test_manager.TestNodeManager.test_successful_update">
-<code class="descname">test_successful_update</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_successful_update" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_successful_update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_successful_update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests doing a successful database update</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scheduler.test.node.test_manager.TestNodeManager.test_sync_and_remove_node_model">
-<code class="descname">test_sync_and_remove_node_model</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_sync_and_remove_node_model" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_sync_and_remove_node_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_sync_and_remove_node_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests doing a successful database update when a node model should be removed from the scheduler</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scheduler.test.node.test_manager.TestNodeManager.test_sync_node_model">
-<code class="descname">test_sync_node_model</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_sync_node_model" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_sync_node_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_sync_node_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests doing a successful database update when a node model has been updated in the database</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="scheduler.test.node.test_manager.TestNodeManager.test_sync_with_renamed_node">
-<code class="descname">test_sync_with_renamed_node</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_sync_with_renamed_node" title="Permalink to this definition">¶</a></dt>
+<code class="descname">test_sync_with_renamed_node</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.test.node.test_manager.TestNodeManager.test_sync_with_renamed_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests doing a successful database update when a node model has its hostname changed in the database</p>
 </dd></dl>
 

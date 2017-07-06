@@ -118,6 +118,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
@@ -130,7 +131,9 @@
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.admin">scheduler.admin module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.apps">scheduler.apps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.cluster_utils">scheduler.cluster_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.configuration">scheduler.configuration module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.initialize">scheduler.initialize module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.manager">scheduler.manager module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.models">scheduler.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.scale_scheduler">scheduler.scale_scheduler module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.serializers">scheduler.serializers module</a></li>
@@ -303,138 +306,6 @@
 <dt id="scheduler.sync.job_type_manager.JobTypeManager.sync_with_database">
 <code class="descname">sync_with_database</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.sync.job_type_manager.JobTypeManager.sync_with_database" title="Permalink to this definition">¶</a></dt>
 <dd><p>Syncs with the database to retrieve updated job type models</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-scheduler.sync.scheduler_manager">
-<span id="scheduler-sync-scheduler-manager-module"></span><h2>scheduler.sync.scheduler_manager module<a class="headerlink" href="#module-scheduler.sync.scheduler_manager" title="Permalink to this headline">¶</a></h2>
-<p>Defines the class that manages high-level scheduler configuration</p>
-<dl class="class">
-<dt id="scheduler.sync.scheduler_manager.SchedulerManager">
-<em class="property">class </em><code class="descclassname">scheduler.sync.scheduler_manager.</code><code class="descname">SchedulerManager</code><a class="headerlink" href="#scheduler.sync.scheduler_manager.SchedulerManager" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>This class manages the high-level scheduler configuration. It is a combination of data from both the Scale
-database and the Mesos master. This class is thread-safe.</p>
-<dl class="method">
-<dt id="scheduler.sync.scheduler_manager.SchedulerManager.add_scheduling_counts">
-<code class="descname">add_scheduling_counts</code><span class="sig-paren">(</span><em>job_exe_count</em>, <em>task_count</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.sync.scheduler_manager.SchedulerManager.add_scheduling_counts" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates the scheduler information from Mesos</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>job_exe_count</strong> (<em>int</em>) &#8211; The number of new job executions scheduled</li>
-<li><strong>task_count</strong> (<em>int</em>) &#8211; The number of tasks launched</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="scheduler.sync.scheduler_manager.SchedulerManager.framework_id">
-<code class="descname">framework_id</code><a class="headerlink" href="#scheduler.sync.scheduler_manager.SchedulerManager.framework_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the framework ID</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The framework ID</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="scheduler.sync.scheduler_manager.SchedulerManager.generate_status_json">
-<code class="descname">generate_status_json</code><span class="sig-paren">(</span><em>status_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.sync.scheduler_manager.SchedulerManager.generate_status_json" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates the portion of the status JSON that describes the scheduler settings and metrics</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status_dict</strong> (<em>dict</em>) &#8211; The status JSON dict</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="scheduler.sync.scheduler_manager.SchedulerManager.is_paused">
-<code class="descname">is_paused</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.sync.scheduler_manager.SchedulerManager.is_paused" title="Permalink to this definition">¶</a></dt>
-<dd><p>Indicates whether the scheduler is currently paused or not</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the scheduler is paused, False otherwise</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="scheduler.sync.scheduler_manager.SchedulerManager.mesos_address">
-<code class="descname">mesos_address</code><a class="headerlink" href="#scheduler.sync.scheduler_manager.SchedulerManager.mesos_address" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the Mesos master address (hostname and port)</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The address of the Mesos master</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="util.html#util.host.HostAddress" title="util.host.HostAddress"><code class="xref py py-class docutils literal"><span class="pre">util.host.HostAddress</span></code></a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="scheduler.sync.scheduler_manager.SchedulerManager.queue_mode">
-<code class="descname">queue_mode</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.sync.scheduler_manager.SchedulerManager.queue_mode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the current mode for ordering the queue</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The queue mode</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="scheduler.sync.scheduler_manager.SchedulerManager.sync_with_database">
-<code class="descname">sync_with_database</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.sync.scheduler_manager.SchedulerManager.sync_with_database" title="Permalink to this definition">¶</a></dt>
-<dd><p>Syncs with the database to retrieve an updated scheduler model</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="scheduler.sync.scheduler_manager.SchedulerManager.update_from_mesos">
-<code class="descname">update_from_mesos</code><span class="sig-paren">(</span><em>framework_id=None</em>, <em>mesos_address=None</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.sync.scheduler_manager.SchedulerManager.update_from_mesos" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates the scheduler information from Mesos</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>framework_id</strong> (<em>string</em>) &#8211; The framework ID of the scheduler</li>
-<li><strong>mesos_address</strong> (<a class="reference internal" href="util.html#util.host.HostAddress" title="util.host.HostAddress"><code class="xref py py-class docutils literal"><span class="pre">util.host.HostAddress</span></code></a>) &#8211; The address of the Mesos master</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 </dd></dl>

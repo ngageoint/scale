@@ -234,6 +234,36 @@ provide.</td>
 <td>ISO-8601 Datetime</td>
 <td>When the status information was generated</td>
 </tr>
+<tr class="row-odd"><td>scheduler</td>
+<td>JSON Object</td>
+<td>Scheduler configuration and metrics information</td>
+</tr>
+<tr class="row-even"><td>scheduler.metrics</td>
+<td>JSON Object</td>
+<td>Contains various near real-time metrics related to scheudling tasks and jobs</td>
+</tr>
+<tr class="row-odd"><td>scheduler.hostname</td>
+<td>String</td>
+<td>The name of the host where the scheduler is running</td>
+</tr>
+<tr class="row-even"><td>scheduler.mesos</td>
+<td>JSON Object</td>
+<td>Contains Scale&#8217;s framework ID and hostname and port of the Mesos master</td>
+</tr>
+<tr class="row-odd"><td>num_offers</td>
+<td>Integer</td>
+<td>Number of resource offers currently held by Scale</td>
+</tr>
+<tr class="row-even"><td>resources</td>
+<td>JSON Object</td>
+<td>Describes the resource totals across all of Scale&#8217;s nodes. Each resource name
+is a key and its corresponding object breaks down the resource into several
+categories: <em>running</em> resources are used by current Scale tasks, <em>offered</em>
+resources are currently offered to Scale, <em>free</em> resources are available on
+the node and may be offered to Scale soon, <em>unavailable</em> resources are used by
+other tasks and cannot be used by Scale, and <em>total</em> resources are the total
+amounts for the node.</td>
+</tr>
 <tr class="row-odd"><td>job_types</td>
 <td>Array</td>
 <td>List of job type objects, with a few basic fields</td>
@@ -267,6 +297,54 @@ category.</td>
 </tr>
 <tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
    <span class="s2">&quot;timestamp&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;scheduler&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;metrics&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;task_updates_per_sec&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+         <span class="s2">&quot;new_offers_per_sec&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+         <span class="s2">&quot;jobs_finished_per_sec&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+         <span class="s2">&quot;jobs_launched_per_sec&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+         <span class="s2">&quot;tasks_launched_per_sec&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+         <span class="s2">&quot;offers_launched_per_sec&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+         <span class="s2">&quot;tasks_finished_per_sec&quot;</span><span class="o">:</span> <span class="mf">0.0</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;hostname&quot;</span><span class="o">:</span> <span class="s2">&quot;scheduler-host.domain.com&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;mesos&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;framework_id&quot;</span><span class="o">:</span> <span class="s2">&quot;1234&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;master_hostname&quot;</span><span class="o">:</span> <span class="s2">&quot;192.168.1.1&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;master_port&quot;</span><span class="o">:</span> <span class="mi">5050</span>
+      <span class="p">}</span>
+   <span class="p">},</span>
+   <span class="s2">&quot;num_offers&quot;</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+   <span class="s2">&quot;resources&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;mem&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;offered&quot;</span><span class="o">:</span> <span class="mf">91445.0</span><span class="p">,</span>
+         <span class="s2">&quot;total&quot;</span><span class="o">:</span> <span class="mf">177501.0</span><span class="p">,</span>
+         <span class="s2">&quot;running&quot;</span><span class="o">:</span> <span class="mf">1024.0</span><span class="p">,</span>
+         <span class="s2">&quot;free&quot;</span><span class="o">:</span> <span class="mf">72744.0</span><span class="p">,</span>
+         <span class="s2">&quot;unavailable&quot;</span><span class="o">:</span> <span class="mf">12288.0</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;gpus&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;offered&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+         <span class="s2">&quot;total&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+         <span class="s2">&quot;running&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+         <span class="s2">&quot;free&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+         <span class="s2">&quot;unavailable&quot;</span><span class="o">:</span> <span class="mf">0.0</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;disk&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;offered&quot;</span><span class="o">:</span> <span class="mf">383051.0</span><span class="p">,</span>
+         <span class="s2">&quot;total&quot;</span><span class="o">:</span> <span class="mf">676101.0</span><span class="p">,</span>
+         <span class="s2">&quot;running&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+         <span class="s2">&quot;free&quot;</span><span class="o">:</span> <span class="mf">289722.0</span><span class="p">,</span>
+         <span class="s2">&quot;unavailable&quot;</span><span class="o">:</span> <span class="mf">3328.0</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;cpus&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;offered&quot;</span><span class="o">:</span> <span class="mf">7.3</span><span class="p">,</span>
+         <span class="s2">&quot;total&quot;</span><span class="o">:</span> <span class="mf">28.0</span><span class="p">,</span>
+         <span class="s2">&quot;running&quot;</span><span class="o">:</span> <span class="mf">1.0</span><span class="p">,</span>
+         <span class="s2">&quot;free&quot;</span><span class="o">:</span> <span class="mf">11.0</span><span class="p">,</span>
+         <span class="s2">&quot;unavailable&quot;</span><span class="o">:</span> <span class="mf">8.7</span>
+      <span class="p">}</span>
+   <span class="p">},</span>
    <span class="s2">&quot;job_types&quot;</span><span class="o">:</span> <span class="p">[</span>
       <span class="p">{</span>
          <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -307,6 +385,37 @@ category.</td>
                <span class="s2">&quot;last_updated&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span>
             <span class="p">}</span>
          <span class="p">],</span>
+         <span class="s2">&quot;num_offers&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+         <span class="s2">&quot;resources&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;mem&quot;</span><span class="o">:</span> <span class="p">{</span>
+               <span class="s2">&quot;offered&quot;</span><span class="o">:</span> <span class="mf">26893.0</span><span class="p">,</span>
+               <span class="s2">&quot;total&quot;</span><span class="o">:</span> <span class="mf">29965.0</span><span class="p">,</span>
+               <span class="s2">&quot;running&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+               <span class="s2">&quot;free&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+               <span class="s2">&quot;unavailable&quot;</span><span class="o">:</span> <span class="mf">3072.0</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;gpus&quot;</span><span class="o">:</span> <span class="p">{</span>
+               <span class="s2">&quot;offered&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+               <span class="s2">&quot;total&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+               <span class="s2">&quot;running&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+               <span class="s2">&quot;free&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+               <span class="s2">&quot;unavailable&quot;</span><span class="o">:</span> <span class="mf">0.0</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;disk&quot;</span><span class="o">:</span> <span class="p">{</span>
+               <span class="s2">&quot;offered&quot;</span><span class="o">:</span> <span class="mf">95553.0</span><span class="p">,</span>
+               <span class="s2">&quot;total&quot;</span><span class="o">:</span> <span class="mf">96577.0</span><span class="p">,</span>
+               <span class="s2">&quot;running&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+               <span class="s2">&quot;free&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+               <span class="s2">&quot;unavailable&quot;</span><span class="o">:</span> <span class="mf">1024.0</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;cpus&quot;</span><span class="o">:</span> <span class="p">{</span>
+               <span class="s2">&quot;offered&quot;</span><span class="o">:</span> <span class="mf">1.0</span><span class="p">,</span>
+               <span class="s2">&quot;total&quot;</span><span class="o">:</span> <span class="mf">4.0</span><span class="p">,</span>
+               <span class="s2">&quot;running&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+               <span class="s2">&quot;free&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
+               <span class="s2">&quot;unavailable&quot;</span><span class="o">:</span> <span class="mf">3.0</span>
+            <span class="p">}</span>
+         <span class="p">},</span>
          <span class="s2">&quot;job_executions&quot;</span><span class="o">:</span> <span class="p">{</span>
             <span class="s2">&quot;running&quot;</span><span class="o">:</span> <span class="p">{</span>
                <span class="s2">&quot;total&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>

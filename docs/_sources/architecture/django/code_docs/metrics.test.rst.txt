@@ -12,14 +12,6 @@ metrics\.test\.test\_daily\_metrics module
     :undoc-members:
     :show-inheritance:
 
-metrics\.test\.test\_metrics\_processor module
-----------------------------------------------
-
-.. automodule:: metrics.test.test_metrics_processor
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 metrics\.test\.test\_models module
 ----------------------------------
 

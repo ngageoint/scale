@@ -1,6 +1,13 @@
 mesos\_api package
 ==================
 
+Subpackages
+-----------
+
+.. toctree::
+
+    mesos_api.unversioned
+
 Submodules
 ----------
 

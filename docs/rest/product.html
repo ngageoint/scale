@@ -595,140 +595,172 @@ still in research and development.</td>
 <tr class="row-even"><td colspan="3">Returns a specific product file and all its related model information including sources and derived products.</td>
 </tr>
 <tr class="row-odd"><td colspan="3"><dl class="first last docutils">
+<dt><strong>DEPRECATED</strong></dt>
+<dd>This table describes the current v5 version of the product file details API, which is now deprecated.
+The new v6 version of this API does not include the <em>sources</em>, <em>ancestors</em>, and <em>descendants</em> arrays
+in the response. The new v6 version also does not support the use of <em>file_name</em> in the URL (only
+product ID supported).</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-even"><td colspan="3"><dl class="first last docutils">
 <dt><strong>GET</strong> /products/{id}/</dt>
 <dd>Where {id} is the unique identifier of an existing model.</dd>
 </dl>
 </td>
 </tr>
-<tr class="row-even"><td colspan="3"><dl class="first last docutils">
+<tr class="row-odd"><td colspan="3"><dl class="first last docutils">
 <dt><strong>GET</strong> /products/{file_name}/</dt>
 <dd>Where {file_name} is the unique name of a product file associated with an existing model.</dd>
 </dl>
 </td>
 </tr>
-<tr class="row-odd"><td colspan="3"><strong>Successful Response</strong></td>
+<tr class="row-even"><td colspan="3"><strong>Successful Response</strong></td>
 </tr>
-<tr class="row-even"><td><strong>Status</strong></td>
+<tr class="row-odd"><td><strong>Status</strong></td>
 <td colspan="2">200 OK</td>
 </tr>
-<tr class="row-odd"><td><strong>Content Type</strong></td>
+<tr class="row-even"><td><strong>Content Type</strong></td>
 <td colspan="2"><em>application/json</em></td>
 </tr>
-<tr class="row-even"><td colspan="3"><strong>JSON Fields</strong></td>
+<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-odd"><td>id</td>
+<tr class="row-even"><td>id</td>
 <td>Integer</td>
 <td>The unique identifier of the model.</td>
 </tr>
-<tr class="row-even"><td>workspace</td>
+<tr class="row-odd"><td>workspace</td>
 <td>JSON Object</td>
 <td>The workspace that has stored the product file.
 (See <a class="reference internal" href="workspace.html#rest-workspace-details"><span class="std std-ref">Workspace Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>file_name</td>
+<tr class="row-even"><td>file_name</td>
 <td>String</td>
 <td>The name of the product file.</td>
 </tr>
-<tr class="row-even"><td>media_type</td>
+<tr class="row-odd"><td>media_type</td>
 <td>String</td>
 <td>The IANA media type of the product file.</td>
 </tr>
-<tr class="row-odd"><td>file_size</td>
+<tr class="row-even"><td>file_size</td>
 <td>Integer</td>
 <td>The size of the product file in bytes.</td>
 </tr>
-<tr class="row-even"><td>data_type</td>
+<tr class="row-odd"><td>data_type</td>
 <td>Array</td>
 <td>List of strings describing the data type of the product file.</td>
 </tr>
-<tr class="row-odd"><td>is_deleted</td>
+<tr class="row-even"><td>is_deleted</td>
 <td>Boolean</td>
 <td>Whether the product file has been deleted.</td>
 </tr>
-<tr class="row-even"><td>uuid</td>
+<tr class="row-odd"><td>uuid</td>
 <td>String</td>
 <td>A unique identifier that stays stable across multiple job execution runs.</td>
 </tr>
-<tr class="row-odd"><td>url</td>
+<tr class="row-even"><td>url</td>
 <td>URL</td>
 <td>The absolute URL to use for downloading the file.</td>
 </tr>
-<tr class="row-even"><td>created</td>
+<tr class="row-odd"><td>created</td>
 <td>ISO-8601 Datetime</td>
 <td>When the associated database model was initially created.</td>
 </tr>
-<tr class="row-odd"><td>deleted</td>
+<tr class="row-even"><td>deleted</td>
 <td>ISO-8601 Datetime</td>
 <td>When the product file was deleted.</td>
 </tr>
-<tr class="row-even"><td>data_started</td>
+<tr class="row-odd"><td>data_started</td>
 <td>ISO-8601 Datetime</td>
 <td>When collection of the underlying data file started.</td>
 </tr>
-<tr class="row-odd"><td>data_ended</td>
+<tr class="row-even"><td>data_ended</td>
 <td>ISO-8601 Datetime</td>
 <td>When collection of the underlying data file ended.</td>
 </tr>
-<tr class="row-even"><td>geometry</td>
+<tr class="row-odd"><td>geometry</td>
 <td>WKT String</td>
 <td>The full geospatial geometry footprint of the product file.</td>
 </tr>
-<tr class="row-odd"><td>center_point</td>
+<tr class="row-even"><td>center_point</td>
 <td>WKT String</td>
 <td>The central geospatial location of the product file.</td>
 </tr>
-<tr class="row-even"><td>meta_data</td>
+<tr class="row-odd"><td>meta_data</td>
 <td>JSON Object</td>
 <td>A dictionary of key/value pairs that describe product-specific attributes.</td>
 </tr>
-<tr class="row-odd"><td>countries</td>
+<tr class="row-even"><td>countries</td>
 <td>Array</td>
 <td>A list of zero or more strings with the ISO3 country codes for countries
 contained in the geographic boundary of this file.</td>
 </tr>
-<tr class="row-even"><td>last_modified</td>
+<tr class="row-odd"><td>last_modified</td>
 <td>ISO-8601 Datetime</td>
 <td>When the associated database model was last saved.</td>
 </tr>
-<tr class="row-odd"><td>is_operational</td>
+<tr class="row-even"><td>is_operational</td>
 <td>Boolean</td>
 <td>Whether this product is operational (True) or is still in a research &amp;
 development (R&amp;D) phase (False).</td>
 </tr>
-<tr class="row-even"><td>is_published</td>
+<tr class="row-odd"><td>is_published</td>
 <td>Boolean</td>
 <td>Whether the product file is currently published.</td>
 </tr>
-<tr class="row-odd"><td>has_been_published</td>
+<tr class="row-even"><td>has_been_published</td>
 <td>Boolean</td>
 <td>Whether the product file has ever been published.</td>
 </tr>
-<tr class="row-even"><td>published</td>
+<tr class="row-odd"><td>published</td>
 <td>ISO-8601 Datetime</td>
 <td>When the product file was originally published by Scale.</td>
 </tr>
-<tr class="row-odd"><td>unpublished</td>
+<tr class="row-even"><td>unpublished</td>
 <td>ISO-8601 Datetime</td>
 <td>When the product file was unpublished by Scale.</td>
 </tr>
-<tr class="row-even"><td>job_type</td>
+<tr class="row-odd"><td>source_started</td>
+<td>ISO-8601 Datetime</td>
+<td>When collection of the underlying source file started.</td>
+</tr>
+<tr class="row-even"><td>source_ended</td>
+<td>ISO-8601 Datetime</td>
+<td>When collection of the underlying source file ended.</td>
+</tr>
+<tr class="row-odd"><td>job_type</td>
 <td>JSON Object</td>
 <td>The type of job that created the product.
 (See <a class="reference internal" href="job_type.html#rest-job-type-details"><span class="std std-ref">Job Type Details</span></a>)</td>
 </tr>
-<tr class="row-odd"><td>job</td>
+<tr class="row-even"><td>job</td>
 <td>JSON Object</td>
 <td>The job that created the product.
 (See <a class="reference internal" href="job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td>job_exe</td>
+<tr class="row-odd"><td>job_exe</td>
 <td>JSON Object</td>
 <td>The job execution that created the product.
 (See <a class="reference internal" href="job_execution.html#rest-job-execution-details"><span class="std std-ref">Job Execution Details</span></a>)</td>
 </tr>
+<tr class="row-even"><td>recipe_type</td>
+<td>JSON Object</td>
+<td>The type of recipe that generated the product.
+(See <a class="reference internal" href="recipe_type.html#rest-recipe-type-details"><span class="std std-ref">Recipe Type Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>recipe</td>
+<td>JSON Object</td>
+<td>The recipe instance that generated the product.
+(See <a class="reference internal" href="recipe.html#rest-recipe-details"><span class="std std-ref">Recipe Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td>batch</td>
+<td>JSON Object</td>
+<td>The batch instance that generated the product.</td>
+</tr>
 <tr class="row-odd"><td>sources</td>
 <td>Array</td>
-<td>A list of source files used to derive this product file during jobs.
+<td>(See <a class="reference internal" href="batch.html#rest-batch-details"><span class="std std-ref">Batch Details</span></a>)
+A list of source files used to derive this product file during jobs.
 (See <a class="reference internal" href="source_file.html#rest-source-file-details"><span class="std std-ref">Source File Details</span></a>)</td>
 </tr>
 <tr class="row-even"><td>ancestors</td>
@@ -768,6 +800,8 @@ development (R&amp;D) phase (False).</td>
     <span class="s2">&quot;has_been_published&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
     <span class="s2">&quot;published&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
     <span class="s2">&quot;unpublished&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;source_started&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;source_ended&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-02T00:00:00Z&quot;</span><span class="p">,</span>
     <span class="s2">&quot;job_type&quot;</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
         <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;png-filter&quot;</span><span class="p">,</span>
@@ -789,7 +823,26 @@ development (R&amp;D) phase (False).</td>
     <span class="p">},</span>
     <span class="s2">&quot;job_exe&quot;</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">4</span>
-    <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;recipe_type&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;my-recipe&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="s2">&quot;1.0.0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Recipe&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Processes some data&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;recipe&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">60</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;batch&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">15</span><span class="p">,</span>
+        <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;My Batch&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;My batch of recipes&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="s2">&quot;SUBMITTED&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;recipe_type&quot;</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
+        <span class="s2">&quot;event&quot;</span><span class="o">:</span> <span class="mi">19</span><span class="p">,</span>
+        <span class="s2">&quot;creator_job&quot;</span><span class="o">:</span> <span class="mi">62</span><span class="p">,</span>
+    <span class="p">},</span>
     <span class="s2">&quot;sources&quot;</span><span class="o">:</span> <span class="p">[</span>
         <span class="p">{</span>
             <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -1251,6 +1304,231 @@ Choices: [PUBLISHED, UNPUBLISHED, DELETED].</td>
                     <span class="s2">&quot;parsed&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span>
                 <span class="p">}</span>
             <span class="p">]</span>
+        <span class="p">},</span>
+        <span class="p">...</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table border="1" class="docutils" id="rest-product-file-sources">
+<colgroup>
+<col width="17%" />
+<col width="16%" />
+<col width="8%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head" colspan="4"><strong>Product File Source List</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td colspan="4">Returns a list of all source files that produced the given product ID</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><dl class="first last docutils">
+<dt><strong>GET</strong> /products/{id}/sources/</dt>
+<dd>Where {id} is the unique identifier of an existing product file.</dd>
+</dl>
+</td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>Query Parameters</strong></td>
+</tr>
+<tr class="row-odd"><td>page</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The page of the results to return. Defaults to 1.</td>
+</tr>
+<tr class="row-even"><td>page_size</td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The size of the page to use for pagination of results.
+Defaults to 100, and can be anywhere from 1-1000.</td>
+</tr>
+<tr class="row-odd"><td>started</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>The start of the time range to query.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-even"><td>ended</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
+<td>End of the time range to query, defaults to the current time.
+Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
+Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
+</tr>
+<tr class="row-odd"><td>time_field</td>
+<td>String</td>
+<td>Optional</td>
+<td><p class="first">Indicates the time field(s) that <em>started</em> and <em>ended</em> will use for
+time filtering. Valid values are:</p>
+<ul class="simple">
+<li><em>last_modified</em> - last modification of source file meta-data</li>
+<li><em>data</em> - data time of source file (<em>data_started</em>, <em>data_ended</em>)</li>
+</ul>
+<p class="last">The default value is <em>last_modified</em>.</p>
+</td>
+</tr>
+<tr class="row-even"><td>order</td>
+<td>String</td>
+<td>Optional</td>
+<td>One or more fields to use when ordering the results.
+Duplicate it to multi-sort, (ex: order=file_name&amp;order=created).
+Nested objects require a delimiter (ex: order=job_type__name).
+Prefix fields with a dash to reverse the sort, (ex: order=-created).</td>
+</tr>
+<tr class="row-odd"><td>is_parsed</td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Return only sources flagged as successfully parsed.</td>
+</tr>
+<tr class="row-even"><td>file_name</td>
+<td>String</td>
+<td>Optional</td>
+<td>Return only sources with a given file name.</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
+</tr>
+<tr class="row-even"><td><strong>Status</strong></td>
+<td colspan="3">200 OK</td>
+</tr>
+<tr class="row-odd"><td><strong>Content Type</strong></td>
+<td colspan="3"><em>application/json</em></td>
+</tr>
+<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
+</tr>
+<tr class="row-odd"><td>count</td>
+<td>Integer</td>
+<td colspan="2">The total number of results that match the query parameters.</td>
+</tr>
+<tr class="row-even"><td>next</td>
+<td>URL</td>
+<td colspan="2">A URL to the next page of results.</td>
+</tr>
+<tr class="row-odd"><td>previous</td>
+<td>URL</td>
+<td colspan="2">A URL to the previous page of results.</td>
+</tr>
+<tr class="row-even"><td>results</td>
+<td>Array</td>
+<td colspan="2">List of result JSON objects that match the query parameters.</td>
+</tr>
+<tr class="row-odd"><td>.id</td>
+<td>Integer</td>
+<td colspan="2">The unique identifier of the model. Can be passed to the details API call.
+(See <a class="reference internal" href="source_file.html#rest-source-file-details"><span class="std std-ref">Source File Details</span></a>)</td>
+</tr>
+<tr class="row-even"><td>.workspace</td>
+<td>JSON Object</td>
+<td colspan="2">The workspace that has stored the source file.
+(See <a class="reference internal" href="workspace.html#rest-workspace-details"><span class="std std-ref">Workspace Details</span></a>)</td>
+</tr>
+<tr class="row-odd"><td>.file_name</td>
+<td>String</td>
+<td colspan="2">The name of the source file.</td>
+</tr>
+<tr class="row-even"><td>.media_type</td>
+<td>String</td>
+<td colspan="2">The IANA media type of the source file.</td>
+</tr>
+<tr class="row-odd"><td>.file_size</td>
+<td>Integer</td>
+<td colspan="2">The size of the source file in bytes.</td>
+</tr>
+<tr class="row-even"><td>.data_type</td>
+<td>Array</td>
+<td colspan="2">List of strings describing the data type of the source.</td>
+</tr>
+<tr class="row-odd"><td>.is_deleted</td>
+<td>Boolean</td>
+<td colspan="2">Whether the source file has been deleted.</td>
+</tr>
+<tr class="row-even"><td>.uuid</td>
+<td>String</td>
+<td colspan="2">A unique identifier that stays stable across multiple job execution runs.</td>
+</tr>
+<tr class="row-odd"><td>.url</td>
+<td>URL</td>
+<td colspan="2">The absolute URL to use for downloading the file.</td>
+</tr>
+<tr class="row-even"><td>.created</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the associated database model was initially created.</td>
+</tr>
+<tr class="row-odd"><td>.deleted</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the source file was deleted.</td>
+</tr>
+<tr class="row-even"><td>.data_started</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When collection of the underlying data file started.</td>
+</tr>
+<tr class="row-odd"><td>.data_ended</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When collection of the underlying data file ended.</td>
+</tr>
+<tr class="row-even"><td>.geometry</td>
+<td>WKT String</td>
+<td colspan="2">The full geospatial geometry footprint of the source.</td>
+</tr>
+<tr class="row-odd"><td>.center_point</td>
+<td>WKT String</td>
+<td colspan="2">The central geospatial location of the source.</td>
+</tr>
+<tr class="row-even"><td>.meta_data</td>
+<td>JSON Object</td>
+<td colspan="2">A dictionary of key/value pairs that describe source-specific attributes.</td>
+</tr>
+<tr class="row-odd"><td>.countries</td>
+<td>Array</td>
+<td colspan="2">A list of zero or more strings with the ISO3 country codes for countries
+contained in the geographic boundary of this file.</td>
+</tr>
+<tr class="row-even"><td>.last_modified</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the associated database model was last saved.</td>
+</tr>
+<tr class="row-odd"><td>.is_parsed</td>
+<td>Boolean</td>
+<td colspan="2">Whether this source was successfully parsed.</td>
+</tr>
+<tr class="row-even"><td>.parsed</td>
+<td>ISO-8601 Datetime</td>
+<td colspan="2">When the source file was originally parsed by Scale.</td>
+</tr>
+<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">55</span><span class="p">,</span>
+    <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;results&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">465</span><span class="p">,</span>
+            <span class="s2">&quot;workspace&quot;</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;Raw Source&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;file_name&quot;</span><span class="o">:</span> <span class="s2">&quot;my_file.kml&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;media_type&quot;</span><span class="o">:</span> <span class="s2">&quot;application/vnd.google-earth.kml+xml&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;file_size&quot;</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
+            <span class="s2">&quot;data_type&quot;</span><span class="o">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;is_deleted&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="s2">&quot;uuid&quot;</span><span class="o">:</span> <span class="s2">&quot;c8928d9183fc99122948e7840ec9a0fd&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;url&quot;</span><span class="o">:</span> <span class="s2">&quot;http://host.com/file/path/my_file.kml&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;deleted&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;data_started&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;data_ended&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;geometry&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;center_point&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="s2">&quot;meta_data&quot;</span><span class="o">:</span> <span class="p">{...},</span>
+            <span class="s2">&quot;countries&quot;</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;TCY&quot;</span><span class="p">,</span> <span class="s2">&quot;TCT&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;is_parsed&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="s2">&quot;parsed&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span>
         <span class="p">},</span>
         <span class="p">...</span>
     <span class="p">]</span>

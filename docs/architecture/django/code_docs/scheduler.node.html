@@ -118,6 +118,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
@@ -130,7 +131,9 @@
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.admin">scheduler.admin module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.apps">scheduler.apps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.cluster_utils">scheduler.cluster_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.configuration">scheduler.configuration module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.initialize">scheduler.initialize module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.manager">scheduler.manager module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.models">scheduler.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.scale_scheduler">scheduler.scale_scheduler module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.serializers">scheduler.serializers module</a></li>
@@ -226,6 +229,17 @@
 <h1>scheduler.node package<a class="headerlink" href="#scheduler-node-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-scheduler.node.agent">
+<span id="scheduler-node-agent-module"></span><h2>scheduler.node.agent module<a class="headerlink" href="#module-scheduler.node.agent" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class that represents an agent in the scheduler</p>
+<dl class="class">
+<dt id="scheduler.node.agent.Agent">
+<em class="property">class </em><code class="descclassname">scheduler.node.agent.</code><code class="descname">Agent</code><span class="sig-paren">(</span><em>agent_id</em>, <em>hostname</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.agent.Agent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This class represents an agent available to Scale.</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-scheduler.node.conditions">
 <span id="scheduler-node-conditions-module"></span><h2>scheduler.node.conditions module<a class="headerlink" href="#module-scheduler.node.conditions" title="Permalink to this headline">¶</a></h2>
@@ -618,14 +632,14 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="scheduler.node.manager.NodeManager.register_agent_ids">
-<code class="descname">register_agent_ids</code><span class="sig-paren">(</span><em>agent_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.manager.NodeManager.register_agent_ids" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds the set of online agent IDs to the manager so they can be registered</p>
+<dt id="scheduler.node.manager.NodeManager.register_agents">
+<code class="descname">register_agents</code><span class="sig-paren">(</span><em>agents</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.manager.NodeManager.register_agents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the list of online agents to the manager so they can be registered</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>agent_ids</strong> (<em>set</em>) &#8211; The set of online agent IDs to add</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>agents</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The list of online agents to register</td>
 </tr>
 </tbody>
 </table>
@@ -633,18 +647,13 @@
 
 <dl class="method">
 <dt id="scheduler.node.manager.NodeManager.sync_with_database">
-<code class="descname">sync_with_database</code><span class="sig-paren">(</span><em>master_hostname</em>, <em>master_port</em>, <em>scheduler</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.manager.NodeManager.sync_with_database" title="Permalink to this definition">¶</a></dt>
+<code class="descname">sync_with_database</code><span class="sig-paren">(</span><em>scheduler_config</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.manager.NodeManager.sync_with_database" title="Permalink to this definition">¶</a></dt>
 <dd><p>Syncs with the database to retrieve updated node models and queries Mesos for unknown agent IDs</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>master_hostname</strong> (<em>string</em>) &#8211; The name of the Mesos master host</li>
-<li><strong>master_port</strong> (<em>int</em>) &#8211; The port used by the Mesos master</li>
-<li><strong>scheduler</strong> (<a class="reference internal" href="scheduler.html#scheduler.models.Scheduler" title="scheduler.models.Scheduler"><code class="xref py py-class docutils literal"><span class="pre">scheduler.models.Scheduler</span></code></a>) &#8211; The scheduler model</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>scheduler_config</strong> (<a class="reference internal" href="scheduler.html#scheduler.configuration.SchedulerConfiguration" title="scheduler.configuration.SchedulerConfiguration"><code class="xref py py-class docutils literal"><span class="pre">scheduler.configuration.SchedulerConfiguration</span></code></a>) &#8211; The scheduler configuration</td>
 </tr>
 </tbody>
 </table>
@@ -950,7 +959,7 @@ no longer online, there&#8217;s no reason for the scheduler to continue to track
 
 <dl class="method">
 <dt id="scheduler.node.node_class.Node.update_from_model">
-<code class="descname">update_from_model</code><span class="sig-paren">(</span><em>node</em>, <em>scheduler</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.node_class.Node.update_from_model" title="Permalink to this definition">¶</a></dt>
+<code class="descname">update_from_model</code><span class="sig-paren">(</span><em>node</em>, <em>scheduler_config</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.node_class.Node.update_from_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Updates this node&#8217;s data from the database models</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -958,7 +967,7 @@ no longer online, there&#8217;s no reason for the scheduler to continue to track
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>node</strong> (<a class="reference internal" href="node.html#node.models.Node" title="node.models.Node"><code class="xref py py-class docutils literal"><span class="pre">node.models.Node</span></code></a>) &#8211; The node model</li>
-<li><strong>scheduler</strong> (<a class="reference internal" href="scheduler.html#scheduler.models.Scheduler" title="scheduler.models.Scheduler"><code class="xref py py-class docutils literal"><span class="pre">scheduler.models.Scheduler</span></code></a>) &#8211; The scheduler model</li>
+<li><strong>scheduler_config</strong> (<a class="reference internal" href="scheduler.html#scheduler.configuration.SchedulerConfiguration" title="scheduler.configuration.SchedulerConfiguration"><code class="xref py py-class docutils literal"><span class="pre">scheduler.configuration.SchedulerConfiguration</span></code></a>) &#8211; The scheduler configuration</li>
 </ul>
 </td>
 </tr>

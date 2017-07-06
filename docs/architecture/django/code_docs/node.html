@@ -118,6 +118,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">node package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
@@ -496,6 +497,30 @@ object the first time, the query is executed.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <p>Provides additional methods for handling nodes</p>
 <dl class="method">
+<dt id="node.models.NodeManager.create_nodes">
+<code class="descname">create_nodes</code><span class="sig-paren">(</span><em>hostnames</em>, <em>agent_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.NodeManager.create_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates and returns new nodes with the given host names</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>hostnames</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The list of host names</li>
+<li><strong>agent_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The list of agent IDs</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of new nodes</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="node.models.NodeManager.get_details">
 <code class="descname">get_details</code><span class="sig-paren">(</span><em>node_id</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.NodeManager.get_details" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets additional details for the given node model based on related model attributes.</p>
@@ -541,6 +566,24 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="node.models.NodeManager.get_scheduler_nodes">
+<code class="descname">get_scheduler_nodes</code><span class="sig-paren">(</span><em>hostnames</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.NodeManager.get_scheduler_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of all nodes that either have one of the given host names or is active.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>hostnames</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The list of host names</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of nodes for the scheduler</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="node.models.NodeManager.get_status">
 <code class="descname">get_status</code><span class="sig-paren">(</span><em>started</em>, <em>ended=None</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.NodeManager.get_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a list of nodes with job execution counts broken down by status.</p>
@@ -559,33 +602,6 @@ object the first time, the query is executed.</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="#node.models.NodeStatus" title="node.models.NodeStatus"><code class="xref py py-class docutils literal"><span class="pre">node.models.NodeStatus</span></code></a>]</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="node.models.NodeManager.register_node">
-<code class="descname">register_node</code><span class="sig-paren">(</span><em>hostname</em>, <em>port</em>, <em>slave_id</em><span class="sig-paren">)</span><a class="headerlink" href="#node.models.NodeManager.register_node" title="Permalink to this definition">¶</a></dt>
-<dd><p>Registers a node with the given properties and saves the properties
-in the database. If a node with the given hostname does not exist it is
-created, else the existing node is updated.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>hostname</strong> (<em>str</em>) &#8211; The full domain-qualified hostname of the node</li>
-<li><strong>port</strong> (<em>int</em>) &#8211; The port being used by the executor on this node</li>
-<li><strong>slave_id</strong> (<em>str</em>) &#8211; The slave ID used by Mesos for the node</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The node model</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#node.models.Node" title="node.models.Node"><code class="xref py py-class docutils literal"><span class="pre">node.models.Node</span></code></a></p>
 </td>
 </tr>
 </tbody>

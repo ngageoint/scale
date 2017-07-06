@@ -29,14 +29,6 @@ metrics\.daily\_metrics module
     :undoc-members:
     :show-inheritance:
 
-metrics\.metrics\_processor module
-----------------------------------
-
-.. automodule:: metrics.metrics_processor
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 metrics\.models module
 ----------------------
 

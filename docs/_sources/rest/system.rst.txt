@@ -30,6 +30,24 @@ These services provide access to general system information.
 +--------------------------+-------------------+--------------------------------------------------------------------------------+
 | timestamp                | ISO-8601 Datetime | When the status information was generated                                      |
 +--------------------------+-------------------+--------------------------------------------------------------------------------+
+| scheduler                | JSON Object       | Scheduler configuration and metrics information                                |
++--------------------------+-------------------+--------------------------------------------------------------------------------+
+| scheduler.metrics        | JSON Object       | Contains various near real-time metrics related to scheudling tasks and jobs   |
++--------------------------+-------------------+--------------------------------------------------------------------------------+
+| scheduler.hostname       | String            | The name of the host where the scheduler is running                            |
++--------------------------+-------------------+--------------------------------------------------------------------------------+
+| scheduler.mesos          | JSON Object       | Contains Scale's framework ID and hostname and port of the Mesos master        |
++--------------------------+-------------------+--------------------------------------------------------------------------------+
+| num_offers               | Integer           | Number of resource offers currently held by Scale                              |
++--------------------------+-------------------+--------------------------------------------------------------------------------+
+| resources                | JSON Object       | Describes the resource totals across all of Scale's nodes. Each resource name  |
+|                          |                   | is a key and its corresponding object breaks down the resource into several    |
+|                          |                   | categories: *running* resources are used by current Scale tasks, *offered*     |
+|                          |                   | resources are currently offered to Scale, *free* resources are available on    |
+|                          |                   | the node and may be offered to Scale soon, *unavailable* resources are used by |
+|                          |                   | other tasks and cannot be used by Scale, and *total* resources are the total   |
+|                          |                   | amounts for the node.                                                          |
++--------------------------+-------------------+--------------------------------------------------------------------------------+
 | job_types                | Array             | List of job type objects, with a few basic fields                              |
 +--------------------------+-------------------+--------------------------------------------------------------------------------+
 | nodes                    | Array             | List of node objects, with a few basic fields including the current node state |
@@ -53,6 +71,54 @@ These services provide access to general system information.
 |                                                                                                                               |
 |   {                                                                                                                           |
 |      "timestamp": "1970-01-01T00:00:00Z",                                                                                     |
+|      "scheduler": {                                                                                                           |
+|         "metrics": {                                                                                                          |
+|            "task_updates_per_sec": 0.0,                                                                                       |
+|            "new_offers_per_sec": 0.0,                                                                                         |
+|            "jobs_finished_per_sec": 0.0,                                                                                      |
+|            "jobs_launched_per_sec": 0.0,                                                                                      |
+|            "tasks_launched_per_sec": 0.0,                                                                                     |
+|            "offers_launched_per_sec": 0.0,                                                                                    |
+|            "tasks_finished_per_sec": 0.0                                                                                      |
+|         },                                                                                                                    |
+|         "hostname": "scheduler-host.domain.com",                                                                              |
+|         "mesos": {                                                                                                            |
+|            "framework_id": "1234",                                                                                            |
+|            "master_hostname": "192.168.1.1",                                                                                  |
+|            "master_port": 5050                                                                                                |
+|         }                                                                                                                     |
+|      },                                                                                                                       |
+|      "num_offers": 4,                                                                                                         |
+|      "resources": {                                                                                                           |
+|         "mem": {                                                                                                              |
+|            "offered": 91445.0,                                                                                                |
+|            "total": 177501.0,                                                                                                 |
+|            "running": 1024.0,                                                                                                 |
+|            "free": 72744.0,                                                                                                   |
+|            "unavailable": 12288.0                                                                                             |
+|         },                                                                                                                    |
+|         "gpus": {                                                                                                             |
+|            "offered": 0.0,                                                                                                    |
+|            "total": 0.0,                                                                                                      |
+|            "running": 0.0,                                                                                                    |
+|            "free": 0.0,                                                                                                       |
+|            "unavailable": 0.0                                                                                                 |
+|         },                                                                                                                    |
+|         "disk": {                                                                                                             |
+|            "offered": 383051.0,                                                                                               |
+|            "total": 676101.0,                                                                                                 |
+|            "running": 0.0,                                                                                                    |
+|            "free": 289722.0,                                                                                                  |
+|            "unavailable": 3328.0                                                                                              |
+|         },                                                                                                                    |
+|         "cpus": {                                                                                                             |
+|            "offered": 7.3,                                                                                                    |
+|            "total": 28.0,                                                                                                     |
+|            "running": 1.0,                                                                                                    |
+|            "free": 11.0,                                                                                                      |
+|            "unavailable": 8.7                                                                                                 |
+|         }                                                                                                                     |
+|      },                                                                                                                       |
 |      "job_types": [                                                                                                           |
 |         {                                                                                                                     |
 |            "id": 1,                                                                                                           |
@@ -93,6 +159,37 @@ These services provide access to general system information.
 |                  "last_updated": "1970-01-01T00:00:00Z"                                                                       |
 |               }                                                                                                               |
 |            ],                                                                                                                 |
+|            "num_offers": 1,                                                                                                   |
+|            "resources": {                                                                                                     |
+|               "mem": {                                                                                                        |
+|                  "offered": 26893.0,                                                                                          |
+|                  "total": 29965.0,                                                                                            |
+|                  "running": 0.0,                                                                                              |
+|                  "free": 0.0,                                                                                                 |
+|                  "unavailable": 3072.0                                                                                        |
+|               },                                                                                                              |
+|               "gpus": {                                                                                                       |
+|                  "offered": 0.0,                                                                                              |
+|                  "total": 0.0,                                                                                                |
+|                  "running": 0.0,                                                                                              |
+|                  "free": 0.0,                                                                                                 |
+|                  "unavailable": 0.0                                                                                           |
+|               },                                                                                                              |
+|               "disk": {                                                                                                       |
+|                  "offered": 95553.0,                                                                                          |
+|                  "total": 96577.0,                                                                                            |
+|                  "running": 0.0,                                                                                              |
+|                  "free": 0.0,                                                                                                 |
+|                  "unavailable": 1024.0                                                                                        |
+|               },                                                                                                              |
+|               "cpus": {                                                                                                       |
+|                  "offered": 1.0,                                                                                              |
+|                  "total": 4.0,                                                                                                |
+|                  "running": 0.0,                                                                                              |
+|                  "free": 0.0,                                                                                                 |
+|                  "unavailable": 3.0                                                                                           |
+|               }                                                                                                               |
+|            },                                                                                                                 |
 |            "job_executions": {                                                                                                |
 |               "running": {                                                                                                    |
 |                  "total": 3,                                                                                                  |

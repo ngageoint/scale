@@ -118,6 +118,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
@@ -130,7 +131,9 @@
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.admin">scheduler.admin module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.apps">scheduler.apps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.cluster_utils">scheduler.cluster_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.configuration">scheduler.configuration module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.initialize">scheduler.initialize module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.manager">scheduler.manager module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.models">scheduler.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.scale_scheduler">scheduler.scale_scheduler module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.html#module-scheduler.serializers">scheduler.serializers module</a></li>
@@ -263,19 +266,42 @@ requested.</p>
 
 <dl class="method">
 <dt id="scheduler.resources.agent.AgentResources.generate_status_json">
-<code class="descname">generate_status_json</code><span class="sig-paren">(</span><em>node_dict</em>, <em>total_running</em>, <em>total_offered</em>, <em>total_watermark</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.resources.agent.AgentResources.generate_status_json" title="Permalink to this definition">¶</a></dt>
+<code class="descname">generate_status_json</code><span class="sig-paren">(</span><em>node_dict</em>, <em>total_running=None</em>, <em>total_offered=None</em>, <em>total_watermark=None</em>, <em>total=None</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.resources.agent.AgentResources.generate_status_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates the portion of the status JSON that describes the resources for this agent</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>node_dict</strong> (<em>dict</em>) &#8211; The dict for this agent&#8217;s node within the status JSON</li>
-<li><strong>total_running</strong> (<a class="reference internal" href="node.resources.html#node.resources.node_resources.NodeResources" title="node.resources.node_resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.node_resources.NodeResources</span></code></a>) &#8211; The total running resources to add up</li>
-<li><strong>total_offered</strong> (<a class="reference internal" href="node.resources.html#node.resources.node_resources.NodeResources" title="node.resources.node_resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.node_resources.NodeResources</span></code></a>) &#8211; The total offered resources to add up</li>
-<li><strong>total_watermark</strong> (<a class="reference internal" href="node.resources.html#node.resources.node_resources.NodeResources" title="node.resources.node_resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.node_resources.NodeResources</span></code></a>) &#8211; The total watermark resources to add up</li>
+<li><strong>total_running</strong> (<a class="reference internal" href="node.resources.html#node.resources.node_resources.NodeResources" title="node.resources.node_resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.node_resources.NodeResources</span></code></a>) &#8211; The total running resources to add up, possibly None</li>
+<li><strong>total_offered</strong> (<a class="reference internal" href="node.resources.html#node.resources.node_resources.NodeResources" title="node.resources.node_resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.node_resources.NodeResources</span></code></a>) &#8211; The total offered resources to add up, possibly None</li>
+<li><strong>total_watermark</strong> (<a class="reference internal" href="node.resources.html#node.resources.node_resources.NodeResources" title="node.resources.node_resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.node_resources.NodeResources</span></code></a>) &#8211; The total watermark resources to add up, possibly None</li>
+<li><strong>total</strong> (<a class="reference internal" href="node.resources.html#node.resources.node_resources.NodeResources" title="node.resources.node_resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.node_resources.NodeResources</span></code></a>) &#8211; The total resources to add up, possibly None</li>
 </ul>
 </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The total number of offers this agent has</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">int</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.resources.agent.AgentResources.has_total_resources">
+<code class="descname">has_total_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.resources.agent.AgentResources.has_total_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this agent knows its total resources or not</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if agent knows its total resources, False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
 </tr>
 </tbody>
 </table>
@@ -340,30 +366,27 @@ a copy of the set of resources for the agent.</p>
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="scheduler.resources.agent.AgentResources.set_total">
+<code class="descname">set_total</code><span class="sig-paren">(</span><em>total_resources</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.resources.agent.AgentResources.set_total" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the total resources for the agent</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>total_resources</strong> (<a class="reference internal" href="node.resources.html#node.resources.node_resources.NodeResources" title="node.resources.node_resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.node_resources.NodeResources</span></code></a>) &#8211; The total resources</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="scheduler.resources.agent.ResourceSet">
-<em class="property">class </em><code class="descclassname">scheduler.resources.agent.</code><code class="descname">ResourceSet</code><span class="sig-paren">(</span><em>offered_resources</em>, <em>task_resources</em>, <em>watermark_resources</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.resources.agent.ResourceSet" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">tuple</span></code></p>
-<dl class="attribute">
-<dt id="scheduler.resources.agent.ResourceSet.offered_resources">
-<code class="descname">offered_resources</code><a class="headerlink" href="#scheduler.resources.agent.ResourceSet.offered_resources" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for field number 0</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="scheduler.resources.agent.ResourceSet.task_resources">
-<code class="descname">task_resources</code><a class="headerlink" href="#scheduler.resources.agent.ResourceSet.task_resources" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for field number 1</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="scheduler.resources.agent.ResourceSet.watermark_resources">
-<code class="descname">watermark_resources</code><a class="headerlink" href="#scheduler.resources.agent.ResourceSet.watermark_resources" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for field number 2</p>
-</dd></dl>
-
+<em class="property">class </em><code class="descclassname">scheduler.resources.agent.</code><code class="descname">ResourceSet</code><span class="sig-paren">(</span><em>offered_resources=None</em>, <em>task_resources=None</em>, <em>watermark_resources=None</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.resources.agent.ResourceSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This class represents a set of resources on an agent</p>
 </dd></dl>
 
 </div>
@@ -499,6 +522,24 @@ current offered resources and watermark resources for each agent.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>agent_shortages</strong> (<em>dict</em>) &#8211; Dict where resource shortage is stored by agent ID</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.resources.manager.ResourceManager.sync_with_mesos">
+<code class="descname">sync_with_mesos</code><span class="sig-paren">(</span><em>master_hostname</em>, <em>master_port</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.resources.manager.ResourceManager.sync_with_mesos" title="Permalink to this definition">¶</a></dt>
+<dd><p>Syncs with Mesos to retrieve the resouce totals needed by any agents</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>master_hostname</strong> (<em>string</em>) &#8211; The name of the Mesos master host</li>
+<li><strong>master_port</strong> (<em>int</em>) &#8211; The port used by the Mesos master</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>

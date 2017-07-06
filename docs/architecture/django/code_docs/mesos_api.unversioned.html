@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>node.resources.json package &mdash; Scale 5.0.0-snapshot documentation</title>
+  <title>mesos_api.unversioned package &mdash; Scale 5.0.0-snapshot documentation</title>
   
 
   
@@ -38,9 +38,9 @@
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="Scale 5.0.0-snapshot documentation" href="../../../index.html"/>
-        <link rel="up" title="node.resources package" href="node.resources.html"/>
-        <link rel="next" title="node.test package" href="node.test.html"/>
-        <link rel="prev" title="node.resources package" href="node.resources.html"/> 
+        <link rel="up" title="mesos_api package" href="mesos_api.html"/>
+        <link rel="next" title="messaging package" href="messaging.html"/>
+        <link rel="prev" title="mesos_api package" href="mesos_api.html"/> 
 
   
   <script src="../../../_static/js/modernizr.min.js"></script>
@@ -117,22 +117,19 @@
 <li class="toctree-l3"><a class="reference internal" href="error.html">error package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="node.html">node package</a><ul class="current">
-<li class="toctree-l4 current"><a class="reference internal" href="node.html#subpackages">Subpackages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="node.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="node.html#module-node.admin">node.admin module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="node.html#module-node.apps">node.apps module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="node.html#module-node.models">node.models module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="node.html#module-node.serializers">node.serializers module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="node.html#module-node.serializers_extra">node.serializers_extra module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="node.html#module-node.urls">node.urls module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="node.html#module-node.views">node.views module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="node.html#module-node">Module contents</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="mesos_api.html">mesos_api package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="mesos_api.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mesos_api.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mesos_api.html#module-mesos_api.api">mesos_api.api module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mesos_api.html#module-mesos_api.apps">mesos_api.apps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mesos_api.html#module-mesos_api.tasks">mesos_api.tasks module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mesos_api.html#module-mesos_api.utils">mesos_api.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mesos_api.html#module-mesos_api">Module contents</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="product.html">product package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="queue.html">queue package</a></li>
@@ -200,17 +197,15 @@
         
           <li><a href="../index.html">Django/Code Base</a> &raquo;</li>
         
-          <li><a href="node.html">node package</a> &raquo;</li>
+          <li><a href="mesos_api.html">mesos_api package</a> &raquo;</li>
         
-          <li><a href="node.resources.html">node.resources package</a> &raquo;</li>
-        
-      <li>node.resources.json package</li>
+      <li>mesos_api.unversioned package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/node.resources.json.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/mesos_api.unversioned.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -223,56 +218,42 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="node-resources-json-package">
-<h1>node.resources.json package<a class="headerlink" href="#node-resources-json-package" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="mesos-api-unversioned-package">
+<h1>mesos_api.unversioned package<a class="headerlink" href="#mesos-api-unversioned-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-node.resources.json.resources">
-<span id="node-resources-json-resources-module"></span><h2>node.resources.json.resources module<a class="headerlink" href="#module-node.resources.json.resources" title="Permalink to this headline">¶</a></h2>
-<p>Defines the JSON schema for a set of resources</p>
-<dl class="class">
-<dt id="node.resources.json.resources.Resources">
-<em class="property">class </em><code class="descclassname">node.resources.json.resources.</code><code class="descname">Resources</code><span class="sig-paren">(</span><em>resources=None</em><span class="sig-paren">)</span><a class="headerlink" href="#node.resources.json.resources.Resources" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Represents the schema for a set of resources</p>
-<dl class="method">
-<dt id="node.resources.json.resources.Resources.get_dict">
-<code class="descname">get_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.resources.json.resources.Resources.get_dict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the internal dictionary representing these resources</p>
+<div class="section" id="module-mesos_api.unversioned.agent">
+<span id="mesos-api-unversioned-agent-module"></span><h2>mesos_api.unversioned.agent module<a class="headerlink" href="#module-mesos_api.unversioned.agent" title="Permalink to this headline">¶</a></h2>
+<p>Defines methods that call the unversioned Mesos HTTP endpoints</p>
+<dl class="function">
+<dt id="mesos_api.unversioned.agent.get_agent_resources">
+<code class="descclassname">mesos_api.unversioned.agent.</code><code class="descname">get_agent_resources</code><span class="sig-paren">(</span><em>hostname</em>, <em>port</em>, <em>agent_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#mesos_api.unversioned.agent.get_agent_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the total resources for each of the given agents</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The internal dictionary</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>hostname</strong> (<em>str</em>) &#8211; The hostname of the master</li>
+<li><strong>port</strong> (<em>int</em>) &#8211; The port of the master</li>
+<li><strong>agent_ids</strong> (<em>set</em>) &#8211; The set of agent IDs</li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The total resources for each agent stored by agent ID</p>
+</td>
 </tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="node.resources.json.resources.Resources.get_node_resources">
-<code class="descname">get_node_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.resources.json.resources.Resources.get_node_resources" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the node resources represented by this schema</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The node resources</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">node.resources.NodeResources</span></code></td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
+</td>
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
 </dd></dl>
 
 </div>
-<div class="section" id="module-node.resources.json">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-node.resources.json" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-mesos_api.unversioned">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-mesos_api.unversioned" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -286,10 +267,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="node.test.html" class="btn btn-neutral float-right" title="node.test package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="messaging.html" class="btn btn-neutral float-right" title="messaging package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="node.resources.html" class="btn btn-neutral" title="node.resources package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="mesos_api.html" class="btn btn-neutral" title="mesos_api package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

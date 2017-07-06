@@ -40,7 +40,7 @@
     <link rel="top" title="Scale 5.0.0-snapshot documentation" href="../../../index.html"/>
         <link rel="up" title="Django/Code Base" href="../index.html"/>
         <link rel="next" title="metrics.management package" href="metrics.management.html"/>
-        <link rel="prev" title="mesos_api package" href="mesos_api.html"/> 
+        <link rel="prev" title="messaging.test package" href="messaging.test.html"/> 
 
   
   <script src="../../../_static/js/modernizr.min.js"></script>
@@ -118,12 +118,12 @@
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">metrics package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-metrics.apps">metrics.apps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-metrics.daily_metrics">metrics.daily_metrics module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-metrics.metrics_processor">metrics.metrics_processor module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-metrics.models">metrics.models module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-metrics.registry">metrics.registry module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-metrics.serializers">metrics.serializers module</a></li>
@@ -253,7 +253,6 @@
 <li class="toctree-l1"><a class="reference internal" href="metrics.test.html">metrics.test package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="metrics.test.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="metrics.test.html#module-metrics.test.test_daily_metrics">metrics.test.test_daily_metrics module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="metrics.test.html#module-metrics.test.test_metrics_processor">metrics.test.test_metrics_processor module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="metrics.test.html#module-metrics.test.test_models">metrics.test.test_models module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="metrics.test.html#module-metrics.test.test_views">metrics.test.test_views module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="metrics.test.html#module-metrics.test.utils">metrics.test.utils module</a></li>
@@ -311,37 +310,6 @@
 <code class="descname">process_event</code><span class="sig-paren">(</span><em>event</em>, <em>last_event=None</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.daily_metrics.DailyMetricsProcessor.process_event" title="Permalink to this definition">¶</a></dt>
 <dd><p>See <a class="reference internal" href="job.html#job.clock.ClockEventProcessor.process_event" title="job.clock.ClockEventProcessor.process_event"><code class="xref py py-meth docutils literal"><span class="pre">job.clock.ClockEventProcessor.process_event()</span></code></a>.</p>
 <p>Compares the new event with the last event any missing metrics jobs.</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-metrics.metrics_processor">
-<span id="metrics-metrics-processor-module"></span><h2>metrics.metrics_processor module<a class="headerlink" href="#module-metrics.metrics_processor" title="Permalink to this headline">¶</a></h2>
-<p>Defines the MetricsProcessor for tracking various usage metrics</p>
-<dl class="class">
-<dt id="metrics.metrics_processor.MetricsProcessor">
-<em class="property">class </em><code class="descclassname">metrics.metrics_processor.</code><code class="descname">MetricsProcessor</code><a class="headerlink" href="#metrics.metrics_processor.MetricsProcessor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>This class queries and stores memory, cpu, etc. metrics tracking and trending.</p>
-<dl class="method">
-<dt id="metrics.metrics_processor.MetricsProcessor.create_metrics_file">
-<code class="descname">create_metrics_file</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#metrics.metrics_processor.MetricsProcessor.create_metrics_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create an empty rrd file with the proper metrics defined</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<em>str</em>) &#8211; The full path to the filename to create</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="metrics.metrics_processor.MetricsProcessor.query_metrics">
-<code class="descname">query_metrics</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#metrics.metrics_processor.MetricsProcessor.query_metrics" title="Permalink to this definition">¶</a></dt>
-<dd><p>Queries the various metrics save the stats for historical tracking</p>
 </dd></dl>
 
 </dd></dl>
@@ -1872,7 +1840,7 @@ are not included by default.</li>
         <a href="metrics.management.html" class="btn btn-neutral float-right" title="metrics.management package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="mesos_api.html" class="btn btn-neutral" title="mesos_api package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="messaging.test.html" class="btn btn-neutral" title="messaging.test package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

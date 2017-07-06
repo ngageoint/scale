@@ -118,6 +118,7 @@
 <li class="toctree-l3"><a class="reference internal" href="ingest.html">ingest package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="job.html">job package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="mesos_api.html">mesos_api package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="messaging.html">messaging package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="metrics.html">metrics package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="node.html">node package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="port.html">port package</a></li>
@@ -379,6 +380,36 @@ functionality specific to source files.</p>
 <em class="property">class </em><code class="descclassname">source.models.</code><code class="descname">SourceFileManager</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#source.models.SourceFileManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.contrib.gis.db.models.manager.GeoManager</span></code></p>
 <p>Provides additional methods for handling source files</p>
+<dl class="method">
+<dt id="source.models.SourceFileManager.filter_sources">
+<code class="descname">filter_sources</code><span class="sig-paren">(</span><em>started=None</em>, <em>ended=None</em>, <em>time_field=None</em>, <em>is_parsed=None</em>, <em>file_name=None</em>, <em>order=None</em><span class="sig-paren">)</span><a class="headerlink" href="#source.models.SourceFileManager.filter_sources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a query for source models that filters on the given fields. The returned query includes the related
+workspace, job_type, and job fields, except for the workspace.json_config field. The related countries are set
+to be pre-fetched as part of the query.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>started</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query source files updated after this amount of time.</li>
+<li><strong>ended</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; Query source files updated before this amount of time.</li>
+<li><strong>time_field</strong> (<em>string</em>) &#8211; The time field to use for filtering.</li>
+<li><strong>is_parsed</strong> (<em>bool</em>) &#8211; Query source files flagged as successfully parsed.</li>
+<li><strong>file_name</strong> (<em>str</em>) &#8211; Query source files with the given file name.</li>
+<li><strong>order</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>str</em><em>]</em>) &#8211; A list of fields to control the sort order.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The list of source files that match the time range.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list[<a class="reference internal" href="storage.html#storage.models.ScaleFile" title="storage.models.ScaleFile"><code class="xref py py-class docutils literal"><span class="pre">storage.models.ScaleFile</span></code></a>]</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="source.models.SourceFileManager.get_details">
 <code class="descname">get_details</code><span class="sig-paren">(</span><em>source_id</em><span class="sig-paren">)</span><a class="headerlink" href="#source.models.SourceFileManager.get_details" title="Permalink to this definition">¶</a></dt>

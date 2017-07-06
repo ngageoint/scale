@@ -46,10 +46,26 @@ scheduler\.cluster\_utils module
     :undoc-members:
     :show-inheritance:
 
+scheduler\.configuration module
+-------------------------------
+
+.. automodule:: scheduler.configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 scheduler\.initialize module
 ----------------------------
 
 .. automodule:: scheduler.initialize
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+scheduler\.manager module
+-------------------------
+
+.. automodule:: scheduler.manager
     :members:
     :undoc-members:
     :show-inheritance:

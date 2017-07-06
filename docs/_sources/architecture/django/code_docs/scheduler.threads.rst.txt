@@ -12,14 +12,6 @@ scheduler\.threads\.base\_thread module
     :undoc-members:
     :show-inheritance:
 
-scheduler\.threads\.db\_sync module
------------------------------------
-
-.. automodule:: scheduler.threads.db_sync
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 scheduler\.threads\.recon module
 --------------------------------
 
@@ -40,6 +32,14 @@ scheduler\.threads\.scheduler\_status module
 --------------------------------------------
 
 .. automodule:: scheduler.threads.scheduler_status
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+scheduler\.threads\.sync module
+-------------------------------
+
+.. automodule:: scheduler.threads.sync
     :members:
     :undoc-members:
     :show-inheritance:

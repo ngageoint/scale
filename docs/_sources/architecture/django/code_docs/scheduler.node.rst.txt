@@ -4,6 +4,14 @@ scheduler\.node package
 Submodules
 ----------
 
+scheduler\.node\.agent module
+-----------------------------
+
+.. automodule:: scheduler.node.agent
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 scheduler\.node\.conditions module
 ----------------------------------
 

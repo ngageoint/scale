@@ -207,6 +207,23 @@ Specific examples of this format will be given for each message broker below. Th
 <li>Either API Keys or an EC2 instance with IAM Role that have above IAM Policy attached</li>
 </ul>
 <p>The following sample IAM Policy file would provide complete access to the scale-command-messages SQS:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;Version&quot;</span><span class="o">:</span> <span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Statement&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;Sid&quot;</span><span class="o">:</span> <span class="s2">&quot;Stmt689276142600&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Effect&quot;</span><span class="o">:</span> <span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Action&quot;</span><span class="o">:</span> <span class="p">[</span>
+                <span class="s2">&quot;sqs:*&quot;</span>
+            <span class="p">],</span>
+            <span class="s2">&quot;Resource&quot;</span><span class="o">:</span> <span class="p">[</span>
+                <span class="s2">&quot;arn:aws:sqs:us-east-1:*:scale-command-message&quot;</span>
+            <span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 <p>If you are using API keys the Access Key ID and Secret Access Key will be placed in the SCALE_BROKER_URL userid and password placeholders respectively. When using IAM roles,
 this section can be entirely omitted. Based on the above examples your environment variables passed to Scale should be set as follows:</p>
 <p><strong>API Keys:</strong></p>
@@ -227,6 +244,65 @@ broker will be lost if there is a container restart.</p>
 <li>User name and password to authenticate to RabbitMQ</li>
 </ul>
 <p>The easiest route to RabbitMQ deployment would just be to deploy into Marathon alongside Scale. The following sample marathon.json would be a reasonable starting point:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="s2">&quot;/rabbitmq&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;cpus&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="s2">&quot;mem&quot;</span><span class="o">:</span> <span class="mi">512</span><span class="p">,</span>
+  <span class="s2">&quot;disk&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="s2">&quot;instances&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="s2">&quot;container&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;docker&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;image&quot;</span><span class="o">:</span> <span class="s2">&quot;rabbitmq:3.6&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;forcePullImage&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+      <span class="s2">&quot;privileged&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+      <span class="s2">&quot;portMappings&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+          <span class="s2">&quot;containerPort&quot;</span><span class="o">:</span> <span class="mi">5672</span><span class="p">,</span>
+          <span class="s2">&quot;protocol&quot;</span><span class="o">:</span> <span class="s2">&quot;tcp&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;hostPort&quot;</span><span class="o">:</span> <span class="mi">5672</span><span class="p">,</span>
+          <span class="s2">&quot;labels&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;VIP_0&quot;</span><span class="o">:</span> <span class="s2">&quot;/rabbitmq:5672&quot;</span>
+          <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="s2">&quot;containerPort&quot;</span><span class="o">:</span> <span class="mi">15672</span><span class="p">,</span>
+          <span class="s2">&quot;protocol&quot;</span><span class="o">:</span> <span class="s2">&quot;tcp&quot;</span>
+        <span class="p">}</span>
+      <span class="p">],</span>
+      <span class="s2">&quot;network&quot;</span><span class="o">:</span> <span class="s2">&quot;BRIDGE&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;DOCKER&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;volumes&quot;</span><span class="o">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+        <span class="s2">&quot;containerPath&quot;</span><span class="o">:</span> <span class="s2">&quot;/var/lib/rabbitmq&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;hostPath&quot;</span><span class="o">:</span> <span class="s2">&quot;rabbitmq&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;mode&quot;</span><span class="o">:</span> <span class="s2">&quot;RW&quot;</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+        <span class="s2">&quot;containerPath&quot;</span><span class="o">:</span> <span class="s2">&quot;rabbitmq&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;persistent&quot;</span><span class="o">:</span> <span class="p">{</span>
+          <span class="s2">&quot;size&quot;</span><span class="o">:</span> <span class="mi">1024</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;mode&quot;</span><span class="o">:</span> <span class="s2">&quot;RW&quot;</span>
+      <span class="p">}</span>
+    <span class="p">]</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;healthChecks&quot;</span><span class="o">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;protocol&quot;</span><span class="o">:</span> <span class="s2">&quot;TCP&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;gracePeriodSeconds&quot;</span><span class="o">:</span> <span class="mi">300</span><span class="p">,</span>
+      <span class="s2">&quot;intervalSeconds&quot;</span><span class="o">:</span> <span class="mi">60</span><span class="p">,</span>
+      <span class="s2">&quot;timeoutSeconds&quot;</span><span class="o">:</span> <span class="mi">20</span><span class="p">,</span>
+      <span class="s2">&quot;maxConsecutiveFailures&quot;</span><span class="o">:</span> <span class="mi">3</span>
+    <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="s2">&quot;residency&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;relaunchEscalationTimeoutSeconds&quot;</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="s2">&quot;taskLostBehavior&quot;</span><span class="o">:</span> <span class="s2">&quot;WAIT_FOREVER&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 <p>The above configuration will generate a persistent storage volume (1GiB) and pin RabbitMQ to that node. This will protect you from data loss
 as long as that node remains in your cluster. Setting up a truly fault tolerant RabbitMQ cluster is outside the scope of this guide.</p>
 <p>To configure Scale to use the RabbitMQ deployed as described above we need to set environment variables as below:</p>
