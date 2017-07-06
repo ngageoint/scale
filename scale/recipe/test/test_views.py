@@ -5,6 +5,7 @@ import json
 
 from django.test.testcases import TransactionTestCase
 
+import batch.test.utils as batch_test_utils
 import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
@@ -673,7 +674,7 @@ class TestRecipesView(TransactionTestCase):
     def setUp(self):
         django.setup()
 
-        self.job_type1 = job_test_utils.create_job_type()
+        self.job_type1 = job_test_utils.create_job_type(name='scale-batch-creator')
 
         definition = {
             'version': '1.0',
@@ -726,6 +727,19 @@ class TestRecipesView(TransactionTestCase):
 
         results = json.loads(response.content)
         self.assertEqual(results['count'], 2)
+
+    def test_successful_batch(self):
+        """Tests getting recipes by batch id"""
+
+        batch_recipe = batch_test_utils.create_batch_recipe(recipe=self.recipe1)
+
+        url = rest_util.get_url('/recipes/?batch_id=%d' % batch_recipe.batch.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertEqual(results['count'], 1)
+        self.assertEqual(results['results'][0]['recipe_type']['id'], self.recipe_type.id)
 
     def test_successful_type_name(self):
         """Tests getting recipes by type name"""

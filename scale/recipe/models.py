@@ -280,8 +280,8 @@ class RecipeManager(models.Manager):
         # Return handlers with updated data after all dependent jobs have been locked
         return self._get_recipe_handlers(recipe_ids).values()
 
-    def get_recipes(self, started=None, ended=None, type_ids=None, type_names=None, include_superseded=False,
-                    order=None):
+    def get_recipes(self, started=None, ended=None, type_ids=None, type_names=None, batch_ids=None, 
+                    include_superseded=False, order=None):
         """Returns a list of recipes within the given time range.
 
         :param started: Query recipes updated after this amount of time.
@@ -292,6 +292,8 @@ class RecipeManager(models.Manager):
         :type type_ids: [int]
         :param type_names: Query recipes of the type associated with the name.
         :type type_names: [string]
+        :param batch_ids: Query jobs associated with batches with the given identifiers.
+        :type batch_ids: list[int]
         :param include_superseded: Whether to include recipes that are superseded.
         :type include_superseded: bool
         :param order: A list of fields to control the sort order.
@@ -317,6 +319,10 @@ class RecipeManager(models.Manager):
             recipes = recipes.filter(recipe_type_id__in=type_ids)
         if type_names:
             recipes = recipes.filter(recipe_type__name__in=type_names)
+
+        # Apply batch filtering 
+        if batch_ids:
+            recipes = recipes.filter(batchrecipe__batch__in=batch_ids)
 
         # Apply additional filters
         if not include_superseded:

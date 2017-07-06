@@ -10,6 +10,7 @@ from django.utils.timezone import utc, now
 from mock import patch
 from rest_framework import status
 
+import batch.test.utils as batch_test_utils
 import error.test.utils as error_test_utils
 import job.test.utils as job_test_utils
 import storage.test.utils as storage_test_utils
@@ -24,7 +25,7 @@ class TestJobsView(TestCase):
     def setUp(self):
         django.setup()
 
-        self.job_type1 = job_test_utils.create_job_type(name='test1', version='1.0', category='test-1')
+        self.job_type1 = job_test_utils.create_job_type(name='scale-batch-creator', version='1.0', category='test-1')
         self.job1 = job_test_utils.create_job(job_type=self.job_type1, status='RUNNING')
 
         self.job_type2 = job_test_utils.create_job_type(name='test2', version='1.0', category='test-2')
@@ -132,13 +133,25 @@ class TestJobsView(TestCase):
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 3)
 
+    def test_batch(self):
+        """Tests filtering jobs by batch"""
+        batch_job = batch_test_utils.create_batch_job(job=self.job1)
+
+        url = rest_util.get_url('/jobs/?batch_id=%d' % batch_job.batch.id)
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['id'], self.job1.id)
+
     def test_order_by(self):
         """Tests successfully calling the jobs view with sorting."""
 
-        job_type1b = job_test_utils.create_job_type(name='test1', version='2.0', category='test-1')
+        job_type1b = job_test_utils.create_job_type(name='scale-batch-creator', version='2.0', category='test-1')
         job_test_utils.create_job(job_type=job_type1b, status='RUNNING')
 
-        job_type1c = job_test_utils.create_job_type(name='test1', version='3.0', category='test-1')
+        job_type1c = job_test_utils.create_job_type(name='scale-batch-creator', version='3.0', category='test-1')
         job_test_utils.create_job(job_type=job_type1c, status='RUNNING')
 
         url = rest_util.get_url('/jobs/?order=job_type__name&order=-job_type__version')

@@ -115,7 +115,8 @@ class JobManager(models.Manager):
         return job
 
     def filter_jobs(self, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None, job_type_names=None,
-                    job_type_categories=None, error_categories=None, include_superseded=False, order=None):
+                    job_type_categories=None, batch_ids=None, error_categories=None, include_superseded=False, 
+                    order=None):
         """Returns a query for job models that filters on the given fields. The returned query includes the related
         job_type, job_type_rev, event, and error fields, except for the job_type.interface and job_type_rev.interface
         fields.
@@ -134,6 +135,8 @@ class JobManager(models.Manager):
         :type job_type_names: [string]
         :param job_type_categories: Query jobs of the type associated with the category.
         :type job_type_categories: [string]
+        :param batch_ids: Query jobs associated with the given batch identifiers.
+        :type batch_ids: list[int]
         :param error_categories: Query jobs that failed due to errors associated with the category.
         :type error_categories: [string]
         :param include_superseded: Whether to include jobs that are superseded.
@@ -165,6 +168,8 @@ class JobManager(models.Manager):
             jobs = jobs.filter(job_type__name__in=job_type_names)
         if job_type_categories:
             jobs = jobs.filter(job_type__category__in=job_type_categories)
+        if batch_ids:
+            jobs = jobs.filter(batchjob__batch__in=batch_ids)
         if error_categories:
             jobs = jobs.filter(error__category__in=error_categories)
         if not include_superseded:
@@ -178,7 +183,8 @@ class JobManager(models.Manager):
         return jobs
 
     def get_jobs(self, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None, job_type_names=None,
-                 job_type_categories=None, error_categories=None, include_superseded=False, order=None):
+                 job_type_categories=None, batch_ids=None, error_categories=None, include_superseded=False, 
+                 order=None):
         """Returns a list of jobs within the given time range.
 
         :param started: Query jobs updated after this amount of time.
@@ -195,6 +201,8 @@ class JobManager(models.Manager):
         :type job_type_names: [string]
         :param job_type_categories: Query jobs of the type associated with the category.
         :type job_type_categories: [string]
+        :param batch_ids: Query jobs associated with batches with the given identifiers.
+        :type batch_ids: list[int]
         :param error_categories: Query jobs that failed due to errors associated with the category.
         :type error_categories: [string]
         :param include_superseded: Whether to include jobs that are superseded.
@@ -207,8 +215,9 @@ class JobManager(models.Manager):
 
         return self.filter_jobs(started=started, ended=ended, statuses=statuses, job_ids=job_ids,
                                 job_type_ids=job_type_ids, job_type_names=job_type_names,
-                                job_type_categories=job_type_categories, error_categories=error_categories,
-                                include_superseded=include_superseded, order=order)
+                                job_type_categories=job_type_categories, batch_ids=batch_ids, 
+                                error_categories=error_categories, include_superseded=include_superseded, 
+                                order=order)
 
     def get_details(self, job_id):
         """Gets additional details for the given job model based on related model attributes.

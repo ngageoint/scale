@@ -189,6 +189,7 @@ class SourceJobsView(ListAPIView):
         job_type_ids = rest_util.parse_int_list(request, 'job_type_id', required=False)
         job_type_names = rest_util.parse_string_list(request, 'job_type_name', required=False)
         job_type_categories = rest_util.parse_string_list(request, 'job_type_category', required=False)
+        batch_ids = rest_util.parse_int_list(request, 'batch_id', required=False)
         error_categories = rest_util.parse_string_list(request, 'error_category', required=False)
         include_superseded = rest_util.parse_bool(request, 'include_superseded', required=False)
 
@@ -197,7 +198,7 @@ class SourceJobsView(ListAPIView):
         jobs = SourceFile.objects.get_source_jobs(source_id, started=started, ended=ended, statuses=statuses,
                                                   job_ids=job_ids, job_type_ids=job_type_ids,
                                                   job_type_names=job_type_names,
-                                                  job_type_categories=job_type_categories,
+                                                  job_type_categories=job_type_categories, batch_ids=batch_ids,
                                                   error_categories=error_categories,
                                                   include_superseded=include_superseded, order=order)
 
