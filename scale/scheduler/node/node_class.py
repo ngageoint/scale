@@ -38,6 +38,8 @@ class Node(object):
     DEPRECATED = NodeState(state='DEPRECATED', title='Deprecated', description=deprecated_desc)
     OFFLINE = NodeState(state='OFFLINE', title='Offline',
                         description='Node is offline/unavailable, so no jobs can currently run on it.')
+    stopped_desc = 'Scheduler is paused, so no new jobs will be scheduled. Existing jobs will continue to run.'
+    SCHEDULER_STOPPED = NodeState(state='SCHEDULER_STOPPED', title='Scheduler Stopped', description=stopped_desc)
     paused_desc = 'Node is paused, so no new jobs will be scheduled. Existing jobs will continue to run.'
     PAUSED = NodeState(state='PAUSED', title='Paused', description=paused_desc)
     degraded_desc = 'Node has an error condition, putting it in a degraded state.'
@@ -224,7 +226,7 @@ class Node(object):
         :rtype: bool
         """
 
-        return self._state == Node.READY and not self._is_scheduler_paused
+        return self._state == Node.READY
 
     def is_ready_for_next_job_task(self):
         """Indicates whether this node is ready to launch the next task of a job execution
@@ -335,9 +337,7 @@ class Node(object):
         :rtype: bool
         """
 
-        if self._is_scheduler_paused:
-            return False
-        elif self._state in [Node.INITIAL_CLEANUP, Node.IMAGE_PULL, Node.READY]:
+        if self._state in [Node.INITIAL_CLEANUP, Node.IMAGE_PULL, Node.READY]:
             return True
         elif self._state == Node.DEGRADED:
             # The cleanup task can be scheduled during DEGRADED state as long as the Docker daemon is OK
@@ -382,9 +382,7 @@ class Node(object):
         :rtype: bool
         """
 
-        if self._is_scheduler_paused:
-            return False
-        elif self._state == Node.IMAGE_PULL:
+        if self._state == Node.IMAGE_PULL:
             return True
         elif self._state == Node.DEGRADED:
             # The pull task can be scheduled during DEGRADED state if other conditions match IMAGE_PULL state and the
@@ -482,6 +480,8 @@ class Node(object):
             self._state = self.DEPRECATED
         elif not self._is_online:
             self._state = self.OFFLINE
+        elif self._is_scheduler_paused:
+            self._state = self.SCHEDULER_STOPPED
         elif self._is_paused:
             self._state = self.PAUSED
         elif self._conditions.has_active_errors():
