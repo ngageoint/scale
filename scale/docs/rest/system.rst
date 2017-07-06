@@ -38,6 +38,8 @@ These services provide access to general system information.
 +--------------------------+-------------------+--------------------------------------------------------------------------------+
 | scheduler.mesos          | JSON Object       | Contains Scale's framework ID and hostname and port of the Mesos master        |
 +--------------------------+-------------------+--------------------------------------------------------------------------------+
+| scheduler.state          | JSON Object       | The current scheduler state, with a title and description                      |
++--------------------------+-------------------+--------------------------------------------------------------------------------+
 | num_offers               | Integer           | Number of resource offers currently held by Scale                              |
 +--------------------------+-------------------+--------------------------------------------------------------------------------+
 | resources                | JSON Object       | Describes the resource totals across all of Scale's nodes. Each resource name  |
@@ -86,6 +88,11 @@ These services provide access to general system information.
 |            "framework_id": "1234",                                                                                            |
 |            "master_hostname": "192.168.1.1",                                                                                  |
 |            "master_port": 5050                                                                                                |
+|         },                                                                                                                    |
+|         "state": {                                                                                                            |
+|            "name": "READY",                                                                                                   |
+|            "title": "Ready",                                                                                                  |
+|            "description": "Scheduler is ready to run new jobs."                                                               |
 |         }                                                                                                                     |
 |      },                                                                                                                       |
 |      "num_offers": 4,                                                                                                         |
