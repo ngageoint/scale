@@ -42,6 +42,12 @@ class RecipeManager(models.Manager):
         modified = timezone.now()
         self.filter(id=recipe_id).update(completed=when, last_modified=modified)
 
+        # Count the a completed recipe if part of a batch
+        from batch.models import Batch, BatchRecipe
+        batch_recipe = BatchRecipe.objects.filter(recipe__id=recipe_id)
+        if batch_recipe:
+            Batch.objects.count_completed_recipe(batch_recipe.batch.id)
+
     @transaction.atomic
     def create_recipe(self, recipe_type, data, event, superseded_recipe=None, delta=None, superseded_jobs=None):
         """Creates a new recipe for the given type and returns a recipe handler for it. All jobs for the recipe will

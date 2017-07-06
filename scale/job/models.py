@@ -73,6 +73,12 @@ class JobManager(models.Manager):
         job.last_status_change = when
         job.save()
 
+        # Count the a completed job if part of a batch
+        from batch.models import Batch, BatchJob
+        batch_job = BatchJob.objects.filter(job__id=job.id)
+        if batch_job:
+            Batch.objects.count_completed_job(batch_job.batch.id) 
+
     def create_job(self, job_type, event, superseded_job=None, delete_superseded=True):
         """Creates a new job for the given type and returns the job model. Optionally a job can be provided that the new
         job is superseding. If provided, the caller must have obtained a model lock on the job to supersede. The
