@@ -422,6 +422,9 @@ class Batch(models.Model):
     created_count = models.IntegerField(default=0)
     failed_count = models.IntegerField(default=0)
     total_count = models.IntegerField(default=0)
+    
+    completed_job_count = models.IntegerField(default=0)
+    completed_recipe_count = models.IntegerField(default=0)
 
     created = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
