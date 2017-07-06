@@ -1,18 +1,27 @@
 """Defines the class that manages high-level scheduler configuration and metrics"""
 from __future__ import unicode_literals
 
+import logging
 import threading
+from collections import namedtuple
 
 from django.utils.timezone import now
 
-from queue.models import QUEUE_ORDER_FIFO
 from scheduler.configuration import SchedulerConfiguration
 from scheduler.models import Scheduler
+
+logger = logging.getLogger(__name__)
+SchedulerState = namedtuple('SchedulerState', ['state', 'title', 'description'])
 
 
 class SchedulerManager(object):
     """This class manages the high-level scheduler configuration and metrics. It is a combination of data from both the
     Scale database and the Mesos master. This class is thread-safe."""
+
+    # Scheduler States
+    paused_desc = 'Scheduler is paused, so no new jobs will be scheduled. Existing jobs will continue to run.'
+    PAUSED = SchedulerState(state='PAUSED', title='Paused', description=paused_desc)
+    READY = SchedulerState(state='READY', title='Ready', description='Scheduler is ready to run new jobs.')
 
     def __init__(self):
         """Constructor
@@ -32,6 +41,9 @@ class SchedulerManager(object):
         self._task_fin_count = 0  # Number of tasks finished since last status JSON
         self._task_launch_count = 0  # Number of tasks launched since last status JSON
         self._task_update_count = 0  # Number of task updates since last status JSON
+
+        self._state = None
+        self._update_state()
 
     def add_new_offer_count(self, new_offer_count):
         """Add count from a group of newly received offers
@@ -84,6 +96,7 @@ class SchedulerManager(object):
 
         with self._lock:
             when = now()
+            state = self._state
             last_json = self._last_json
             job_fin_count = self._job_fin_count
             job_launch_count = self._job_launch_count
@@ -121,7 +134,9 @@ class SchedulerManager(object):
                         'tasks_finished_per_sec': task_fin_per_sec, 'jobs_finished_per_sec': job_fin_per_sec,
                         'jobs_launched_per_sec': job_launch_per_sec, 'tasks_launched_per_sec': task_launch_per_sec,
                         'offers_launched_per_sec': offer_launch_per_sec}
-        status_dict['scheduler'] = {'hostname': self.hostname, 'mesos': mesos_dict, 'metrics': metrics_dict}
+        state_dict = {'name': state.state, 'title': state.title, 'description': state.description}
+        status_dict['scheduler'] = {'hostname': self.hostname, 'mesos': mesos_dict, 'metrics': metrics_dict,
+                                    'state': state_dict}
 
     def sync_with_database(self):
         """Syncs with the database to retrieve an updated scheduler model
@@ -129,7 +144,10 @@ class SchedulerManager(object):
 
         scheduler_model = Scheduler.objects.first()
         new_config = SchedulerConfiguration(scheduler_model)
-        self.config = new_config
+
+        with self._lock:
+            self.config = new_config
+            self._update_state()
 
     def update_from_mesos(self, framework_id=None, mesos_address=None):
         """Updates the scheduler information from Mesos
@@ -159,6 +177,20 @@ class SchedulerManager(object):
         elif number > 10.0:
             return round(number, 1)
         return round(number, 2)
+
+    def _update_state(self):
+        """Updates the scheduler's state. Caller must have obtained the scheduler's thread lock.
+        """
+
+        old_state = self._state
+
+        if self.config.is_paused:
+            self._state = self.PAUSED
+        else:
+            self._state = self.READY
+
+        if old_state and old_state != self._state:
+            logger.info('Scheduler is now in %s state', self._state.state)
 
 
 scheduler_mgr = SchedulerManager()
