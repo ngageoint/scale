@@ -14,5 +14,6 @@ export COVERAGE_FILE=$root/.coverage
 coverage run --source='.' manage.py test
 cd $root/scale/docs
 make code_docs html
-./push-docs.sh
+cd $root
+push-docs.sh
 cd $root
