@@ -30,7 +30,7 @@ class RecipeManager(models.Manager):
     """Provides additional methods for handling recipes
     """
 
-    def complete(self, recipe_id, when):
+    def complete_recipe(self, recipe_id, when):
         """Marks the recipe with the given ID as being completed
 
         :param recipe_id: The recipe ID
