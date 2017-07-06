@@ -138,8 +138,8 @@ class SourceFileManager(models.GeoManager):
                                              statuses=statuses, scan_ids=scan_ids, strike_ids=strike_ids, order=order)
 
     def get_source_jobs(self, source_file_id, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None,
-                        job_type_names=None, job_type_categories=None, error_categories=None, include_superseded=False,
-                        order=None):
+                        job_type_names=None, job_type_categories=None, batch_ids=None, error_categories=None, 
+                        include_superseded=False, order=None):
         """Returns a query for the list of jobs that have used the given source file as input. The returned query
         includes the related job_type, job_type_rev, event, and error fields, except for the job_type.interface and
         job_type_rev.interface fields.
@@ -160,6 +160,8 @@ class SourceFileManager(models.GeoManager):
         :type job_type_names: [string]
         :param job_type_categories: Query jobs of the type associated with the category.
         :type job_type_categories: [string]
+        :param batch_ids: Query jobs associated with batches with the given identifiers.
+        :type batch_ids: list[int]
         :param error_categories: Query jobs that failed due to errors associated with the category.
         :type error_categories: [string]
         :param include_superseded: Whether to include jobs that are superseded.
@@ -177,8 +179,9 @@ class SourceFileManager(models.GeoManager):
             order = ['last_modified', 'id']
         jobs = Job.objects.filter_jobs(started=started, ended=ended, statuses=statuses, job_ids=job_ids,
                                        job_type_ids=job_type_ids, job_type_names=job_type_names,
-                                       job_type_categories=job_type_categories, error_categories=error_categories,
-                                       include_superseded=include_superseded, order=order)
+                                       job_type_categories=job_type_categories, batch_ids=batch_ids, 
+                                       error_categories=error_categories, include_superseded=include_superseded, 
+                                       order=order)
         distinct = [field.replace('-', '') for field in order]  # Remove - char for reverse sort fields
         jobs = jobs.filter(job_file_links__ancestor_id=source_file_id).distinct(*distinct)
         return jobs

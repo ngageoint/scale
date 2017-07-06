@@ -6,6 +6,7 @@ import django
 from django.test import TestCase, TransactionTestCase
 from rest_framework import status
 
+import batch.test.utils as batch_test_utils
 import error.test.utils as error_test_utils
 import job.test.utils as job_test_utils
 import source.test.utils as source_test_utils
@@ -307,7 +308,7 @@ class TestSourceJobsView(TransactionTestCase):
         from product.test import utils as product_test_utils
         self.src_file = source_test_utils.create_source()
 
-        self.job_type1 = job_test_utils.create_job_type(name='test1', version='1.0', category='test-1')
+        self.job_type1 = job_test_utils.create_job_type(name='scale-batch-creator', version='1.0', category='test-1')
         self.job1 = job_test_utils.create_job(job_type=self.job_type1, status='RUNNING')
         self.job_exe1 = job_test_utils.create_job_exe(job=self.job1)
         product_test_utils.create_file_link(ancestor=self.src_file, job=self.job1, job_exe=self.job_exe1)
@@ -432,16 +433,28 @@ class TestSourceJobsView(TransactionTestCase):
         result = json.loads(response.content)
         self.assertEqual(len(result['results']), 3)
 
+    def test_batch(self):
+        """Tests filtering jobs by batch"""
+        batch_job = batch_test_utils.create_batch_job(job=self.job1)
+
+        url = rest_util.get_url('/sources/%d/jobs/?batch_id=%d' % (self.src_file.id, batch_job.batch.id))
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(len(result['results']), 1)
+        self.assertEqual(result['results'][0]['id'], self.job1.id)
+
     def test_order_by(self):
         """Tests successfully calling the source jobs view with sorting."""
 
         from product.test import utils as product_test_utils
-        job_type1b = job_test_utils.create_job_type(name='test1', version='2.0', category='test-1')
+        job_type1b = job_test_utils.create_job_type(name='scale-batch-creator', version='2.0', category='test-1')
         job1b = job_test_utils.create_job(job_type=job_type1b, status='RUNNING')
         job_exe1b = job_test_utils.create_job_exe(job=job1b)
         product_test_utils.create_file_link(ancestor=self.src_file, job=job1b, job_exe=job_exe1b)
 
-        job_type1c = job_test_utils.create_job_type(name='test1', version='3.0', category='test-1')
+        job_type1c = job_test_utils.create_job_type(name='scale-batch-creator', version='3.0', category='test-1')
         job1c = job_test_utils.create_job(job_type=job_type1c, status='RUNNING')
         job_exe1c = job_test_utils.create_job_exe(job=job1c)
         product_test_utils.create_file_link(ancestor=self.src_file, job=job1c, job_exe=job_exe1c)
