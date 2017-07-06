@@ -24,6 +24,20 @@ logger = logging.getLogger(__name__)
 class BatchManager(models.Manager):
     """Provides additional methods for handling batches"""
 
+    def count_completed_job(self, batch_id):
+        """Preforms a plus one count up on the completed job field of a Batch"""
+
+        job_count = Batch.objects.filter(id=batch_id).values('completed_job_count')
+        new_count = job_count.completed_job_count + 1
+        job_count.update(completed_job_count=new_count)
+
+    def count_completed_recipe(self, batch_id):
+        """Preforms a plus one count up on the completed recipe field of a Batch"""
+
+        recipe_count = Batch.objects.filter(id=batch_id).values('completed_recipe_count')
+        new_count = recipe_count.completed_recipe_count + 1
+        recipe_count.update(completed_recipe_count=new_count)
+
     @transaction.atomic
     def create_batch(self, recipe_type, definition, title=None, description=None):
         """Creates a new batch that represents a group of recipes that should be scheduled for re-processing. This
