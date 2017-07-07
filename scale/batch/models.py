@@ -25,24 +25,22 @@ class BatchManager(models.Manager):
     """Provides additional methods for handling batches"""
 
     def count_completed_job(self, batch_id):
-        """Preforms a count-plus-one on the completed job field of a Batch
+        """Performs a count-plus-one on the completed job field of a Batch
 
         :param batch_id: The unique identifier of the batch.
         :type batch_id: int
         """
 
-        job_count = Batch.objects.filter(id=batch_id).values('completed_job_count')
-        job_count.update(completed_job_count=job_count[0]['completed_job_count'] + 1)
+        Batch.objects.filter(id=batch_id).update(completed_job_count=F('completed_job_count') + 1)
 
     def count_completed_recipe(self, batch_id):
-        """Preforms a count-plus-one on the completed recipe field of a Batch
+        """Performs a count-plus-one on the completed recipe field of a Batch
 
         :param batch_id: The unique identifier of the batch.
         :type batch_id: int
         """
 
-        recipe_count = Batch.objects.filter(id=batch_id).values('completed_recipe_count')
-        recipe_count.update(completed_recipe_count=recipe_count[0]['completed_recipe_count'] + 1)
+        Batch.objects.filter(id=batch_id).update(completed_recipe_count=F('completed_recipe_count') + 1)
 
     @transaction.atomic
     def create_batch(self, recipe_type, definition, title=None, description=None):
