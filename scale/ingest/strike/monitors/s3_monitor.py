@@ -80,7 +80,7 @@ class S3Monitor(Monitor):
                 messages = client.receive_messages(self._sqs_name,
                                                    batch_size=10,
                                                    wait_time_seconds=self.wait_time,
-                                                   visibility_timeout=self.visibility_timeout)
+                                                   visibility_timeout_seconds=self.visibility_timeout)
 
                 for message in messages:
                     try:
