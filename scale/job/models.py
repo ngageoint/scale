@@ -75,9 +75,12 @@ class JobManager(models.Manager):
 
         # Count as a completed job if part of a batch
         from batch.models import Batch, BatchJob
-        batch_job = BatchJob.objects.filter(job__id=job.id)
-        if batch_job:
-            Batch.objects.count_completed_job(batch_job.batch.id) 
+        try:
+            batch_job = BatchJob.objects.get(job_id=job.id)
+            Batch.objects.count_completed_job(batch_job.batch.id)
+        except BatchJob.DoesNotExist:
+            batch_job = None
+            
 
     def create_job(self, job_type, event, superseded_job=None, delete_superseded=True):
         """Creates a new job for the given type and returns the job model. Optionally a job can be provided that the new

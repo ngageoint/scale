@@ -44,9 +44,11 @@ class RecipeManager(models.Manager):
 
         # Count as a completed recipe if part of a batch
         from batch.models import Batch, BatchRecipe
-        batch_recipe = BatchRecipe.objects.filter(recipe__id=recipe_id)
-        if batch_recipe:
+        try:
+            batch_recipe = BatchRecipe.objects.get(recipe_id=recipe_id)
             Batch.objects.count_completed_recipe(batch_recipe.batch.id)
+        except BatchRecipe.DoesNotExist:
+            batch_recipe = None
 
     @transaction.atomic
     def create_recipe(self, recipe_type, data, event, superseded_recipe=None, delta=None, superseded_jobs=None):
