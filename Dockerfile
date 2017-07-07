@@ -90,7 +90,9 @@ RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
  && pip install -r /tmp/production.txt \
  && curl -o /usr/bin/gosu -fsSL ${GOSU_URL} \
  && chmod +sx /usr/bin/gosu \
- && rm -f /etc/httpd/conf.d/welcome.conf \
+ # Strip out extra apache files
+ && rm -f /etc/httpd/conf.d/*.conf \
+ && rm -rf /usr/share/httpd \
  && sed -i 's^User apache^User scale^g' /etc/httpd/conf/httpd.conf \
  # Patch access logs to show originating IP instead of reverse proxy.
  && sed -i 's!LogFormat "%h!LogFormat "%{X-Forwarded-For}i %h!g' /etc/httpd/conf/httpd.conf \
