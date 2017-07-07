@@ -201,154 +201,160 @@
 <p>These services provide access to information about registered batch re-processing requests.</p>
 <table border="1" class="docutils" id="rest-batch-list">
 <colgroup>
-<col width="17%" />
-<col width="0%" />
+<col width="20%" />
 <col width="16%" />
-<col width="0%" />
 <col width="8%" />
-<col width="59%" />
+<col width="56%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head" colspan="6"><strong>Batch List</strong></th>
+<tr class="row-odd"><th class="head" colspan="4"><strong>Batch List</strong></th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td colspan="6">Returns a list of all batches.</td>
+<tr class="row-even"><td colspan="4">Returns a list of all batches.</td>
 </tr>
-<tr class="row-odd"><td colspan="6"><strong>GET</strong> /batches/</td>
+<tr class="row-odd"><td colspan="4"><strong>GET</strong> /batches/</td>
 </tr>
-<tr class="row-even"><td colspan="6"><strong>Query Parameters</strong></td>
+<tr class="row-even"><td colspan="4"><strong>Query Parameters</strong></td>
 </tr>
 <tr class="row-odd"><td>page</td>
-<td colspan="2">Integer</td>
-<td colspan="2">Optional</td>
+<td>Integer</td>
+<td>Optional</td>
 <td>The page of the results to return. Defaults to 1.</td>
 </tr>
 <tr class="row-even"><td>page_size</td>
-<td colspan="2">Integer</td>
-<td colspan="2">Optional</td>
+<td>Integer</td>
+<td>Optional</td>
 <td>The size of the page to use for pagination of results.
 Defaults to 100, and can be anywhere from 1-1000.</td>
 </tr>
 <tr class="row-odd"><td>started</td>
-<td colspan="2">ISO-8601 Datetime</td>
-<td colspan="2">Optional</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
 <td>The start of the time range to query.
 Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
 Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
 </tr>
 <tr class="row-even"><td>ended</td>
-<td colspan="2">ISO-8601 Datetime</td>
-<td colspan="2">Optional</td>
+<td>ISO-8601 Datetime</td>
+<td>Optional</td>
 <td>End of the time range to query, defaults to the current time.
 Supports the ISO-8601 date/time format, (ex: 2015-01-01T00:00:00Z).
 Supports the ISO-8601 duration format, (ex: PT3H0M0S).</td>
 </tr>
 <tr class="row-odd"><td>order</td>
-<td colspan="2">String</td>
-<td colspan="2">Optional</td>
+<td>String</td>
+<td>Optional</td>
 <td>One or more fields to use when ordering the results.
 Duplicate it to multi-sort, (ex: order=title&amp;order=status).
 Prefix fields with a dash to reverse the sort, (ex: order=-title).</td>
 </tr>
 <tr class="row-even"><td>status</td>
-<td colspan="2">String</td>
-<td colspan="2">Optional</td>
+<td>String</td>
+<td>Optional</td>
 <td>Return only batches with a status matching this string.
 Choices: [SUBMITTED, CREATED].
 Duplicate it to filter by multiple values.</td>
 </tr>
 <tr class="row-odd"><td>recipe_type_id</td>
-<td colspan="2">Integer</td>
-<td colspan="2">Optional</td>
+<td>Integer</td>
+<td>Optional</td>
 <td>Return only batches with a given recipe type identifier.
 Duplicate it to filter by multiple values.</td>
 </tr>
 <tr class="row-even"><td>recipe_type_name</td>
-<td colspan="2">String</td>
-<td colspan="2">Optional</td>
+<td>String</td>
+<td>Optional</td>
 <td>Return only batches with a given recipe type name.
 Duplicate it to filter by multiple values.</td>
 </tr>
-<tr class="row-odd"><td colspan="6"><strong>Successful Response</strong></td>
+<tr class="row-odd"><td colspan="4"><strong>Successful Response</strong></td>
 </tr>
 <tr class="row-even"><td><strong>Status</strong></td>
-<td colspan="5">200 OK</td>
+<td colspan="3">200 OK</td>
 </tr>
 <tr class="row-odd"><td><strong>Content Type</strong></td>
-<td colspan="5"><em>application/json</em></td>
+<td colspan="3"><em>application/json</em></td>
 </tr>
-<tr class="row-even"><td colspan="6"><strong>JSON Fields</strong></td>
+<tr class="row-even"><td colspan="4"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-odd"><td colspan="2">count</td>
-<td colspan="2">Integer</td>
+<tr class="row-odd"><td>count</td>
+<td>Integer</td>
 <td colspan="2">The total number of results that match the query parameters.</td>
 </tr>
-<tr class="row-even"><td colspan="2">next</td>
-<td colspan="2">URL</td>
+<tr class="row-even"><td>next</td>
+<td>URL</td>
 <td colspan="2">A URL to the next page of results.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">previous</td>
-<td colspan="2">URL</td>
+<tr class="row-odd"><td>previous</td>
+<td>URL</td>
 <td colspan="2">A URL to the previous page of results.</td>
 </tr>
-<tr class="row-even"><td colspan="2">results</td>
-<td colspan="2">Array</td>
+<tr class="row-even"><td>results</td>
+<td>Array</td>
 <td colspan="2">List of result JSON objects that match the query parameters.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.id</td>
-<td colspan="2">Integer</td>
+<tr class="row-odd"><td>.id</td>
+<td>Integer</td>
 <td colspan="2">The unique identifier of the model. Can be passed to the details API call.
 (See <a class="reference internal" href="#rest-batch-details"><span class="std std-ref">Batch Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td colspan="2">.title</td>
-<td colspan="2">String</td>
+<tr class="row-even"><td>.title</td>
+<td>String</td>
 <td colspan="2">The human readable display name of the batch.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.description</td>
-<td colspan="2">String</td>
+<tr class="row-odd"><td>.description</td>
+<td>String</td>
 <td colspan="2">A longer description of the batch.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.status</td>
-<td colspan="2">String</td>
+<tr class="row-even"><td>.status</td>
+<td>String</td>
 <td colspan="2">The current status of the batch.
 Choices: [SUBMITTED, CREATED].</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.recipe_type</td>
-<td colspan="2">JSON Object</td>
+<tr class="row-odd"><td>.recipe_type</td>
+<td>JSON Object</td>
 <td colspan="2">The recipe type that is associated with the batch.
 (See <a class="reference internal" href="recipe_type.html#rest-recipe-type-details"><span class="std std-ref">Recipe Type Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td colspan="2">.event</td>
-<td colspan="2">JSON Object</td>
+<tr class="row-even"><td>.event</td>
+<td>JSON Object</td>
 <td colspan="2">The trigger event that is associated with the batch.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.creator_job</td>
-<td colspan="2">JSON Object</td>
+<tr class="row-odd"><td>.creator_job</td>
+<td>JSON Object</td>
 <td colspan="2">The job that is executed to create all the recipes defined by the batch.
 (See <a class="reference internal" href="job.html#rest-job-details"><span class="std std-ref">Job Details</span></a>)</td>
 </tr>
-<tr class="row-even"><td colspan="2">.created_count</td>
-<td colspan="2">Integer</td>
+<tr class="row-even"><td>.created_count</td>
+<td>Integer</td>
 <td colspan="2">The number of batch recipes created by this batch.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.failed_count</td>
-<td colspan="2">Integer</td>
+<tr class="row-odd"><td>.failed_count</td>
+<td>Integer</td>
 <td colspan="2">The number of batch recipes failed by this batch.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.total_count</td>
-<td colspan="2">Integer</td>
+<tr class="row-even"><td>.completed_jobs_count</td>
+<td>Integer</td>
+<td colspan="2">The number of batch jobs completed by this batch.</td>
+</tr>
+<tr class="row-odd"><td>.completed_recipe_count</td>
+<td>Integer</td>
+<td colspan="2">The number of batch recipes completed by this batch.</td>
+</tr>
+<tr class="row-even"><td>.total_count</td>
+<td>Integer</td>
 <td colspan="2">An estimate of the total number of batch recipes to create for this batch.</td>
 </tr>
-<tr class="row-odd"><td colspan="2">.created</td>
-<td colspan="2">ISO-8601 Datetime</td>
+<tr class="row-odd"><td>.created</td>
+<td>ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was initially created.</td>
 </tr>
-<tr class="row-even"><td colspan="2">.last_modified</td>
-<td colspan="2">ISO-8601 Datetime</td>
+<tr class="row-even"><td>.last_modified</td>
+<td>ISO-8601 Datetime</td>
 <td colspan="2">When the associated database model was last saved.</td>
 </tr>
-<tr class="row-odd"><td colspan="6"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-odd"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">11</span><span class="p">,</span>
     <span class="s2">&quot;next&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
     <span class="s2">&quot;previous&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
@@ -404,6 +410,8 @@ Choices: [SUBMITTED, CREATED].</td>
             <span class="p">},</span>
             <span class="s2">&quot;created_count&quot;</span><span class="o">:</span> <span class="mi">256</span><span class="p">,</span>
             <span class="s2">&quot;failed_count&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;completed_job_count&quot;</span><span class="o">:</span> <span class="mi">21</span><span class="p">,</span>
+            <span class="s2">&quot;completed_recipe_count&quot;</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
             <span class="s2">&quot;total_count&quot;</span><span class="o">:</span> <span class="mi">512</span><span class="p">,</span>
             <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-15T19:03:26.346Z&quot;</span><span class="p">,</span>
             <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-15T19:05:26.346Z&quot;</span>
@@ -699,9 +707,9 @@ batch when using a trigger rule.</td>
 </table>
 <table border="1" class="docutils" id="rest-batch-details">
 <colgroup>
-<col width="18%" />
+<col width="20%" />
 <col width="16%" />
-<col width="66%" />
+<col width="65%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head" colspan="3"><strong>Batch Details</strong></th>
@@ -769,6 +777,14 @@ Choices: [SUBMITTED, CREATED].</td>
 <tr class="row-odd"><td>failed_count</td>
 <td>Integer</td>
 <td>The number of batch recipes failed by this batch.</td>
+</tr>
+<tr class="row-even"><td>completed_jobs_count</td>
+<td>Integer</td>
+<td>The number of batch jobs completed by this batch.</td>
+</tr>
+<tr class="row-odd"><td>completed_recipe_count</td>
+<td>Integer</td>
+<td>The number of batch recipes completed by this batch.</td>
 </tr>
 <tr class="row-even"><td>total_count</td>
 <td>Integer</td>
@@ -871,6 +887,8 @@ Choices: [SUBMITTED, CREATED].</td>
     <span class="p">},</span>
     <span class="s2">&quot;created_count&quot;</span><span class="o">:</span> <span class="mi">256</span><span class="p">,</span>
     <span class="s2">&quot;failed_count&quot;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s2">&quot;completed_job_count&quot;</span><span class="o">:</span> <span class="mi">21</span><span class="p">,</span>
+    <span class="s2">&quot;completed_recipe_count&quot;</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
     <span class="s2">&quot;total_count&quot;</span><span class="o">:</span> <span class="mi">512</span><span class="p">,</span>
     <span class="s2">&quot;created&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-15T19:03:26.346Z&quot;</span><span class="p">,</span>
     <span class="s2">&quot;last_modified&quot;</span><span class="o">:</span> <span class="s2">&quot;2015-06-15T19:05:26.346Z&quot;</span>

@@ -255,6 +255,7 @@
 <li class="toctree-l2"><a class="reference internal" href="batch.migrations.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="batch.migrations.html#module-batch.migrations.0001_initial">batch.migrations.0001_initial module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="batch.migrations.html#module-batch.migrations.0002_auto_20170412_1225">batch.migrations.0002_auto_20170412_1225 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="batch.migrations.html#module-batch.migrations.0003_auto_20170706_1948">batch.migrations.0003_auto_20170706_1948 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="batch.migrations.html#module-batch.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -413,6 +414,20 @@ many-to-one relation.</p>
 <p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
 <p>Most of the implementation is delegated to a dynamically defined manager
 class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.Batch.completed_job_count">
+<code class="descname">completed_job_count</code><a class="headerlink" href="#batch.models.Batch.completed_job_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="batch.models.Batch.completed_recipe_count">
+<code class="descname">completed_recipe_count</code><a class="headerlink" href="#batch.models.Batch.completed_recipe_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -750,6 +765,34 @@ object the first time, the query is executed.</p>
 <em class="property">class </em><code class="descclassname">batch.models.</code><code class="descname">BatchManager</code><a class="headerlink" href="#batch.models.BatchManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <p>Provides additional methods for handling batches</p>
+<dl class="method">
+<dt id="batch.models.BatchManager.count_completed_job">
+<code class="descname">count_completed_job</code><span class="sig-paren">(</span><em>batch_id</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchManager.count_completed_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a count-plus-one on the completed job field of a Batch</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>batch_id</strong> (<em>int</em>) &#8211; The unique identifier of the batch.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="batch.models.BatchManager.count_completed_recipe">
+<code class="descname">count_completed_recipe</code><span class="sig-paren">(</span><em>batch_id</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchManager.count_completed_recipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a count-plus-one on the completed recipe field of a Batch</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>batch_id</strong> (<em>int</em>) &#8211; The unique identifier of the batch.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="batch.models.BatchManager.create_batch">
 <code class="descname">create_batch</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#batch.models.BatchManager.create_batch" title="Permalink to this definition">¶</a></dt>

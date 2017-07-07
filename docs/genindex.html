@@ -549,6 +549,8 @@
 </li>
       <li><a href="architecture/django/code_docs/batch.migrations.html#module-batch.migrations.0002_auto_20170412_1225">batch.migrations.0002_auto_20170412_1225 (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/batch.migrations.html#module-batch.migrations.0003_auto_20170706_1948">batch.migrations.0003_auto_20170706_1948 (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/batch.html#module-batch.models">batch.models (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.MultipleObjectsReturned">Batch.MultipleObjectsReturned</a>
@@ -826,16 +828,20 @@
       <ul>
         <li><a href="architecture/django/code_docs/job.execution.tasks.html#job.execution.tasks.pre_task.PreTask.complete">(job.execution.tasks.pre_task.PreTask method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeManager.complete">(recipe.models.RecipeManager method)</a>
-</li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobManager.complete_job">complete_job() (job.models.JobManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobExecutionManager.complete_job_exe">complete_job_exe() (job.models.JobExecutionManager method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeManager.complete_recipe">complete_recipe() (recipe.models.RecipeManager method)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.Recipe.completed">completed (recipe.models.Recipe attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsJobType.completed_count">completed_count (metrics.models.MetricsJobType attribute)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.completed_job_count">completed_job_count (batch.models.Batch attribute)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.completed_recipe_count">completed_recipe_count (batch.models.Batch attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/port.html#port.schema.Configuration">Configuration (class in port.schema)</a>
 </li>
@@ -919,14 +925,18 @@
 </li>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.metrics.FinishedJobExeMetrics.count">count (job.execution.metrics.FinishedJobExeMetrics attribute)</a>
 </li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchManager.count_completed_job">count_completed_job() (batch.models.BatchManager method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchManager.count_completed_recipe">count_completed_recipe() (batch.models.BatchManager method)</a>
+</li>
       <li><a href="architecture/django/code_docs/scheduler.task.html#scheduler.task.manager.TaskUpdateManager.COUNT_WARNING_THRESHOLD">COUNT_WARNING_THRESHOLD (scheduler.task.manager.TaskUpdateManager attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.countries">countries (storage.models.ScaleFile attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData">CountryData (class in storage.models)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.DoesNotExist">CountryData.DoesNotExist</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.MultipleObjectsReturned">CountryData.MultipleObjectsReturned</a>
@@ -1285,6 +1295,8 @@
 
       <ul>
         <li><a href="architecture/django/code_docs/batch.migrations.html#batch.migrations.0002_auto_20170412_1225.Migration.dependencies">(batch.migrations.0002_auto_20170412_1225.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/batch.migrations.html#batch.migrations.0003_auto_20170706_1948.Migration.dependencies">(batch.migrations.0003_auto_20170706_1948.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/error.migrations.html#error.migrations.0001_initial.Migration.dependencies">(error.migrations.0001_initial.Migration attribute)</a>
 </li>
@@ -5110,6 +5122,8 @@
       <ul>
         <li><a href="architecture/django/code_docs/batch.migrations.html#batch.migrations.0002_auto_20170412_1225.Migration">(class in batch.migrations.0002_auto_20170412_1225)</a>
 </li>
+        <li><a href="architecture/django/code_docs/batch.migrations.html#batch.migrations.0003_auto_20170706_1948.Migration">(class in batch.migrations.0003_auto_20170706_1948)</a>
+</li>
         <li><a href="architecture/django/code_docs/error.migrations.html#error.migrations.0001_initial.Migration">(class in error.migrations.0001_initial)</a>
 </li>
         <li><a href="architecture/django/code_docs/error.migrations.html#error.migrations.0002_auto_20151217_1319.Migration">(class in error.migrations.0002_auto_20151217_1319)</a>
@@ -5775,6 +5789,8 @@
 
       <ul>
         <li><a href="architecture/django/code_docs/batch.migrations.html#batch.migrations.0002_auto_20170412_1225.Migration.operations">(batch.migrations.0002_auto_20170412_1225.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/batch.migrations.html#batch.migrations.0003_auto_20170706_1948.Migration.operations">(batch.migrations.0003_auto_20170706_1948.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/error.migrations.html#error.migrations.0001_initial.Migration.operations">(error.migrations.0001_initial.Migration attribute)</a>
 </li>
@@ -9235,6 +9251,10 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.configuration.json.job.html#job.test.configuration.json.job.test_job_config.TestJobConfiguration.test_convert_from_1_0">test_convert_from_1_0() (job.test.configuration.json.job.test_job_config.TestJobConfiguration method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_models.TestBatchManager.test_count_completed_job">test_count_completed_job() (batch.test.test_models.TestBatchManager method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_models.TestBatchManager.test_count_completed_recipe">test_count_completed_recipe() (batch.test.test_models.TestBatchManager method)</a>
+</li>
       <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFile.test_country_data">test_country_data() (storage.test.test_models.TestScaleFile method)</a>
 </li>
       <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesView.test_create">test_create() (batch.test.test_views.TestBatchesView method)</a>
@@ -10717,10 +10737,10 @@
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_node_class.TestNode.test_paused_node_pull_task">test_paused_node_pull_task() (scheduler.test.node.test_node_class.TestNode method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_manager.TestSchedulingManager.test_paused_scheduler">test_paused_scheduler() (scheduler.test.scheduling.test_manager.TestSchedulingManager method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_manager.TestSchedulingManager.test_paused_scheduler">test_paused_scheduler() (scheduler.test.scheduling.test_manager.TestSchedulingManager method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_clock.TestClock.test_perform_tick">test_perform_tick() (job.test.test_clock.TestClock method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_clock.TestClock.test_perform_tick_error">test_perform_tick_error() (job.test.test_clock.TestClock method)</a>

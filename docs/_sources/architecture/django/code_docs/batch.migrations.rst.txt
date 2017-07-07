@@ -20,6 +20,14 @@ batch\.migrations\.0002\_auto\_20170412\_1225 module
     :undoc-members:
     :show-inheritance:
 
+batch\.migrations\.0003\_auto\_20170706\_1948 module
+----------------------------------------------------
+
+.. automodule:: batch.migrations.0003_auto_20170706_1948
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
