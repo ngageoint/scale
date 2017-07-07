@@ -113,7 +113,12 @@ These services provide access to information about job types.
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .cpus_required           | Decimal           | The number of CPUs needed for a job of this type.                        |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
-| .mem_required            | Decimal           | The amount of RAM in MiB needed for a job of this type.                  |
+| .mem_required            | Decimal           | A constant amount of memory in MiB required for a job of this type.      |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .mem_const_required      | Decimal           | A constant amount of memory in MiB required for a job of this type.      |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .mem_mult_required       | Decimal           | A multiplier (2x = 2.0) applied to the size of the input files to        |
+|                          |                   | determine additional memory in MiB required for a job of this type.      |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | .shared_mem_required     | Decimal           | The amount of shared memory (/dev/shm) in MiB needed for a job of this   |
 |                          |                   | type.                                                                    |
@@ -163,6 +168,8 @@ These services provide access to information about job types.
 |                "max_tries": 0,                                                                                          |
 |                "cpus_required": 0.5,                                                                                    |
 |                "mem_required": 64.0,                                                                                    |
+|                "mem_const_required": 64.0,                                                                              |
+|                "mem_mult_required": 0.0,                                                                                |
 |                "shared_mem_required": 0.0,                                                                              |
 |                "disk_out_const_required": 64.0,                                                                         |
 |                "disk_out_mult_required": 0.0,                                                                           |
@@ -227,7 +234,15 @@ These services provide access to information about job types.
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | cpus_required           | Decimal           | Optional | The number of CPUs needed for a job of this type.              |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
-| mem_required            | Decimal           | Optional | The amount of RAM in MiB needed for a job of this type.        |
+| .mem_required           | Decimal           | Optional | A constant amount of memory in MiB required for a job of this  |
+|                         |                   |          | type.                                                          |
++-------------------------+-------------------+----------+----------------------------------------------------------------+
+| .mem_const_required     | Decimal           | Optional | A constant amount of memory in MiB required for a job of this  |
+|                         |                   |          | type.                                                          |
++-------------------------+-------------------+----------+----------------------------------------------------------------+
+| .mem_mult_required      | Decimal           | Optional | A multiplier (2x = 2.0) applied to the size of the input files |
+|                         |                   |          | to determine additional memory in MiB required for a job of    |
+|                         |                   |          | this type.                                                     |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | shared_mem_required     | Decimal           | Optional | The amount of shared memory (/dev/shm) in MiB needed for a job |
 |                         |                   |          | of this type.                                                  |
@@ -271,6 +286,8 @@ These services provide access to information about job types.
 |        "max_tries": 0,                                                                                                  |
 |        "cpus_required": 0.5,                                                                                            |
 |        "mem_required": 64.0,                                                                                            |
+|        "mem_const_required": 64.0,                                                                                      |
+|        "mem_mult_required": 0.0,                                                                                        |
 |        "shared_mem_required": 0.0,                                                                                      |
 |        "disk_out_const_required": 64.0,                                                                                 |
 |        "disk_out_mult_required": 0.0,                                                                                   |
@@ -357,6 +374,8 @@ These services provide access to information about job types.
 |        "max_tries": 0,                                                                                                  |
 |        "cpus_required": 0.5,                                                                                            |
 |        "mem_required": 64.0,                                                                                            |
+|        "mem_const_required": 64.0,                                                                                      |
+|        "mem_mult_required": 0.0,                                                                                        |
 |        "shared_mem_required": 0.0,                                                                                      |
 |        "disk_out_const_required": 64.0,                                                                                 |
 |        "disk_out_mult_required": 0.0,                                                                                   |
@@ -425,7 +444,15 @@ These services provide access to information about job types.
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | cpus_required           | Decimal           | Optional | The number of CPUs needed for a job of this type.              |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
-| mem_required            | Decimal           | Optional | The amount of RAM in MiB needed for a job of this type.        |
+| .mem_required           | Decimal           | Optional | A constant amount of memory in MiB required for a job of this  |
+|                         |                   |          | type.                                                          |
++-------------------------+-------------------+----------+----------------------------------------------------------------+
+| .mem_const_required     | Decimal           | Optional | A constant amount of memory in MiB required for a job of this  |
+|                         |                   |          | type.                                                          |
++-------------------------+-------------------+----------+----------------------------------------------------------------+
+| .mem_mult_required      | Decimal           | Optional | A multiplier (2x = 2.0) applied to the size of the input files |
+|                         |                   |          | to determine additional memory in MiB required for a job of    |
+|                         |                   |          | this type.                                                     |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | shared_mem_required     | Decimal           | Optional | The amount of shared memory (/dev/shm) in MiB needed for a job |
 |                         |                   |          | of this type.                                                  |
@@ -469,6 +496,8 @@ These services provide access to information about job types.
 |        "max_tries": 0,                                                                                                  |
 |        "cpus_required": 0.5,                                                                                            |
 |        "mem_required": 64.0,                                                                                            |
+|        "mem_const_required": 64.0,                                                                                      |
+|        "mem_mult_required": 0.0,                                                                                        |
 |        "shared_mem_required": 0.0,                                                                                      |
 |        "disk_out_const_required": 64.0,                                                                                 |
 |        "disk_out_mult_required": 0.0,                                                                                   |
@@ -607,7 +636,12 @@ These services provide access to information about job types.
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | cpus_required            | Decimal           | The number of CPUs needed for a job of this type.                        |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
-| mem_required             | Decimal           | The amount of RAM in MiB needed for a job of this type.                  |
+| .mem_required            | Decimal           | A constant amount of memory in MiB required for a job of this type.      |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .mem_const_required      | Decimal           | A constant amount of memory in MiB required for a job of this type.      |
++--------------------------+-------------------+--------------------------------------------------------------------------+
+| .mem_mult_required       | Decimal           | A multiplier (2x = 2.0) applied to the size of the input files to        |
+|                          |                   | determine additional memory in MiB required for a job of this type.      |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
 | shared_mem_required      | Decimal           | The amount of shared memory (/dev/shm) in MiB needed for a job of this   |
 |                          |                   | type.                                                                    |
@@ -698,6 +732,8 @@ These services provide access to information about job types.
 |        "max_tries": 0,                                                                                                  |
 |        "cpus_required": 0.5,                                                                                            |
 |        "mem_required": 64.0,                                                                                            |
+|        "mem_const_required": 64.0,                                                                                      |
+|        "mem_mult_required": 0.0,                                                                                        |
 |        "shared_mem_required": 0.0,                                                                                      |
 |        "disk_out_const_required": 64.0,                                                                                 |
 |        "disk_out_mult_required": 0.0,                                                                                   |
@@ -804,7 +840,15 @@ These services provide access to information about job types.
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | cpus_required           | Decimal           | Optional | The number of CPUs needed for a job of this type.              |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
-| mem_required            | Decimal           | Optional | The amount of RAM in MiB needed for a job of this type.        |
+| .mem_required           | Decimal           | Optional | A constant amount of memory in MiB required for a job of this  |
+|                         |                   |          | type.                                                          |
++-------------------------+-------------------+----------+----------------------------------------------------------------+
+| .mem_const_required     | Decimal           | Optional | A constant amount of memory in MiB required for a job of this  |
+|                         |                   |          | type.                                                          |
++-------------------------+-------------------+----------+----------------------------------------------------------------+
+| .mem_mult_required      | Decimal           | Optional | A multiplier (2x = 2.0) applied to the size of the input files |
+|                         |                   |          | to determine additional memory in MiB required for a job of    |
+|                         |                   |          | this type.                                                     |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
 | shared_mem_required     | Decimal           | Optional | The amount of shared memory (/dev/shm) in MiB needed for a job |
 |                         |                   |          | of this type.                                                  |
@@ -847,6 +891,8 @@ These services provide access to information about job types.
 |        "max_tries": 0,                                                                                                  |
 |        "cpus_required": 0.5,                                                                                            |
 |        "mem_required": 64.0,                                                                                            |
+|        "mem_const_required": 64.0,                                                                                      |
+|        "mem_mult_required": 0.0,                                                                                        |
 |        "shared_mem_required": 0.0,                                                                                      |
 |        "disk_out_const_required": 64.0,                                                                                 |
 |        "disk_out_mult_required": 0.0,                                                                                   |
@@ -931,6 +977,8 @@ These services provide access to information about job types.
 |        "max_tries": 0,                                                                                                  |
 |        "cpus_required": 0.5,                                                                                            |
 |        "mem_required": 64.0,                                                                                            |
+|        "mem_const_required": 64.0,                                                                                      |
+|        "mem_mult_required": 0.0,                                                                                        |
 |        "shared_mem_required": 0.0,                                                                                      |
 |        "disk_out_const_required": 64.0,                                                                                 |
 |        "disk_out_mult_required": 0.0,                                                                                   |

@@ -110,8 +110,6 @@ class JobManager(models.Manager):
         job.priority = job_type.priority
         job.timeout = job_type.timeout
         job.max_tries = job_type.max_tries
-        job.cpus_required = max(job_type.cpus_required, MIN_CPUS)
-        job.mem_required = max(job_type.mem_required, MIN_MEM)
 
         if superseded_job:
             root_id = superseded_job.root_superseded_job_id
@@ -808,16 +806,22 @@ class Job(models.Model):
 
         resources = self.job_type.get_resources()
 
-        # Calculate output space required in MiB rounded up to the nearest whole MiB
-        multiplier = self.job_type.disk_out_mult_required
-        const = self.job_type.disk_out_const_required
+        # Calculate memory required in MiB rounded up to the nearest whole MiB
+        multiplier = self.job_type.mem_mult_required
+        const = self.job_type.mem_const_required
         disk_in_required = self.disk_in_required
         if not disk_in_required:
             disk_in_required = 0.0
+        memory_mb = long(math.ceil(multiplier * disk_in_required + const))
+        memory_required = max(memory_mb, MIN_MEM)
+
+        # Calculate output space required in MiB rounded up to the nearest whole MiB
+        multiplier = self.job_type.disk_out_mult_required
+        const = self.job_type.disk_out_const_required
         output_size_mb = long(math.ceil(multiplier * disk_in_required + const))
         disk_out_required = max(output_size_mb, MIN_DISK)
 
-        resources.add(NodeResources([Disk(disk_out_required + disk_in_required)]))
+        resources.add(NodeResources([Mem(memory_required), Disk(disk_out_required + disk_in_required)]))
         return resources
 
     def increase_max_tries(self):
@@ -2415,8 +2419,11 @@ class JobType(models.Model):
     :type max_tries: :class:`django.db.models.IntegerField`
     :keyword cpus_required: The number of CPUs required for a job of this type
     :type cpus_required: :class:`django.db.models.FloatField`
-    :keyword mem_required: The amount of RAM in MiB required for a job of this type
-    :type mem_required: :class:`django.db.models.FloatField`
+    :keyword mem_const_required: A constant amount of RAM in MiB required for a job of this type
+    :type mem_const_required: :class:`django.db.models.FloatField`
+    :keyword mem_mult_required: A multiplier (2x = 2.0) applied to the size of the input files to determine additional
+        RAM in MiB required for a job of this type
+    :type mem_mult_required: :class:`django.db.models.FloatField`
     :keyword shared_mem_required: The amount of shared memory (/dev/shm) in MiB required for a job of this type
     :type shared_mem_required: :class:`django.db.models.FloatField`
     :keyword disk_out_const_required: A constant amount of disk space in MiB required for job output (temp work and
@@ -2477,7 +2484,8 @@ class JobType(models.Model):
     timeout = models.IntegerField(default=1800)
     max_tries = models.IntegerField(default=3)
     cpus_required = models.FloatField(default=1.0)
-    mem_required = models.FloatField(default=64.0)
+    mem_const_required = models.FloatField(default=64.0)
+    mem_mult_required = models.FloatField(default=0.0)
     shared_mem_required = models.FloatField(default=0.0)
     disk_out_const_required = models.FloatField(default=64.0)
     disk_out_mult_required = models.FloatField(default=0.0)
@@ -2547,8 +2555,7 @@ class JobType(models.Model):
         resources.remove_resource('mem')
         resources.remove_resource('disk')
         cpus = max(self.cpus_required, MIN_CPUS)
-        mem = max(self.mem_required, MIN_MEM)
-        resources.add(NodeResources([Cpus(cpus), Mem(mem)]))
+        resources.add(NodeResources([Cpus(cpus)]))
         return resources
 
     def natural_key(self):

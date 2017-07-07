@@ -126,6 +126,10 @@ class JobTypesView(ListCreateAPIView):
         for key, value in request.data.iteritems():
             if key not in base_fields and key not in JobType.UNEDITABLE_FIELDS:
                 extra_fields[key] = value
+        # Change mem_required to mem_const_required, TODO: remove once mem_required field is removed from REST API
+        if 'mem_required' in extra_fields:
+            extra_fields['mem_const_required'] = extra_fields['mem_required']
+            del extra_fields['mem_required']
 
         try:
             with transaction.atomic():
@@ -244,6 +248,10 @@ class JobTypeDetailsView(GenericAPIView):
         for key, value in request.data.iteritems():
             if key not in base_fields and key not in JobType.UNEDITABLE_FIELDS:
                 extra_fields[key] = value
+        # Change mem_required to mem_const_required, TODO: remove once mem_required field is removed from REST API
+        if 'mem_required' in extra_fields:
+            extra_fields['mem_const_required'] = extra_fields['mem_required']
+            del extra_fields['mem_required']
 
         try:
             from recipe.configuration.definition.exceptions import InvalidDefinition

@@ -546,7 +546,8 @@ class TestConfigurationViewImport(TestCase):
         self.assertEqual(result.max_scheduled, 1)
         self.assertEqual(result.max_tries, 1)
         self.assertEqual(result.cpus_required, 2.0)
-        self.assertEqual(result.mem_required, 1024.0)
+        self.assertEqual(result.mem_const_required, 1024.0)
+        self.assertEqual(result.mem_mult_required, 0.0)
         self.assertEqual(result.shared_mem_required, 3.0)
         self.assertEqual(result.disk_out_const_required, 1024.0)
         self.assertEqual(result.disk_out_mult_required, 1.0)
@@ -1527,7 +1528,8 @@ class TestConfigurationViewImport(TestCase):
                     'timeout': 100,
                     'max_tries': 1,
                     'cpus_required': 2.0,
-                    'mem_required': 1024.0,
+                    'mem_const_required': 1024.0,
+                    'mem_mult_required': 2.0,
                     'disk_out_const_required': 1024.0,
                     'disk_out_mult_required': 1.0,
                     'interface': interface,
@@ -1567,6 +1569,8 @@ class TestConfigurationViewImport(TestCase):
         job_types = JobType.objects.filter(name='test-job-name', version='1.0.0')
         self.assertEqual(len(job_types), 1)
         self.assertEqual(job_types[0].title, 'test-job-title')
+        self.assertEqual(job_types[0].mem_const_required, 1024.0)
+        self.assertEqual(job_types[0].mem_mult_required, 2.0)
         self.assertDictEqual(job_types[0].interface, interface)
         self.assertIsNone(job_types[0].max_scheduled)
         self.assertDictEqual(job_types[0].error_mapping, error_mapping)
