@@ -389,7 +389,7 @@ class QueueManager(models.Manager):
                 if jobs_to_queue:
                     self._queue_jobs(jobs_to_queue)
             if handler.is_completed():
-                Recipe.objects.complete(handler.recipe.id, when)
+                Recipe.objects.complete_recipe(handler.recipe.id, when)
 
     @transaction.atomic
     def handle_job_failure(self, job_exe_id, when, tasks, error=None):

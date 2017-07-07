@@ -30,7 +30,7 @@ class RecipeManager(models.Manager):
     """Provides additional methods for handling recipes
     """
 
-    def complete(self, recipe_id, when):
+    def complete_recipe(self, recipe_id, when):
         """Marks the recipe with the given ID as being completed
 
         :param recipe_id: The recipe ID
@@ -41,6 +41,14 @@ class RecipeManager(models.Manager):
 
         modified = timezone.now()
         self.filter(id=recipe_id).update(completed=when, last_modified=modified)
+
+        # Count as a completed recipe if part of a batch
+        from batch.models import Batch, BatchRecipe
+        try:
+            batch_recipe = BatchRecipe.objects.get(recipe_id=recipe_id)
+            Batch.objects.count_completed_recipe(batch_recipe.batch.id)
+        except BatchRecipe.DoesNotExist:
+            batch_recipe = None
 
     @transaction.atomic
     def create_recipe(self, recipe_type, data, event, superseded_recipe=None, delta=None, superseded_jobs=None):

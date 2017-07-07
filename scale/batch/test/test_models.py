@@ -138,6 +138,32 @@ class TestBatchManager(TransactionTestCase):
             'workspace_id': self.workspace.id,
         }
 
+    def test_count_completed_job(self):
+        """Tests calling BatchManger.count_completed_job()"""
+
+        batch = batch_test_utils.create_batch(self.recipe_type)
+        batch_job = batch_test_utils.create_batch_job(batch=batch)
+
+        Batch.objects.count_completed_job(batch.id)
+        count = Batch.objects.get(id=batch.id).completed_job_count
+
+        Batch.objects.count_completed_job(batch_job.batch.id)
+        next_count = Batch.objects.get(id=batch.id).completed_job_count
+        self.assertEqual(count + 1, next_count)
+
+    def test_count_completed_recipe(self):
+        """Tests calling BatchManger.count_completed_recipe()"""
+
+        batch = batch_test_utils.create_batch(self.recipe_type)
+        batch_recipe = batch_test_utils.create_batch_recipe(batch=batch)
+
+        Batch.objects.count_completed_recipe(batch.id)
+        count = Batch.objects.get(id=batch.id).completed_recipe_count
+
+        Batch.objects.count_completed_recipe(batch_recipe.batch.id)
+        next_count = Batch.objects.get(id=batch.id).completed_recipe_count
+        self.assertEqual(count + 1, next_count)
+
     def test_create_successful(self):
         """Tests calling BatchManager.create_batch() successfully"""
 
