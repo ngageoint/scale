@@ -9,3 +9,14 @@
 .wy-table-bordered-all, .rst-content table.docutils {
   width: 100%;
 }
+
+/* override table width restrictions */
+.wy-table-responsive table td, .wy-table-responsive table th {
+    white-space: normal;
+}
+
+.wy-table-responsive {
+    margin-bottom: 24px;
+    max-width: 100%;
+    overflow: visible;
+}
