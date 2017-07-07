@@ -55,7 +55,9 @@ class ConfigurationJobTypeSerializer(serializers.ModelSerializer):
     max_scheduled = serializers.IntegerField(allow_null=True, required=False)
     max_tries = serializers.IntegerField(required=False)
     cpus_required = serializers.FloatField(required=False)
-    mem_required = serializers.FloatField(required=False)
+    mem_required = serializers.FloatField(required=False, source='mem_const_required')
+    mem_const_required = serializers.FloatField(required=False)
+    mem_mult_required = serializers.FloatField(required=False)
     disk_out_const_required = serializers.FloatField(required=False)
     disk_out_mult_required = serializers.FloatField(required=False)
 
@@ -67,8 +69,8 @@ class ConfigurationJobTypeSerializer(serializers.ModelSerializer):
         model = JobType
         fields = ('name', 'version', 'title', 'description', 'category', 'author_name', 'author_url', 'is_operational',
                   'icon_code', 'docker_privileged', 'docker_image', 'priority', 'timeout', 'max_scheduled', 'max_tries',
-                  'cpus_required', 'mem_required', 'disk_out_const_required', 'disk_out_mult_required', 'interface',
-                  'error_mapping', 'trigger_rule')
+                  'cpus_required', 'mem_required', 'mem_const_required', 'mem_mult_required', 'disk_out_const_required',
+                  'disk_out_mult_required', 'interface', 'error_mapping', 'trigger_rule')
 
 
 class ConfigurationRecipeTypeSerializer(serializers.ModelSerializer):

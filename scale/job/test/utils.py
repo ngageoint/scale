@@ -218,7 +218,7 @@ def create_job_type(name=None, version=None, category=None, interface=None, prio
 
     job_type = JobType.objects.create(name=name, version=version, category=category, interface=interface,
                                       priority=priority, timeout=timeout, max_tries=max_tries,
-                                      max_scheduled=max_scheduled, cpus_required=cpus, mem_required=mem,
+                                      max_scheduled=max_scheduled, cpus_required=cpus, mem_const_required=mem,
                                       disk_out_const_required=disk, error_mapping=error_mapping, is_active=is_active,
                                       is_operational=is_operational, trigger_rule=trigger_rule, configuration=configuration)
     JobTypeRevision.objects.create_job_type_revision(job_type)

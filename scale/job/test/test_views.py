@@ -628,7 +628,7 @@ class TestJobTypesView(TestCase):
     def test_reverse_sorting(self):
         """Tests custom sorting in reverse."""
 
-        url = rest_util.get_url('/job-types/?order=-mem_required')
+        url = rest_util.get_url('/job-types/?order=-mem_const_required')
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 

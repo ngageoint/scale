@@ -400,6 +400,10 @@ def _import_job_type(job_type_dict, job_type=None):
                 ))
             else:
                 extra_fields[key] = job_type_dict[key]
+    # Change mem_required to mem_const_required, TODO: remove once mem_required field is removed from REST API
+    if 'mem_required' in extra_fields:
+        extra_fields['mem_const_required'] = extra_fields['mem_required']
+        del extra_fields['mem_required']
 
     # Edit or create the associated job type model
     if job_type:
