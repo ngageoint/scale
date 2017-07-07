@@ -25,3 +25,13 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
+About 
+=====
+
+Scale is a system that provides management of automated processing on a cluster of machines. It allows users to define 
+jobs, which can be any type of script or algorithm. These jobs run on ingested source data and produce product files. 
+The produced products can be disseminated to appropriate users and/or used to evaluate the producing algorithm in terms 
+of performance and accuracy.
+
+Scale was developed at the National Geospatial-Intelligence Agency (NGA) in collaboration with 
+`Ball Aerospace <http://www.ballaerospace.com/>`_ and `Applied Information Sciences (AIS) <http://www.appliedis.com/>`_.
