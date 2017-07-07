@@ -228,6 +228,14 @@ job\.migrations\.0028\_jobinputfile module
     :undoc-members:
     :show-inheritance:
 
+job\.migrations\.0029\_auto\_20170707\_1034 module
+--------------------------------------------------
+
+.. automodule:: job.migrations.0029_auto_20170707_1034
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------
