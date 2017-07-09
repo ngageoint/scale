@@ -1,0 +1,38 @@
+{
+    "id": "scale-db",
+    "cpus": 0.5,
+    "mem": 512,
+    "disk": 0,
+    "instances": 1,
+    "container": {
+        "docker": {
+            "image": "mdillon/postgis:9.5-alpine",
+            "network": "BRIDGE",
+            "portMappings": [
+                {
+                    "containerPort": 5432,
+                    "hostPort": 0
+                }
+            ],
+            "forcePullImage": true
+        },
+        "type": "DOCKER",
+        "volumes": []
+    },
+    "env": {
+        "POSTGRES_DB": "scale",
+        "POSTGRES_USER": "scale",
+        "POSTGRES_PASSWORD": "scale"
+    },
+    "healthChecks": [
+        {
+            "protocol": "TCP",
+            "gracePeriodSeconds": 300,
+            "intervalSeconds": 20,
+            "portIndex": 0,
+            "timeoutSeconds": 20,
+            "maxConsecutiveFailures": 3
+        }
+    ],
+    "uris": []
+}

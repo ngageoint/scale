@@ -1,0 +1,56 @@
+{
+    "id": "scale-webserver",
+    "cpus": 0.5,
+    "mem": 512,
+    "disk": 0,
+    "instances": 1,
+    "container": {
+        "docker": {
+            "image": "geoint/scale",
+            "network": "BRIDGE",
+            "portMappings": [
+                {
+                    "containerPort": 80,
+                    "hostPort": 0
+                }
+            ],
+            "forcePullImage": true
+        },
+        "type": "DOCKER"
+    },
+    "env": {
+        "DCOS_PACKAGE_FRAMEWORK_NAME": "scale",
+        "ENABLE_WEBSERVER": "true",
+        "SCALE_BROKER_URL": "amqp://localhost:5672",
+        "SCALE_DB_HOST": "scale",
+        "SCALE_DB_NAME": "scale",
+        "SCALE_DB_PORT": "5432",
+        "SCALE_DB_USER": "scale",
+        "SCALE_DB_PASS": "scale",
+        "SCALE_STATIC_URL": "/service/scale/static/",
+        "SCALE_WEBSERVER_CPU": "0.5",
+        "SCALE_WEBSERVER_MEMORY": "512",
+        "SCALE_ELASTICSEARCH_URLS": "",
+        "SCALE_ELASTICSEARCH_LB": "false"
+    },
+    "labels": {
+        "HAPROXY_GROUP": "internal,external",
+        "DCOS_SERVICE_SCHEME": "http",
+        "DCOS_SERVICE_NAME": "scale",
+        "DCOS_SERVICE_PORT_INDEX": "0",
+        "HAPROXY_0_VHOST": "scale.marathon.mesos",
+        "HAPROXY_0_BACKEND_HTTP_OPTIONS": "http-request set-header X-HAPROXY 1\nrspadd Access-Control-Allow-Methods:\\ GET,\\ POST,\\ PUT,\\ PATCH,\\ OPTIONS,\\ DELETE\nrspadd Access-Control-Allow-Headers:\\ Origin,\\ X-Requested-With,\\ Content-Type,\\ Accept,\\ Authorization\n"
+    },
+    "healthChecks": [
+        {
+            "path": "/api/v4/version/",
+            "protocol": "TCP",
+            "gracePeriodSeconds": 300,
+            "intervalSeconds": 20,
+            "portIndex": 0,
+            "timeoutSeconds": 20,
+            "maxConsecutiveFailures": 3
+        }
+    ],
+    "uris": []
+}

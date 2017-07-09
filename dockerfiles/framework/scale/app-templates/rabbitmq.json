@@ -1,0 +1,44 @@
+{
+    "id": "scale-rabbitmq",
+    "cpus": 1,
+    "mem": 512,
+    "disk": 0,
+    "instances": 1,
+    "container": {
+        "docker": {
+            "image": "rabbitmq:3.6-management",
+            "forcePullImage": true,
+            "privileged": false,
+            "portMappings": [
+                {
+                    "containerPort": 5672,
+                    "hostPort": 5672,
+                    "protocol": "tcp",
+                    "labels": {
+                        "VIP_0": "/scale-rabbitmq:5672"
+                    }
+                },
+                {
+                    "containerPort": 15672,
+                    "protocol": "tcp",
+                    "servicePort": 0,
+                    "labels": {
+                        "VIP_1": "/scale-rabbitmq:15672"
+                    }
+                }
+            ],
+            "network": "BRIDGE"
+        }
+    },
+    "healthChecks": [
+        {
+            "protocol": "TCP",
+            "gracePeriodSeconds": 300,
+            "intervalSeconds": 60,
+            "timeoutSeconds": 20,
+            "maxConsecutiveFailures": 3,
+            "portIndex": 0
+        }
+    ],
+    "uris": []
+}
