@@ -18,5 +18,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         """See :meth:`django.core.management.base.BaseCommand.handle`.
         """
-
-        logger.info('Hello Scale!')
+        
+        logger.warning('Hello Scale! (stderr)')
+        logger.info('Hello Scale! (stdout)')
