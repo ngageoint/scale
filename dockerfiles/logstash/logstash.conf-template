@@ -14,20 +14,25 @@ filter {
   mutate {
     add_field => { "[@metadata][DEBUG]" => "${LOGSTASH_DEBUG:false}" }
   }
-  ruby {
-    init => "@ordernum = 0"
-    code => "@ordernum += 1; event['scale_order_num'] = @ordernum; event['scale_task'] = event['program'].sub(%r{^docker/}, ''); event['scale_job_exe'] = event['scale_task'].sub(%r{_[^_]*$}, ''); event['scale_node'] = event['logsource']; event['stream'] = event['severity'] == 3 ? 'stderr' : 'stdout'"
-    if [@metadata][DEBUG] != 'true' {
+  if [@metadata][DEBUG] != 'true' {
+    ruby {
+      init => "@ordernum = 0"
+      code => "@ordernum += 1; event['scale_order_num'] = @ordernum; event['scale_task'] = event['program'].sub(%r{^docker/}, ''); event['scale_job_exe'] = event['scale_task'].sub(%r{_[^_]*$}, ''); event['scale_node'] = event['logsource']; event['stream'] = event['severity'] == 3 ? 'stderr' : 'stdout'"
       remove_field => ["host", "priority", "timestamp8601", "logsource", "program", "pid", "severity", "facility", "timestamp", "facility_label", "severity_label"]
     }
   }
+  else {
+    ruby {
+      init => "@ordernum = 0"
+      code => "@ordernum += 1; event['scale_order_num'] = @ordernum; event['scale_task'] = event['program'].sub(%r{^docker/}, ''); event['scale_job_exe'] = event['scale_task'].sub(%r{_[^_]*$}, ''); event['scale_node'] = event['logsource']; event['stream'] = event['severity'] == 3 ? 'stderr' : 'stdout'"
+    }
+  }
+
 }
 output {
   elasticsearch {
     hosts => _ES_HOSTS_
   }
-}
-output {
   if [@metadata][DEBUG] == 'true' {
     stdout { codec => rubydebug }
   }
