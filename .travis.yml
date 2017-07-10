@@ -2,19 +2,25 @@ language: python
 
 python:
 - '2.7'
-env:
-  matrix:
-    - BUILD_DOCS='true'   RUN_TESTS='false'
-    - BUILD_DOCS='false'  RUN_TESTS='true'
+
+matrix:
+  include:
+    - os: linux
+      env: RUN_TESTS='true'   BUILD_DOCS='false'
+      addons:
+        postgresql: "9.4"
+
+    - os: linux
+      env: RUN_TESTS='false'  BUILD_DOCS='true'
 
 cache: pip
-
-addons:
-  postgresql: "9.4"
 
 # Travis team suggested fix for truncated log build failures
 filter_secrets: false
 
+install:
+- if [ ${RUN_TESTS} == 'true' ]; then pip install -q -r scale/pip/requirements.txt; fi
+- if [ ${BUILD_DOCS} == 'true' ]; then pip install -q -r scale/pip/docs.txt; fi
 script: 
 - ./travis-build.sh
 - ./push-docs.sh

@@ -21,9 +21,6 @@ then
     psql -c 'create database scale;' -U postgres
     psql -d scale -U postgres -c "create extension postgis;"
     psql -d scale -U postgres -c "create extension postgis_topology;"
-    python scale/manage.py migrate --noinput
-
-    pip install -q -r scale/pip/requirements.txt
 
     cd $root/scale
     export COVERAGE_FILE=$root/.coverage
@@ -32,8 +29,6 @@ fi
 
 if [ ${BUILD_DOCS} == 'true' ]
 then
-    pip install -q -r scale/pip/docs.txt
-
     cd $root/scale/docs
     make code_docs html
 fi
