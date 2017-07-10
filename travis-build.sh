@@ -15,7 +15,7 @@ cd $root/scale-ui
 ./travis-build.sh
 
 
-if [ ${RUN_TESTS} == 'true' ]
+if [ "${RUN_TESTS}" == "true" ]
 then
     cd $root/scale
     cp scale/local_settings_TRAVIS-CI.py scale/local_settings.py
@@ -24,10 +24,10 @@ then
     psql -d scale -U postgres -c "create extension postgis_topology;"
 
     export COVERAGE_FILE=$root/.coverage
-    coverage run --source='.' manage.py test
+    coverage run --source='.' manage.py test --parallel
 fi
 
-if [ ${BUILD_DOCS} == 'true' ]
+if [ "${BUILD_DOCS}" == "true" ]
 then
     cd $root/scale/docs
     make code_docs html

@@ -6,12 +6,12 @@ python:
 matrix:
   include:
     - os: linux
-      env: RUN_TESTS='true'   BUILD_DOCS='false'
+      env: RUN_TESTS='true'
       addons:
         postgresql: "9.4"
 
     - os: linux
-      env: RUN_TESTS='false'  BUILD_DOCS='true'
+      env: BUILD_DOCS='true'
 
 cache: pip
 
@@ -19,8 +19,8 @@ cache: pip
 filter_secrets: false
 
 install:
-- if [ ${RUN_TESTS} == 'true' ]; then pip install -q -r scale/pip/requirements.txt; fi
-- if [ ${BUILD_DOCS} == 'true' ]; then pip install -q -r scale/pip/docs.txt -r scale/pip/production.txt; fi
+- if [ "${RUN_TESTS}" == "true" ]; then pip install -q -r scale/pip/requirements.txt; fi
+- if [ "${BUILD_DOCS}" == "true" ]; then pip install -q -r scale/pip/docs.txt -r scale/pip/production.txt; fi
 script: 
 - ./travis-build.sh
 - ./push-docs.sh
