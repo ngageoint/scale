@@ -23,7 +23,7 @@ sys.path.insert(0, os.path.abspath('../..'))
 # Set up Django for autodoc generation
 import scale
 import django
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "scale.local_settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "scale.local_settings_DOCS")
 django.setup()
 
 # -- General configuration -----------------------------------------------------
