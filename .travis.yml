@@ -2,6 +2,10 @@ language: python
 
 python:
 - '2.7'
+env:
+  matrix:
+    - BUILD_DOCS='true'   RUN_TESTS='false'
+    - BUILD_DOCS='false'  RUN_TESTS='true'
 
 cache: pip
 
@@ -11,18 +15,6 @@ addons:
 # Travis team suggested fix for truncated log build failures
 filter_secrets: false
 
-before_script:
-- cp scale/scale/local_settings_TRAVIS-CI.py scale/scale/local_settings.py
-- psql -c 'create database scale;' -U postgres
-- psql -d scale -U postgres -c "create extension postgis;"
-- psql -d scale -U postgres -c "create extension postgis_topology;"
-- python scale/manage.py migrate --noinput
-# DISABLED as no unit tests exist for UI. Add NodeJS 6 to build dependencies
-# - wget https://raw.githubusercontent.com/creationix/nvm/v0.31.0/nvm.sh -O ~/.nvm/nvm.sh
-# - source ~/.nvm/nvm.sh
-# - nvm install 6
-install:
-- pip install -q -r scale/pip/requirements.txt
 script: 
 - ./travis-build.sh
 - ./push-docs.sh
