@@ -17,12 +17,12 @@ cd $root/scale-ui
 
 if [ ${RUN_TESTS} == 'true' ]
 then
-    cp scale/scale/local_settings_TRAVIS-CI.py scale/scale/local_settings.py
+    cd $root/scale
+    cp scale/local_settings_TRAVIS-CI.py scale/local_settings.py
     psql -c 'create database scale;' -U postgres
     psql -d scale -U postgres -c "create extension postgis;"
     psql -d scale -U postgres -c "create extension postgis_topology;"
 
-    cd $root/scale
     export COVERAGE_FILE=$root/.coverage
     coverage run --source='.' manage.py test
 fi
