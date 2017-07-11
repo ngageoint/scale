@@ -651,6 +651,7 @@ class QueueManager(models.Manager):
         executions_to_schedule = []
         for job_execution in job_executions:
             node_id = job_execution.provided_node_id
+            agent_id = job_execution.provided_agent_id
             resources = job_execution.provided_resources
             input_file_size = job_execution.input_file_size
             job_exe = job_exes[job_execution.id]
@@ -660,13 +661,13 @@ class QueueManager(models.Manager):
             if job_exe.status != 'QUEUED':
                 continue
 
-            executions_to_schedule.append((job_exe, node_id, resources, input_file_size))
+            executions_to_schedule.append((job_exe, node_id, resources, input_file_size, agent_id))
 
         # Schedule job executions
         scheduled_job_exes = []
         job_exe_ids_scheduled = []
         for job_exe in JobExecution.objects.schedule_job_executions(framework_id, executions_to_schedule, workspaces):
-            scheduled_job_exes.append(RunningJobExecution(job_exe))
+            scheduled_job_exes.append(RunningJobExecution(job_exe.agent_id, job_exe))
             job_exe_ids_scheduled.append(job_exe.id)
 
         # Clear the scheduled job executions from the queue

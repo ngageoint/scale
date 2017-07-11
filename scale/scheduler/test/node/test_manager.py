@@ -276,7 +276,7 @@ class TestNodeManager(TestCase):
 
         job_exe = job_test_utils.create_job_exe(node=self.node_1)
         # Add a job execution to clean up and get the cleanup task for it
-        cleanup_mgr.add_job_execution(RunningJobExecution(job_exe))
+        cleanup_mgr.add_job_execution(RunningJobExecution('agent', job_exe))
         tasks = node_mgr.get_next_tasks(when)
         self.assertEqual(len(tasks), 1)
         task = tasks[0]

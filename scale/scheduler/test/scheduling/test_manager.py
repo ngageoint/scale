@@ -39,6 +39,7 @@ class TestSchedulingManager(TestCase):
 
         self.agent_1 = Agent('agent_1', 'host_1')
         self.agent_2 = Agent('agent_2', 'host_2')
+        self.agent_3 = Agent('agent_3', 'host_2')
         node_mgr.clear()
         node_mgr.register_agents([self.agent_1, self.agent_2])
         node_mgr.sync_with_database(scheduler_mgr.config)
@@ -69,6 +70,30 @@ class TestSchedulingManager(TestCase):
         scheduling_manager = SchedulingManager()
         num_tasks = scheduling_manager.perform_scheduling(self._driver, now())
         self.assertEqual(num_tasks, 2)  # Schedule both queued job executions
+
+    @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
+    def test_node_with_new_agent_id(self, mock_taskinfo):
+        """Tests successfully calling perform_scheduling() when a node get a new agent ID"""
+        mock_taskinfo.return_value = MagicMock()
+
+        # Host 2 gets new agent ID of agent_3
+        node_mgr.lost_node(self.agent_2)
+        node_mgr.register_agents([self.agent_3])
+        node_mgr.sync_with_database(scheduler_mgr.config)
+
+        offer = ResourceOffer('offer', self.agent_3.agent_id, self.framework_id,
+                              NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now())
+        resource_mgr.add_new_offers([offer])
+
+        scheduling_manager = SchedulingManager()
+        num_tasks = scheduling_manager.perform_scheduling(self._driver, now())
+        self.assertEqual(num_tasks, 2)  # Schedule both queued job executions
+        # Check that created tasks have the correct agent ID
+        calls = self._driver.method_calls
+        self.assertEqual(1, len(calls))
+        mesos_tasks = calls[0][1][1]
+        for mesos_task in mesos_tasks:
+            self.assertEqual(self.agent_3.agent_id, mesos_task.slave_id.value)
 
     @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
     def test_paused_scheduler(self, mock_taskinfo):
@@ -124,7 +149,7 @@ class TestSchedulingManager(TestCase):
         queue_test_utils.create_queue(job_type=job_type_with_limit)
         job_type_mgr.sync_with_database()
         # One job of this type is already running
-        job_exe_mgr.schedule_job_exes([RunningJobExecution(job_exe_1)])
+        job_exe_mgr.schedule_job_exes([RunningJobExecution(self.agent_1.agent_id, job_exe_1)])
 
         offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
                                 NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now())

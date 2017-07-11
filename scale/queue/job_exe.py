@@ -17,6 +17,7 @@ class QueuedJobExecution(object):
         self.input_file_size = queue.input_file_size
         self._required_resources = queue.get_resources()
 
+        self._provided_agent_id = None
         self._provided_node_id = None
         self._provided_resources = None
 
@@ -29,6 +30,16 @@ class QueuedJobExecution(object):
         """
 
         return self._queue.job_exe_id
+
+    @property
+    def provided_agent_id(self):
+        """Returns the ID of the agent that has been provided to run this job execution
+
+        :returns: The ID of the agent that has been provided to run this job execution
+        :rtype: string
+        """
+
+        return self._provided_agent_id
 
     @property
     def provided_node_id(self):
@@ -70,15 +81,18 @@ class QueuedJobExecution(object):
 
         return self._required_resources
 
-    def accepted(self, node_id, resources):
+    def accepted(self, agent_id, node_id, resources):
         """Indicates that this job execution has been accepted to be scheduled and passes the node and resources being
         provided
 
+        :param agent_id: The agent ID
+        :type agent_id: string
         :param node_id: The node ID
         :type node_id: int
         :param resources: The provided resources
         :type resources: :class:`node.resources.node_resources.NodeResources`
         """
 
+        self._provided_agent_id = agent_id
         self._provided_node_id = node_id
         self._provided_resources = resources

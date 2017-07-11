@@ -23,9 +23,11 @@ logger = logging.getLogger(__name__)
 class RunningJobExecution(object):
     """This class represents a currently running job execution. This class is thread-safe."""
 
-    def __init__(self, job_exe):
+    def __init__(self, agent_id, job_exe):
         """Constructor
 
+        :param agent_id: The ID of the agent on which the execution is running
+        :type agent_id: string
         :param job_exe: The job execution, which must be in RUNNING status and have its related node_id, job, job_type
             and job_type_rev models populated
         :type job_exe: :class:`job.models.JobExecution`
@@ -51,11 +53,11 @@ class RunningJobExecution(object):
 
         # Create tasks
         if not job_exe.is_system:
-            self._all_tasks.append(PullTask(job_exe))
-            self._all_tasks.append(PreTask(job_exe))
-        self._all_tasks.append(JobTask(job_exe))
+            self._all_tasks.append(PullTask(agent_id, job_exe))
+            self._all_tasks.append(PreTask(agent_id, job_exe))
+        self._all_tasks.append(JobTask(agent_id, job_exe))
         if not job_exe.is_system:
-            self._all_tasks.append(PostTask(job_exe))
+            self._all_tasks.append(PostTask(agent_id, job_exe))
         for task in self._all_tasks:
             self._remaining_tasks.append(task)
 

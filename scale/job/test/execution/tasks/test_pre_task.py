@@ -27,7 +27,7 @@ class TestPreTask(TestCase):
         scale_errors = [ScaleDatabaseError(), ScaleIOError(), ScaleOperationalError(), MissingSetting('')]
 
         for scale_error in scale_errors:
-            task = PreTask(self.job_exe)
+            task = PreTask('agent_1', self.job_exe)
             update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.RUNNING, now())
             task.update(update)
             update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.FAILED, now(),

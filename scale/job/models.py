@@ -1097,9 +1097,9 @@ class JobExecutionManager(models.Manager):
         :param framework_id: The scheduling framework ID
         :type framework_id: string
         :param job_executions: A list of tuples where each tuple contains the job_exe model to schedule, the node ID to
-            schedule it on, the resources it will be given, and the input file size
+            schedule it on, the resources it will be given, the input file size, and the agent ID
         :type job_executions: [(:class:`job.models.JobExecution`, int,
-            :class:`node.resources.node_resources.NodeResources`, int)]
+            :class:`node.resources.node_resources.NodeResources`, int, string)]
         :param workspaces: A dict of all workspaces stored by name
         :type workspaces: {string: :class:`storage.models.Workspace`}
         :returns: The scheduled job_exe models with related job, job_type, job_type_rev and node models populated
@@ -1127,6 +1127,7 @@ class JobExecutionManager(models.Manager):
                 node_id = job_execution[1]
                 resources = job_execution[2]
                 input_file_size = job_execution[3]
+                agent_id = job_execution[4]
 
                 if job_exe.status != 'QUEUED':
                     continue
@@ -1157,6 +1158,7 @@ class JobExecutionManager(models.Manager):
                 job_exe.disk_total_scheduled = resources.disk
                 job_exe.save()
                 job_exe.docker_volumes = docker_volumes
+                job_exe.agent_id = agent_id
                 job_exes.append(job_exe)
                 jobs_to_running.append(job_exe.job)
             except Exception:

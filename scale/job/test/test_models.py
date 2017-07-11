@@ -456,8 +456,9 @@ class TestJobExecutionManager(TransactionTestCase):
         input_sz_2 = 12
 
         job_exes = JobExecution.objects.schedule_job_executions('123',
-                                                                [(job_exe_1, node_1.id, resources_1, input_sz_1),
-                                                                 (job_exe_2, node_2.id, resources_2, input_sz_2)], {})
+                                                                [(job_exe_1, node_1.id, resources_1, input_sz_1, ''),
+                                                                 (job_exe_2, node_2.id, resources_2, input_sz_2, '')],
+                                                                {})
 
         for job_exe in job_exes:
             if job_exe.id == job_exe_1.id:
@@ -499,7 +500,7 @@ class TestJobExecutionManager(TransactionTestCase):
         input_size = 12
         workspaces = {workspace.name: workspace}
 
-        job_exes = JobExecution.objects.schedule_job_executions('123', [(job_exe, node, resources, input_size)],
+        job_exes = JobExecution.objects.schedule_job_executions('123', [(job_exe, node, resources, input_size, '')],
                                                                 workspaces)
 
         # Set up expected results
@@ -566,7 +567,7 @@ class TestJobExecutionManager(TransactionTestCase):
         input_sz = 12
         workspaces = {workspace_1.name: workspace_1, workspace_2.name: workspace_2}
 
-        job_exes = JobExecution.objects.schedule_job_executions('123', [(job_exe, node, resources, input_sz)],
+        job_exes = JobExecution.objects.schedule_job_executions('123', [(job_exe, node, resources, input_sz, '')],
                                                                 workspaces)
 
         # Set up expected results
@@ -643,7 +644,7 @@ class TestJobExecutionManager(TransactionTestCase):
         input_sz = 12
         workspaces = {workspace.name: workspace}
 
-        job_exes = JobExecution.objects.schedule_job_executions('123', [(job_exe, node, resources, input_sz)],
+        job_exes = JobExecution.objects.schedule_job_executions('123', [(job_exe, node, resources, input_sz, '')],
                                                                 workspaces)
 
         # Set up expected results
