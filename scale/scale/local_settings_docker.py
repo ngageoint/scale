@@ -8,7 +8,7 @@ import elasticsearch
 SECRET_KEY = os.environ.get('SCALE_SECRET_KEY', INSECURE_DEFAULT_KEY)
 
 # Use the following lines to enable developer/debug mode.
-DEBUG = bool(os.environ.get('SCALE_DEBUG', False))
+DEBUG = os.environ.get('SCALE_DEBUG', 'false').lower in ('yes', 'true', 't', '1')
 TEMPLATES[0]['OPTIONS']['debug'] = DEBUG
 
 # Set the external URL context here, default to using SCRIPT_NAME passed by reverse proxy.
@@ -104,7 +104,7 @@ if MARATHON_PASSED_IMAGE:
 CONFIG_URI = os.environ.get('CONFIG_URI', CONFIG_URI)
 
 # Logging configuration
-LOGGING = LOG_CONSOLE_INFO
+LOGGING = LOG_CONSOLE_DEBUG if DEBUG else LOG_CONSOLE_INFO
 
 # Base URL of vault or DCOS secrets store, or None to disable secrets
 SECRETS_URL = os.environ.get('SECRETS_URL', None)
