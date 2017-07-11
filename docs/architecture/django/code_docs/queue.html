@@ -301,7 +301,7 @@
 <p>This class represents a queued job execution that is being considered to be scheduled.</p>
 <dl class="method">
 <dt id="queue.job_exe.QueuedJobExecution.accepted">
-<code class="descname">accepted</code><span class="sig-paren">(</span><em>node_id</em>, <em>resources</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.job_exe.QueuedJobExecution.accepted" title="Permalink to this definition">¶</a></dt>
+<code class="descname">accepted</code><span class="sig-paren">(</span><em>agent_id</em>, <em>node_id</em>, <em>resources</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.job_exe.QueuedJobExecution.accepted" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indicates that this job execution has been accepted to be scheduled and passes the node and resources being
 provided</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -309,6 +309,7 @@ provided</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>agent_id</strong> (<em>string</em>) &#8211; The agent ID</li>
 <li><strong>node_id</strong> (<em>int</em>) &#8211; The node ID</li>
 <li><strong>resources</strong> (<a class="reference internal" href="node.resources.html#node.resources.node_resources.NodeResources" title="node.resources.node_resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.node_resources.NodeResources</span></code></a>) &#8211; The provided resources</li>
 </ul>
@@ -329,6 +330,22 @@ provided</p>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The ID of this job execution</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="queue.job_exe.QueuedJobExecution.provided_agent_id">
+<code class="descname">provided_agent_id</code><a class="headerlink" href="#queue.job_exe.QueuedJobExecution.provided_agent_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the ID of the agent that has been provided to run this job execution</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The ID of the agent that has been provided to run this job execution</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
 </tr>
 </tbody>
 </table>

@@ -2514,8 +2514,8 @@ related job, job_type, job_type_rev and node_id models populated.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>framework_id</strong> (<em>string</em>) &#8211; The scheduling framework ID</li>
 <li><strong>job_executions</strong> ([(<a class="reference internal" href="#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>, int,
-<a class="reference internal" href="node.resources.html#node.resources.node_resources.NodeResources" title="node.resources.node_resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.node_resources.NodeResources</span></code></a>, int)]) &#8211; A list of tuples where each tuple contains the job_exe model to schedule, the node ID to
-schedule it on, the resources it will be given, and the input file size</li>
+<a class="reference internal" href="node.resources.html#node.resources.node_resources.NodeResources" title="node.resources.node_resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.node_resources.NodeResources</span></code></a>, int, string)]) &#8211; A list of tuples where each tuple contains the job_exe model to schedule, the node ID to
+schedule it on, the resources it will be given, the input file size, and the agent ID</li>
 <li><strong>workspaces</strong> ({string: <a class="reference internal" href="storage.html#storage.models.Workspace" title="storage.models.Workspace"><code class="xref py py-class docutils literal"><span class="pre">storage.models.Workspace</span></code></a>}) &#8211; A dict of all workspaces stored by name</li>
 </ul>
 </td>

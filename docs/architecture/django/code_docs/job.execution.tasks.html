@@ -285,7 +285,7 @@
 <p>Defines the abstract base class for all job execution tasks</p>
 <dl class="class">
 <dt id="job.execution.tasks.exe_task.JobExecutionTask">
-<em class="property">class </em><code class="descclassname">job.execution.tasks.exe_task.</code><code class="descname">JobExecutionTask</code><span class="sig-paren">(</span><em>task_id</em>, <em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.exe_task.JobExecutionTask" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">job.execution.tasks.exe_task.</code><code class="descname">JobExecutionTask</code><span class="sig-paren">(</span><em>task_id</em>, <em>agent_id</em>, <em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.exe_task.JobExecutionTask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="job.tasks.html#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a></p>
 <p>Abstract base class for a job execution task. A job execution consists of three tasks: the pre-task,
 the job-task, and the post-task.</p>
@@ -384,7 +384,7 @@ confuses this task with the previous lost task.</p>
 <p>Defines the class for a job execution job task</p>
 <dl class="class">
 <dt id="job.execution.tasks.job_task.JobTask">
-<em class="property">class </em><code class="descclassname">job.execution.tasks.job_task.</code><code class="descname">JobTask</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.job_task.JobTask" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">job.execution.tasks.job_task.</code><code class="descname">JobTask</code><span class="sig-paren">(</span><em>agent_id</em>, <em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.job_task.JobTask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#job.execution.tasks.exe_task.JobExecutionTask" title="job.execution.tasks.exe_task.JobExecutionTask"><code class="xref py py-class docutils literal"><span class="pre">job.execution.tasks.exe_task.JobExecutionTask</span></code></a></p>
 <p>Represents a job execution job task (runs the actual job/algorithm). This class is thread-safe.</p>
 <dl class="method">
@@ -427,7 +427,7 @@ confuses this task with the previous lost task.</p>
 <p>Defines the class for a job execution post-task</p>
 <dl class="class">
 <dt id="job.execution.tasks.post_task.PostTask">
-<em class="property">class </em><code class="descclassname">job.execution.tasks.post_task.</code><code class="descname">PostTask</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.post_task.PostTask" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">job.execution.tasks.post_task.</code><code class="descname">PostTask</code><span class="sig-paren">(</span><em>agent_id</em>, <em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.post_task.PostTask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#job.execution.tasks.exe_task.JobExecutionTask" title="job.execution.tasks.exe_task.JobExecutionTask"><code class="xref py py-class docutils literal"><span class="pre">job.execution.tasks.exe_task.JobExecutionTask</span></code></a></p>
 <p>Represents a job execution post-task. This class is thread-safe.</p>
 <dl class="method">
@@ -456,7 +456,7 @@ confuses this task with the previous lost task.</p>
 <p>Defines the class for a job execution pre-task</p>
 <dl class="class">
 <dt id="job.execution.tasks.pre_task.PreTask">
-<em class="property">class </em><code class="descclassname">job.execution.tasks.pre_task.</code><code class="descname">PreTask</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.pre_task.PreTask" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">job.execution.tasks.pre_task.</code><code class="descname">PreTask</code><span class="sig-paren">(</span><em>agent_id</em>, <em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.pre_task.PreTask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#job.execution.tasks.exe_task.JobExecutionTask" title="job.execution.tasks.exe_task.JobExecutionTask"><code class="xref py py-class docutils literal"><span class="pre">job.execution.tasks.exe_task.JobExecutionTask</span></code></a></p>
 <p>Represents a job execution pre-task. This class is thread-safe.</p>
 <dl class="method">
@@ -491,7 +491,7 @@ confuses this task with the previous lost task.</p>
 <p>Defines the class for a job execution pull-task</p>
 <dl class="class">
 <dt id="job.execution.tasks.pull_task.PullTask">
-<em class="property">class </em><code class="descclassname">job.execution.tasks.pull_task.</code><code class="descname">PullTask</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.pull_task.PullTask" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">job.execution.tasks.pull_task.</code><code class="descname">PullTask</code><span class="sig-paren">(</span><em>agent_id</em>, <em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.tasks.pull_task.PullTask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#job.execution.tasks.exe_task.JobExecutionTask" title="job.execution.tasks.exe_task.JobExecutionTask"><code class="xref py py-class docutils literal"><span class="pre">job.execution.tasks.exe_task.JobExecutionTask</span></code></a></p>
 <p>Represents a job execution pull-task. This class is thread-safe.</p>
 <dl class="method">
