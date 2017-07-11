@@ -26,12 +26,13 @@ class TestJobExecutionManager(TransactionTestCase):
         # Clear error cache so test works correctly
         CACHED_BUILTIN_ERRORS.clear()
 
+        self.agent_id = 'agent'
         self.node_model_1 = node_test_utils.create_node()
         self.job_exe_model_1 = job_test_utils.create_job_exe(status='RUNNING', node=self.node_model_1)
-        self.job_exe_1 = RunningJobExecution(self.job_exe_model_1)
+        self.job_exe_1 = RunningJobExecution(self.agent_id, self.job_exe_model_1)
         self.node_model_2 = node_test_utils.create_node()
         self.job_exe_model_2 = job_test_utils.create_job_exe(status='RUNNING', node=self.node_model_2)
-        self.job_exe_2 = RunningJobExecution(self.job_exe_model_2)
+        self.job_exe_2 = RunningJobExecution(self.agent_id, self.job_exe_model_2)
 
         self.job_exe_mgr = JobExecutionManager()
 

@@ -458,7 +458,7 @@ class TotalJobExeMetrics(object):
         job_exe_query = JobExecution.objects.select_related('error')
         job_exe_query = job_exe_query.filter(status__in=['COMPLETED', 'FAILED'], ended__gte=oldest_time)
         for job_exe_model in job_exe_query:
-            job_exe = RunningJobExecution(job_exe_model)
+            job_exe = RunningJobExecution('', job_exe_model)
             job_exe._set_finished_status(job_exe_model.status, job_exe_model.ended, job_exe_model.error)
             self._finished_metrics.add_job_execution(job_exe)
             self._finished_metrics_over_time.add_job_execution(job_exe)

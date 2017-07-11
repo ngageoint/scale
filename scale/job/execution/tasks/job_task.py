@@ -15,15 +15,17 @@ class JobTask(JobExecutionTask):
     """Represents a job execution job task (runs the actual job/algorithm). This class is thread-safe.
     """
 
-    def __init__(self, job_exe):
+    def __init__(self, agent_id, job_exe):
         """Constructor
 
+        :param agent_id: The ID of the agent on which the task is launched
+        :type agent_id: string
         :param job_exe: The job execution, which must be in RUNNING status and have its related node, job, and job_type
         models populated
         :type job_exe: :class:`job.models.JobExecution`
         """
 
-        super(JobTask, self).__init__(job_exe.get_job_task_id(), job_exe)
+        super(JobTask, self).__init__(job_exe.get_job_task_id(), agent_id, job_exe)
 
         self._is_system = job_exe.job.job_type.is_system
         self._uses_docker = job_exe.uses_docker()

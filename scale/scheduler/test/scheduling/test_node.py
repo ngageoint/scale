@@ -24,6 +24,8 @@ class TestSchedulingNode(TestCase):
     def setUp(self):
         django.setup()
 
+        self.agent_id = 'agent_1'
+
     def test_accept_job_exe_next_task(self):
         """Tests successfully calling accept_job_exe_next_task()"""
 
@@ -38,10 +40,10 @@ class TestSchedulingNode(TestCase):
         task_resources = NodeResources()
         watermark_resources = NodeResources([Cpus(100.0), Mem(500.0)])
         resource_set = ResourceSet(offered_resources, task_resources, watermark_resources)
-        scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
+        scheduling_node = SchedulingNode(self.agent_id, node, [], [], resource_set)
 
         job_exe_model = job_test_utils.create_job_exe(resources=NodeResources([Cpus(1.0), Mem(10.0)]))
-        job_exe = RunningJobExecution(job_exe_model)
+        job_exe = RunningJobExecution(self.agent_id, job_exe_model)
         waiting_tasks = []
 
         had_waiting_task = scheduling_node.accept_job_exe_next_task(job_exe, waiting_tasks)
@@ -68,7 +70,7 @@ class TestSchedulingNode(TestCase):
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
 
         job_exe_model = job_test_utils.create_job_exe(resources=NodeResources([Cpus(1.0), Mem(10.0)]))
-        job_exe = RunningJobExecution(job_exe_model)
+        job_exe = RunningJobExecution(self.agent_id, job_exe_model)
         waiting_tasks = []
 
         had_waiting_task = scheduling_node.accept_job_exe_next_task(job_exe, waiting_tasks)
@@ -95,7 +97,7 @@ class TestSchedulingNode(TestCase):
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
 
         job_exe_model = job_test_utils.create_job_exe(resources=NodeResources([Cpus(1.0), Mem(10.0)]))
-        job_exe = RunningJobExecution(job_exe_model)
+        job_exe = RunningJobExecution(self.agent_id, job_exe_model)
         waiting_tasks = []
 
         job_exe.execution_canceled()
@@ -123,7 +125,7 @@ class TestSchedulingNode(TestCase):
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
 
         job_exe_model = job_test_utils.create_job_exe(resources=NodeResources([Cpus(11.0), Mem(10.0)]))
-        job_exe = RunningJobExecution(job_exe_model)
+        job_exe = RunningJobExecution(self.agent_id, job_exe_model)
         waiting_tasks = []
 
         had_waiting_task = scheduling_node.accept_job_exe_next_task(job_exe, waiting_tasks)
@@ -295,9 +297,9 @@ class TestSchedulingNode(TestCase):
         resource_set = ResourceSet(offered_resources, NodeResources(), watermark_resources)
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
         job_exe_model_1 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(1.0), Mem(10.0)]))
-        running_job_exe_1 = RunningJobExecution(job_exe_model_1)
+        running_job_exe_1 = RunningJobExecution(self.agent_id, job_exe_model_1)
         job_exe_model_2 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(2.0), Mem(20.0)]))
-        running_job_exe_2 = RunningJobExecution(job_exe_model_2)
+        running_job_exe_2 = RunningJobExecution(self.agent_id, job_exe_model_2)
         node_task_resources = NodeResources()
         node_task_resources.add(health_task.get_resources())
         node_task_resources.add(pull_task.get_resources())
@@ -353,9 +355,9 @@ class TestSchedulingNode(TestCase):
         resource_set = ResourceSet(offered_resources, NodeResources(), watermark_resources)
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
         job_exe_model_1 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(1.0), Mem(10.0)]))
-        running_job_exe_1 = RunningJobExecution(job_exe_model_1)
+        running_job_exe_1 = RunningJobExecution(self.agent_id, job_exe_model_1)
         job_exe_model_2 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(2.0), Mem(20.0)]))
-        running_job_exe_2 = RunningJobExecution(job_exe_model_2)
+        running_job_exe_2 = RunningJobExecution(self.agent_id, job_exe_model_2)
         node_task_resources = NodeResources()
         node_task_resources.add(health_task.get_resources())
         node_task_resources.add(pull_task.get_resources())
@@ -409,9 +411,9 @@ class TestSchedulingNode(TestCase):
         resource_set = ResourceSet(offered_resources, NodeResources(), watermark_resources)
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
         job_exe_model_1 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(1.0), Mem(10.0)]))
-        running_job_exe_1 = RunningJobExecution(job_exe_model_1)
+        running_job_exe_1 = RunningJobExecution(self.agent_id, job_exe_model_1)
         job_exe_model_2 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(2.0), Mem(20.0)]))
-        running_job_exe_2 = RunningJobExecution(job_exe_model_2)
+        running_job_exe_2 = RunningJobExecution(self.agent_id, job_exe_model_2)
         node_task_resources = NodeResources()
         node_task_resources.add(health_task.get_resources())
         node_task_resources.add(pull_task.get_resources())
@@ -497,10 +499,10 @@ class TestSchedulingNode(TestCase):
         task = HealthTask('1234', 'agent_1')  # Resources are 0.1 CPUs and 32 MiB memory
         job_exe_model_1 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(10.0), Mem(50.0)]))
         job_exe_model_1.job.priority = 1000
-        job_exe_1 = RunningJobExecution(job_exe_model_1)
+        job_exe_1 = RunningJobExecution(self.agent_id, job_exe_model_1)
         job_exe_model_2 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(56.0), Mem(15.0)]))
         job_exe_model_2.job.priority = 100
-        job_exe_2 = RunningJobExecution(job_exe_model_2)
+        job_exe_2 = RunningJobExecution(self.agent_id, job_exe_model_2)
         scheduling_node = SchedulingNode('agent_1', node, [task], [job_exe_1, job_exe_2], resource_set)
         queue_model_1 = queue_test_utils.create_queue(priority=100, cpus_required=8.0, mem_required=40.0,
                                                       disk_in_required=0.0, disk_out_required=0.0,
@@ -550,10 +552,10 @@ class TestSchedulingNode(TestCase):
         task = HealthTask('1234', 'agent_1')  # Resources are 0.1 CPUs and 32 MiB memory
         job_exe_model_1 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(10.0), Mem(50.0)]))
         job_exe_model_1.job.priority = 1000
-        job_exe_1 = RunningJobExecution(job_exe_model_1)
+        job_exe_1 = RunningJobExecution(self.agent_id, job_exe_model_1)
         job_exe_model_2 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(56.0), Mem(15.0)]))
         job_exe_model_2.job.priority = 100
-        job_exe_2 = RunningJobExecution(job_exe_model_2)
+        job_exe_2 = RunningJobExecution(self.agent_id, job_exe_model_2)
         scheduling_node = SchedulingNode('agent_1', node, [task], [job_exe_1, job_exe_2], resource_set)
         queue_model_1 = queue_test_utils.create_queue(priority=100, cpus_required=8.0, mem_required=40.0,
                                                       disk_in_required=0.0, disk_out_required=0.0,
@@ -597,7 +599,7 @@ class TestSchedulingNode(TestCase):
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
         # Allocate 10 CPUs and 50 MiB memory to existing job execution
         job_exe_model = job_test_utils.create_job_exe(resources=NodeResources([Cpus(10.0), Mem(50.0)]))
-        job_exe = RunningJobExecution(job_exe_model)
+        job_exe = RunningJobExecution(self.agent_id, job_exe_model)
         scheduling_node.accept_job_exe_next_task(job_exe, [])
 
         # Should have 10 CPUs and 50 MiB memory left, so this should be scheduled
@@ -633,7 +635,7 @@ class TestSchedulingNode(TestCase):
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
         # Allocate 10 CPUs and 50 MiB memory to existing job execution
         job_exe_model = job_test_utils.create_job_exe(resources=NodeResources([Cpus(10.0), Mem(50.0)]))
-        job_exe = RunningJobExecution(job_exe_model)
+        job_exe = RunningJobExecution(self.agent_id, job_exe_model)
         scheduling_node.accept_job_exe_next_task(job_exe, [])
 
         # Should have 10 CPUs and 50 MiB memory left, so this job execution is too big
@@ -659,9 +661,9 @@ class TestSchedulingNode(TestCase):
         resource_set = ResourceSet(offered_resources, NodeResources(), watermark_resources)
         scheduling_node = SchedulingNode('agent_1', node, [], [], resource_set)
         job_exe_model_1 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(10.0), Mem(50.0)]))
-        job_exe_1 = RunningJobExecution(job_exe_model_1)
+        job_exe_1 = RunningJobExecution(self.agent_id, job_exe_model_1)
         job_exe_model_2 = job_test_utils.create_job_exe(resources=NodeResources([Cpus(5.0), Mem(25.0)]))
-        job_exe_2 = RunningJobExecution(job_exe_model_2)
+        job_exe_2 = RunningJobExecution(self.agent_id, job_exe_model_2)
         scheduling_node.accept_job_exe_next_task(job_exe_1, [])
         scheduling_node.accept_job_exe_next_task(job_exe_2, [])
         self.assertEqual(len(scheduling_node._allocated_running_job_exes), 2)

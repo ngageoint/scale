@@ -32,7 +32,7 @@ class TestIngestJobType(TestCase):
         ingest_job_type.save()
         job = job_test_utils.create_job(job_type=ingest_job_type, num_exes=1)
         job_exe = job_test_utils.create_job_exe(job=job)
-        running_job_exe = RunningJobExecution(job_exe)
+        running_job_exe = RunningJobExecution('agent_1', job_exe)
 
         # Start job-task and then task times out
         when_launched = now() + timedelta(seconds=1)

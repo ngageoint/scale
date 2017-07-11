@@ -200,7 +200,7 @@ class TestNode(TestCase):
         self.assertListEqual([], node.get_next_tasks(when))
 
         # Add job execution and complete task to clean it up
-        job_exe = RunningJobExecution(self.job_exe)
+        job_exe = RunningJobExecution('agent', self.job_exe)
         node.add_job_execution(job_exe)
         task = node.get_next_tasks(when)[0]
         self.assertTrue(task.id.startswith(CLEANUP_TASK_ID_PREFIX))

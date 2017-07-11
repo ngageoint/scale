@@ -149,7 +149,7 @@ class TestSchedulingManager(TestCase):
         queue_test_utils.create_queue(job_type=job_type_with_limit)
         job_type_mgr.sync_with_database()
         # One job of this type is already running
-        job_exe_mgr.schedule_job_exes([RunningJobExecution(job_exe_1)])
+        job_exe_mgr.schedule_job_exes([RunningJobExecution(self.agent_1.agent_id, job_exe_1)])
 
         offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
                                 NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now())

@@ -17,11 +17,13 @@ class JobExecutionTask(Task):
 
     __metaclass__ = ABCMeta
 
-    def __init__(self, task_id, job_exe):
+    def __init__(self, task_id, agent_id, job_exe):
         """Constructor
 
         :param task_id: The unique ID of the task
         :type task_id: string
+        :param agent_id: The ID of the agent on which the task is launched
+        :type agent_id: string
         :param job_exe: The job execution, which must be in RUNNING status and have its related node, job, job_type, and
             job_type_rev models populated
         :type job_exe: :class:`job.models.JobExecution`
@@ -30,7 +32,7 @@ class JobExecutionTask(Task):
         task_name = '%s %s' % (job_exe.job.job_type.title, job_exe.job.job_type.version)
         if not job_exe.is_system:
             task_name = 'Scale %s' % task_name
-        super(JobExecutionTask, self).__init__(task_id, task_name, job_exe.node.slave_id)
+        super(JobExecutionTask, self).__init__(task_id, task_name, agent_id)
 
         self._base_task_id = task_id  # This is the base task ID in case this task gets lost
         self._lost_count = 0

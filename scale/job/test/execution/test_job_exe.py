@@ -30,13 +30,15 @@ class TestRunningJobExecution(TestCase):
         job_exe = job_test_utils.create_job_exe(job=job, status='RUNNING')
         self._job_exe_id = job_exe.id
 
+        self.agent_id = 'agent'
+
         self.task_mgr = TaskManager()
 
     def test_successful_normal_job_execution(self):
         """Tests running through a normal job execution successfully"""
 
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
-        running_job_exe = RunningJobExecution(job_exe)
+        running_job_exe = RunningJobExecution(self.agent_id, job_exe)
         self.assertFalse(running_job_exe.is_finished())
         self.assertTrue(running_job_exe.is_next_task_ready())
 
@@ -163,7 +165,7 @@ class TestRunningJobExecution(TestCase):
         """Tests running through a normal job execution that fails"""
 
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
-        running_job_exe = RunningJobExecution(job_exe)
+        running_job_exe = RunningJobExecution(self.agent_id, job_exe)
         self.assertFalse(running_job_exe.is_finished())
         self.assertTrue(running_job_exe.is_next_task_ready())
 
@@ -230,7 +232,7 @@ class TestRunningJobExecution(TestCase):
         """Tests running through a job execution where a task launch times out"""
 
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
-        running_job_exe = RunningJobExecution(job_exe)
+        running_job_exe = RunningJobExecution(self.agent_id, job_exe)
 
         # Start, run, and complete pull-task
         task = running_job_exe.start_next_task()
@@ -279,7 +281,7 @@ class TestRunningJobExecution(TestCase):
         """Tests running through a job execution where the pull task times out"""
 
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
-        running_job_exe = RunningJobExecution(job_exe)
+        running_job_exe = RunningJobExecution(self.agent_id, job_exe)
 
         # Start pull-task and then task times out
         when_launched = now()
@@ -305,7 +307,7 @@ class TestRunningJobExecution(TestCase):
         """Tests running through a job execution where the pre task times out"""
 
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
-        running_job_exe = RunningJobExecution(job_exe)
+        running_job_exe = RunningJobExecution(self.agent_id, job_exe)
 
         # Start, run, and complete pull-task
         task = running_job_exe.start_next_task()
@@ -344,7 +346,7 @@ class TestRunningJobExecution(TestCase):
         """Tests running through a job execution where the job task times out"""
 
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
-        running_job_exe = RunningJobExecution(job_exe)
+        running_job_exe = RunningJobExecution(self.agent_id, job_exe)
 
         # Start, run, and complete pull-task
         task = running_job_exe.start_next_task()
@@ -400,7 +402,7 @@ class TestRunningJobExecution(TestCase):
         job_type.save()
         job = job_test_utils.create_job(job_type=job_type, num_exes=1)
         job_exe = job_test_utils.create_job_exe(job=job)
-        running_job_exe = RunningJobExecution(job_exe)
+        running_job_exe = RunningJobExecution(self.agent_id, job_exe)
 
         # Start job-task and then task times out
         when_launched = now() + timedelta(seconds=1)
@@ -427,7 +429,7 @@ class TestRunningJobExecution(TestCase):
         """Tests running through a job execution where the post task times out"""
 
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
-        running_job_exe = RunningJobExecution(job_exe)
+        running_job_exe = RunningJobExecution(self.agent_id, job_exe)
 
         # Start, run, and complete pull-task
         task = running_job_exe.start_next_task()
@@ -495,7 +497,7 @@ class TestRunningJobExecution(TestCase):
         """Tests running through a job execution that gets lost"""
 
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
-        running_job_exe = RunningJobExecution(job_exe)
+        running_job_exe = RunningJobExecution(self.agent_id, job_exe)
 
         # Start, run, and complete pull-task
         task = running_job_exe.start_next_task()
@@ -542,7 +544,7 @@ class TestRunningJobExecution(TestCase):
         """Tests running through a job execution that has a task that gets lost"""
 
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
-        running_job_exe = RunningJobExecution(job_exe)
+        running_job_exe = RunningJobExecution(self.agent_id, job_exe)
 
         # Start, run, and complete pull-task
         task = running_job_exe.start_next_task()
@@ -595,7 +597,7 @@ class TestRunningJobExecution(TestCase):
         """Tests running through a job execution that gets canceled"""
 
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
-        running_job_exe = RunningJobExecution(job_exe)
+        running_job_exe = RunningJobExecution(self.agent_id, job_exe)
 
         # Start, run, and complete pull-task
         task = running_job_exe.start_next_task()
@@ -639,7 +641,7 @@ class TestRunningJobExecution(TestCase):
         CACHED_BUILTIN_ERRORS.clear()
 
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
-        running_job_exe = RunningJobExecution(job_exe)
+        running_job_exe = RunningJobExecution(self.agent_id, job_exe)
 
         # Start, run, and complete pull-task
         task = running_job_exe.start_next_task()
@@ -676,7 +678,7 @@ class TestRunningJobExecution(TestCase):
         CACHED_BUILTIN_ERRORS.clear()
 
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
-        running_job_exe = RunningJobExecution(job_exe)
+        running_job_exe = RunningJobExecution(self.agent_id, job_exe)
 
         # Start, run, and complete pull-task
         task = running_job_exe.start_next_task()
@@ -732,7 +734,7 @@ class TestRunningJobExecution(TestCase):
         CACHED_BUILTIN_ERRORS.clear()
 
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
-        running_job_exe = RunningJobExecution(job_exe)
+        running_job_exe = RunningJobExecution(self.agent_id, job_exe)
 
         # Start, run, and complete pull-task
         task = running_job_exe.start_next_task()
@@ -807,7 +809,7 @@ class TestRunningJobExecution(TestCase):
         CACHED_BUILTIN_ERRORS.clear()
 
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
-        running_job_exe = RunningJobExecution(job_exe)
+        running_job_exe = RunningJobExecution(self.agent_id, job_exe)
 
         # Start pull-task
         task = running_job_exe.start_next_task()
@@ -839,7 +841,7 @@ class TestRunningJobExecution(TestCase):
         CACHED_BUILTIN_ERRORS.clear()
 
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
-        running_job_exe = RunningJobExecution(job_exe)
+        running_job_exe = RunningJobExecution(self.agent_id, job_exe)
 
         # Start, run, and complete pull-task
         task = running_job_exe.start_next_task()
@@ -904,7 +906,7 @@ class TestRunningJobExecution(TestCase):
         CACHED_BUILTIN_ERRORS.clear()
 
         job_exe = JobExecution.objects.get_job_exe_with_job_and_job_type(self._job_exe_id)
-        running_job_exe = RunningJobExecution(job_exe)
+        running_job_exe = RunningJobExecution(self.agent_id, job_exe)
 
         # Start, run, and complete pull-task
         task = running_job_exe.start_next_task()
@@ -950,13 +952,13 @@ class TestRunningJobExecution(TestCase):
         job_exe_3 = job_test_utils.create_job_exe(status='RUNNING')
         job_exe_4 = job_test_utils.create_job_exe(status='RUNNING')
 
-        running_job_exe_1 = RunningJobExecution(job_exe_1)
+        running_job_exe_1 = RunningJobExecution(self.agent_id, job_exe_1)
         task_1 = running_job_exe_1.start_next_task()
-        running_job_exe_2 = RunningJobExecution(job_exe_2)
+        running_job_exe_2 = RunningJobExecution(self.agent_id, job_exe_2)
         task_2 = running_job_exe_2.start_next_task()
-        running_job_exe_3 = RunningJobExecution(job_exe_3)
+        running_job_exe_3 = RunningJobExecution(self.agent_id, job_exe_3)
         task_3 = running_job_exe_3.start_next_task()
-        running_job_exe_4 = RunningJobExecution(job_exe_4)
+        running_job_exe_4 = RunningJobExecution(self.agent_id, job_exe_4)
         task_4 = running_job_exe_4.start_next_task()
 
         task_1_and_2_launch_time = now()
