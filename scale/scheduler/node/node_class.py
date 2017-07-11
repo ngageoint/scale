@@ -51,15 +51,15 @@ class Node(object):
     IMAGE_PULL = NodeState(state='IMAGE_PULL', title='Pulling image', description=pull_desc)
     READY = NodeState(state='READY', title='Ready', description='Node is ready to run new jobs.')
 
-    def __init__(self, agent_id, node, scheduler):
+    def __init__(self, agent_id, node, scheduler_config):
         """Constructor
 
         :param agent_id: The Mesos agent ID for the node
         :type agent_id: string
         :param node: The node model
         :type node: :class:`node.models.Node`
-        :param scheduler: The scheduler model
-        :type scheduler: :class:`scheduler.models.Scheduler`
+        :param scheduler_config: The scheduler configuration
+        :type scheduler_config: :class:`scheduler.configuration.SchedulerConfiguration`
         """
 
         self._hostname = str(node.hostname)  # Never changes
@@ -75,7 +75,7 @@ class Node(object):
         self._is_initial_cleanup_completed = False
         self._is_online = True
         self._is_paused = node.is_paused
-        self._is_scheduler_paused = scheduler.is_paused
+        self._is_scheduler_paused = scheduler_config.is_paused
         self._last_heath_task = None
         self._lock = threading.Lock()
         self._port = node.port
