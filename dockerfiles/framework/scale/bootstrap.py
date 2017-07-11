@@ -170,7 +170,7 @@ def initialize_app_template(template_name, app_name, image_name):
     marathon_json_file.close()
 
     # Update id and VIPs to reflect app_name
-    search_replace(marathon, 'scale-%s' % template_name, app_name)
+    marathon = search_replace(marathon, 'scale-%s' % template_name, app_name)
 
     # Set container.docker.image
     if image_name:
