@@ -108,6 +108,7 @@ RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
 # install the source code and config files
 COPY dockerfiles/framework/scale/entryPoint.sh /opt/scale/
 COPY dockerfiles/framework/scale/*.py /opt/scale/
+COPY dockerfiles/framework/scale/app-templates/* /opt/scale/app-templates/
 COPY dockerfiles/framework/scale/scale.conf /etc/httpd/conf.d/scale.conf
 COPY scale/scale/local_settings_docker.py /opt/scale/scale/local_settings.py
 COPY scale /opt/scale

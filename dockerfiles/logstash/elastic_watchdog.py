@@ -15,7 +15,7 @@ ES_URLS = os.getenv('ELASTICSEARCH_URLS').split(',')
 SLEEP_TIME = float(os.getenv('SLEEP_TIME', 30))
 TEMPLATE_URI = os.getenv('TEMPLATE_URI', None)
 
-CONF_FILE = '/opt/watchdog/logstash.conf'
+CONF_FILE = '/opt/logstash/logstash.conf'
 
 
 def update_endpoints(endpoints):

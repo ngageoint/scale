@@ -18,6 +18,7 @@ This image provides a number of environment variables that can be used to tweak 
 * ELASTICSEARCH_LB: Boolean value indicating whether we are behind a load balancer (`true`) or not (`false`). If this
  value is set to `false`, watchdog functionality will be activated, otherwise it will be skipped.
 * LOGSTASH_ARGS: String of any arbitrary command-line arguments to pass to Logstash.
+* LOGSTASH_DEBUG: Case-sensitive boolean value indicating whether to output incoming messages to stdout. Must be `true` if output is desired, any other value will not output messages.
 * SLEEP_TIME: Time in seconds to sleep between watchdog checks of Elasticsearch nodes.
 * TEMPLATE_URI: URL to container accessible location of Logstash template config. See below for example.
 

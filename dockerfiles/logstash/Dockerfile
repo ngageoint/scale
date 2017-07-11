@@ -1,4 +1,4 @@
-FROM logstash:2.4
+FROM logstash:2.4-alpine
 MAINTAINER Scale Developers <https://github.com/ngageoint/scale>
 
 LABEL \
@@ -8,13 +8,13 @@ LABEL \
     DESCRIPTION="Log aggregator, formatter and Elasticsearch forwarder for Scale jobs" \
     CLASSIFICATION="UNCLASSIFIED"
 
-RUN apt-get update && apt-get install -y supervisor python-requests
+RUN apk add --no-cache supervisor py-requests
 
 COPY supervisord.conf /etc/supervisord.conf
 
 RUN mkdir -p /opt/watchdog && chown -R logstash /opt/watchdog && chown logstash /var/run
-COPY logstash.conf-template /opt/watchdog/logstash.conf-template
-COPY elastic_watchdog.py /opt/watchdog/elastic_watchdog.py
+COPY logstash.conf-template /opt/logstash/logstash.conf-template
+COPY elastic_watchdog.py /opt/logstash/elastic_watchdog.py
 
 CMD [ "supervisord" ]
 

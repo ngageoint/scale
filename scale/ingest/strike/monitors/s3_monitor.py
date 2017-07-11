@@ -79,8 +79,8 @@ class S3Monitor(Monitor):
                 logger.debug('Beginning long-poll against queue with wait time of %s seconds.' % self.wait_time)
                 messages = client.receive_messages(self._sqs_name,
                                                    batch_size=10,
-                                                   wait_time=self.wait_time,
-                                                   visibility_timeout=self.visibility_timeout)
+                                                   wait_time_seconds=self.wait_time,
+                                                   visibility_timeout_seconds=self.visibility_timeout)
 
                 for message in messages:
                     try:
