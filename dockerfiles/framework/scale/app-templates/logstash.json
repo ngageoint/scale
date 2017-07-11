@@ -1,5 +1,5 @@
 {
-    "id": "scale-logstash",
+    "id": "scale-template-logstash",
     "cpus": 0.5,
     "mem": 1024,
     "disk": 256,
@@ -14,7 +14,7 @@
                     "hostPort": 9229,
                     "protocol": "tcp",
                     "labels": {
-                        "VIP_0": "/scale-logstash:8000"
+                        "VIP_0": "/scale-template-logstash:8000"
                     }
                 },
                 {
@@ -22,7 +22,7 @@
                     "hostPort": 0,
                     "protocol": "tcp",
                     "labels": {
-                        "VIP_1": "/scale-logstash:80"
+                        "VIP_1": "/scale-template-logstash:80"
                     }
                 }
             ],

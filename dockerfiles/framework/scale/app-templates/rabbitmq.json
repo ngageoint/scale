@@ -1,5 +1,5 @@
 {
-    "id": "scale-rabbitmq",
+    "id": "scale-template-rabbitmq",
     "cpus": 1,
     "mem": 512,
     "disk": 0,
@@ -15,7 +15,7 @@
                     "hostPort": 5672,
                     "protocol": "tcp",
                     "labels": {
-                        "VIP_0": "/scale-rabbitmq:5672"
+                        "VIP_0": "/scale-template-rabbitmq:5672"
                     }
                 },
                 {
@@ -23,7 +23,7 @@
                     "protocol": "tcp",
                     "servicePort": 0,
                     "labels": {
-                        "VIP_1": "/scale-rabbitmq:15672"
+                        "VIP_1": "/scale-template-rabbitmq:15672"
                     }
                 }
             ],

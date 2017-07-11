@@ -1,5 +1,5 @@
 {
-    "id": "scale-webserver",
+    "id": "scale-template-webserver",
     "cpus": 0.5,
     "mem": 512,
     "disk": 0,

@@ -1,5 +1,5 @@
 {
-    "id": "scale-db",
+    "id": "scale-template-db",
     "cpus": 0.5,
     "mem": 512,
     "disk": 0,
