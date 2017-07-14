@@ -1932,8 +1932,8 @@ class JobTypeManager(models.Manager):
         return job_type
 
     @transaction.atomic
-    def edit_job_type(self, job_type_id, interface=None, trigger_rule=None, remove_trigger_rule=False,
-                      error_mapping=None, custom_resources=None, **kwargs):
+    def edit_job_type(self, job_type_id, interface=None, configuration=None, trigger_rule=None, 
+                      remove_trigger_rule=False,error_mapping=None, custom_resources=None, **kwargs):
         """Edits the given job type and saves the changes in the database. The caller must provide the related
         trigger_rule model. All database changes occur in an atomic transaction. An argument of None for a field
         indicates that the field should not change. The remove_trigger_rule parameter indicates the difference between
@@ -1943,6 +1943,8 @@ class JobTypeManager(models.Manager):
         :type job_type_id: int
         :param interface: The interface for running a job of this type, possibly None
         :type interface: :class:`job.configuration.interface.job_interface.JobInterface`
+        :param configuration: The configuration for running a job of this type, possibly None
+        :type configuration: :class:`job.configuration.json.job.job_config.JobConfiguration`
         :param trigger_rule: The trigger rule that creates jobs of this type, possibly None
         :type trigger_rule: :class:`trigger.models.TriggerRule`
         :param remove_trigger_rule: Indicates whether the trigger rule should be unchanged (False) or removed (True)
@@ -1988,6 +1990,10 @@ class JobTypeManager(models.Manager):
             job_type.save()
             for recipe_type in recipe_types:
                 recipe_type.get_recipe_definition().validate_job_interfaces()
+
+        # New job configuration
+        if configuration:
+            job_type.configuration = configuration.get_dict()
 
         if trigger_rule or remove_trigger_rule:
             if job_type.trigger_rule:
