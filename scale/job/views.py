@@ -14,9 +14,11 @@ from rest_framework.views import APIView
 
 import trigger.handler as trigger_handler
 from job.configuration.data.exceptions import InvalidConnection
+from job.configuration.exceptions import InvalidJobConfiguration
 from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.job_interface import JobInterface
+from job.configuration.json.job.job_config import JobConfiguration
 from job.exceptions import InvalidJobField
 from job.serializers import (JobDetailsSerializer, JobSerializer, JobTypeDetailsSerializer,
                              JobTypeFailedStatusSerializer, JobTypeSerializer, JobTypePendingStatusSerializer,
@@ -200,6 +202,20 @@ class JobTypeDetailsView(GenericAPIView):
         except InvalidInterfaceDefinition as ex:
             raise BadParameter('Job type interface invalid: %s' % unicode(ex))
 
+        # Validate the job configuration
+        configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
+        configuration = None
+        try:
+            if configuration_dict:
+                configuration = JobConfiguration(configuration_dict)
+                if interface:
+                    configuration.validate(interface)
+                else:
+                    stored_interface = JobType.objects.values_list('interface', flat=True).get(pk=job_type_id)
+                    configuration.validate(JobInterface(stored_interface))
+        except InvalidJobConfiguration as ex:
+            raise BadParameter('Job type configuration invalid: %s' % unicode(ex))
+
         # Validate the error mapping
         error_dict = rest_util.parse_dict(request, 'error_mapping', required=False)
         error_mapping = None
@@ -274,8 +290,9 @@ class JobTypeDetailsView(GenericAPIView):
                     job_type.trigger_rule.save()
 
                 # Edit the job type
-                JobType.objects.edit_job_type(job_type_id, interface, trigger_rule, remove_trigger_rule, error_mapping,
-                                              custom_resources, **extra_fields)
+                JobType.objects.edit_job_type(job_type_id, interface, configuration, trigger_rule,
+                                              remove_trigger_rule, error_mapping, custom_resources,
+                                              **extra_fields)
         except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition,
                 ValueError) as ex:
             logger.exception('Unable to update job type: %i', job_type_id)
