@@ -7,8 +7,18 @@ if [[ $1 == "-f" ]]; then
     force=1
     shift
 fi
+
 ver=($*)
 verstring=$(IFS=. ; echo "${ver[*]}")
+
+if [[ "${verstring}x" == "x" ]]
+then
+    echo Missing version parameter!
+    echo Usage:
+    echo   ./generate-release.sh [-f] 6 0 0
+    exit 1
+fi
+
 tput setaf 2
 echo "Building release $verstring"
 tput sgr0
