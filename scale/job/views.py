@@ -209,9 +209,11 @@ class JobTypeDetailsView(GenericAPIView):
             if configuration_dict:
                 configuration = JobConfiguration(configuration_dict)
                 if interface:
+                    secrets = configuration.get_secret_settings(interface)
                     configuration.validate(interface)
                 else:
                     stored_interface = JobType.objects.values_list('interface', flat=True).get(pk=job_type_id)
+                    secrets = configuration.get_secret_settings(stored_interface)
                     configuration.validate(JobInterface(stored_interface))
         except InvalidJobConfiguration as ex:
             raise BadParameter('Job type configuration invalid: %s' % unicode(ex))
@@ -292,7 +294,7 @@ class JobTypeDetailsView(GenericAPIView):
                 # Edit the job type
                 JobType.objects.edit_job_type(job_type_id, interface, configuration, trigger_rule,
                                               remove_trigger_rule, error_mapping, custom_resources,
-                                              **extra_fields)
+                                              secrets, **extra_fields)
         except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition,
                 ValueError) as ex:
             logger.exception('Unable to update job type: %i', job_type_id)
