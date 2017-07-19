@@ -117,18 +117,19 @@ class SecretsHandler(object):
 
         return all_job_types
 
-    def set_job_type_secrets(self, job_name, secret_json):
+    def set_job_type_secrets(self, job_name, secrets):
         """write job-type secrets to the secrets backend
 
-        :param job_name: name of the job that the screts belong to.
+        :param job_name: name of the job that the secrets belong to.
+                         Format: [job_name]-[job_version]
         :type job_name: str
-        :param secret_json: dict with name:value pairs for all secrets associated with the job
-        :type secret_json: dict
+        :param secrets: dict with name:value pairs for all secrets associated with the job
+        :type secrets: dict
         :return:
         """
 
         url = self.secrets_url
-        secret_values = json.dumps(secret_json)
+        secret_values = json.dumps(secrets)
 
         if self.dcos_token:
             url = ''.join([url, '/secret/default/scale/job-type/', job_name])
