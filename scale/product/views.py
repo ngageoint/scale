@@ -71,7 +71,7 @@ class ProductDetailsView(RetrieveAPIView):
     # TODO: remove when REST API v5 is removed
     def get_serializer_class(self):
         """Override the serializer for legacy API calls."""
-        if self.request.version == 'v5':
+        if self.request.version == 'v4' or self.request.version == 'v5':
             return ProductFileDetailsSerializerV5
         return ProductFileDetailsSerializer
 
@@ -88,7 +88,7 @@ class ProductDetailsView(RetrieveAPIView):
         :returns: the HTTP response to send back to the user
         """
 
-        if request.version == 'v5':
+        if request.version == 'v4' or request.version == 'v5':
             return self.retrieve_v5(request, product_id, file_name)
 
         try:
