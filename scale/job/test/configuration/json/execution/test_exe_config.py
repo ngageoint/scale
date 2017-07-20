@@ -21,9 +21,8 @@ class TestExecutionConfiguration(TestCase):
         # Try minimal acceptable configuration
         ExecutionConfiguration()
 
-        # Duplicate workspace name in pre-task
-        config = {'pre_task': {'workspaces': [{'name': 'name1', 'mode': 'ro'}, {'name': 'name1', 'mode': 'ro'}]},
-                  'job_task': {'workspaces': []}}
+        # Invalid version
+        config = {'version': 'BAD'}
         self.assertRaises(InvalidExecutionConfiguration, ExecutionConfiguration, config)
 
         # Duplicate workspace name in job-task
@@ -109,22 +108,27 @@ class TestExecutionConfigurationConvert(TestCase):
     """Tests performing conversion from lower to higher minor versions of configuration schema."""
 
     def setUp(self):
-        self.job_configuration_dict = {
-            'version': '1.0',
-            'job_task': {
-                'workspaces': [{
-                    'name': 'name1',
-                    'mode': 'ro'
-                    }]
-                }
-            }
-
         django.setup()
 
-    @patch('job.configuration.json.execution.exe_config.ExecutionConfiguration.get_dict')
-    def test_successful(self, mock_get_dict):
-        """Tests calling ExecutionConfiguration.convert_configuration() successfully."""
-        mock_get_dict.return_value = self.job_configuration_dict
-        job_configuration = ExecutionConfiguration.convert_configuration(self.job_configuration_dict)
-        self.assertEqual(job_configuration['version'], '1.1')
-        self.assertFalse(job_configuration['job_task']['settings'])
+    def test_convert_1_0_to_current(self, mock_get_dict):
+        """Tests converting execution configuration 1.0 to current"""
+
+        old_dict = {'version': '1.0', 'job_task': {'workspaces': [{'name': 'name1', 'mode': 'ro'}]}}
+        exe_config = ExecutionConfiguration(old_dict)
+        new_dict = exe_config.get_dict()
+        self.assertEqual(new_dict['version'], '2.0')
+        self.assertEqual(1, len(new_dict['tasks']))
+        self.assertEqual('main', new_dict['tasks'][0]['type'])
+
+    def test_convert_1_1_to_current(self, mock_get_dict):
+        """Tests converting execution configuration 1.1 to current"""
+
+        old_dict = {'version': '1.1', 'job_task': {'settings': {'setting_1': 'value_1'},
+                                                   'workspaces': [{'name': 'name1', 'mode': 'ro'}]}}
+        exe_config = ExecutionConfiguration(old_dict)
+        new_dict = exe_config.get_dict()
+        self.assertEqual(new_dict['version'], '2.0')
+        self.assertEqual(1, len(new_dict['tasks']))
+        self.assertEqual('main', new_dict['tasks'][0]['type'])
+        self.assertEqual(1, len(new_dict['tasks']['settings']))
+        self.assertEqual('value_1', new_dict['tasks'][0]['settings']['setting_1'])

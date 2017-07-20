@@ -28,8 +28,7 @@ class PullTask(JobExecutionTask):
         self._docker_image = None
         self._docker_params = []
         self._is_docker_privileged = False
-        self._running_timeout_threshold = datetime.timedelta(minutes=15)
-        self._staging_timeout_threshold = datetime.timedelta(minutes=2)
+        self._running_timeout_threshold = datetime.timedelta(minutes=30)
 
         self.timeout_error_name = 'pull-timeout'
         self._command = create_pull_command(job_exe.get_docker_image())
