@@ -202,9 +202,10 @@ class JobTypeDetailsView(GenericAPIView):
         except InvalidInterfaceDefinition as ex:
             raise BadParameter('Job type interface invalid: %s' % unicode(ex))
 
-        # Validate the job configuration
+        # Validate the job configuration and pull out secrets
         configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
         configuration = None
+        secrets = None
         try:
             if configuration_dict:
                 configuration = JobConfiguration(configuration_dict)

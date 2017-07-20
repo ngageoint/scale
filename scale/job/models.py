@@ -1955,7 +1955,6 @@ class JobTypeManager(models.Manager):
         :type custom_resources: :class:`node.resources.json.resources.Resources`
         :param configuration: The configuration for running a job of this type, possibly None
         :type configuration: :class:`job.configuration.json.job.job_config.JobConfiguration`
-        
         :param secrets: Secret settings required by this job type
         :type secrets: dict
 
