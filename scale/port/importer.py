@@ -408,7 +408,8 @@ def _import_job_type(job_type_dict, job_type=None):
     # Edit or create the associated job type model
     if job_type:
         try:
-            JobType.objects.edit_job_type(job_type.id, interface, trigger_rule, remove_trigger_rule, error_mapping,
+            JobType.objects.edit_job_type(job_type.id, interface=interface, trigger_rule=trigger_rule,
+                                          remove_trigger_rule=remove_trigger_rule, error_mapping=error_mapping,
                                           **extra_fields)
         except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition) as ex:
             logger.exception('Job type edit failed')
