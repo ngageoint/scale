@@ -719,46 +719,46 @@ class QueueManager(models.Manager):
 
 
 class Queue(models.Model):
-    """Represents a job that is queued to be run on a node
+    """Represents a job execution that is queued and ready to be run on a node
 
-    :keyword job_exe: The job execution that has been queued
-    :type job_exe: :class:`django.db.models.ForeignKey`
+    :keyword job_type: The type of this job
+    :type job_type: :class:`django.db.models.ForeignKey`
     :keyword job: The job that has been queued
     :type job: :class:`django.db.models.ForeignKey`
-    :keyword job_type: The type of this job execution
-    :type job_type: :class:`django.db.models.ForeignKey`
+    :keyword exe_num: The number for this job execution
+    :type exe_num: :class:`django.db.models.IntegerField`
 
     :keyword priority: The priority of the job (lower number is higher priority)
     :type priority: :class:`django.db.models.IntegerField`
     :keyword input_file_size: The amount of disk space in MiB required for input files for this job
     :type input_file_size: :class:`django.db.models.FloatField`
+    :keyword is_canceled: Whether this queued job execution has been canceled
+    :type is_canceled: :class:`django.db.models.BooleanField`
 
-    :keyword configuration: JSON description describing the configuration for how the job should be run
+    :keyword configuration: JSON description describing the execution configuration for how the job should be run
     :type configuration: :class:`django.contrib.postgres.fields.JSONField`
     :keyword resources: JSON description describing the resources required for this job
     :type resources: :class:`django.contrib.postgres.fields.JSONField`
 
     :keyword created: When the queue model was created
     :type created: :class:`django.db.models.DateTimeField`
-    :keyword queued: When the job execution was placed onto the queue
+    :keyword queued: When the job was placed onto the queue
     :type queued: :class:`django.db.models.DateTimeField`
-    :keyword last_modified: When the queue model was last modified
-    :type last_modified: :class:`django.db.models.DateTimeField`
     """
 
-    job_exe = models.OneToOneField('job.JobExecution', primary_key=True, on_delete=models.PROTECT)
-    job = models.ForeignKey('job.Job', on_delete=models.PROTECT)
     job_type = models.ForeignKey('job.JobType', on_delete=models.PROTECT)
+    job = models.ForeignKey('job.Job', on_delete=models.PROTECT)
+    exe_num = models.IntegerField()
 
     priority = models.IntegerField(db_index=True)
     input_file_size = models.FloatField()
+    is_canceled = models.BooleanField(default=False)
 
     configuration = django.contrib.postgres.fields.JSONField(default=dict)
     resources = django.contrib.postgres.fields.JSONField(default=dict)
 
     created = models.DateTimeField(auto_now_add=True)
     queued = models.DateTimeField()
-    last_modified = models.DateTimeField(auto_now=True)
 
     objects = QueueManager()
 
