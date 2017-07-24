@@ -87,6 +87,23 @@ class JobTypesView(ListCreateAPIView):
         except InvalidInterfaceDefinition as ex:
             raise BadParameter('Job type interface invalid: %s' % unicode(ex))
 
+        # Validate the job configuration and pull out secrets
+        configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
+        configuration = None
+        secrets = None
+        try:
+            if configuration_dict:
+                configuration = JobConfiguration(configuration_dict)
+                if interface:
+                    secrets = configuration.get_secret_settings(interface)
+                    configuration.validate(interface)
+                else:
+                    stored_interface = JobType.objects.values_list('interface', flat=True).get(pk=job_type_id)
+                    secrets = configuration.get_secret_settings(stored_interface)
+                    configuration.validate(JobInterface(stored_interface))
+        except InvalidJobConfiguration as ex:
+            raise BadParameter('Job type configuration invalid: %s' % unicode(ex))
+
         # Validate the error mapping
         error_dict = rest_util.parse_dict(request, 'error_mapping', required=False)
         error_mapping = None
@@ -124,7 +141,8 @@ class JobTypesView(ListCreateAPIView):
 
         # Extract the fields that should be updated as keyword arguments
         extra_fields = {}
-        base_fields = {'name', 'version', 'interface', 'trigger_rule', 'error_mapping', 'custom_resources'}
+        base_fields = {'name', 'version', 'interface', 'trigger_rule', 'error_mapping', 'custom_resources',
+                       'configuration'}
         for key, value in request.data.iteritems():
             if key not in base_fields and key not in JobType.UNEDITABLE_FIELDS:
                 extra_fields[key] = value
@@ -139,11 +157,15 @@ class JobTypesView(ListCreateAPIView):
                 # Attempt to create the trigger rule
                 trigger_rule = None
                 if rule_handler and 'configuration' in trigger_rule_dict:
-                    trigger_rule = rule_handler.create_trigger_rule(trigger_rule_dict['configuration'], name, is_active)
-
+                    trigger_rule = rule_handler.create_trigger_rule(trigger_rule_dict['configuration'], name,
+                                                                    is_active)
                 # Create the job type
-                job_type = JobType.objects.create_job_type(name, version, interface, trigger_rule, error_mapping,
-                                                           custom_resources, **extra_fields)
+                job_type = JobType.objects.create_job_type(name=name, version=version, interface=interface,
+                                                           trigger_rule=trigger_rule, error_mapping=error_mapping,
+                                                           custom_resources=custom_resources,
+                                                           configuration=configuration, secrets=secrets,
+                                                           **extra_fields)
+
         except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, ValueError) as ex:
             logger.exception('Unable to create new job type: %s', name)
             raise BadParameter(unicode(ex))
@@ -185,7 +207,7 @@ class JobTypeDetailsView(GenericAPIView):
     def patch(self, request, job_type_id):
         """Edits an existing job type and returns the updated details
 
-        :param request: the HTTP GET request
+        :param request: the HTTP POST request
         :type request: :class:`rest_framework.request.Request`
         :param job_type_id: The ID for the job type.
         :type job_type_id: int encoded as a str
@@ -263,7 +285,8 @@ class JobTypeDetailsView(GenericAPIView):
 
         # Extract the fields that should be updated as keyword arguments
         extra_fields = {}
-        base_fields = {'name', 'version', 'interface', 'trigger_rule', 'error_mapping', 'custom_resources'}
+        base_fields = {'name', 'version', 'interface', 'trigger_rule', 'error_mapping', 'custom_resources',
+                       'configuration'}
         for key, value in request.data.iteritems():
             if key not in base_fields and key not in JobType.UNEDITABLE_FIELDS:
                 extra_fields[key] = value
@@ -336,6 +359,14 @@ class JobTypesValidationView(APIView):
         except InvalidInterfaceDefinition as ex:
             raise BadParameter('Job type interface invalid: %s' % unicode(ex))
 
+        # Validate the job configuration
+        configuration_dict = rest_util.parse_dict(request, 'configuration', required=False)
+        configuration = None
+        try:
+            configuration = JobConfiguration(configuration_dict)
+        except InvalidJobConfiguration as ex:
+            raise BadParameter('Job type configuration invalid: %s' % unicode(ex))
+
         # Validate the error mapping
         error_dict = rest_util.parse_dict(request, 'error_mapping', required=False)
         error_mapping = None
@@ -383,9 +414,11 @@ class JobTypesValidationView(APIView):
             logger.exception('Failed to import higher level recipe application.')
             pass
 
-        # Validate the job interface
+        # Validate the job type
         try:
-            warnings = JobType.objects.validate_job_type(name, version, interface, error_mapping, trigger_config)
+            warnings = JobType.objects.validate_job_type(name=name, version=version, interface=interface,
+                                                         error_mapping=error_mapping, trigger_config=trigger_config,
+                                                         configuration=configuration)
         except (InvalidDefinition, InvalidTriggerType, InvalidTriggerRule) as ex:
             logger.exception('Unable to validate new job type: %s', name)
             raise BadParameter(unicode(ex))
@@ -521,7 +554,7 @@ class JobsView(ListAPIView):
         jobs = Job.objects.get_jobs(started=started, ended=ended, statuses=statuses, job_ids=job_ids,
                                     job_type_ids=job_type_ids, job_type_names=job_type_names,
                                     job_type_categories=job_type_categories, batch_ids=batch_ids,
-                                    error_categories=error_categories, include_superseded=include_superseded, 
+                                    error_categories=error_categories, include_superseded=include_superseded,
                                     order=order)
 
         page = self.paginate_queryset(jobs)
