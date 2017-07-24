@@ -7,6 +7,7 @@ from django.db.models import Q
 
 import port.serializers as serializers
 from error.models import Error
+from job.configuration.json.job.job_config import JobConfiguration
 from job.models import JobType
 from port.schema import Configuration
 from recipe.models import RecipeType
@@ -75,6 +76,12 @@ def get_job_types(recipe_types=None, job_type_ids=None, job_type_names=None, job
         job_types = job_types.filter(name__in=job_type_names)
     if job_type_categories:
         job_types = job_types.filter(category__in=job_type_categories)
+
+    # Scrub configuration for secrets
+    for job_type in job_types:
+        if job_type.configuration:
+            job_type.configuration.validate(job_type.interface)
+            job_type.configuration = job_type.configuration.get_dict()
 
     return job_types
 
