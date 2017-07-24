@@ -10,9 +10,11 @@ import port.serializers as serializers
 import trigger.handler as trigger_handler
 from error.models import Error
 from job.configuration.data.exceptions import InvalidConnection
+from job.configuration.exceptions import InvalidJobConfiguration
 from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.job_interface import JobInterface
+from job.configuration.json.job.job_config import JobConfiguration
 from job.exceptions import InvalidJobField
 from job.models import JobType
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
@@ -353,6 +355,21 @@ def _import_job_type(job_type_dict, job_type=None):
     except InvalidInterfaceDefinition as ex:
         raise InvalidConfiguration('Job type interface invalid: %s -> %s' % (result.get('name'), unicode(ex)))
 
+    # Validate the job configuration 
+    try:
+        configuration_dict = None
+        secrets = None
+        if 'configuration' in result:
+            configuration_dict = result.get('configuration')
+        elif job_type:
+            configuration_dict = job_type.configuration
+        if interface:
+            configuration = JobConfiguration(configuration_dict)
+            secrets = configuration.get_secret_settings(interface)
+            configuration.validate(interface)
+    except InvalidJobConfiguration as ex:
+        raise InvalidConfiguration('Job type configuration invalid: %s -> %s' % (result.get('name'), unicode(ex)))
+
     # Validate the error mapping
     try:
         error_mapping_dict = None
@@ -410,14 +427,16 @@ def _import_job_type(job_type_dict, job_type=None):
         try:
             JobType.objects.edit_job_type(job_type.id, interface=interface, trigger_rule=trigger_rule,
                                           remove_trigger_rule=remove_trigger_rule, error_mapping=error_mapping,
-                                          **extra_fields)
+                                          configuration=configuration, secrets=secrets, **extra_fields)
         except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition) as ex:
             logger.exception('Job type edit failed')
             raise InvalidConfiguration('Unable to edit existing job type: %s -> %s' % (result.get('name'), unicode(ex)))
     else:
         try:
-            JobType.objects.create_job_type(result.get('name'), result.get('version'), interface, trigger_rule,
-                                            error_mapping, **extra_fields)
+            JobType.objects.create_job_type(name=result.get('name'), version=result.get('version'),
+                                            interface=interface, trigger_rule=trigger_rule,
+                                            error_mapping=error_mapping, configuration=configuration, secrets=secrets,
+                                            **extra_fields)
         except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition) as ex:
             logger.exception('Job type create failed')
             raise InvalidConfiguration('Unable to create new job type: %s -> %s' % (result.get('name'), unicode(ex)))
