@@ -1921,7 +1921,8 @@ class JobTypeManager(models.Manager):
         job_type.interface = interface.get_dict()
         job_type.trigger_rule = trigger_rule
         if configuration:
-            configuration.validate()
+            configuration = JobConfiguration(job_type.configuration)
+            configuration.validate(job_type.interface)
             job_type.configuration = configuration.get_dict()
         if error_mapping:
             error_mapping.validate()
@@ -2006,8 +2007,9 @@ class JobTypeManager(models.Manager):
                 recipe_type.get_recipe_definition().validate_job_interfaces()
 
         # New job configuration
-        if configuration:
-            configuration.validate()
+        if job_type.configuration:
+            configuration = JobConfiguration(job_type.configuration)
+            configuration.validate(job_type.interface)
             job_type.configuration = configuration.get_dict()
 
         if trigger_rule or remove_trigger_rule:
@@ -2135,8 +2137,10 @@ class JobTypeManager(models.Manager):
         job_type.errors = Error.objects.filter(name__in=error_names) if error_names else []
 
         # Scrub configuration for secrets
-        job_type.configuration.validate(job_type.interface)
-        job_type.configuration = job_type.configuration.get_dict()
+        if job_type.configuration:
+            configuration = JobConfiguration(job_type.configuration)
+            configuration.validate(job_type.interface)
+            job_type.configuration = configuration.get_dict()
 
         # Add recent performance statistics
         started = timezone.now()
@@ -2364,7 +2368,7 @@ class JobTypeManager(models.Manager):
             warnings.extend(trigger_config.validate_trigger_for_job(interface))
 
         if configuration:
-            warnings.extend(configuration.validate())
+            warnings.extend(configuration.validate(interface))
 
         if error_mapping:
             warnings.extend(error_mapping.validate())
