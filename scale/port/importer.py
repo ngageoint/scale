@@ -355,7 +355,7 @@ def _import_job_type(job_type_dict, job_type=None):
     except InvalidInterfaceDefinition as ex:
         raise InvalidConfiguration('Job type interface invalid: %s -> %s' % (result.get('name'), unicode(ex)))
 
-    # Validate the job configuration 
+    # Validate the job configuration
     try:
         configuration_dict = None
         secrets = None
@@ -366,7 +366,7 @@ def _import_job_type(job_type_dict, job_type=None):
         if interface:
             configuration = JobConfiguration(configuration_dict)
             secrets = configuration.get_secret_settings(interface)
-            configuration.validate(interface)
+            warnings.extend(configuration.validate(interface))
     except InvalidJobConfiguration as ex:
         raise InvalidConfiguration('Job type configuration invalid: %s -> %s' % (result.get('name'), unicode(ex)))
 
