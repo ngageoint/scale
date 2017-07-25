@@ -94,13 +94,8 @@ class JobTypesView(ListCreateAPIView):
         try:
             if configuration_dict:
                 configuration = JobConfiguration(configuration_dict)
-                if interface:
-                    secrets = configuration.get_secret_settings(interface)
-                    configuration.validate(interface)
-                else:
-                    stored_interface = JobType.objects.values_list('interface', flat=True).get(pk=job_type_id)
-                    secrets = configuration.get_secret_settings(stored_interface)
-                    configuration.validate(JobInterface(stored_interface))
+                secrets = configuration.get_secret_settings(interface)
+                configuration.validate(interface)
         except InvalidJobConfiguration as ex:
             raise BadParameter('Job type configuration invalid: %s' % unicode(ex))
 

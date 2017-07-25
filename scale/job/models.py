@@ -1921,7 +1921,6 @@ class JobTypeManager(models.Manager):
         job_type.interface = interface.get_dict()
         job_type.trigger_rule = trigger_rule
         if configuration:
-            configuration = JobConfiguration(job_type.configuration)
             configuration.validate(job_type.interface)
             job_type.configuration = configuration.get_dict()
         if error_mapping:
@@ -2008,7 +2007,6 @@ class JobTypeManager(models.Manager):
 
         # New job configuration
         if job_type.configuration:
-            configuration = JobConfiguration(job_type.configuration)
             configuration.validate(job_type.interface)
             job_type.configuration = configuration.get_dict()
 
