@@ -207,6 +207,7 @@ class JobConfiguration(object):
         except AttributeError:
             interface_dict = interface
 
+        settings_to_delete = []
         if 'settings' in self._configuration and 'settings' in interface_dict:
             interface_settings = interface_dict['settings']
 
@@ -214,41 +215,46 @@ class JobConfiguration(object):
             interface_secret_names = [setting['name'] for setting in interface_settings if setting['secret']]
             for setting_name in interface_secret_names:
                 if setting_name in self._configuration['settings']:
-                    del self._configuration['settings'][setting_name]
-                    warning_str = 'Setting %s will be handled as a secret based off interface designation.'
-                    warnings.extend(ValidationWarning('settings', warning_str % setting_name))
+                    warning_str = 'Setting %s will be handled as a secret.' % setting_name
+                    settings_to_delete.append({'name': setting_name, 'warning': warning_str})
 
             # Remove settings not used in the interface
             interface_setting_names = [setting['name'] for setting in interface_settings]
             for setting_name in self._configuration['settings']:
                 if setting_name not in interface_setting_names:
-                    del self._configuration['settings'][setting_name]
-                    warning_str = 'Setting %s will be ignored due to no corresponding interface designation.'
-                    warnings.extend(ValidationWarning('settings', warning_str & setting_name))
+                    warning_str = 'Setting %s will be ignored due to no matching interface designation.' % setting_name
+                    settings_to_delete.append({'name': setting_name, 'warning': warning_str})
 
         elif 'settings' in self._configuration:
             # Remove all settings
             for setting_name in self._configuration['settings']:
-                del self._configuration['settings'][setting_name]
-                warning_str = 'Setting %s will be ignored due to no corresponding interface designation.'
-                warnings.extend(ValidationWarning('settings', warning_str & setting_name))
+                warning_str = 'Setting %s will be ignored due to no matching interface designation.' % setting_name
+                settings_to_delete.append({'name': setting_name, 'warning': warning_str})
 
+        for setting in settings_to_delete:
+            del self._configuration['settings'][setting['name']]
+            warnings.append(ValidationWarning('settings', setting['warning']))
+
+        mounts_to_delete = []
         if 'mounts' in interface_dict and 'mounts' in self._configuration:
             interface_mounts = interface_dict['mounts']
 
             # Remove mounts not used in the interface
             interface_mount_names = [mount['name'] for mount in interface_mounts]
-            for mount in self._configuration['mounts']:
-                if mount['name'] not in interface_mount_names:
-                    del self._configuration['mounts'][mount['name']]
-                    warning_str = 'Mount %s will be ignored due to no corresponding interface designation.'
-                    warnings.extend(ValidationWarning('mounts', warning_str & mount['name']))
+            for mount_name, v in self._configuration['mounts'].items():
+                if mount_name not in interface_mount_names:
+                    warning_str = 'Mount %s will be ignored due to no matching interface designation.' % mount_name
+                    mounts_to_delete.append({'name': mount_name, 'warning': warning_str})
 
         elif 'mounts' in self._configuration:
-            for mount in self._configuration['mounts']:
-                del self._configuration['mounts'][mount]
-                warning_str = 'Mount %s will be ignored due to no corresponding interface designation.'
-                warnings.extend(ValidationWarning('mounts', warning_str & mount['name']))
+            # Remove all mounts
+            for mount_name, v in self._configuration['mounts'].items():
+                warning_str = 'Mount %s will be ignored due to no matching interface designation.' % mount_name
+                mounts_to_delete.append({'name': mount_name, 'warning': warning_str})
+
+        for mount in mounts_to_delete:
+            del self._configuration['mounts'][mount['name']]
+            warnings.append(ValidationWarning('mounts', mount['warning']))
 
         return warnings
 
