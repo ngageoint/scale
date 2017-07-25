@@ -202,7 +202,10 @@ class JobConfiguration(object):
         """
 
         warnings = []
-        interface_dict = interface.get_dict()
+        try:
+            interface_dict = interface.get_dict()
+        except AttributeError:
+            interface_dict = interface
 
         if 'settings' in self._configuration and 'settings' in interface_dict:
             interface_settings = interface_dict['settings']
