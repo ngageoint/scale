@@ -218,15 +218,15 @@ class ScaleFileManager(models.Manager):
             workspace.download_files(wp_file_downloads)
 
     def get_files(self, file_ids):
-        """Returns the files with the given IDs. The files will have their related workspace field populated.
+        """Returns the files with the given IDs
 
         :param file_ids: The file IDs
-        :type file_ids: list[int]
-        :returns: The files that match the given IDs
-        :rtype: [:class:`storage.models.ScaleFile`]
+        :type file_ids: list
+        :returns: The Scale file models that match the given IDs
+        :rtype: list
         """
 
-        return self.filter(id__in=file_ids).select_related('workspace').iterator()
+        return self.filter(id__in=file_ids).iterator()
 
     def move_files(self, file_moves):
         """Moves the given files to the new file system paths. Each ScaleFile model should have its related workspace

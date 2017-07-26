@@ -29,7 +29,7 @@ class QueuedJobExecution(object):
         :rtype: int
         """
 
-        return self._queue.job_exe_id
+        return self._queue.id
 
     @property
     def provided_agent_id(self):

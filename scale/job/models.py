@@ -380,21 +380,20 @@ class JobManager(models.Manager):
         list(self.select_for_update().filter(id__in=job_ids).order_by('id').iterator())
 
     def queue_jobs(self, jobs, when, priority=None):
-        """Queues the given jobs and returns the new queued job executions. The caller must have obtained model locks on
-        the job models. Any jobs that are not in a valid status for being queued, are without job data, or are
-        superseded will be ignored. All jobs should have their related job_type and job_type_rev models populated.
+        """Queues the given jobs and returns the models that are successfully set to QUEUED. The caller must have
+        obtained model locks on the job models in an atomic transaction. Any jobs that are not in a valid status for
+        being queued, are without job data, or are superseded will be ignored. All jobs should have their related
+        job_type and job_type_rev models populated.
 
-        :param jobs: The jobs to put on the queue
-        :type jobs: [:class:`job.models.Job`]
+        :param jobs: The job models to set to QUEUED
+        :type jobs: list
         :param when: The time that the jobs are queued
         :type when: :class:`datetime.datetime`
         :param priority: An optional argument to reset the jobs' priority before they are queued
         :type priority: int
-        :returns: The new queued job execution models
-        :rtype: [:class:`job.models.JobExecution`]
+        :returns: The list of job models that were successfully set to QUEUED
+        :rtype: list
         """
-
-        modified = timezone.now()
 
         # Update job models in memory and collect job IDs
         job_ids = set()
@@ -414,19 +413,19 @@ class JobManager(models.Manager):
             job.num_exes += 1
             if priority:
                 job.priority = priority
-            job.last_modified = modified
+            job.last_modified = when
 
         # Update job models in database with single query
         if priority:
             self.filter(id__in=job_ids).update(status='QUEUED', error=None, queued=when, started=None, ended=None,
                                                last_status_change=when, num_exes=models.F('num_exes') + 1,
-                                               priority=priority, last_modified=modified)
+                                               priority=priority, last_modified=when)
         else:
             self.filter(id__in=job_ids).update(status='QUEUED', error=None, queued=when, started=None, ended=None,
                                                last_status_change=when, num_exes=models.F('num_exes') + 1,
-                                               last_modified=modified)
+                                               last_modified=when)
 
-        return JobExecution.objects.queue_job_exes(jobs_to_queue, when)
+        return jobs_to_queue
 
     def populate_job_data(self, job, data):
         """Populates the job data and all derived fields for the given job. The caller must have obtained a model lock
@@ -463,6 +462,7 @@ class JobManager(models.Manager):
         disk_in_required = max(input_size_mb, MIN_DISK)
         disk_out_required = max(output_size_mb, MIN_DISK)
 
+        # TODO: this logic gets moved to schedule time
         # Configure workspaces needed for the job
         configuration = job.get_execution_configuration()
         for name in input_workspaces:

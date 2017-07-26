@@ -358,6 +358,14 @@ class JobInterface(object):
 
         return self.definition['command']
 
+    def get_command_args(self):
+        """Gets the command arguments
+        :return: the command args
+        :rtype: str
+        """
+
+        return self.definition['command_arguments']
+
     def get_dict(self):
         """Returns the internal dictionary that represents this job interface
 
@@ -767,7 +775,7 @@ class JobInterface(object):
     def _get_settings_values(self, settings, exe_configuration, job_type):
         """
         :param settings: The settings
-        :type settings: JSON
+        :type settings: dict
         :param exe_configuration: The execution configuration
         :type exe_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         :return: settings name and the value to replace it with
@@ -779,8 +787,9 @@ class JobInterface(object):
         secret_settings = {}
 
         # Isolate the job_type settings and convert to list
-        config_settings = config_settings['job_task']['settings']
-        config_settings_dict = {setting['name']: setting['value'] for setting in config_settings}
+        for task_dict in config_settings['tasks']:
+            if task_dict['type'] == 'main':
+                config_settings_dict = task_dict['settings']
 
         for setting in settings:
             setting_name = setting['name']

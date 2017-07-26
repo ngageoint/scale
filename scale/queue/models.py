@@ -17,6 +17,7 @@ from job.models import Job, JobType
 from job.models import JobExecution
 from node.resources.json.resources import Resources
 from recipe.models import Recipe
+from storage.models import ScaleFile
 from trigger.models import TriggerEvent
 
 logger = logging.getLogger(__name__)
@@ -488,16 +489,15 @@ class QueueManager(models.Manager):
         :type job_type: :class:`job.models.JobType`
         :param data: JSON description defining the job data to run on
         :type data: dict
-        :returns: The ID of the new job and the ID of the job execution
-        :rtype: tuple of (int, int)
+        :returns: The ID of the new job
+        :rtype: int
         """
 
         description = {'user': 'Anonymous'}
         event = TriggerEvent.objects.create_trigger_event('USER', None, description, timezone.now())
 
         job_id = self.queue_new_job(job_type, JobData(data), event).id
-        job_exe = JobExecution.objects.get(job_id=job_id, status='QUEUED')
-        return job_id, job_exe.id
+        return job_id
 
     @transaction.atomic
     def queue_new_recipe(self, recipe_type, data, event, superseded_recipe=None, delta=None, superseded_jobs=None,
@@ -539,7 +539,7 @@ class QueueManager(models.Manager):
                 raise Exception('Scale created invalid job data: %s' % str(ex))
             jobs_to_queue.append(job)
         if jobs_to_queue:
-            self._queue_jobs(jobs_to_queue, priority)
+            self._queue_jobs(jobs_to_queue, priority=priority)
 
         return handler
 
@@ -609,7 +609,7 @@ class QueueManager(models.Manager):
         # Update jobs that are being re-queued
         if jobs_to_queue:
             Job.objects.increment_max_tries(jobs_to_queue)
-            self._queue_jobs(jobs_to_queue, priority)
+            self._queue_jobs(jobs_to_queue, priority=priority)
         when = timezone.now()
         if jobs_to_blocked:
             Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
@@ -675,39 +675,51 @@ class QueueManager(models.Manager):
 
         return scheduled_job_exes
 
-    def _queue_jobs(self, jobs, priority=None):
-        """Queues the given jobs and returns the new queued job executions. The caller must have obtained model locks on
-        the job models. Any jobs that are not in a valid status for being queued, are without job data, or are
-        superseded will be ignored. All jobs should have their related job_type and job_type_rev models populated.
+    def _queue_jobs(self, jobs, input_files=None, priority=None):
+        """Queues the given jobs. The caller must have obtained model locks on the job models in an atomic transaction.
+        Any jobs that are not in a valid status for being queued, are without job data, or are superseded will be
+        ignored. All jobs should have their related job_type and job_type_rev models populated. If the Scale input file
+        models are not provided, they will be queried.
 
-        :param jobs: The jobs to put on the queue
-        :type jobs: [:class:`job.models.Job`]
+        :param jobs: The job models to put on the queue
+        :type jobs: list
+        :param input_files: The dict of Scale file models stored by ID
+        :type input_files: dict
         :param priority: An optional argument to reset the jobs' priority before they are queued
         :type priority: int
-        :returns: The new queued job execution models
-        :rtype: [:class:`job.models.JobExecution`]
         """
 
         when_queued = timezone.now()
 
-        job_exes = Job.objects.queue_jobs(jobs, when_queued, priority)
+        # Set job models to QUEUED
+        queued_jobs = Job.objects.queue_jobs(jobs, when_queued, priority)
 
-        # Execute any registered processors from other applications
-        for processor_class in self._processors:
-            processor = processor_class()
-            for job_exe in job_exes:
-                processor.process_queued(job_exe, job_exe.job.num_exes == 1)
+        if not input_files:
+            # Query for all input files
+            input_files = {}
+            input_file_ids = set()
+            for job in queued_jobs:
+                input_file_ids.update(job.get_job_data().get_input_file_ids())
+            if input_file_ids:
+                for input_file in ScaleFile.objects.get_files(input_file_ids):
+                    input_files[input_file.id] = input_file
 
+        # Bulk create queue models
         queues = []
-        for job_exe in job_exes:
+        for job in queued_jobs:
+            config = ExecutionConfiguration()
+            config.configure_for_queued_job(job, input_files)
+
             queue = Queue()
-            queue.job_exe = job_exe
-            queue.job = job_exe.job
-            queue.job_type = job_exe.job.job_type
-            queue.priority = job_exe.job.priority
-            queue.input_file_size = job_exe.job.disk_in_required if job_exe.job.disk_in_required else 0.0
-            queue.configuration = job_exe.job.configuration
-            queue.resources = job_exe.job.get_resources().get_json().get_dict()
+            queue.job_type = job.job_type
+            queue.job = job
+            queue.exe_num = job.num_exes
+            queue.priority = job.priority
+            queue.input_file_size = job.disk_in_required if job.disk_in_required else 0.0
+            queue.is_canceled = False
+            queue.interface = job.get_job_interface().get_dict()
+            queue.configuration = config.get_dict()
+            queue.resources = job.get_resources().get_json().get_dict()
             queue.queued = when_queued
             queues.append(queue)
 
@@ -715,7 +727,6 @@ class QueueManager(models.Manager):
             return []
 
         self.bulk_create(queues)
-        return job_exes
 
 
 class Queue(models.Model):
@@ -735,6 +746,8 @@ class Queue(models.Model):
     :keyword is_canceled: Whether this queued job execution has been canceled
     :type is_canceled: :class:`django.db.models.BooleanField`
 
+    :keyword interface: JSON description describing the job's interface
+    :type interface: :class:`django.contrib.postgres.fields.JSONField`
     :keyword configuration: JSON description describing the execution configuration for how the job should be run
     :type configuration: :class:`django.contrib.postgres.fields.JSONField`
     :keyword resources: JSON description describing the resources required for this job
@@ -754,6 +767,7 @@ class Queue(models.Model):
     input_file_size = models.FloatField()
     is_canceled = models.BooleanField(default=False)
 
+    interface = django.contrib.postgres.fields.JSONField(default=dict)
     configuration = django.contrib.postgres.fields.JSONField(default=dict)
     resources = django.contrib.postgres.fields.JSONField(default=dict)
 

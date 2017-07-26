@@ -127,10 +127,10 @@ class TestQueueManager(TransactionTestCase):
         first = True
         for queue in Queue.objects.get_queue(QUEUE_ORDER_FIFO):
             if first:
-                self.assertEqual(queue.job_exe_id, queue_1.job_exe_id)
+                self.assertEqual(queue.id, queue_1.id)
                 first = False
             else:
-                self.assertEqual(queue.job_exe_id, queue_2.job_exe_id)
+                self.assertEqual(queue.id, queue_2.id)
 
     def test_get_queue_lifo(self):
         """Tests calling QueueManager.get_queue() in LIFO mode"""
@@ -144,10 +144,10 @@ class TestQueueManager(TransactionTestCase):
         first = True
         for queue in Queue.objects.get_queue(QUEUE_ORDER_LIFO):
             if first:
-                self.assertEqual(queue.job_exe_id, queue_2.job_exe_id)
+                self.assertEqual(queue.id, queue_2.id)
                 first = False
             else:
-                self.assertEqual(queue.job_exe_id, queue_1.job_exe_id)
+                self.assertEqual(queue.id, queue_1.id)
 
     def test_handle_job_failure(self):
         """Tests calling QueueManager.handle_job_failure() when the job fails"""
@@ -269,8 +269,9 @@ class TestQueueManagerHandleJobCancellation(TransactionTestCase):
 
         # Queue the job
         job = job_test_utils.create_job()
-        job_exe = Queue.objects._queue_jobs([job])[0]
-        job_exe_id = job_exe.id
+        Queue.objects._queue_jobs([job])
+        # TODO: change this test to check if the queue model has been marked canceled
+        job_exe_id = None
 
         # Call method to test
         Queue.objects.handle_job_cancellation(job.id, now())
@@ -889,8 +890,6 @@ class TestQueueManagerScheduleJobExecutions(TransactionTestCase):
         self.job_type_2 = job_test_utils.create_job_type(configuration={'INVALID': 'SCHEMA'})
         self.queue_1 = queue_test_utils.create_queue(job_type=self.job_type_1)
         self.queue_2 = queue_test_utils.create_queue(job_type=self.job_type_2)
-        self.job_exe_1 = self.queue_1.job_exe
-        self.job_exe_2 = self.queue_2.job_exe
 
     def test_successful(self):
         """Tests calling QueueManager.schedule_job_executions() successfully."""
@@ -900,16 +899,8 @@ class TestQueueManagerScheduleJobExecutions(TransactionTestCase):
         queued_job_exe_2 = QueuedJobExecution(self.queue_2)
         queued_job_exe_2.accepted('agent', self.node.id, Resources(self.queue_2.resources).get_node_resources())
 
+        # TODO: make a new test after this method is reworked
         scheduled_job_exes = Queue.objects.schedule_job_executions('framework-123',
                                                                    [queued_job_exe_1, queued_job_exe_2], {})
         # Only job_exe_1 should have scheduled since job_exe_2 has an invalid job type configuration JSON
         self.assertEqual(len(scheduled_job_exes), 1)
-        self.assertEqual(scheduled_job_exes[0].id, self.job_exe_1.id)
-        # job_exe_1 should be RUNNING
-        self.assertEqual(Queue.objects.filter(job_exe_id=self.job_exe_1.id).count(), 0)
-        self.assertEqual(JobExecution.objects.get(id=self.job_exe_1.id).status, 'RUNNING')
-        self.assertEqual(Job.objects.get(id=self.job_exe_1.job_id).status, 'RUNNING')
-        # job_exe_2 should be QUEUED
-        self.assertEqual(Queue.objects.filter(job_exe_id=self.job_exe_2.id).count(), 1)
-        self.assertEqual(JobExecution.objects.get(id=self.job_exe_2.id).status, 'QUEUED')
-        self.assertEqual(Job.objects.get(id=self.job_exe_2.job_id).status, 'QUEUED')

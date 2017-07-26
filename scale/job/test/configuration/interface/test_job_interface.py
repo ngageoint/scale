@@ -900,7 +900,8 @@ class TestJobInterfacePreSteps(TestCase):
 
         command_arguments = job_interface_dict['command_arguments']
         config_key_value = 'required_value'
-        job_config_json = {'job_task': {'settings': [{'name': 'setting1', 'value': config_key_value}]}}
+        job_config_json = {'version': '1.1', 'job_task': {'settings': [{'name': 'setting1',
+                                                                        'value': config_key_value}]}}
         job_config = ExecutionConfiguration(job_config_json)
 
         job_interface = JobInterface(job_interface_dict)
@@ -930,7 +931,8 @@ class TestJobInterfacePreSteps(TestCase):
 
         command_arguments = job_interface_dict['command_arguments']
         config_key_values = ['secret_val', 'required_value2']
-        job_config_json = {'job_task': {'settings': [{'name': 'setting2', 'value': config_key_values[1]}]}}
+        job_config_json = {'version': '1.1', 'job_task': {'settings': [{'name': 'setting2',
+                                                                        'value': config_key_values[1]}]}}
         job_config = ExecutionConfiguration(job_config_json)
 
         job_interface = JobInterface(job_interface_dict)
@@ -955,7 +957,8 @@ class TestJobInterfacePreSteps(TestCase):
 
         command_arguments = job_interface_dict['command_arguments']
         config_key_value = 'required_value1'
-        job_config_json = {'job_task': {'settings': [{'name': 'setting2', 'value': config_key_value}]}}
+        job_config_json = {'version': '1.1', 'job_task': {'settings': [{'name': 'setting2',
+                                                                        'value': config_key_value}]}}
         job_config = ExecutionConfiguration(job_config_json)
 
         job_interface = JobInterface(job_interface_dict)
@@ -987,7 +990,8 @@ class TestJobInterfacePreSteps(TestCase):
         }]
 
         config_key_value = ['value1']
-        job_config_json = {'job_task': {'settings': [{'name': 'setting1', 'value': config_key_value[0]}]}}
+        job_config_json = {'version': '1.1', 'job_task': {'settings': [{'name': 'setting1',
+                                                                        'value': config_key_value[0]}]}}
         job_config = ExecutionConfiguration(job_config_json)
 
         job_interface = JobInterface(job_interface_dict)
@@ -1008,7 +1012,7 @@ class TestJobInterfacePreSteps(TestCase):
         job_interface_dict['mounts'] = [{'name': 'mount_1', 'required': True, 'path': '/path/1', 'mode': 'ro'},
                                         {'name': 'mount_2', 'required': False, 'path': '/path/2', 'mode': 'rw'}]
         # The only required mount is provided
-        job_config_json = {'mounts': {'mount_1': {'type': 'host', 'host_path': '/host/path'}}}
+        job_config_json = {'version': '1.1', 'mounts': {'mount_1': {'type': 'host', 'host_path': '/host/path'}}}
 
         job_type = job_test_utils.create_job_type(interface=job_interface_dict)
         job_type.configuration = job_config_json
@@ -1068,7 +1072,8 @@ class TestJobInterfacePreSteps(TestCase):
             'required': True,
         }]
 
-        job_config_json = {'job_task': {'settings': [{'name': 'setting2', 'value': 'another_setting'}]}}
+        job_config_json = {'version': '1.1', 'job_task': {'settings': [{'name': 'setting2',
+                                                                        'value': 'another_setting'}]}}
 
         job_interface = JobInterface(job_interface_dict)
         job_config = ExecutionConfiguration(job_config_json)
@@ -1104,7 +1109,7 @@ class TestJobInterfacePreSteps(TestCase):
             'required': True,
         }]
 
-        job_config_json = {'job_task': {'settings': [{'name': 'setting1', 'value': 'test_setting'}]}}
+        job_config_json = {'version': '1.1', 'job_task': {'settings': [{'name': 'setting1', 'value': 'test_setting'}]}}
 
         job_interface = JobInterface(job_interface_dict)
         job_config = ExecutionConfiguration(job_config_json)
@@ -1130,7 +1135,8 @@ class TestJobInterfacePreSteps(TestCase):
             'required': True,
         }]
 
-        job_config_json = {'job_task': {'settings': [{'name': 'setting2', 'value': 'another_setting'}]}}
+        job_config_json = {'version': '1.1', 'job_task': {'settings': [{'name': 'setting2',
+                                                                        'value': 'another_setting'}]}}
 
         job_interface = JobInterface(job_interface_dict)
         job_config = ExecutionConfiguration(job_config_json)

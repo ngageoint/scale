@@ -2,15 +2,15 @@
 from __future__ import unicode_literals
 
 import logging
+import os
 
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 from job.configuration.exceptions import InvalidExecutionConfiguration
-from job.configuration.job_parameter import TaskSetting
 from job.configuration.json.execution import exe_config_1_1 as previous_version
 from job.configuration.volume import MODE_RO, MODE_RW
-from job.execution.container import get_mount_volume_name
+from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
 
 logger = logging.getLogger(__name__)
 
@@ -48,15 +48,18 @@ EXE_CONFIG_SCHEMA = {
     'definitions': {
         'input_file': {
             'type': 'object',
-            'required': ['type', 'workspace_name', 'workspace_path', 'is_deleted'],
+            'required': ['id', 'type', 'workspace_id', 'workspace_path', 'is_deleted'],
             'additionalProperties': False,
             'properties': {
+                'id': {
+                    'type': 'integer',
+                },
                 'type': {
                     'type': 'string',
                     'enum': ['SOURCE', 'PRODUCT'],
                 },
-                'workspace_name': {
-                    'type': 'string',
+                'workspace_id': {
+                    'type': 'integer',
                 },
                 'workspace_path': {
                     'type': 'string',
@@ -83,7 +86,7 @@ EXE_CONFIG_SCHEMA = {
         },
         'task': {
             'type': 'object',
-            'required': ['task_id', 'type', 'args'],
+            'required': ['type', 'args'],
             'additionalProperties': False,
             'properties': {
                 'task_id': {
@@ -238,6 +241,82 @@ class ExecutionConfiguration(object):
         except ValidationError as validation_error:
             raise InvalidExecutionConfiguration(validation_error)
 
+    def configure_for_queued_job(self, job, input_files):
+        """Configures this execution for the given queued job. The given job model should have its related job_type and
+        job_type_rev models populated.
+
+        :param job: The queued job model
+        :type job: :class:`job.models.Job`
+        :param input_files: The dict of Scale file models stored by ID
+        :type input_files: dict
+        """
+
+        data = job.get_job_data()
+        self._add_input_files(data, input_files)
+
+        # Set up env vars for job's input data
+        env_vars = {}
+        # TODO: refactor this to use JobData method after Seed upgrade
+        for data_input in data.get_dict()['input_data']:
+            input_name = data_input['name']
+            env_var = input_name.upper()  # Environment variable names are all upper case
+            if 'value' in data_input:
+                env_vars[env_var] = data_input['value']
+            if 'file_id' in data_input:
+                file_dict = self._configuration['input_files'][input_name][0]
+                file_name = os.path.basename(file_dict['workspace_path'])
+                if 'local_file_name' in file_dict:
+                    file_name = file_dict['local_file_name']
+                env_vars[env_var] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name, file_name)
+            elif 'file_ids' in data_input:
+                env_vars[env_var] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name)
+
+        # Add env var for output directory
+        # TODO: original output dir can be removed when Scale only supports Seed-based job types
+        env_vars['job_output_dir'] = SCALE_JOB_EXE_OUTPUT_PATH  # Original output directory
+        env_vars['OUTPUT_DIR'] = SCALE_JOB_EXE_OUTPUT_PATH  # Seed output directory
+
+        main_task_dict = {'type': 'main', 'args': job.get_job_interface().get_command_args(), 'env_vars': env_vars}
+        self._configuration['tasks'] = [main_task_dict]
+
+    def get_dict(self):
+        """Returns the internal dictionary that represents this execution configuration
+
+        :returns: The internal dictionary
+        :rtype: dict
+        """
+
+        return self._configuration
+
+    def _add_input_files(self, job_data, input_files):
+        """Adds the given input files to the configuration
+
+        :param job_data: The job data
+        :type job_data: :class:`job.configuration.data.job_data.JobData`
+        :param input_files: The dict of Scale file models stored by ID
+        :type input_files: dict
+        """
+
+        files_dict = {}
+
+        for input_name, file_ids in job_data.get_input_file_ids_by_input().items():
+            file_list = []
+            file_names = set()
+            for file_id in file_ids:
+                scale_file = input_files[file_id]
+                file_dict = {'id': scale_file.id, 'type': scale_file.file_type, 'workspace_id': scale_file.workspace_id,
+                             'workspace_path': scale_file.file_path, 'is_deleted': scale_file.is_deleted}
+                # Check for file name collision and use Scale file ID to ensure names are unique
+                file_name = scale_file.file_name
+                if file_name in file_names:
+                    file_name = '%d.%s' % (scale_file.id, file_name)
+                    file_dict['local_file_name'] = file_name
+                file_names.add(file_name)
+                file_list.append(file_dict)
+            files_dict[input_name] = file_list
+
+        self._configuration['input_files'] = files_dict
+
     @staticmethod
     def _convert_configuration(configuration):
         """Converts the given execution configuration to the 2.0 schema
@@ -314,15 +393,6 @@ class ExecutionConfiguration(object):
         if 'tasks' not in self._configuration:
             self._configuration['tasks'] = []
 
-    def get_dict(self):
-        """Returns the internal dictionary that represents this execution configuration
-
-        :returns: The internal dictionary
-        :rtype: dict
-        """
-
-        return self._configuration
-
     # TODO: phase all of this out and replace it
 
     def add_job_task_setting(self, name, value):
@@ -334,7 +404,7 @@ class ExecutionConfiguration(object):
         :type value: string
         """
 
-        self._configuration['job_task']['settings'].append({'name': name, 'value': str(value)})
+        pass
 
     def add_post_task_setting(self, name, value):
         """Adds a setting name/value to this job's post task
@@ -345,7 +415,7 @@ class ExecutionConfiguration(object):
         :type value: string
         """
 
-        self._configuration['post_task']['settings'].append({'name': name, 'value': str(value)})
+        pass
 
     def add_pre_task_setting(self, name, value):
         """Adds a setting name/value to this job's pre task
@@ -356,7 +426,7 @@ class ExecutionConfiguration(object):
         :type value: string
         """
 
-        self._configuration['pre_task']['settings'].append({'name': name, 'value': str(value)})
+        pass
 
     def add_job_task_docker_params(self, params):
         """Adds the given Docker parameters to this job's job task
