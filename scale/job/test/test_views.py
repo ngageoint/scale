@@ -683,6 +683,65 @@ class TestJobTypesView(TestCase):
         self.assertIsNone(results['trigger_rule'])
         self.assertIsNone(results['max_scheduled'])
 
+    def test_create_configuration(self):
+        """Tests creating a new job type with a valid configuration."""
+        url = rest_util.get_url('/job-types/')
+        json_data = {
+            'name': 'job-type-post-test-config',
+            'version': '1.0.0',
+            'title': 'Job Type Post Test',
+            'description': 'This is a test.',
+            'priority': '1',
+            'interface': {
+                'version': '1.4',
+                'command': 'test_cmd',
+                'command_arguments': 'test_arg ${DB_HOST}',
+                'mounts': [{
+                    'name': 'dted',
+                    'path': '/some/path',
+                    }],
+                'settings': [{
+                    'name': 'DB_HOST',
+                    'required': True,
+                }],
+                'input_data': [],
+                'output_data': [],
+                'shared_resources': [],
+            },
+            'configuration': {
+                'version': '2.0',
+                'mounts': {
+                    'dted': {'type': 'host',
+                             'host_path': '/path/to/dted'}
+                },
+                'settings': {
+                    'DB_HOST': 'scale'
+                }
+            },
+            'error_mapping': {
+                'version': '1.0',
+                'exit_codes': {
+                    '1': self.error.name,
+                },
+            },
+            'custom_resources': {
+                'version': '1.0',
+                'resources': {
+                    'foo': 10.0
+                }
+            }
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        job_type = JobType.objects.filter(name='job-type-post-test-config').first()
+
+        results = json.loads(response.content)
+        self.assertEqual(results['id'], job_type.id)
+        self.assertIsNotNone(results['configuration']['mounts'])
+        self.assertIsNotNone(results['configuration']['settings'])
+
     def test_create_max_scheduled(self):
         """Tests creating a new job type."""
         url = rest_util.get_url('/job-types/')
@@ -765,6 +824,179 @@ class TestJobTypesView(TestCase):
         self.assertIsNotNone(results['interface'])
         self.assertDictEqual(results['error_mapping']['exit_codes'], {})
         self.assertEqual(results['trigger_rule']['type'], 'PARSE')
+
+    def test_create_missing_mount(self):
+        """Tests creating a new job type with a mount referenced in configuration but not interface."""
+        url = rest_util.get_url('/job-types/')
+        json_data = {
+            'name': 'job-type-post-test-no-mount',
+            'version': '1.0.0',
+            'title': 'Job Type Post Test',
+            'description': 'This is a test.',
+            'priority': '1',
+            'interface': {
+                'version': '1.4',
+                'command': 'test_cmd',
+                'command_arguments': 'test_arg ${DB_HOST}',
+                'mounts': [],
+                'settings': [{
+                    'name': 'DB_HOST',
+                    'required': True,
+                }],
+                'input_data': [],
+                'output_data': [],
+                'shared_resources': [],
+            },
+            'configuration': {
+                'version': '2.0',
+                'mounts': {
+                    'dted': {'type': 'host',
+                             'host_path': '/path/to/dted'}
+                },
+                'settings': {
+                    'DB_HOST': 'scale'
+                }
+            },
+            'error_mapping': {
+                'version': '1.0',
+                'exit_codes': {
+                    '1': self.error.name,
+                },
+            },
+            'custom_resources': {
+                'version': '1.0',
+                'resources': {
+                    'foo': 10.0
+                }
+            }
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        job_type = JobType.objects.filter(name='job-type-post-test-no-mount').first()
+
+        results = json.loads(response.content)
+        self.assertEqual(results['id'], job_type.id)
+        self.assertEqual(results['configuration']['mounts'], {})
+
+    def test_create_missing_setting(self):
+        """Tests creating a new job type with a setting referenced in configuration but not interface."""
+        url = rest_util.get_url('/job-types/')
+        json_data = {
+            'name': 'job-type-post-test-no-setting',
+            'version': '1.0.0',
+            'title': 'Job Type Post Test',
+            'description': 'This is a test.',
+            'priority': '1',
+            'interface': {
+                'version': '1.4',
+                'command': 'test_cmd',
+                'command_arguments': 'test_arg',
+                'mounts': [{
+                    'name': 'dted',
+                    'path': '/some/path',
+                }],
+                'settings': [],
+                'input_data': [],
+                'output_data': [],
+                'shared_resources': [],
+            },
+            'configuration': {
+                'version': '2.0',
+                'mounts': {
+                    'dted': {'type': 'host',
+                             'host_path': '/path/to/dted'}
+                },
+                'settings': {
+                    'DB_HOST': 'scale'
+                }
+            },
+            'error_mapping': {
+                'version': '1.0',
+                'exit_codes': {
+                    '1': self.error.name,
+                },
+            },
+            'custom_resources': {
+                'version': '1.0',
+                'resources': {
+                    'foo': 10.0
+                }
+            }
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        job_type = JobType.objects.filter(name='job-type-post-test-no-setting').first()
+
+        results = json.loads(response.content)
+        self.assertEqual(results['id'], job_type.id)
+        self.assertEqual(results['configuration']['settings'], {})
+
+    def test_create_missing_other_setting(self):
+        """Tests creating a new job type with a setting referenced in configuration but not interface."""
+        url = rest_util.get_url('/job-types/')
+        json_data = {
+            'name': 'job-type-post-test-no-other-setting',
+            'version': '1.0.0',
+            'title': 'Job Type Post Test',
+            'description': 'This is a test.',
+            'priority': '1',
+            'interface': {
+                'version': '1.4',
+                'command': 'test_cmd',
+                'command_arguments': 'test_arg',
+                'mounts': [{
+                    'name': 'dted',
+                    'path': '/some/path',
+                }],
+                'settings': [{
+                    'name': 'DB_HOST',
+                    'required': True,
+                }],
+                'input_data': [],
+                'output_data': [],
+                'shared_resources': [],
+            },
+            'configuration': {
+                'version': '2.0',
+                'mounts': {
+                    'dted': {'type': 'host',
+                             'host_path': '/path/to/dted'}
+                },
+                'settings': {
+                    'DB_HOST': 'scale',
+                    'setting': 'value'
+                }
+            },
+            'error_mapping': {
+                'version': '1.0',
+                'exit_codes': {
+                    '1': self.error.name,
+                },
+            },
+            'custom_resources': {
+                'version': '1.0',
+                'resources': {
+                    'foo': 10.0
+                }
+            }
+        }
+
+        good_setting = {
+            'DB_HOST': 'scale'
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        job_type = JobType.objects.filter(name='job-type-post-test-no-other-setting').first()
+
+        results = json.loads(response.content)
+        self.assertEqual(results['id'], job_type.id)
+        self.assertEqual(results['configuration']['settings'], good_setting)
 
     def test_create_missing_param(self):
         """Tests creating a job type with missing fields."""
@@ -1306,6 +1538,281 @@ class TestJobTypesValidationView(TransactionTestCase):
 
         results = json.loads(response.content)
         self.assertDictEqual(results, {'warnings': []}, 'JSON result was incorrect')
+
+    def test_successful_configuration(self):
+        """Tests validating a new job type with a valid configuration."""
+        url = rest_util.get_url('/job-types/validation/')
+        json_data = {
+            'name': 'job-type-post-test-config',
+            'version': '1.0.0',
+            'title': 'Job Type Post Test',
+            'description': 'This is a test.',
+            'priority': '1',
+            'interface': {
+                'version': '1.4',
+                'command': 'test_cmd',
+                'command_arguments': 'test_arg ${DB_HOST}',
+                'mounts': [{
+                    'name': 'dted',
+                    'path': '/some/path',
+                    }],
+                'settings': [{
+                    'name': 'DB_HOST',
+                    'required': True,
+                }],
+                'input_data': [],
+                'output_data': [],
+                'shared_resources': [],
+            },
+            'configuration': {
+                'version': '2.0',
+                'mounts': {
+                    'dted': {'type': 'host',
+                             'host_path': '/path/to/dted'}
+                },
+                'settings': {
+                    'DB_HOST': 'scale'
+                }
+            },
+            'error_mapping': {
+                'version': '1.0',
+                'exit_codes': {
+                    '1': self.error.name,
+                },
+            },
+            'custom_resources': {
+                'version': '1.0',
+                'resources': {
+                    'foo': 10.0
+                }
+            }
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertDictEqual(results, {'warnings': []}, 'JSON result was incorrect')
+
+    def test_missing_mount(self):
+        """Tests validating a new job type with a mount referenced in configuration but not interface."""
+        url = rest_util.get_url('/job-types/validation/')
+        json_data = {
+            'name': 'job-type-post-test-no-mount',
+            'version': '1.0.0',
+            'title': 'Job Type Post Test',
+            'description': 'This is a test.',
+            'priority': '1',
+            'interface': {
+                'version': '1.4',
+                'command': 'test_cmd',
+                'command_arguments': 'test_arg ${DB_HOST}',
+                'mounts': [],
+                'settings': [{
+                    'name': 'DB_HOST',
+                    'required': True,
+                }],
+                'input_data': [],
+                'output_data': [],
+                'shared_resources': [],
+            },
+            'configuration': {
+                'version': '2.0',
+                'mounts': {
+                    'dted': {'type': 'host',
+                             'host_path': '/path/to/dted'}
+                },
+                'settings': {
+                    'DB_HOST': 'scale'
+                }
+            },
+            'error_mapping': {
+                'version': '1.0',
+                'exit_codes': {
+                    '1': self.error.name,
+                },
+            },
+            'custom_resources': {
+                'version': '1.0',
+                'resources': {
+                    'foo': 10.0
+                }
+            }
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertEqual(len(results['warnings']), 1)
+        self.assertEqual(results['warnings'][0]['id'], 'mounts')
+
+    def test_missing_setting(self):
+        """Tests validating a new job type with a setting referenced in configuration but not interface."""
+        url = rest_util.get_url('/job-types/validation/')
+        json_data = {
+            'name': 'job-type-post-test-no-setting',
+            'version': '1.0.0',
+            'title': 'Job Type Post Test',
+            'description': 'This is a test.',
+            'priority': '1',
+            'interface': {
+                'version': '1.4',
+                'command': 'test_cmd',
+                'command_arguments': 'test_arg',
+                'mounts': [{
+                    'name': 'dted',
+                    'path': '/some/path',
+                }],
+                'settings': [],
+                'input_data': [],
+                'output_data': [],
+                'shared_resources': [],
+            },
+            'configuration': {
+                'version': '2.0',
+                'mounts': {
+                    'dted': {'type': 'host',
+                             'host_path': '/path/to/dted'}
+                },
+                'settings': {
+                    'DB_HOST': 'scale'
+                }
+            },
+            'error_mapping': {
+                'version': '1.0',
+                'exit_codes': {
+                    '1': self.error.name,
+                },
+            },
+            'custom_resources': {
+                'version': '1.0',
+                'resources': {
+                    'foo': 10.0
+                }
+            }
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertEqual(len(results['warnings']), 1)
+        self.assertEqual(results['warnings'][0]['id'], 'settings')
+
+    def test_missing_other_setting(self):
+        """Tests validating a new job type with a setting referenced in configuration but not interface."""
+        url = rest_util.get_url('/job-types/validation/')
+        json_data = {
+            'name': 'job-type-post-test-no-other-setting',
+            'version': '1.0.0',
+            'title': 'Job Type Post Test',
+            'description': 'This is a test.',
+            'priority': '1',
+            'interface': {
+                'version': '1.4',
+                'command': 'test_cmd',
+                'command_arguments': 'test_arg',
+                'mounts': [{
+                    'name': 'dted',
+                    'path': '/some/path',
+                }],
+                'settings': [{
+                    'name': 'DB_HOST',
+                    'required': True,
+                }],
+                'input_data': [],
+                'output_data': [],
+                'shared_resources': [],
+            },
+            'configuration': {
+                'version': '2.0',
+                'mounts': {
+                    'dted': {'type': 'host',
+                             'host_path': '/path/to/dted'}
+                },
+                'settings': {
+                    'DB_HOST': 'scale',
+                    'setting': 'value'
+                }
+            },
+            'error_mapping': {
+                'version': '1.0',
+                'exit_codes': {
+                    '1': self.error.name,
+                },
+            },
+            'custom_resources': {
+                'version': '1.0',
+                'resources': {
+                    'foo': 10.0
+                }
+            }
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertEqual(len(results['warnings']), 1)
+        self.assertEqual(results['warnings'][0]['id'], 'settings')
+
+    def test_secret_setting(self):
+        """Tests validating a new job type with a secret setting."""
+        url = rest_util.get_url('/job-types/validation/')
+        json_data = {
+            'name': 'job-type-post-test-no-other-setting',
+            'version': '1.0.0',
+            'title': 'Job Type Post Test',
+            'description': 'This is a test.',
+            'priority': '1',
+            'interface': {
+                'version': '1.4',
+                'command': 'test_cmd',
+                'command_arguments': 'test_arg',
+                'mounts': [{
+                    'name': 'dted',
+                    'path': '/some/path',
+                }],
+                'settings': [{
+                    'name': 'DB_HOST',
+                    'required': True,
+                    'secret': True,
+                }],
+                'input_data': [],
+                'output_data': [],
+                'shared_resources': [],
+            },
+            'configuration': {
+                'version': '2.0',
+                'mounts': {
+                    'dted': {'type': 'host',
+                             'host_path': '/path/to/dted'}
+                },
+                'settings': {
+                    'DB_HOST': 'some_secret_value',
+                }
+            },
+            'error_mapping': {
+                'version': '1.0',
+                'exit_codes': {
+                    '1': self.error.name,
+                },
+            },
+            'custom_resources': {
+                'version': '1.0',
+                'resources': {
+                    'foo': 10.0
+                }
+            }
+        }
+
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertEqual(len(results['warnings']), 1)
+        self.assertEqual(results['warnings'][0]['id'], 'settings')
 
     def test_bad_param(self):
         """Tests validating a new job type with missing fields."""
@@ -1968,3 +2475,4 @@ class TestJobExecutionSpecificLogView(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         self.assertEqual(response.accepted_media_type, 'application/json')
+        
