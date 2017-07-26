@@ -2006,7 +2006,7 @@ class JobTypeManager(models.Manager):
                 recipe_type.get_recipe_definition().validate_job_interfaces()
 
         # New job configuration
-        if job_type.configuration:
+        if configuration:
             configuration.validate(job_type.interface)
             job_type.configuration = configuration.get_dict()
 
