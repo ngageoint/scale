@@ -466,9 +466,6 @@ class QueueManager(models.Manager):
         """
 
         job = Job.objects.create_job(job_type, event)
-        if not configuration:
-            configuration = ExecutionConfiguration()
-        job.configuration = configuration.get_dict()
         job.save()
 
         # No lock needed for this job since it doesn't exist outside this transaction yet
@@ -775,6 +772,15 @@ class Queue(models.Model):
     queued = models.DateTimeField()
 
     objects = QueueManager()
+
+    def get_execution_configuration(self):
+        """Returns the execution configuration for this queued job
+
+        :returns: The execution configuration for this queued job
+        :rtype: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        """
+
+        return ExecutionConfiguration(self.configuration)
 
     def get_resources(self):
         """Returns the resources required by this job execution

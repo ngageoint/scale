@@ -479,7 +479,6 @@ class JobManager(models.Manager):
 
         # Update job model in memory
         job.data = data.get_dict()
-        job.configuration = configuration.get_dict()
         job.disk_in_required = disk_in_required
         job.disk_out_required = disk_out_required
         job.last_modified = modified
@@ -499,9 +498,8 @@ class JobManager(models.Manager):
         FileAncestryLink.objects.create_file_ancestry_links(input_file_ids, None, job, None)
 
         # Update job model in database with single query
-        self.filter(id=job.id).update(data=data.get_dict(), configuration=configuration.get_dict(),
-                                      disk_in_required=disk_in_required, disk_out_required=disk_out_required,
-                                      last_modified=modified)
+        self.filter(id=job.id).update(data=data.get_dict(), disk_in_required=disk_in_required,
+                                      disk_out_required=disk_out_required, last_modified=modified)
 
     def populate_input_files(self, jobs):
         """Populates each of the given jobs with its input file references in a field called "input_files".
@@ -662,8 +660,6 @@ class Job(models.Model):
     :keyword data: JSON description defining the data for this job. This field must be populated when the job is first
         queued.
     :type data: :class:`django.contrib.postgres.fields.JSONField`
-    :keyword configuration: JSON description describing the configuration for how the job should be run
-    :type configuration: :class:`django.contrib.postgres.fields.JSONField`
     :keyword results: JSON description defining the results for this job. This field is populated when the job is
         successfully completed.
     :type results: :class:`django.contrib.postgres.fields.JSONField`
@@ -733,7 +729,6 @@ class Job(models.Model):
     error = models.ForeignKey('error.Error', blank=True, null=True, on_delete=models.PROTECT)
 
     data = django.contrib.postgres.fields.JSONField(default=dict)
-    configuration = django.contrib.postgres.fields.JSONField(default=dict)
     results = django.contrib.postgres.fields.JSONField(default=dict)
 
     priority = models.IntegerField()
@@ -772,15 +767,6 @@ class Job(models.Model):
         """
 
         return JobData(self.data)
-
-    def get_execution_configuration(self):
-        """Returns the execution configuration for this job
-
-        :returns: The execution configuration for this job
-        :rtype: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
-        """
-
-        return ExecutionConfiguration(self.configuration)
 
     def get_job_interface(self):
         """Returns the interface for this job
