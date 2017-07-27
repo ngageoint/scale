@@ -18,6 +18,7 @@ import trigger.test.utils as trigger_test_utils
 import util.rest as rest_util
 from error.models import Error
 from job.models import JobType
+from vault.secrets_handler import SecretsHandler
 
 
 class TestJobsView(TestCase):
@@ -742,6 +743,75 @@ class TestJobTypesView(TestCase):
         self.assertIsNotNone(results['configuration']['mounts'])
         self.assertIsNotNone(results['configuration']['settings'])
 
+    def test_create_secrets(self):
+        """Tests creating a new job type with secrets."""
+        url = rest_util.get_url('/job-types/')
+        json_data = {
+            'name': 'job-type-post-test-secret',
+            'version': '1.0.0',
+            'title': 'Job Type Post Test',
+            'description': 'This is a test.',
+            'priority': '1',
+            'interface': {
+                'version': '1.4',
+                'command': 'test_cmd',
+                'command_arguments': 'test_arg ${DB_HOST}',
+                'mounts': [{
+                    'name': 'dted',
+                    'path': '/some/path',
+                    }],
+                'settings': [{
+                    'name': 'DB_HOST',
+                    'required': True,
+                    'secret': True,
+                }],
+                'input_data': [],
+                'output_data': [],
+                'shared_resources': [],
+            },
+            'configuration': {
+                'version': '2.0',
+                'mounts': {
+                    'dted': {'type': 'host',
+                             'host_path': '/path/to/dted'}
+                },
+                'settings': {
+                    'DB_HOST': 'scale'
+                }
+            },
+            'error_mapping': {
+                'version': '1.0',
+                'exit_codes': {
+                    '1': self.error.name,
+                },
+            },
+            'custom_resources': {
+                'version': '1.0',
+                'resources': {
+                    'foo': 10.0
+                }
+            }
+        }
+
+        with patch.object(SecretsHandler, '__init__', return_value=None), \
+          patch.object(SecretsHandler, 'set_job_type_secrets', return_value=None) as mock_set_secret:
+            response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+
+        job_type = JobType.objects.filter(name='job-type-post-test-secret').first()
+
+        results = json.loads(response.content)
+        self.assertEqual(results['id'], job_type.id)
+
+        # Secrets sent to Vault
+        secrets_name = '-'.join([json_data['name'], json_data['version']])
+        secrets = json_data['configuration']['settings']
+        mock_set_secret.assert_called_once_with(secrets_name, secrets)
+
+        #Secrets scrubbed from configuration on return
+        self.assertEqual(results['configuration']['settings'], {})
+
     def test_create_max_scheduled(self):
         """Tests creating a new job type."""
         url = rest_util.get_url('/job-types/')
@@ -1144,11 +1214,33 @@ class TestJobTypeDetailsView(TestCase):
             'command': 'test_cmd',
             'command_arguments': 'test_arg',
             'env_vars': [],
-            'mounts': [],
-            'settings': [],
+            'mounts': [{
+                'name': 'dted',
+                'path': '/some/path',
+                'required': True,
+                'mode': 'ro'
+            }],
+            'settings': [{
+                'name': 'DB_HOST',
+                'required': True,
+                'secret': False,
+            }],
             'input_data': [],
             'output_data': [],
             'shared_resources': [],
+        }
+
+        self.configuration = {
+            'version': '2.0',
+            'mounts': {
+                'dted': {
+                    'type': 'host',
+                    'host_path': '/path/to/dted',
+                    },
+            },
+            'settings': {
+                'DB_HOST': 'scale',
+            },
         }
 
         self.error = error_test_utils.create_error(category='ALGORITHM')
@@ -1174,7 +1266,8 @@ class TestJobTypeDetailsView(TestCase):
                                                                    configuration=self.trigger_config)
 
         self.job_type = job_test_utils.create_job_type(interface=self.interface, error_mapping=self.error_mapping,
-                                                       trigger_rule=self.trigger_rule, max_scheduled=2)
+                                                       trigger_rule=self.trigger_rule, max_scheduled=2,
+                                                       configuration=self.configuration)
         self.error1 = error_test_utils.create_error()
         self.error2 = error_test_utils.create_error()
 
@@ -1208,6 +1301,97 @@ class TestJobTypeDetailsView(TestCase):
         self.assertEqual(len(result['job_counts_6h']), 0)
         self.assertEqual(len(result['job_counts_12h']), 0)
         self.assertEqual(len(result['job_counts_24h']), 0)
+
+    def test_successful_get_secrets(self):
+        """Tests getting a job_type with associated secrets and extra mounts"""
+
+        configuration = self.configuration.copy()
+        configuration['mounts'] = {
+            'dted': {
+                'type': 'host',
+                'host_path': '/path/to/dted',
+            },
+            'ref_data': {
+                'type': 'host',
+                'host_path': '/path/to/ref_data',
+            }
+        }
+        configuration['settings'] = {
+            'DB_HOST': 'scale',
+            'OTHER_DB': 'other_scale'
+        }
+
+        interface = self.interface.copy()
+        interface['settings'] = [{
+            'name': 'DB_HOST',
+            'required': True,
+            'secret': True,
+        }]
+
+        new_job_type = job_test_utils.create_job_type(interface=interface, error_mapping=self.error_mapping,
+                                                      trigger_rule=self.trigger_rule, max_scheduled=2,
+                                                      configuration=configuration)
+
+        url = rest_util.get_url('/job-types/%d/' % new_job_type.id)
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+
+        self.assertEqual(result['id'], new_job_type.id)
+        self.assertEqual(result['name'], new_job_type.name)
+        self.assertEqual(result['version'], new_job_type.version)
+
+        # Check extra and secret settings removed
+        self.assertEqual(result['configuration']['settings'], {})
+
+        # Check extra mount removed
+        self.assertEqual(result['configuration']['mounts'], self.configuration['mounts'])
+
+    def test_successful_no_settings(self):
+        """Tests getting a job_type with no settings in interface (but defined in configuration)"""
+
+        configuration = self.configuration.copy()
+        configuration['mounts'] = {
+            'dted': {
+                'type': 'host',
+                'host_path': '/path/to/dted',
+            },
+            'ref_data': {
+                'type': 'host',
+                'host_path': '/path/to/ref_data',
+            }
+        }
+        configuration['settings'] = {
+            'DB_HOST': 'scale',
+            'OTHER_DB': 'other_scale'
+        }
+
+        interface = self.interface.copy()
+        interface['settings'] = None
+        interface['mounts'] = None
+
+        new_job_type = job_test_utils.create_job_type(interface=interface, error_mapping=self.error_mapping,
+                                                      trigger_rule=self.trigger_rule, max_scheduled=2,
+                                                      configuration=configuration)
+
+        url = rest_util.get_url('/job-types/%d/' % new_job_type.id)
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+
+        self.assertEqual(result['id'], new_job_type.id)
+        self.assertEqual(result['name'], new_job_type.name)
+        self.assertEqual(result['version'], new_job_type.version)
+
+        # Check extra settings removed
+        self.assertEqual(result['configuration']['settings'], {})
+
+        # Check extra mounts removed
+        self.assertEqual(result['configuration']['mounts'], {})
 
     def test_edit_simple(self):
         """Tests editing only the basic attributes of a job type"""
@@ -1248,6 +1432,69 @@ class TestJobTypeDetailsView(TestCase):
         self.assertEqual(result['revision_num'], 2)
         self.assertEqual(result['interface']['command'], 'test_cmd_edit')
         self.assertEqual(result['trigger_rule']['id'], self.trigger_rule.id)
+
+    def test_edit_configuration(self):
+        """Tests editing the configuration of a job type"""
+        configuration = self.configuration.copy()
+        configuration['settings'] = {'DB_HOST': 'other_scale_db'}
+        configuration['mounts'] = {
+            'dted': {
+                'type': 'host',
+                'host_path': '/some/new/path'
+                }
+            }
+
+        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
+        json_data = {
+            'configuration': configuration,
+        }
+        response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(result['id'], self.job_type.id)
+        self.assertEqual(result['title'], self.job_type.title)
+        self.assertEqual(result['revision_num'], 1)
+        self.assertEqual(result['configuration']['settings'], {'DB_HOST': 'other_scale_db'})
+        self.assertEqual(result['configuration']['mounts']['dted'], {'type': 'host', 'host_path': '/some/new/path'})
+        self.assertEqual(result['trigger_rule']['id'], self.trigger_rule.id)
+
+    def test_edit_configuration_secret(self):
+        """Tests editing the configuration of a job type with secrets"""
+        configuration = self.configuration.copy()
+
+        interface = self.interface.copy()
+        interface['settings'] = [{
+            'name': 'DB_HOST',
+            'required': True,
+            'secret': True,
+        }]
+
+        url = rest_util.get_url('/job-types/%d/' % self.job_type.id)
+        json_data = {
+            'configuration': configuration,
+            'interface': interface,
+        }
+
+        with patch.object(SecretsHandler, '__init__', return_value=None), \
+          patch.object(SecretsHandler, 'set_job_type_secrets', return_value=None) as mock_set_secret:
+            response = self.client.generic('PATCH', url, json.dumps(json_data), 'application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+        self.assertEqual(result['id'], self.job_type.id)
+        self.assertEqual(result['title'], self.job_type.title)
+        self.assertEqual(result['revision_num'], 2)
+        self.assertEqual(result['trigger_rule']['id'], self.trigger_rule.id)
+
+        # Secrets sent to Vault
+        secrets_name = '-'.join([result['name'], result['version']])
+        secrets = configuration['settings']
+        mock_set_secret.assert_called_once_with(secrets_name, secrets)
+
+        #Secrets scrubbed from configuration on return
+        self.assertEqual(result['configuration']['settings'], {})
 
     def test_edit_error_mapping(self):
         """Tests editing the error mapping of a job type"""
@@ -2475,4 +2722,3 @@ class TestJobExecutionSpecificLogView(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
         self.assertEqual(response.accepted_media_type, 'application/json')
-        
