@@ -51,7 +51,7 @@ def validate_config(config_dict):
         # Attempt a real import and then roll it back when successful to confirm the validation
         # This saves on duplicate code because the existing validation methods expect database models to exist
         with transaction.atomic():
-            warnings = _import_config(config_dict)
+            warnings = _import_config(config_dict, validating=True)
             raise Validated('Configuration is valid, rolling back transaction.')
     except Validated:
         pass
@@ -72,7 +72,7 @@ def import_config(config_dict):
     return _import_config(config_dict)
 
 
-def _import_config(config_dict):
+def _import_config(config_dict, validating=False):
     """Applies a previously exported configuration to the current system.
 
     This method only exists to decouple the import logic from the atomic transaction so that this method can be reused
@@ -80,6 +80,8 @@ def _import_config(config_dict):
 
     :param config_dict: A dictionary of configuration changes to import.
     :type config_dict: dict
+    :param validating: Flag to determine if running a validate or commit transaction.
+    :type validating: bool
     :returns: A list of warnings discovered during the import.
     :rtype: list[:class:`port.schema.ValidationWarning`]
 
@@ -111,7 +113,7 @@ def _import_config(config_dict):
         for job_type_dict in config.job_types:
             job_type_key = (job_type_dict.get('name'), job_type_dict.get('version'))
             job_type = job_type_map.get(job_type_key)
-            warnings.extend(_import_job_type(job_type_dict, job_type))
+            warnings.extend(_import_job_type(job_type_dict, job_type, validating))
     if recipe_type_map:
         for recipe_type_dict in config.recipe_types:
             recipe_type_key = (recipe_type_dict.get('name'), recipe_type_dict.get('version'))
@@ -317,7 +319,7 @@ def _import_recipe_type(recipe_type_dict, recipe_type=None):
     return warnings
 
 
-def _import_job_type(job_type_dict, job_type=None):
+def _import_job_type(job_type_dict, job_type=None, validating=False):
     """Attempts to apply the given job types configuration to the system.
 
     Note that proper model locking must be performed before calling this method.
@@ -326,6 +328,8 @@ def _import_job_type(job_type_dict, job_type=None):
     :type job_type_dict: dict
     :param job_type: The existing job type model to update if applicable.
     :type job_type: :class:`job.models.JobType`
+    :param validating: Flag to determine if running a validate or commit transaction.
+    :type validating: bool
     :returns: A list of warnings discovered during import.
     :rtype: list[:class:`port.schema.ValidationWarning`]
 
@@ -365,7 +369,8 @@ def _import_job_type(job_type_dict, job_type=None):
             configuration_dict = job_type.configuration
         if interface:
             configuration = JobConfiguration(configuration_dict)
-            secrets = configuration.get_secret_settings(interface)
+            if not validating:
+                secrets = configuration.get_secret_settings(interface)
             warnings.extend(configuration.validate(interface))
     except InvalidJobConfiguration as ex:
         raise InvalidConfiguration('Job type configuration invalid: %s -> %s' % (result.get('name'), unicode(ex)))
@@ -408,7 +413,7 @@ def _import_job_type(job_type_dict, job_type=None):
 
     # Extract the fields that should be updated as keyword arguments
     extra_fields = {}
-    base_fields = {'name', 'version', 'interface', 'trigger_rule', 'error_mapping'}
+    base_fields = {'name', 'version', 'interface', 'trigger_rule', 'error_mapping', 'configuration'}
     for key in job_type_dict:
         if key not in base_fields:
             if key in JobType.UNEDITABLE_FIELDS:
