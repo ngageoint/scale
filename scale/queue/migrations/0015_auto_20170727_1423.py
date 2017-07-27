@@ -10,6 +10,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('job', '0029_auto_20170707_1034'),
+        ('product', '0010_auto_20170727_1349'),
         ('storage', '0008_auto_20170609_1443'),
         ('queue', '0014_queue'),
     ]
@@ -20,6 +21,8 @@ class Migration(migrations.Migration):
         # Go through all of the queued job models and re-populate the queue table
         when_queued = now()
         Job = apps.get_model('job', 'Job')
+        JobExecution = apps.get_model('job', 'JobExecution')
+        FileAncestryLink = apps.get_model('product', 'FileAncestryLink')
         Queue = apps.get_model('queue', 'Queue')
         ScaleFile = apps.get_model('storage', 'ScaleFile')
         total_count = Job.objects.filter(status='QUEUED').count()
@@ -68,6 +71,28 @@ class Migration(migrations.Migration):
             Queue.objects.bulk_create(queues)
             done_count += batch_size
         print 'All %s jobs completed' % str(total_count)
+
+        total_count = JobExecution.objects.filter(status='QUEUED').count()
+        print 'Updating file ancestry links for %s queued job executions' % str(total_count)
+        done_count = 0
+        batch_size = 1000
+        while done_count < total_count:
+            percent = (float(done_count) / float(total_count)) * 100.00
+            print 'Completed %s of %s queued job executions (%f%%)' % (done_count, total_count, percent)
+            batch_end = done_count + batch_size
+            job_exe_qry = JobExecution.objects.filter(status='QUEUED').defer('configuration', 'resources')
+            job_exe_qry = job_exe_qry.order_by('id')[done_count:batch_end]
+
+            job_exe_ids = []
+            for job_exe in job_exe_qry:
+                job_exe_ids.append(job_exe.id)
+
+            FileAncestryLink.objects.filter(job_exe_id__in=job_exe_ids).update(job_exe_id=None)
+
+            done_count += batch_size
+        print 'All file ancestry links for %s queued job executions completed' % str(total_count)
+        print 'Deleting %s queued job executions...' % str(total_count)
+        JobExecution.objects.filter(status='QUEUED').delete()
 
     operations = [
         migrations.RunPython(populate_queue),
