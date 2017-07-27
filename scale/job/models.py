@@ -1936,7 +1936,7 @@ class JobTypeManager(models.Manager):
 
         # Save any secrets to Vault
         if secrets:
-            job_type.objects.set_job_type_secrets(job_type.id, secrets)
+            self.set_job_type_secrets(job_type.id, secrets)
 
         # Create first revision of the job type
         JobTypeRevision.objects.create_job_type_revision(job_type)
@@ -2041,7 +2041,7 @@ class JobTypeManager(models.Manager):
 
         # Save any secrets to Vault
         if secrets:
-            job_type.objects.set_job_type_secrets(job_type.id, secrets)
+            self.set_job_type_secrets(job_type.id, secrets)
 
         if interface:
             # Create new revision of the job type for new interface
@@ -2323,8 +2323,8 @@ class JobTypeManager(models.Manager):
         """
 
         secrets_handler = SecretsHandler()
-        job_info = JobType.objects.values_list('name', 'version', flat=True).get(pk=job_type_id)
-        job_name = '-'.join([job_info])
+        job_info = JobType.objects.values_list('name', 'version').get(pk=job_type_id)
+        job_name = '-'.join(list(job_info))
 
         secrets_handler.set_job_type_secrets(job_name, secrets)
 
