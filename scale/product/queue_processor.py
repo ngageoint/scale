@@ -1,5 +1,5 @@
 """Defines the QueueEventProcessor for generating file ancestry links as job executions change status."""
-from product.models import FileAncestryLink, ProductFile
+from product.models import ProductFile
 from queue.models import QueueEventProcessor
 
 
@@ -11,11 +11,7 @@ class ProductProcessor(QueueEventProcessor):
 
         Creates file ancestry links for all source files and their ancestry needed to run the job execution.
         """
-        # Build file ancestry links for all job input files the first time the job is queued
-        # This provides linkage of source files to jobs and recipes even when no products are ultimately created
-        if is_initial:
-            input_file_ids = job_exe.job.get_job_data().get_input_file_ids()
-            FileAncestryLink.objects.create_file_ancestry_links(input_file_ids, None, job_exe)
+        pass
 
     def process_completed(self, job_exe):
         """See :meth:`queue.models.QueueEventProcessor.process_completed`.

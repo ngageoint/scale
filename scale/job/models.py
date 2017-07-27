@@ -79,8 +79,7 @@ class JobManager(models.Manager):
             batch_job = BatchJob.objects.get(job_id=job.id)
             Batch.objects.count_completed_job(batch_job.batch.id)
         except BatchJob.DoesNotExist:
-            batch_job = None
-            
+            pass
 
     def create_job(self, job_type, event, superseded_job=None, delete_superseded=True):
         """Creates a new job for the given type and returns the job model. Optionally a job can be provided that the new
@@ -494,6 +493,10 @@ class JobManager(models.Manager):
             job_input.job_input = input_file[1]
             job_inputs.append(job_input)
         JobInputFile.objects.bulk_create(job_inputs)
+
+        # Populate file ancestry links
+        from product.models import FileAncestryLink
+        FileAncestryLink.objects.create_file_ancestry_links(input_file_ids, None, job, None)
 
         # Update job model in database with single query
         self.filter(id=job.id).update(data=data.get_dict(), configuration=configuration.get_dict(),

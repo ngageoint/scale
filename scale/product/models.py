@@ -9,8 +9,7 @@ import django.utils.timezone as timezone
 from django.db import transaction
 
 import storage.geospatial_utils as geo_utils
-from job.models import JobManager
-from recipe.models import Recipe, RecipeManager
+from recipe.models import Recipe
 from storage.brokers.broker import FileUpload
 from storage.models import ScaleFile
 from util.parse import parse_datetime
@@ -24,7 +23,7 @@ class FileAncestryLinkManager(models.Manager):
     """
 
     @transaction.atomic
-    def create_file_ancestry_links(self, parent_ids, child_ids, job_exe):
+    def create_file_ancestry_links(self, parent_ids, child_ids, job, job_exe_id):
         """Creates the appropriate file ancestry links for the given parent and child files. All database changes are
         made in an atomic transaction.
 
@@ -33,24 +32,26 @@ class FileAncestryLinkManager(models.Manager):
         :param child_ids: Set of child file IDs. Passing None can be used to link input files to jobs and recipes
             without any derived products.
         :type child_ids: set of int
-        :param job_exe: The job execution that is creating the file links
-        :type job_exe: :class:`job.models.JobExecution`
+        :param job: The job that is creating the file links
+        :type job: :class:`job.models.Job`
+        :param job_exe_id: The job execution that is creating the file links
+        :type job_exe_id: int
         """
 
         new_links = []
         created = timezone.now()
 
-        # Delete any previous file ancestry links for the given execution
-        # This overrides any file input links that were created when the execution was first queued
-        FileAncestryLink.objects.filter(job_exe=job_exe).delete()
+        # Delete any previous file ancestry links for the given job
+        # This overrides any file input links that were created when the job first received its input data
+        FileAncestryLink.objects.filter(job_id=job.id).delete()
 
         # Not all jobs have a recipe so attempt to get one if applicable
-        job_recipe = Recipe.objects.get_recipe_for_job(job_exe.job_id)
+        job_recipe = Recipe.objects.get_recipe_for_job(job.id)
 
         # See if this job is in a batch
         from batch.models import BatchJob
         try:
-            batch_id = BatchJob.objects.get(job_id=job_exe.job_id).batch_id
+            batch_id = BatchJob.objects.get(job_id=job.id).batch_id
         except BatchJob.DoesNotExist:
             batch_id = None
 
@@ -75,8 +76,8 @@ class FileAncestryLinkManager(models.Manager):
                 link.descendant_id = child_id
 
                 # Set references to the current execution
-                link.job_exe_id = job_exe.id
-                link.job = job_exe.job
+                link.job_exe_id = job_exe_id
+                link.job = job
                 link.batch_id = batch_id
                 new_links.append(link)
 
@@ -95,8 +96,8 @@ class FileAncestryLinkManager(models.Manager):
                 link.descendant_id = child_id
 
                 # Set references to the current execution
-                link.job_exe_id = job_exe.id
-                link.job = job_exe.job
+                link.job_exe_id = job_exe_id
+                link.job = job
                 link.batch_id = batch_id
 
                 if job_recipe:
@@ -166,7 +167,8 @@ class FileAncestryLink(models.Model):
     descendant = models.ForeignKey('storage.ScaleFile', blank=True, null=True, on_delete=models.PROTECT,
                                    related_name='ancestors')
 
-    job_exe = models.ForeignKey('job.JobExecution', on_delete=models.PROTECT, related_name='job_exe_file_links')
+    job_exe = models.ForeignKey('job.JobExecution', blank=True, null=True, on_delete=models.PROTECT,
+                                related_name='job_exe_file_links')
     job = models.ForeignKey('job.Job', on_delete=models.PROTECT, related_name='job_file_links')
     recipe = models.ForeignKey('recipe.Recipe', blank=True, on_delete=models.PROTECT, null=True,
                                related_name='recipe_file_links')

@@ -8,7 +8,7 @@ import job.test.utils as job_test_utils
 import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
-from job.models import JobExecution
+from job.models import Job
 from queue.models import Queue
 from source.triggers.parse_trigger_handler import ParseTriggerHandler
 from storage.models import ScaleFile
@@ -147,8 +147,7 @@ class TestParseTriggerHandlerProcessParsedSourceFile(TestCase):
 
         # Check results
         queue_1 = Queue.objects.get(job_type=self.job_type_1.id)
-        job_exe_1 = JobExecution.objects.select_related().get(pk=queue_1.job_exe_id)
-        job_1 = job_exe_1.job
+        job_1 = Job.objects.get(pk=queue_1.job_id)
         self.assertEqual(job_1.data['input_data'][0]['name'], self.input_name)
         self.assertEqual(job_1.data['input_data'][0]['file_id'], self.source_file.id)
 
@@ -176,8 +175,7 @@ class TestParseTriggerHandlerProcessParsedSourceFile(TestCase):
 
         # Check results...ensure first job is queued
         queue_1 = Queue.objects.get(job_type=self.job_type_2.id)
-        job_exe_1 = JobExecution.objects.select_related().get(pk=queue_1.job_exe_id)
-        job_1 = job_exe_1.job
+        job_1 = Job.objects.get(pk=queue_1.job_id)
         self.assertEqual(job_1.data['input_data'][0]['name'], self.input_name)
         self.assertEqual(job_1.data['input_data'][0]['file_id'], self.source_file.id)
         self.assertEqual(job_1.data['output_data'][0]['name'], self.output_name)
