@@ -7,8 +7,8 @@ import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 from django.conf import settings
-from vault.exceptions import InvalidSecretsAuthorization, InvalidSecretsRequest, InvalidSecretsToken, \
-    InvalidSecretsValue
+from vault.exceptions import InvalidSecretsAuthorization, InvalidSecretsConfiguration, InvalidSecretsRequest, \
+    InvalidSecretsToken, InvalidSecretsValue
 
 
 class SecretsHandler(object):
@@ -40,7 +40,9 @@ class SecretsHandler(object):
         if not self.raise_ssl_warnings:
             requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-        if self.service_account:
+        if not self.secrets_url:
+            raise InvalidSecretsConfiguration('A secrets backend is not properly configured with Scale.')
+        elif self.service_account:
             self.dcos_token = self._dcos_authenticate()
         else:
             self.dcos_token = None
