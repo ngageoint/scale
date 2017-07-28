@@ -32,6 +32,7 @@ from queue.models import Queue
 from trigger.configuration.exceptions import InvalidTriggerRule, InvalidTriggerType
 import util.rest as rest_util
 from util.rest import BadParameter
+from vault.exceptions import InvalidSecretsConfiguration
 
 logger = logging.getLogger(__name__)
 
@@ -161,7 +162,8 @@ class JobTypesView(ListCreateAPIView):
                                                            configuration=configuration, secrets=secrets,
                                                            **extra_fields)
 
-        except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, ValueError) as ex:
+        except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, 
+                InvalidSecretsConfiguration, ValueError) as ex:
             logger.exception('Unable to create new job type: %s', name)
             raise BadParameter(unicode(ex))
 
@@ -316,7 +318,7 @@ class JobTypeDetailsView(GenericAPIView):
                                               custom_resources=custom_resources, configuration=configuration,
                                               secrets=secrets, **extra_fields)
         except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition,
-                ValueError) as ex:
+                InvalidSecretsConfiguration, ValueError) as ex:
             logger.exception('Unable to update job type: %i', job_type_id)
             raise BadParameter(unicode(ex))
 

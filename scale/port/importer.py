@@ -26,6 +26,7 @@ from recipe.models import RecipeType
 from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
 from trigger.models import TriggerRule
 from trigger.configuration.exceptions import InvalidTriggerType, InvalidTriggerRule
+from vault.exceptions import InvalidSecretsConfiguration
 
 logger = logging.getLogger(__name__)
 
@@ -433,7 +434,8 @@ def _import_job_type(job_type_dict, job_type=None, validating=False):
             JobType.objects.edit_job_type(job_type.id, interface=interface, trigger_rule=trigger_rule,
                                           remove_trigger_rule=remove_trigger_rule, error_mapping=error_mapping,
                                           configuration=configuration, secrets=secrets, **extra_fields)
-        except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition) as ex:
+        except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition,
+                InvalidSecretsConfiguration) as ex:
             logger.exception('Job type edit failed')
             raise InvalidConfiguration('Unable to edit existing job type: %s -> %s' % (result.get('name'), unicode(ex)))
     else:
@@ -442,7 +444,8 @@ def _import_job_type(job_type_dict, job_type=None, validating=False):
                                             interface=interface, trigger_rule=trigger_rule,
                                             error_mapping=error_mapping, configuration=configuration, secrets=secrets,
                                             **extra_fields)
-        except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition) as ex:
+        except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition,
+                InvalidSecretsConfiguration) as ex:
             logger.exception('Job type create failed')
             raise InvalidConfiguration('Unable to create new job type: %s -> %s' % (result.get('name'), unicode(ex)))
     return warnings
