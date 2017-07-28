@@ -1,7 +1,7 @@
 """Defines the serializers for jobs and job types"""
 import rest_framework.serializers as serializers
 
-from job.models import Job, JobExecution
+from job.models import Job, JobExecutionEnd
 from util.rest import ModelIdSerializer
 
 
@@ -167,7 +167,7 @@ class JobRevisionSerializer(JobSerializer):
 
 class JobExecutionBaseSerializer(ModelIdSerializer):
     """Converts job execution model fields to REST output"""
-    status = serializers.ChoiceField(choices=JobExecution.JOB_EXE_STATUSES)
+    status = serializers.ChoiceField(choices=JobExecutionEnd.JOB_EXE_STATUSES)
     command_arguments = serializers.CharField()
     timeout = serializers.IntegerField()
 

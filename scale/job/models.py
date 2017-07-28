@@ -1202,148 +1202,78 @@ class JobExecutionManager(models.Manager):
 
 
 class JobExecution(models.Model):
-    """Represents an instance of a job being queued and executed on a cluster node. Any status updates to a job
-    execution model requires obtaining a lock on the model using select_for_update().
+    """Represents a job execution that has been scheduled to run on a node
 
-    :keyword job: The job that is being executed
+    :keyword job: The job that was scheduled
     :type job: :class:`django.db.models.ForeignKey`
-    :keyword status: The status of the execution
-    :type status: :class:`django.db.models.CharField`
-    :keyword error: The error that caused the failure (should only be set when status is FAILED)
-    :type error: :class:`django.db.models.ForeignKey`
-
-    :keyword command_arguments: The argument string to execute on the command line for this job execution. This field is
-        populated when the job execution is scheduled to run on a node and is updated when any needed pre-job steps are
-        run.
-    :type command_arguments: :class:`django.db.models.CharField`
-    :keyword timeout: The maximum amount of time to allow this job to run before being killed (in seconds)
-    :type timeout: :class:`django.db.models.IntegerField`
-    :keyword configuration: JSON description describing the configuration for how the job execution should be run
-    :type configuration: :class:`django.contrib.postgres.fields.JSONField`
-    :keyword resources: JSON description describing the resources allocated to this job execution
-    :type resources: :class:`django.contrib.postgres.fields.JSONField`
-
+    :keyword job_type: The type of the job that was scheduled
+    :type job_type: :class:`django.db.models.ForeignKey`
+    :keyword exe_num: The number of the job's execution
+    :type exe_num: :class:`django.db.models.IntegerField`
     :keyword cluster_id: This is an ID for the job execution that is unique in the context of the cluster, allowing
         Scale components (task IDs, Docker volume names, etc) to have unique names within the cluster
     :type cluster_id: :class:`django.db.models.CharField`
-    :keyword node: The node on which the job execution is being run
+    :keyword node: The node on which the job execution is scheduled
     :type node: :class:`django.db.models.ForeignKey`
-    :keyword environment: JSON description defining the environment data for this job execution. This field is populated
-        when the job execution is scheduled to run on a node.
-    :type environment: :class:`django.contrib.postgres.fields.JSONField`
-    :keyword cpus_scheduled: The number of CPUs scheduled for this job execution
-    :type cpus_scheduled: :class:`django.db.models.FloatField`
-    :keyword mem_scheduled: The amount of RAM in MiB scheduled for this job execution
-    :type mem_scheduled: :class:`django.db.models.FloatField`
-    :keyword disk_in_scheduled: The amount of disk space in MiB scheduled for input files for this job execution
-    :type disk_in_scheduled: :class:`django.db.models.FloatField`
-    :keyword disk_out_scheduled: The amount of disk space in MiB scheduled for output (temp work and products) for this
-        job execution
-    :type disk_out_scheduled: :class:`django.db.models.FloatField`
-    :keyword disk_total_scheduled: The total amount of disk space in MiB scheduled for this job execution
-    :type disk_total_scheduled: :class:`django.db.models.FloatField`
 
-    :keyword pre_started: When the pre-task was started
-    :type pre_started: :class:`django.db.models.DateTimeField`
-    :keyword pre_completed: When the pre-task was completed
-    :type pre_completed: :class:`django.db.models.DateTimeField`
-    :keyword pre_exit_code: The exit code of the pre-task
-    :type pre_exit_code: :class:`django.db.models.IntegerField`
+    :keyword timeout: The maximum amount of time to allow this execution to run before being killed (in seconds)
+    :type timeout: :class:`django.db.models.IntegerField`
+    :keyword input_file_size: The total amount of disk space in MiB for all input files for this job execution
+    :type input_file_size: :class:`django.db.models.FloatField`
+    :keyword resources: JSON description describing the resources allocated to this job execution
+    :type resources: :class:`django.contrib.postgres.fields.JSONField`
+    :keyword configuration: JSON description describing the configuration for how the job execution should be run
+    :type configuration: :class:`django.contrib.postgres.fields.JSONField`
 
-    :keyword job_started: When the main job task started running
-    :type job_started: :class:`django.db.models.DateTimeField`
-    :keyword job_completed: When the main job task was completed
-    :type job_completed: :class:`django.db.models.DateTimeField`
-    :keyword job_exit_code: The exit code of the main job task
-    :type job_exit_code: :class:`django.db.models.IntegerField`
-
-    :keyword post_started: When the post-task was started
-    :type post_started: :class:`django.db.models.DateTimeField`
-    :keyword post_completed: When the post-task was completed
-    :type post_completed: :class:`django.db.models.DateTimeField`
-    :keyword post_exit_code: The exit code of the post-task
-    :type post_exit_code: :class:`django.db.models.IntegerField`
-
-    :keyword stdout: The stdout contents of the entire job execution. This field should normally be deferred when
-        querying for job executions since it can be large and often is not needed.
-    :type stdout: :class:`django.db.models.TextField`
-    :keyword stderr: The stderr contents of the entire job execution. This field should normally be deferred when
-        querying for job executions since it can be large and often is not needed.
-    :type stderr: :class:`django.db.models.TextField`
-
-    :keyword results_manifest: The results manifest generated by the job's algorithm
-    :type results_manifest: :class:`django.contrib.postgres.fields.JSONField`
-    :keyword results: JSON description defining the results for this job execution. This field is populated when the
-        post-job steps are successfully completed.
-    :type results: :class:`django.contrib.postgres.fields.JSONField`
-
-    :keyword created: When the job execution was created
-    :type created: :class:`django.db.models.DateTimeField`
-    :keyword queued: When the job was added to the queue for this run and went to QUEUED status
+    :keyword queued: When the job execution was added to the queue
     :type queued: :class:`django.db.models.DateTimeField`
-    :keyword started: When the job was scheduled and went to RUNNING status
+    :keyword started: When the job execution was started (scheduled)
     :type started: :class:`django.db.models.DateTimeField`
-    :keyword ended: When the job execution ended (FAILED, COMPLETED, or CANCELED)
-    :type ended: :class:`django.db.models.DateTimeField`
-    :keyword last_modified: When the job execution was last modified
-    :type last_modified: :class:`django.db.models.DateTimeField`
+    :keyword created: When this model was created
+    :type created: :class:`django.db.models.DateTimeField`
     """
-    JOB_EXE_STATUSES = (
-        ('QUEUED', 'QUEUED'),
-        ('RUNNING', 'RUNNING'),
-        ('FAILED', 'FAILED'),
-        ('COMPLETED', 'COMPLETED'),
-        ('CANCELED', 'CANCELED'),
-    )
-
-    FINAL_STATUSES = ['FAILED', 'COMPLETED', 'CANCELED']
 
     job = models.ForeignKey('job.Job', on_delete=models.PROTECT)
-    status = models.CharField(choices=JOB_EXE_STATUSES, default='QUEUED', max_length=50, db_index=True)
-    error = models.ForeignKey('error.Error', blank=True, null=True, on_delete=models.PROTECT)
-
-    command_arguments = models.CharField(max_length=1000)
-    timeout = models.IntegerField()
-    configuration = django.contrib.postgres.fields.JSONField(default=dict)
-    resources = django.contrib.postgres.fields.JSONField(default=dict)
-
+    job_type = models.ForeignKey('job.JobType', blank=True, null=True, on_delete=models.PROTECT)
+    exe_num = models.IntegerField(blank=True, null=True)
     cluster_id = models.CharField(blank=True, max_length=100, null=True)
     node = models.ForeignKey('node.Node', blank=True, null=True, on_delete=models.PROTECT)
-    # TODO: Remove this unused field. This will force changes through the REST API though, so coordinate with UI
-    environment = django.contrib.postgres.fields.JSONField(default=dict)
+
+    timeout = models.IntegerField()
+    input_file_size = models.FloatField(blank=True, null=True)
+    resources = django.contrib.postgres.fields.JSONField(default=dict)
+    configuration = django.contrib.postgres.fields.JSONField(default=dict)
+
+    queued = models.DateTimeField()
+    started = models.DateTimeField(blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    # TODO: old fields that are being nulled out, they should be removed in the future after they have been moved to the
+    # new job_exe_end and job_exe_output tables and they are no longer needed for the REST API
+    status = models.CharField(blank=True, max_length=50, null=True, db_index=True)
+    error = models.ForeignKey('error.Error', blank=True, null=True, on_delete=models.PROTECT)
+    command_arguments = models.CharField(blank=True, max_length=1000, null=True)
+    environment = django.contrib.postgres.fields.JSONField(blank=True, null=True)
     cpus_scheduled = models.FloatField(blank=True, null=True)
     mem_scheduled = models.FloatField(blank=True, null=True)
-    # disk_in_scheduled represents the job's total input size
-    disk_in_scheduled = models.FloatField(blank=True, null=True)
     disk_out_scheduled = models.FloatField(blank=True, null=True)
     disk_total_scheduled = models.FloatField(blank=True, null=True)
-
-    # TODO: Rename pre_completed, job_completed, etc to pre_ended, job_ended, etc. This will force changes through the
-    # REST API though, so coordinate with UI
     pre_started = models.DateTimeField(blank=True, null=True)
     pre_completed = models.DateTimeField(blank=True, null=True)
     pre_exit_code = models.IntegerField(blank=True, null=True)
-
     job_started = models.DateTimeField(blank=True, null=True)
     job_completed = models.DateTimeField(blank=True, null=True)
     job_exit_code = models.IntegerField(blank=True, null=True)
-    job_metrics = django.contrib.postgres.fields.JSONField(default=dict)
-
+    job_metrics = django.contrib.postgres.fields.JSONField(blank=True, null=True)
     post_started = models.DateTimeField(blank=True, null=True)
     post_completed = models.DateTimeField(blank=True, null=True)
     post_exit_code = models.IntegerField(blank=True, null=True)
-
-    stdout = models.TextField(blank=True, null=True) #deprecated
-    stderr = models.TextField(blank=True, null=True) #deprecated
-
-    results_manifest = django.contrib.postgres.fields.JSONField(default=dict)
-    results = django.contrib.postgres.fields.JSONField(default=dict)
-
-    created = models.DateTimeField(auto_now_add=True)
-    queued = models.DateTimeField()
-    started = models.DateTimeField(blank=True, null=True)
+    stdout = models.TextField(blank=True, null=True)
+    stderr = models.TextField(blank=True, null=True)
+    results_manifest = django.contrib.postgres.fields.JSONField(blank=True, null=True)
+    results = django.contrib.postgres.fields.JSONField(blank=True, null=True)
     ended = models.DateTimeField(blank=True, db_index=True, null=True)
-    last_modified = models.DateTimeField(auto_now=True, db_index=True)
+    last_modified = models.DateTimeField(blank=True, db_index=True, null=True)
 
     objects = JobExecutionManager()
 
@@ -1743,6 +1673,96 @@ class JobExecution(models.Model):
     class Meta(object):
         """Meta information for the database"""
         db_table = 'job_exe'
+
+
+class JobExecutionEnd(models.Model):
+    """Represents the end of a job execution, including the execution's final status and end time
+
+    :keyword job_exe: The primary key to the scheduled job execution
+    :type job_exe: :class:`django.db.models.ForeignKey`
+    :keyword job: The job that was executed
+    :type job: :class:`django.db.models.ForeignKey`
+    :keyword job_type: The type of the job that was executed
+    :type job_type: :class:`django.db.models.ForeignKey`
+    :keyword exe_num: The number of the job's execution
+    :type exe_num: :class:`django.db.models.IntegerField`
+
+    :keyword status: The final status of the execution
+    :type status: :class:`django.db.models.CharField`
+    :keyword error: The error that caused the failure (should only be set when status is FAILED)
+    :type error: :class:`django.db.models.ForeignKey`
+    :keyword node: The node on which the job execution was run (None if it was canceled before being scheduled)
+    :type node: :class:`django.db.models.ForeignKey`
+
+    :keyword queued: When the job execution was added to the queue
+    :type queued: :class:`django.db.models.DateTimeField`
+    :keyword started: When the job execution was started (scheduled)
+    :type started: :class:`django.db.models.DateTimeField`
+    :keyword ended: When the job execution ended
+    :type ended: :class:`django.db.models.DateTimeField`
+    :keyword created: When this model was created
+    :type created: :class:`django.db.models.DateTimeField`
+    """
+
+    JOB_EXE_STATUSES = (
+        ('FAILED', 'FAILED'),
+        ('COMPLETED', 'COMPLETED'),
+        ('CANCELED', 'CANCELED'),
+    )
+
+    job_exe = models.OneToOneField('job.JobExecution', primary_key=True, on_delete=models.PROTECT)
+    job = models.ForeignKey('job.Job', on_delete=models.PROTECT)
+    job_type = models.ForeignKey('job.JobType', on_delete=models.PROTECT)
+    exe_num = models.IntegerField()
+
+    status = models.CharField(choices=JOB_EXE_STATUSES, max_length=50, db_index=True)
+    error = models.ForeignKey('error.Error', blank=True, null=True, on_delete=models.PROTECT)
+    node = models.ForeignKey('node.Node', blank=True, null=True, on_delete=models.PROTECT)
+
+    queued = models.DateTimeField()
+    started = models.DateTimeField(blank=True, db_index=True, null=True)
+    ended = models.DateTimeField(db_index=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta(object):
+        """Meta information for the database"""
+        db_table = 'job_exe_end'
+
+
+class JobExecutionOutput(models.Model):
+    """Represents the output of a job execution
+
+    :keyword job_exe: The primary key to the scheduled job execution
+    :type job_exe: :class:`django.db.models.ForeignKey`
+    :keyword job: The job that was executed
+    :type job: :class:`django.db.models.ForeignKey`
+    :keyword job_type: The type of the job that was executed
+    :type job_type: :class:`django.db.models.ForeignKey`
+    :keyword exe_num: The number of the job's execution
+    :type exe_num: :class:`django.db.models.IntegerField`
+
+    :keyword output_manifest: The output manifest generated by the job execution
+    :type output_manifest: :class:`django.contrib.postgres.fields.JSONField`
+    :keyword output: JSON description of the job execution's output
+    :type output: :class:`django.contrib.postgres.fields.JSONField`
+
+    :keyword created: When this model was created
+    :type created: :class:`django.db.models.DateTimeField`
+    """
+
+    job_exe = models.OneToOneField('job.JobExecution', primary_key=True, on_delete=models.PROTECT)
+    job = models.ForeignKey('job.Job', on_delete=models.PROTECT)
+    job_type = models.ForeignKey('job.JobType', on_delete=models.PROTECT)
+    exe_num = models.IntegerField()
+
+    output_manifest = django.contrib.postgres.fields.JSONField(blank=True, null=True)
+    output = django.contrib.postgres.fields.JSONField(default=dict)
+
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta(object):
+        """Meta information for the database"""
+        db_table = 'job_exe_output'
 
 
 class JobInputFile(models.Model):
