@@ -8,7 +8,7 @@ import elasticsearch
 SECRET_KEY = os.environ.get('SCALE_SECRET_KEY', INSECURE_DEFAULT_KEY)
 
 # Use the following lines to enable developer/debug mode.
-DEBUG = os.environ.get('SCALE_DEBUG') in ['True', 'TRUE', 'true', '1', 'yes']
+DEBUG = os.environ.get('SCALE_DEBUG').lower() in ['true', '1', 't']
 TEMPLATES[0]['OPTIONS']['debug'] = DEBUG
 
 # Set the external URL context here, default to using SCRIPT_NAME passed by reverse proxy.
@@ -113,4 +113,4 @@ SECRETS_TOKEN = os.environ.get('SECRETS_TOKEN', None)
 # DCOS service account name, or None if not DCOS secrets store
 DCOS_SERVICE_ACCOUNT = os.environ.get('DCOS_SERVICE_ACCOUNT', None)
 # Flag for raising SSL warnings associated with secrets transactions.
-SECRETS_SSL_WARNINGS = os.environ.get('SECRETS_SSL_WARNINGS') not in ['False', 'FALSE', 'false', '0', 'no']
+SECRETS_SSL_WARNINGS = os.environ.get('SECRETS_SSL_WARNINGS').lower() not in ['false', '0', 'f']

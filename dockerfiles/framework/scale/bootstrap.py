@@ -207,6 +207,12 @@ def deploy_webserver(client, app_name, es_urls, es_lb, db_host, db_port, broker_
     marathon['cpus'] = int(cpu)
     marathon['mem'] = int(memory)
 
+    # Set attributes for secrets
+    marathon['DCOS_SERVICE_ACCOUNT'] = os.environ.get('DCOS_SERVICE_ACCOUNT', None)
+    marathon['SECRETS_SSL_WARNINGS'] = os.environ.get('SECRETS_SSL_WARNINGS').lower() not in ['false', '0', 'f']
+    marathon['SECRETS_TOKEN'] = os.environ.get('SECRETS_TOKEN', None)
+    marathon['SECRETS_URL'] = os.environ.get('SECRETS_URL', None)
+
     env_map = {
         'SCALE_ALLOWED_HOSTS': 'SCALE_ALLOWED_HOSTS',
         'SCALE_SECRET_KEY': 'SCALE_SECRET_KEY',
