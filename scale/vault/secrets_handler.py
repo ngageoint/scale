@@ -210,7 +210,7 @@ class SecretsHandler(object):
         try:
             token = jwt.encode({'uid': self.service_account}, self.secrets_token, algorithm='RS256')
         except ValueError:
-            raise InvalidSecretsToken('The provided token could not be encoded: ')
+            raise InvalidSecretsToken('The provided token could not be encoded')
 
         url = self.secrets_url + '/acs/api/v1/auth/login'
         data = json.dumps({
