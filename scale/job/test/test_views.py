@@ -805,7 +805,7 @@ class TestJobTypesView(TestCase):
         self.assertEqual(results['id'], job_type.id)
 
         # Secrets sent to Vault
-        secrets_name = '-'.join([json_data['name'], json_data['version']])
+        secrets_name = '-'.join([json_data['name'], json_data['version']]).replace('.', '_')
         secrets = json_data['configuration']['settings']
         mock_set_secret.assert_called_once_with(secrets_name, secrets)
 
@@ -1489,7 +1489,7 @@ class TestJobTypeDetailsView(TestCase):
         self.assertEqual(result['trigger_rule']['id'], self.trigger_rule.id)
 
         # Secrets sent to Vault
-        secrets_name = '-'.join([result['name'], result['version']])
+        secrets_name = '-'.join([result['name'], result['version']]).replace('.', '_')
         secrets = configuration['settings']
         mock_set_secret.assert_called_once_with(secrets_name, secrets)
 

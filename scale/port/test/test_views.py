@@ -674,7 +674,7 @@ class TestConfigurationViewImport(TestCase):
 
         # Secrets sent to Vault
         secrets_name = '-'.join([json_data['import']['job_types'][0]['name'],
-                                 json_data['import']['job_types'][0]['version']])
+                                 json_data['import']['job_types'][0]['version']]).replace('.', '_')
         secrets = {'DB_PASS': 'elacs'}
         mock_set_secret.assert_called_once_with(secrets_name, secrets)
 
