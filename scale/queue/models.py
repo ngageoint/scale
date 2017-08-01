@@ -619,7 +619,7 @@ class QueueManager(models.Manager):
 
     @transaction.atomic
     def schedule_job_executions(self, framework_id, job_executions, workspaces):
-        """Schedules the given job executions on the provided nodes and resources. The corresponding queue models will
+        """Schedules the given queued job executions on the provided nodes and resources. The corresponding queue models will
         be deleted from the database. All database changes occur in an atomic transaction.
 
         :param framework_id: The scheduling framework ID
@@ -711,9 +711,10 @@ class QueueManager(models.Manager):
             queue.job_type = job.job_type
             queue.job = job
             queue.exe_num = job.num_exes
-            queue.priority = job.priority
             queue.input_file_size = job.disk_in_required if job.disk_in_required else 0.0
             queue.is_canceled = False
+            queue.priority = job.priority
+            queue.timeout = job.timeout
             queue.interface = job.get_job_interface().get_dict()
             queue.configuration = config.get_dict()
             queue.resources = job.get_resources().get_json().get_dict()
@@ -736,12 +737,14 @@ class Queue(models.Model):
     :keyword exe_num: The number for this job execution
     :type exe_num: :class:`django.db.models.IntegerField`
 
-    :keyword priority: The priority of the job (lower number is higher priority)
-    :type priority: :class:`django.db.models.IntegerField`
     :keyword input_file_size: The amount of disk space in MiB required for input files for this job
     :type input_file_size: :class:`django.db.models.FloatField`
     :keyword is_canceled: Whether this queued job execution has been canceled
     :type is_canceled: :class:`django.db.models.BooleanField`
+    :keyword priority: The priority of the job (lower number is higher priority)
+    :type priority: :class:`django.db.models.IntegerField`
+    :keyword timeout: The maximum amount of time to allow this execution to run before being killed (in seconds)
+    :type timeout: :class:`django.db.models.IntegerField`
 
     :keyword interface: JSON description describing the job's interface
     :type interface: :class:`django.contrib.postgres.fields.JSONField`
@@ -760,9 +763,10 @@ class Queue(models.Model):
     job = models.ForeignKey('job.Job', on_delete=models.PROTECT)
     exe_num = models.IntegerField()
 
-    priority = models.IntegerField(db_index=True)
     input_file_size = models.FloatField()
     is_canceled = models.BooleanField(default=False)
+    priority = models.IntegerField(db_index=True)
+    timeout = models.IntegerField()
 
     interface = django.contrib.postgres.fields.JSONField(default=dict)
     configuration = django.contrib.postgres.fields.JSONField(default=dict)

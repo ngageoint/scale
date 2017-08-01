@@ -1386,17 +1386,11 @@ class JobExecution(models.Model):
         self.configuration = configuration.get_dict()
 
     def get_cluster_id(self):
-        """Gets the cluster ID for the job execution. This call is only valid after the job execution has been scheduled
-        (is no longer queued).
+        """Gets the cluster ID for the job execution
 
         :returns: The cluster ID for the job execution
         :rtype: string
-
-        :raises :class:`util.exceptions.ScaleLogicBug`: If the job execution is still queued
         """
-
-        if self.status == 'QUEUED':
-            raise ScaleLogicBug('cluster_id is not set until the job execution is scheduled')
 
         if not self.cluster_id:
             # Return old-style format before cluster_id field was created
@@ -1651,15 +1645,18 @@ class JobExecution(models.Model):
 
         return self.job.job_type.is_system
 
-    def set_cluster_id(self, framework_id):
+    def set_cluster_id(self, framework_id, job_id, exe_num):
         """Sets the unique cluster ID for this job execution
 
         :param framework_id: The scheduling framework ID
         :type framework_id: string
+        :param job_id: The job ID
+        :type job_id: int
+        :param exe_num: The number of the execution
+        :type exe_num: int
         """
 
-        # Cluster ID is created from framework ID and job execution ID
-        self.cluster_id = '%s_%s_%d' % (JOB_TASK_ID_PREFIX, framework_id, self.pk)
+        self.cluster_id = '%s_%s_%dx%d' % (JOB_TASK_ID_PREFIX, framework_id, job_id, exe_num)
 
     def uses_docker(self):
         """Indicates whether this job execution uses Docker

@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
         ('error', '0004_error_should_be_retried'),
         ('node', '0004_auto_20170524_1639'),
         ('job', '0030_remove_job_configuration'),
-        ('queue', '0015_auto_20170727_1423'),
+        ('queue', '0015_auto_20170731_1527'),
     ]
 
     operations = [

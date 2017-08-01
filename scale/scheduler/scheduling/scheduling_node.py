@@ -94,7 +94,7 @@ class SchedulingNode(object):
             self._allocated_queued_job_exes.append(job_exe)
             self.allocated_resources.add(resources)
             self._remaining_resources.subtract(resources)
-            job_exe.accepted(self.agent_id, self.node_id, resources)
+            job_exe.scheduled(self.agent_id, self.node_id, resources)
             return True
 
         return False
