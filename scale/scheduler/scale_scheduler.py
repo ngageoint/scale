@@ -279,6 +279,12 @@ class ScaleScheduler(MesosScheduler):
         recon_mgr.remove_task_id(task_id)
 
         # Hand off task update to be saved in the database
+        if task_id.startswith(JOB_TASK_ID_PREFIX):
+            # Grab job execution ID from manager
+            cluster_id = JobExecution.parse_cluster_id(task_id)
+            job_exe = job_exe_mgr.get_running_job_exe(cluster_id)
+            if job_exe:
+                model.job_exe_id = job_exe.id
         task_update_mgr.add_task_update(model)
 
         # Update task with latest status
@@ -294,8 +300,8 @@ class ScaleScheduler(MesosScheduler):
                     was_job_finished = True
                     cleanup_mgr.add_job_execution(job_exe)
             except Exception:
-                job_exe_id = JobExecution.get_job_exe_id(task_id)
-                logger.exception('Error handling status update for job execution: %s', job_exe_id)
+                cluster_id = JobExecution.parse_cluster_id(task_id)
+                logger.exception('Error handling status update for job execution: %s', cluster_id)
                 # Error handling status update, add task so it can be reconciled
                 task = task_mgr.get_task(task_id)
                 if task:
@@ -442,7 +448,7 @@ class ScaleScheduler(MesosScheduler):
 
         # Find current tasks for running executions
         for job_exe in job_exes:
-            running_job_exe = job_exe_mgr.get_running_job_exe(job_exe.id)
+            running_job_exe = job_exe_mgr.get_running_job_exe(job_exe.get_cluster_id())
             if running_job_exe:
                 task = running_job_exe.current_task
                 if task:

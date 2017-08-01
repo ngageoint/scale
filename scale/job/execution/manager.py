@@ -21,7 +21,7 @@ class JobExecutionManager(object):
         """Constructor
         """
 
-        self._running_job_exes = {}  # {ID: RunningJobExecution}
+        self._running_job_exes = {}  # {Cluster ID: RunningJobExecution}
         self._lock = threading.Lock()
         self._metrics = TotalJobExeMetrics(now())
 
@@ -44,18 +44,18 @@ class JobExecutionManager(object):
         with self._lock:
             self._metrics.generate_status_json(nodes_list, when)
 
-    def get_running_job_exe(self, job_exe_id):
-        """Returns the running job execution with the given ID, or None if the job execution does not exist
+    def get_running_job_exe(self, cluster_id):
+        """Returns the running job execution with the given cluster ID, or None if the job execution does not exist
 
-        :param job_exe_id: The ID of the job execution to return
-        :type job_exe_id: int
-        :returns: The running job execution with the given ID, possibly None
+        :param cluster_id: The cluster ID of the job execution to return
+        :type cluster_id: int
+        :returns: The running job execution with the given cluster ID, possibly None
         :rtype: :class:`job.execution.job_exe.RunningJobExecution`
         """
 
         with self._lock:
-            if job_exe_id in self._running_job_exes:
-                return self._running_job_exes[job_exe_id]
+            if cluster_id in self._running_job_exes:
+                return self._running_job_exes[cluster_id]
             return None
 
     def get_running_job_exes(self):
@@ -65,11 +65,8 @@ class JobExecutionManager(object):
         :rtype: [:class:`job.execution.job_exe.RunningJobExecution`]
         """
 
-        running_job_exes = []
         with self._lock:
-            for job_exe_id in self._running_job_exes:
-                running_job_exes.append(self._running_job_exes[job_exe_id])
-        return running_job_exes
+            return list(self._running_job_exes.values())
 
     def handle_task_timeout(self, task, when):
         """Handles the timeout of the given task
@@ -81,14 +78,14 @@ class JobExecutionManager(object):
         """
 
         if task.id.startswith(JOB_TASK_ID_PREFIX):
-            job_exe_id = JobExecution.get_job_exe_id(task.id)
+            cluster_id = JobExecution.parse_cluster_id(task.id)
             with self._lock:
-                if job_exe_id in self._running_job_exes:
-                    job_exe = self._running_job_exes[job_exe_id]
+                if cluster_id in self._running_job_exes:
+                    job_exe = self._running_job_exes[cluster_id]
                     try:
                         job_exe.execution_timed_out(task, when)
                     except DatabaseError:
-                        logger.exception('Error failing timed out job execution %i', job_exe_id)
+                        logger.exception('Error failing timed out job execution %s', cluster_id)
                     # We do not remove timed out job executions at this point. We wait for the status update of the
                     # killed task to come back so that job execution cleanup occurs after the task is dead.
 
@@ -102,10 +99,10 @@ class JobExecutionManager(object):
         """
 
         if task_update.task_id.startswith(JOB_TASK_ID_PREFIX):
-            job_exe_id = JobExecution.get_job_exe_id(task_update.task_id)
+            cluster_id = JobExecution.parse_cluster_id(task_update.task_id)
             with self._lock:
-                if job_exe_id in self._running_job_exes:
-                    job_exe = self._running_job_exes[job_exe_id]
+                if cluster_id in self._running_job_exes:
+                    job_exe = self._running_job_exes[cluster_id]
                     job_exe.task_update(task_update)
                     if job_exe.is_finished():
                         self._handle_finished_job_exe(job_exe)
@@ -133,14 +130,13 @@ class JobExecutionManager(object):
 
         lost_exes = []
         with self._lock:
-            for job_exe_id in self._running_job_exes.keys():
-                job_exe = self._running_job_exes[job_exe_id]
+            for job_exe in self._running_job_exes.values():
                 if job_exe.node_id == node_id:
                     lost_exes.append(job_exe)
                     try:
                         job_exe.execution_lost(when)
                     except DatabaseError:
-                        logger.exception('Error failing lost job execution: %s', job_exe.id)
+                        logger.exception('Error failing lost job execution: %s', job_exe.cluster_id)
                     if job_exe.is_finished():
                         self._handle_finished_job_exe(job_exe)
         return lost_exes
@@ -154,7 +150,7 @@ class JobExecutionManager(object):
 
         with self._lock:
             for job_exe in job_exes:
-                self._running_job_exes[job_exe.id] = job_exe
+                self._running_job_exes[job_exe.cluster_id] = job_exe
             self._metrics.add_running_job_exes(job_exes)
 
     def sync_with_database(self):
@@ -165,22 +161,24 @@ class JobExecutionManager(object):
         :rtype: [:class:`job.tasks.base_task.Task`]
         """
 
+        job_exe_ids = []
         with self._lock:
-            job_exe_ids = list(self._running_job_exes.keys())
+            for job_exe in self._running_job_exes.values():
+                job_exe_ids.append(job_exe.id)
 
         canceled_tasks = []
         canceled_models = list(JobExecution.objects.filter(id__in=job_exe_ids, status='CANCELED').iterator())
 
         with self._lock:
             for job_exe_model in canceled_models:
-                if job_exe_model.id in self._running_job_exes:
-                    canceled_job_exe = self._running_job_exes[job_exe_model.id]
+                if job_exe_model.get_cluster_id() in self._running_job_exes:
+                    canceled_job_exe = self._running_job_exes[job_exe_model.get_cluster_id()]
                     try:
                         task = canceled_job_exe.execution_canceled()
                         if task:
                             canceled_tasks.append(task)
                     except DatabaseError:
-                        logger.exception('Error canceling job execution %i', job_exe_model.id)
+                        logger.exception('Error canceling job execution %s', job_exe_model.get_cluster_id())
                     # We do not remove canceled job executions at this point. We wait for the status update of the
                     # killed task to come back so that job execution cleanup occurs after the task is dead.
 
@@ -193,7 +191,7 @@ class JobExecutionManager(object):
         :type job_exe: :class:`job.execution.job_exe.RunningJobExecution`
         """
 
-        del self._running_job_exes[job_exe.id]
+        del self._running_job_exes[job_exe.cluster_id]
         self._metrics.job_exe_finished(job_exe)
 
 

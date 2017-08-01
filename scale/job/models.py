@@ -1278,17 +1278,18 @@ class JobExecution(models.Model):
     objects = JobExecutionManager()
 
     @staticmethod
-    def get_job_exe_id(task_id):
-        """Returns the job execution ID for the given task ID
+    def parse_cluster_id(task_id):
+        """Parses and returns the cluster ID from the given task ID
 
         :param task_id: The task ID
-        :type task_id: str
-        :returns: The job execution ID
-        :rtype: int
+        :type task_id: string
+        :returns: The cluster ID
+        :rtype: string
         """
 
-        # Job execution ID is the fourth segment
-        return int(task_id.split('_')[3])
+        # Cluster ID is the first four segments
+        segments = task_id.split('_')
+        return '_'.join(segments[:4])
 
     def configure_docker_params(self, workspaces, docker_volumes):
         """Configures the Docker parameters needed for each task in the execution. The job execution must have been set
