@@ -2324,7 +2324,7 @@ class JobTypeManager(models.Manager):
 
         secrets_handler = SecretsHandler()
         job_info = JobType.objects.values_list('name', 'version').get(pk=job_type_id)
-        job_name = '-'.join(list(job_info))
+        job_name = '-'.join(list(job_info)).replace('.', '_')
 
         secrets_handler.set_job_type_secrets(job_name, secrets)
 
