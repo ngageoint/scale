@@ -134,6 +134,11 @@ class SecretsHandler(object):
         secret_values = json.dumps(secrets)
 
         if self.dcos_token:
+            if job_name in self.list_job_types():
+                method = 'PATCH'
+            else:
+                method = 'PUT'
+
             url = ''.join([url, '/secret/default/scale/job-type/', job_name])
             headers = {
                 'Content-Type': 'application/json',
@@ -144,7 +149,8 @@ class SecretsHandler(object):
                 'description': 'Secrets for Scale job ' + job_name,
                 'value': secret_values
             })
-            self._make_request('PUT', url, headers, data)
+
+            self._make_request(method, url, headers, data)
 
         else:
             url = ''.join([url, '/secret/scale/job-type/', job_name])
