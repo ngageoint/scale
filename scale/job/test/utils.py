@@ -156,13 +156,13 @@ def create_job_exe(job_type=None, job=None, status='RUNNING', configuration=None
         resources = NodeResources()
 
     job_exe = JobExecution.objects.create(job=job, status=status, error=error, configuration=configuration,
-                                          resources=resources.get_json().get_dict(), disk_in_scheduled=input_file_size,
+                                          resources=resources.get_json().get_dict(), input_file_size=input_file_size,
                                           command_arguments=command_arguments, timeout=timeout, node=node,
                                           created=created, queued=queued, started=started, pre_started=pre_started,
                                           pre_completed=pre_completed, job_started=job_started,
                                           job_completed=job_completed, post_started=post_started,
                                           post_completed=post_completed, ended=ended, last_modified=last_modified)
-    job_exe.set_cluster_id('1234')
+    job_exe.set_cluster_id('1234', job.id, job.num_exes)
     return job_exe
 
 

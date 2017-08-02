@@ -9,6 +9,7 @@ import django.contrib.postgres.fields
 from django.db import models, transaction
 
 from error.models import Error
+from job.configuration.configurators import QueuedExecutionConfigurator
 from job.configuration.data.exceptions import InvalidData
 from job.configuration.data.job_data import JobData
 from job.configuration.json.execution.exe_config import ExecutionConfiguration
@@ -675,8 +676,9 @@ class QueueManager(models.Manager):
     def _queue_jobs(self, jobs, input_files=None, priority=None):
         """Queues the given jobs. The caller must have obtained model locks on the job models in an atomic transaction.
         Any jobs that are not in a valid status for being queued, are without job data, or are superseded will be
-        ignored. All jobs should have their related job_type and job_type_rev models populated. If the Scale input file
-        models are not provided, they will be queried.
+        ignored. All jobs should have their related job_type and job_type_rev models populated. All scale_file models
+        should have their related workspace field populated. If the scale_file models are not provided, they will be
+        queried.
 
         :param jobs: The job models to put on the queue
         :type jobs: list
@@ -703,9 +705,9 @@ class QueueManager(models.Manager):
 
         # Bulk create queue models
         queues = []
+        configurator = QueuedExecutionConfigurator(input_files)
         for job in queued_jobs:
-            config = ExecutionConfiguration()
-            config.configure_for_queued_job(job, input_files)
+            config = configurator.configure_queued_job(job)
 
             queue = Queue()
             queue.job_type = job.job_type

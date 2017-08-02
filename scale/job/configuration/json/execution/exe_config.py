@@ -48,7 +48,7 @@ EXE_CONFIG_SCHEMA = {
     'definitions': {
         'input_file': {
             'type': 'object',
-            'required': ['id', 'type', 'workspace_id', 'workspace_path', 'is_deleted'],
+            'required': ['id', 'type', 'workspace_name', 'workspace_path', 'is_deleted'],
             'additionalProperties': False,
             'properties': {
                 'id': {
@@ -58,8 +58,8 @@ EXE_CONFIG_SCHEMA = {
                     'type': 'string',
                     'enum': ['SOURCE', 'PRODUCT'],
                 },
-                'workspace_id': {
-                    'type': 'integer',
+                'workspace_name': {
+                    'type': 'string',
                 },
                 'workspace_path': {
                     'type': 'string',
@@ -241,43 +241,101 @@ class ExecutionConfiguration(object):
         except ValidationError as validation_error:
             raise InvalidExecutionConfiguration(validation_error)
 
-    def configure_for_queued_job(self, job, input_files):
-        """Configures this execution for the given queued job. The given job model should have its related job_type and
-        job_type_rev models populated.
+    # TODO: implement
+    def configure_for_scheduled_job(self, job_exe, job_type, interface, workspaces, secrets):
+        """Configures this execution for the given scheduled job. The given job_exe and job_type models will not have
+        any related fields populated. This execution configuration will have all secret values replaced with '*****' so
+        that it is safe to be stored in the database. Another copy of this configuration will be returned that has the
+        actual secret values populated and can be used for actual scheduling.
 
-        :param job: The queued job model
-        :type job: :class:`job.models.Job`
-        :param input_files: The dict of Scale file models stored by ID
-        :type input_files: dict
+        :param job_exe: The job execution model being scheduled
+        :type job_exe: :class:`job.models.JobExecution`
+        :param job_type: The job type model
+        :type job_type: :class:`job.models.JobType`
+        :param interface: The job interface
+        :type interface: :class:`job.configuration.interface.job_interface.JobInterface`
+        :param workspaces: The dict of workspaces stored by ID
+        :type workspaces: dict
+        :returns: A copy of this configuration containing secret values
+        :rtype: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         """
 
-        data = job.get_job_data()
-        self._add_input_files(data, input_files)
+        # TODO: figure out how ingest job should pass in workspace when queuing job
 
-        # Set up env vars for job's input data
-        env_vars = {}
-        # TODO: refactor this to use JobData method after Seed upgrade
-        for data_input in data.get_dict()['input_data']:
-            input_name = data_input['name']
-            env_var = input_name.upper()  # Environment variable names are all upper case
-            if 'value' in data_input:
-                env_vars[env_var] = data_input['value']
-            if 'file_id' in data_input:
-                file_dict = self._configuration['input_files'][input_name][0]
-                file_name = os.path.basename(file_dict['workspace_path'])
-                if 'local_file_name' in file_dict:
-                    file_name = file_dict['local_file_name']
-                env_vars[env_var] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name, file_name)
-            elif 'file_ids' in data_input:
-                env_vars[env_var] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name)
+        # TODO: make configurator for this
+        # TODO: set shared mem docker param for main task
+        # TODO: add mounts/volumes to main task (interface, job_type.job_config)
 
-        # Add env var for output directory
-        # TODO: original output dir can be removed when Scale only supports Seed-based job types
-        env_vars['job_output_dir'] = SCALE_JOB_EXE_OUTPUT_PATH  # Original output directory
-        env_vars['OUTPUT_DIR'] = SCALE_JOB_EXE_OUTPUT_PATH  # Seed output directory
+        # TODO: check for system vs non-system job and add DB settings, IO mounts, and workspaces as needed
+        # TODO: add workspaces from populate_job_data()
+        # TODO: move output dir env var (setting?) to here
+        # TODO: this includes system jobs like strike and scan - figure out if these can be resolved now (like ingest)
 
-        main_task_dict = {'type': 'main', 'args': job.get_job_interface().get_command_args(), 'env_vars': env_vars}
-        self._configuration['tasks'] = [main_task_dict]
+        # TODO: apply resource env vars to all tasks (including shared mem) (add resources to task JSONs)
+        # TODO: convert workspaces to volumes for all tasks
+        # TODO: apply logging docker params to all tasks
+
+        # TODO: make copy of this configuration
+        config_with_secrets = None
+        # TODO: populate settings in both (copy with secrets, this without) (provide DB settings values)
+        # TODO: convert settings to env vars in both
+        # TODO: add env vars from interface until this feature goes away
+        # TODO: convert volumes and env vars to docker params in both
+        # TODO: add docker params from job type until this feature gets removed
+        return config_with_secrets
+
+    def add_to_task(self, task_type, args=None, env_vars=None):
+        """Adds the given parameters to the task with the given type. The task with the given type must already exist.
+
+        :param task_type: The task type to add the parameters to
+        :type task_type: string
+        :param args: The command arguments for the task
+        :type args: string
+        :param env_vars: A dict of env var names and values to add to the task
+        :type env_vars: dict
+        """
+
+        task_dict = self._get_task_dict(task_type)
+        if args:
+            self._add_args_to_task(task_dict, args)
+        if env_vars:
+            self._add_env_vars_to_task(task_dict, env_vars)
+
+    # TODO: need this?
+    def add_to_tasks(self, task_types, args=None, env_vars=None):
+        """Adds the given parameters to the tasks with the given types
+
+        :param task_types: The list of task types to add the parameters to
+        :type task_types: list
+        :param args: The command arguments for the task(s)
+        :type args: string
+        :param env_vars: A dict of env var names and values to add to the task(s)
+        :type env_vars: dict
+        """
+
+        for task_type in task_types:
+            self.add_to_task(task_type, args=args, env_vars=env_vars)
+
+    def create_tasks(self, task_types):
+        """Makes sure that tasks with the given types are created and in the given order. If an already existing task
+        type is not included in the given list, it will be removed.
+
+        :param task_types: The list of task types
+        :type task_types: list
+        """
+
+        tasks_by_type = {}
+        for task_dict in self._configuration['tasks']:
+            tasks_by_type[task_dict['type']] = task_dict
+
+        tasks = []
+        for task_type in task_types:
+            if task_type in tasks_by_type:
+                tasks.append(tasks_by_type[task_type])
+                del tasks_by_type[task_type]
+            else:
+                tasks.append(self._create_task(task_type))
+        self._configuration['tasks'] = tasks
 
     def get_dict(self):
         """Returns the internal dictionary that represents this execution configuration
@@ -288,34 +346,56 @@ class ExecutionConfiguration(object):
 
         return self._configuration
 
-    def _add_input_files(self, job_data, input_files):
-        """Adds the given input files to the configuration
+    def set_input_files(self, input_files):
+        """Sets the given input files in the configuration
 
-        :param job_data: The job data
-        :type job_data: :class:`job.configuration.data.job_data.JobData`
-        :param input_files: The dict of Scale file models stored by ID
+        :param input_files: A dict where data input name maps to a list of input files
         :type input_files: dict
         """
 
         files_dict = {}
 
-        for input_name, file_ids in job_data.get_input_file_ids_by_input().items():
+        for input_name in input_files:
             file_list = []
-            file_names = set()
-            for file_id in file_ids:
-                scale_file = input_files[file_id]
-                file_dict = {'id': scale_file.id, 'type': scale_file.file_type, 'workspace_id': scale_file.workspace_id,
-                             'workspace_path': scale_file.file_path, 'is_deleted': scale_file.is_deleted}
-                # Check for file name collision and use Scale file ID to ensure names are unique
-                file_name = scale_file.file_name
-                if file_name in file_names:
-                    file_name = '%d.%s' % (scale_file.id, file_name)
-                    file_dict['local_file_name'] = file_name
-                file_names.add(file_name)
+            for input_file in input_files[input_name]:
+                file_dict = {'id': input_file.id, 'type': input_file.file_type,
+                             'workspace_name': input_file.workspace_name, 'workspace_path': input_file.file_path,
+                             'is_deleted': input_file.is_deleted}
+                if input_file.local_file_name:
+                    file_dict['local_file_name'] = input_file.local_file_name
                 file_list.append(file_dict)
             files_dict[input_name] = file_list
 
         self._configuration['input_files'] = files_dict
+
+    def _add_args_to_task(self, task_dict, args):
+        """Adds the given command arguments to the given task
+
+        :param task_dict: The task dict
+        :type task_dict: dict
+        :param args: The command arguments
+        :type args: string
+        """
+
+        task_dict['args'] = args
+
+    def _add_env_vars_to_task(self, task_dict, env_vars):
+        """Adds the given environment variables to the given task
+
+        :param task_dict: The task dict
+        :type task_dict: dict
+        :param env_vars: The command arguments
+        :type env_vars: dict
+        """
+
+        if 'env_vars' in task_dict:
+            task_env_vars = task_dict['env_vars']
+        else:
+            task_env_vars = {}
+            task_dict['env_vars'] = task_env_vars
+
+        for name, value in env_vars.items():
+            task_env_vars[name] = value
 
     @staticmethod
     def _convert_configuration(configuration):
@@ -383,6 +463,31 @@ class ExecutionConfiguration(object):
             configuration['tasks'] = []
         configuration['tasks'].append(new_task_dict)
         del configuration[old_task_name]
+
+    def _create_task(self, task_type):
+        """Creates a new task with the given type
+
+        :param task_type: The task type
+        :type task_type: string
+        :return: The task dict
+        :rtype: dict
+        """
+
+        return {'type': task_type, 'args': ''}
+
+    def _get_task_dict(self, task_type):
+        """Returns the dict for the task with the given type, if it exists
+
+        :param task_type: The task type
+        :type task_type: string
+        :return: The task dict, possibly None
+        :rtype: dict
+        """
+
+        for task_dict in self._configuration['tasks']:
+            if task_dict['type'] == task_type:
+                return task_dict
+        return None
 
     def _populate_default_values(self):
         """Populates any missing JSON fields that have default values
