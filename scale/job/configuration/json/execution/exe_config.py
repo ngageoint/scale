@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 import logging
-import os
 
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
@@ -10,7 +9,6 @@ from jsonschema.exceptions import ValidationError
 from job.configuration.exceptions import InvalidExecutionConfiguration
 from job.configuration.json.execution import exe_config_1_1 as previous_version
 from job.configuration.volume import MODE_RO, MODE_RW
-from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
 
 logger = logging.getLogger(__name__)
 
@@ -153,7 +151,7 @@ EXE_CONFIG_SCHEMA = {
         },
         'workspace': {
             'type': 'object',
-            'required': ['volume_name', 'mode'],
+            'required': ['mode'],
             'additionalProperties': False,
             'properties': {
                 'volume_name': {
@@ -241,50 +239,7 @@ class ExecutionConfiguration(object):
         except ValidationError as validation_error:
             raise InvalidExecutionConfiguration(validation_error)
 
-    # TODO: implement
-    def configure_for_scheduled_job(self, job_exe, job_type, interface, workspaces, secrets):
-        """Configures this execution for the given scheduled job. The given job_exe and job_type models will not have
-        any related fields populated. This execution configuration will have all secret values replaced with '*****' so
-        that it is safe to be stored in the database. Another copy of this configuration will be returned that has the
-        actual secret values populated and can be used for actual scheduling.
-
-        :param job_exe: The job execution model being scheduled
-        :type job_exe: :class:`job.models.JobExecution`
-        :param job_type: The job type model
-        :type job_type: :class:`job.models.JobType`
-        :param interface: The job interface
-        :type interface: :class:`job.configuration.interface.job_interface.JobInterface`
-        :param workspaces: The dict of workspaces stored by ID
-        :type workspaces: dict
-        :returns: A copy of this configuration containing secret values
-        :rtype: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
-        """
-
-        # TODO: figure out how ingest job should pass in workspace when queuing job
-
-        # TODO: make configurator for this
-        # TODO: set shared mem docker param for main task
-        # TODO: add mounts/volumes to main task (interface, job_type.job_config)
-
-        # TODO: check for system vs non-system job and add DB settings, IO mounts, and workspaces as needed
-        # TODO: add workspaces from populate_job_data()
-        # TODO: move output dir env var (setting?) to here
-        # TODO: this includes system jobs like strike and scan - figure out if these can be resolved now (like ingest)
-
-        # TODO: apply resource env vars to all tasks (including shared mem) (add resources to task JSONs)
-        # TODO: convert workspaces to volumes for all tasks
-        # TODO: apply logging docker params to all tasks
-
-        # TODO: make copy of this configuration
-        config_with_secrets = None
-        # TODO: populate settings in both (copy with secrets, this without) (provide DB settings values)
-        # TODO: convert settings to env vars in both
-        # TODO: add env vars from interface until this feature goes away
-        # TODO: convert volumes and env vars to docker params in both
-        # TODO: add docker params from job type until this feature gets removed
-        return config_with_secrets
-
-    def add_to_task(self, task_type, args=None, env_vars=None):
+    def add_to_task(self, task_type, args=None, env_vars=None, workspaces=None):
         """Adds the given parameters to the task with the given type. The task with the given type must already exist.
 
         :param task_type: The task type to add the parameters to
@@ -293,13 +248,17 @@ class ExecutionConfiguration(object):
         :type args: string
         :param env_vars: A dict of env var names and values to add to the task
         :type env_vars: dict
+        :param workspaces: The workspaces stored by name
+        :type workspaces: dict
         """
 
         task_dict = self._get_task_dict(task_type)
         if args:
-            self._add_args_to_task(task_dict, args)
+            ExecutionConfiguration._add_args_to_task(task_dict, args)
         if env_vars:
-            self._add_env_vars_to_task(task_dict, env_vars)
+            ExecutionConfiguration._add_env_vars_to_task(task_dict, env_vars)
+        if workspaces:
+            ExecutionConfiguration._add_workspaces_to_task(task_dict, workspaces)
 
     # TODO: need this?
     def add_to_tasks(self, task_types, args=None, env_vars=None):
@@ -334,7 +293,7 @@ class ExecutionConfiguration(object):
                 tasks.append(tasks_by_type[task_type])
                 del tasks_by_type[task_type]
             else:
-                tasks.append(self._create_task(task_type))
+                tasks.append(ExecutionConfiguration._create_task(task_type))
         self._configuration['tasks'] = tasks
 
     def get_dict(self):
@@ -368,7 +327,8 @@ class ExecutionConfiguration(object):
 
         self._configuration['input_files'] = files_dict
 
-    def _add_args_to_task(self, task_dict, args):
+    @staticmethod
+    def _add_args_to_task(task_dict, args):
         """Adds the given command arguments to the given task
 
         :param task_dict: The task dict
@@ -379,7 +339,8 @@ class ExecutionConfiguration(object):
 
         task_dict['args'] = args
 
-    def _add_env_vars_to_task(self, task_dict, env_vars):
+    @staticmethod
+    def _add_env_vars_to_task(task_dict, env_vars):
         """Adds the given environment variables to the given task
 
         :param task_dict: The task dict
@@ -396,6 +357,33 @@ class ExecutionConfiguration(object):
 
         for name, value in env_vars.items():
             task_env_vars[name] = value
+
+    @staticmethod
+    def _add_workspaces_to_task(task_dict, workspaces):
+        """Adds the given workspaces to the given task
+
+        :param task_dict: The task dict
+        :type task_dict: dict
+        :param workspaces: The workspaces stored by name
+        :type workspaces: dict
+        """
+
+        if 'workspaces' in task_dict:
+            task_workspaces = task_dict['workspaces']
+        else:
+            task_workspaces = {}
+            task_dict['workspaces'] = task_workspaces
+
+        for workspace in workspaces.values():
+            if workspace.name in task_workspaces:
+                # Only replace existing workspace if upgrading mode from RO to RW
+                existing_workspace = task_workspaces[workspace.name]
+                if existing_workspace.mode == MODE_RW or workspace.mode == MODE_RO:
+                    continue
+            workspace_dict = {'mode': workspace.mode}
+            if workspace.volume_name:
+                workspace_dict['volume_name'] = workspace.volume_name
+            task_workspaces[workspace.name] = workspace_dict
 
     @staticmethod
     def _convert_configuration(configuration):
@@ -464,7 +452,8 @@ class ExecutionConfiguration(object):
         configuration['tasks'].append(new_task_dict)
         del configuration[old_task_name]
 
-    def _create_task(self, task_type):
+    @staticmethod
+    def _create_task(task_type):
         """Creates a new task with the given type
 
         :param task_type: The task type

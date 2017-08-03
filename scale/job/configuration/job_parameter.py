@@ -16,23 +16,6 @@ class DockerParam(object):
         self.value = value
 
 
-class TaskWorkspace(object):
-    """Represents a workspace needed by a job task
-    """
-
-    def __init__(self, name, mode):
-        """Creates a task workspace
-
-        :param name: The name of the workspace
-        :type name: string
-        :param mode: The mode to use for the workspace, either 'ro' or 'rw'
-        :type mode: string
-        """
-
-        self.name = name
-        self.mode = mode
-
-
 class TaskSetting(object):
     """Represents a setting needed by a job task
     """

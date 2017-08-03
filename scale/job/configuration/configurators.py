@@ -5,6 +5,8 @@ import os
 
 from job.configuration.input_file import InputFile
 from job.configuration.json.execution.exe_config import ExecutionConfiguration
+from job.configuration.volume import MODE_RW
+from job.configuration.workspace import Workspace
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
 
 
@@ -46,6 +48,8 @@ class QueuedExecutionConfigurator(object):
 
         config = ExecutionConfiguration()
         data = job.get_job_data()
+
+        # Add input file meta-data
         input_files_dict = self._create_input_file_dict(data)
         config.set_input_files(input_files_dict)
 
@@ -66,14 +70,20 @@ class QueuedExecutionConfigurator(object):
             elif 'file_ids' in data_input:
                 env_vars[env_var_name] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name)
 
+        # Add any workspaces needed if this is a system job
+        workspaces = {}
+        if job.job_type.is_system:
+            workspaces = QueuedExecutionConfigurator._system_task_workspaces(job)
+
         # Add env var for output directory
         # TODO: original output dir can be removed when Scale only supports Seed-based job types
         env_vars['job_output_dir'] = SCALE_JOB_EXE_OUTPUT_PATH  # Original output directory
         env_vars['OUTPUT_DIR'] = SCALE_JOB_EXE_OUTPUT_PATH  # Seed output directory
 
-        # Create main task with command args and env vars for input data
+        # Create main task with fields populated from input data
         config.create_tasks(['main'])
-        config.add_to_task('main', args=job.get_job_interface().get_command_args(), env_vars=env_vars)
+        config.add_to_task('main', args=job.get_job_interface().get_command_args(), env_vars=env_vars,
+                           workspaces=workspaces)
 
         return config
 
@@ -104,3 +114,92 @@ class QueuedExecutionConfigurator(object):
             files_dict[input_name] = file_list
 
         return files_dict
+
+    @staticmethod
+    def _system_task_workspaces(job):
+        """Returns any workspaces needed for the main task if this job is a system job. The given job model should have
+        its related job_type and job_type_rev models populated.
+
+        :param job: The queued job model
+        :type job: :class:`job.models.Job`
+        :returns: A dict where workspaces are stored by name
+        :rtype: dict
+        """
+
+        workspaces = {}
+        data = job.get_job_data()
+
+        if job.job_type.name == 'scale-ingest':
+            workspace_name = None
+            new_workspace_name = None
+            prop_dict = data.get_property_values(['Ingest ID', 'workspace', 'new_workspace'])
+            if 'workspace' in prop_dict:
+                workspace_name = prop_dict['workspace']
+                if 'new_workspace' in prop_dict:
+                    new_workspace_name = prop_dict['new_workspace']
+            else:
+                # Old ingest jobs do not have the workspace(s) in their data, will need to query ingest model
+                if 'Ingest ID' in prop_dict:
+                    ingest_id = int(prop_dict['Ingest ID'])
+                    from ingest.models import Ingest
+                    ingest = Ingest.objects.select_related('workspace', 'new_workspace').get(id=ingest_id)
+                    workspace_name = ingest.workspace.name
+                    new_workspace_name = ingest.new_workspace.name
+            if workspace_name:
+                workspaces[workspace_name] = Workspace(workspace_name, MODE_RW)
+            if new_workspace_name:
+                workspaces[new_workspace_name] = Workspace(new_workspace_name, MODE_RW)
+
+        return workspaces
+
+
+class ScheduledExecutionConfigurator(object):
+    """Configurator that handles execution configurations when a job execution is scheduled
+    """
+
+    def __init__(self, workspaces):
+        """Creates a ScheduledExecutionConfigurator
+
+        :param workspaces: The dict of workspace models stored by name
+        :type workspaces: dict
+        """
+
+        self._workspaces = workspaces
+
+    def configure_scheduled_job(self, job_exe, job_type, interface):
+        """Configures the JSON configuration field for the given scheduled job execution. The given job_exe and job_type
+        models will not have any related fields populated. The execution configuration in the job_exe model will have
+        all secret values replaced with '*****' so that it is safe to be stored in the database. Another copy of this
+        configuration will be returned that has the actual secret values populated and can be used for actual
+        scheduling.
+
+        :param job_exe: The job execution model being scheduled
+        :type job_exe: :class:`job.models.JobExecution`
+        :param job_type: The job type model
+        :type job_type: :class:`job.models.JobType`
+        :param interface: The job interface
+        :type interface: :class:`job.configuration.interface.job_interface.JobInterface`
+        :returns: A copy of the configuration containing secret values
+        :rtype: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        """
+
+        # TODO: set shared mem docker param for main task
+        # TODO: add mounts/volumes to main task (interface, job_type.job_config)
+
+        # TODO: check for system vs non-system job and add DB settings, IO mounts, and workspaces as needed
+        # TODO: add workspaces from populate_job_data()
+        # TODO: move output dir env var (setting?) to here
+        # TODO: this includes system jobs like strike and scan - figure out if these can be resolved now (like ingest)
+
+        # TODO: apply resource env vars to all tasks (including shared mem) (add resources to task JSONs)
+        # TODO: convert workspaces to volumes (add in workspace volume names) for all tasks
+        # TODO: apply logging docker params to all tasks
+
+        # TODO: make copy of this configuration
+        config_with_secrets = None
+        # TODO: populate settings in both (copy with secrets, this without) (provide DB settings values)
+        # TODO: convert settings to env vars in both
+        # TODO: add env vars from interface until this feature goes away
+        # TODO: convert volumes and env vars to docker params in both
+        # TODO: add docker params from job type until this feature gets removed
+        return config_with_secrets

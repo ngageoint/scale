@@ -306,13 +306,10 @@ class IngestManager(models.Manager):
 
             data = JobData()
             data.add_property_input('Ingest ID', str(ingest_id))
+            data.add_property_input('workspace', ingest.workspace.name)
+            data.add_property_input('new_workspace', ingest.new_workspace.name)
 
-            exe_configuration = ExecutionConfiguration()
-            if ingest.workspace:
-                exe_configuration.add_job_task_workspace(ingest.workspace.name, MODE_RW)
-            if ingest.new_workspace:
-                exe_configuration.add_job_task_workspace(ingest.new_workspace.name, MODE_RW)
-            ingest_job = Queue.objects.queue_new_job(ingest_job_type, data, event, exe_configuration)
+            ingest_job = Queue.objects.queue_new_job(ingest_job_type, data, event)
 
             ingest.job = ingest_job
             ingest.status = 'QUEUED'

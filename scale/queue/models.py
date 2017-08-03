@@ -448,7 +448,7 @@ class QueueManager(models.Manager):
                 Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
 
     @transaction.atomic
-    def queue_new_job(self, job_type, data, event, configuration=None):
+    def queue_new_job(self, job_type, data, event):
         """Creates a new job for the given type and data. The new job is immediately placed on the queue. The new job,
         job_exe, and queue models are saved in the database in an atomic transaction.
 
@@ -458,8 +458,6 @@ class QueueManager(models.Manager):
         :type data: :class:`job.configuration.data.job_data.JobData`
         :param event: The event that triggered the creation of this job
         :type event: :class:`trigger.models.TriggerEvent`
-        :param configuration: The optional initial execution configuration
-        :type configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         :returns: The new queued job
         :rtype: :class:`job.models.Job`
 
@@ -723,10 +721,8 @@ class QueueManager(models.Manager):
             queue.queued = when_queued
             queues.append(queue)
 
-        if not queues:
-            return []
-
-        self.bulk_create(queues)
+        if queues:
+            self.bulk_create(queues)
 
 
 class Queue(models.Model):
