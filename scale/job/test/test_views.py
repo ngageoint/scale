@@ -2058,8 +2058,7 @@ class TestJobTypesValidationView(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
-        self.assertEqual(len(results['warnings']), 1)
-        self.assertEqual(results['warnings'][0]['id'], 'settings')
+        self.assertEqual(len(results['warnings']), 0)
 
     def test_bad_param(self):
         """Tests validating a new job type with missing fields."""

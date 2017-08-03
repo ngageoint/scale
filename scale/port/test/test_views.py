@@ -2133,8 +2133,8 @@ class TestConfigurationValidationView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         results = json.loads(response.content)
-        self.assertEqual(len(results['warnings']), 3)
-        self.assertEqual(len([warning for warning in results['warnings'] if warning['id'] == 'settings']), 2)
+        self.assertEqual(len(results['warnings']), 2)
+        self.assertEqual(len([warning for warning in results['warnings'] if warning['id'] == 'settings']), 1)
         self.assertEqual(len([warning for warning in results['warnings'] if warning['id'] == 'mounts']), 1)
 
     def test_errors(self):

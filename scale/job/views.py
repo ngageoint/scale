@@ -95,8 +95,8 @@ class JobTypesView(ListCreateAPIView):
         try:
             if configuration_dict:
                 configuration = JobConfiguration(configuration_dict)
-                secrets = configuration.get_secret_settings(interface)
-                configuration.validate(interface)
+                secrets = configuration.get_secret_settings(interface.get_dict())
+                configuration.validate(interface.get_dict())
         except InvalidJobConfiguration as ex:
             raise BadParameter('Job type configuration invalid: %s' % unicode(ex))
 
@@ -204,7 +204,7 @@ class JobTypeDetailsView(GenericAPIView):
     def patch(self, request, job_type_id):
         """Edits an existing job type and returns the updated details
 
-        :param request: the HTTP POST request
+        :param request: the HTTP PATCH request
         :type request: :class:`rest_framework.request.Request`
         :param job_type_id: The ID for the job type.
         :type job_type_id: int encoded as a str
@@ -229,12 +229,12 @@ class JobTypeDetailsView(GenericAPIView):
             if configuration_dict:
                 configuration = JobConfiguration(configuration_dict)
                 if interface:
-                    secrets = configuration.get_secret_settings(interface)
-                    configuration.validate(interface)
+                    secrets = configuration.get_secret_settings(interface.get_dict())
+                    configuration.validate(interface.get_dict())
                 else:
                     stored_interface = JobType.objects.values_list('interface', flat=True).get(pk=job_type_id)
                     secrets = configuration.get_secret_settings(stored_interface)
-                    configuration.validate(JobInterface(stored_interface))
+                    configuration.validate(stored_interface)
         except InvalidJobConfiguration as ex:
             raise BadParameter('Job type configuration invalid: %s' % unicode(ex))
 

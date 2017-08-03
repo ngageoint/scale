@@ -2366,7 +2366,7 @@ class JobTypeManager(models.Manager):
             warnings.extend(trigger_config.validate_trigger_for_job(interface))
 
         if configuration:
-            warnings.extend(configuration.validate(interface))
+            warnings.extend(configuration.validate(interface.get_dict()))
 
         if error_mapping:
             warnings.extend(error_mapping.validate())

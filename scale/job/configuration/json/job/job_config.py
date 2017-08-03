@@ -159,20 +159,16 @@ class JobConfiguration(object):
         """Returns a dict of configuration settings that are secret based off the job interface
         setting designations.
 
-        :param interface: The interface for the job type
-        :type interface: :class:`job.configuration.interface.job_interface.JobInterface`
+        :param interface: The interface dict for the job type
+        :type interface: dict
         :returns: name:value pairs of secret settings, possibly None
         :rtype: dict
         """
 
         secrets = {}
-        try:
-            interface_dict = interface.get_dict()
-        except AttributeError:
-            interface_dict = interface
 
-        if 'settings' in self._configuration and 'settings' in interface_dict:
-            interface_settings = interface_dict['settings']
+        if 'settings' in self._configuration and 'settings' in interface:
+            interface_settings = interface['settings']
             secret_settings = [setting['name'] for setting in interface_settings if setting['secret']]
 
             for setting_name in secret_settings:
@@ -198,22 +194,18 @@ class JobConfiguration(object):
     def validate(self, interface):
         """Validates the configuration against the interface to find setting and mount usages
 
-        :param interface: The interface for the job type
-        :type interface: :class:`job.configuration.interface.job_interface.JobInterface`
+        :param interface: The interface dict for the job type
+        :type interface: dict
         :returns: A list of warnings discovered during validation.
         :rtype: [:class:`job.configuration.data.job_data.ValidationWarning`]
         """
 
         warnings = []
-        try:
-            interface_dict = interface.get_dict()
-        except AttributeError:
-            interface_dict = interface
 
         settings_to_delete = []
-        if 'settings' in self._configuration and 'settings' in interface_dict and \
-           self._configuration['settings'] is not None and interface_dict['settings'] is not None:
-            interface_settings = interface_dict['settings']
+        if 'settings' in self._configuration and 'settings' in interface and \
+           self._configuration['settings'] is not None and interface['settings'] is not None:
+            interface_settings = interface['settings']
 
             # Remove settings not used in the interface
             interface_setting_names = [setting['name'] for setting in interface_settings]
@@ -227,8 +219,7 @@ class JobConfiguration(object):
             for setting_name in interface_secret_names:
                 if setting_name in self._configuration['settings']:
                     if setting_name not in settings_to_delete:
-                        warning_str = 'Setting %s will be handled as a secret.' % setting_name
-                        settings_to_delete.append({'name': setting_name, 'warning': warning_str})
+                        settings_to_delete.append({'name': setting_name, 'warning': None})
 
         elif 'settings' in self._configuration and self._configuration['settings'] is not None:
             # Remove all settings
@@ -238,23 +229,24 @@ class JobConfiguration(object):
 
         for setting in settings_to_delete:
             del self._configuration['settings'][setting['name']]
-            warnings.append(ValidationWarning('settings', setting['warning']))
+            if setting['warning']:
+                warnings.append(ValidationWarning('settings', setting['warning']))
 
         mounts_to_delete = []
-        if 'mounts' in interface_dict and 'mounts' in self._configuration and \
-           self._configuration['mounts'] is not None and interface_dict['mounts'] is not None:
-            interface_mounts = interface_dict['mounts']
+        if 'mounts' in interface and 'mounts' in self._configuration and \
+           self._configuration['mounts'] is not None and interface['mounts'] is not None:
+            interface_mounts = interface['mounts']
 
             # Remove mounts not used in the interface
             interface_mount_names = [mount['name'] for mount in interface_mounts]
-            for mount_name, v in self._configuration['mounts'].items():
+            for mount_name, _mount_value in self._configuration['mounts'].items():
                 if mount_name not in interface_mount_names:
                     warning_str = 'Mount %s will be ignored due to no matching interface designation.' % mount_name
                     mounts_to_delete.append({'name': mount_name, 'warning': warning_str})
 
         elif 'mounts' in self._configuration and self._configuration['mounts'] is not None:
             # Remove all mounts
-            for mount_name, v in self._configuration['mounts'].items():
+            for mount_name, _mount_value in self._configuration['mounts'].items():
                 warning_str = 'Mount %s will be ignored due to no matching interface designation.' % mount_name
                 mounts_to_delete.append({'name': mount_name, 'warning': warning_str})
 
