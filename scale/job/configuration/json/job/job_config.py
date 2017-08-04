@@ -203,8 +203,7 @@ class JobConfiguration(object):
         warnings = []
 
         settings_to_delete = []
-        if 'settings' in self._configuration and 'settings' in interface and \
-           self._configuration['settings'] is not None and interface['settings'] is not None:
+        if 'settings' in self._configuration and 'settings' in interface:
             interface_settings = interface['settings']
 
             # Remove settings not used in the interface
@@ -221,7 +220,7 @@ class JobConfiguration(object):
                     if setting_name not in settings_to_delete:
                         settings_to_delete.append({'name': setting_name, 'warning': None})
 
-        elif 'settings' in self._configuration and self._configuration['settings'] is not None:
+        elif 'settings' in self._configuration:
             # Remove all settings
             for setting_name in self._configuration['settings']:
                 warning_str = 'Setting %s will be ignored due to no matching interface designation.' % setting_name
@@ -233,8 +232,7 @@ class JobConfiguration(object):
                 warnings.append(ValidationWarning('settings', setting['warning']))
 
         mounts_to_delete = []
-        if 'mounts' in interface and 'mounts' in self._configuration and \
-           self._configuration['mounts'] is not None and interface['mounts'] is not None:
+        if 'mounts' in interface and 'mounts' in self._configuration:
             interface_mounts = interface['mounts']
 
             # Remove mounts not used in the interface
@@ -244,7 +242,7 @@ class JobConfiguration(object):
                     warning_str = 'Mount %s will be ignored due to no matching interface designation.' % mount_name
                     mounts_to_delete.append({'name': mount_name, 'warning': warning_str})
 
-        elif 'mounts' in self._configuration and self._configuration['mounts'] is not None:
+        elif 'mounts' in self._configuration:
             # Remove all mounts
             for mount_name, _mount_value in self._configuration['mounts'].items():
                 warning_str = 'Mount %s will be ignored due to no matching interface designation.' % mount_name

@@ -1369,8 +1369,8 @@ class TestJobTypeDetailsView(TestCase):
         }
 
         interface = self.interface.copy()
-        interface['settings'] = None
-        interface['mounts'] = None
+        interface['settings'] = []
+        interface['mounts'] = []
 
         new_job_type = job_test_utils.create_job_type(interface=interface, error_mapping=self.error_mapping,
                                                       trigger_rule=self.trigger_rule, max_scheduled=2,
