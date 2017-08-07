@@ -184,6 +184,7 @@ class Monitor(object):
             Ingest.objects.start_ingest_tasks([ingest], strike_id=self.strike_id)
         # No rule match
         else:
+            ingest.status = 'DEFERRED'
             ingest.save()
 
     def _start_transfer(self, ingest, when):
