@@ -1,4 +1,5 @@
 
+# TODO: update references and remove this
 class DockerParam(object):
     """Represents a Docker parameter
     """

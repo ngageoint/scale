@@ -239,13 +239,15 @@ class ExecutionConfiguration(object):
         except ValidationError as validation_error:
             raise InvalidExecutionConfiguration(validation_error)
 
-    def add_to_task(self, task_type, args=None, env_vars=None, workspaces=None):
+    def add_to_task(self, task_type, args=None, docker_params=None, env_vars=None, workspaces=None):
         """Adds the given parameters to the task with the given type. The task with the given type must already exist.
 
         :param task_type: The task type to add the parameters to
         :type task_type: string
         :param args: The command arguments for the task
         :type args: string
+        :param docker_params: The Docker parameters
+        :type docker_params: list
         :param env_vars: A dict of env var names and values to add to the task
         :type env_vars: dict
         :param workspaces: The workspaces stored by name
@@ -255,6 +257,8 @@ class ExecutionConfiguration(object):
         task_dict = self._get_task_dict(task_type)
         if args:
             ExecutionConfiguration._add_args_to_task(task_dict, args)
+        if docker_params:
+            ExecutionConfiguration._add_docker_params_to_task(task_dict, docker_params)
         if env_vars:
             ExecutionConfiguration._add_env_vars_to_task(task_dict, env_vars)
         if workspaces:
@@ -338,6 +342,25 @@ class ExecutionConfiguration(object):
         """
 
         task_dict['args'] = args
+
+    @staticmethod
+    def _add_docker_params_to_task(task_dict, docker_params):
+        """Adds the given Docker parameters to the given task
+
+        :param task_dict: The task dict
+        :type task_dict: dict
+        :param docker_params: The Docker parameters
+        :type docker_params: list
+        """
+
+        if 'docker_params' in task_dict:
+            task_docker_params = task_dict['docker_params']
+        else:
+            task_docker_params = []
+            task_dict['docker_params'] = task_docker_params
+
+        for param in docker_params:
+            task_docker_params.append({'flag': param.flag, 'value': param.value})
 
     @staticmethod
     def _add_env_vars_to_task(task_dict, env_vars):

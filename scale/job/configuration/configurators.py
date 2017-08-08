@@ -1,8 +1,10 @@
 """Defines the classes that handle processing job and execution configuration"""
 from __future__ import unicode_literals
 
+import math
 import os
 
+from job.configuration.docker_param import DockerParameter
 from job.configuration.input_file import InputFile
 from job.configuration.json.execution.exe_config import ExecutionConfiguration
 from job.configuration.volume import MODE_RW
@@ -183,7 +185,13 @@ class ScheduledExecutionConfigurator(object):
         :rtype: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         """
 
-        # TODO: set shared mem docker param for main task
+        config = job_exe.get_execution_configuration()
+
+        # Set shared memory if required by this job type
+        shared_mem = job_type.shared_mem_required
+        if shared_mem > 0:
+            config.add_to_task('main', docker_params=[DockerParameter('shm-size', '%dm' % int(math.ceil(shared_mem)))])
+
         # TODO: add mounts/volumes to main task (interface, job_type.job_config)
 
         # TODO: check for system vs non-system job and add DB settings, IO mounts, and workspaces as needed

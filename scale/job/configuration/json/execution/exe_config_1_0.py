@@ -8,7 +8,7 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 from job.configuration.exceptions import InvalidExecutionConfiguration
-from job.configuration.job_parameter import DockerParam, TaskWorkspace
+from job.configuration.job_parameter import DockerParam
 from job.execution.container import get_workspace_volume_name
 from storage.container import get_workspace_volume_path
 
@@ -83,6 +83,22 @@ EXE_CONFIG_SCHEMA = {
         },
     },
 }
+
+
+class TaskWorkspace(object):
+    """Represents a workspace needed by a job task
+    """
+
+    def __init__(self, name, mode):
+        """Creates a task workspace
+        :param name: The name of the workspace
+        :type name: string
+        :param mode: The mode to use for the workspace, either 'ro' or 'rw'
+        :type mode: string
+        """
+
+        self.name = name
+        self.mode = mode
 
 
 class ExecutionConfiguration(object):
@@ -310,7 +326,7 @@ class ExecutionConfiguration(object):
         """Returns the workspaces needed for the job task
 
         :returns: The job task workspaces
-        :rtype: [:class:`job.configuration.job_parameter.TaskWorkspace`]
+        :rtype: [:class:`job.configuration.json.execution.exe_config_1_0.TaskWorkspace`]
         """
 
         workspaces = self._configuration['job_task']['workspaces']
@@ -320,7 +336,7 @@ class ExecutionConfiguration(object):
         """Returns the workspaces needed for the post task
 
         :returns: The post task workspaces
-        :rtype: [:class:`job.configuration.job_parameter.TaskWorkspace`]
+        :rtype: [:class:`job.configuration.json.execution.exe_config_1_0.TaskWorkspace`]
         """
 
         workspaces = self._configuration['post_task']['workspaces']
@@ -330,7 +346,7 @@ class ExecutionConfiguration(object):
         """Returns the workspaces needed for the pre task
 
         :returns: The pre task workspaces
-        :rtype: [:class:`job.configuration.job_parameter.TaskWorkspace`]
+        :rtype: [:class:`job.configuration.json.execution.exe_config_1_0.TaskWorkspace`]
         """
 
         workspaces = self._configuration['pre_task']['workspaces']
@@ -351,7 +367,7 @@ class ExecutionConfiguration(object):
         :param job_exe: The job execution model (must not be queued) with related job and job_type fields
         :type job_exe: :class:`job.models.JobExecution`
         :param task_workspaces: List of the task workspaces
-        :type task_workspaces: [:class:`job.configuration.job_parameter.TaskWorkspace`]
+        :type task_workspaces: [:class:`job.configuration.json.execution.exe_config_1_0.TaskWorkspace`]
         :param workspaces: A dict of all workspaces stored by name
         :type workspaces: {string: :class:`storage.models.Workspace`}
         :param volume_create: Indicates if new volumes need to be created for these workspaces
