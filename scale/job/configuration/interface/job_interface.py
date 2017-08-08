@@ -798,7 +798,7 @@ class JobInterface(object):
             if setting_is_secret:
                 job_type_name = job_type.get_job_type_name()
                 job_type_ver = job_type.get_job_type_version()
-                job_index = '-'.join([job_type_name, job_type_ver])
+                job_index = '-'.join([job_type_name, job_type_ver]).replace('.', '_')
 
                 if not secret_settings:
                     secret_settings = secrets_mgr.retrieve_job_type_secrets(job_index)

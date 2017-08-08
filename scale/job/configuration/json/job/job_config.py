@@ -67,6 +67,21 @@ JOB_CONFIG_SCHEMA = {
 }
 
 
+class ValidationWarning(object):
+    """Tracks job configuration warnings during validation that may not prevent the job from working."""
+
+    def __init__(self, key, details):
+        """Constructor sets basic attributes.
+
+        :param key: A unique identifier clients can use to recognize the warning.
+        :type key: string
+        :param details: A user-friendly description of the problem, including field names and/or associated values.
+        :type details: string
+        """
+        self.key = key
+        self.details = details
+
+
 class JobConfiguration(object):
     """Represents the schema for a job configuration"""
 
@@ -140,6 +155,28 @@ class JobConfiguration(object):
 
         return volume
 
+    def get_secret_settings(self, interface):
+        """Returns a dict of configuration settings that are secret based off the job interface
+        setting designations.
+
+        :param interface: The interface dict for the job type
+        :type interface: dict
+        :returns: name:value pairs of secret settings, possibly None
+        :rtype: dict
+        """
+
+        secrets = {}
+
+        if 'settings' in self._configuration and 'settings' in interface:
+            interface_settings = interface['settings']
+            secret_settings = [setting['name'] for setting in interface_settings if setting['secret']]
+
+            for setting_name in secret_settings:
+                if setting_name in self._configuration['settings']:
+                    secrets[setting_name] = self._configuration['settings'][setting_name]
+
+        return secrets
+
     def get_setting_value(self, name):
         """Returns the value of the given setting if defined in this configuration, otherwise returns None
 
@@ -153,6 +190,69 @@ class JobConfiguration(object):
             return self._configuration['settings'][name]
 
         return None
+
+    def validate(self, interface):
+        """Validates the configuration against the interface to find setting and mount usages
+
+        :param interface: The interface dict for the job type
+        :type interface: dict
+        :returns: A list of warnings discovered during validation.
+        :rtype: [:class:`job.configuration.data.job_data.ValidationWarning`]
+        """
+
+        warnings = []
+
+        settings_to_delete = []
+        if 'settings' in self._configuration and 'settings' in interface:
+            interface_settings = interface['settings']
+
+            # Remove settings not used in the interface
+            interface_setting_names = [setting['name'] for setting in interface_settings]
+            for setting_name in self._configuration['settings']:
+                if setting_name not in interface_setting_names:
+                    warning_str = 'Setting %s will be ignored due to no matching interface designation.' % setting_name
+                    settings_to_delete.append({'name': setting_name, 'warning': warning_str})
+
+             # Detect any secrets and remove them as settings in configuration
+            interface_secret_names = [setting['name'] for setting in interface_settings if setting['secret']]
+            for setting_name in interface_secret_names:
+                if setting_name in self._configuration['settings']:
+                    if setting_name not in settings_to_delete:
+                        settings_to_delete.append({'name': setting_name, 'warning': None})
+
+        elif 'settings' in self._configuration:
+            # Remove all settings
+            for setting_name in self._configuration['settings']:
+                warning_str = 'Setting %s will be ignored due to no matching interface designation.' % setting_name
+                settings_to_delete.append({'name': setting_name, 'warning': warning_str})
+
+        for setting in settings_to_delete:
+            del self._configuration['settings'][setting['name']]
+            if setting['warning']:
+                warnings.append(ValidationWarning('settings', setting['warning']))
+
+        mounts_to_delete = []
+        if 'mounts' in interface and 'mounts' in self._configuration:
+            interface_mounts = interface['mounts']
+
+            # Remove mounts not used in the interface
+            interface_mount_names = [mount['name'] for mount in interface_mounts]
+            for mount_name, _mount_value in self._configuration['mounts'].items():
+                if mount_name not in interface_mount_names:
+                    warning_str = 'Mount %s will be ignored due to no matching interface designation.' % mount_name
+                    mounts_to_delete.append({'name': mount_name, 'warning': warning_str})
+
+        elif 'mounts' in self._configuration:
+            # Remove all mounts
+            for mount_name, _mount_value in self._configuration['mounts'].items():
+                warning_str = 'Mount %s will be ignored due to no matching interface designation.' % mount_name
+                mounts_to_delete.append({'name': mount_name, 'warning': warning_str})
+
+        for mount in mounts_to_delete:
+            del self._configuration['mounts'][mount['name']]
+            warnings.append(ValidationWarning('mounts', mount['warning']))
+
+        return warnings
 
     def _convert_configuration(self):
         """Converts the configuration from a previous schema version

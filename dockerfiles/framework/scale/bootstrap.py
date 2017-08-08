@@ -207,6 +207,13 @@ def deploy_webserver(client, app_name, es_urls, es_lb, db_host, db_port, broker_
     marathon['cpus'] = int(cpu)
     marathon['mem'] = int(memory)
 
+    # Set attributes for secrets
+    secrets_dcos_sa = os.environ.get('DCOS_SERVICE_ACCOUNT', '')
+    secrets_ssl_warn = os.environ.get('SECRETS_SSL_WARNINGS', '')
+    secrets_token = os.environ.get('SECRETS_TOKEN', '')
+    secrets_url = os.environ.get('SECRETS_URL', '')
+
+
     env_map = {
         'SCALE_ALLOWED_HOSTS': 'SCALE_ALLOWED_HOSTS',
         'SCALE_SECRET_KEY': 'SCALE_SECRET_KEY',
@@ -219,6 +226,7 @@ def deploy_webserver(client, app_name, es_urls, es_lb, db_host, db_port, broker_
 
     arbitrary_env = {
         'DCOS_PACKAGE_FRAMEWORK_NAME': FRAMEWORK_NAME,
+        'DCOS_SERVICE_ACCOUNT': str(secrets_dcos_sa),
         'ENABLE_WEBSERVER': 'true',
         'SCALE_BROKER_URL': broker_url,
         'SCALE_DB_HOST': db_host,
@@ -227,7 +235,10 @@ def deploy_webserver(client, app_name, es_urls, es_lb, db_host, db_port, broker_
         'SCALE_WEBSERVER_CPU': str(cpu),
         'SCALE_WEBSERVER_MEMORY': str(memory),
         'SCALE_ELASTICSEARCH_URLS': es_urls,
-        'SCALE_ELASTICSEARCH_LB': es_lb
+        'SCALE_ELASTICSEARCH_LB': es_lb,
+        'SECRETS_SSL_WARNINGS': str(secrets_ssl_warn),
+        'SECRETS_TOKEN': str(secrets_token),
+        'SECRETS_URL': str(secrets_url)
     }
     # For all environment variable that are set add to marathon json.
     for env in arbitrary_env:

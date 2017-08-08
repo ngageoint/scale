@@ -7,6 +7,12 @@ class InvalidSecretsAuthorization(Exception):
     pass
 
 
+class InvalidSecretsConfiguration(Exception):
+    """Exception indicating that the secrets backend is not properly configured
+    """
+    pass
+
+
 class InvalidSecretsRequest(Exception):
     """Exception indicating that the secrets request was invalid
     """

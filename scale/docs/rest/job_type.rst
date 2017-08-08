@@ -255,6 +255,9 @@ These services provide access to information about job types.
 | interface               | JSON Object       | Required | JSON description of the interface for running the job.         |
 |                         |                   |          | (See :ref:`architecture_jobs_interface_spec`)                  |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
+| configuration           | JSON Object       | Optional | JSON description of the configuration for running the job      |
+|                         |                   |          | (See :ref:`architecture_jobs_job_configuration_spec`)          |
++--------------------------+-------------------+--------------------------------------------------------------------------+
 | custom_resources        | JSON Object       | Optional | JSON description for any custom resources needed for running a |
 |                         |                   |          | job of this type. (See :ref:`architecture_jobs_resources`)     |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
@@ -294,7 +297,7 @@ These services provide access to information about job types.
 |        "interface": {                                                                                                   |
 |            "version": "1.0",                                                                                            |
 |            "command": "test_cmd",                                                                                       |
-|            "command_arguments": "test_arg",                                                                             |
+|            "command_arguments": "test_arg ${dted_path}",                                                                |
 |            "input_data": [                                                                                              |
 |                {                                                                                                        |
 |                    "media_types": ["image/png"],                                                                        |
@@ -302,8 +305,32 @@ These services provide access to information about job types.
 |                    "name": "input_file"                                                                                 |
 |                }                                                                                                        |
 |            ],                                                                                                           |
+|            "settings": [                                                                                                |
+|                {                                                                                                        |
+|                    "name": "dted_path",                                                                                 |
+|                    "required": true,                                                                                    |
+|                    "secret": false                                                                                      |
+|                }                                                                                                        |
+|            ],                                                                                                           |
+|            "mounts": [                                                                                                  |
+|                {                                                                                                        |
+|                    "name": "ref_data",                                                                                  |
+|                    "path": "/container/path/to/ref_data",                                                               |
+|                    "required": true,                                                                                    |
+|                    "mode": "ro"                                                                                         |
+|                }                                                                                                        |
+|            ],                                                                                                           |
 |            "output_data": [],                                                                                           |
 |            "shared_resources": []                                                                                       |
+|        },                                                                                                               |
+|        "configuration": {                                                                                               |
+|            "version": "2.0",                                                                                            |
+|            "mounts": {                                                                                                  |
+|                "ref_data": {"type": "host", "host_path": "/path/to/ref_data"}                                           |
+|            },                                                                                                           |
+|            "settings": {                                                                                                |
+|                "dted_path": "/path/to/dted"                                                                             |
+|            }                                                                                                            |
 |        },                                                                                                               |
 |        "custom_resources": {                                                                                            |
 |            "version": "1.0",                                                                                            |
@@ -465,6 +492,9 @@ These services provide access to information about job types.
 | interface               | JSON Object       | Required | JSON description of the interface for running the job.         |
 |                         |                   |          | (See :ref:`architecture_jobs_interface_spec`)                  |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
+| configuration           | JSON Object       | Optional | JSON description of the configuration for running the job      |
+|                         |                   |          | (See :ref:`architecture_jobs_job_configuration_spec`)          |
++--------------------------+-------------------+--------------------------------------------------------------------------+
 | custom_resources        | JSON Object       | Optional | JSON description for any custom resources needed for running a |
 |                         |                   |          | job of this type. (See :ref:`architecture_jobs_resources`)     |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
@@ -504,7 +534,7 @@ These services provide access to information about job types.
 |        "interface": {                                                                                                   |
 |            "version": "1.0",                                                                                            |
 |            "command": "test_cmd",                                                                                       |
-|            "command_arguments": "test_arg",                                                                             |
+|            "command_arguments": "test_arg ${dted_path}",                                                                |
 |            "input_data": [                                                                                              |
 |                {                                                                                                        |
 |                    "media_types": ["image/png"],                                                                        |
@@ -512,8 +542,32 @@ These services provide access to information about job types.
 |                    "name": "input_file"                                                                                 |
 |                }                                                                                                        |
 |            ],                                                                                                           |
+|            "settings": [                                                                                                |
+|                {                                                                                                        |
+|                    "name": "dted_path",                                                                                 |
+|                    "required": true,                                                                                    |
+|                    "secret": false                                                                                      |
+|                }                                                                                                        |
+|            ],                                                                                                           |
+|            "mounts": [                                                                                                  |
+|                {                                                                                                        |
+|                    "name": "ref_data",                                                                                  |
+|                    "path": "/container/path/to/ref_data",                                                               |
+|                    "required": true,                                                                                    |
+|                    "mode": "ro"                                                                                         |
+|                }                                                                                                        |
+|            ],                                                                                                           |
 |            "output_data": [],                                                                                           |
 |            "shared_resources": []                                                                                       |
+|        },                                                                                                               |
+|        "configuration": {                                                                                               |
+|            "version": "2.0",                                                                                            |
+|            "mounts": {                                                                                                  |
+|                "ref_data": {"type": "host", "host_path": "/path/to/ref_data"}                                           |
+|            },                                                                                                           |
+|            "settings": {                                                                                                |
+|                "dted_path": "/path/to/dted"                                                                             |
+|            }                                                                                                            |
 |        },                                                                                                               |
 |        "custom_resources": {                                                                                            |
 |            "version": "1.0",                                                                                            |
@@ -662,6 +716,9 @@ These services provide access to information about job types.
 | interface                | JSON Object       | JSON description defining the interface for running a job of this type.  |
 |                          |                   | (See :ref:`architecture_jobs_interface_spec`)                            |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
+| configuration            | JSON Object       | JSON description defining the configuration for running a job of this    |
+|                          |                   | type. (See :ref:`architecture_jobs_job_configuration_spec`)              |
++--------------------------+-------------------+--------------------------------------------------------------------------+
 | custom_resources         | JSON Object       | JSON description for any custom resources needed for running a job of    |
 |                          |                   | this type. (See :ref:`architecture_jobs_resources`)                      |
 +--------------------------+-------------------+--------------------------------------------------------------------------+
@@ -742,6 +799,7 @@ These services provide access to information about job types.
 |        "paused": null,                                                                                                  |
 |        "last_modified": "2015-03-11T00:00:00Z"                                                                          |
 |        "interface": {...},                                                                                              |
+|        "configuration": {...},                                                                                          |
 |        "custom_resources": {...},                                                                                       |
 |        "error_mapping": {...},                                                                                          |
 |        "trigger_rule": {...},                                                                                           |
@@ -861,6 +919,9 @@ These services provide access to information about job types.
 | interface               | JSON Object       | Optional | JSON description of the interface for running the job.         |
 |                         |                   |          | (See :ref:`architecture_jobs_interface_spec`)                  |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
+| configuration           | JSON Object       | Optional | JSON description of the configuration for running the job      |
+|                         |                   |          | (See :ref:`architecture_jobs_job_configuration_spec`)          |
++--------------------------+-------------------+--------------------------------------------------------------------------+
 | custom_resources        | JSON Object       | Optional | JSON description for any custom resources needed for running a |
 |                         |                   |          | job of this type. (See :ref:`architecture_jobs_resources`)     |
 +-------------------------+-------------------+----------+----------------------------------------------------------------+
@@ -899,7 +960,7 @@ These services provide access to information about job types.
 |        "interface": {                                                                                                   |
 |            "version": "1.0",                                                                                            |
 |            "command": "test_cmd",                                                                                       |
-|            "command_arguments": "test_arg",                                                                             |
+|            "command_arguments": "test_arg ${dted_path}",                                                                |
 |            "input_data": [                                                                                              |
 |                {                                                                                                        |
 |                    "media_types": ["image/png"],                                                                        |
@@ -907,8 +968,24 @@ These services provide access to information about job types.
 |                    "name": "input_file"                                                                                 |
 |                }                                                                                                        |
 |            ],                                                                                                           |
+|            "settings": [                                                                                                |
+|                {                                                                                                        |
+|                    "name": "dted_path",                                                                                 |
+|                    "required": true,                                                                                    |
+|                    "secret": false                                                                                      |
+|                }                                                                                                        |
+|            ],                                                                                                           |
 |            "output_data": [],                                                                                           |
 |            "shared_resources": []                                                                                       |
+|        },                                                                                                               |
+|        "configuration": {                                                                                               |
+|            "version": "2.0",                                                                                            |
+|            "mounts": {                                                                                                  |
+|                "ref_data": {"type": "host", "host_path": "/path/to/ref_data"}                                           |
+|            },                                                                                                           |
+|            "settings": {                                                                                                |
+|                "dted_path": "/path/to/dted"                                                                             |
+|            }                                                                                                            |
 |        },                                                                                                               |
 |        "custom_resources": {                                                                                            |
 |            "version": "1.0",                                                                                            |
@@ -987,6 +1064,7 @@ These services provide access to information about job types.
 |        "paused": null,                                                                                                  |
 |        "last_modified": "2015-03-11T00:00:00Z",                                                                         |
 |        "interface": {...},                                                                                              |
+|        "configuration": {...},                                                                                          |
 |        "error_mapping": {...},                                                                                          |
 |        "errors": [...],                                                                                                 |
 |        "job_counts_6h": [...],                                                                                          |
@@ -1055,7 +1133,7 @@ These services provide access to information about job types.
 +--------------------+-------------------+--------------------------------------------------------------------------------+
 | .. code-block:: javascript                                                                                              |
 |                                                                                                                         |
-|   "count": 2,                                                                                                           | 
+|   "count": 2,                                                                                                           |
 |   "next": null,                                                                                                         |
 |   "previous": null,                                                                                                     |
 |   "results": [                                                                                                          |
@@ -1319,7 +1397,7 @@ These services provide access to information about job types.
 |                    "last_modified": "2015-03-11T00:00:00Z"                                                              |
 |                },                                                                                                       |
 |                "count": 38,                                                                                             |
-|                "first_error": "2015-08-28T23:29:28.719Z",                                                               | 
+|                "first_error": "2015-08-28T23:29:28.719Z",                                                               |
 |                "last_error": "2015-09-08T16:27:42.243Z"                                                                 |
 |            },                                                                                                           |
 |            ...                                                                                                          |
