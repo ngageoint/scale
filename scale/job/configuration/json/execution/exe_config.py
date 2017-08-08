@@ -309,6 +309,19 @@ class ExecutionConfiguration(object):
 
         return self._configuration
 
+    def get_input_workspace_names(self):
+        """Returns a list of the names of all input workspaces
+
+        :returns: The list of the names of all input workspaces
+        :rtype: list
+        """
+
+        workspace_names = set()
+        for file_list in self._configuration['input_files'].values():
+            for file_dict in file_list:
+                workspace_names.add(file_dict['workspace_name'])
+        return list(workspace_names)
+
     def set_input_files(self, input_files):
         """Sets the given input files in the configuration
 
@@ -361,6 +374,25 @@ class ExecutionConfiguration(object):
 
         for param in docker_params:
             task_docker_params.append({'flag': param.flag, 'value': param.value})
+
+    @staticmethod
+    def _add_env_vars_to_task(task_dict, env_vars):
+        """Adds the given environment variables to the given task
+
+        :param task_dict: The task dict
+        :type task_dict: dict
+        :param env_vars: The command arguments
+        :type env_vars: dict
+        """
+
+        if 'env_vars' in task_dict:
+            task_env_vars = task_dict['env_vars']
+        else:
+            task_env_vars = {}
+            task_dict['env_vars'] = task_env_vars
+
+        for name, value in env_vars.items():
+            task_env_vars[name] = value
 
     @staticmethod
     def _add_env_vars_to_task(task_dict, env_vars):

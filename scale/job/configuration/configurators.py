@@ -7,7 +7,7 @@ import os
 from job.configuration.docker_param import DockerParameter
 from job.configuration.input_file import InputFile
 from job.configuration.json.execution.exe_config import ExecutionConfiguration
-from job.configuration.volume import MODE_RW
+from job.configuration.volume import MODE_RO, MODE_RW
 from job.configuration.workspace import Workspace
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
 
@@ -86,7 +86,6 @@ class QueuedExecutionConfigurator(object):
         config.create_tasks(['main'])
         config.add_to_task('main', args=job.get_job_interface().get_command_args(), env_vars=env_vars,
                            workspaces=workspaces)
-
         return config
 
     def _create_input_file_dict(self, job_data):
@@ -131,6 +130,7 @@ class QueuedExecutionConfigurator(object):
         workspaces = {}
         data = job.get_job_data()
 
+        # Configure ingest workspace based on input data values
         if job.job_type.name == 'scale-ingest':
             workspace_name = None
             new_workspace_name = None
@@ -151,6 +151,23 @@ class QueuedExecutionConfigurator(object):
                 workspaces[workspace_name] = Workspace(workspace_name, MODE_RW)
             if new_workspace_name:
                 workspaces[new_workspace_name] = Workspace(new_workspace_name, MODE_RW)
+
+        # Configure Strike workspace based on current configuration
+        if job.job_type.name == 'scale-strike':
+            from ingest.models import Strike
+            strike = Strike.objects.get(job_id=job.id)
+            workspace_name = strike.get_strike_configuration().get_workspace()
+            workspaces[workspace_name] = Workspace(workspace_name, MODE_RW)
+
+        # Configure Scan workspace based on current configuration
+        if job.job_type.name == 'scale-scan':
+            from ingest.models import Scan
+            try:
+                scan = Scan.objects.get(job_id=job.id)
+            except Scan.DoesNotExist:
+                scan = Scan.objects.get(dry_run_job_id=job.id)
+            workspace_name = scan.get_scan_configuration().get_workspace()
+            workspaces[workspace_name] = Workspace(workspace_name, MODE_RW)
 
         return workspaces
 
@@ -193,21 +210,60 @@ class ScheduledExecutionConfigurator(object):
             config.add_to_task('main', docker_params=[DockerParameter('shm-size', '%dm' % int(math.ceil(shared_mem)))])
 
         # TODO: add mounts/volumes to main task (interface, job_type.job_config)
+        # Configure job based upon whether it is a system job
+        if job_type.is_system:
+            # TODO: set main task resources
+            pass
+        else:
+            ScheduledExecutionConfigurator._configure_regular_job(config, job_type, interface)
 
-        # TODO: check for system vs non-system job and add DB settings, IO mounts, and workspaces as needed
-        # TODO: add workspaces from populate_job_data()
-        # TODO: move output dir env var (setting?) to here
-        # TODO: this includes system jobs like strike and scan - figure out if these can be resolved now (like ingest)
-
+        # TODO: these apply to all tasks
         # TODO: apply resource env vars to all tasks (including shared mem) (add resources to task JSONs)
         # TODO: convert workspaces to volumes (add in workspace volume names) for all tasks
         # TODO: apply logging docker params to all tasks
 
         # TODO: make copy of this configuration
         config_with_secrets = None
-        # TODO: populate settings in both (copy with secrets, this without) (provide DB settings values)
+        # TODO: populate settings in both (copy with secrets, this without) (do DB settings values, put in fixtures?)
         # TODO: convert settings to env vars in both
         # TODO: add env vars from interface until this feature goes away
         # TODO: convert volumes and env vars to docker params in both
         # TODO: add docker params from job type until this feature gets removed
         return config_with_secrets
+
+    @staticmethod
+    def _configure_regular_job(config, job_type, interface):
+        """Configures the given execution as a regular (non-system) job by adding pre and post tasks,
+        input/output mounts, etc
+
+        :param config: The execution configuration
+        :type config: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :param job_type: The job type model
+        :type job_type: :class:`job.models.JobType`
+        :param interface: The job interface
+        :type interface: :class:`job.configuration.interface.job_interface.JobInterface`
+        """
+
+        config.create_tasks(['pull', 'pre', 'main', 'post'])
+
+        # Configure input workspaces
+        ro_input_workspaces = {}
+        rw_input_workspaces = {}
+        for input_workspace in config.get_input_workspace_names():
+            ro_input_workspaces[input_workspace] = Workspace(input_workspace, MODE_RO)
+            rw_input_workspaces[input_workspace] = Workspace(input_workspace, MODE_RW)
+        config.add_to_task('pre', workspaces=ro_input_workspaces)
+        config.add_to_task('main', workspaces=ro_input_workspaces)
+        config.add_to_task('post', workspaces=rw_input_workspaces)
+
+        # TODO: update exe config schema to contain output workspaces and set them when queuing job
+        # TODO: configure output workspaces here and update populate_job_data()
+
+        # Configure input/output mounts
+        # TODO: implement
+
+        # Configure output directory
+        # TODO: implement
+
+        # Configure task resources
+        # TODO: implement
