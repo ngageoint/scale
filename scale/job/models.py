@@ -34,6 +34,7 @@ from storage.models import ScaleFile, Workspace
 from trigger.configuration.exceptions import InvalidTriggerType
 from trigger.models import TriggerRule
 from util.exceptions import RollbackTransaction, ScaleLogicBug
+from vault.secrets_handler import SecretsHandler
 
 
 logger = logging.getLogger(__name__)
@@ -80,7 +81,7 @@ class JobManager(models.Manager):
             Batch.objects.count_completed_job(batch_job.batch.id)
         except BatchJob.DoesNotExist:
             batch_job = None
-            
+
 
     def create_job(self, job_type, event, superseded_job=None, delete_superseded=True):
         """Creates a new job for the given type and returns the job model. Optionally a job can be provided that the new
@@ -1448,11 +1449,11 @@ class JobExecution(models.Model):
         # Configure any Docker parameters needed for workspaces
         configuration.configure_workspace_docker_params(self, workspaces, docker_volumes)
 
-        # Configure docker paramters listed in database
+        # Configure docker parameters listed in database
         if self.job.job_type.docker_params:
             for key, value in self.job.job_type.docker_params:
                 configuration.add_job_task_docker_params(DockerParam(key, value))
-        
+
         # Add job environment variable as docker parameters
         interface = self.get_job_interface()
         env_vars = interface.populate_env_vars_arguments(configuration, self.job.job_type)
@@ -1568,7 +1569,7 @@ class JobExecution(models.Model):
         """
 
         return self.job.job_type.name
-        
+
     def get_job_type_version(self):
         """Returns the version of this job's type
 
@@ -1871,7 +1872,7 @@ class JobTypeManager(models.Manager):
 
     @transaction.atomic
     def create_job_type(self, name, version, interface, trigger_rule=None, error_mapping=None, custom_resources=None,
-                        **kwargs):
+                        configuration=None, secrets=None, **kwargs):
         """Creates a new non-system job type and saves it in the database. All database changes occur in an atomic
         transaction.
 
@@ -1887,6 +1888,10 @@ class JobTypeManager(models.Manager):
         :type error_mapping: :class:`job.configuration.interface.error_interface.ErrorInterface`
         :param custom_resources: Custom resources required by this job type
         :type custom_resources: :class:`node.resources.json.resources.Resources`
+        :param configuration: The configuration for running a job of this type, possibly None
+        :type configuration: :class:`job.configuration.json.job.job_config.JobConfiguration`
+        :param secrets: Secret settings required by this job type
+        :type secrets: dict
         :returns: The new job type
         :rtype: :class:`job.models.JobType`
 
@@ -1917,6 +1922,9 @@ class JobTypeManager(models.Manager):
         job_type.version = version
         job_type.interface = interface.get_dict()
         job_type.trigger_rule = trigger_rule
+        if configuration:
+            configuration.validate(job_type.interface)
+            job_type.configuration = configuration.get_dict()
         if error_mapping:
             error_mapping.validate()
             job_type.error_mapping = error_mapping.get_dict()
@@ -1928,6 +1936,10 @@ class JobTypeManager(models.Manager):
             job_type.paused = timezone.now() if kwargs['is_paused'] else None
         job_type.save()
 
+        # Save any secrets to Vault
+        if secrets:
+            self.set_job_type_secrets(job_type.id, secrets)
+
         # Create first revision of the job type
         JobTypeRevision.objects.create_job_type_revision(job_type)
 
@@ -1935,7 +1947,7 @@ class JobTypeManager(models.Manager):
 
     @transaction.atomic
     def edit_job_type(self, job_type_id, interface=None, trigger_rule=None, remove_trigger_rule=False,
-                      error_mapping=None, custom_resources=None, **kwargs):
+                      error_mapping=None, custom_resources=None, configuration=None, secrets=None, **kwargs):
         """Edits the given job type and saves the changes in the database. The caller must provide the related
         trigger_rule model. All database changes occur in an atomic transaction. An argument of None for a field
         indicates that the field should not change. The remove_trigger_rule parameter indicates the difference between
@@ -1954,6 +1966,10 @@ class JobTypeManager(models.Manager):
         :type error_mapping: :class:`job.configuration.interface.error_interface.ErrorInterface`
         :param custom_resources: Custom resources required by this job type
         :type custom_resources: :class:`node.resources.json.resources.Resources`
+        :param configuration: The configuration for running a job of this type, possibly None
+        :type configuration: :class:`job.configuration.json.job.job_config.JobConfiguration`
+        :param secrets: Secret settings required by this job type
+        :type secrets: dict
 
         :raises :class:`job.exceptions.InvalidJobField`: If a given job type field has an invalid value
         :raises :class:`trigger.configuration.exceptions.InvalidTriggerType`: If the given trigger rule is an invalid
@@ -1991,6 +2007,11 @@ class JobTypeManager(models.Manager):
             for recipe_type in recipe_types:
                 recipe_type.get_recipe_definition().validate_job_interfaces()
 
+        # New job configuration
+        if configuration:
+            configuration.validate(job_type.interface)
+            job_type.configuration = configuration.get_dict()
+
         if trigger_rule or remove_trigger_rule:
             if job_type.trigger_rule:
                 # Archive old trigger rule since we are changing to a new one
@@ -2019,6 +2040,10 @@ class JobTypeManager(models.Manager):
         for field_name in kwargs:
             setattr(job_type, field_name, kwargs[field_name])
         job_type.save()
+
+        # Save any secrets to Vault
+        if secrets:
+            self.set_job_type_secrets(job_type.id, secrets)
 
         if interface:
             # Create new revision of the job type for new interface
@@ -2110,6 +2135,12 @@ class JobTypeManager(models.Manager):
         # Add associated error information
         error_names = job_type.get_error_interface().get_error_names()
         job_type.errors = Error.objects.filter(name__in=error_names) if error_names else []
+
+        # Scrub configuration for secrets
+        if job_type.configuration:
+            configuration = JobConfiguration(job_type.configuration)
+            configuration.validate(job_type.interface)
+            job_type.configuration = configuration.get_dict()
 
         # Add recent performance statistics
         started = timezone.now()
@@ -2284,7 +2315,22 @@ class JobTypeManager(models.Manager):
             results.append(status)
         return results
 
-    def validate_job_type(self, name, version, interface, error_mapping=None, trigger_config=None):
+    def set_job_type_secrets(self, job_type_id, secrets):
+        """Sends request to SecretsHandler to write secrets for a job type.
+
+        :param job_type_id: The ID of the job type
+        :type job_type_id: int
+        :param secrets: Secret settings required by this job type.
+        :type secrets: dict
+        """
+
+        secrets_handler = SecretsHandler()
+        job_info = JobType.objects.values_list('name', 'version').get(pk=job_type_id)
+        job_name = '-'.join(list(job_info)).replace('.', '_')
+
+        secrets_handler.set_job_type_secrets(job_name, secrets)
+
+    def validate_job_type(self, name, version, interface, error_mapping=None, trigger_config=None, configuration=None):
         """Validates a new job type prior to attempting a save
 
         :param name: The system name of the job type
@@ -2297,13 +2343,15 @@ class JobTypeManager(models.Manager):
         :type error_mapping: :class:`job.configuration.interface.error_interface.ErrorInterface`
         :param trigger_config: The trigger rule configuration, possibly None
         :type trigger_config: :class:`trigger.configuration.trigger_rule.TriggerRuleConfiguration`
+        :param configuration: The configuration for running a job of this type, possibly None
+        :type configuration: :class:`job.configuration.json.job.job_config.JobConfiguration`
         :returns: A list of warnings discovered during validation.
         :rtype: [:class:`job.configuration.data.job_data.ValidationWarning`]
 
         :raises :class:`trigger.configuration.exceptions.InvalidTriggerType`: If the given trigger rule is an invalid
             type for creating jobs
-        :raises :class:`trigger.configuration.exceptions.InvalidTriggerRule`: If the given trigger rule configuration is
-            invalid
+        :raises :class:`trigger.configuration.exceptions.InvalidTriggerRule`: If the given trigger rule configuration
+            is invalid
         :raises :class:`job.configuration.data.exceptions.InvalidConnection`: If the trigger rule connection to the job
             type interface is invalid
         :raises :class:`recipe.configuration.definition.exceptions.InvalidDefinition`: If the interface invalidates any
@@ -2318,6 +2366,9 @@ class JobTypeManager(models.Manager):
                 msg = '%s is an invalid trigger rule type for creating jobs'
                 raise InvalidTriggerType(msg % trigger_config.trigger_rule_type)
             warnings.extend(trigger_config.validate_trigger_for_job(interface))
+
+        if configuration:
+            warnings.extend(configuration.validate(interface.get_dict()))
 
         if error_mapping:
             warnings.extend(error_mapping.validate())

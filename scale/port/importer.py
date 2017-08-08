@@ -10,9 +10,11 @@ import port.serializers as serializers
 import trigger.handler as trigger_handler
 from error.models import Error
 from job.configuration.data.exceptions import InvalidConnection
+from job.configuration.exceptions import InvalidJobConfiguration
 from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.job_interface import JobInterface
+from job.configuration.json.job.job_config import JobConfiguration
 from job.exceptions import InvalidJobField
 from job.models import JobType
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
@@ -24,6 +26,7 @@ from recipe.models import RecipeType
 from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
 from trigger.models import TriggerRule
 from trigger.configuration.exceptions import InvalidTriggerType, InvalidTriggerRule
+from vault.exceptions import InvalidSecretsConfiguration
 
 logger = logging.getLogger(__name__)
 
@@ -49,7 +52,7 @@ def validate_config(config_dict):
         # Attempt a real import and then roll it back when successful to confirm the validation
         # This saves on duplicate code because the existing validation methods expect database models to exist
         with transaction.atomic():
-            warnings = _import_config(config_dict)
+            warnings = _import_config(config_dict, validating=True)
             raise Validated('Configuration is valid, rolling back transaction.')
     except Validated:
         pass
@@ -70,7 +73,7 @@ def import_config(config_dict):
     return _import_config(config_dict)
 
 
-def _import_config(config_dict):
+def _import_config(config_dict, validating=False):
     """Applies a previously exported configuration to the current system.
 
     This method only exists to decouple the import logic from the atomic transaction so that this method can be reused
@@ -78,6 +81,8 @@ def _import_config(config_dict):
 
     :param config_dict: A dictionary of configuration changes to import.
     :type config_dict: dict
+    :param validating: Flag to determine if running a validate or commit transaction.
+    :type validating: bool
     :returns: A list of warnings discovered during the import.
     :rtype: list[:class:`port.schema.ValidationWarning`]
 
@@ -109,7 +114,7 @@ def _import_config(config_dict):
         for job_type_dict in config.job_types:
             job_type_key = (job_type_dict.get('name'), job_type_dict.get('version'))
             job_type = job_type_map.get(job_type_key)
-            warnings.extend(_import_job_type(job_type_dict, job_type))
+            warnings.extend(_import_job_type(job_type_dict, job_type, validating))
     if recipe_type_map:
         for recipe_type_dict in config.recipe_types:
             recipe_type_key = (recipe_type_dict.get('name'), recipe_type_dict.get('version'))
@@ -315,7 +320,7 @@ def _import_recipe_type(recipe_type_dict, recipe_type=None):
     return warnings
 
 
-def _import_job_type(job_type_dict, job_type=None):
+def _import_job_type(job_type_dict, job_type=None, validating=False):
     """Attempts to apply the given job types configuration to the system.
 
     Note that proper model locking must be performed before calling this method.
@@ -324,6 +329,8 @@ def _import_job_type(job_type_dict, job_type=None):
     :type job_type_dict: dict
     :param job_type: The existing job type model to update if applicable.
     :type job_type: :class:`job.models.JobType`
+    :param validating: Flag to determine if running a validate or commit transaction.
+    :type validating: bool
     :returns: A list of warnings discovered during import.
     :rtype: list[:class:`port.schema.ValidationWarning`]
 
@@ -352,6 +359,22 @@ def _import_job_type(job_type_dict, job_type=None):
         interface = JobInterface(interface_dict)
     except InvalidInterfaceDefinition as ex:
         raise InvalidConfiguration('Job type interface invalid: %s -> %s' % (result.get('name'), unicode(ex)))
+
+    # Validate the job configuration
+    try:
+        configuration_dict = None
+        secrets = None
+        if 'configuration' in result:
+            configuration_dict = result.get('configuration')
+        elif job_type:
+            configuration_dict = job_type.configuration
+        if interface:
+            configuration = JobConfiguration(configuration_dict)
+            if not validating:
+                secrets = configuration.get_secret_settings(interface.get_dict())
+            warnings.extend(configuration.validate(interface.get_dict()))
+    except InvalidJobConfiguration as ex:
+        raise InvalidConfiguration('Job type configuration invalid: %s -> %s' % (result.get('name'), unicode(ex)))
 
     # Validate the error mapping
     try:
@@ -391,7 +414,7 @@ def _import_job_type(job_type_dict, job_type=None):
 
     # Extract the fields that should be updated as keyword arguments
     extra_fields = {}
-    base_fields = {'name', 'version', 'interface', 'trigger_rule', 'error_mapping'}
+    base_fields = {'name', 'version', 'interface', 'trigger_rule', 'error_mapping', 'configuration'}
     for key in job_type_dict:
         if key not in base_fields:
             if key in JobType.UNEDITABLE_FIELDS:
@@ -408,16 +431,21 @@ def _import_job_type(job_type_dict, job_type=None):
     # Edit or create the associated job type model
     if job_type:
         try:
-            JobType.objects.edit_job_type(job_type.id, interface, trigger_rule, remove_trigger_rule, error_mapping,
-                                          **extra_fields)
-        except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition) as ex:
+            JobType.objects.edit_job_type(job_type.id, interface=interface, trigger_rule=trigger_rule,
+                                          remove_trigger_rule=remove_trigger_rule, error_mapping=error_mapping,
+                                          configuration=configuration, secrets=secrets, **extra_fields)
+        except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition,
+                InvalidSecretsConfiguration) as ex:
             logger.exception('Job type edit failed')
             raise InvalidConfiguration('Unable to edit existing job type: %s -> %s' % (result.get('name'), unicode(ex)))
     else:
         try:
-            JobType.objects.create_job_type(result.get('name'), result.get('version'), interface, trigger_rule,
-                                            error_mapping, **extra_fields)
-        except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition) as ex:
+            JobType.objects.create_job_type(name=result.get('name'), version=result.get('version'),
+                                            interface=interface, trigger_rule=trigger_rule,
+                                            error_mapping=error_mapping, configuration=configuration, secrets=secrets,
+                                            **extra_fields)
+        except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, InvalidDefinition,
+                InvalidSecretsConfiguration) as ex:
             logger.exception('Job type create failed')
             raise InvalidConfiguration('Unable to create new job type: %s -> %s' % (result.get('name'), unicode(ex)))
     return warnings

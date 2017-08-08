@@ -104,6 +104,7 @@ These services allow administrators to export recipe, job, and error records and
 |                "disk_out_const_required": 64.0,                                                                         |
 |                "disk_out_mult_required": 0.0,                                                                           |
 |                "interface": {...},                                                                                      |
+|                "configuration": {...},                                                                                  |
 |                "error_mapping": {...},                                                                                  |
 |                "trigger_rule": {...}                                                                                    |
 |            },                                                                                                           |

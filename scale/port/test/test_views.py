@@ -4,6 +4,7 @@ import json
 
 import django
 from django.test.testcases import TestCase, TransactionTestCase
+from mock import patch
 from rest_framework import status
 
 import error.test.utils as error_test_utils
@@ -15,6 +16,7 @@ import util.rest as rest_util
 from error.models import Error
 from job.models import JobType
 from recipe.models import RecipeType
+from vault.secrets_handler import SecretsHandler
 
 
 class TestConfigurationViewExport(TransactionTestCase):
@@ -272,6 +274,69 @@ class TestConfigurationViewExport(TransactionTestCase):
         self.assertEqual(len(results['errors']), 1)
         self.assertEqual(results['errors'][0]['name'], error2.name)
 
+    def test_job_type_configuration(self):
+        """Tests effectiveness of configuration.validate() when exporting ."""
+
+        interface = {
+            'version': '1.4',
+            'command': 'test_cmd',
+            'command_arguments': 'test_arg, ${SECRET_SETTING} ${DB_HOST}',
+            'env_vars': [],
+            'mounts': [
+                {
+                    'name': 'dted',
+                    'path': '/some/path',
+                    'mode': 'ro',
+                    'required': True,
+                }
+            ],
+            'settings': [
+                {
+                    'name': 'SECRET_SETTING',
+                    'required': True,
+                    'secret': True,
+                },
+                {
+                    'name': 'DB_HOST',
+                    'required': True,
+                    'secret': False,
+                }
+            ],
+            'input_data': [],
+            'output_data': [],
+            'shared_resources': [],
+        }
+
+        configuration = {
+            'version': '2.0',
+            'mounts': {
+                'dted': {
+                    'type': 'host',
+                    'host_path': '/path/to/dted'
+                },
+                'UNUSED_MOUNT': {
+                    'type': 'host',
+                    'host_path': '/path/to/ref_data'
+                },
+            },
+            'settings': {
+                'SECRET_SETTING': 'elacs',
+                'DB_HOST': 'scale',
+                'UNUSED_SETTING': 'val',
+            },
+        }
+
+        job_type2 = job_test_utils.create_job_type(interface=interface, configuration=configuration)
+
+        url = rest_util.get_url('/configuration/?&job_type_name=%s' % (job_type2.name))
+        response = self.client.generic('GET', url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        result = json.loads(response.content)
+
+        self.assertTrue('UNUSED_SETTING' not in result['job_types'][0]['configuration']['settings'])
+        self.assertTrue('SECRET_SETTING' not in result['job_types'][0]['configuration']['settings'])
+        self.assertTrue('UNUSED_MOUNT' not in result['job_types'][0]['configuration']['mounts'])
 
 class TestConfigurationViewImport(TestCase):
     """Tests related to the configuration import endpoint"""
@@ -460,14 +525,52 @@ class TestConfigurationViewImport(TestCase):
         interface = {
             'version': '1.4',
             'command': 'test_cmd',
-            'command_arguments': 'test_arg',
+            'command_arguments': 'test_arg, ${DB_PASS} ${DB_HOST}',
             'env_vars': [],
-            'mounts': [],
-            'settings': [],
+            'mounts': [
+                {
+                    'name': 'dted',
+                    'path': '/some/path',
+                    'mode': 'ro',
+                    'required': True,
+                }
+            ],
+            'settings': [
+                {
+                    'name': 'DB_PASS',
+                    'required': True,
+                    'secret': True,
+                },
+                {
+                    'name': 'DB_HOST',
+                    'required': True,
+                    'secret': False,
+                }
+            ],
             'input_data': [],
             'output_data': [],
             'shared_resources': [],
         }
+
+        configuration = {
+            'version': '2.0',
+            'mounts': {
+                'dted': {
+                    'type': 'host',
+                    'host_path': '/path/to/dted'
+                },
+                'UNUSED_MOUNT': {
+                    'type': 'host',
+                    'host_path': '/path/to/ref_data'
+                },
+            },
+            'settings': {
+                'DB_PASS': 'elacs',
+                'DB_HOST': 'scale',
+                'UNUSED_SETTING': 'val',
+            },
+        }
+
         error_mapping = {
             'version': '1.0',
             'exit_codes': {
@@ -511,6 +614,7 @@ class TestConfigurationViewImport(TestCase):
                     'disk_out_const_required': 1024.0,
                     'disk_out_mult_required': 1.0,
                     'interface': interface,
+                    'configuration': configuration,
                     'error_mapping': error_mapping,
                     'trigger_rule': {
                         'type': 'PARSE',
@@ -523,7 +627,11 @@ class TestConfigurationViewImport(TestCase):
         }
 
         url = rest_util.get_url('/configuration/')
-        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
+        with patch.object(SecretsHandler, '__init__', return_value=None), \
+          patch.object(SecretsHandler, 'set_job_type_secrets', return_value=None) as mock_set_secret:
+            response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+
         self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         json.loads(response.content)
@@ -560,6 +668,15 @@ class TestConfigurationViewImport(TestCase):
         self.assertEqual(result.trigger_rule.name, 'test-name')
         self.assertFalse(result.trigger_rule.is_active)
         self.assertDictEqual(result.trigger_rule.configuration, trigger_rule_config)
+
+        self.assertTrue('UNUSED_SETTING' not in result.configuration['settings'])
+        self.assertTrue('UNUSED_MOUNT' not in result.configuration['mounts'])
+
+        # Secrets sent to Vault
+        secrets_name = '-'.join([json_data['import']['job_types'][0]['name'],
+                                 json_data['import']['job_types'][0]['version']]).replace('.', '_')
+        secrets = {'DB_PASS': 'elacs'}
+        mock_set_secret.assert_called_once_with(secrets_name, secrets)
 
     def test_job_types_edit_simple(self):
         """Tests importing only job types that update basic models."""
@@ -1954,6 +2071,71 @@ class TestConfigurationValidationView(TestCase):
         recipe_types = RecipeType.objects.filter(name=recipe_type.name, version=recipe_type.version)
         self.assertEqual(len(recipe_types), 1)
         self.assertEqual(recipe_types[0].title, recipe_type.title)
+
+    def test_job_type_configuration(self):
+        """Tests validating with warnings in the configuration."""
+
+        error = error_test_utils.create_error(category='DATA')
+        job_type = job_test_utils.create_job_type()
+        recipe_type = recipe_test_utils.create_recipe_type()
+
+        configuration = {
+            'version': '2.0',
+            'mounts': {
+                'dted': {'type': 'host',
+                         'host_path': '/path/to/dted'}
+            },
+            'settings': {
+                'DB_HOST': 'scale',
+                'DB_USER': 'elacs'
+            }
+        }
+
+        interface = {
+            'version': '1.4',
+            'command': 'test_cmd',
+            'command_arguments': 'test_arg',
+            'mounts': [],
+            'settings': [{
+                'name': 'DB_HOST',
+                'required': True,
+                'secret': True,
+            }],
+            'input_data': [],
+            'output_data': [],
+            'shared_resources': [],
+        }
+
+        json_data = {
+            'import': {
+                'errors': [{
+                    'name': error.name,
+                    'title': 'test-error-title',
+                    'category': 'ALGORITHM',
+                }],
+                'job_types': [{
+                    'name': job_type.name,
+                    'version': job_type.version,
+                    'title': 'test-job-title',
+                    'interface': interface,
+                    'configuration': configuration
+                }],
+                'recipe_types': [{
+                    'name': recipe_type.name,
+                    'version': recipe_type.version,
+                    'title': 'test-recipe-title',
+                }],
+            },
+        }
+
+        url = rest_util.get_url('/configuration/validation/')
+        response = self.client.generic('POST', url, json.dumps(json_data), 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
+
+        results = json.loads(response.content)
+        self.assertEqual(len(results['warnings']), 2)
+        self.assertEqual(len([warning for warning in results['warnings'] if warning['id'] == 'settings']), 1)
+        self.assertEqual(len([warning for warning in results['warnings'] if warning['id'] == 'mounts']), 1)
 
     def test_errors(self):
         """Tests validating an edit of all types with a critical error."""

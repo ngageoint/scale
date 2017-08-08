@@ -63,6 +63,7 @@ class JobTypeDetailsSerializer(JobTypeSerializer):
     from trigger.serializers import TriggerRuleDetailsSerializer
 
     interface = serializers.JSONField(default=dict)
+    configuration = serializers.JSONField(default=dict)
     custom_resources = serializers.JSONField(source='convert_custom_resources')
     error_mapping = serializers.JSONField(default=dict)
     errors = ErrorSerializer(many=True)

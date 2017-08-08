@@ -7,8 +7,8 @@ import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 from django.conf import settings
-from vault.exceptions import InvalidSecretsAuthorization, InvalidSecretsRequest, InvalidSecretsToken, \
-    InvalidSecretsValue
+from vault.exceptions import InvalidSecretsAuthorization, InvalidSecretsConfiguration, InvalidSecretsRequest, \
+    InvalidSecretsToken, InvalidSecretsValue
 
 
 class SecretsHandler(object):
@@ -40,7 +40,9 @@ class SecretsHandler(object):
         if not self.raise_ssl_warnings:
             requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-        if self.service_account:
+        if not self.secrets_url:
+            raise InvalidSecretsConfiguration('A secrets backend is not properly configured with Scale.')
+        elif self.service_account:
             self.dcos_token = self._dcos_authenticate()
         else:
             self.dcos_token = None
@@ -117,20 +119,26 @@ class SecretsHandler(object):
 
         return all_job_types
 
-    def set_job_type_secrets(self, job_name, secret_json):
+    def set_job_type_secrets(self, job_name, secrets):
         """write job-type secrets to the secrets backend
 
-        :param job_name: name of the job that the screts belong to.
+        :param job_name: name of the job that the secrets belong to.
+                         Format: [job_name]-[job_version]
         :type job_name: str
-        :param secret_json: dict with name:value pairs for all secrets associated with the job
-        :type secret_json: dict
+        :param secrets: dict with name:value pairs for all secrets associated with the job
+        :type secrets: dict
         :return:
         """
 
         url = self.secrets_url
-        secret_values = json.dumps(secret_json)
+        secret_values = json.dumps(secrets)
 
         if self.dcos_token:
+            if job_name in self.list_job_types():
+                method = 'PATCH'
+            else:
+                method = 'PUT'
+
             url = ''.join([url, '/secret/default/scale/job-type/', job_name])
             headers = {
                 'Content-Type': 'application/json',
@@ -141,7 +149,8 @@ class SecretsHandler(object):
                 'description': 'Secrets for Scale job ' + job_name,
                 'value': secret_values
             })
-            self._make_request('PUT', url, headers, data)
+
+            self._make_request(method, url, headers, data)
 
         else:
             url = ''.join([url, '/secret/scale/job-type/', job_name])
@@ -207,7 +216,7 @@ class SecretsHandler(object):
         try:
             token = jwt.encode({'uid': self.service_account}, self.secrets_token, algorithm='RS256')
         except ValueError:
-            raise InvalidSecretsToken('The provided token could not be encoded: ')
+            raise InvalidSecretsToken('The provided token could not be encoded')
 
         url = self.secrets_url + '/acs/api/v1/auth/login'
         data = json.dumps({
