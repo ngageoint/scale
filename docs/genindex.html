@@ -3047,6 +3047,8 @@
 </li>
       <li><a href="architecture/django/code_docs/node.html#node.models.NodeManager.get_scheduler_nodes">get_scheduler_nodes() (node.models.NodeManager method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.configuration.json.job.html#job.configuration.json.job.job_config.JobConfiguration.get_secret_settings">get_secret_settings() (job.configuration.json.job.job_config.JobConfiguration method)</a>
+</li>
       <li><a href="architecture/django/code_docs/metrics.html#metrics.registry.get_serializer">get_serializer() (in module metrics.registry)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.html#node.views.NodeDetailsView.get_serializer_class">get_serializer_class() (node.views.NodeDetailsView method)</a>
@@ -3794,6 +3796,8 @@
       <li><a href="architecture/django/code_docs/ingest.scan.scanners.html#ingest.scan.scanners.exceptions.InvalidScannerConfiguration">InvalidScannerConfiguration</a>
 </li>
       <li><a href="architecture/django/code_docs/vault.html#vault.exceptions.InvalidSecretsAuthorization">InvalidSecretsAuthorization</a>
+</li>
+      <li><a href="architecture/django/code_docs/vault.html#vault.exceptions.InvalidSecretsConfiguration">InvalidSecretsConfiguration</a>
 </li>
       <li><a href="architecture/django/code_docs/vault.html#vault.exceptions.InvalidSecretsRequest">InvalidSecretsRequest</a>
 </li>
@@ -7779,8 +7783,12 @@
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.set_deleted">set_deleted() (storage.models.ScaleFile method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/vault.html#vault.secrets_handler.SecretsHandler.set_job_type_secrets">set_job_type_secrets() (vault.secrets_handler.SecretsHandler method)</a>
+      <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeManager.set_job_type_secrets">set_job_type_secrets() (job.models.JobTypeManager method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/vault.html#vault.secrets_handler.SecretsHandler.set_job_type_secrets">(vault.secrets_handler.SecretsHandler method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/ingest.scan.scanners.html#ingest.scan.scanners.scanner.Scanner.set_recursive">set_recursive() (ingest.scan.scanners.scanner.Scanner method)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.resources.html#scheduler.resources.agent.AgentResources.set_shortage">set_shortage() (scheduler.resources.agent.AgentResources method)</a>
@@ -9307,6 +9315,8 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/scheduler.test.html#scheduler.test.test_initialize.TestInitializeSystem.test_create_clock_job">test_create_clock_job() (scheduler.test.test_initialize.TestInitializeSystem method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesView.test_create_configuration">test_create_configuration() (job.test.test_views.TestJobTypesView method)</a>
+</li>
       <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorsView.test_create_error_bad_category">test_create_error_bad_category() (error.test.test_views.TestErrorsView method)</a>
 </li>
       <li><a href="architecture/django/code_docs/error.test.html#error.test.test_views.TestErrorsView.test_create_error_missing">test_create_error_missing() (error.test.test_views.TestErrorsView method)</a>
@@ -9317,12 +9327,20 @@
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesView.test_create_max_scheduled">test_create_max_scheduled() (job.test.test_views.TestJobTypesView method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesView.test_create_missing_mount">test_create_missing_mount() (job.test.test_views.TestJobTypesView method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesView.test_create_missing_other_setting">test_create_missing_other_setting() (job.test.test_views.TestJobTypesView method)</a>
+</li>
       <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_views.TestBatchesView.test_create_missing_param">test_create_missing_param() (batch.test.test_views.TestBatchesView method)</a>
 
       <ul>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesView.test_create_missing_param">(job.test.test_views.TestJobTypesView method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesView.test_create_missing_setting">test_create_missing_setting() (job.test.test_views.TestJobTypesView method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesView.test_create_secrets">test_create_secrets() (job.test.test_views.TestJobTypesView method)</a>
+</li>
       <li><a href="architecture/django/code_docs/batch.test.html#batch.test.test_models.TestBatchManager.test_create_successful">test_create_successful() (batch.test.test_models.TestBatchManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesView.test_create_trigger">test_create_trigger() (job.test.test_views.TestJobTypesView method)</a>
@@ -9436,6 +9454,10 @@
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScanDetailsView.test_edit_config_conflict">test_edit_config_conflict() (ingest.test.test_views.TestScanDetailsView method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsView.test_edit_configuration">test_edit_configuration() (job.test.test_views.TestJobTypeDetailsView method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsView.test_edit_configuration_secret">test_edit_configuration_secret() (job.test.test_views.TestJobTypeDetailsView method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsView.test_edit_custom_resources">test_edit_custom_resources() (job.test.test_views.TestJobTypeDetailsView method)</a>
 </li>
@@ -10119,6 +10141,12 @@
         <li><a href="architecture/django/code_docs/source.test.html#source.test.test_views.TestSourceProductsView.test_job_type_category">(source.test.test_views.TestSourceProductsView method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/port.test.html#port.test.test_views.TestConfigurationValidationView.test_job_type_configuration">test_job_type_configuration() (port.test.test_views.TestConfigurationValidationView method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/port.test.html#port.test.test_views.TestConfigurationViewExport.test_job_type_configuration">(port.test.test_views.TestConfigurationViewExport method)</a>
+</li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobsUpdateView.test_job_type_id">test_job_type_id() (job.test.test_views.TestJobsUpdateView method)</a>
 
       <ul>
@@ -10323,9 +10351,13 @@
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.strike.configuration.html#ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration.test_missing_monitor">test_missing_monitor() (ingest.test.strike.configuration.test_strike_configuration.TestStrikeConfiguration method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesValidationView.test_missing_mount">test_missing_mount() (job.test.test_views.TestJobTypesValidationView method)</a>
+</li>
       <li><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_nfs_broker.TestNfsBrokerValidateConfiguration.test_missing_nfs_path">test_missing_nfs_path() (storage.test.brokers.test_nfs_broker.TestNfsBrokerValidateConfiguration method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.configuration.results.html#job.test.configuration.results.test_results_manifest.TestResultsManifestValidation.test_missing_optional_is_ok">test_missing_optional_is_ok() (job.test.configuration.results.test_results_manifest.TestResultsManifestValidation method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesValidationView.test_missing_other_setting">test_missing_other_setting() (job.test.test_views.TestJobTypesValidationView method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.configuration.data.html#job.test.configuration.data.test_job_data.TestJobDataValidateOutputFiles.test_missing_output">test_missing_output() (job.test.configuration.data.test_job_data.TestJobDataValidateOutputFiles method)</a>
 </li>
@@ -10346,6 +10378,8 @@
       <li><a href="architecture/django/code_docs/job.test.configuration.results.html#job.test.configuration.results.test_results_manifest.TestResultsManifestValidation.test_missing_required_is_bad">test_missing_required_is_bad() (job.test.configuration.results.test_results_manifest.TestResultsManifestValidation method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.scan.configuration.html#ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration.test_missing_scanner">test_missing_scanner() (ingest.test.scan.configuration.test_scan_configuration.TestScanConfiguration method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesValidationView.test_missing_setting">test_missing_setting() (job.test.test_views.TestJobTypesValidationView method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_broker.TestBroker.test_missing_solidus_credentials_broker_url">test_missing_solidus_credentials_broker_url() (util.test.test_broker.TestBroker method)</a>
 </li>
@@ -10743,6 +10777,8 @@
 </li>
       <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestScaleFileUpdateUUID.test_partial">test_partial() (storage.test.test_models.TestScaleFileUpdateUUID method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobTypeManagerEditJobType.test_pause_system_job_type">test_pause_system_job_type() (job.test.test_models.TestJobTypeManagerEditJobType method)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_manager.TestSchedulingManager.test_paused_job_type">test_paused_job_type() (scheduler.test.scheduling.test_manager.TestSchedulingManager method)</a>
@@ -10751,8 +10787,6 @@
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_node_class.TestNode.test_paused_node_pull_task">test_paused_node_pull_task() (scheduler.test.node.test_node_class.TestNode method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_manager.TestSchedulingManager.test_paused_scheduler">test_paused_scheduler() (scheduler.test.scheduling.test_manager.TestSchedulingManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_clock.TestClock.test_perform_tick">test_perform_tick() (job.test.test_clock.TestClock method)</a>
@@ -11014,6 +11048,8 @@
       <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_node.TestSchedulingNode.test_score_job_exe_for_scheduling">test_score_job_exe_for_scheduling() (scheduler.test.scheduling.test_node.TestSchedulingNode method)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.scheduling.html#scheduler.test.scheduling.test_node.TestSchedulingNode.test_score_job_exe_for_scheduling_insufficient_resources">test_score_job_exe_for_scheduling_insufficient_resources() (scheduler.test.scheduling.test_node.TestSchedulingNode method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesValidationView.test_secret_setting">test_secret_setting() (job.test.test_views.TestJobTypesValidationView method)</a>
 </li>
       <li><a href="architecture/django/code_docs/messaging.test.html#messaging.test.test_manager.TestCommandMessageManager.test_send_message">test_send_message() (messaging.test.test_manager.TestCommandMessageManager method)</a>
 </li>
@@ -11333,6 +11369,8 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesView.test_successful_batch">test_successful_batch() (recipe.test.test_views.TestRecipesView method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypesValidationView.test_successful_configuration">test_successful_configuration() (job.test.test_views.TestJobTypesValidationView method)</a>
+</li>
       <li><a href="architecture/django/code_docs/source.test.html#source.test.test_models.TestSourceFileManagerSaveParseResults.test_successful_data_time_save">test_successful_data_time_save() (source.test.test_models.TestSourceFileManagerSaveParseResults method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.test.html#recipe.test.test_views.TestRecipesView.test_successful_details">test_successful_details() (recipe.test.test_views.TestRecipesView method)</a>
@@ -11359,6 +11397,8 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobDetailsView.test_successful_files">test_successful_files() (job.test.test_views.TestJobDetailsView method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsView.test_successful_get_secrets">test_successful_get_secrets() (job.test.test_views.TestJobTypeDetailsView method)</a>
+</li>
       <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScansProcessView.test_successful_ingest_body">test_successful_ingest_body() (ingest.test.test_views.TestScansProcessView method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.html#ingest.test.test_views.TestScansProcessView.test_successful_ingest_params">test_successful_ingest_params() (ingest.test.test_views.TestScansProcessView method)</a>
@@ -11370,6 +11410,8 @@
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/recipe.test.configuration.definition.html#recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeMap.test_successful_new_recipe">test_successful_new_recipe() (recipe.test.configuration.definition.test_recipe_definition.TestRecipeDefinitionGetJobTypeMap method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.test.html#job.test.test_views.TestJobTypeDetailsView.test_successful_no_settings">test_successful_no_settings() (job.test.test_views.TestJobTypeDetailsView method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobTypeManagerCreateJobType.test_successful_no_trigger_rule">test_successful_no_trigger_rule() (job.test.test_models.TestJobTypeManagerCreateJobType method)</a>
 </li>
@@ -12772,6 +12814,8 @@
 </li>
         <li><a href="architecture/django/code_docs/job.configuration.interface.html#job.configuration.interface.error_interface.ErrorInterface.validate">(job.configuration.interface.error_interface.ErrorInterface method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.configuration.json.job.html#job.configuration.json.job.job_config.JobConfiguration.validate">(job.configuration.json.job.job_config.JobConfiguration method)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.configuration.results.results_manifest.html#job.configuration.results.results_manifest.results_manifest.ResultsManifest.validate">(job.configuration.results.results_manifest.results_manifest.ResultsManifest method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.configuration.results.results_manifest.html#job.configuration.results.results_manifest.results_manifest_1_0.ResultsManifest.validate">(job.configuration.results.results_manifest.results_manifest_1_0.ResultsManifest method)</a>
@@ -12919,6 +12963,8 @@
         <li><a href="architecture/django/code_docs/ingest.strike.configuration.html#ingest.strike.configuration.strike_configuration_1_0.ValidationWarning">(class in ingest.strike.configuration.strike_configuration_1_0)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.configuration.data.html#job.configuration.data.job_data.ValidationWarning">(class in job.configuration.data.job_data)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.configuration.json.job.html#job.configuration.json.job.job_config.ValidationWarning">(class in job.configuration.json.job.job_config)</a>
 </li>
         <li><a href="architecture/django/code_docs/port.html#port.schema.ValidationWarning">(class in port.schema)</a>
 </li>

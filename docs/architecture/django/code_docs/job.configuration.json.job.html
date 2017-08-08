@@ -285,6 +285,25 @@ this configuration, None is returned.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="job.configuration.json.job.job_config.JobConfiguration.get_secret_settings">
+<code class="descname">get_secret_settings</code><span class="sig-paren">(</span><em>interface</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.json.job.job_config.JobConfiguration.get_secret_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dict of configuration settings that are secret based off the job interface
+setting designations.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>interface</strong> (<em>dict</em>) &#8211; The interface dict for the job type</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">name:value pairs of secret settings, possibly None</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.configuration.json.job.job_config.JobConfiguration.get_setting_value">
 <code class="descname">get_setting_value</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.json.job.job_config.JobConfiguration.get_setting_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the value of the given setting if defined in this configuration, otherwise returns None</p>
@@ -302,6 +321,31 @@ this configuration, None is returned.</p>
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="job.configuration.json.job.job_config.JobConfiguration.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><em>interface</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.json.job.job_config.JobConfiguration.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates the configuration against the interface to find setting and mount usages</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>interface</strong> (<em>dict</em>) &#8211; The interface dict for the job type</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of warnings discovered during validation.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="job.configuration.data.html#job.configuration.data.job_data.ValidationWarning" title="job.configuration.data.job_data.ValidationWarning"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.job_data.ValidationWarning</span></code></a>]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.configuration.json.job.job_config.ValidationWarning">
+<em class="property">class </em><code class="descclassname">job.configuration.json.job.job_config.</code><code class="descname">ValidationWarning</code><span class="sig-paren">(</span><em>key</em>, <em>details</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.json.job.job_config.ValidationWarning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Tracks job configuration warnings during validation that may not prevent the job from working.</p>
 </dd></dl>
 
 </div>

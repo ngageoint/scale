@@ -3625,6 +3625,8 @@ transaction.</p>
 <li><strong>trigger_rule</strong> (<a class="reference internal" href="trigger.html#trigger.models.TriggerRule" title="trigger.models.TriggerRule"><code class="xref py py-class docutils literal"><span class="pre">trigger.models.TriggerRule</span></code></a>) &#8211; The trigger rule that creates jobs of this type, possibly None</li>
 <li><strong>error_mapping</strong> (<a class="reference internal" href="job.configuration.interface.html#job.configuration.interface.error_interface.ErrorInterface" title="job.configuration.interface.error_interface.ErrorInterface"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.error_interface.ErrorInterface</span></code></a>) &#8211; Mapping for translating an exit code to an error type</li>
 <li><strong>custom_resources</strong> (<a class="reference internal" href="node.resources.json.html#node.resources.json.resources.Resources" title="node.resources.json.resources.Resources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.json.resources.Resources</span></code></a>) &#8211; Custom resources required by this job type</li>
+<li><strong>configuration</strong> (<a class="reference internal" href="job.configuration.json.job.html#job.configuration.json.job.job_config.JobConfiguration" title="job.configuration.json.job.job_config.JobConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.json.job.job_config.JobConfiguration</span></code></a>) &#8211; The configuration for running a job of this type, possibly None</li>
+<li><strong>secrets</strong> (<em>dict</em>) &#8211; Secret settings required by this job type</li>
 </ul>
 </td>
 </tr>
@@ -3664,6 +3666,8 @@ no change to the trigger rule (False) and removing the trigger rule (True) when 
 when trigger_rule is None</li>
 <li><strong>error_mapping</strong> (<a class="reference internal" href="job.configuration.interface.html#job.configuration.interface.error_interface.ErrorInterface" title="job.configuration.interface.error_interface.ErrorInterface"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.error_interface.ErrorInterface</span></code></a>) &#8211; Mapping for translating an exit code to an error type</li>
 <li><strong>custom_resources</strong> (<a class="reference internal" href="node.resources.json.html#node.resources.json.resources.Resources" title="node.resources.json.resources.Resources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.json.resources.Resources</span></code></a>) &#8211; Custom resources required by this job type</li>
+<li><strong>configuration</strong> (<a class="reference internal" href="job.configuration.json.job.html#job.configuration.json.job.job_config.JobConfiguration" title="job.configuration.json.job.job_config.JobConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.json.job.job_config.JobConfiguration</span></code></a>) &#8211; The configuration for running a job of this type, possibly None</li>
+<li><strong>secrets</strong> (<em>dict</em>) &#8211; Secret settings required by this job type</li>
 </ul>
 </td>
 </tr>
@@ -3874,8 +3878,26 @@ count of associated jobs and the longest running job.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="job.models.JobTypeManager.set_job_type_secrets">
+<code class="descname">set_job_type_secrets</code><span class="sig-paren">(</span><em>job_type_id</em>, <em>secrets</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeManager.set_job_type_secrets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends request to SecretsHandler to write secrets for a job type.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>job_type_id</strong> (<em>int</em>) &#8211; The ID of the job type</li>
+<li><strong>secrets</strong> (<em>dict</em>) &#8211; Secret settings required by this job type.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.models.JobTypeManager.validate_job_type">
-<code class="descname">validate_job_type</code><span class="sig-paren">(</span><em>name</em>, <em>version</em>, <em>interface</em>, <em>error_mapping=None</em>, <em>trigger_config=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeManager.validate_job_type" title="Permalink to this definition">¶</a></dt>
+<code class="descname">validate_job_type</code><span class="sig-paren">(</span><em>name</em>, <em>version</em>, <em>interface</em>, <em>error_mapping=None</em>, <em>trigger_config=None</em>, <em>configuration=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeManager.validate_job_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validates a new job type prior to attempting a save</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -3887,6 +3909,7 @@ count of associated jobs and the longest running job.</p>
 <li><strong>interface</strong> (<a class="reference internal" href="job.configuration.interface.html#job.configuration.interface.job_interface.JobInterface" title="job.configuration.interface.job_interface.JobInterface"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.job_interface.JobInterface</span></code></a>) &#8211; The interface for running a job of this type</li>
 <li><strong>error_mapping</strong> (<a class="reference internal" href="job.configuration.interface.html#job.configuration.interface.error_interface.ErrorInterface" title="job.configuration.interface.error_interface.ErrorInterface"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.interface.error_interface.ErrorInterface</span></code></a>) &#8211; The interface for mapping error exit codes</li>
 <li><strong>trigger_config</strong> (<a class="reference internal" href="trigger.configuration.html#trigger.configuration.trigger_rule.TriggerRuleConfiguration" title="trigger.configuration.trigger_rule.TriggerRuleConfiguration"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.trigger_rule.TriggerRuleConfiguration</span></code></a>) &#8211; The trigger rule configuration, possibly None</li>
+<li><strong>configuration</strong> (<a class="reference internal" href="job.configuration.json.job.html#job.configuration.json.job.job_config.JobConfiguration" title="job.configuration.json.job.job_config.JobConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.json.job.job_config.JobConfiguration</span></code></a>) &#8211; The configuration for running a job of this type, possibly None</li>
 </ul>
 </td>
 </tr>
@@ -3901,8 +3924,8 @@ count of associated jobs and the longest running job.</p>
 <dl class="docutils">
 <dt>:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerType" title="trigger.configuration.exceptions.InvalidTriggerType"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerType</span></code></a>: If the given trigger rule is an invalid</dt>
 <dd>type for creating jobs</dd>
-<dt>:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerRule" title="trigger.configuration.exceptions.InvalidTriggerRule"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerRule</span></code></a>: If the given trigger rule configuration is</dt>
-<dd>invalid</dd>
+<dt>:raises <a class="reference internal" href="trigger.configuration.html#trigger.configuration.exceptions.InvalidTriggerRule" title="trigger.configuration.exceptions.InvalidTriggerRule"><code class="xref py py-class docutils literal"><span class="pre">trigger.configuration.exceptions.InvalidTriggerRule</span></code></a>: If the given trigger rule configuration</dt>
+<dd>is invalid</dd>
 <dt>:raises <a class="reference internal" href="job.configuration.data.html#job.configuration.data.exceptions.InvalidConnection" title="job.configuration.data.exceptions.InvalidConnection"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.data.exceptions.InvalidConnection</span></code></a>: If the trigger rule connection to the job</dt>
 <dd>type interface is invalid</dd>
 <dt>:raises <a class="reference internal" href="recipe.configuration.definition.html#recipe.configuration.definition.exceptions.InvalidDefinition" title="recipe.configuration.definition.exceptions.InvalidDefinition"><code class="xref py py-class docutils literal"><span class="pre">recipe.configuration.definition.exceptions.InvalidDefinition</span></code></a>: If the interface invalidates any</dt>
@@ -4860,7 +4883,7 @@ object the first time, the query is executed.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP GET request</li>
+<li><strong>request</strong> (<code class="xref py py-class docutils literal"><span class="pre">rest_framework.request.Request</span></code>) &#8211; the HTTP PATCH request</li>
 <li><strong>job_type_id</strong> (<em>int encoded as a str</em>) &#8211; The ID for the job type.</li>
 </ul>
 </td>

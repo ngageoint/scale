@@ -271,6 +271,13 @@
 </dd></dl>
 
 <dl class="exception">
+<dt id="vault.exceptions.InvalidSecretsConfiguration">
+<em class="property">exception </em><code class="descclassname">vault.exceptions.</code><code class="descname">InvalidSecretsConfiguration</code><a class="headerlink" href="#vault.exceptions.InvalidSecretsConfiguration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Exception indicating that the secrets backend is not properly configured</p>
+</dd></dl>
+
+<dl class="exception">
 <dt id="vault.exceptions.InvalidSecretsRequest">
 <em class="property">exception </em><code class="descclassname">vault.exceptions.</code><code class="descname">InvalidSecretsRequest</code><a class="headerlink" href="#vault.exceptions.InvalidSecretsRequest" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
@@ -336,15 +343,16 @@
 
 <dl class="method">
 <dt id="vault.secrets_handler.SecretsHandler.set_job_type_secrets">
-<code class="descname">set_job_type_secrets</code><span class="sig-paren">(</span><em>job_name</em>, <em>secret_json</em><span class="sig-paren">)</span><a class="headerlink" href="#vault.secrets_handler.SecretsHandler.set_job_type_secrets" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_job_type_secrets</code><span class="sig-paren">(</span><em>job_name</em>, <em>secrets</em><span class="sig-paren">)</span><a class="headerlink" href="#vault.secrets_handler.SecretsHandler.set_job_type_secrets" title="Permalink to this definition">¶</a></dt>
 <dd><p>write job-type secrets to the secrets backend</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>job_name</strong> (<em>str</em>) &#8211; name of the job that the screts belong to.</li>
-<li><strong>secret_json</strong> (<em>dict</em>) &#8211; dict with name:value pairs for all secrets associated with the job</li>
+<li><strong>job_name</strong> (<em>str</em>) &#8211; name of the job that the secrets belong to.
+Format: [job_name]-[job_version]</li>
+<li><strong>secrets</strong> (<em>dict</em>) &#8211; dict with name:value pairs for all secrets associated with the job</li>
 </ul>
 </td>
 </tr>

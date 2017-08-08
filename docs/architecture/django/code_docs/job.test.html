@@ -1071,6 +1071,18 @@ for input and output</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="job.test.test_views.TestJobTypeDetailsView.test_edit_configuration">
+<code class="descname">test_edit_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_edit_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests editing the configuration of a job type</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypeDetailsView.test_edit_configuration_secret">
+<code class="descname">test_edit_configuration_secret</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_edit_configuration_secret" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests editing the configuration of a job type with secrets</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.test.test_views.TestJobTypeDetailsView.test_edit_custom_resources">
 <code class="descname">test_edit_custom_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_edit_custom_resources" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests editing the custom resources of a job type</p>
@@ -1140,6 +1152,18 @@ for input and output</p>
 <dt id="job.test.test_views.TestJobTypeDetailsView.test_successful">
 <code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests successfully calling the get job type details view.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypeDetailsView.test_successful_get_secrets">
+<code class="descname">test_successful_get_secrets</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_successful_get_secrets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests getting a job_type with associated secrets and extra mounts</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypeDetailsView.test_successful_no_settings">
+<code class="descname">test_successful_no_settings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypeDetailsView.test_successful_no_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests getting a job_type with no settings in interface (but defined in configuration)</p>
 </dd></dl>
 
 </dd></dl>
@@ -1265,9 +1289,39 @@ for input and output</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="job.test.test_views.TestJobTypesValidationView.test_missing_mount">
+<code class="descname">test_missing_mount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_missing_mount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new job type with a mount referenced in configuration but not interface.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypesValidationView.test_missing_other_setting">
+<code class="descname">test_missing_other_setting</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_missing_other_setting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new job type with a setting referenced in configuration but not interface.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypesValidationView.test_missing_setting">
+<code class="descname">test_missing_setting</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_missing_setting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new job type with a setting referenced in configuration but not interface.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypesValidationView.test_secret_setting">
+<code class="descname">test_secret_setting</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_secret_setting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new job type with a secret setting.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.test.test_views.TestJobTypesValidationView.test_successful">
 <code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests validating a new job type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypesValidationView.test_successful_configuration">
+<code class="descname">test_successful_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesValidationView.test_successful_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests validating a new job type with a valid configuration.</p>
 </dd></dl>
 
 <dl class="method">
@@ -1336,15 +1390,45 @@ for input and output</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="job.test.test_views.TestJobTypesView.test_create_configuration">
+<code class="descname">test_create_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_create_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating a new job type with a valid configuration.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.test.test_views.TestJobTypesView.test_create_max_scheduled">
 <code class="descname">test_create_max_scheduled</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_create_max_scheduled" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests creating a new job type.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="job.test.test_views.TestJobTypesView.test_create_missing_mount">
+<code class="descname">test_create_missing_mount</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_create_missing_mount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating a new job type with a mount referenced in configuration but not interface.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypesView.test_create_missing_other_setting">
+<code class="descname">test_create_missing_other_setting</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_create_missing_other_setting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating a new job type with a setting referenced in configuration but not interface.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.test.test_views.TestJobTypesView.test_create_missing_param">
 <code class="descname">test_create_missing_param</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_create_missing_param" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests creating a job type with missing fields.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypesView.test_create_missing_setting">
+<code class="descname">test_create_missing_setting</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_create_missing_setting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating a new job type with a setting referenced in configuration but not interface.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.test_views.TestJobTypesView.test_create_secrets">
+<code class="descname">test_create_secrets</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_views.TestJobTypesView.test_create_secrets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests creating a new job type with secrets.</p>
 </dd></dl>
 
 <dl class="method">
