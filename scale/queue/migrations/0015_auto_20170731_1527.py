@@ -5,6 +5,8 @@ from __future__ import unicode_literals
 from django.db import migrations
 from django.utils.timezone import now
 
+from job.configuration.configurators import QueuedExecutionConfigurator
+
 
 class Migration(migrations.Migration):
 
@@ -48,9 +50,9 @@ class Migration(migrations.Migration):
 
             # Bulk create queue models
             queues = []
+            configurator = QueuedExecutionConfigurator(input_files)
             for job in job_qry:
-                config = ExecutionConfiguration()
-                config.configure_for_queued_job(job, input_files)
+                config = configurator.configure_queued_job(job)
 
                 queue = Queue()
                 queue.job_type = job.job_type
