@@ -4,6 +4,8 @@ from __future__ import unicode_literals
 import math
 import os
 
+from django.conf import settings
+
 from job.configuration.docker_param import DockerParameter
 from job.configuration.input_file import InputFile
 from job.configuration.json.execution.exe_config import ExecutionConfiguration
@@ -264,7 +266,29 @@ class ScheduledExecutionConfigurator(object):
         config.set_task_ids(job_exe.get_cluster_id())
         # TODO: apply resource env vars to all tasks (including shared mem)
         # TODO: convert workspaces to volumes (add in workspace volume names) for all tasks
-        # TODO: apply logging docker params to all tasks
+
+        # Configure tasks for logging
+        if settings.LOGGING_ADDRESS is not None:
+            log_driver = DockerParameter('log-driver', 'syslog')
+            # Must explicitly specify RFC3164 to ensure compatibility with logstash in Docker 1.11+
+            syslog_format = DockerParameter('log-opt', 'syslog-format=rfc3164')
+            log_address = DockerParameter('log-opt', 'syslog-address=%s' % settings.LOGGING_ADDRESS)
+            if not job_exe.is_system:
+                pre_task_tag = DockerParameter('log-opt', 'tag=%s' % config.get_task_id('pre'))
+                config.add_to_task('pre', docker_params=[log_driver, syslog_format, log_address, pre_task_tag])
+                post_task_tag = DockerParameter('log-opt', 'tag=%s' % config.get_task_id('post'))
+                config.add_to_task('post', docker_params=[log_driver, syslog_format, log_address, post_task_tag])
+                # TODO: remove es_urls parameter when Scale no longer supports old style job types
+                es_urls = None
+                # Use connection pool to get up-to-date list of elasticsearch nodes
+                if settings.ELASTICSEARCH:
+                    hosts = [host.host for host in settings.ELASTICSEARCH.transport.connection_pool.connections]
+                    es_urls = ','.join(hosts)
+                # Post task needs ElasticSearch URL to grab logs for old artifact registration
+                es_param = DockerParameter('env', 'SCALE_ELASTICSEARCH_URLS=%s' % es_urls)
+                config.add_to_task('post', docker_params=[es_param])
+            main_task_tag = DockerParameter('log-opt', 'tag=%s' % config.get_task_id('main'))
+            config.add_to_task('main', docker_params=[log_driver, syslog_format, log_address, main_task_tag])
 
     @staticmethod
     def _configure_main_task(config, job_exe, job_type, interface):

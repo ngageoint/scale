@@ -357,6 +357,20 @@ class ExecutionConfiguration(object):
             return list(self._configuration['output_workspaces'].values())
         return []
 
+    def get_task_id(self, task_type):
+        """Returns the task ID for the given task type
+
+        :param task_type: The task type
+        :type task_type: string
+        :returns: The task ID
+        :rtype: string
+        """
+
+        for task_dict in self._configuration['tasks']:
+            if task_dict['type'] == task_type:
+                return task_dict['task_id']
+        return None
+
     def set_input_files(self, input_files):
         """Sets the given input files in the configuration
 
@@ -630,180 +644,6 @@ class ExecutionConfiguration(object):
 
     # TODO: phase all of this out and replace it
 
-    def add_job_task_setting(self, name, value):
-        """Adds a setting name/value to this job's job task
-
-        :param name: The setting name to add
-        :type name: string
-        :param value: The setting value to add
-        :type value: string
-        """
-
-        pass
-
-    def add_post_task_setting(self, name, value):
-        """Adds a setting name/value to this job's post task
-
-        :param name: The setting name to add
-        :type name: string
-        :param value: The setting value to add
-        :type value: string
-        """
-
-        pass
-
-    def add_pre_task_setting(self, name, value):
-        """Adds a setting name/value to this job's pre task
-
-        :param name: The setting name to add
-        :type name: string
-        :param value: The setting value to add
-        :type value: string
-        """
-
-        pass
-
-    def add_job_task_docker_params(self, params):
-        """Adds the given Docker parameters to this job's job task
-
-        :param params: The Docker parameters to add
-        :type params: [:class:`job.configuration.job_parameter.DockerParam`]
-        """
-
-        pass
-
-    def add_post_task_docker_params(self, params):
-        """Adds the given Docker parameters to this job's post task
-
-        :param params: The Docker parameters to add
-        :type params: [:class:`job.configuration.job_parameter.DockerParam`]
-        """
-
-        pass
-
-    def add_pre_task_docker_params(self, params):
-        """Adds the given Docker parameters to this job's pre task
-
-        :param params: The Docker parameters to add
-        :type params: [:class:`job.configuration.job_parameter.DockerParam`]
-        """
-
-        pass
-
-    def add_job_task_workspace(self, name, mode):
-        """Adds a needed workspace to this job's job task
-
-        :param name: The name of the workspace
-        :type name: string
-        :param mode: The mode of the workspace, either MODE_RO or MODE_RW
-        :type mode: string
-        """
-
-        pass
-
-    def add_post_task_workspace(self, name, mode):
-        """Adds a needed workspace to this job's post task
-
-        :param name: The name of the workspace
-        :type name: string
-        :param mode: The mode of the workspace, either MODE_RO or MODE_RW
-        :type mode: string
-        """
-
-        pass
-
-    def add_pre_task_workspace(self, name, mode):
-        """Adds a needed workspace to this job's pre task
-
-        :param name: The name of the workspace
-        :type name: string
-        :param mode: The mode of the workspace, either MODE_RO or MODE_RW
-        :type mode: string
-        """
-
-        pass
-
-    def get_job_task_settings(self):
-        """Returns the settings name/values needed for the job task
-
-        :returns: The job task settings name/values
-        :rtype: [:class:`job.configuration.job_parameter.TaskSetting`]
-        """
-
-        return []
-
-    def get_post_task_settings(self):
-        """Returns the settings name/values needed for the post task
-
-        :returns: The post task settings name/values
-        :rtype: [:class:`job.configuration.job_parameter.TaskSetting`]
-        """
-
-        return []
-
-    def get_pre_task_setting(self):
-        """Returns the settings name/values needed for the pre task
-
-        :returns: The pre task settings name/values
-        :rtype: [:class:`job.configuration.job_parameter.TaskSetting`]
-        """
-
-        return []
-
-    def get_job_task_docker_params(self):
-        """Returns the Docker parameters needed for the job task
-
-        :returns: The job task Docker parameters
-        :rtype: [:class:`job.configuration.job_parameter.DockerParam`]
-        """
-
-        return []
-
-    def get_post_task_docker_params(self):
-        """Returns the Docker parameters needed for the post task
-
-        :returns: The post task Docker parameters
-        :rtype: [:class:`job.configuration.job_parameter.DockerParam`]
-        """
-
-        return []
-
-    def get_pre_task_docker_params(self):
-        """Returns the Docker parameters needed for the pre task
-
-        :returns: The pre task Docker parameters
-        :rtype: [:class:`job.configuration.job_parameter.DockerParam`]
-        """
-
-        return []
-
-    def get_job_task_workspaces(self):
-        """Returns the workspaces needed for the job task
-
-        :returns: The job task workspaces
-        :rtype: [:class:`job.configuration.job_parameter.TaskWorkspace`]
-        """
-
-        return []
-
-    def get_post_task_workspaces(self):
-        """Returns the workspaces needed for the post task
-
-        :returns: The post task workspaces
-        :rtype: [:class:`job.configuration.job_parameter.TaskWorkspace`]
-        """
-
-        return []
-
-    def get_pre_task_workspaces(self):
-        """Returns the workspaces needed for the pre task
-
-        :returns: The pre task workspaces
-        :rtype: [:class:`job.configuration.job_parameter.TaskWorkspace`]
-        """
-
-        return []
-
     def configure_workspace_docker_params(self, job_exe, workspaces, docker_volumes):
         """Configures the Docker parameters needed for each workspace in the job execution tasks. The given job
         execution must have been set to RUNNING status.
@@ -814,17 +654,6 @@ class ExecutionConfiguration(object):
         :type workspaces: {string: :class:`storage.models.Workspace`}
         :param docker_volumes: A list to add Docker volume names to
         :type docker_volumes: [string]
-
-        :raises Exception: If the job execution is still queued
-        """
-
-        pass
-
-    def configure_logging_docker_params(self, job_exe):
-        """Configures the Docker parameters needed for job execution logging
-
-        :param job_exe: The job execution model (must not be queued) with related job and job_type fields
-        :type job_exe: :class:`job.models.JobExecution`
 
         :raises Exception: If the job execution is still queued
         """
@@ -846,22 +675,3 @@ class ExecutionConfiguration(object):
                 setting_value = job_config.get_setting_value(setting_name)
                 if setting_value:
                     self.add_job_task_setting(setting_name, setting_value)
-
-    def populate_mounts(self, job_exe):
-        """Adds the mounts defined in the job type's interface and configuration to the execution configuration
-
-        :param job_exe: The job execution model with related job and job_type fields
-        :type job_exe: :class:`job.models.JobExecution`
-        """
-
-        pass
-        # interface = job_exe.get_job_interface()
-        # job_config = job_exe.get_job_configuration()
-        # for mount in interface.get_dict()['mounts']:
-        #     name = mount['name']
-        #     mode = mount['mode']
-        #     path = mount['path']
-        #     volume_name = get_mount_volume_name(job_exe, name)
-        #     volume = job_config.get_mount_volume(name, volume_name, path, mode)
-        #     if volume:
-        #         self.add_job_task_docker_params([volume.to_docker_param()])
