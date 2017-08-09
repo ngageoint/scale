@@ -264,7 +264,16 @@ class ScheduledExecutionConfigurator(object):
         """
 
         config.set_task_ids(job_exe.get_cluster_id())
-        # TODO: apply resource env vars to all tasks (including shared mem)
+
+        # Configure env vars describing allocated task resources
+        for task_type in config.get_task_types():
+            env_vars = {}
+            resources_json = config.get_resources(task_type).get_json()
+            for name, value in resources_json.get_dict().items():
+                env_name = 'ALLOCATED_%s' % normalize_env_var_name(name)
+                env_vars[env_name] = value
+            config.add_to_task(task_type, env_vars=env_vars)
+
         # TODO: convert workspaces to volumes (add in workspace volume names) for all tasks
 
         # Configure tasks for logging
@@ -307,7 +316,10 @@ class ScheduledExecutionConfigurator(object):
         # Set shared memory if required by this job type
         shared_mem = job_type.shared_mem_required
         if shared_mem > 0:
-            config.add_to_task('main', docker_params=[DockerParameter('shm-size', '%dm' % int(math.ceil(shared_mem)))])
+            shared_mem = int(math.ceil(shared_mem))
+            env_vars = {'ALLOCATED_SHARED_MEM': shared_mem}
+            config.add_to_task('main', docker_params=[DockerParameter('shm-size', '%dm' % shared_mem)],
+                               env_vars=env_vars)
 
         job_config = job_type.get_job_configuration()
         mount_volumes = {}

@@ -9,6 +9,7 @@ from jsonschema.exceptions import ValidationError
 from job.configuration.exceptions import InvalidExecutionConfiguration
 from job.configuration.json.execution import exe_config_1_1 as previous_version
 from job.configuration.volume import MODE_RO, MODE_RW
+from node.resources.json.resources import Resources
 
 logger = logging.getLogger(__name__)
 
@@ -357,12 +358,26 @@ class ExecutionConfiguration(object):
             return list(self._configuration['output_workspaces'].values())
         return []
 
-    def get_task_id(self, task_type):
-        """Returns the task ID for the given task type
+    def get_resources(self, task_type):
+        """Returns the resources for the given task type, None if the task type doesn't exist
 
         :param task_type: The task type
         :type task_type: string
-        :returns: The task ID
+        :returns: The task resources, possibly None
+        :rtype: :class:`node.resources.node_resources.NodeResources`
+        """
+
+        for task_dict in self._configuration['tasks']:
+            if task_dict['type'] == task_type:
+                return Resources(task_dict['resources']).get_node_resources()
+        return None
+
+    def get_task_id(self, task_type):
+        """Returns the task ID for the given task type, None if the task type doesn't exist
+
+        :param task_type: The task type
+        :type task_type: string
+        :returns: The task ID, possibly None
         :rtype: string
         """
 
@@ -370,6 +385,18 @@ class ExecutionConfiguration(object):
             if task_dict['type'] == task_type:
                 return task_dict['task_id']
         return None
+
+    def get_task_types(self):
+        """Returns all task types in the configuration
+
+        :returns: The list of task types
+        :rtype: list
+        """
+
+        task_types = []
+        for task_dict in self._configuration['tasks']:
+            task_types.append(task_dict['type'])
+        return task_types
 
     def set_input_files(self, input_files):
         """Sets the given input files in the configuration
