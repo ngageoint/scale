@@ -388,6 +388,16 @@ class ExecutionConfiguration(object):
 
         self._configuration['output_workspaces'] = output_workspaces
 
+    def set_task_ids(self, cluster_id):
+        """Sets the IDs for all of the tasks
+
+        :param cluster_id: The cluster ID for the job execution
+        :type cluster_id: string
+        """
+
+        for task_dict in self._configuration['tasks']:
+            task_dict['task_id'] = '%s_%s' % (cluster_id, task_dict['type'])
+
     @staticmethod
     def _add_args_to_task(task_dict, args):
         """Adds the given command arguments to the given task

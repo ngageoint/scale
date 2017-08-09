@@ -240,10 +240,7 @@ class ScheduledExecutionConfigurator(object):
             ScheduledExecutionConfigurator._configure_regular_job(config, job_exe)
 
         # Configure items that apply to all tasks
-        # TODO: set task IDs
-        # TODO: apply resource env vars to all tasks (including shared mem)
-        # TODO: convert workspaces to volumes (add in workspace volume names) for all tasks
-        # TODO: apply logging docker params to all tasks
+        ScheduledExecutionConfigurator._configure_all_tasks(config, job_exe)
 
         # TODO: make copy of this configuration
         config_with_secrets = None
@@ -255,8 +252,23 @@ class ScheduledExecutionConfigurator(object):
         return config_with_secrets
 
     @staticmethod
+    def _configure_all_tasks(config, job_exe):
+        """Configures the given execution with items that apply to all tasks
+
+        :param config: The execution configuration
+        :type config: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :param job_exe: The job execution model being scheduled
+        :type job_exe: :class:`job.models.JobExecution`
+        """
+
+        config.set_task_ids(job_exe.get_cluster_id())
+        # TODO: apply resource env vars to all tasks (including shared mem)
+        # TODO: convert workspaces to volumes (add in workspace volume names) for all tasks
+        # TODO: apply logging docker params to all tasks
+
+    @staticmethod
     def _configure_main_task(config, job_exe, job_type, interface):
-        """Configures the main task for the given execution with features specific to the main task
+        """Configures the main task for the given execution with items specific to the main task
 
         :param config: The execution configuration
         :type config: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
