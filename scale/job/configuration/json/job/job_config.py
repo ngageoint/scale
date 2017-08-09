@@ -146,12 +146,11 @@ class JobConfiguration(object):
         mount_type = mount_config['type']
         if mount_type == 'host':
             host_path = mount_config['host_path']
-            volume = Volume(container_path, mode, is_host=True, host_path=host_path)
+            volume = Volume(volume_name, container_path, mode, is_host=True, host_path=host_path)
         elif mount_type == 'volume':
             driver = mount_config['driver']
             driver_opts = mount_config['driver_opts']
-            volume = Volume(container_path, mode, is_host=False, name=volume_name, driver=driver,
-                            driver_opts=driver_opts)
+            volume = Volume(volume_name, container_path, mode, is_host=False, driver=driver, driver_opts=driver_opts)
 
         return volume
 

@@ -102,6 +102,13 @@ EXE_CONFIG_SCHEMA = {
                     'description': 'The type of the task',
                     'type': 'string',
                 },
+                'resources': {
+                    'description': 'The resources allocated to the task',
+                    'type': 'object',
+                    'additionalProperties': {
+                        'type': 'number',
+                    },
+                },
                 'args': {
                     'description': 'The command argument string for this task',
                     'type': 'string',
@@ -246,8 +253,10 @@ class ExecutionConfiguration(object):
         except ValidationError as validation_error:
             raise InvalidExecutionConfiguration(validation_error)
 
-    def add_to_task(self, task_type, args=None, docker_params=None, env_vars=None, workspaces=None):
-        """Adds the given parameters to the task with the given type. The task with the given type must already exist.
+    def add_to_task(self, task_type, args=None, docker_params=None, env_vars=None, mount_volumes=None, resources=None,
+                    workspaces=None):
+        """Adds the given parameters to the task with the given type. The task with the given type must already exist. A
+        mount volume of None indicates a required mount that is missing.
 
         :param task_type: The task type to add the parameters to
         :type task_type: string
@@ -257,6 +266,10 @@ class ExecutionConfiguration(object):
         :type docker_params: list
         :param env_vars: A dict of env var names and values to add to the task
         :type env_vars: dict
+        :param mount_volumes: The mount volumes stored by mount name (a volume may be None)
+        :type mount_volumes: dict
+        :param resources: The resources
+        :type resources: :class:`node.resources.node_resources.NodeResources`
         :param workspaces: The workspaces stored by name
         :type workspaces: dict
         """
@@ -268,6 +281,10 @@ class ExecutionConfiguration(object):
             ExecutionConfiguration._add_docker_params_to_task(task_dict, docker_params)
         if env_vars:
             ExecutionConfiguration._add_env_vars_to_task(task_dict, env_vars)
+        if mount_volumes:
+            ExecutionConfiguration._add_mount_volumes_to_task(task_dict, mount_volumes)
+        if resources:
+            ExecutionConfiguration._add_resources_to_task(task_dict, resources)
         if workspaces:
             ExecutionConfiguration._add_workspaces_to_task(task_dict, workspaces)
 
@@ -422,23 +439,55 @@ class ExecutionConfiguration(object):
             task_env_vars[name] = value
 
     @staticmethod
-    def _add_env_vars_to_task(task_dict, env_vars):
-        """Adds the given environment variables to the given task
+    def _add_mount_volumes_to_task(task_dict, mount_volumes):
+        """Adds the given mount volumes to the given task. A mount volume of None indicates a required mount that is
+        missing.
 
         :param task_dict: The task dict
         :type task_dict: dict
-        :param env_vars: The command arguments
-        :type env_vars: dict
+        :param mount_volumes: The mount volumes stored by mount name (a volume may be None)
+        :type mount_volumes: dict
         """
 
-        if 'env_vars' in task_dict:
-            task_env_vars = task_dict['env_vars']
+        if 'mounts' in task_dict:
+            task_mounts = task_dict['mounts']
         else:
-            task_env_vars = {}
-            task_dict['env_vars'] = task_env_vars
+            task_mounts = {}
+            task_dict['mounts'] = task_mounts
 
-        for name, value in env_vars.items():
-            task_env_vars[name] = value
+        if 'volumes' in task_dict:
+            task_volumes = task_dict['volumes']
+        else:
+            task_volumes = {}
+            task_dict['volumes'] = task_volumes
+
+        for mount_name, volume in mount_volumes.items():
+            if volume:
+                task_mounts[mount_name] = volume.name
+                if volume.is_host:
+                    vol_dict = {'container_path': volume.container_path, 'mode': volume.mode, 'type': 'host',
+                                'host_path': volume.host_path}
+                else:
+                    vol_dict = {'container_path': volume.container_path, 'mode': volume.mode, 'type': 'volume'}
+                    if volume.driver:
+                        vol_dict['driver'] = volume.driver
+                    if volume.driver_opts:
+                        vol_dict['driver_opts'] = volume.driver_opts
+                task_volumes[volume.name] = vol_dict
+            else:
+                task_mounts[mount_name] = None
+
+    @staticmethod
+    def _add_resources_to_task(task_dict, resources):
+        """Adds the given resources to the given task
+
+        :param task_dict: The task dict
+        :type task_dict: dict
+        :param resources: The resources
+        :type resources: :class:`node.resources.node_resources.NodeResources`
+        """
+
+        task_dict['resources'] = resources.get_json().get_dict()
 
     @staticmethod
     def _add_workspaces_to_task(task_dict, workspaces):

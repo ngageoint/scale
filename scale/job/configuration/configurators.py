@@ -7,9 +7,13 @@ import os
 from job.configuration.docker_param import DockerParameter
 from job.configuration.input_file import InputFile
 from job.configuration.json.execution.exe_config import ExecutionConfiguration
-from job.configuration.volume import MODE_RO, MODE_RW
+from job.configuration.volume import Volume, MODE_RO, MODE_RW
 from job.configuration.workspace import TaskWorkspace
-from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
+from job.execution.container import get_job_exe_input_vol_name, get_job_exe_output_vol_name, get_mount_volume_name, \
+    SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
+from job.tasks.pull_task import create_pull_command
+from node.resources.node_resources import NodeResources
+from node.resources.resource import Disk
 from storage.models import Workspace
 
 
@@ -87,11 +91,6 @@ class QueuedExecutionConfigurator(object):
             for output, workspace_id in data.get_output_workspaces().items():
                 output_workspaces[output] = self._cached_workspace_names[workspace_id]
             config.set_output_workspaces(output_workspaces)
-
-        # Add env var for output directory
-        # TODO: original output dir can be removed when Scale only supports Seed-based job types
-        env_vars['job_output_dir'] = SCALE_JOB_EXE_OUTPUT_PATH  # Original output directory
-        env_vars['OUTPUT_DIR'] = SCALE_JOB_EXE_OUTPUT_PATH  # Seed output directory
 
         # Create main task with fields populated from input data
         config.create_tasks(['main'])
@@ -231,21 +230,18 @@ class ScheduledExecutionConfigurator(object):
 
         config = job_exe.get_execution_configuration()
 
-        # Set shared memory if required by this job type
-        shared_mem = job_type.shared_mem_required
-        if shared_mem > 0:
-            config.add_to_task('main', docker_params=[DockerParameter('shm-size', '%dm' % int(math.ceil(shared_mem)))])
+        # Configure items specific to the main task
+        ScheduledExecutionConfigurator._configure_main_task(config, job_exe, job_type, interface)
 
-        # TODO: add mounts/volumes to main task (interface, job_type.job_config)
-        # Configure job based upon whether it is a system job
+        # Configure job tasks based upon whether system job or regular job
         if job_type.is_system:
-            # TODO: set main task resources
-            pass
+            ScheduledExecutionConfigurator._configure_system_job(config, job_exe)
         else:
-            ScheduledExecutionConfigurator._configure_regular_job(config, job_type, interface)
+            ScheduledExecutionConfigurator._configure_regular_job(config, job_exe)
 
-        # TODO: these apply to all tasks
-        # TODO: apply resource env vars to all tasks (including shared mem) (add resources to task JSONs)
+        # Configure items that apply to all tasks
+        # TODO: set task IDs
+        # TODO: apply resource env vars to all tasks (including shared mem)
         # TODO: convert workspaces to volumes (add in workspace volume names) for all tasks
         # TODO: apply logging docker params to all tasks
 
@@ -259,19 +255,54 @@ class ScheduledExecutionConfigurator(object):
         return config_with_secrets
 
     @staticmethod
-    def _configure_regular_job(config, job_type, interface):
-        """Configures the given execution as a regular (non-system) job by adding pre and post tasks,
-        input/output mounts, etc
+    def _configure_main_task(config, job_exe, job_type, interface):
+        """Configures the main task for the given execution with features specific to the main task
 
         :param config: The execution configuration
         :type config: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :param job_exe: The job execution model being scheduled
+        :type job_exe: :class:`job.models.JobExecution`
         :param job_type: The job type model
         :type job_type: :class:`job.models.JobType`
         :param interface: The job interface
         :type interface: :class:`job.configuration.interface.job_interface.JobInterface`
         """
 
+        # Set shared memory if required by this job type
+        shared_mem = job_type.shared_mem_required
+        if shared_mem > 0:
+            config.add_to_task('main', docker_params=[DockerParameter('shm-size', '%dm' % int(math.ceil(shared_mem)))])
+
+        job_config = job_type.get_job_configuration()
+        mount_volumes = {}
+        # TODO: use better interface method once we switch to Seed
+        for mount in interface.get_dict()['mounts']:
+            name = mount['name']
+            mode = mount['mode']
+            path = mount['path']
+            volume_name = get_mount_volume_name(job_exe, name)
+            volume = job_config.get_mount_volume(name, volume_name, path, mode)
+            if volume:
+                mount_volumes[name] = volume
+            else:
+                mount_volumes[name] = None
+        config.add_to_task('main', mount_volumes=mount_volumes)
+
+    @staticmethod
+    def _configure_regular_job(config, job_exe):
+        """Configures the given execution as a regular (non-system) job by adding pre and post tasks,
+        input/output mounts, etc
+
+        :param config: The execution configuration
+        :type config: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :param job_exe: The job execution model being scheduled
+        :type job_exe: :class:`job.models.JobExecution`
+        """
+
         config.create_tasks(['pull', 'pre', 'main', 'post'])
+        config.add_to_task('pull', args=create_pull_command(job_exe.get_docker_image()))
+        config.add_to_task('pre', args='scale_pre_steps -i %i' % job_exe.id)
+        config.add_to_task('post', args='scale_post_steps -i %i' % job_exe.id)
 
         # Configure input workspaces
         ro_input_workspaces = {}
@@ -281,7 +312,7 @@ class ScheduledExecutionConfigurator(object):
             rw_input_workspaces[input_workspace] = TaskWorkspace(input_workspace, MODE_RW)
         config.add_to_task('pre', workspaces=ro_input_workspaces)
         config.add_to_task('main', workspaces=ro_input_workspaces)
-        # Post tasks have access to input workspaces due to input files being moved as part of parse results
+        # Post tasks have access to input workspaces in case input files need moved as part of parse results
         config.add_to_task('post', workspaces=rw_input_workspaces)
 
         # Configure output workspaces
@@ -291,10 +322,43 @@ class ScheduledExecutionConfigurator(object):
         config.add_to_task('post', workspaces=output_workspaces)
 
         # Configure input/output mounts
-        # TODO: implement
+        input_mnt_name = 'scale_input_mount'
+        output_mnt_name = 'scale_output_mount'
+        input_vol_name = get_job_exe_input_vol_name(job_exe)
+        output_vol_name = get_job_exe_output_vol_name(job_exe)
+        input_vol_ro = Volume(input_vol_name, SCALE_JOB_EXE_INPUT_PATH, MODE_RO, is_host=False)
+        input_vol_rw = Volume(input_vol_name, SCALE_JOB_EXE_INPUT_PATH, MODE_RW, is_host=False)
+        output_vol_ro = Volume(output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH, MODE_RO, is_host=False)
+        output_vol_rw = Volume(output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH, MODE_RW, is_host=False)
+        config.add_to_task('pre', mount_volumes={input_mnt_name: input_vol_rw, output_mnt_name: output_vol_rw})
+        config.add_to_task('main', mount_volumes={input_mnt_name: input_vol_ro, output_mnt_name: output_vol_rw})
+        config.add_to_task('post', mount_volumes={output_mnt_name: output_vol_ro})
 
         # Configure output directory
-        # TODO: implement
+        # TODO: original output dir can be removed when Scale only supports Seed-based job types
+        env_vars = {'job_output_dir': SCALE_JOB_EXE_OUTPUT_PATH, 'OUTPUT_DIR': SCALE_JOB_EXE_OUTPUT_PATH}
+        config.add_to_task('main', env_vars=env_vars)
 
         # Configure task resources
-        # TODO: implement
+        resources = job_exe.get_resources()
+        # Pull-task and pre-task require full amount of resources
+        config.add_to_task('pull', resources=resources)
+        config.add_to_task('pre', resources=resources)
+        # Main-task no longer requires the input file space
+        resources.subtract(NodeResources([Disk(job_exe.input_file_size)]))
+        config.add_to_task('main', resources=resources)
+        # Post-task no longer requires any disk space
+        resources.remove_resource('disk')
+        config.add_to_task('post', resources=resources)
+
+    @staticmethod
+    def _configure_system_job(config, job_exe):
+        """Configures the given execution as a system job
+
+        :param config: The execution configuration
+        :type config: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :param job_exe: The job execution model being scheduled
+        :type job_exe: :class:`job.models.JobExecution`
+        """
+
+        config.add_to_task('main', resources=job_exe.get_resources())
