@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 
-class Workspace(object):
+class TaskWorkspace(object):
     """Represents a workspace needed by a task
     """
 

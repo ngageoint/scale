@@ -35,6 +35,13 @@ EXE_CONFIG_SCHEMA = {
                 },
             },
         },
+        'output_workspaces': {
+            'description': 'The output parameters each mapped to their output workspace',
+            'type': 'object',
+            'additionalProperties': {
+                'type': 'string',
+            },
+        },
         'tasks': {
             'description': 'The execution configuration for each task',
             'type': 'array',
@@ -322,6 +329,17 @@ class ExecutionConfiguration(object):
                 workspace_names.add(file_dict['workspace_name'])
         return list(workspace_names)
 
+    def get_output_workspace_names(self):
+        """Returns a list of the names of all output workspaces
+
+        :returns: The list of the names of all output workspaces
+        :rtype: list
+        """
+
+        if 'output_workspaces' in self._configuration:
+            return list(self._configuration['output_workspaces'].values())
+        return []
+
     def set_input_files(self, input_files):
         """Sets the given input files in the configuration
 
@@ -343,6 +361,15 @@ class ExecutionConfiguration(object):
             files_dict[input_name] = file_list
 
         self._configuration['input_files'] = files_dict
+
+    def set_output_workspaces(self, output_workspaces):
+        """Sets the given output workspaces in the configuration
+
+        :param output_workspaces: A dict where job output parameters map to output workspace name
+        :type output_workspaces: dict
+        """
+
+        self._configuration['output_workspaces'] = output_workspaces
 
     @staticmethod
     def _add_args_to_task(task_dict, args):

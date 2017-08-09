@@ -8,8 +8,9 @@ from job.configuration.docker_param import DockerParameter
 from job.configuration.input_file import InputFile
 from job.configuration.json.execution.exe_config import ExecutionConfiguration
 from job.configuration.volume import MODE_RO, MODE_RW
-from job.configuration.workspace import Workspace
+from job.configuration.workspace import TaskWorkspace
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
+from storage.models import Workspace
 
 
 def normalize_env_var_name(name):
@@ -37,6 +38,7 @@ class QueuedExecutionConfigurator(object):
         """
 
         self._input_files = input_files
+        self._cached_workspace_names = {}  # {ID: Name}
 
     def configure_queued_job(self, job):
         """Creates and returns an execution configuration for the given queued job. The given job model should have its
@@ -72,10 +74,19 @@ class QueuedExecutionConfigurator(object):
             elif 'file_ids' in data_input:
                 env_vars[env_var_name] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name)
 
-        # Add any workspaces needed if this is a system job
-        workspaces = {}
+        task_workspaces = {}
         if job.job_type.is_system:
-            workspaces = QueuedExecutionConfigurator._system_task_workspaces(job)
+            # Add any workspaces needed for this system job
+            task_workspaces = QueuedExecutionConfigurator._system_job_workspaces(job)
+        else:
+            # Set any output workspaces needed
+            # TODO: In the future, output workspaces can be moved from job data to configuration, moving this step to
+            # the ScheduledExecutionConfigurator
+            self._cache_workspace_names(data.get_output_workspace_ids())
+            output_workspaces = {}
+            for output, workspace_id in data.get_output_workspaces().items():
+                output_workspaces[output] = self._cached_workspace_names[workspace_id]
+            config.set_output_workspaces(output_workspaces)
 
         # Add env var for output directory
         # TODO: original output dir can be removed when Scale only supports Seed-based job types
@@ -85,8 +96,24 @@ class QueuedExecutionConfigurator(object):
         # Create main task with fields populated from input data
         config.create_tasks(['main'])
         config.add_to_task('main', args=job.get_job_interface().get_command_args(), env_vars=env_vars,
-                           workspaces=workspaces)
+                           workspaces=task_workspaces)
         return config
+
+    def _cache_workspace_names(self, workspace_ids):
+        """Queries and caches the workspace names for the given IDs
+
+        :param workspace_ids: The set of workspace IDs
+        :type workspace_ids: set
+        """
+
+        ids = []
+        for workspace_id in workspace_ids:
+            if workspace_id not in self._cached_workspace_names:
+                ids.append(workspace_id)
+
+        if ids:
+            for workspace in Workspace.objects.filter(id__in=ids).iterator():
+                self._cached_workspace_names[workspace.id] = workspace.name
 
     def _create_input_file_dict(self, job_data):
         """Creates the dict storing lists of input files by input name
@@ -117,7 +144,7 @@ class QueuedExecutionConfigurator(object):
         return files_dict
 
     @staticmethod
-    def _system_task_workspaces(job):
+    def _system_job_workspaces(job):
         """Returns any workspaces needed for the main task if this job is a system job. The given job model should have
         its related job_type and job_type_rev models populated.
 
@@ -148,16 +175,16 @@ class QueuedExecutionConfigurator(object):
                     workspace_name = ingest.workspace.name
                     new_workspace_name = ingest.new_workspace.name
             if workspace_name:
-                workspaces[workspace_name] = Workspace(workspace_name, MODE_RW)
+                workspaces[workspace_name] = TaskWorkspace(workspace_name, MODE_RW)
             if new_workspace_name:
-                workspaces[new_workspace_name] = Workspace(new_workspace_name, MODE_RW)
+                workspaces[new_workspace_name] = TaskWorkspace(new_workspace_name, MODE_RW)
 
         # Configure Strike workspace based on current configuration
         if job.job_type.name == 'scale-strike':
             from ingest.models import Strike
             strike = Strike.objects.get(job_id=job.id)
             workspace_name = strike.get_strike_configuration().get_workspace()
-            workspaces[workspace_name] = Workspace(workspace_name, MODE_RW)
+            workspaces[workspace_name] = TaskWorkspace(workspace_name, MODE_RW)
 
         # Configure Scan workspace based on current configuration
         if job.job_type.name == 'scale-scan':
@@ -167,7 +194,7 @@ class QueuedExecutionConfigurator(object):
             except Scan.DoesNotExist:
                 scan = Scan.objects.get(dry_run_job_id=job.id)
             workspace_name = scan.get_scan_configuration().get_workspace()
-            workspaces[workspace_name] = Workspace(workspace_name, MODE_RW)
+            workspaces[workspace_name] = TaskWorkspace(workspace_name, MODE_RW)
 
         return workspaces
 
@@ -250,14 +277,18 @@ class ScheduledExecutionConfigurator(object):
         ro_input_workspaces = {}
         rw_input_workspaces = {}
         for input_workspace in config.get_input_workspace_names():
-            ro_input_workspaces[input_workspace] = Workspace(input_workspace, MODE_RO)
-            rw_input_workspaces[input_workspace] = Workspace(input_workspace, MODE_RW)
+            ro_input_workspaces[input_workspace] = TaskWorkspace(input_workspace, MODE_RO)
+            rw_input_workspaces[input_workspace] = TaskWorkspace(input_workspace, MODE_RW)
         config.add_to_task('pre', workspaces=ro_input_workspaces)
         config.add_to_task('main', workspaces=ro_input_workspaces)
+        # Post tasks have access to input workspaces due to input files being moved as part of parse results
         config.add_to_task('post', workspaces=rw_input_workspaces)
 
-        # TODO: update exe config schema to contain output workspaces and set them when queuing job
-        # TODO: configure output workspaces here and update populate_job_data()
+        # Configure output workspaces
+        output_workspaces = {}
+        for output_workspace in config.get_input_workspace_names():
+            output_workspaces[output_workspace] = TaskWorkspace(output_workspace, MODE_RW)
+        config.add_to_task('post', workspaces=output_workspaces)
 
         # Configure input/output mounts
         # TODO: implement

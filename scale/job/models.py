@@ -20,7 +20,7 @@ from job.configuration.data.job_data import JobData
 from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.job_interface import JobInterface
 from job.configuration.job_parameter import DockerParam
-from job.configuration.json.execution.exe_config import ExecutionConfiguration, MODE_RO, MODE_RW
+from job.configuration.json.execution.exe_config import ExecutionConfiguration, MODE_RW
 from job.configuration.json.job.job_config import JobConfiguration
 from job.configuration.results.job_results import JobResults
 from job.exceptions import InvalidJobField
@@ -30,7 +30,7 @@ from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
 from node.resources.json.resources import Resources
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Cpus, Disk, Mem
-from storage.models import ScaleFile, Workspace
+from storage.models import ScaleFile
 from trigger.configuration.exceptions import InvalidTriggerType
 from trigger.models import TriggerRule
 from util.exceptions import RollbackTransaction, ScaleLogicBug
@@ -448,10 +448,8 @@ class JobManager(models.Manager):
         input_file_ids = data.get_input_file_ids()
         input_files = ScaleFile.objects.get_files(input_file_ids)
         input_size_bytes = 0
-        input_workspaces = set()
         for input_file in input_files:
             input_size_bytes += input_file.file_size
-            input_workspaces.add(input_file.workspace.name)
 
         # Calculate total input file size in MiB rounded up to the nearest whole MiB
         input_size_mb = long(math.ceil((input_size_bytes / (1024.0 * 1024.0))))
@@ -461,22 +459,6 @@ class JobManager(models.Manager):
         output_size_mb = long(math.ceil(multiplier * input_size_mb + const))
         disk_in_required = max(input_size_mb, MIN_DISK)
         disk_out_required = max(output_size_mb, MIN_DISK)
-
-        # TODO: this logic gets moved to schedule time
-        # Configure workspaces needed for the job
-        configuration = job.get_execution_configuration()
-        for name in input_workspaces:
-            configuration.add_job_task_workspace(name, MODE_RO)
-        if not job.job_type.is_system:
-            for name in input_workspaces:
-                configuration.add_pre_task_workspace(name, MODE_RO)
-                # We add input workspaces to post task so it can perform a parse results move if requested by the job's
-                # results manifest
-                configuration.add_post_task_workspace(name, MODE_RW)
-            # TODO: Using workspace names in job data instead of IDs would save a query here
-            for workspace in Workspace.objects.filter(id__in=data.get_output_workspace_ids()).iterator():
-                if workspace.name not in input_workspaces:
-                    configuration.add_post_task_workspace(workspace.name, MODE_RW)
 
         # Update job model in memory
         job.data = data.get_dict()

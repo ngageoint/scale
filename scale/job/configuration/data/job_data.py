@@ -241,6 +241,21 @@ class JobData(object):
 
         return list(workspace_ids)
 
+    def get_output_workspaces(self):
+        """Returns a dict of the output parameter names mapped to their output workspace ID
+
+        :returns: A dict mapping output parameters to workspace IDs
+        :rtype: dict
+        """
+
+        workspaces = {}
+        for name in self.data_outputs_by_name:
+            file_output = self.data_outputs_by_name[name]
+            workspace_id = file_output['workspace_id']
+            workspaces[name] = workspace_id
+
+        return workspaces
+
     def get_property_values(self, property_names):
         """Retrieves the values contained in this job data for the given property names. If no value is available for a
         property name, it will not be included in the returned dict.
