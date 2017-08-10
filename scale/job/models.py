@@ -13,18 +13,15 @@ from django.db import models, transaction
 from django.db.models import Q
 from django.utils import timezone
 
-import job.execution.container as job_exe_container
 import util.parse
 from error.models import Error
 from job.configuration.data.job_data import JobData
 from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.job_interface import JobInterface
-from job.configuration.job_parameter import DockerParam
-from job.configuration.json.execution.exe_config import ExecutionConfiguration, MODE_RW
+from job.configuration.json.execution.exe_config import ExecutionConfiguration
 from job.configuration.json.job.job_config import JobConfiguration
 from job.configuration.results.job_results import JobResults
 from job.exceptions import InvalidJobField
-from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
 from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
 from node.resources.json.resources import Resources
@@ -1119,8 +1116,6 @@ class JobExecutionManager(models.Manager):
                 job_exe.status = 'RUNNING'
                 job_exe.started = started
                 job_exe.node_id = node_id
-                docker_volumes = []
-                job_exe.configure_docker_params(workspaces, docker_volumes)
                 job_exe.environment = {}
                 job_exe.resources = resources.get_json().get_dict()
                 job_exe.cpus_scheduled = resources.cpus
@@ -1129,7 +1124,6 @@ class JobExecutionManager(models.Manager):
                 job_exe.disk_out_scheduled = resources.disk - input_file_size
                 job_exe.disk_total_scheduled = resources.disk
                 job_exe.save()
-                job_exe.docker_volumes = docker_volumes
                 job_exe.agent_id = agent_id
                 job_exes.append(job_exe)
                 jobs_to_running.append(job_exe.job)
@@ -1273,101 +1267,6 @@ class JobExecution(models.Model):
         # Cluster ID is the first four segments
         segments = task_id.split('_')
         return '_'.join(segments[:4])
-
-    def configure_docker_params(self, workspaces, docker_volumes):
-        """Configures the Docker parameters needed for each task in the execution. The job execution must have been set
-        to status RUNNING prior to invoking this. Requires workspace information to determine any Docker parameters that
-        might be required by this job execution's workspaces.
-
-        :param workspaces: A dict of all workspaces stored by name
-        :type workspaces: {string: :class:`storage.models.Workspace`}
-        :param docker_volumes: A list to add Docker volume names to
-        :type docker_volumes: [string]
-
-        :raises Exception: If the job execution is still queued
-        """
-
-        configuration = self.get_execution_configuration()
-
-        # Set up shared memory
-        shared_mem = self.job.job_type.shared_mem_required
-        if shared_mem > 0:
-            configuration.add_job_task_docker_params([DockerParam('shm-size', '%dm' % int(math.ceil(shared_mem)))])
-
-        # Setup task logging
-        configuration.configure_logging_docker_params(self)
-
-        # Populate configuration with default settings
-        configuration.populate_default_job_settings(self)
-
-        # Populate configuration with mount volumes
-        configuration.populate_mounts(self)
-
-        # Pass database connection details from scheduler as environment variables
-        db = settings.DATABASES['default']
-        db_name = DockerParam('env', 'SCALE_DB_NAME=' + db['NAME'])
-        db_user = DockerParam('env', 'SCALE_DB_USER=' + db['USER'])
-        db_pass = DockerParam('env', 'SCALE_DB_PASS=' + db['PASSWORD'])
-        db_host = DockerParam('env', 'SCALE_DB_HOST=' + db['HOST'])
-        db_port = DockerParam('env', 'SCALE_DB_PORT=' + db['PORT'])
-        if self.job.job_type.is_system:
-            configuration.add_job_task_docker_params([db_name, db_user, db_pass, db_host, db_port])
-        else:
-            configuration.add_pre_task_docker_params([db_name, db_user, db_pass, db_host, db_port])
-            configuration.add_post_task_docker_params([db_name, db_user, db_pass, db_host, db_port])
-
-        if not self.is_system:
-            # Non-system jobs get named Docker volumes for input and output data
-            input_vol_name = job_exe_container.get_job_exe_input_vol_name(self)
-            output_vol_name = job_exe_container.get_job_exe_output_vol_name(self)
-            docker_volumes.extend([input_vol_name, output_vol_name])
-            input_volume_ro = '%s:%s:ro' % (input_vol_name, SCALE_JOB_EXE_INPUT_PATH)
-            input_volume_rw = '%s:%s:rw' % (input_vol_name, SCALE_JOB_EXE_INPUT_PATH)
-            output_volume_ro = '%s:%s:ro' % (output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH)
-            output_volume_rw = '%s:%s:rw' % (output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH)
-            configuration.add_pre_task_docker_params([DockerParam('volume', input_volume_rw),
-                                                      DockerParam('volume', output_volume_rw)])
-            configuration.add_job_task_docker_params([DockerParam('volume', input_volume_ro),
-                                                      DockerParam('volume', output_volume_rw)])
-            configuration.add_post_task_docker_params([DockerParam('volume', output_volume_ro)])
-
-        # Configure Strike workspace based on current configuration
-        if self.job.job_type.name == 'scale-strike':
-            from ingest.models import Strike
-            strike = Strike.objects.get(job_id=self.job_id)
-            workspace_name = strike.get_strike_configuration().get_workspace()
-            configuration.add_job_task_workspace(workspace_name, MODE_RW)
-
-        # Configure Scan workspace based on current configuration
-        if self.job.job_type.name == 'scale-scan':
-            from ingest.models import Scan
-            try:
-                scan = Scan.objects.get(job_id=self.job_id)
-            except Scan.DoesNotExist:
-                scan = Scan.objects.get(dry_run_job_id=self.job_id)
-            workspace_name = scan.get_scan_configuration().get_workspace()
-            configuration.add_job_task_workspace(workspace_name, MODE_RW)
-
-        # Configure any Docker parameters needed for workspaces
-        configuration.configure_workspace_docker_params(self, workspaces, docker_volumes)
-
-        # Configure docker parameters listed in database
-        if self.job.job_type.docker_params:
-            for key, value in self.job.job_type.docker_params:
-                configuration.add_job_task_docker_params(DockerParam(key, value))
-
-        # Add job environment variable as docker parameters
-        interface = self.get_job_interface()
-        env_vars = interface.populate_env_vars_arguments(configuration, self.job.job_type)
-
-        for env_var in env_vars:
-            env_var_name = env_var['name']
-            env_var_value = env_var['value']
-            if env_var_value:
-                env_val = env_var_name + '=' + env_var_value
-                configuration.add_job_task_docker_params([DockerParam('env', env_val)])
-
-        self.configuration = configuration.get_dict()
 
     def get_cluster_id(self):
         """Gets the cluster ID for the job execution

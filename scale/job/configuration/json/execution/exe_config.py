@@ -799,25 +799,5 @@ class ExecutionConfiguration(object):
         """Populates any missing JSON fields that have default values
         """
 
-        if 'input_files' not in self._configuration:
-            self._configuration['input_files'] = {}
         if 'tasks' not in self._configuration:
             self._configuration['tasks'] = []
-
-    # TODO: phase all of this out and replace it
-
-    def populate_default_job_settings(self, job_exe):
-        """Gathers the job settings defined in the job_type and populates the execution configuration with them
-
-        :param job_exe: The job execution model with related job and job_type fields
-        :type job_exe: :class:`job.models.JobExecution`
-        """
-
-        interface = job_exe.get_job_interface()
-        job_config = job_exe.get_job_configuration()
-        for setting in interface.get_dict()['settings']:
-            if not setting['secret']:
-                setting_name = setting['name']
-                setting_value = job_config.get_setting_value(setting_name)
-                if setting_value:
-                    self.add_job_task_setting(setting_name, setting_value)
