@@ -517,30 +517,23 @@ class JobInterface(object):
 
         param_replacements = self._get_settings_values(interface_settings,
                                                        exe_configuration,
-                                                       job_type)
+                                                       job_type, True)
 
         command_arguments = self._replace_command_parameters(command_arguments, param_replacements)
 
         return command_arguments
 
-    def populate_env_vars_arguments(self, exe_configuration, job_type, censor):
+    def populate_env_vars_arguments(self, param_replacements):
         """Populates the environment variables with the requested values.
 
-        :param exe_configuration: The execution configuration
-        :type exe_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
-        :param job_type: The job type definition 
-        :type job_type: :class:`job.models.JobType`
-        :param censor: Whether to censor secrets
-        :type censor: bool
+        :param param_replacements: The parameter replacements
+        :type param_replacements: dict
 
         :return: env_vars populated with values
         :rtype: dict
         """
 
         env_vars = self.definition['env_vars']
-        interface_settings = self.definition['settings']
-
-        param_replacements = self._get_settings_values(interface_settings, exe_configuration, job_type, censor)
         env_vars = self._replace_env_var_parameters(env_vars, param_replacements)
 
         return env_vars

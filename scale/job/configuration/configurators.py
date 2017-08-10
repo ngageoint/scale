@@ -8,6 +8,7 @@ from django.conf import settings
 
 from job.configuration.docker_param import DockerParameter
 from job.configuration.input_file import InputFile
+from job.configuration.interface.job_interface import JobInterface
 from job.configuration.json.execution.exe_config import ExecutionConfiguration
 from job.configuration.volume import Volume, MODE_RO, MODE_RW
 from job.configuration.workspace import TaskWorkspace
@@ -67,20 +68,24 @@ class QueuedExecutionConfigurator(object):
 
         # Set up env vars for job's input data
         env_vars = {}
+        input_values = {}
         # TODO: refactor this to use JobData method after Seed upgrade
         for data_input in data.get_dict()['input_data']:
             input_name = data_input['name']
             env_var_name = normalize_env_var_name(input_name)
             if 'value' in data_input:
                 env_vars[env_var_name] = data_input['value']
+                input_values[input_name] = data_input['value']
             if 'file_id' in data_input:
                 input_file = input_files_dict[input_name][0]
                 file_name = os.path.basename(input_file.workspace_path)
                 if input_file.local_file_name:
                     file_name = input_file.local_file_name
                 env_vars[env_var_name] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name, file_name)
+                input_values[input_name] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name, file_name)
             elif 'file_ids' in data_input:
                 env_vars[env_var_name] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name)
+                input_values[input_name] = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name)
 
         task_workspaces = {}
         if job.job_type.is_system:
@@ -97,9 +102,11 @@ class QueuedExecutionConfigurator(object):
             config.set_output_workspaces(output_workspaces)
 
         # Create main task with fields populated from input data
+        args = job.get_job_interface().get_command_args()
+        # TODO: command arg input param replacement can be removed when old-style job type support is dropped
+        args = JobInterface._replace_command_parameters(args, input_values)
         config.create_tasks(['main'])
-        config.add_to_task('main', args=job.get_job_interface().get_command_args(), env_vars=env_vars,
-                           workspaces=task_workspaces)
+        config.add_to_task('main', args=args, env_vars=env_vars, workspaces=task_workspaces)
         return config
 
     def _cache_workspace_names(self, workspace_ids):
@@ -372,7 +379,6 @@ class ScheduledExecutionConfigurator(object):
         :type job_exe: :class:`job.models.JobExecution`
         """
 
-        # TODO: configure main task command args
         config.create_tasks(['pull', 'pre', 'main', 'post'])
         config.add_to_task('pull', args=create_pull_command(job_exe.get_docker_image()))
         config.add_to_task('pre', args='scale_pre_steps -i %i' % job_exe.id)
@@ -409,9 +415,12 @@ class ScheduledExecutionConfigurator(object):
         config.add_to_task('post', mount_volumes={output_mnt_name: output_vol_ro})
 
         # Configure output directory
-        # TODO: original output dir can be removed when Scale only supports Seed-based job types
+        # TODO: original output dir and command arg replacement can be removed when Scale no longer supports old-style
+        # job types
         env_vars = {'job_output_dir': SCALE_JOB_EXE_OUTPUT_PATH, 'OUTPUT_DIR': SCALE_JOB_EXE_OUTPUT_PATH}
-        config.add_to_task('main', env_vars=env_vars)
+        args = config._get_task_dict('main')['args']
+        args = JobInterface._replace_command_parameters(args, env_vars)
+        config.add_to_task('main', args=args, env_vars=env_vars)
 
         # Configure task resources
         resources = job_exe.get_resources()
@@ -470,7 +479,12 @@ class ScheduledExecutionConfigurator(object):
                     else:
                         value = job_config.get_setting_value(name)
                     task_settings[name] = value
-                _config.add_to_task('main', settings=task_settings)
+                # TODO: command args and env var replacement from the interface should be removed once Scale drops
+                # support for old-style job types
+                args = config._get_task_dict('main')['args']
+                args = JobInterface._replace_command_parameters(args, task_settings)
+                env_vars = interface.populate_env_vars_arguments(task_settings)
+                _config.add_to_task('main', args=args, env_vars=env_vars, settings=task_settings)
 
         # Configure env vars for settings
         for _config in [config, config_with_secrets]:
@@ -480,13 +494,6 @@ class ScheduledExecutionConfigurator(object):
                     env_name = normalize_env_var_name(name)
                     env_vars[env_name] = value
                 _config.add_to_task(task_type, env_vars=env_vars)
-
-        # TODO: this feature should be removed once Scale drops support for old-style job types
-        # Configure env vars defined in interface
-        env_vars = interface.populate_env_vars_arguments(config, job_type, True)
-        config.add_to_task('main', env_vars=env_vars)
-        env_vars = interface.populate_env_vars_arguments(config_with_secrets, job_type, False)
-        config_with_secrets.add_to_task('main', env_vars=env_vars)
 
         # Configure Docker parameters for env vars and Docker volumes
         for _config in [config, config_with_secrets]:
@@ -522,5 +529,4 @@ class ScheduledExecutionConfigurator(object):
         :type job_exe: :class:`job.models.JobExecution`
         """
 
-        # TODO: configure main task command args
         config.add_to_task('main', resources=job_exe.get_resources())
