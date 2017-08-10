@@ -523,13 +523,15 @@ class JobInterface(object):
 
         return command_arguments
 
-    def populate_env_vars_arguments(self, exe_configuration, job_type):
+    def populate_env_vars_arguments(self, exe_configuration, job_type, censor):
         """Populates the environment variables with the requested values.
 
         :param exe_configuration: The execution configuration
         :type exe_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         :param job_type: The job type definition 
         :type job_type: :class:`job.models.JobType`
+        :param censor: Whether to censor secrets
+        :type censor: bool
 
         :return: env_vars populated with values
         :rtype: dict
@@ -538,9 +540,7 @@ class JobInterface(object):
         env_vars = self.definition['env_vars']
         interface_settings = self.definition['settings']
 
-        param_replacements = self._get_settings_values(interface_settings,
-                                                       exe_configuration,
-                                                       job_type)
+        param_replacements = self._get_settings_values(interface_settings, exe_configuration, job_type, censor)
         env_vars = self._replace_env_var_parameters(env_vars, param_replacements)
 
         return env_vars
@@ -772,12 +772,14 @@ class JobInterface(object):
             if data_item_name == output_data['name']:
                 return output_data
 
-    def _get_settings_values(self, settings, exe_configuration, job_type):
+    def _get_settings_values(self, settings, exe_configuration, job_type, censor):
         """
         :param settings: The settings
         :type settings: dict
         :param exe_configuration: The execution configuration
         :type exe_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :param censor: Whether to censor secrets
+        :type censor: bool
         :return: settings name and the value to replace it with
         :rtype: dict
         """
@@ -804,8 +806,10 @@ class JobInterface(object):
                     secret_settings = secrets_mgr.retrieve_job_type_secrets(job_index)
 
                 if setting_name in secret_settings.keys():
-                    settings_value = secret_settings[setting_name]
-                    exe_configuration.add_job_task_setting(setting_name, '*****')
+                    if censor:
+                        settings_value = '*****'
+                    else:
+                        settings_value = secret_settings[setting_name]
                     param_replacements[setting_name] = settings_value
                 else:
                     param_replacements[setting_name] = ''

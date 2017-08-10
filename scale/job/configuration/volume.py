@@ -38,29 +38,34 @@ class Volume(object):
         self.driver = driver
         self.driver_opts = driver_opts
 
-    def to_docker_param(self):
+    def to_docker_param(self, is_created):
         """Returns a Docker parameter that will perform the mount of this volume
 
+        :param is_created: Whether this volume has already been created
+        :type is_created: bool
         :returns: The Docker parameter that will mount this volume
         :rtype: :class:`job.configuration.docker_param.DockerParameter`
         """
 
-        # TODO: this currently only supports creating a volume for the first time
         if self.is_host:
             # Host mount is special, use host path for volume name
             volume_name = self.host_path
         else:
-            # Create named volume, possibly with driver and driver options
-            driver_params = []
-            if self.driver:
-                driver_params.append('--driver %s' % self.driver)
-            if self.driver_opts:
-                for name, value in self.driver_opts.iteritems():
-                    driver_params.append('--opt %s=%s' % (name, value))
-            if driver_params:
-                volume_name = '$(docker volume create --name %s %s)' % (' '.join(driver_params), self.name)
+            if is_created:
+                # Re-use existing volume
+                volume_name = self.name
             else:
-                volume_name = '$(docker volume create --name %s)' % self.name
+                # Create named volume, possibly with driver and driver options
+                driver_params = []
+                if self.driver:
+                    driver_params.append('--driver %s' % self.driver)
+                if self.driver_opts:
+                    for name, value in self.driver_opts.iteritems():
+                        driver_params.append('--opt %s=%s' % (name, value))
+                if driver_params:
+                    volume_name = '$(docker volume create --name %s %s)' % (self.name, ' '.join(driver_params))
+                else:
+                    volume_name = '$(docker volume create --name %s)' % self.name
 
         volume_param = '%s:%s:%s' % (volume_name, self.container_path, self.mode)
         return DockerParameter('volume', volume_param)

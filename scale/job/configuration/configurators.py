@@ -245,13 +245,10 @@ class ScheduledExecutionConfigurator(object):
         # Configure items that apply to all tasks
         ScheduledExecutionConfigurator._configure_all_tasks(self, config, job_exe)
 
-        # TODO: make copy of this configuration
-        config_with_secrets = None
-        # TODO: populate settings in both (copy with secrets, this without) (do DB settings values, put in fixtures?)
-        # TODO: convert settings to env vars in both
-        # TODO: add env vars from interface until this feature goes away
-        # TODO: convert volumes and env vars to docker params in both
-        # TODO: add docker params from job type until this feature gets removed
+        # Configure secrets
+        config_with_secrets = ScheduledExecutionConfigurator._configure_secrets(config, job_exe, job_type, interface)
+
+        job_exe.configuration = config.get_dict()
         return config_with_secrets
 
     def _configure_all_tasks(self, config, job_exe):
@@ -368,6 +365,7 @@ class ScheduledExecutionConfigurator(object):
         :type job_exe: :class:`job.models.JobExecution`
         """
 
+        # TODO: configure main task command args
         config.create_tasks(['pull', 'pre', 'main', 'post'])
         config.add_to_task('pull', args=create_pull_command(job_exe.get_docker_image()))
         config.add_to_task('pre', args='scale_pre_steps -i %i' % job_exe.id)
@@ -421,6 +419,68 @@ class ScheduledExecutionConfigurator(object):
         config.add_to_task('post', resources=resources)
 
     @staticmethod
+    def _configure_secrets(config, job_exe, job_type, interface):
+        """Creates a copy of the configuration, configures secrets (masked in one of the copies), and applies any final
+        configuration
+
+        :param config: The execution configuration, where the secrets will be masked out
+        :type config: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :param job_exe: The job execution model being scheduled
+        :type job_exe: :class:`job.models.JobExecution`
+        :param job_type: The job type model
+        :type job_type: :class:`job.models.JobType`
+        :param interface: The job interface
+        :type interface: :class:`job.configuration.interface.job_interface.JobInterface`
+        :returns: The copy of the execution configuration that contains the secrets
+        :rtype: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        """
+
+        # Copy the configuration
+        config_with_secrets = config.create_copy()
+
+        # TODO: populate settings in both (copy with secrets, this without) (do DB settings values, put in fixtures?)
+
+        # Configure env vars for settings
+        for _config in [config, config_with_secrets]:
+            for task_type in _config.get_task_types():
+                env_vars = {}
+                for name, value in _config.get_settings(task_type):
+                    env_name = normalize_env_var_name(name)
+                    env_vars[env_name] = value
+                _config.add_to_task(task_type, env_vars=env_vars)
+
+        # TODO: this feature should be removed once Scale drops support for old-style job types
+        # Configure env vars defined in interface
+        env_vars = interface.populate_env_vars_arguments(config, job_type, True)
+        config.add_to_task('main', env_vars=env_vars)
+        env_vars = interface.populate_env_vars_arguments(config_with_secrets, job_type, False)
+        config_with_secrets.add_to_task('main', env_vars=env_vars)
+
+        # Configure Docker parameters for env vars and Docker volumes
+        for _config in [config, config_with_secrets]:
+            existing_volumes = set()
+            for task_type in _config.get_task_types():
+                docker_params = []
+                for name, value in _config.get_env_vars(task_type):
+                    docker_params.append(DockerParameter('env', '%s=%s' % (name, value)))
+                for name, volume in _config.get_volumes(task_type):
+                    docker_params.append(volume.to_docker_param(is_created=(name in existing_volumes)))
+                    existing_volumes.add(name)
+                _config.add_to_task(task_type, docker_params=docker_params)
+
+        # TODO: this feature should be removed once Scale drops support for job type docker params
+        # Configure docker parameters listed in job type
+        if job_type.docker_params:
+            docker_params = []
+            for key, value in job_type.docker_params:
+                docker_params.append(DockerParameter(key, value))
+            if docker_params:
+                config.add_to_task('main', docker_params=docker_params)
+                config_with_secrets.add_to_task('main', docker_params=docker_params)
+
+        return config_with_secrets
+
+    @staticmethod
     def _configure_system_job(config, job_exe):
         """Configures the given execution as a system job
 
@@ -430,4 +490,5 @@ class ScheduledExecutionConfigurator(object):
         :type job_exe: :class:`job.models.JobExecution`
         """
 
+        # TODO: configure main task command args
         config.add_to_task('main', resources=job_exe.get_resources())

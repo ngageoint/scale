@@ -2,13 +2,14 @@
 from __future__ import unicode_literals
 
 import logging
+from copy import deepcopy
 
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
 from job.configuration.exceptions import InvalidExecutionConfiguration
 from job.configuration.json.execution import exe_config_1_1 as previous_version
-from job.configuration.volume import MODE_RO, MODE_RW
+from job.configuration.volume import Volume, MODE_RO, MODE_RW
 from job.configuration.workspace import TaskWorkspace
 from node.resources.json.resources import Resources
 
@@ -294,6 +295,15 @@ class ExecutionConfiguration(object):
         if workspaces:
             ExecutionConfiguration._add_workspaces_to_task(task_dict, workspaces)
 
+    def create_copy(self):
+        """Creates and returns a copy of this configuration
+
+        :returns: The copied configuration
+        :rtype: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        """
+
+        return ExecutionConfiguration(deepcopy(self._configuration))
+
     def create_tasks(self, task_types):
         """Makes sure that tasks with the given types are created and in the given order. If an already existing task
         type is not included in the given list, it will be removed.
@@ -323,6 +333,21 @@ class ExecutionConfiguration(object):
         """
 
         return self._configuration
+
+    def get_env_vars(self, task_type):
+        """Returns the environment variables for the given task type
+
+        :param task_type: The task type
+        :type task_type: string
+        :returns: The dict of environment variables
+        :rtype: dict
+        """
+
+        for task_dict in self._configuration['tasks']:
+            if task_dict['type'] == task_type:
+                if 'env_vars' in task_dict:
+                    return task_dict['env_vars']
+        return {}
 
     def get_input_workspace_names(self):
         """Returns a list of the names of all input workspaces
@@ -362,6 +387,21 @@ class ExecutionConfiguration(object):
                 return Resources(task_dict['resources']).get_node_resources()
         return None
 
+    def get_settings(self, task_type):
+        """Returns the settings for the given task type
+
+        :param task_type: The task type
+        :type task_type: string
+        :returns: The dict of settings
+        :rtype: dict
+        """
+
+        for task_dict in self._configuration['tasks']:
+            if task_dict['type'] == task_type:
+                if 'settings' in task_dict:
+                    return task_dict['settings']
+        return {}
+
     def get_task_id(self, task_type):
         """Returns the task ID for the given task type, None if the task type doesn't exist
 
@@ -387,6 +427,35 @@ class ExecutionConfiguration(object):
         for task_dict in self._configuration['tasks']:
             task_types.append(task_dict['type'])
         return task_types
+
+    def get_volumes(self, task_type):
+        """Returns the Docker volumes for the given task type
+
+        :param task_type: The task type
+        :type task_type: string
+        :returns: The dict of Docker volumes stored by volume name
+        :rtype: dict
+        """
+
+        volumes = {}
+        for task_dict in self._configuration['tasks']:
+            if task_dict['type'] == task_type:
+                if 'volumes' in task_dict:
+                    for name, vol_dict in task_dict['volumes'].items():
+                        if vol_dict['type'] == 'host':
+                            vol = Volume(name, vol_dict['container_path'], vol_dict['mode'], is_host=True,
+                                         host_path=vol_dict['host_path'])
+                        else:
+                            driver = None
+                            driver_opts = None
+                            if 'driver' in vol_dict:
+                                driver = vol_dict['driver']
+                            if 'driver_opts' in vol_dict:
+                                driver_opts = vol_dict['driver_opts']
+                            vol = Volume(name, vol_dict['container_path'], vol_dict['mode'], is_host=False,
+                                         driver=driver, driver_opts=driver_opts)
+                        volumes[name] = vol
+        return volumes
 
     def get_workspaces(self, task_type):
         """Returns the workspaces for the given task type
@@ -482,7 +551,7 @@ class ExecutionConfiguration(object):
 
         :param task_dict: The task dict
         :type task_dict: dict
-        :param env_vars: The command arguments
+        :param env_vars: The environment variables
         :type env_vars: dict
         """
 
