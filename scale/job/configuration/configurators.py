@@ -12,10 +12,11 @@ from job.configuration.json.execution.exe_config import ExecutionConfiguration
 from job.configuration.volume import Volume, MODE_RO, MODE_RW
 from job.configuration.workspace import TaskWorkspace
 from job.execution.container import get_job_exe_input_vol_name, get_job_exe_output_vol_name, get_mount_volume_name, \
-    SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
+    get_workspace_volume_name, SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
 from job.tasks.pull_task import create_pull_command
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Disk
+from storage.container import get_workspace_volume_path
 from storage.models import Workspace
 
 
@@ -242,7 +243,7 @@ class ScheduledExecutionConfigurator(object):
             ScheduledExecutionConfigurator._configure_regular_job(config, job_exe)
 
         # Configure items that apply to all tasks
-        ScheduledExecutionConfigurator._configure_all_tasks(config, job_exe)
+        ScheduledExecutionConfigurator._configure_all_tasks(self, config, job_exe)
 
         # TODO: make copy of this configuration
         config_with_secrets = None
@@ -253,8 +254,7 @@ class ScheduledExecutionConfigurator(object):
         # TODO: add docker params from job type until this feature gets removed
         return config_with_secrets
 
-    @staticmethod
-    def _configure_all_tasks(config, job_exe):
+    def _configure_all_tasks(self, config, job_exe):
         """Configures the given execution with items that apply to all tasks
 
         :param config: The execution configuration
@@ -267,14 +267,35 @@ class ScheduledExecutionConfigurator(object):
 
         # Configure env vars describing allocated task resources
         for task_type in config.get_task_types():
+            # Configure env vars describing allocated task resources
             env_vars = {}
             resources_json = config.get_resources(task_type).get_json()
             for name, value in resources_json.get_dict().items():
                 env_name = 'ALLOCATED_%s' % normalize_env_var_name(name)
                 env_vars[env_name] = value
-            config.add_to_task(task_type, env_vars=env_vars)
 
-        # TODO: convert workspaces to volumes (add in workspace volume names) for all tasks
+            # Configure workspace volumes
+            workspace_volumes = {}
+            for task_workspace in config.get_workspaces(task_type):
+                workspace_model = self._workspaces[task_workspace.name]
+                # TODO: Should refactor workspace broker to return a Volume object and remove BrokerVolume
+                if workspace_model.volume:
+                    vol_name = get_workspace_volume_name(job_exe, task_workspace.name)
+                    cont_path = get_workspace_volume_path(vol_name)
+                    if workspace_model.volume.host:
+                        host_path = workspace_model.volume.remote_path
+                        volume = Volume(vol_name, cont_path, task_workspace.mode, is_host=True, host_path=host_path)
+                    else:
+                        driver = workspace_model.volume.driver
+                        driver_opts = {}
+                        # TODO: Hack alert for nfs broker, as stated above, we should return Volume from broker
+                        if driver == 'nfs':
+                            driver_opts = {'share': workspace_model.volume.remote_path}
+                        volume = Volume(vol_name, cont_path, task_workspace.mode, is_host=False, driver=driver,
+                                        driver_opts=driver_opts)
+                    workspace_volumes[task_workspace.name] = volume
+
+            config.add_to_task(task_type, env_vars=env_vars, wksp_volumes=workspace_volumes)
 
         # Configure tasks for logging
         if settings.LOGGING_ADDRESS is not None:

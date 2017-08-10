@@ -58,7 +58,7 @@ class Volume(object):
                 for name, value in self.driver_opts.iteritems():
                     driver_params.append('--opt %s=%s' % (name, value))
             if driver_params:
-                volume_name = '$(docker volume create --name %s %s)' % (self.name, ' '.join(driver_params))
+                volume_name = '$(docker volume create --name %s %s)' % (' '.join(driver_params), self.name)
             else:
                 volume_name = '$(docker volume create --name %s)' % self.name
 

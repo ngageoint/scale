@@ -9,6 +9,7 @@ from jsonschema.exceptions import ValidationError
 from job.configuration.exceptions import InvalidExecutionConfiguration
 from job.configuration.json.execution import exe_config_1_1 as previous_version
 from job.configuration.volume import MODE_RO, MODE_RW
+from job.configuration.workspace import TaskWorkspace
 from node.resources.json.resources import Resources
 
 logger = logging.getLogger(__name__)
@@ -255,7 +256,7 @@ class ExecutionConfiguration(object):
             raise InvalidExecutionConfiguration(validation_error)
 
     def add_to_task(self, task_type, args=None, docker_params=None, env_vars=None, mount_volumes=None, resources=None,
-                    workspaces=None):
+                    wksp_volumes=None, workspaces=None):
         """Adds the given parameters to the task with the given type. The task with the given type must already exist. A
         mount volume of None indicates a required mount that is missing.
 
@@ -271,6 +272,8 @@ class ExecutionConfiguration(object):
         :type mount_volumes: dict
         :param resources: The resources
         :type resources: :class:`node.resources.node_resources.NodeResources`
+        :param wksp_volumes: The workspace volumes stored by workspace name
+        :type wksp_volumes: dict
         :param workspaces: The workspaces stored by name
         :type workspaces: dict
         """
@@ -286,23 +289,10 @@ class ExecutionConfiguration(object):
             ExecutionConfiguration._add_mount_volumes_to_task(task_dict, mount_volumes)
         if resources:
             ExecutionConfiguration._add_resources_to_task(task_dict, resources)
+        if wksp_volumes:
+            ExecutionConfiguration._add_workspace_volumes_to_task(task_dict, wksp_volumes)
         if workspaces:
             ExecutionConfiguration._add_workspaces_to_task(task_dict, workspaces)
-
-    # TODO: need this?
-    def add_to_tasks(self, task_types, args=None, env_vars=None):
-        """Adds the given parameters to the tasks with the given types
-
-        :param task_types: The list of task types to add the parameters to
-        :type task_types: list
-        :param args: The command arguments for the task(s)
-        :type args: string
-        :param env_vars: A dict of env var names and values to add to the task(s)
-        :type env_vars: dict
-        """
-
-        for task_type in task_types:
-            self.add_to_task(task_type, args=args, env_vars=env_vars)
 
     def create_tasks(self, task_types):
         """Makes sure that tasks with the given types are created and in the given order. If an already existing task
@@ -397,6 +387,22 @@ class ExecutionConfiguration(object):
         for task_dict in self._configuration['tasks']:
             task_types.append(task_dict['type'])
         return task_types
+
+    def get_workspaces(self, task_type):
+        """Returns the workspaces for the given task type
+
+        :param task_type: The task type
+        :type task_type: string
+        :returns: The list of workspaces
+        :rtype: list
+        """
+
+        workspaces = []
+        for task_dict in self._configuration['tasks']:
+            if task_dict['type'] == task_type:
+                for name, workspace_dict in task_dict['workspaces'].items():
+                    workspaces.append(TaskWorkspace(name, workspace_dict['mode']))
+        return workspaces
 
     def set_input_files(self, input_files):
         """Sets the given input files in the configuration
@@ -506,27 +512,14 @@ class ExecutionConfiguration(object):
             task_mounts = {}
             task_dict['mounts'] = task_mounts
 
-        if 'volumes' in task_dict:
-            task_volumes = task_dict['volumes']
-        else:
-            task_volumes = {}
-            task_dict['volumes'] = task_volumes
-
+        volumes = []
         for mount_name, volume in mount_volumes.items():
             if volume:
                 task_mounts[mount_name] = volume.name
-                if volume.is_host:
-                    vol_dict = {'container_path': volume.container_path, 'mode': volume.mode, 'type': 'host',
-                                'host_path': volume.host_path}
-                else:
-                    vol_dict = {'container_path': volume.container_path, 'mode': volume.mode, 'type': 'volume'}
-                    if volume.driver:
-                        vol_dict['driver'] = volume.driver
-                    if volume.driver_opts:
-                        vol_dict['driver_opts'] = volume.driver_opts
-                task_volumes[volume.name] = vol_dict
+                volumes.append(volume)
             else:
                 task_mounts[mount_name] = None
+        ExecutionConfiguration._add_volumes_to_task(task_dict, volumes)
 
     @staticmethod
     def _add_resources_to_task(task_dict, resources):
@@ -539,6 +532,54 @@ class ExecutionConfiguration(object):
         """
 
         task_dict['resources'] = resources.get_json().get_dict()
+
+    @staticmethod
+    def _add_volumes_to_task(task_dict, volumes):
+        """Adds the given volumes to the given task
+
+        :param task_dict: The task dict
+        :type task_dict: dict
+        :param volumes: The list of volumes
+        :type volumes: list
+        """
+
+        if 'volumes' in task_dict:
+            task_volumes = task_dict['volumes']
+        else:
+            task_volumes = {}
+            task_dict['volumes'] = task_volumes
+
+        for volume in volumes:
+            if volume.is_host:
+                vol_dict = {'container_path': volume.container_path, 'mode': volume.mode, 'type': 'host',
+                            'host_path': volume.host_path}
+            else:
+                vol_dict = {'container_path': volume.container_path, 'mode': volume.mode, 'type': 'volume'}
+                if volume.driver:
+                    vol_dict['driver'] = volume.driver
+                if volume.driver_opts:
+                    vol_dict['driver_opts'] = volume.driver_opts
+            task_volumes[volume.name] = vol_dict
+
+    @staticmethod
+    def _add_workspace_volumes_to_task(task_dict, wksp_volumes):
+        """Adds the given workspace volumes to the given task
+
+        :param task_dict: The task dict
+        :type task_dict: dict
+        :param wksp_volumes: The workspace volumes stored by workspace name
+        :type wksp_volumes: dict
+        """
+
+        if 'workspaces' in task_dict:
+            task_workspaces = task_dict['workspaces']
+        else:
+            task_workspaces = {}
+            task_dict['workspaces'] = task_workspaces
+
+        for name, volume in wksp_volumes:
+            task_workspaces[name] = {'mode': volume.mode, 'volume_name': volume.name}
+        ExecutionConfiguration._add_volumes_to_task(task_dict, wksp_volumes.values())
 
     @staticmethod
     def _add_workspaces_to_task(task_dict, workspaces):
@@ -670,22 +711,6 @@ class ExecutionConfiguration(object):
             self._configuration['tasks'] = []
 
     # TODO: phase all of this out and replace it
-
-    def configure_workspace_docker_params(self, job_exe, workspaces, docker_volumes):
-        """Configures the Docker parameters needed for each workspace in the job execution tasks. The given job
-        execution must have been set to RUNNING status.
-
-        :param job_exe: The job execution model (must not be queued) with related job and job_type fields
-        :type job_exe: :class:`job.models.JobExecution`
-        :param workspaces: A dict of all workspaces stored by name
-        :type workspaces: {string: :class:`storage.models.Workspace`}
-        :param docker_volumes: A list to add Docker volume names to
-        :type docker_volumes: [string]
-
-        :raises Exception: If the job execution is still queued
-        """
-
-        pass
 
     def populate_default_job_settings(self, job_exe):
         """Gathers the job settings defined in the job_type and populates the execution configuration with them
