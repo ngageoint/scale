@@ -22,6 +22,58 @@ class TestExecutionConfiguration(TestCase):
         config = {'version': 'BAD'}
         self.assertRaises(InvalidExecutionConfiguration, ExecutionConfiguration, config)
 
+    def test_create_copy(self):
+        """Tests the create_copy() method"""
+
+        config = {
+            'version': '2.0',
+            'input_files': {
+                'INPUT_1': [{
+                    'id': 1234,
+                    'type': 'PRODUCT',
+                    'workspace_id': 123,
+                    'workspace_path': 'the/workspace/path/file.json',
+                    'local_file_name': 'file_abcdfeg.json',
+                    'is_deleted': False,
+                }]
+            },
+            'output_workspaces': {
+                'OUTPUT_1': 'WORKSPACE_1'
+            },
+            'tasks': [
+                {
+                    'task_id': 'task-1234',
+                    'type': 'main',
+                    'resources': {'cpu': 1.0},
+                    'args': 'foo ${INPUT_1} ${JOB_OUTPUT_DIR}',
+                    'env_vars': {'ENV_VAR_NAME': 'ENV_VAR_VALUE'},
+                    'workspaces': {'WORKSPACE_NAME': {'mode': 'RO', 'volume_name': None}},
+                    'mounts': {'MOUNT_NAME': 'MOUNT_VOLUME_NAME'},
+                    'settings': {'SETTING_NAME': 'SETTING_VALUE'},
+                    'volumes': {
+                        'VOLUME_NAME_1': {
+                            'container_path': '/the/container/path',
+                            'mode': 'RO',
+                            'type': 'host',
+                            'host_path': '/the/host/path'
+                        },
+                        'VOLUME_NAME_2': {
+                            'container_path': '/the/other/container/path',
+                            'mode': 'RW',
+                            'type': 'volume',
+                            'driver': 'SUPER_DRIVER_5000',
+                            'driver_opts': {'turbo': 'yes-pleez'}
+                        }
+                    },
+                    'docker_params': [{'flag': 'hello', 'value': 'scale'}]
+                }
+            ]
+        }
+        exe_config = ExecutionConfiguration(config)
+
+        copy = exe_config.create_copy()
+        self.assertDictEqual(copy.get_dict(), config)
+
 
 class TestExecutionConfigurationConvert(TestCase):
     """Tests performing conversion from lower to higher minor versions of configuration schema."""
