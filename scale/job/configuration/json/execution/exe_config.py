@@ -257,9 +257,10 @@ class ExecutionConfiguration(object):
             raise InvalidExecutionConfiguration(validation_error)
 
     def add_to_task(self, task_type, args=None, docker_params=None, env_vars=None, mount_volumes=None, resources=None,
-                    wksp_volumes=None, workspaces=None):
+                    settings=None, wksp_volumes=None, workspaces=None):
         """Adds the given parameters to the task with the given type. The task with the given type must already exist. A
-        mount volume of None indicates a required mount that is missing.
+        mount volume of None indicates a required mount that is missing. A setting value of None indicates a required
+        setting that is missing.
 
         :param task_type: The task type to add the parameters to
         :type task_type: string
@@ -273,6 +274,8 @@ class ExecutionConfiguration(object):
         :type mount_volumes: dict
         :param resources: The resources
         :type resources: :class:`node.resources.node_resources.NodeResources`
+        :param settings: The setting names and values (a value may be None)
+        :type settings: dict
         :param wksp_volumes: The workspace volumes stored by workspace name
         :type wksp_volumes: dict
         :param workspaces: The workspaces stored by name
@@ -290,6 +293,8 @@ class ExecutionConfiguration(object):
             ExecutionConfiguration._add_mount_volumes_to_task(task_dict, mount_volumes)
         if resources:
             ExecutionConfiguration._add_resources_to_task(task_dict, resources)
+        if settings:
+            ExecutionConfiguration._add_settings_to_task(task_dict, settings)
         if wksp_volumes:
             ExecutionConfiguration._add_workspace_volumes_to_task(task_dict, wksp_volumes)
         if workspaces:
@@ -601,6 +606,26 @@ class ExecutionConfiguration(object):
         """
 
         task_dict['resources'] = resources.get_json().get_dict()
+
+    @staticmethod
+    def _add_settings_to_task(task_dict, settings):
+        """Adds the given settings to the given task. A setting value of None indicates a required setting that is
+        missing.
+
+        :param task_dict: The task dict
+        :type task_dict: dict
+        :param settings: The setting names and values (a value may be None)
+        :type settings: dict
+        """
+
+        if 'settings' in task_dict:
+            task_settings = task_dict['settings']
+        else:
+            task_settings = {}
+            task_dict['settings'] = task_settings
+
+        for name, value in settings.items():
+            task_settings[name] = value
 
     @staticmethod
     def _add_volumes_to_task(task_dict, volumes):

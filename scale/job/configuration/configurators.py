@@ -18,6 +18,7 @@ from node.resources.node_resources import NodeResources
 from node.resources.resource import Disk
 from storage.container import get_workspace_volume_path
 from storage.models import Workspace
+from scheduler.vault.manager import secrets_mgr
 
 
 def normalize_env_var_name(name):
@@ -214,6 +215,12 @@ class ScheduledExecutionConfigurator(object):
 
         self._workspaces = workspaces
 
+        db = settings.DATABASES['default']
+        self._system_settings = {'SCALE_DB_NAME': db['NAME'], 'SCALE_DB_USER': db['USER'],
+                                 'SCALE_DB_PASS': db['PASSWORD'], 'SCALE_DB_HOST': db['HOST'],
+                                 'SCALE_DB_PORT': db['PORT']}
+        self._system_settings_hidden = {key: '*****' for key in self._system_settings.keys()}
+
     def configure_scheduled_job(self, job_exe, job_type, interface):
         """Configures the JSON configuration field for the given scheduled job execution. The given job_exe and job_type
         models will not have any related fields populated. The execution configuration in the job_exe model will have
@@ -243,10 +250,10 @@ class ScheduledExecutionConfigurator(object):
             ScheduledExecutionConfigurator._configure_regular_job(config, job_exe)
 
         # Configure items that apply to all tasks
-        ScheduledExecutionConfigurator._configure_all_tasks(self, config, job_exe)
+        self._configure_all_tasks(config, job_exe)
 
         # Configure secrets
-        config_with_secrets = ScheduledExecutionConfigurator._configure_secrets(config, job_exe, job_type, interface)
+        config_with_secrets = self._configure_secrets(config, job_exe, job_type, interface)
 
         job_exe.configuration = config.get_dict()
         return config_with_secrets
@@ -418,8 +425,7 @@ class ScheduledExecutionConfigurator(object):
         resources.remove_resource('disk')
         config.add_to_task('post', resources=resources)
 
-    @staticmethod
-    def _configure_secrets(config, job_exe, job_type, interface):
+    def _configure_secrets(self, config, job_exe, job_type, interface):
         """Creates a copy of the configuration, configures secrets (masked in one of the copies), and applies any final
         configuration
 
@@ -438,7 +444,33 @@ class ScheduledExecutionConfigurator(object):
         # Copy the configuration
         config_with_secrets = config.create_copy()
 
-        # TODO: populate settings in both (copy with secrets, this without) (do DB settings values, put in fixtures?)
+        # Configure settings values, some are secret
+        if job_type.is_system:
+            config.add_to_task('main', settings=self._system_settings_hidden)
+            config_with_secrets.add_to_task('main', settings=self._system_settings)
+        else:
+            config.add_to_task('pre', settings=self._system_settings_hidden)
+            config_with_secrets.add_to_task('pre', settings=self._system_settings)
+            config.add_to_task('post', settings=self._system_settings_hidden)
+            config_with_secrets.add_to_task('post', settings=self._system_settings)
+            job_config = job_type.get_job_configuration()
+            job_type_name = job_type.get_job_type_name()
+            job_type_ver = job_type.get_job_type_version()
+            job_index = '-'.join([job_type_name, job_type_ver]).replace('.', '_')
+            secret_settings = secrets_mgr.retrieve_job_type_secrets(job_index)
+            for _config, secrets_hidden in [(config, True), (config_with_secrets, False)]:
+                task_settings = {}
+                # TODO: use better interface method once we switch to Seed
+                for setting in interface.get_dict()['settings']:
+                    name = setting['name']
+                    if setting['secret']:
+                        value = secret_settings[name]
+                        if value is not None and secrets_hidden:
+                            value = '*****'
+                    else:
+                        value = job_config.get_setting_value(name)
+                    task_settings[name] = value
+                _config.add_to_task('main', settings=task_settings)
 
         # Configure env vars for settings
         for _config in [config, config_with_secrets]:
