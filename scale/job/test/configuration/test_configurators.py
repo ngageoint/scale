@@ -16,20 +16,26 @@ class TestQueuedExecutionConfigurator(TestCase):
     def setUp(self):
         django.setup()
 
-    def test_configure_queued_job(self):
-        """Tests successfully calling configure_queued_job()"""
+    def test_configure_queued_job_regular(self):
+        """Tests successfully calling configure_queued_job() on a regular (non-system) job"""
 
         file_1 = storage_test_utils.create_file()
         file_2 = storage_test_utils.create_file()
         file_3 = storage_test_utils.create_file()
         input_files = {file_1.id: file_1, file_2.id: file_2, file_3.id: file_3}
+        interface_dict = {'version': '1.4', 'command': 'foo',
+                          'command_arguments': '${a:input_1} ${b:input_2} ${input_3} ${job_output_dir}',
+                          'input_data': [{'name': 'input_1', 'type': 'property'}, {'name': 'input_2', 'type': 'file'},
+                                         {'name': 'input_3', 'type': 'files'}]}
         data_dict = {'input_data': [{'name': 'input_1', 'value': 'my_val'}, {'name': 'input_2', 'file_id': file_1.id},
                                     {'name': 'input_3', 'file_ids': [file_2.id, file_3.id]}]}
-        expected_env_vars = {'INPUT_1': 'my_val', 'INPUT_2': os.path.join(SCALE_JOB_EXE_INPUT_PATH,
-                                                                          'input_2', file_1.file_name),
-                             'INPUT_3': os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'input_3'),
+        input_2_val = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'input_2', file_1.file_name)
+        input_3_val = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'input_3')
+        expected_args = '-a my_val -b %s %s ${job_output_dir}' % (input_2_val, input_3_val)
+        expected_env_vars = {'INPUT_1': 'my_val', 'INPUT_2': input_2_val, 'INPUT_3': input_3_val,
                              'job_output_dir': SCALE_JOB_EXE_OUTPUT_PATH, 'OUTPUT_DIR': SCALE_JOB_EXE_OUTPUT_PATH}
-        job = job_test_utils.create_job(data=data_dict, status='QUEUED')
+        job_type = job_test_utils.create_job_type(interface=interface_dict)
+        job = job_test_utils.create_job(job_type=job_type, data=data_dict, status='QUEUED')
         configurator = QueuedExecutionConfigurator(input_files)
 
         # Test method
@@ -42,5 +48,5 @@ class TestQueuedExecutionConfigurator(TestCase):
         self.assertEqual(len(config_dict['tasks']), 1)
         main_task = config_dict['tasks'][0]
         self.assertEqual(main_task['type'], 'main')
-        self.assertEqual(main_task['args'], job.get_job_interface().get_command_args())
+        self.assertEqual(main_task['args'], expected_args)
         self.assertDictEqual(main_task['env_vars'], expected_env_vars)
