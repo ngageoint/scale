@@ -305,7 +305,7 @@ class IngestManager(models.Manager):
                 raise Exception('One of scan_id or strike_id must be set')
 
             data = JobData()
-            data.add_property_input('Ingest ID', str(ingest_id))
+            data.add_property_input('ingest_id', str(ingest_id))
             data.add_property_input('workspace', ingest.workspace.name)
             data.add_property_input('new_workspace', ingest.new_workspace.name)
 

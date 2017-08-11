@@ -18,8 +18,8 @@
 			"interface": {
 			     "version": "1.4",
                  "command": "",
-			     "command_arguments": "scale_ingest ${-i :Ingest ID}",
-			     "input_data": [ { "name": "Ingest ID", "type": "property" },
+			     "command_arguments": "scale_ingest ${-i :ingest_id}",
+			     "input_data": [ { "name": "ingest_id", "type": "property" },
                                  { "name": "workspace", "type": "property" },
                                  { "name": "new_workspace", "type": "property", "required": false } ]
 			},
@@ -79,8 +79,8 @@
             "interface": {
 			     "version": "1.4",
                  "command": "",
-			     "command_arguments": "scale_ingest ${-i :Ingest ID}",
-			     "input_data": [ { "name": "Ingest ID", "type": "property" },
+			     "command_arguments": "scale_ingest ${-i :ingest_id}",
+			     "input_data": [ { "name": "ingest_id", "type": "property" },
                                  { "name": "workspace", "type": "property" },
                                  { "name": "new_workspace", "type": "property", "required": false } ]
 			},

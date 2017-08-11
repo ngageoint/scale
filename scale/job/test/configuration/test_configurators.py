@@ -6,6 +6,7 @@ import django
 from django.test import TestCase
 
 from job.configuration.configurators import QueuedExecutionConfigurator
+from job.configuration.data.job_data import JobData
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
 from job.test import utils as job_test_utils
 from storage.test import utils as storage_test_utils
@@ -50,3 +51,131 @@ class TestQueuedExecutionConfigurator(TestCase):
         self.assertEqual(main_task['type'], 'main')
         self.assertEqual(main_task['args'], expected_args)
         self.assertDictEqual(main_task['env_vars'], expected_env_vars)
+
+    def test_configure_queued_job_old_ingest(self):
+        """Tests successfully calling configure_queued_job() on an old (before revision 3) ingest job"""
+
+        workspace_1 = storage_test_utils.create_workspace()
+        workspace_2 = storage_test_utils.create_workspace()
+        from ingest.test import utils as ingest_test_utils
+        ingest = ingest_test_utils.create_ingest(workspace=workspace_1, new_workspace=workspace_2)
+        data = JobData()
+        data.add_property_input('Ingest ID', str(ingest.id))
+        ingest.job.data = data.get_dict()
+        ingest.job.status = 'QUEUED'
+        ingest.job.save()
+
+        expected_args = 'scale_ingest -i %s' % str(ingest.id)
+        expected_env_vars = {'INGEST ID': str(ingest.id)}
+        expected_workspaces = {workspace_1.name: {'mode': 'MODE_RW'}, workspace_2.name: {'mode': 'MODE_RW'}}
+        expected_config = {'version': '2.0', 'tasks': [{'type': 'main', 'args': expected_args,
+                                                        'env_vars': expected_env_vars,
+                                                        'workspaces': expected_workspaces}]}
+        configurator = QueuedExecutionConfigurator({})
+
+        # Test method
+        exe_config = configurator.configure_queued_job(ingest.job)
+
+        config_dict = exe_config.get_dict()
+        self.assertDictEqual(config_dict, expected_config)
+
+    def test_configure_queued_job_ingest_with_new_workspace(self):
+        """Tests successfully calling configure_queued_job() on an ingest job with a new workspace"""
+
+        workspace_1 = storage_test_utils.create_workspace()
+        workspace_2 = storage_test_utils.create_workspace()
+        from ingest.models import Ingest
+        from ingest.test import utils as ingest_test_utils
+        ingest = ingest_test_utils.create_ingest(workspace=workspace_1, new_workspace=workspace_2)
+        Ingest.objects.start_ingest_tasks([ingest])
+
+        expected_args = 'scale_ingest -i %s' % str(ingest.id)
+        expected_env_vars = {'INGEST_ID': str(ingest.id)}
+        expected_workspaces = {workspace_1.name: {'mode': 'MODE_RW'}, workspace_2.name: {'mode': 'MODE_RW'}}
+        expected_config = {'version': '2.0', 'tasks': [{'type': 'main', 'args': expected_args,
+                                                        'env_vars': expected_env_vars,
+                                                        'workspaces': expected_workspaces}]}
+        configurator = QueuedExecutionConfigurator({})
+
+        # Test method
+        exe_config = configurator.configure_queued_job(ingest.job)
+
+        config_dict = exe_config.get_dict()
+        self.assertDictEqual(config_dict, expected_config)
+
+    def test_configure_queued_job_ingest_without_new_workspace(self):
+        """Tests successfully calling configure_queued_job() on an ingest job without a new workspace"""
+
+        workspace_1 = storage_test_utils.create_workspace()
+        from ingest.models import Ingest
+        from ingest.test import utils as ingest_test_utils
+        ingest = ingest_test_utils.create_ingest(workspace=workspace_1)
+        Ingest.objects.start_ingest_tasks([ingest])
+
+        expected_args = 'scale_ingest -i %s' % str(ingest.id)
+        expected_env_vars = {'INGEST_ID': str(ingest.id)}
+        expected_workspaces = {workspace_1.name: {'mode': 'MODE_RW'}}
+        expected_config = {'version': '2.0', 'tasks': [{'type': 'main', 'args': expected_args,
+                                                        'env_vars': expected_env_vars,
+                                                        'workspaces': expected_workspaces}]}
+        configurator = QueuedExecutionConfigurator({})
+
+        # Test method
+        exe_config = configurator.configure_queued_job(ingest.job)
+
+        config_dict = exe_config.get_dict()
+        self.assertDictEqual(config_dict, expected_config)
+
+    def test_configure_queued_job_strike(self):
+        """Tests successfully calling configure_queued_job() on a Strike job"""
+
+        workspace = storage_test_utils.create_workspace()
+        configuration = {'version': '1.0', 'mount': 'host:/my/path', 'transfer_suffix': '_tmp',
+                         'files_to_ingest': [{'filename_regex': '.*txt', 'workspace_name': workspace.name,
+                                              'workspace_path': 'wksp/path'}]}
+        from ingest.test import utils as ingest_test_utils
+        strike = ingest_test_utils.create_strike(configuration=configuration)
+        data = JobData()
+        data.add_property_input('Strike ID', str(strike.id))
+        strike.job.data = data.get_dict()
+        strike.job.status = 'QUEUED'
+        strike.job.save()
+
+        expected_args = 'scale_strike -i %s' % str(strike.id)
+        expected_env_vars = {'STRIKE ID': str(strike.id)}
+        expected_workspaces = {workspace.name: {'mode': 'MODE_RW'}}
+        expected_config = {'version': '2.0', 'tasks': [{'type': 'main', 'args': expected_args,
+                                                        'env_vars': expected_env_vars,
+                                                        'workspaces': expected_workspaces}]}
+        configurator = QueuedExecutionConfigurator({})
+
+        # Test method
+        exe_config = configurator.configure_queued_job(strike.job)
+
+        config_dict = exe_config.get_dict()
+        self.assertDictEqual(config_dict, expected_config)
+
+    def test_configure_queued_job_scan(self):
+        """Tests successfully calling configure_queued_job() on a Scan job"""
+
+        workspace = storage_test_utils.create_workspace()
+        configuration = {'version': '1.0', 'workspace': workspace.name, 'scanner': {'type': 'dir'}, 'recursive': True,
+                         'files_to_ingest': [{'filename_regex': '.*'}]}
+        from ingest.models import Scan
+        from ingest.test import utils as ingest_test_utils
+        scan = ingest_test_utils.create_scan(configuration=configuration)
+        Scan.objects.queue_scan(scan.id, False)
+
+        expected_args = 'scale_scan -i %s' % str(scan.id)
+        expected_env_vars = {'SCAN ID': str(scan.id), 'DRY RUN': 'False'}
+        expected_workspaces = {workspace.name: {'mode': 'MODE_RW'}}
+        expected_config = {'version': '2.0', 'tasks': [{'type': 'main', 'args': expected_args,
+                                                        'env_vars': expected_env_vars,
+                                                        'workspaces': expected_workspaces}]}
+        configurator = QueuedExecutionConfigurator({})
+
+        # Test method
+        exe_config = configurator.configure_queued_job(scan.job)
+
+        config_dict = exe_config.get_dict()
+        self.assertDictEqual(config_dict, expected_config)
