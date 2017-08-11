@@ -20,6 +20,7 @@ class TestQueuedExecutionConfigurator(TestCase):
     def test_configure_queued_job_regular(self):
         """Tests successfully calling configure_queued_job() on a regular (non-system) job"""
 
+        workspace = storage_test_utils.create_workspace()
         file_1 = storage_test_utils.create_file()
         file_2 = storage_test_utils.create_file()
         file_3 = storage_test_utils.create_file()
@@ -27,14 +28,17 @@ class TestQueuedExecutionConfigurator(TestCase):
         interface_dict = {'version': '1.4', 'command': 'foo',
                           'command_arguments': '${a:input_1} ${b:input_2} ${input_3} ${job_output_dir}',
                           'input_data': [{'name': 'input_1', 'type': 'property'}, {'name': 'input_2', 'type': 'file'},
-                                         {'name': 'input_3', 'type': 'files'}]}
+                                         {'name': 'input_3', 'type': 'files'}],
+                          'output_data': [{'name': 'output_1', 'type': 'file'}]}
         data_dict = {'input_data': [{'name': 'input_1', 'value': 'my_val'}, {'name': 'input_2', 'file_id': file_1.id},
-                                    {'name': 'input_3', 'file_ids': [file_2.id, file_3.id]}]}
+                                    {'name': 'input_3', 'file_ids': [file_2.id, file_3.id]}],
+                     'output_data': [{'name': 'output_1', 'workspace_id': workspace.id}]}
         input_2_val = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'input_2', file_1.file_name)
         input_3_val = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'input_3')
         expected_args = '-a my_val -b %s %s ${job_output_dir}' % (input_2_val, input_3_val)
         expected_env_vars = {'INPUT_1': 'my_val', 'INPUT_2': input_2_val, 'INPUT_3': input_3_val,
                              'job_output_dir': SCALE_JOB_EXE_OUTPUT_PATH, 'OUTPUT_DIR': SCALE_JOB_EXE_OUTPUT_PATH}
+        expected_output_workspaces = {'output_1': workspace.name}
         job_type = job_test_utils.create_job_type(interface=interface_dict)
         job = job_test_utils.create_job(job_type=job_type, data=data_dict, status='QUEUED')
         configurator = QueuedExecutionConfigurator(input_files)
@@ -46,6 +50,7 @@ class TestQueuedExecutionConfigurator(TestCase):
         self.assertSetEqual(set(config_dict['input_files'].keys()), {'input_2', 'input_3'})
         self.assertEqual(len(config_dict['input_files']['input_2']), 1)
         self.assertEqual(len(config_dict['input_files']['input_3']), 2)
+        self.assertDictEqual(config_dict['output_workspaces'], expected_output_workspaces)
         self.assertEqual(len(config_dict['tasks']), 1)
         main_task = config_dict['tasks'][0]
         self.assertEqual(main_task['type'], 'main')
