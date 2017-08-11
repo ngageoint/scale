@@ -7,6 +7,9 @@ from error.exceptions import get_error_by_exit_code
 from job.execution.tasks.exe_task import JobExecutionTask
 
 
+POST_TASK_COMMAND_ARGS = 'scale_post_steps'
+
+
 class PostTask(JobExecutionTask):
     """Represents a job execution post-task. This class is thread-safe.
     """

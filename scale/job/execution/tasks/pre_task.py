@@ -7,6 +7,9 @@ from error.exceptions import get_error_by_exit_code
 from job.execution.tasks.exe_task import JobExecutionTask
 
 
+PRE_TASK_COMMAND_ARGS = 'scale_pre_steps'
+
+
 class PreTask(JobExecutionTask):
     """Represents a job execution pre-task. This class is thread-safe.
     """

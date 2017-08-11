@@ -4,12 +4,21 @@ import os
 
 import django
 from django.test import TestCase
+from django.utils.timezone import now
+from mock import patch, MagicMock
 
 from job.configuration.configurators import QueuedExecutionConfigurator, ScheduledExecutionConfigurator
 from job.configuration.data.job_data import JobData
 from job.configuration.json.execution.exe_config import ExecutionConfiguration
-from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
+from job.execution.container import get_job_exe_input_vol_name, get_job_exe_output_vol_name, get_mount_volume_name, \
+    get_workspace_volume_name, SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
+from job.execution.tasks.post_task import POST_TASK_COMMAND_ARGS
+from job.execution.tasks.pre_task import PRE_TASK_COMMAND_ARGS
+from job.tasks.pull_task import create_pull_command
 from job.test import utils as job_test_utils
+from node.resources.node_resources import NodeResources
+from node.resources.resource import Disk
+from storage.container import get_workspace_volume_path
 from storage.test import utils as storage_test_utils
 from trigger.test import utils as trigger_test_utils
 
@@ -206,17 +215,23 @@ class TestScheduledExecutionConfigurator(TestCase):
     def test_configure_scheduled_job_regular(self):
         """Tests successfully calling configure_scheduled_job() on a regular (non-system) job"""
 
-        workspace = storage_test_utils.create_workspace()
-        workspaces = {workspace.name: workspace}
-        file_1 = storage_test_utils.create_file()
-        file_2 = storage_test_utils.create_file()
-        file_3 = storage_test_utils.create_file()
+        framework_id = '1234'
+        broker_dict = {'version': '1.0', 'broker': {'type': 'host', 'host_path': '/w_1/host/path'}}
+        input_workspace = storage_test_utils.create_workspace(json_config=broker_dict)
+        broker_dict = {'version': '1.0', 'broker': {'type': 's3', 'bucket_name': 'bucket1',
+                                                    'host_path': '/w_2/host/path', 'region_name': 'us-east-1'}}
+        output_workspace = storage_test_utils.create_workspace(json_config=broker_dict)
+        workspaces = {input_workspace.name: input_workspace, output_workspace.name: output_workspace}
+        file_1 = storage_test_utils.create_file(workspace=input_workspace)
+        file_2 = storage_test_utils.create_file(workspace=input_workspace)
+        file_3 = storage_test_utils.create_file(workspace=input_workspace)
         interface_dict = {'version': '1.4', 'command': 'foo',
                           'command_arguments': '${-a :input_1} ${-b :input_2} ${input_3} ${s_1} ${job_output_dir}',
                           'env_vars': [{'name': 'my_special_env', 'value': '${s_2}'}],
                           'mounts': [{'name': 'm_1', 'path': '/the/cont/path', 'mode': 'ro'},
                                      {'name': 'm_2', 'path': '/the/missing/cont/path', 'mode': 'rw'},
-                                     {'name': 'm_3', 'path': '/the/optional/cont/path', 'mode': 'rw'}],
+                                     {'name': 'm_3', 'path': '/the/optional/cont/path', 'mode': 'rw',
+                                      'required': False}],
                           'settings': [{'name': 's_1'}, {'name': 's_2', 'secret': True}, {'name': 's_3'},
                                        {'name': 's_4', 'required': False}],
                           'input_data': [{'name': 'input_1', 'type': 'property'}, {'name': 'input_2', 'type': 'file'},
@@ -224,23 +239,169 @@ class TestScheduledExecutionConfigurator(TestCase):
                           'output_data': [{'name': 'output_1', 'type': 'file'}]}
         data_dict = {'input_data': [{'name': 'input_1', 'value': 'my_val'}, {'name': 'input_2', 'file_id': file_1.id},
                                     {'name': 'input_3', 'file_ids': [file_2.id, file_3.id]}],
-                     'output_data': [{'name': 'output_1', 'workspace_id': workspace.id}]}
-        job_type = job_test_utils.create_job_type(interface=interface_dict)
+                     'output_data': [{'name': 'output_1', 'workspace_id': output_workspace.id}]}
+        job_type_config_dict = {'version': '2.0', 'settings': {'s_1': 's_1_value'},
+                                'mounts': {'m_1': {'type': 'host', 'host_path': '/m_1/host_path'}}}
+        job_type = job_test_utils.create_job_type(interface=interface_dict, configuration=job_type_config_dict)
         from queue.job_exe import QueuedJobExecution
         from queue.models import Queue
         job = Queue.objects.queue_new_job(job_type, JobData(data_dict), trigger_test_utils.create_trigger_event())
+        resources = job.get_resources()
+        main_resources = resources.copy()
+        main_resources.subtract(NodeResources([Disk(job.input_file_size)]))
+        post_resources = resources.copy()
+        post_resources.remove_resource('disk')
         # Get job info off of the queue
         queue = Queue.objects.get(job_id=job.id)
         queued_job_exe = QueuedJobExecution(queue)
-        configurator = ScheduledExecutionConfigurator(workspaces)
+        job_exe_model = queued_job_exe.create_job_exe_model(framework_id, now())
 
         # Test method
-        exe_config = configurator.configure_scheduled_job()
+        with patch('django.con.settings') as mock_settings:
+            with patch('scheduler.vault.manager.secrets_mgr') as mock_secrets_mgr:
+                mock_settings.LOGGING_ADDRESS = None  # Ignore logging settings, there's enough in this unit test
+                mock_settings.DATABASES = {'default': {'SCALE_DB_NAME': 'TEST_NAME', 'SCALE_DB_USER': 'TEST_USER',
+                                                       'SCALE_DB_PASS': 'TEST_PASSWORD', 'SCALE_DB_HOST': 'TEST_HOST',
+                                                       'SCALE_DB_PORT': 'TEST_PORT'}}
+                mock_secrets_mgr.retrieve_job_type_secrets = MagicMock()
+                mock_secrets_mgr.retrieve_job_type_secrets.return_value = {'s_2': 's_2_secret'}
+            configurator = ScheduledExecutionConfigurator(workspaces)
+            exe_config_with_secrets = configurator.configure_scheduled_job(job_exe_model, job_type, queue.interface)
 
         # Expected results
+        input_wksp_vol_name = get_workspace_volume_name(job_exe_model, input_workspace.name)
+        input_wksp_vol_path = get_workspace_volume_path(input_workspace.name)
+        output_wksp_vol_name = get_workspace_volume_name(job_exe_model, output_workspace.name)
+        output_wksp_vol_path = get_workspace_volume_path(output_workspace.name)
+        m_1_vol_name = get_mount_volume_name(job_exe_model, 'm_1')
+        input_mnt_name = 'scale_input_mount'
+        output_mnt_name = 'scale_output_mount'
+        input_vol_name = get_job_exe_input_vol_name(job_exe_model)
+        output_vol_name = get_job_exe_output_vol_name(job_exe_model)
         input_2_val = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'input_2', file_1.file_name)
         input_3_val = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'input_3')
-        expected_args = '-a my_val -b %s %s ${job_output_dir}' % (input_2_val, input_3_val)
-        expected_env_vars = {'INPUT_1': 'my_val', 'INPUT_2': input_2_val, 'INPUT_3': input_3_val,
-                             'job_output_dir': SCALE_JOB_EXE_OUTPUT_PATH, 'OUTPUT_DIR': SCALE_JOB_EXE_OUTPUT_PATH}
-        expected_output_workspaces = {'output_1': workspace.name}
+        expected_input_files = queue.get_execution_configuration().get_dict()['input_files']
+        expected_output_workspaces = {'output_1': output_workspace.name}
+        expected_pull_task = {'task_id': '%s_pull' % job_exe_model.get_cluster_id(), 'type': 'pull',
+                              'resources': resources.get_json().get_dict(),
+                              'args': create_pull_command(job_type.docker_image),
+                              'env_vars': {'SCALE_JOB_ID': job.id, 'SCALE_EXE_NUM': job.exe_num,
+                                           'ALLOCATED_CPU': resources.cpus, 'ALLOCATED_MEM': resources.mem,
+                                           'ALLOCATED_DISK': resources.disk}}
+        expected_pre_task = {'task_id': '%s_pre' % job_exe_model.get_cluster_id(), 'type': 'pre',
+                             'resources': resources.get_json().get_dict(), 'args': PRE_TASK_COMMAND_ARGS,
+                             'env_vars': {'SCALE_JOB_ID': job.id, 'SCALE_EXE_NUM': job.exe_num,
+                                          'ALLOCATED_CPU': resources.cpus, 'ALLOCATED_MEM': resources.mem,
+                                          'ALLOCATED_DISK': resources.disk, 'SCALE_DB_NAME': 'TEST_NAME',
+                                          'SCALE_DB_USER': 'TEST_USER', 'SCALE_DB_PASS': 'TEST_PASSWORD',
+                                          'SCALE_DB_HOST': 'TEST_HOST', 'SCALE_DB_PORT': 'TEST_PORT'},
+                             'workspaces': {input_workspace.name: {'mode': 'ro', 'volume_name': input_wksp_vol_name}},
+                             'mounts': {input_mnt_name: input_vol_name, output_mnt_name: output_vol_name},
+                             'settings': {'SCALE_DB_NAME': 'TEST_NAME', 'SCALE_DB_USER': 'TEST_USER',
+                                          'SCALE_DB_PASS': 'TEST_PASSWORD', 'SCALE_DB_HOST': 'TEST_HOST',
+                                          'SCALE_DB_PORT': 'TEST_PORT'},
+                             'volumes': {input_wksp_vol_name: {'container_path': input_wksp_vol_path, 'mode': 'ro',
+                                                               'type': 'host', 'host_path': '/w_1/host/path'},
+                                         input_vol_name: {'container_path': SCALE_JOB_EXE_INPUT_PATH, 'mode': 'rw',
+                                                          'type': 'volume'},
+                                         output_vol_name: {'container_path': SCALE_JOB_EXE_OUTPUT_PATH, 'mode': 'rw',
+                                                           'type': 'volume'}},
+                             'docker_params': [{'flag': 'env', 'value': 'SCALE_JOB_ID=%d' % job.id},
+                                               {'flag': 'env', 'value': 'SCALE_EXE_NUM=%d' % job.exe_num},
+                                               {'flag': 'env', 'value': 'ALLOCATED_CPU=%d' % resources.cpus},
+                                               {'flag': 'env', 'value': 'ALLOCATED_MEM=%d' % resources.mem},
+                                               {'flag': 'env', 'value': 'ALLOCATED_DISK=%d' % resources.disk},
+                                               {'flag': 'env', 'value': 'SCALE_DB_NAME=TEST_NAME'},
+                                               {'flag': 'env', 'value': 'SCALE_DB_USER=TEST_USER'},
+                                               {'flag': 'env', 'value': 'SCALE_DB_PASS=TEST_PASSWORD'},
+                                               {'flag': 'env', 'value': 'SCALE_DB_HOST=TEST_HOST'},
+                                               {'flag': 'env', 'value': 'SCALE_DB_PORT=TEST_PORT'},
+                                               {'flag': 'volume',
+                                                'value': '/w_1/host/path:%s:ro' % input_wksp_vol_path},
+                                               {'flag': 'volume', 'value': '$(docker volume create --name %s):%s:rw' %
+                                                                           (input_vol_name, SCALE_JOB_EXE_INPUT_PATH)},
+                                               {'flag': 'volume', 'value': '$(docker volume create --name %s):%s:rw' %
+                                                                           (output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH)}
+                                               ]}
+        expected_pst_task = {'task_id': '%s_post' % job_exe_model.get_cluster_id(), 'type': 'post',
+                             'resources': resources.get_json().get_dict(), 'args': POST_TASK_COMMAND_ARGS,
+                             'env_vars': {'SCALE_JOB_ID': job.id, 'SCALE_EXE_NUM': job.exe_num,
+                                          'ALLOCATED_CPU': post_resources.cpus, 'ALLOCATED_MEM': post_resources.mem,
+                                          'ALLOCATED_DISK': post_resources.disk, 'SCALE_DB_NAME': 'TEST_NAME',
+                                          'SCALE_DB_USER': 'TEST_USER', 'SCALE_DB_PASS': 'TEST_PASSWORD',
+                                          'SCALE_DB_HOST': 'TEST_HOST', 'SCALE_DB_PORT': 'TEST_PORT'},
+                             'workspaces': {input_workspace.name: {'mode': 'rw', 'volume_name': input_wksp_vol_name},
+                                            output_workspace.name: {'mode': 'rw', 'volume_name': output_wksp_vol_name}},
+                             'mounts': {output_mnt_name: output_vol_name},
+                             'settings': {'SCALE_DB_NAME': 'TEST_NAME', 'SCALE_DB_USER': 'TEST_USER',
+                                          'SCALE_DB_PASS': 'TEST_PASSWORD', 'SCALE_DB_HOST': 'TEST_HOST',
+                                          'SCALE_DB_PORT': 'TEST_PORT'},
+                             'volumes': {input_wksp_vol_name: {'container_path': input_wksp_vol_path, 'mode': 'rw',
+                                                               'type': 'host', 'host_path': '/w_1/host/path'},
+                                         output_wksp_vol_name: {'container_path': output_wksp_vol_path, 'mode': 'rw',
+                                                                'type': 'host', 'host_path': '/w_2/host/path'},
+                                         output_vol_name: {'container_path': SCALE_JOB_EXE_OUTPUT_PATH, 'mode': 'ro',
+                                                           'type': 'volume'}},
+                             'docker_params': [{'flag': 'env', 'value': 'SCALE_JOB_ID=%d' % job.id},
+                                               {'flag': 'env', 'value': 'SCALE_EXE_NUM=%d' % job.exe_num},
+                                               {'flag': 'env', 'value': 'ALLOCATED_CPU=%d' % post_resources.cpus},
+                                               {'flag': 'env', 'value': 'ALLOCATED_MEM=%d' % post_resources.mem},
+                                               {'flag': 'env', 'value': 'ALLOCATED_DISK=%d' % post_resources.disk},
+                                               {'flag': 'env', 'value': 'SCALE_DB_NAME=TEST_NAME'},
+                                               {'flag': 'env', 'value': 'SCALE_DB_USER=TEST_USER'},
+                                               {'flag': 'env', 'value': 'SCALE_DB_PASS=TEST_PASSWORD'},
+                                               {'flag': 'env', 'value': 'SCALE_DB_HOST=TEST_HOST'},
+                                               {'flag': 'env', 'value': 'SCALE_DB_PORT=TEST_PORT'},
+                                               {'flag': 'volume',
+                                                'value': '/w_1/host/path:%s:rw' % input_wksp_vol_path},
+                                               {'flag': 'volume',
+                                                'value': '/w_2/host/path:%s:rw' % output_wksp_vol_path},
+                                               {'flag': 'volume', 'value': '%s:%s:rw' %
+                                                                           (output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH)}
+                                               ]}
+        expected_main_task = {'task_id': '%s_main' % job_exe_model.get_cluster_id(), 'type': 'main',
+                              'resources': main_resources.get_json().get_dict(),
+                              'args': '-a my_val -b %s %s s_1_value %s' %
+                                      (input_2_val, input_3_val, SCALE_JOB_EXE_OUTPUT_PATH),
+                              'env_vars': {'INPUT_1': 'my_val', 'INPUT_2': input_2_val, 'INPUT_3': input_3_val,
+                                           'job_output_dir': SCALE_JOB_EXE_OUTPUT_PATH,
+                                           'OUTPUT_DIR': SCALE_JOB_EXE_OUTPUT_PATH, 'my_special_env': 's_2_secret',
+                                           'ALLOCATED_CPU': post_resources.cpus, 'ALLOCATED_MEM': post_resources.mem,
+                                           'ALLOCATED_DISK': post_resources.disk},
+                              'workspaces': {input_workspace.name: {'mode': 'ro', 'volume_name': input_wksp_vol_name}},
+                              'mounts': {'m_1': m_1_vol_name, 'm_2': None, input_mnt_name: input_vol_name,
+                                         output_mnt_name: output_vol_name},  # m_2 and s_3 are required, but missing
+                              'settings': {'s_1': 's_1_value', 's_2': 's_2_secret', 's_3': None},
+                              'volumes': {input_wksp_vol_name: {'container_path': input_wksp_vol_path, 'mode': 'ro',
+                                                                'type': 'host', 'host_path': '/w_1/host/path'},
+                                          input_vol_name: {'container_path': SCALE_JOB_EXE_INPUT_PATH, 'mode': 'ro',
+                                                           'type': 'volume'},
+                                          output_vol_name: {'container_path': SCALE_JOB_EXE_OUTPUT_PATH, 'mode': 'rw',
+                                                            'type': 'volume'},
+                                          m_1_vol_name: {'container_path': '/the/cont/path', 'mode': 'ro',
+                                                         'type': 'host', 'host_path': '/m_1/host_path'}},
+                              'docker_params': [{'flag': 'env', 'value': 'INPUT_1=my_val'},
+                                                {'flag': 'env', 'value': 'INPUT_2=%s' % input_2_val},
+                                                {'flag': 'env', 'value': 'INPUT_3=%s' % input_3_val},
+                                                {'flag': 'env', 'value': 'job_output_dir=%s' % SCALE_JOB_EXE_OUTPUT_PATH},
+                                                {'flag': 'env', 'value': 'OUTPUT_DIR=%s' % SCALE_JOB_EXE_OUTPUT_PATH},
+                                                {'flag': 'env', 'value': 'my_special_env=s_2_secret'},
+                                                {'flag': 'env', 'value': 'ALLOCATED_CPU=%d' % post_resources.cpus},
+                                                {'flag': 'env', 'value': 'ALLOCATED_MEM=%d' % post_resources.mem},
+                                                {'flag': 'env', 'value': 'ALLOCATED_DISK=%d' % post_resources.disk},
+                                                {'flag': 'volume',
+                                                 'value': '/w_1/host/path:%s:ro' % input_wksp_vol_path},
+                                                {'flag': 'volume',
+                                                 'value': '/m_1/host_path:%s:ro' % m_1_vol_name},
+                                                {'flag': 'volume', 'value': '%s:%s:ro' %
+                                                                            (input_vol_name, SCALE_JOB_EXE_INPUT_PATH)},
+                                                {'flag': 'volume', 'value': '%s:%s:rw' %
+                                                                            (output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH)}
+                                                ]}
+        expected_config = {'version': '2.0',
+                           'input_files': expected_input_files,
+                           'output_workspaces': expected_output_workspaces,
+                           'tasks': [expected_pull_task, expected_pre_task, expected_main_task, expected_pst_task]}
+
+        # Compare results, including secrets
+        self.assertDictEqual(exe_config_with_secrets.get_dict(), expected_config)

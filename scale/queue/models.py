@@ -12,6 +12,7 @@ from error.models import Error
 from job.configuration.configurators import QueuedExecutionConfigurator
 from job.configuration.data.exceptions import InvalidData
 from job.configuration.data.job_data import JobData
+from job.configuration.interface.job_interface import JobInterface
 from job.configuration.json.execution.exe_config import ExecutionConfiguration
 from job.execution.job_exe import RunningJobExecution
 from job.models import Job, JobType
@@ -783,6 +784,15 @@ class Queue(models.Model):
         """
 
         return ExecutionConfiguration(self.configuration)
+
+    def get_job_interface(self):
+        """Returns the interface for this job
+
+        :returns: The job interface
+        :rtype: :class:`job.configuration.interface.job_interface.JobInterface`
+        """
+
+        return JobInterface(self.interface)
 
     def get_resources(self):
         """Returns the resources required by this job execution

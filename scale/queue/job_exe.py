@@ -17,6 +17,7 @@ class QueuedJobExecution(object):
 
         self.id = queue.id
         self.is_canceled = queue.is_canceled
+        self.interface = queue.get_job_interface()
         self.required_resources = queue.get_resources()
 
         self._queue = queue

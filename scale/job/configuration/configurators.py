@@ -14,6 +14,8 @@ from job.configuration.volume import Volume, MODE_RO, MODE_RW
 from job.configuration.workspace import TaskWorkspace
 from job.execution.container import get_job_exe_input_vol_name, get_job_exe_output_vol_name, get_mount_volume_name, \
     get_workspace_volume_name, SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
+from job.execution.tasks.post_task import POST_TASK_COMMAND_ARGS
+from job.execution.tasks.pre_task import PRE_TASK_COMMAND_ARGS
 from job.tasks.pull_task import create_pull_command
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Disk
@@ -381,8 +383,9 @@ class ScheduledExecutionConfigurator(object):
 
         config.create_tasks(['pull', 'pre', 'main', 'post'])
         config.add_to_task('pull', args=create_pull_command(job_exe.get_docker_image()))
-        config.add_to_task('pre', args='scale_pre_steps -i %i' % job_exe.id)
-        config.add_to_task('post', args='scale_post_steps -i %i' % job_exe.id)
+        env_vars = {'SCALE_JOB_ID': job_exe.job_id, 'SCALE_EXE_NUM': job_exe.exe_num}
+        config.add_to_task('pre', args=PRE_TASK_COMMAND_ARGS, env_vars=env_vars)
+        config.add_to_task('post', args=POST_TASK_COMMAND_ARGS, env_vars=env_vars)
 
         # Configure input workspaces
         ro_input_workspaces = {}
@@ -473,9 +476,11 @@ class ScheduledExecutionConfigurator(object):
                 for setting in interface.get_dict()['settings']:
                     name = setting['name']
                     if setting['secret']:
-                        value = secret_settings[name]
-                        if value is not None and secrets_hidden:
-                            value = '*****'
+                        value = None
+                        if name in secret_settings:
+                            value = secret_settings[name]
+                            if value is not None and secrets_hidden:
+                                value = '*****'
                     else:
                         value = job_config.get_setting_value(name)
                     task_settings[name] = value
