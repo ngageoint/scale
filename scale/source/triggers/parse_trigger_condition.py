@@ -11,17 +11,23 @@ class ParseTriggerCondition(object):
     """Represents the condition for a parse trigger rule
     """
 
-    def __init__(self, media_type, data_types):
+    def __init__(self, media_type, data_types, any_data_types=None, not_data_types=None):
         """Creates a parse trigger condition
 
         :param media_type: The media type that a parse file must match, possibly None
         :type media_type: str
         :param data_types: The set of data types that a parse file must matched, possibly None
         :type data_types: set of str
+        :param any_data_types: The set of data types that a parsed file must match at least one, possibly None
+        :type data_types: set of str
+        :param not_data_types: The set of data types that a parsed file must not match any of, possibly None
+        :type data_types: set of str
         """
 
         self._media_type = media_type
         self._data_types = data_types if data_types is not None else set()
+        self._any_data_types = any_data_types if any_data_types is not None else set()
+        self._not_data_types = not_data_types if not_data_types is not None else set()
 
     def get_media_type(self):
         """Returns the file media type for this parse trigger condition
@@ -55,4 +61,14 @@ class ParseTriggerCondition(object):
         if self._media_type and self._media_type != source_file.media_type:
             return False
 
-        return self._data_types <= source_file.get_data_type_tags()
+        condition_met = True
+        file_data_types = source_file.get_data_type_tags()
+
+        if self._data_types:
+            condition_met = self._data_types <= file_data_types
+        if self._not_data_types:
+            condition_met = True not in [tag in file_data_types for tag in self._not_data_types]
+        if self._any_data_types:
+            condition_met = True in [tag in file_data_types for tag in self._any_data_types]
+
+        return condition_met
