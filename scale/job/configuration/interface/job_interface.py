@@ -499,7 +499,7 @@ class JobInterface(object):
         :type command_arguments: string
         :param exe_configuration: The execution configuration
         :type exe_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
-        :param job_type: The job type definition 
+        :param job_type: The job type definition
         :type job_type: :class:`job.models.JobType`
         :return: command arguments with the settings populated
         :rtype: str
@@ -520,7 +520,7 @@ class JobInterface(object):
 
         :param exe_configuration: The execution configuration
         :type exe_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
-        :param job_type: The job type definition 
+        :param job_type: The job type definition
         :type job_type: :class:`job.models.JobType`
 
         :return: env_vars populated with values
@@ -770,6 +770,8 @@ class JobInterface(object):
         :type settings: JSON
         :param exe_configuration: The execution configuration
         :type exe_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :param job_type: The job type definition
+        :type job_type: :class:`job.models.JobType`
         :return: settings name and the value to replace it with
         :rtype: dict
         """
@@ -787,9 +789,7 @@ class JobInterface(object):
             setting_is_secret = setting['secret']
 
             if setting_is_secret:
-                job_type_name = job_type.get_job_type_name()
-                job_type_ver = job_type.get_job_type_version()
-                job_index = '-'.join([job_type_name, job_type_ver]).replace('.', '_')
+                job_index = job_type.get_secrets_key()
 
                 if not secret_settings:
                     secret_settings = secrets_mgr.retrieve_job_type_secrets(job_index)
