@@ -9,6 +9,7 @@ from jsonschema.exceptions import ValidationError
 from job.configuration.data.job_connection import JobConnection
 from recipe.configuration.data.recipe_connection import RecipeConnection
 from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
+from source.triggers.configuration import parse_trigger_rule_1_0 as previous_parse_trigger_config
 from source.triggers.parse_trigger_condition import ParseTriggerCondition
 from storage.models import Workspace
 from trigger.configuration.exceptions import InvalidTriggerRule
@@ -16,6 +17,8 @@ from trigger.configuration.exceptions import InvalidTriggerRule
 
 logger = logging.getLogger(__name__)
 
+
+SCHEMA_VERSION = '1.1'
 
 PARSE_TRIGGER_SCHEMA = {
     "type": "object",
@@ -37,6 +40,18 @@ PARSE_TRIGGER_SCHEMA = {
                 },
                 "data_types": {
                     "description": "Data types required by a parsed file to trigger an event",
+                    "type": "array",
+                    "items": {"$ref": "#/definitions/data_type_tag"}
+                },
+                "any_of_data_types": {
+                    "description": "Array of Data types with at least one match required by a parsed file to "
+                                   "trigger an event",
+                    "type": "array",
+                    "items": {"$ref": "#/definitions/data_type_tag"}
+                },
+                "not_data_types": {
+                    "description": "Array of Data types with at least one match required by a parsed file to "
+                                   "not trigger an event",
                     "type": "array",
                     "items": {"$ref": "#/definitions/data_type_tag"}
                 },
@@ -90,11 +105,24 @@ class ParseTriggerRuleConfiguration(RecipeTriggerRuleConfiguration):
         except ValidationError as validation_error:
             raise InvalidTriggerRule(validation_error)
 
+        if 'version' not in self._dict:
+            self._dict['version'] = SCHEMA_VERSION
+
+        if self._dict['version'] != SCHEMA_VERSION:
+            self.convert_parse_trigger_rule_config()
+
         self._populate_default_values()
 
-        version = self._dict['version']
-        if version != '1.0':
-            raise InvalidTriggerRule('%s is an unsupported version number' % version)
+    def convert_parse_trigger_rule_config(self):
+        """Convert a previous Parse Trigger Rule schema to the 1.1 schema
+        """
+
+        previous = previous_parse_trigger_config.ParseTriggerRuleConfiguration(self.trigger_rule_type, self._dict)
+        self._dict = previous.get_dict()
+
+        self._dict['version'] = SCHEMA_VERSION
+        self._dict['condition']['any_of_data_types'] = []
+        self._dict['condition']['not_data_types'] = []
 
     def get_condition(self):
         """Returns the condition for this parse trigger rule
@@ -153,7 +181,8 @@ class ParseTriggerRuleConfiguration(RecipeTriggerRuleConfiguration):
         return job_interface.validate_connection(connection)
 
     def validate_trigger_for_recipe(self, recipe_definition):
-        """See :meth:`recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration.validate_trigger_for_recipe`
+        """See :meth:
+        `recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration.validate_trigger_for_recipe`
         """
 
         input_file_name = self.get_input_data_name()
@@ -171,7 +200,7 @@ class ParseTriggerRuleConfiguration(RecipeTriggerRuleConfiguration):
         """
 
         if 'version' not in self._dict:
-            self._dict['version'] = '1.0'
+            self._dict['version'] = '1.1'
 
         if 'condition' not in self._dict:
             self._dict['condition'] = {}
@@ -179,3 +208,7 @@ class ParseTriggerRuleConfiguration(RecipeTriggerRuleConfiguration):
             self._dict['condition']['media_type'] = ''
         if 'data_types' not in self._dict['condition']:
             self._dict['condition']['data_types'] = []
+        if 'any_of_data_types' not in self._dict['condition']:
+            self._dict['condition']['any_of_data_types'] = []
+        if 'not_data_types' not in self._dict['condition']:
+            self._dict['condition']['not_data_types'] = []
