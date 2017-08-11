@@ -7,6 +7,7 @@ from copy import deepcopy
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
+from job.configuration.docker_param import DockerParameter
 from job.configuration.exceptions import InvalidExecutionConfiguration
 from job.configuration.json.execution import exe_config_1_1 as previous_version
 from job.configuration.volume import Volume, MODE_RO, MODE_RW
@@ -330,6 +331,20 @@ class ExecutionConfiguration(object):
                 tasks.append(ExecutionConfiguration._create_task(task_type))
         self._configuration['tasks'] = tasks
 
+    def get_args(self, task_type):
+        """Returns the command arguments for the given task type, None if the task type doesn't exist
+
+        :param task_type: The task type
+        :type task_type: string
+        :returns: The command arguments, possibly None
+        :rtype: string
+        """
+
+        for task_dict in self._configuration['tasks']:
+            if task_dict['type'] == task_type:
+                return task_dict['args']
+        return None
+
     def get_dict(self):
         """Returns the internal dictionary that represents this execution configuration
 
@@ -338,6 +353,23 @@ class ExecutionConfiguration(object):
         """
 
         return self._configuration
+
+    def get_docker_params(self, task_type):
+        """Returns the Docker parameters for the given task type
+
+        :param task_type: The task type
+        :type task_type: string
+        :returns: The list of Docker parameters
+        :rtype: list
+        """
+
+        params = []
+        for task_dict in self._configuration['tasks']:
+            if task_dict['type'] == task_type:
+                if 'docker_params' in task_dict:
+                    for param_dict in task_dict['docker_params']:
+                        params.append(DockerParameter(param_dict['flag'], param_dict['value']))
+        return params
 
     def get_env_vars(self, task_type):
         """Returns the environment variables for the given task type
@@ -366,6 +398,21 @@ class ExecutionConfiguration(object):
             for file_dict in file_list:
                 workspace_names.add(file_dict['workspace_name'])
         return list(workspace_names)
+
+    def get_named_docker_volumes(self):
+        """Returns the names of all (non-host) Docker volumes
+
+        :returns: The list of all named Docker volumes
+        :rtype: list
+        """
+
+        volumes = set()
+        for task_dict in self._configuration['tasks']:
+            if 'volumes' in task_dict:
+                for name, vol_dict in task_dict['volumes'].items():
+                    if vol_dict['type'] == 'volume':
+                        volumes.add(name)
+        return list(volumes)
 
     def get_output_workspace_names(self):
         """Returns a list of the names of all output workspaces

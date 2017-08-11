@@ -38,7 +38,7 @@ class QueuedJobExecution(object):
 
         job_exe = JobExecution()
         job_exe.job_id = self._queue.job_id
-        job_exe.job_type = self._queue.job_type_id
+        job_exe.job_type_id = self._queue.job_type_id
         job_exe.exe_num = self._queue.exe_num
         job_exe.timeout = self._queue.timeout
         job_exe.input_file_size = self._queue.input_file_size

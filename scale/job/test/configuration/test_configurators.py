@@ -403,5 +403,7 @@ class TestScheduledExecutionConfigurator(TestCase):
                            'output_workspaces': expected_output_workspaces,
                            'tasks': [expected_pull_task, expected_pre_task, expected_main_task, expected_pst_task]}
 
+        # Ensure configuration is valid
+        ExecutionConfiguration(exe_config_with_secrets.get_dict())
         # Compare results, including secrets
         self.assertDictEqual(exe_config_with_secrets.get_dict(), expected_config)

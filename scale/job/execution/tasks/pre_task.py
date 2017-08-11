@@ -14,25 +14,34 @@ class PreTask(JobExecutionTask):
     """Represents a job execution pre-task. This class is thread-safe.
     """
 
-    def __init__(self, agent_id, job_exe):
+    def __init__(self, agent_id, job_exe, job_type, configuration):
         """Constructor
 
-        :param agent_id: The ID of the agent on which the task is launched
+        :param agent_id: The ID of the agent on which the execution is running
         :type agent_id: string
-        :param job_exe: The job execution, which must be in RUNNING status and have its related node, job, and job_type
-        models populated
+        :param job_exe: The job execution model, related fields will only have IDs populated
         :type job_exe: :class:`job.models.JobExecution`
+        :param job_type: The job type model
+        :type job_type: :class:`job.models.JobType`
+        :param configuration: The job execution configuration, including secret values
+        :type configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         """
 
-        super(PreTask, self).__init__(job_exe.get_pre_task_id(), agent_id, job_exe)
+        super(PreTask, self).__init__(configuration.get_task_id('pre'), agent_id, job_exe, job_type)
 
+        # Set base task fields
         self._uses_docker = True
         self._docker_image = self._create_scale_image_name()
-        self._docker_params = job_exe.get_execution_configuration().get_pre_task_docker_params()
+        self._docker_params = configuration.get_docker_params('pre')
         self._is_docker_privileged = False
-        self._command_arguments = 'scale_pre_steps -i %i' % job_exe.id
+        self._command_arguments = configuration.get_args('pre')
         self._running_timeout_threshold = datetime.timedelta(hours=1)
+
+        # Set job execution task fields
         self.timeout_error_name = 'pre-timeout'
+
+        # Private fields for this class
+        self._resources = configuration.get_resources('pre')
 
     def complete(self, task_update):
         """See :meth:`job.execution.tasks.exe_task.JobExecutionTask.complete`
@@ -74,8 +83,7 @@ class PreTask(JobExecutionTask):
         """See :meth:`job.tasks.base_task.Task.get_resources`
         """
 
-        with self._lock:
-            return self._resources
+        return self._resources
 
     def populate_job_exe_model(self, job_exe):
         """See :meth:`job.execution.tasks.exe_task.JobExecutionTask.populate_job_exe_model`

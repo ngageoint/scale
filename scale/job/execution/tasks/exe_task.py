@@ -11,49 +11,38 @@ JOB_TASK_ID_PREFIX = 'scale_job'
 
 
 class JobExecutionTask(Task):
-    """Abstract base class for a job execution task. A job execution consists of three tasks: the pre-task,
-    the job-task, and the post-task.
+    """Abstract base class for a job execution task
     """
 
     __metaclass__ = ABCMeta
 
-    def __init__(self, task_id, agent_id, job_exe):
+    def __init__(self, task_id, agent_id, job_exe, job_type):
         """Constructor
 
         :param task_id: The unique ID of the task
         :type task_id: string
-        :param agent_id: The ID of the agent on which the task is launched
+        :param agent_id: The ID of the agent on which the execution is running
         :type agent_id: string
-        :param job_exe: The job execution, which must be in RUNNING status and have its related node, job, job_type, and
-            job_type_rev models populated
+        :param job_exe: The job execution model, related fields will only have IDs populated
         :type job_exe: :class:`job.models.JobExecution`
+        :param job_type: The job type model
+        :type job_type: :class:`job.models.JobType`
         """
 
-        task_name = '%s %s' % (job_exe.job.job_type.title, job_exe.job.job_type.version)
-        if not job_exe.is_system:
+        task_name = '%s %s' % (job_type.title, job_type.version)
+        if not job_type.is_system:
             task_name = 'Scale %s' % task_name
         super(JobExecutionTask, self).__init__(task_id, task_name, agent_id)
 
+        # Public, read-only info
+        self.job_exe_id = job_exe.id
+
+        # Internal job execution info
         self._base_task_id = task_id  # This is the base task ID in case this task gets lost
         self._lost_count = 0
 
-        self.timeout_error_name = None  # Sub-classes should set this
-
-        # Keep job execution values that should not change
-        self._job_exe_id = job_exe.id
-        self._resources = job_exe.get_resources()
-        self._input_file_size = job_exe.disk_in_scheduled
-        self._error_mapping = job_exe.get_error_interface()  # This can change, but not worth re-querying
-
-    @property
-    def job_exe_id(self):
-        """Returns the job execution ID of the task
-
-        :returns: The job execution ID
-        :rtype: int
-        """
-
-        return self._job_exe_id
+        # Sub-classes should set this
+        self.timeout_error_name = None
 
     def complete(self, task_update):
         """Completes this task and indicates whether following tasks should update their cached job execution values

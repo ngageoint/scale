@@ -23,26 +23,28 @@ logger = logging.getLogger(__name__)
 class RunningJobExecution(object):
     """This class represents a currently running job execution. This class is thread-safe."""
 
-    def __init__(self, agent_id, job_exe):
+    def __init__(self, agent_id, job_exe, job_type, configuration):
         """Constructor
 
         :param agent_id: The ID of the agent on which the execution is running
         :type agent_id: string
-        :param job_exe: The job execution, which must be in RUNNING status and have its related node_id, job, job_type
-            and job_type_rev models populated
+        :param job_exe: The job execution model, related fields will only have IDs populated
         :type job_exe: :class:`job.models.JobExecution`
+        :param job_type: The job type model
+        :type job_type: :class:`job.models.JobType`
+        :param configuration: The job execution configuration, including secret values
+        :type configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         """
 
-        self._id = job_exe.id
-        self._job_id = job_exe.job_id
-        self._job_type_id = job_exe.job.job_type_id
-        self._priority = job_exe.job.priority
-        self._node_id = job_exe.node_id
-        if hasattr(job_exe, 'docker_volumes'):
-            self._docker_volumes = job_exe.docker_volumes
-        else:
-            self._docker_volumes = []
+        # Public, read-only info
+        self.id = job_exe.id
+        self.cluster_id = job_exe.get_cluster_id()
+        self.job_id = job_exe.job_id
+        self.job_type_id = job_exe.job_type_id
+        self.node_id = job_exe.node_id
+        self.docker_volumes = configuration.get_named_docker_volumes()
 
+        # Internal task and status info
         self._lock = threading.Lock()  # Protects the following fields
         self._all_tasks = []
         self._current_task = None
@@ -52,6 +54,7 @@ class RunningJobExecution(object):
         self._status = 'RUNNING'
 
         # Create tasks
+        # TODO: follow configuration for task creation
         if not job_exe.is_system:
             self._all_tasks.append(PullTask(agent_id, job_exe))
             self._all_tasks.append(PreTask(agent_id, job_exe))
@@ -70,16 +73,6 @@ class RunningJobExecution(object):
         """
 
         return self._current_task
-
-    @property
-    def docker_volumes(self):
-        """Returns the names of the Docker volumes used by this job execution
-
-        :returns: The list of Docker volume names
-        :rtype: [string]
-        """
-
-        return self._docker_volumes
 
     @property
     def error_category(self):
@@ -104,56 +97,6 @@ class RunningJobExecution(object):
         return self._finished
 
     @property
-    def id(self):
-        """Returns the ID of this job execution
-
-        :returns: The ID of the job execution
-        :rtype: int
-        """
-
-        return self._id
-
-    @property
-    def job_id(self):
-        """Returns the job ID of this job execution
-
-        :returns: The job ID of the job execution
-        :rtype: int
-        """
-
-        return self._job_id
-
-    @property
-    def job_type_id(self):
-        """Returns the job type ID of this job execution
-
-        :returns: The job type ID of the job execution
-        :rtype: int
-        """
-
-        return self._job_type_id
-
-    @property
-    def priority(self):
-        """The job execution's priority
-
-        :returns: The priority of the job execution
-        :rtype: int
-        """
-
-        return self._priority
-
-    @property
-    def node_id(self):
-        """Returns the ID of this job execution's node
-
-        :returns: The ID of the node
-        :rtype: int
-        """
-
-        return self._node_id
-
-    @property
     def status(self):
         """Returns the status of this job execution
 
@@ -173,7 +116,7 @@ class RunningJobExecution(object):
 
         # Saves this job execution's task info to the database
         with transaction.atomic():
-            job_exe = JobExecution.objects.get_locked_job_exe(self._id)
+            job_exe = JobExecution.objects.get_locked_job_exe(self.id)
             for task in self._all_tasks:
                 task.populate_job_exe_model(job_exe)
             job_exe.save()
@@ -195,7 +138,7 @@ class RunningJobExecution(object):
 
         error = Error.objects.get_builtin_error('node-lost')
         from queue.models import Queue
-        Queue.objects.handle_job_failure(self._id, when, self._all_tasks, error)
+        Queue.objects.handle_job_failure(self.id, when, self._all_tasks, error)
 
         with self._lock:
             self._current_task = None
@@ -218,7 +161,7 @@ class RunningJobExecution(object):
             error_name = 'launch-timeout'
         error = Error.objects.get_builtin_error(error_name)
         from queue.models import Queue
-        Queue.objects.handle_job_failure(self._id, when, self._all_tasks, error)
+        Queue.objects.handle_job_failure(self.id, when, self._all_tasks, error)
 
         with self._lock:
             self._current_task = None
@@ -337,18 +280,18 @@ class RunningJobExecution(object):
         with transaction.atomic():
             need_refresh = current_task.complete(task_update)
             if need_refresh and remaining_tasks:
-                job_exe = JobExecution.objects.get(id=self._id)
+                job_exe = JobExecution.objects.get(id=self.id)
                 for task in remaining_tasks:
                     task.refresh_cached_values(job_exe)
             if not remaining_tasks:
                 from queue.models import Queue
-                Queue.objects.handle_job_completion(self._id, when, self._all_tasks)
+                Queue.objects.handle_job_completion(self.id, when, self._all_tasks)
 
         with self._lock:
             if self._current_task and self._current_task.id == task_update.task_id:
                 self._current_task = None
                 if not self._remaining_tasks:
-                    self._set_finished_status('COMPLETED',when )
+                    self._set_finished_status('COMPLETED', when)
 
     @retry_database_query
     def _task_fail(self, task_update):
@@ -366,7 +309,7 @@ class RunningJobExecution(object):
         with transaction.atomic():
             error = current_task.determine_error(task_update)
             from queue.models import Queue
-            Queue.objects.handle_job_failure(self._id, when, self._all_tasks, error)
+            Queue.objects.handle_job_failure(self.id, when, self._all_tasks, error)
 
         with self._lock:
             self._current_task = None
