@@ -1254,20 +1254,6 @@ class JobExecution(models.Model):
 
     objects = JobExecutionManager()
 
-    @staticmethod
-    def parse_cluster_id(task_id):
-        """Parses and returns the cluster ID from the given task ID
-
-        :param task_id: The task ID
-        :type task_id: string
-        :returns: The cluster ID
-        :rtype: string
-        """
-
-        # Cluster ID is the first four segments
-        segments = task_id.split('_')
-        return '_'.join(segments[:4])
-
     def get_cluster_id(self):
         """Gets the cluster ID for the job execution
 
@@ -1281,33 +1267,6 @@ class JobExecution(models.Model):
 
         return self.cluster_id
 
-    def get_docker_image(self):
-        """Gets the Docker image for the job execution
-
-        :returns: The Docker image for the job execution
-        :rtype: string
-        """
-
-        return self.job.job_type.docker_image
-
-    def get_error_interface(self):
-        """Returns the error interface for this job execution
-
-        :returns: The error interface for this job execution
-        :rtype: :class:`job.configuration.interface.job_interface.ErrorInterface`
-        """
-
-        return self.job.job_type.get_error_interface()
-
-    def get_job_configuration(self):
-        """Returns the default job configuration for this job type
-
-        :returns: The default job configuration for this job type
-        :rtype: :class:`job.configuration.json.job.job_config.JobConfiguration`
-        """
-
-        return self.job.job_type.get_job_configuration()
-
     def get_execution_configuration(self):
         """Returns the execution configuration for this job
 
@@ -1316,63 +1275,6 @@ class JobExecution(models.Model):
         """
 
         return ExecutionConfiguration(self.configuration)
-
-    def get_job_environment(self):
-        """Returns the environment data for this job
-
-        :returns: The environment data for this job
-        :rtype: dict
-        """
-
-        return self.environment
-
-    def get_job_interface(self):
-        """Returns the job interface for executing this job
-
-        :returns: The interface for this job execution
-        :rtype: :class:`job.configuration.interface.job_interface.JobInterface`
-        """
-
-        return self.job.get_job_interface()
-
-    def get_job_results(self):
-        """Returns the results for this job execution
-
-        :returns: The results for this job execution
-        :rtype: :class:`job.configuration.results.job_results.JobResults`
-        """
-
-        return JobResults(self.results)
-
-    def get_job_task_id(self):
-        """Gets the job-task ID for this job execution. This call is only valid after the job execution has been
-        scheduled (is no longer queued).
-
-        :returns: The job-task ID for the job execution
-        :rtype: string
-
-        :raises :class:`util.exceptions.ScaleLogicBug`: If the job execution is still queued
-        """
-
-        return '%s_job' % self.get_cluster_id()
-
-    def get_job_type_name(self):
-        """Returns the name of this job's type
-
-        :returns: The name of this job's type
-        :rtype: string
-        """
-
-        return self.job.job_type.name
-
-    def get_job_type_version(self):
-        """Returns the version of this job's type
-
-        :returns: The version of this job's type
-        :rtype: string
-        """
-
-        return self.job.job_type.version
 
     def get_log_json(self, include_stdout=True, include_stderr=True, since=None):
         """Get log data from elasticsearch as a dict (from the raw JSON).
@@ -1446,51 +1348,6 @@ class JobExecution(models.Model):
             return d, last_modified
         return '\n'.join(h['_source']['message'] for h in valid_hits), last_modified
 
-    def get_post_task_id(self):
-        """Gets the post-task ID for this job execution. This call is only valid after the job execution has been
-        scheduled (is no longer queued) and if this is not a system job type.
-
-        :returns: The post-task ID for the job execution
-        :rtype: string
-
-        :raises :class:`util.exceptions.ScaleLogicBug`: If the job execution is still queued or is a system job type
-        """
-
-        if self.is_system:
-            raise ScaleLogicBug('System jobs do not have a post-task')
-
-        return '%s_post' % self.get_cluster_id()
-
-    def get_pre_task_id(self):
-        """Gets the pre-task ID for this job execution. This call is only valid after the job execution has been
-        scheduled (is no longer queued) and if this is not a system job type.
-
-        :returns: The pre-task ID for the job execution
-        :rtype: string
-
-        :raises :class:`util.exceptions.ScaleLogicBug`: If the job execution is still queued or is a system job type
-        """
-
-        if self.is_system:
-            raise ScaleLogicBug('System jobs do not have a pre-task')
-
-        return '%s_pre' % self.get_cluster_id()
-
-    def get_pull_task_id(self):
-        """Gets the pull-task ID for this job execution. This call is only valid after the job execution has been
-        scheduled (is no longer queued) and if this is not a system job type.
-
-        :returns: The pull-task ID for the job execution
-        :rtype: string
-
-        :raises :class:`util.exceptions.ScaleLogicBug`: If the job execution is still queued or is a system job type
-        """
-
-        if self.is_system:
-            raise ScaleLogicBug('System jobs do not have a pull-task')
-
-        return '%s_pull' % self.get_cluster_id()
-
     def get_resources(self):
         """Returns the resources allocated to this job execution
 
@@ -1500,33 +1357,19 @@ class JobExecution(models.Model):
 
         return Resources(self.resources).get_node_resources()
 
-    def is_docker_privileged(self):
-        """Indicates whether this job execution uses Docker in privileged mode
+    @staticmethod
+    def parse_cluster_id(task_id):
+        """Parses and returns the cluster ID from the given task ID
 
-        :returns: True if this job execution uses Docker in privileged mode, False otherwise
-        :rtype: bool
+        :param task_id: The task ID
+        :type task_id: string
+        :returns: The cluster ID
+        :rtype: string
         """
 
-        return self.job.job_type.docker_privileged
-
-    @property
-    def is_finished(self):
-        """Indicates if this job execution has completed (success or failure)
-
-        :returns: True if the job execution is in an final state, False otherwise
-        :rtype: bool
-        """
-        return self.status in ['FAILED', 'COMPLETED', 'CANCELED']
-
-    @property
-    def is_system(self):
-        """Indicates whether this job execution is for a system job
-
-        :returns: True if this job execution is for a system job, False otherwise
-        :rtype: bool
-        """
-
-        return self.job.job_type.is_system
+        # Cluster ID is the first four segments
+        segments = task_id.split('_')
+        return '_'.join(segments[:4])
 
     def set_cluster_id(self, framework_id, job_id, exe_num):
         """Sets the unique cluster ID for this job execution
@@ -1540,15 +1383,6 @@ class JobExecution(models.Model):
         """
 
         self.cluster_id = '%s_%s_%dx%d' % (JOB_TASK_ID_PREFIX, framework_id, job_id, exe_num)
-
-    def uses_docker(self):
-        """Indicates whether this job execution uses Docker
-
-        :returns: True if this job execution uses Docker, False otherwise
-        :rtype: bool
-        """
-
-        return self.job.job_type.uses_docker
 
     class Meta(object):
         """Meta information for the database"""
