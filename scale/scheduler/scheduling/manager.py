@@ -5,11 +5,15 @@ from __future__ import unicode_literals
 import datetime
 import logging
 
+from django.db import transaction
 from django.db.utils import DatabaseError
 from django.utils.timezone import now
 from mesos.interface import mesos_pb2
 
+from job.configuration.configurators import ScheduledExecutionConfigurator
+from job.execution.job_exe import RunningJobExecution
 from job.execution.manager import job_exe_mgr
+from job.models import JobExecution
 from job.tasks.manager import task_mgr
 from mesos_api.tasks import create_mesos_task
 from node.resources.node_resources import NodeResources
@@ -286,11 +290,11 @@ class SchedulingManager(object):
         :type job_type_limits: dict
         :param job_type_resources: The list of all of the job type resource requirements
         :type job_type_resources: list
-        :returns: The list of queued job executions that were scheduled on nodes
+        :returns: The list of queued job executions that were scheduled
         :rtype: list
         """
 
-        queued_job_executions = []
+        scheduled_job_executions = []
         ignore_job_type_ids = self._calculate_job_types_to_ignore(job_types, job_type_limits)
         started = now()
 
@@ -307,7 +311,7 @@ class SchedulingManager(object):
             # Try to schedule job execution and adjust job type limit if needed
             job_exe = QueuedJobExecution(queue)
             if self._schedule_new_job_exe(job_exe, nodes, job_type_resources):
-                queued_job_executions.append(job_exe)
+                scheduled_job_executions.append(job_exe)
                 if job_type_id in job_type_limits:
                     job_type_limits[job_type_id] -= 1
 
@@ -318,7 +322,74 @@ class SchedulingManager(object):
         else:
             logger.debug(msg, duration.total_seconds())
 
-        return queued_job_executions
+        return scheduled_job_executions
+
+    @retry_database_query(max_tries=5, base_ms_delay=1000, max_ms_delay=5000)
+    def _process_scheduled_job_executions(self, framework_id, queued_job_executions, job_types, workspaces):
+        """Processes the given queued job executions that have been scheduled and returns the new running job
+        executions. All database updates occur in an atomic transaction.
+
+        :param framework_id: The scheduling framework ID
+        :type framework_id: string
+        :param queued_job_executions: A list of queued job executions that have been scheduled
+        :type queued_job_executions: list
+        :param job_types: A dict of all job types stored by ID
+        :type job_types: dict
+        :param workspaces: A dict of all workspaces stored by name
+        :type workspaces: dict
+        :returns: The running job executions stored in lists by node ID
+        :rtype: dict
+        """
+
+        started = now()
+        running_job_exes = {}
+        configurator = ScheduledExecutionConfigurator(workspaces)
+
+        with transaction.atomic():
+            # TODO: store canceled job_exes in separate dict
+            # Bulk create all of the job execution models
+            job_exe_models = []
+            scheduled_models = {}  # {queue ID: (job_exe model, config)}
+            for queued_job_exe in queued_job_executions:
+                job_exe_model = queued_job_exe.create_job_exe_model(framework_id, started)
+                job_exe_models.append(job_exe_model)
+                job_type = job_types[job_exe_model.job_type_id]
+                # The configuration stored in the job_exe model has been censored so it is safe to save in database
+                # The returned configuration may contain secrets and should be passed to running job_exe for use
+                config = configurator.configure_scheduled_job(job_exe_model, job_type, queued_job_exe.interface)
+                scheduled_models[queued_job_exe.id] = (job_exe_model, config)
+            JobExecution.objects.bulk_create(job_exe_models)
+
+            # TODO: create job_exe_end models for canceled ones
+            # Create running job executions and store by node ID
+            queue_ids = []
+            for queued_job_exe in queued_job_executions:
+                queue_ids.append(queued_job_exe.id)
+                if queued_job_exe.id in scheduled_models:
+                    agent_id = queued_job_exe.scheduled_agent_id
+                    job_exe = scheduled_models[queued_job_exe.id][0]
+                    job_type = job_types[job_exe.job_type_id]
+                    config = scheduled_models[queued_job_exe.id][0]  # May contain secrets!
+                    running_job_exe = RunningJobExecution(agent_id, job_exe, job_type, config)
+                    if running_job_exe.node_id in running_job_exes:
+                        running_job_exes[running_job_exe.node_id].append(running_job_exe)
+                    else:
+                        running_job_exes[running_job_exe.node_id] = [running_job_exe]
+
+            # Update scheduled jobs to RUNNING status
+            # TODO: implement
+
+            # Delete queue models
+            Queue.objects.filter(id__in=queue_ids)
+
+        duration = now() - started
+        msg = 'Queries to process scheduled jobs took %.3f seconds'
+        if duration > SCHEDULE_QUERY_WARN_THRESHOLD:
+            logger.warning(msg, duration.total_seconds())
+        else:
+            logger.debug(msg, duration.total_seconds())
+
+        return running_job_exes
 
     def _schedule_new_job_exe(self, job_exe, nodes, job_type_resources):
         """Schedules the given job execution on the queue on one of the available nodes, if possible
@@ -396,20 +467,20 @@ class SchedulingManager(object):
                 available_nodes[node.node_id] = node
 
         try:
-            queued_job_exes = self._process_queue(available_nodes, job_types, job_type_limits, job_type_resources)
-            scheduled_job_exes = self._schedule_new_job_exes_in_database(framework_id, queued_job_exes, workspaces)
-            all_scheduled_job_exes = []
-            for node_id in scheduled_job_exes:
-                all_scheduled_job_exes.extend(scheduled_job_exes[node_id])
-            job_exe_mgr.schedule_job_exes(all_scheduled_job_exes)
+            scheduled_job_exes = self._process_queue(available_nodes, job_types, job_type_limits, job_type_resources)
+            running_job_exes = self._process_scheduled_job_executions(framework_id, scheduled_job_exes, workspaces)
+            all_running_job_exes = []
+            for node_id in running_job_exes:
+                all_running_job_exes.extend(running_job_exes[node_id])
+            job_exe_mgr.schedule_job_exes(all_running_job_exes)
             node_ids = set()
             job_exe_count = 0
             scheduled_resources = NodeResources()
-            for node_id in scheduled_job_exes:
+            for node_id in running_job_exes:
                 if node_id in nodes:
-                    nodes[node_id].add_scheduled_job_exes(scheduled_job_exes[node_id])
-                    for scheduled_job_exe in scheduled_job_exes[node_id]:
-                        first_task = scheduled_job_exe.next_task()
+                    nodes[node_id].add_scheduled_job_exes(running_job_exes[node_id])
+                    for running_job_exe in running_job_exes[node_id]:
+                        first_task = running_job_exe.next_task()
                         if first_task:
                             node_ids.add(node_id)
                             scheduled_resources.add(first_task.get_resources())
@@ -426,38 +497,6 @@ class SchedulingManager(object):
                 node.reset_new_job_exes()
 
         return job_exe_count
-
-    @retry_database_query(max_tries=5, base_ms_delay=1000, max_ms_delay=5000)
-    def _schedule_new_job_exes_in_database(self, framework_id, job_executions, workspaces):
-        """Schedules the given job executions in the database
-
-        :param framework_id: The scheduling framework ID
-        :type framework_id: string
-        :param job_executions: A list of queued job executions that have been given nodes and resources on which to run
-        :type job_executions: list
-        :param workspaces: A dict of all workspaces stored by name
-        :type workspaces: dict
-        :returns: The scheduled job executions stored by node ID
-        :rtype: dict
-        """
-
-        started = now()
-
-        scheduled_job_executions = {}
-        for scheduled_job_execution in Queue.objects.schedule_job_executions(framework_id, job_executions, workspaces):
-            if scheduled_job_execution.node_id in scheduled_job_executions:
-                scheduled_job_executions[scheduled_job_execution.node_id].append(scheduled_job_execution)
-            else:
-                scheduled_job_executions[scheduled_job_execution.node_id] = [scheduled_job_execution]
-
-        duration = now() - started
-        msg = 'Query to schedule jobs took %.3f seconds'
-        if duration > SCHEDULE_QUERY_WARN_THRESHOLD:
-            logger.warning(msg, duration.total_seconds())
-        else:
-            logger.debug(msg, duration.total_seconds())
-
-        return scheduled_job_executions
 
     def _schedule_waiting_tasks(self, nodes, running_job_exes, when):
         """Schedules all waiting tasks for which there are sufficient resources and updates the resource manager with

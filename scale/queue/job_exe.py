@@ -19,9 +19,9 @@ class QueuedJobExecution(object):
         self.is_canceled = queue.is_canceled
         self.interface = queue.get_job_interface()
         self.required_resources = queue.get_resources()
+        self.scheduled_agent_id = None
 
         self._queue = queue
-        self._scheduled_agent_id = None
         self._scheduled_node_id = None
         self._scheduled_resources = None
 
@@ -70,6 +70,6 @@ class QueuedJobExecution(object):
         :type resources: :class:`node.resources.node_resources.NodeResources`
         """
 
-        self._scheduled_agent_id = agent_id
+        self.scheduled_agent_id = agent_id
         self._scheduled_node_id = node_id
         self._scheduled_resources = resources
