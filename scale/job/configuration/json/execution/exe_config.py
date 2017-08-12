@@ -469,9 +469,9 @@ class ExecutionConfiguration(object):
         return None
 
     def get_task_types(self):
-        """Returns all task types in the configuration
+        """Returns all task types in the configuration in order
 
-        :returns: The list of task types
+        :returns: The ordered list of task types
         :rtype: list
         """
 

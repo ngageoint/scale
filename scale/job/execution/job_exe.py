@@ -8,7 +8,7 @@ from django.db import transaction
 from django.utils.timezone import now
 
 from error.models import Error
-from job.execution.tasks.job_task import JobTask
+from job.execution.tasks.main_task import MainTask
 from job.execution.tasks.post_task import PostTask
 from job.execution.tasks.pre_task import PreTask
 from job.execution.tasks.pull_task import PullTask
@@ -54,13 +54,17 @@ class RunningJobExecution(object):
         self._status = 'RUNNING'
 
         # Create tasks
-        # TODO: follow configuration for task creation
-        if not job_exe.is_system:
-            self._all_tasks.append(PullTask(agent_id, job_exe))
-            self._all_tasks.append(PreTask(agent_id, job_exe))
-        self._all_tasks.append(JobTask(agent_id, job_exe))
-        if not job_exe.is_system:
-            self._all_tasks.append(PostTask(agent_id, job_exe))
+        for task_type in configuration.get_task_types():
+            task = None
+            if task_type == 'pull':
+                task = PullTask(agent_id, job_exe, job_type, configuration)
+            elif task_type == 'pre':
+                task = PreTask(agent_id, job_exe, job_type, configuration)
+            elif task_type == 'main':
+                task = MainTask(agent_id, job_exe, job_type, configuration)
+            elif task_type == 'post':
+                task = PostTask(agent_id, job_exe, job_type, configuration)
+            self._all_tasks.append(task)
         for task in self._all_tasks:
             self._remaining_tasks.append(task)
 

@@ -5,50 +5,56 @@ import datetime
 
 from error.exceptions import get_error_by_exit_code
 from job.execution.tasks.exe_task import JobExecutionTask
-from node.resources.node_resources import NodeResources
-from node.resources.resource import Disk
+
 
 JOB_TYPE_TIMEOUT_ERRORS = {}  # {Job type name: error name}
 
 
-class JobTask(JobExecutionTask):
-    """Represents a job execution job task (runs the actual job/algorithm). This class is thread-safe.
+class MainTask(JobExecutionTask):
+    """Represents a job execution main task (runs the actual job/algorithm). This class is thread-safe.
     """
 
-    def __init__(self, agent_id, job_exe):
+    def __init__(self, agent_id, job_exe, job_type, configuration):
         """Constructor
 
-        :param agent_id: The ID of the agent on which the task is launched
+        :param agent_id: The ID of the agent on which the execution is running
         :type agent_id: string
-        :param job_exe: The job execution, which must be in RUNNING status and have its related node, job, and job_type
-        models populated
+        :param job_exe: The job execution model, related fields will only have IDs populated
         :type job_exe: :class:`job.models.JobExecution`
+        :param job_type: The job type model
+        :type job_type: :class:`job.models.JobType`
+        :param configuration: The job execution configuration, including secret values
+        :type configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         """
 
-        super(JobTask, self).__init__(job_exe.get_job_task_id(), agent_id, job_exe)
+        super(MainTask, self).__init__(configuration.get_task_id('main'), agent_id, job_exe, job_type)
 
-        self._is_system = job_exe.job.job_type.is_system
-        self._uses_docker = job_exe.uses_docker()
+        # Set base task fields
+        self._is_system = job_type.is_system
+        self._uses_docker = job_type.uses_docker
         if self._uses_docker:
             if self._is_system:
                 self._docker_image = self._create_scale_image_name()
             else:
-                self._docker_image = job_exe.get_docker_image()
-            self._docker_params = job_exe.get_execution_configuration().get_job_task_docker_params()
-            self._is_docker_privileged = job_exe.is_docker_privileged()
-        self._command = job_exe.get_job_interface().get_command()
-        self._command_arguments = job_exe.command_arguments
-        if job_exe.job.job_type.is_long_running:
+                self._docker_image = job_type.docker_image
+            self._docker_params = configuration.get_docker_params('main')
+            self._is_docker_privileged = job_type.is_docker_privileged
+        self._command_arguments = configuration.get_args('main')
+        if job_type.is_long_running:
             self._running_timeout_threshold = None
         else:
             self._running_timeout_threshold = datetime.timedelta(seconds=job_exe.timeout)
 
+        # Set job execution task fields
         # Determine error to use if this task times out
-        job_type_name = job_exe.job.job_type.name
-        if job_type_name in JOB_TYPE_TIMEOUT_ERRORS:
-            self.timeout_error_name = JOB_TYPE_TIMEOUT_ERRORS[job_type_name]
+        if job_type.name in JOB_TYPE_TIMEOUT_ERRORS:
+            self.timeout_error_name = JOB_TYPE_TIMEOUT_ERRORS[job_type.name]
         else:
             self.timeout_error_name = 'system-timeout' if self._is_system else 'timeout'
+
+        # Private fields for this class
+        self._error_mapping = job_type.get_error_interface()
+        self._resources = configuration.get_resources('main')
 
     def determine_error(self, task_update):
         """See :meth:`job.execution.tasks.exe_task.JobExecutionTask.determine_error`
@@ -78,11 +84,7 @@ class JobTask(JobExecutionTask):
         """See :meth:`job.tasks.base_task.Task.get_resources`
         """
 
-        with self._lock:
-            # Input files have already been written, only disk space for output files is required
-            resources_without_input_files = self._resources.copy()
-            resources_without_input_files.subtract(NodeResources([Disk(self._input_file_size)]))
-            return resources_without_input_files
+        return self._resources
 
     def populate_job_exe_model(self, job_exe):
         """See :meth:`job.execution.tasks.exe_task.JobExecutionTask.populate_job_exe_model`
