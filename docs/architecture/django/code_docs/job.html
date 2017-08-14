@@ -3295,6 +3295,22 @@ stderr/stdout expression to an error type</p>
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="job.models.JobType.get_secrets_key">
+<code class="descname">get_secrets_key</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobType.get_secrets_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the reference key for job type secrets stored in the secrets backend.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The job_type name and version concatenated</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="job.models.JobType.icon_code">
 <code class="descname">icon_code</code><a class="headerlink" href="#job.models.JobType.icon_code" title="Permalink to this definition">¶</a></dt>
@@ -3879,14 +3895,14 @@ count of associated jobs and the longest running job.</p>
 
 <dl class="method">
 <dt id="job.models.JobTypeManager.set_job_type_secrets">
-<code class="descname">set_job_type_secrets</code><span class="sig-paren">(</span><em>job_type_id</em>, <em>secrets</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeManager.set_job_type_secrets" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_job_type_secrets</code><span class="sig-paren">(</span><em>secrets_key</em>, <em>secrets</em><span class="sig-paren">)</span><a class="headerlink" href="#job.models.JobTypeManager.set_job_type_secrets" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sends request to SecretsHandler to write secrets for a job type.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>job_type_id</strong> (<em>int</em>) &#8211; The ID of the job type</li>
+<li><strong>secrets_key</strong> (<em>str</em>) &#8211; Reference pointer for job_type settings stored in secrets backend</li>
 <li><strong>secrets</strong> (<em>dict</em>) &#8211; Secret settings required by this job type.</li>
 </ul>
 </td>
