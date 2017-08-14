@@ -144,12 +144,12 @@ class RunningJobExecution(object):
 
         with self._lock:
             task = self._current_task
-            self._finish_execution('CANCELED', now())
+            self._set_final_status('CANCELED', now())
             return task
 
     @retry_database_query
     def execution_lost(self, when):
-        """Fails this job execution for its node becoming lost and returns the current task
+        """Fails this job execution for its node becoming lost
 
         :param when: The time that the node was lost
         :type when: :class:`datetime.datetime`
@@ -161,8 +161,7 @@ class RunningJobExecution(object):
 
         with self._lock:
             self._current_task = None
-            self._remaining_tasks = []
-            self._set_finished_status('FAILED', when, error)
+            self._set_final_status('FAILED', when, error)
 
     @retry_database_query
     def execution_timed_out(self, task, when):
@@ -183,9 +182,7 @@ class RunningJobExecution(object):
         Queue.objects.handle_job_failure(self.id, when, self._all_tasks, error)
 
         with self._lock:
-            self._current_task = None
-            self._remaining_tasks = []
-            self._set_finished_status('FAILED', when, error)
+            self._set_final_status('FAILED', when, error)
 
     def get_container_names(self):
         """Returns the list of container names for all tasks in this job execution
@@ -264,8 +261,9 @@ class RunningJobExecution(object):
         elif task_update.status in [TaskStatusUpdate.FAILED, TaskStatusUpdate.KILLED]:
             self._task_fail(task_update)
 
-    def _finish_execution(self, status, when, error=None):
-        """Sets the finished status for this job execution. Caller must have obtained lock.
+    def _set_final_status(self, status, when, error=None):
+        """Sets the final status for this job execution and removes all remaining tasks. The current task remains since
+        it may need to be killed. Caller must have obtained lock.
 
         :param status: The status
         :type status: string
@@ -276,7 +274,6 @@ class RunningJobExecution(object):
         """
 
         if self._status == 'RUNNING':
-            self._current_task = None
             self._remaining_tasks = []
             self._status = status
             self._finished = when
