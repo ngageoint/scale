@@ -180,7 +180,8 @@ class JobExecutionManager(object):
                         # occurs after the task is dead.
                         canceled_tasks.append(task)
                     else:
-                        self._handle_finished_job_exe(canceled_job_exe)
+                        if canceled_job_exe.is_finished():
+                            self._handle_finished_job_exe(canceled_job_exe)
 
         return canceled_tasks
 
