@@ -877,30 +877,3 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
         self.assertEqual(job_b_2.status, 'BLOCKED')
         job_b_3 = Job.objects.get(id=self.job_b_3.id)
         self.assertEqual(job_b_3.status, 'BLOCKED')
-
-
-class TestQueueManagerScheduleJobExecutions(TransactionTestCase):
-
-    def setUp(self):
-        django.setup()
-
-        self.node = node_test_utils.create_node()
-        self.job_type_1 = job_test_utils.create_job_type()
-        # job_exe_2 has an invalid JSON and will not schedule correctly
-        self.job_type_2 = job_test_utils.create_job_type(configuration={'INVALID': 'SCHEMA'})
-        self.queue_1 = queue_test_utils.create_queue(job_type=self.job_type_1)
-        self.queue_2 = queue_test_utils.create_queue(job_type=self.job_type_2)
-
-    def test_successful(self):
-        """Tests calling QueueManager.schedule_job_executions() successfully."""
-
-        queued_job_exe_1 = QueuedJobExecution(self.queue_1)
-        queued_job_exe_1.scheduled('agent', self.node.id, Resources(self.queue_1.resources).get_node_resources())
-        queued_job_exe_2 = QueuedJobExecution(self.queue_2)
-        queued_job_exe_2.scheduled('agent', self.node.id, Resources(self.queue_2.resources).get_node_resources())
-
-        # TODO: make a new test after this method is reworked
-        scheduled_job_exes = Queue.objects.schedule_job_executions('framework-123',
-                                                                   [queued_job_exe_1, queued_job_exe_2], {})
-        # Only job_exe_1 should have scheduled since job_exe_2 has an invalid job type configuration JSON
-        self.assertEqual(len(scheduled_job_exes), 1)

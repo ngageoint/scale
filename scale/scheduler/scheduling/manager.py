@@ -13,7 +13,7 @@ from mesos.interface import mesos_pb2
 from job.configuration.configurators import ScheduledExecutionConfigurator
 from job.execution.job_exe import RunningJobExecution
 from job.execution.manager import job_exe_mgr
-from job.models import JobExecution
+from job.models import Job, JobExecution
 from job.tasks.manager import task_mgr
 from mesos_api.tasks import create_mesos_task
 from node.resources.node_resources import NodeResources
@@ -347,7 +347,7 @@ class SchedulingManager(object):
 
         with transaction.atomic():
             # TODO: store canceled job_exes in separate dict
-            # Bulk create all of the job execution models
+            # Bulk create the job execution models
             job_exe_models = []
             scheduled_models = {}  # {queue ID: (job_exe model, config)}
             for queued_job_exe in queued_job_executions:
@@ -362,6 +362,7 @@ class SchedulingManager(object):
 
             # TODO: create job_exe_end models for canceled ones
             # Create running job executions and store by node ID
+            job_exe_nums = {}
             queue_ids = []
             for queued_job_exe in queued_job_executions:
                 queue_ids.append(queued_job_exe.id)
@@ -369,18 +370,19 @@ class SchedulingManager(object):
                     agent_id = queued_job_exe.scheduled_agent_id
                     job_exe = scheduled_models[queued_job_exe.id][0]
                     job_type = job_types[job_exe.job_type_id]
-                    config = scheduled_models[queued_job_exe.id][0]  # May contain secrets!
+                    config = scheduled_models[queued_job_exe.id][1]  # May contain secrets!
                     running_job_exe = RunningJobExecution(agent_id, job_exe, job_type, config)
+                    job_exe_nums[running_job_exe.job_id] = running_job_exe.exe_num
                     if running_job_exe.node_id in running_job_exes:
                         running_job_exes[running_job_exe.node_id].append(running_job_exe)
                     else:
                         running_job_exes[running_job_exe.node_id] = [running_job_exe]
 
             # Update scheduled jobs to RUNNING status
-            # TODO: implement
+            Job.objects.update_jobs_to_running(job_exe_nums, started)
 
             # Delete queue models
-            Queue.objects.filter(id__in=queue_ids)
+            Queue.objects.filter(id__in=queue_ids).delete()
 
         duration = now() - started
         msg = 'Queries to process scheduled jobs took %.3f seconds'

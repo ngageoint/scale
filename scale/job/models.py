@@ -319,6 +319,7 @@ class JobManager(models.Manager):
                              job_type_names=job_type_names, job_type_categories=job_type_categories,
                              include_superseded=include_superseded, order=order)
 
+    # TODO: might be able to remove this
     def get_locked_job(self, job_id):
         """Gets the job model with the given ID with a model lock obtained and related job_type and job_type_rev models
 
@@ -328,9 +329,22 @@ class JobManager(models.Manager):
         :rtype: :class:`job.models.Job`
         """
 
-        return self.get_locked_jobs([job_id])[0]
+        return self.get_locked_jobs_with_related([job_id])[0]
 
     def get_locked_jobs(self, job_ids):
+        """Locks and returns the job models for the given IDs with no related fields. Caller must be within an atomic
+        transaction.
+
+        :param job_ids: The job IDs
+        :type job_ids: list
+        :returns: The job models
+        :rtype: list
+        """
+
+        # Job models are always locked in order of ascending ID to prevent deadlocks
+        return list(self.select_for_update().filter(id__in=job_ids).order_by('id').iterator())
+
+    def get_locked_jobs_with_related(self, job_ids):
         """Gets the job models for the given IDs with model locks obtained and related job_type and job_type_rev models
 
         :param job_ids: The job IDs
@@ -373,7 +387,7 @@ class JobManager(models.Manager):
         # Dummy list is used here to force query execution
         # Unfortunately this query can't usually be combined with other queries since using select_related() with
         # select_for_update() will cause the related fields to be locked as well. This requires 2 passes, such as the
-        # two queries in get_locked_jobs().
+        # two queries in get_locked_jobs_with_related().
         list(self.select_for_update().filter(id__in=job_ids).order_by('id').iterator())
 
     def queue_jobs(self, jobs, when, priority=None):
@@ -541,6 +555,31 @@ class JobManager(models.Manager):
         # Cancel any jobs that are PENDING or BLOCKED
         if jobs_to_cancel:
             self.update_status(jobs_to_cancel, 'CANCELED', when)
+
+    @transaction.atomic
+    def update_jobs_to_running(self, jobs, when):
+        """Updates the given jobs to the RUNNING status. The number of each job's running execution is provided to
+        resolve race conditions. All database updates occur in an atomic transaction.
+
+        :param jobs: A dict where each job ID maps to its running execution number
+        :type jobs: dict
+        :param when: The start time
+        :type when: :class:`datetime.datetime`
+        """
+
+        job_ids_to_update = []
+        for locked_job in self.get_locked_jobs(jobs.keys()):
+            exe_num = jobs[locked_job.exe_num]
+            # Only update models that are still in QUEUED and have the same execution number (otherwise this update is
+            # obsolete)
+            if locked_job.exe_num.status == 'QUEUED' and locked_job.exe_num == exe_num:
+                job_ids_to_update.append(locked_job.id)
+
+        if job_ids_to_update:
+            modified = timezone.now()
+            # Update job models in database
+            self.filter(id__in=job_ids_to_update).update(status='RUNNING', last_status_change=when, started=when,
+                                                         last_modified=modified)
 
     def update_status(self, jobs, status, when, error=None):
         """Updates the given jobs with the new status. The caller must have obtained model locks on the job models.
@@ -1055,85 +1094,6 @@ class JobExecutionManager(models.Manager):
         # Create job executions and re-query to get ID fields
         self.bulk_create(job_exes)
         return list(self.filter(job_id__in=job_ids, status='QUEUED').iterator())
-
-    @transaction.atomic
-    def schedule_job_executions(self, framework_id, job_executions, workspaces):
-        """Schedules the given job executions. The caller must have obtained a model lock on the given job_exe models.
-        Any job_exe models that are not in the QUEUED status will be ignored. All of the job_exe and job model changes
-        will be saved in the database in an atomic transaction. The updated job_exe models are returned with their
-        related job, job_type, job_type_rev and node_id models populated.
-
-        :param framework_id: The scheduling framework ID
-        :type framework_id: string
-        :param job_executions: A list of tuples where each tuple contains the job_exe model to schedule, the node ID to
-            schedule it on, the resources it will be given, the input file size, and the agent ID
-        :type job_executions: [(:class:`job.models.JobExecution`, int,
-            :class:`node.resources.node_resources.NodeResources`, int, string)]
-        :param workspaces: A dict of all workspaces stored by name
-        :type workspaces: {string: :class:`storage.models.Workspace`}
-        :returns: The scheduled job_exe models with related job, job_type, job_type_rev and node models populated
-        :rtype: [:class:`job.models.JobExecution`]
-        """
-
-        started = timezone.now()
-        job_ids = []
-        for job_execution in job_executions:
-            job_exe = job_execution[0]
-            if job_exe.status == 'QUEUED':
-                job_ids.append(job_exe.job_id)
-
-        # Lock corresponding jobs
-        jobs = {}
-        for job in Job.objects.get_locked_jobs(job_ids):
-            jobs[job.id] = job
-
-        # Update each job execution
-        job_exes = []
-        jobs_to_running = []
-        for job_execution in job_executions:
-            try:
-                job_exe = job_execution[0]
-                node_id = job_execution[1]
-                resources = job_execution[2]
-                input_file_size = job_execution[3]
-                agent_id = job_execution[4]
-
-                if job_exe.status != 'QUEUED':
-                    continue
-                if node_id is None:
-                    raise Exception('Cannot schedule job execution %i without node ID' % job_exe.id)
-                if resources is None:
-                    raise Exception('Cannot schedule job execution %i without resources' % job_exe.id)
-
-                # Add configuration values for the settings to the command line.
-                interface = job_exe.get_job_interface()
-                job_exe.command_arguments = interface.populate_command_argument_settings(job_exe.command_arguments,
-                                                                                job_exe.get_execution_configuration(),
-                                                                                job_exe.job.job_type)
-
-                job_exe.job = jobs[job_exe.job_id]
-                job_exe.set_cluster_id(framework_id)
-                job_exe.status = 'RUNNING'
-                job_exe.started = started
-                job_exe.node_id = node_id
-                job_exe.environment = {}
-                job_exe.resources = resources.get_json().get_dict()
-                job_exe.cpus_scheduled = resources.cpus
-                job_exe.mem_scheduled = resources.mem
-                job_exe.disk_in_scheduled = input_file_size
-                job_exe.disk_out_scheduled = resources.disk - input_file_size
-                job_exe.disk_total_scheduled = resources.disk
-                job_exe.save()
-                job_exe.agent_id = agent_id
-                job_exes.append(job_exe)
-                jobs_to_running.append(job_exe.job)
-            except Exception:
-                logger.exception('Critical error trying to schedule job_exe %d' % job_execution[0].id)
-
-        # Set jobs of successfully scheduled executions to RUNNING
-        Job.objects.update_status(jobs_to_running, 'RUNNING', started)
-
-        return job_exes
 
     def update_status(self, job_exes, status, when, error=None):
         """Updates the given job executions and jobs with the new status. The caller must have obtained model locks on

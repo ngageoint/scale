@@ -586,7 +586,7 @@ class QueueManager(models.Manager):
         :type priority: int
         """
 
-        jobs_to_requeue = Job.objects.get_locked_jobs(job_ids)
+        jobs_to_requeue = Job.objects.get_locked_jobs_with_related(job_ids)
         all_valid_job_ids = []
         jobs_to_queue = []
         jobs_to_blocked = []
@@ -616,61 +616,6 @@ class QueueManager(models.Manager):
             jobs_to_pending.extend(handler.get_pending_jobs())
         if jobs_to_pending:
             Job.objects.update_status(jobs_to_pending, 'PENDING', when)
-
-    @transaction.atomic
-    def schedule_job_executions(self, framework_id, job_executions, workspaces):
-        """Schedules the given queued job executions on the provided nodes and resources. The corresponding queue models will
-        be deleted from the database. All database changes occur in an atomic transaction.
-
-        :param framework_id: The scheduling framework ID
-        :type framework_id: string
-        :param job_executions: A list of queued job executions that have been given nodes and resources on which to run
-        :type job_executions: list[:class:`queue.job_exe.QueuedJobExecution`]
-        :param workspaces: A dict of all workspaces stored by name
-        :type workspaces: {string: :class:`storage.models.Workspace`}
-        :returns: The scheduled job executions
-        :rtype: list[:class:`job.execution.job_exe.RunningJobExecution`]
-        """
-
-        if not job_executions:
-            return []
-
-        job_exe_ids = []
-        for job_execution in job_executions:
-            job_exe_ids.append(job_execution.id)
-
-        # Lock corresponding job executions
-        job_exes = {}
-        for job_exe in JobExecution.objects.select_for_update().filter(id__in=job_exe_ids).order_by('id'):
-            job_exes[job_exe.id] = job_exe
-
-        # Set up job executions to schedule
-        executions_to_schedule = []
-        for job_execution in job_executions:
-            node_id = job_execution.provided_node_id
-            agent_id = job_execution.provided_agent_id
-            resources = job_execution.provided_resources
-            input_file_size = job_execution.input_file_size
-            job_exe = job_exes[job_execution.id]
-
-            # Ignore executions that are no longer queued (executions may have been changed since queue model was last
-            # queried)
-            if job_exe.status != 'QUEUED':
-                continue
-
-            executions_to_schedule.append((job_exe, node_id, resources, input_file_size, agent_id))
-
-        # Schedule job executions
-        scheduled_job_exes = []
-        job_exe_ids_scheduled = []
-        for job_exe in JobExecution.objects.schedule_job_executions(framework_id, executions_to_schedule, workspaces):
-            scheduled_job_exes.append(RunningJobExecution(job_exe.agent_id, job_exe))
-            job_exe_ids_scheduled.append(job_exe.id)
-
-        # Clear the scheduled job executions from the queue
-        Queue.objects.filter(job_exe_id__in=job_exe_ids_scheduled).delete()
-
-        return scheduled_job_exes
 
     def _queue_jobs(self, jobs, input_files=None, priority=None):
         """Queues the given jobs. The caller must have obtained model locks on the job models in an atomic transaction.

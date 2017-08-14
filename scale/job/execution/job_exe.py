@@ -40,6 +40,7 @@ class RunningJobExecution(object):
         self.id = job_exe.id
         self.cluster_id = job_exe.get_cluster_id()
         self.job_id = job_exe.job_id
+        self.exe_num = job_exe.exe_num
         self.job_type_id = job_exe.job_type_id
         self.node_id = job_exe.node_id
         self.docker_volumes = configuration.get_named_docker_volumes()
