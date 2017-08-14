@@ -1214,6 +1214,24 @@ class JobExecution(models.Model):
 
     objects = JobExecutionManager()
 
+    def create_canceled_job_exe_end_model(self):
+        """Creates and returns a canceled job execution end for this job execution
+
+        :returns: The job execution end model
+        :rtype: :class:`job.models.JobExecutionEnd`
+        """
+
+        job_exe_end = JobExecutionEnd()
+        job_exe_end.job_exe_id = self.id
+        job_exe_end.job_id = self.job_id
+        job_exe_end.job_type = self.job_type_id
+        job_exe_end.exe_num = self.exe_num
+        job_exe_end.status = 'CANCELED'
+        job_exe_end.queued = self.queued
+        job_exe_end.started = self.started
+        job_exe_end.ended = self.started
+        return job_exe_end
+
     def get_cluster_id(self):
         """Gets the cluster ID for the job execution
 

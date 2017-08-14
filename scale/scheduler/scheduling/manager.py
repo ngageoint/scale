@@ -13,7 +13,7 @@ from mesos.interface import mesos_pb2
 from job.configuration.configurators import ScheduledExecutionConfigurator
 from job.execution.job_exe import RunningJobExecution
 from job.execution.manager import job_exe_mgr
-from job.models import Job, JobExecution
+from job.models import Job, JobExecution, JobExecutionEnd
 from job.tasks.manager import task_mgr
 from mesos_api.tasks import create_mesos_task
 from node.resources.node_resources import NodeResources
@@ -299,6 +299,13 @@ class SchedulingManager(object):
         started = now()
 
         for queue in Queue.objects.get_queue(scheduler_mgr.config.queue_mode, ignore_job_type_ids)[:QUEUE_LIMIT]:
+            job_exe = QueuedJobExecution(queue)
+
+            # Canceled job executions get processed as scheduled executions
+            if job_exe.is_canceled:
+                scheduled_job_executions.append(job_exe)
+                continue
+
             # If there are no longer any available nodes, break
             if not nodes:
                 break
@@ -309,7 +316,6 @@ class SchedulingManager(object):
                 continue
 
             # Try to schedule job execution and adjust job type limit if needed
-            job_exe = QueuedJobExecution(queue)
             if self._schedule_new_job_exe(job_exe, nodes, job_type_resources):
                 scheduled_job_executions.append(job_exe)
                 if job_type_id in job_type_limits:
@@ -346,32 +352,38 @@ class SchedulingManager(object):
         configurator = ScheduledExecutionConfigurator(workspaces)
 
         with transaction.atomic():
-            # TODO: store canceled job_exes in separate dict
             # Bulk create the job execution models
             job_exe_models = []
             scheduled_models = {}  # {queue ID: (job_exe model, config)}
+            canceled_models = {}  # {queue ID: job_exe model}
             for queued_job_exe in queued_job_executions:
                 job_exe_model = queued_job_exe.create_job_exe_model(framework_id, started)
                 job_exe_models.append(job_exe_model)
-                job_type = job_types[job_exe_model.job_type_id]
-                # The configuration stored in the job_exe model has been censored so it is safe to save in database
-                # The returned configuration may contain secrets and should be passed to running job_exe for use
-                config = configurator.configure_scheduled_job(job_exe_model, job_type, queued_job_exe.interface)
-                scheduled_models[queued_job_exe.id] = (job_exe_model, config)
+                if queued_job_exe.is_canceled:
+                    canceled_models[queued_job_exe.id] = job_exe_model
+                else:
+                    job_type = job_types[job_exe_model.job_type_id]
+                    # The configuration stored in the job_exe model has been censored so it is safe to save in database
+                    # The returned configuration may contain secrets and should be passed to running job_exe for use
+                    config = configurator.configure_scheduled_job(job_exe_model, job_type, queued_job_exe.interface)
+                    scheduled_models[queued_job_exe.id] = (job_exe_model, config)
             JobExecution.objects.bulk_create(job_exe_models)
 
-            # TODO: create job_exe_end models for canceled ones
-            # Create running job executions and store by node ID
-            job_exe_nums = {}
+            # Create running and canceled job executions
             queue_ids = []
+            job_exe_nums = {}
+            canceled_job_exe_end_models = []
             for queued_job_exe in queued_job_executions:
                 queue_ids.append(queued_job_exe.id)
-                if queued_job_exe.id in scheduled_models:
+                if queued_job_exe.is_canceled:
+                    job_exe_model = canceled_models[queued_job_exe.id]
+                    canceled_job_exe_end_models.append(job_exe_model.create_canceled_job_exe_end_model())
+                else:
                     agent_id = queued_job_exe.scheduled_agent_id
-                    job_exe = scheduled_models[queued_job_exe.id][0]
-                    job_type = job_types[job_exe.job_type_id]
+                    job_exe_model = scheduled_models[queued_job_exe.id][0]
+                    job_type = job_types[job_exe_model.job_type_id]
                     config = scheduled_models[queued_job_exe.id][1]  # May contain secrets!
-                    running_job_exe = RunningJobExecution(agent_id, job_exe, job_type, config)
+                    running_job_exe = RunningJobExecution(agent_id, job_exe_model, job_type, config)
                     job_exe_nums[running_job_exe.job_id] = running_job_exe.exe_num
                     if running_job_exe.node_id in running_job_exes:
                         running_job_exes[running_job_exe.node_id].append(running_job_exe)
@@ -380,6 +392,10 @@ class SchedulingManager(object):
 
             # Update scheduled jobs to RUNNING status
             Job.objects.update_jobs_to_running(job_exe_nums, started)
+
+            # Bulk create the canceled job execution end models
+            if canceled_job_exe_end_models:
+                JobExecutionEnd.objects.bulk_create(canceled_job_exe_end_models)
 
             # Delete queue models
             Queue.objects.filter(id__in=queue_ids).delete()

@@ -30,7 +30,7 @@ class QueuedJobExecution(object):
 
         :param framework_id: The scheduling framework ID
         :type framework_id: string
-        :param when: The schedule time
+        :param when: The start time
         :type when: :class:`datetime.datetime`
         :returns: The job execution model
         :rtype: :class:`job.models.JobExecution`

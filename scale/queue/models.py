@@ -14,7 +14,6 @@ from job.configuration.data.exceptions import InvalidData
 from job.configuration.data.job_data import JobData
 from job.configuration.interface.job_interface import JobInterface
 from job.configuration.json.execution.exe_config import ExecutionConfiguration
-from job.execution.job_exe import RunningJobExecution
 from job.models import Job, JobType
 from job.models import JobExecution
 from node.resources.json.resources import Resources
