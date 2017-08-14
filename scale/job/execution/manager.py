@@ -173,14 +173,14 @@ class JobExecutionManager(object):
             for job_exe_model in canceled_models:
                 if job_exe_model.get_cluster_id() in self._running_job_exes:
                     canceled_job_exe = self._running_job_exes[job_exe_model.get_cluster_id()]
-                    try:
-                        task = canceled_job_exe.execution_canceled()
-                        if task:
-                            canceled_tasks.append(task)
-                    except DatabaseError:
-                        logger.exception('Error canceling job execution %s', job_exe_model.get_cluster_id())
-                    # We do not remove canceled job executions at this point. We wait for the status update of the
-                    # killed task to come back so that job execution cleanup occurs after the task is dead.
+                    task = canceled_job_exe.execution_canceled()
+                    if task:
+                        # Since it has an outstanding task, we do not remove the canceled job execution at this point.
+                        # We wait for the status update of the killed task to come back so that job execution cleanup
+                        # occurs after the task is dead.
+                        canceled_tasks.append(task)
+                    else:
+                        self._handle_finished_job_exe(canceled_job_exe)
 
         return canceled_tasks
 
@@ -190,6 +190,11 @@ class JobExecutionManager(object):
         :param job_exe: The finished job execution
         :type job_exe: :class:`job.execution.job_exe.RunningJobExecution`
         """
+
+        # TODO: saving job_exe_end models here for now, later these models should get stored and sent via messaging
+        # backend in a background thread
+        job_exe_end = job_exe.create_job_exe_end_model()
+        job_exe_end.save()
 
         del self._running_job_exes[job_exe.cluster_id]
         self._metrics.job_exe_finished(job_exe)

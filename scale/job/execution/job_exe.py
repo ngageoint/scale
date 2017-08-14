@@ -12,7 +12,7 @@ from job.execution.tasks.main_task import MainTask
 from job.execution.tasks.post_task import PostTask
 from job.execution.tasks.pre_task import PreTask
 from job.execution.tasks.pull_task import PullTask
-from job.models import JobExecution
+from job.models import JobExecution, JobExecutionEnd
 from job.tasks.update import TaskStatusUpdate
 from util.retry import retry_database_query
 
@@ -43,6 +43,8 @@ class RunningJobExecution(object):
         self.exe_num = job_exe.exe_num
         self.job_type_id = job_exe.job_type_id
         self.node_id = job_exe.node_id
+        self.queued = job_exe.queued
+        self.started = job_exe.started
         self.docker_volumes = configuration.get_named_docker_volumes()
 
         # Internal task and status info
@@ -111,7 +113,28 @@ class RunningJobExecution(object):
 
         return self._status
 
-    @retry_database_query
+    def create_job_exe_end_model(self):
+        """Creates and returns a job execution end model for this job execution. Caller must ensure that this job
+        execution is finished before calling.
+
+        :returns: The job execution end model
+        :rtype: :class:`job.models.JobExecutionEnd`
+        """
+
+        job_exe_end = JobExecutionEnd()
+        job_exe_end.job_exe_id = self.id
+        job_exe_end.job_id = self.job_id
+        job_exe_end.job_type = self.job_type_id
+        job_exe_end.exe_num = self.exe_num
+        job_exe_end.status = self._status
+        if self._error:
+            job_exe_end.error_id = self._error.id
+        job_exe_end.node_id = self.node_id
+        job_exe_end.queued = self.queued
+        job_exe_end.started = self.started
+        job_exe_end.ended = self._finished
+        return job_exe_end
+
     def execution_canceled(self):
         """Cancels this job execution and returns the current task
 
@@ -119,18 +142,9 @@ class RunningJobExecution(object):
         :rtype: :class:`job.tasks.base_task.Task`
         """
 
-        # Saves this job execution's task info to the database
-        with transaction.atomic():
-            job_exe = JobExecution.objects.get_locked_job_exe(self.id)
-            for task in self._all_tasks:
-                task.populate_job_exe_model(job_exe)
-            job_exe.save()
-
         with self._lock:
             task = self._current_task
-            self._current_task = None
-            self._remaining_tasks = []
-            self._set_finished_status('CANCELED', now())
+            self._finish_execution('CANCELED', now())
             return task
 
     @retry_database_query
@@ -250,7 +264,7 @@ class RunningJobExecution(object):
         elif task_update.status in [TaskStatusUpdate.FAILED, TaskStatusUpdate.KILLED]:
             self._task_fail(task_update)
 
-    def _set_finished_status(self, status, when, error=None):
+    def _finish_execution(self, status, when, error=None):
         """Sets the finished status for this job execution. Caller must have obtained lock.
 
         :param status: The status
@@ -262,6 +276,8 @@ class RunningJobExecution(object):
         """
 
         if self._status == 'RUNNING':
+            self._current_task = None
+            self._remaining_tasks = []
             self._status = status
             self._finished = when
             self._error = error
