@@ -1638,7 +1638,7 @@ class JobTypeManager(models.Manager):
 
         # Save any secrets to Vault
         if secrets:
-            self.set_job_type_secrets(job_type.id, secrets)
+            self.set_job_type_secrets(job_type.get_secrets_key(), secrets)
 
         # Create first revision of the job type
         JobTypeRevision.objects.create_job_type_revision(job_type)
@@ -1743,7 +1743,7 @@ class JobTypeManager(models.Manager):
 
         # Save any secrets to Vault
         if secrets:
-            self.set_job_type_secrets(job_type.id, secrets)
+            self.set_job_type_secrets(job_type.get_secrets_key(), secrets)
 
         if interface:
             # Create new revision of the job type for new interface
@@ -2015,20 +2015,17 @@ class JobTypeManager(models.Manager):
             results.append(status)
         return results
 
-    def set_job_type_secrets(self, job_type_id, secrets):
+    def set_job_type_secrets(self, secrets_key, secrets):
         """Sends request to SecretsHandler to write secrets for a job type.
 
-        :param job_type_id: The ID of the job type
-        :type job_type_id: int
+        :param secrets_key: Reference pointer for job_type settings stored in secrets backend
+        :type secrets_key: str
         :param secrets: Secret settings required by this job type.
         :type secrets: dict
         """
 
         secrets_handler = SecretsHandler()
-        job_info = JobType.objects.values_list('name', 'version').get(pk=job_type_id)
-        job_name = '-'.join(list(job_info)).replace('.', '_')
-
-        secrets_handler.set_job_type_secrets(job_name, secrets)
+        secrets_handler.set_job_type_secrets(secrets_key, secrets)
 
     def validate_job_type(self, name, version, interface, error_mapping=None, trigger_config=None, configuration=None):
         """Validates a new job type prior to attempting a save
@@ -2310,6 +2307,15 @@ class JobType(models.Model):
         cpus = max(self.cpus_required, MIN_CPUS)
         resources.add(NodeResources([Cpus(cpus)]))
         return resources
+
+    def get_secrets_key(self):
+        """Returns the reference key for job type secrets stored in the secrets backend.
+
+        :returns: The job_type name and version concatenated
+        :rtype: str
+        """
+
+        return '-'.join([self.name, self.version]).replace('.', '_')
 
     def natural_key(self):
         """Django method to define the natural key for a job type as the

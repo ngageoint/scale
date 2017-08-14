@@ -21,7 +21,7 @@ Copy the following JSON:
       "network": "BRIDGE",
       "portMappings": [{
         "containerPort": 8200,
-        "hostPort": 0,
+        "hostPort": 8282,
         "protocol": "tcp",
         "labels": {
           "VIP_0": "scale-vault:8200"

@@ -915,7 +915,7 @@ class TestJobInterfacePreSteps(TestCase):
         mock_secrets_mgr.return_value = {
             'setting1': 'secret_val'
         }
-        
+
         job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
 
         job_interface_dict['version'] = '1.3'
@@ -936,9 +936,9 @@ class TestJobInterfacePreSteps(TestCase):
         job_config = ExecutionConfiguration(job_config_json)
 
         job_interface = JobInterface(job_interface_dict)
-        job_exe = job_test_utils.create_job_exe(status='QUEUED', configuration=job_config.get_dict())
+        job_type = job_test_utils.create_job_type(interface=job_interface_dict)
 
-        job_command_arguments = job_interface.populate_command_argument_settings(command_arguments, job_config, job_exe)
+        job_command_arguments = job_interface.populate_command_argument_settings(command_arguments, job_config, job_type)
         self.assertEqual(job_command_arguments,
                          ' '.join(config_key_values),
                          'expected a different command from pre_steps')
@@ -1053,7 +1053,7 @@ class TestJobInterfacePreSteps(TestCase):
         mock_secrets_mgr.return_value = {
             'setting1': 'secret_val'
         }
-        
+
         job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
 
         job_interface_dict['command_arguments'] = '${setting1}'
@@ -1078,10 +1078,10 @@ class TestJobInterfacePreSteps(TestCase):
         job_interface = JobInterface(job_interface_dict)
         job_config = ExecutionConfiguration(job_config_json)
 
-        job_type = MagicMock()
+        job_type = job_test_utils.create_job_type(interface=job_interface_dict)
         job_exe = job_test_utils.create_job_exe(status='QUEUED', configuration=job_config.get_dict())
 
-        job_interface.populate_command_argument_settings(job_interface_dict['command_arguments'], job_config, job_exe)
+        job_interface.populate_command_argument_settings(job_interface_dict['command_arguments'], job_config, job_type)
 
         try:
             # Validate acceptable job_interface and job_configuration
