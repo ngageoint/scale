@@ -579,6 +579,27 @@ class JobManager(models.Manager):
             self.update_status(jobs_to_cancel, 'CANCELED', when)
 
     @transaction.atomic
+    def update_jobs_to_canceled(self, job_ids, when):
+        """Updates the given jobs to the CANCELED status. Any jobs that cannot be canceled will be ignored. All database
+        updates occur in an atomic transaction.
+
+        :param job_ids: The list of job IDs
+        :type job_ids: list
+        :param when: The cancel time
+        :type when: :class:`datetime.datetime`
+        """
+
+        jobs_to_update = []
+        for locked_job in self.get_locked_jobs(job_ids):
+            if locked_job.can_be_canceled:
+                jobs_to_update.append(locked_job.id)
+
+        if jobs_to_update:
+            # Update job models in database
+            self.filter(id__in=jobs_to_update).update(status='CANCELED', last_status_change=when,
+                                                      last_modified=timezone.now())
+
+    @transaction.atomic
     def update_jobs_to_running(self, jobs, when):
         """Updates the given jobs to the RUNNING status. The number of each job's running execution is provided to
         resolve race conditions. All database updates occur in an atomic transaction.

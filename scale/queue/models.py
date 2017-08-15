@@ -311,37 +311,12 @@ class QueueManager(models.Manager):
         :type when: :class:`datetime.datetime`
         """
 
-        # Acquire model lock on latest job execution
-        job_exe_qry = JobExecution.objects.select_for_update().defer('stdout', 'stderr').filter(job_id=job_id)
-        job_exe = job_exe_qry.order_by('-created').first()
+        Job.objects.update_jobs_to_canceled([job_id], when)
 
-        # Acquire model lock on job
-        job = Job.objects.get_locked_job(job_id)
-
-        # Get latest job execution again to ensure no new job execution was just created
-        job_exe_2 = JobExecution.objects.defer('stdout', 'stderr').filter(job_id=job_id).order_by('-created').first()
-
-        # It's possible that a new latest job execution was created between obtaining the job_exe and job locks above.
-        # If this happens (should be quite rare), we need to abort the cancellation
-        job_exe_id = job_exe.id if job_exe else None
-        job_exe_2_id = job_exe_2.id if job_exe_2 else None
-        if job_exe_id != job_exe_2_id:
-            raise Exception('Job could not be canceled due to a rare status conflict. Please try again.')
-
-        if not job.can_be_canceled:
-            raise Exception('Job cannot be canceled when in status %s' % job.status)
-
-        if job_exe and not job_exe.is_finished:
-            # Stop the current job execution, removing it from the queue if applicable
-            if job_exe.status == 'QUEUED':
-                Queue.objects.filter(job_exe_id=job_exe.id).delete()
-            JobExecution.objects.update_status([job_exe], 'CANCELED', when)
-        else:
-            # Latest job execution was finished, so just mark the job as CANCELED
-            Job.objects.update_status([job], 'CANCELED', when)
+        self._cancel_queued_jobs([job_id])
 
         # If this job is in a recipe, update dependent jobs so that they are BLOCKED
-        handler = Recipe.objects.get_recipe_handler_for_job(job.id)
+        handler = Recipe.objects.get_recipe_handler_for_job(job_id)
         if handler:
             jobs_to_blocked = handler.get_blocked_jobs()
             Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
@@ -602,6 +577,15 @@ class QueueManager(models.Manager):
             jobs_to_pending.extend(handler.get_pending_jobs())
         if jobs_to_pending:
             Job.objects.update_status(jobs_to_pending, 'PENDING', when)
+
+    def _cancel_queued_jobs(self, job_ids):
+        """Marks the queued job executions for the given jobs as canceled
+
+        :param job_ids: The list of job IDs being canceled
+        :type job_ids: list
+        """
+
+        self.filter(job_id__in=job_ids).update(is_canceled=True)
 
     def _queue_jobs(self, jobs, input_files=None, priority=None):
         """Queues the given jobs. The caller must have obtained model locks on the job models in an atomic transaction.

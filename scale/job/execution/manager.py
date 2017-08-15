@@ -8,7 +8,7 @@ from django.utils.timezone import now
 
 from job.execution.metrics import TotalJobExeMetrics
 from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
-from job.models import JobExecution
+from job.models import Job, JobExecution
 
 logger = logging.getLogger(__name__)
 
@@ -94,6 +94,7 @@ class JobExecutionManager(object):
         :rtype: :class:`job.execution.job_exe.RunningJobExecution`
         """
 
+        finished_job_exe = None
         if task_update.task_id.startswith(JOB_TASK_ID_PREFIX):
             cluster_id = JobExecution.parse_cluster_id(task_update.task_id)
             with self._lock:
@@ -102,7 +103,13 @@ class JobExecutionManager(object):
                     job_exe.task_update(task_update)
                     if job_exe.is_finished():
                         self._handle_finished_job_exe(job_exe)
-                        return job_exe
+                        finished_job_exe = job_exe
+                        # return job_exe
+
+        # TODO: this can be removed once database operations move to messaging backend
+        if finished_job_exe:
+            self._handle_finished_job_exe_in_database(finished_job_exe)
+            return finished_job_exe
 
         return None
 
@@ -125,6 +132,7 @@ class JobExecutionManager(object):
         """
 
         lost_exes = []
+        finished_job_exes = []
         with self._lock:
             for job_exe in self._running_job_exes.values():
                 if job_exe.node_id == node_id:
@@ -132,6 +140,12 @@ class JobExecutionManager(object):
                     job_exe.execution_lost(when)
                     if job_exe.is_finished():
                         self._handle_finished_job_exe(job_exe)
+                        finished_job_exes.append(job_exe)
+
+        # TODO: this can be removed once database operations move to messaging backend
+        for finished_job_exe in finished_job_exes:
+            self._handle_finished_job_exe_in_database(finished_job_exe)
+
         return lost_exes
 
     def schedule_job_exes(self, job_exes):
@@ -154,32 +168,54 @@ class JobExecutionManager(object):
         :rtype: [:class:`job.tasks.base_task.Task`]
         """
 
-        job_exe_ids = []
+        job_ids = []
         with self._lock:
-            for job_exe in self._running_job_exes.values():
-                job_exe_ids.append(job_exe.id)
+            for running_job_exe in self._running_job_exes.values():
+                job_ids.append(running_job_exe.job_id)
+
+        # Query job models from database to check if any running executions have been canceled
+        job_models = {}
+        for job in Job.objects.filter(id__in=job_ids):
+            job_models[job.id] = job
 
         canceled_tasks = []
-        canceled_models = list(JobExecution.objects.filter(id__in=job_exe_ids, status='CANCELED').iterator())
-
+        finished_job_exes = []
         with self._lock:
-            for job_exe_model in canceled_models:
-                if job_exe_model.get_cluster_id() in self._running_job_exes:
-                    canceled_job_exe = self._running_job_exes[job_exe_model.get_cluster_id()]
-                    task = canceled_job_exe.execution_canceled()
+            for running_job_exe in self._running_job_exes.values():
+                job_model = job_models[running_job_exe.job_id]
+                # If the job has been canceled or the job has a newer execution, this execution must be canceled
+                if job_model.status == 'CANCELED' or job_model.num_exes > running_job_exe.exe_num:
+                    task = running_job_exe.execution_canceled()
                     if task:
                         # Since it has an outstanding task, we do not remove the canceled job execution at this point.
                         # We wait for the status update of the killed task to come back so that job execution cleanup
                         # occurs after the task is dead.
                         canceled_tasks.append(task)
                     else:
-                        if canceled_job_exe.is_finished():
-                            self._handle_finished_job_exe(canceled_job_exe)
+                        if running_job_exe.is_finished():
+                            self._handle_finished_job_exe(running_job_exe)
+                            finished_job_exes.append(running_job_exe)
+
+        # TODO: this can be removed once database operations move to messaging backend
+        for finished_job_exe in finished_job_exes:
+            self._handle_finished_job_exe_in_database(finished_job_exe)
 
         return canceled_tasks
 
     def _handle_finished_job_exe(self, running_job_exe):
         """Handles the finished job execution. Caller must have obtained the manager lock.
+
+        :param running_job_exe: The finished job execution
+        :type running_job_exe: :class:`job.execution.job_exe.RunningJobExecution`
+        """
+
+        # Remove the finished job execution and update the metrics
+        del self._running_job_exes[running_job_exe.cluster_id]
+        self._metrics.job_exe_finished(running_job_exe)
+
+    def _handle_finished_job_exe_in_database(self, running_job_exe):
+        """Handles the finished job execution by performing any needed database operations. This is a stop gap until
+        these database operations move to the messaging backend.
 
         :param running_job_exe: The finished job execution
         :type running_job_exe: :class:`job.execution.job_exe.RunningJobExecution`
@@ -200,10 +236,6 @@ class JobExecutionManager(object):
             Queue.objects.handle_job_completion(job_id, exe_num, when)
         elif running_job_exe.status == 'FAILED':
             Queue.objects.handle_job_failure(job_id, exe_num, when, running_job_exe.error)
-
-        # Remove the finished job execution and update the metrics
-        del self._running_job_exes[running_job_exe.cluster_id]
-        self._metrics.job_exe_finished(running_job_exe)
 
 
 job_exe_mgr = JobExecutionManager()
