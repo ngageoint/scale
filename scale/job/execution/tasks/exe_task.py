@@ -44,27 +44,6 @@ class JobExecutionTask(Task):
         # Sub-classes should set this
         self.timeout_error_name = None
 
-    def complete(self, task_update):
-        """Completes this task and indicates whether following tasks should update their cached job execution values
-
-        :param task_update: The task update
-        :type task_update: :class:`job.tasks.update.TaskStatusUpdate`
-        :returns: True if following tasks should update their cached job execution values, False otherwise
-        :rtype: bool
-        """
-
-        with self._lock:
-            if self._task_id != task_update.task_id:
-                return
-
-            # Support duplicate calls to complete(), task updates may repeat
-            self._has_ended = True
-            self._ended = task_update.timestamp
-            self._exit_code = task_update.exit_code
-            self._last_status_update = task_update.timestamp
-
-            return False
-
     @abstractmethod
     def determine_error(self, task_update):
         """Attempts to determine the error that caused this task to fail
@@ -76,24 +55,6 @@ class JobExecutionTask(Task):
         """
 
         raise NotImplementedError()
-
-    def populate_job_exe_model(self, job_exe):
-        """Populates the job execution model with the relevant information from this task
-
-        :param job_exe: The job execution model
-        :type job_exe: :class:`job.models.JobExecution`
-        """
-
-        pass
-
-    def refresh_cached_values(self, job_exe):
-        """Refreshes the task's cached job execution values with the given model
-
-        :param job_exe: The job execution model
-        :type job_exe: :class:`job.models.JobExecution`
-        """
-
-        pass
 
     def update_task_id_for_lost_task(self):
         """Updates this task's ID due to the task being lost. A new, unique ID will prevent race conditions where Scale

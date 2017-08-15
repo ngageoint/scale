@@ -1020,16 +1020,19 @@ class JobExecutionManager(models.Manager):
 
         return job_exe
 
-    def get_job_exe_with_job_and_job_type(self, job_exe_id):
+    def get_job_exe_with_job_and_job_type(self, job_id, exe_num):
         """Gets a job execution with its related job and job_type models populated using only one database query
 
-        :param job_exe_id: The ID of the job execution to retrieve
-        :type job_exe_id: int
+        :param job_id: The job ID
+        :type job_id: int
+        :param exe_num: The execution number
+        :type exe_num: int
         :returns: The job execution model with related job and job_type models populated
         :rtype: :class:`job.models.JobExecution`
         """
 
-        return self.select_related('job__job_type', 'job__job_type_rev').defer('stdout', 'stderr').get(pk=job_exe_id)
+        qry = self.select_related('job__job_type', 'job__job_type_rev').defer('stdout', 'stderr')
+        return qry.get(job_id=job_id, exe_num=exe_num)
 
     def get_latest(self, jobs):
         """Gets the latest job execution associated with each given job.
@@ -1075,20 +1078,6 @@ class JobExecutionManager(models.Manager):
         modified = timezone.now()
         self.filter(id=job_exe_id).update(results=results.get_dict(), results_manifest=results_manifest.get_json_dict(),
                                           last_modified=modified)
-
-    def pre_steps_command_arguments(self, job_exe_id, command_arguments):
-        """Updates the given job execution after the job command argument string has been filled out.
-
-        This typically includes pre-job step information (e.g. location of file paths).
-
-        :param job_exe_id: The job execution whose pre-job steps have filled out the job command
-        :type job_exe_id: int
-        :param command_arguments: The new job execution command argument string with pre-job step information filled in
-        :type command_arguments: string
-        """
-
-        modified = timezone.now()
-        self.filter(id=job_exe_id).update(command_arguments=command_arguments, last_modified=modified)
 
     def queue_job_exes(self, jobs, when):
         """Creates, saves, and returns new job executions for the given queued jobs. The caller must have obtained model

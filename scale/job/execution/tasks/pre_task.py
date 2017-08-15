@@ -43,24 +43,6 @@ class PreTask(JobExecutionTask):
         # Private fields for this class
         self._resources = configuration.get_resources('pre')
 
-    def complete(self, task_update):
-        """See :meth:`job.execution.tasks.exe_task.JobExecutionTask.complete`
-        """
-
-        with self._lock:
-            if self._task_id != task_update.task_id:
-                return
-
-            # Support duplicate calls to complete(), task updates may repeat
-            self._has_ended = True
-            self._ended = task_update.timestamp
-            self._exit_code = task_update.exit_code
-            self._last_status_update = task_update.timestamp
-
-            # The pre-task requires subsequent tasks to query the job execution again since the pre-task determines what
-            # the command_arguments field will be
-            return True
-
     def determine_error(self, task_update):
         """See :meth:`job.execution.tasks.exe_task.JobExecutionTask.determine_error`
         """
@@ -84,14 +66,3 @@ class PreTask(JobExecutionTask):
         """
 
         return self._resources
-
-    def populate_job_exe_model(self, job_exe):
-        """See :meth:`job.execution.tasks.exe_task.JobExecutionTask.populate_job_exe_model`
-        """
-
-        with self._lock:
-            if self._has_started:
-                job_exe.pre_started = self._started
-            if self._has_ended:
-                job_exe.pre_completed = self._ended
-                job_exe.pre_exit_code = self._exit_code

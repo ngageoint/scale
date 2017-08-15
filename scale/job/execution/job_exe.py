@@ -290,7 +290,6 @@ class RunningJobExecution(object):
 
         with self._lock:
             if self._current_task and self._current_task.id == task_update.task_id:
-                self._current_task.complete(task_update)
                 self._current_task = None
                 if not self._remaining_tasks:
                     when = now()

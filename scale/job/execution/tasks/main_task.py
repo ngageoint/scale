@@ -85,24 +85,3 @@ class MainTask(JobExecutionTask):
         """
 
         return self._resources
-
-    def populate_job_exe_model(self, job_exe):
-        """See :meth:`job.execution.tasks.exe_task.JobExecutionTask.populate_job_exe_model`
-        """
-
-        with self._lock:
-            if self._has_started:
-                job_exe.job_started = self._started
-            if self._has_ended:
-                job_exe.job_completed = self._ended
-                job_exe.job_exit_code = self._exit_code
-
-    def refresh_cached_values(self, job_exe):
-        """Refreshes the task's cached job execution values with the given model
-
-        :param job_exe: The job execution model
-        :type job_exe: :class:`job.models.JobExecution`
-        """
-
-        with self._lock:
-            self._command_arguments = job_exe.command_arguments

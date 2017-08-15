@@ -66,14 +66,3 @@ class PostTask(JobExecutionTask):
         """
 
         return self._resources
-
-    def populate_job_exe_model(self, job_exe):
-        """See :meth:`job.execution.tasks.exe_task.JobExecutionTask.populate_job_exe_model`
-        """
-
-        with self._lock:
-            if self._has_started:
-                job_exe.post_started = self._started
-            if self._has_ended:
-                job_exe.post_completed = self._ended
-                job_exe.post_exit_code = self._exit_code
