@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 import logging
 import threading
 
-from django.db import transaction
 from django.utils.timezone import now
 
 from error.models import Error
@@ -12,9 +11,8 @@ from job.execution.tasks.main_task import MainTask
 from job.execution.tasks.post_task import PostTask
 from job.execution.tasks.pre_task import PreTask
 from job.execution.tasks.pull_task import PullTask
-from job.models import JobExecution, JobExecutionEnd
+from job.models import JobExecutionEnd
 from job.tasks.update import TaskStatusUpdate
-from util.retry import retry_database_query
 
 
 logger = logging.getLogger(__name__)
@@ -82,6 +80,16 @@ class RunningJobExecution(object):
         return self._current_task
 
     @property
+    def error(self):
+        """Returns this job execution's error, None if there is no error
+
+        :returns: The error, possibly None
+        :rtype: :class:`error.objects.Error`
+        """
+
+        return self._error
+
+    @property
     def error_category(self):
         """Returns the category of this job execution's error, None if there is no error
 
@@ -147,7 +155,6 @@ class RunningJobExecution(object):
             self._set_final_status('CANCELED', now())
             return task
 
-    @retry_database_query
     def execution_lost(self, when):
         """Fails this job execution for its node becoming lost
 
@@ -156,14 +163,11 @@ class RunningJobExecution(object):
         """
 
         error = Error.objects.get_builtin_error('node-lost')
-        from queue.models import Queue
-        Queue.objects.handle_job_failure(self.id, when, self._all_tasks, error)
 
         with self._lock:
             self._current_task = None
             self._set_final_status('FAILED', when, error)
 
-    @retry_database_query
     def execution_timed_out(self, task, when):
         """Fails this job execution for timing out
 
@@ -178,8 +182,6 @@ class RunningJobExecution(object):
         else:
             error_name = 'launch-timeout'
         error = Error.objects.get_builtin_error(error_name)
-        from queue.models import Queue
-        Queue.objects.handle_job_failure(self.id, when, self._all_tasks, error)
 
         with self._lock:
             self._set_final_status('FAILED', when, error)
@@ -279,7 +281,6 @@ class RunningJobExecution(object):
             self._finished = when
             self._error = error
 
-    @retry_database_query
     def _task_complete(self, task_update):
         """Completes a task for this job execution
 
@@ -288,30 +289,13 @@ class RunningJobExecution(object):
         """
 
         with self._lock:
-            current_task = self._current_task
-            remaining_tasks = self._remaining_tasks
-
-        if not current_task or current_task.id != task_update.task_id:
-            return
-
-        when = now()
-        with transaction.atomic():
-            need_refresh = current_task.complete(task_update)
-            if need_refresh and remaining_tasks:
-                job_exe = JobExecution.objects.get(id=self.id)
-                for task in remaining_tasks:
-                    task.refresh_cached_values(job_exe)
-            if not remaining_tasks:
-                from queue.models import Queue
-                Queue.objects.handle_job_completion(self.id, when, self._all_tasks)
-
-        with self._lock:
             if self._current_task and self._current_task.id == task_update.task_id:
+                self._current_task.complete(task_update)
                 self._current_task = None
                 if not self._remaining_tasks:
-                    self._set_finished_status('COMPLETED', when)
+                    when = now()
+                    self._set_final_status('COMPLETED', when)
 
-    @retry_database_query
     def _task_fail(self, task_update):
         """Fails a task for this job execution
 
@@ -319,20 +303,12 @@ class RunningJobExecution(object):
         :type task_update: :class:`job.tasks.update.TaskStatusUpdate`
         """
 
-        current_task = self._current_task
-        if not current_task or current_task.id != task_update.task_id:
-            return
-
-        when = now()
-        with transaction.atomic():
-            error = current_task.determine_error(task_update)
-            from queue.models import Queue
-            Queue.objects.handle_job_failure(self.id, when, self._all_tasks, error)
-
         with self._lock:
-            self._current_task = None
-            self._remaining_tasks = []
-            self._set_finished_status('FAILED', when, error)
+            if self._current_task and self._current_task.id == task_update.task_id:
+                when = now()
+                error = self._current_task.determine_error(task_update)
+                self._current_task = None
+                self._set_final_status('FAILED', when, error)
 
     def _task_lost(self, task_update):
         """Tells this job execution that one of its tasks was lost

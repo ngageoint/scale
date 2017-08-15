@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 import logging
 import threading
 
-from django.db import DatabaseError
 from django.utils.timezone import now
 
 from job.execution.metrics import TotalJobExeMetrics
@@ -82,12 +81,9 @@ class JobExecutionManager(object):
             with self._lock:
                 if cluster_id in self._running_job_exes:
                     job_exe = self._running_job_exes[cluster_id]
-                    try:
-                        job_exe.execution_timed_out(task, when)
-                    except DatabaseError:
-                        logger.exception('Error failing timed out job execution %s', cluster_id)
-                    # We do not remove timed out job executions at this point. We wait for the status update of the
+                    # We do not remove the failed job execution at this point. We wait for the status update of the
                     # killed task to come back so that job execution cleanup occurs after the task is dead.
+                    job_exe.execution_timed_out(task, when)
 
     def handle_task_update(self, task_update):
         """Handles the given task update and returns the associated job execution if it has finished
@@ -125,7 +121,7 @@ class JobExecutionManager(object):
         :param when: The time that the node was lost
         :type when: :class:`datetime.datetime`
         :returns: A list of the lost job executions that had been running on the node
-        :rtype: [:class:`job.execution.job_exe.RunningJobExecution`]
+        :rtype: list
         """
 
         lost_exes = []
@@ -133,10 +129,7 @@ class JobExecutionManager(object):
             for job_exe in self._running_job_exes.values():
                 if job_exe.node_id == node_id:
                     lost_exes.append(job_exe)
-                    try:
-                        job_exe.execution_lost(when)
-                    except DatabaseError:
-                        logger.exception('Error failing lost job execution: %s', job_exe.cluster_id)
+                    job_exe.execution_lost(when)
                     if job_exe.is_finished():
                         self._handle_finished_job_exe(job_exe)
         return lost_exes
@@ -185,20 +178,32 @@ class JobExecutionManager(object):
 
         return canceled_tasks
 
-    def _handle_finished_job_exe(self, job_exe):
+    def _handle_finished_job_exe(self, running_job_exe):
         """Handles the finished job execution. Caller must have obtained the manager lock.
 
-        :param job_exe: The finished job execution
-        :type job_exe: :class:`job.execution.job_exe.RunningJobExecution`
+        :param running_job_exe: The finished job execution
+        :type running_job_exe: :class:`job.execution.job_exe.RunningJobExecution`
         """
 
         # TODO: saving job_exe_end models here for now, later these models should get stored and sent via messaging
         # backend in a background thread
-        job_exe_end = job_exe.create_job_exe_end_model()
+        job_exe_end = running_job_exe.create_job_exe_end_model()
         job_exe_end.save()
 
-        del self._running_job_exes[job_exe.cluster_id]
-        self._metrics.job_exe_finished(job_exe)
+        # TODO: handling job completion and failure here for now, later these will be sent via messaging backend in a
+        # background thread
+        from queue.models import Queue
+        job_id = running_job_exe.job_id
+        exe_num = running_job_exe.exe_num
+        when = running_job_exe.finished
+        if running_job_exe.status == 'COMPLETED':
+            Queue.objects.handle_job_completion(job_id, exe_num, when)
+        elif running_job_exe.status == 'FAILED':
+            Queue.objects.handle_job_failure(job_id, exe_num, when, running_job_exe.error)
+
+        # Remove the finished job execution and update the metrics
+        del self._running_job_exes[running_job_exe.cluster_id]
+        self._metrics.job_exe_finished(running_job_exe)
 
 
 job_exe_mgr = JobExecutionManager()

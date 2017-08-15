@@ -453,27 +453,29 @@ class ProductFileManager(models.GeoManager):
             product_lists[link.descendant_id].append(source_files[link.ancestor_id])
 
     @transaction.atomic
-    def publish_products(self, job_exe, when):
+    def publish_products(self, job_exe_id, job, when):
         """Publishes all of the products produced by the given job execution. All database changes will be made in an
         atomic transaction.
 
-        :param job_exe: The locked job execution model with related job model
-        :type job_exe: :class:`job.models.JobExecution`
+        :param job_exe_id: The job execution ID
+        :type job_exe_id: int
+        :param job: The locked job model
+        :type job: :class:`job.models.Job`
         :param when: When the products were published
         :type when: :class:`datetime.datetime`
         """
 
         # Don't publish products if the job is already superseded
-        if job_exe.job.is_superseded:
+        if job.is_superseded:
             return
 
         # Unpublish any products created by jobs that are superseded by this job
-        if job_exe.job.root_superseded_job_id:
-            self.unpublish_products(job_exe.job.root_superseded_job_id, when)
+        if job.root_superseded_job_id:
+            self.unpublish_products(job.root_superseded_job_id, when)
 
         # Grab UUIDs from new products to be published
         uuids = []
-        for product_file in self.filter(job_exe_id=job_exe.id):
+        for product_file in self.filter(job_exe_id=job_exe_id):
             uuids.append(product_file.uuid)
 
         # Supersede products with the same UUIDs (a given UUID should only appear once in the product API calls)
@@ -482,7 +484,7 @@ class ProductFileManager(models.GeoManager):
             query.update(is_published=False, is_superseded=True, superseded=when, last_modified=timezone.now())
 
         # Publish this job execution's products
-        self.filter(job_exe_id=job_exe.id).update(has_been_published=True, is_published=True, published=when,
+        self.filter(job_exe_id=job_exe_id).update(has_been_published=True, is_published=True, published=when,
                                                   last_modified=timezone.now())
 
     def unpublish_products(self, root_job_id, when):

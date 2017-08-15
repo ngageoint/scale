@@ -17,6 +17,7 @@ from job.configuration.json.execution.exe_config import ExecutionConfiguration
 from job.models import Job, JobType
 from job.models import JobExecution
 from node.resources.json.resources import Resources
+from product.models import ProductFile
 from recipe.models import Recipe
 from storage.models import ScaleFile
 from trigger.models import TriggerEvent
@@ -346,64 +347,60 @@ class QueueManager(models.Manager):
             Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
 
     @transaction.atomic
-    def handle_job_completion(self, job_exe_id, when, tasks):
-        """Handles the successful completion of a job. All database changes occur in an atomic transaction.
+    def handle_job_completion(self, job_id, exe_num, when):
+        """Handles the successful completion of a job. The number of the job's running execution is provided to resolve
+        race conditions. All database changes occur in an atomic transaction.
 
-        :param job_exe_id: The ID of the job execution that successfully completed
-        :type job_exe_id: int
-        :param when: When the job execution was completed
+        :param job_id: The job ID
+        :type job_id: int
+        :param exe_num: The job's execution number
+        :type exe_num: int
+        :param when: When the job was completed
         :type when: :class:`datetime.datetime`
-        :param tasks: The list of this job's tasks
-        :type tasks: [:class:`job.tasks.base_task.Task`]
         """
 
-        job_exe = JobExecution.objects.get_locked_job_exe(job_exe_id)
-        if job_exe.status != 'RUNNING':
-            # If this job execution is no longer running, ignore completion
+        job = Job.objects.get_locked_job(job_id)
+        # If the status isn't RUNNING or the execution number has changed, this update is obsolete
+        if job.status != 'RUNNING' or job.exe_num != exe_num:
             return
-        job_exe.job = Job.objects.get_locked_job(job_exe.job_id)
-        for task in tasks:
-            task.populate_job_exe_model(job_exe)
-        JobExecution.objects.complete_job_exe(job_exe, when)
 
-        # Execute any registered processors from other applications
-        for processor_class in self._processors:
-            try:
-                processor = processor_class()
-                processor.process_completed(job_exe)
-            except:
-                logger.exception('Unable to call queue processor for completed job execution: %s -> %s',
-                                 processor_class, job_exe_id)
+        Job.objects.complete_job(job, when)
+
+        # Publish this job's products
+        # TODO: we should eventually refactor how product publishing is handled
+        job_exe = JobExecution.objects.get(job_id=job_id, exe_num=exe_num)
+        ProductFile.objects.publish_products(job_exe.id, job, job.ended)
 
         # If this job is in a recipe, queue any jobs in the recipe that have their job dependencies completed
-        handler = Recipe.objects.get_recipe_handler_for_job(job_exe.job_id)
+        handler = Recipe.objects.get_recipe_handler_for_job(job_id)
         if handler:
-            if not job_exe.job.is_superseded:  # Do not queue dependent jobs for superseded jobs
+            if not job.is_superseded:  # Do not queue dependent jobs for superseded jobs
                 jobs_to_queue = []
                 for job_tuple in handler.get_existing_jobs_to_queue():
-                    job = job_tuple[0]
+                    job_to_queue = job_tuple[0]
                     job_data = job_tuple[1]
                     try:
-                        Job.objects.populate_job_data(job, job_data)
+                        Job.objects.populate_job_data(job_to_queue, job_data)
                     except InvalidData as ex:
                         raise Exception('Scale created invalid job data: %s' % str(ex))
-                    jobs_to_queue.append(job)
+                    jobs_to_queue.append(job_to_queue)
                 if jobs_to_queue:
                     self._queue_jobs(jobs_to_queue)
             if handler.is_completed():
                 Recipe.objects.complete_recipe(handler.recipe.id, when)
 
     @transaction.atomic
-    def handle_job_failure(self, job_exe_id, when, tasks, error=None):
-        """Handles the failure of a job execution. If the job has tries remaining, it is put back on the queue.
-        Otherwise it is marked failed. All database changes occur in an atomic transaction.
+    def handle_job_failure(self, job_id, exe_num, when, error=None):
+        """Handles the failure of a job. The number of the job's running execution is provided to resolve race
+        conditions. If the job has tries remaining, it is put back on the queue. Otherwise it is marked failed. All
+        database changes occur in an atomic transaction.
 
-        :param job_exe_id: The ID of the job execution that failed
-        :type job_exe_id: int
-        :param when: When the failure occurred
+        :param job_id: The job ID
+        :type job_id: int
+        :param exe_num: The job's execution number
+        :type exe_num: int
+        :param when: When the job was completed
         :type when: :class:`datetime.datetime`
-        :param tasks: The list of this job's tasks
-        :type tasks: [:class:`job.tasks.base_task.Task`]
         :param error: The error that caused the failure
         :type error: :class:`error.models.Error`
         """
@@ -411,38 +408,28 @@ class QueueManager(models.Manager):
         if not error:
             error = Error.objects.get_unknown_error()
 
-        job_exe = JobExecution.objects.get_locked_job_exe(job_exe_id)
-        if job_exe.status != 'RUNNING':
-            # If this job execution is no longer running, ignore failure
+        job = Job.objects.get_locked_job(job_id)
+        # If the status isn't RUNNING or the execution number has changed, this update is obsolete
+        if job.status != 'RUNNING' or job.exe_num != exe_num:
             return
-        job_exe.job = Job.objects.get_locked_job(job_exe.job_id)
-        for task in tasks:
-            task.populate_job_exe_model(job_exe)
-        JobExecution.objects.update_status([job_exe], 'FAILED', when, error)
-        # TODO: extra save here to capture task info, re-work this as part of the architecture refactor
-        job_exe.save()
 
-        # Execute any registered processors from other applications
-        for processor_class in self._processors:
-            try:
-                processor = processor_class()
-                processor.process_failed(job_exe)
-            except:
-                logger.exception('Unable to call queue processor for failed job execution: %s -> %s', processor_class,
-                                 job_exe_id)
+        # Need related job_type and job_type_rev models
+        # TODO: refactor this as part of the move to the messaging backend
+        job = Job.objects.select_related('job_type', 'job_type_rev').get(id=job_id)
 
         # Re-try job if error supports re-try and there are more tries left
-        retry = error.should_be_retried and job_exe.job.num_exes < job_exe.job.max_tries
+        retry = error.should_be_retried and job.num_exes < job.max_tries
         # Also re-try long running jobs
-        retry = retry or job_exe.job.job_type.is_long_running
+        retry = retry or job.job_type.is_long_running
         # Do not re-try superseded jobs
-        retry = retry and not job_exe.job.is_superseded
+        retry = retry and not job.is_superseded
 
         if retry:
-            self._queue_jobs([job_exe.job])
+            self._queue_jobs([job])
         else:
+            Job.objects.fail_job(job, when, error)
             # If this job is in a recipe, update dependent jobs so that they are BLOCKED
-            handler = Recipe.objects.get_recipe_handler_for_job(job_exe.job_id)
+            handler = Recipe.objects.get_recipe_handler_for_job(job_id)
             if handler:
                 jobs_to_blocked = handler.get_blocked_jobs()
                 Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)

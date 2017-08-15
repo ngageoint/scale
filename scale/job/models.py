@@ -30,7 +30,7 @@ from node.resources.resource import Cpus, Disk, Mem
 from storage.models import ScaleFile
 from trigger.configuration.exceptions import InvalidTriggerType
 from trigger.models import TriggerRule
-from util.exceptions import RollbackTransaction, ScaleLogicBug
+from util.exceptions import RollbackTransaction
 from vault.secrets_handler import SecretsHandler
 
 
@@ -54,24 +54,27 @@ class JobManager(models.Manager):
     """Provides additional methods for handling jobs
     """
 
-    def complete_job(self, job, when, results):
-        """Updates the given job to COMPLETED status. The caller must have obtained a model lock on the job model.
+    def complete_job(self, job, when):
+        """Updates the given job to the COMPLETED status. The caller must have obtained the job model's lock. All
+        database updates occur in an atomic transaction.
 
-        :param job: The job to update
+        :param job: The job model
         :type job: :class:`job.models.Job`
-        :param when: The time that the job was completed
+        :param when: The completed time
         :type when: :class:`datetime.datetime`
-        :param results: The error that caused the failure (required if status is FAILED, should be None otherwise)
-        :type results: :class:`job.configuration.results.job_results.JobResults`
         """
 
         job.status = 'COMPLETED'
-        job.results = results.get_dict()
         job.ended = when
         job.last_status_change = when
+
+        # Query output from completed job execution
+        job_exe_output = JobExecutionOutput.objects.get(job_id=job.id, exe_num=job.exe_num)
+        job.results = job_exe_output.get_output().get_dict()
+
         job.save()
 
-        # Count as a completed job if part of a batch
+        # Update completed job count if part of a batch
         from batch.models import Batch, BatchJob
         try:
             batch_job = BatchJob.objects.get(job_id=job.id)
@@ -117,6 +120,24 @@ class JobManager(models.Manager):
             job.delete_superseded = delete_superseded
 
         return job
+
+    def fail_job(self, job, when, error):
+        """Updates the given job to the FAILED status. The caller must have obtained the job model's lock. All database
+        updates occur in an atomic transaction.
+
+        :param job: The job model
+        :type job: :class:`job.models.Job`
+        :param when: The completed time
+        :type when: :class:`datetime.datetime`
+        :param error: The error that caused the failure
+        :type error: :class:`error.models.Error`
+        """
+
+        job.status = 'FAILED'
+        job.error = error
+        job.ended = when
+        job.last_status_change = when
+        job.save()
 
     def filter_jobs(self, started=None, ended=None, statuses=None, job_ids=None, job_type_ids=None, job_type_names=None,
                     job_type_categories=None, batch_ids=None, error_categories=None, include_superseded=False, 
@@ -319,9 +340,9 @@ class JobManager(models.Manager):
                              job_type_names=job_type_names, job_type_categories=job_type_categories,
                              include_superseded=include_superseded, order=order)
 
-    # TODO: might be able to remove this
     def get_locked_job(self, job_id):
-        """Gets the job model with the given ID with a model lock obtained and related job_type and job_type_rev models
+        """Locks and returns the job model for the given ID with no related fields. Caller must be within an atomic
+        transaction.
 
         :param job_id: The job ID
         :type job_id: int
@@ -329,7 +350,7 @@ class JobManager(models.Manager):
         :rtype: :class:`job.models.Job`
         """
 
-        return self.get_locked_jobs_with_related([job_id])[0]
+        return self.get_locked_jobs([job_id])[0]
 
     def get_locked_jobs(self, job_ids):
         """Locks and returns the job models for the given IDs with no related fields. Caller must be within an atomic
@@ -344,6 +365,7 @@ class JobManager(models.Manager):
         # Job models are always locked in order of ascending ID to prevent deadlocks
         return list(self.select_for_update().filter(id__in=job_ids).order_by('id').iterator())
 
+    # TODO: might be able to remove this
     def get_locked_jobs_with_related(self, job_ids):
         """Gets the job models for the given IDs with model locks obtained and related job_type and job_type_rev models
 
@@ -567,19 +589,27 @@ class JobManager(models.Manager):
         :type when: :class:`datetime.datetime`
         """
 
-        job_ids_to_update = []
+        jobs_to_update = []
+        jobs_to_update_no_status = []  # These are jobs that need to be updated, but without a status change
         for locked_job in self.get_locked_jobs(jobs.keys()):
             exe_num = jobs[locked_job.exe_num]
-            # Only update models that are still in QUEUED and have the same execution number (otherwise this update is
-            # obsolete)
-            if locked_job.exe_num.status == 'QUEUED' and locked_job.exe_num == exe_num:
-                job_ids_to_update.append(locked_job.id)
+            if locked_job.exe_num != exe_num:
+                # If the execution number has changed, this update is obsolete
+                continue
+            if locked_job.exe_num.status == 'QUEUED':
+                jobs_to_update.append(locked_job.id)
+            else:
+                # The job has already received its final status update, don't update status
+                jobs_to_update_no_status.append(locked_job.id)
 
-        if job_ids_to_update:
-            modified = timezone.now()
+        modified = timezone.now()
+        if jobs_to_update:
             # Update job models in database
-            self.filter(id__in=job_ids_to_update).update(status='RUNNING', last_status_change=when, started=when,
-                                                         last_modified=modified)
+            self.filter(id__in=jobs_to_update).update(status='RUNNING', last_status_change=when, started=when,
+                                                      last_modified=modified)
+        if jobs_to_update_no_status:
+            # Update job models in database except for status change
+            self.filter(id__in=jobs_to_update_no_status).update(started=when, last_modified=modified)
 
     def update_status(self, jobs, status, when, error=None):
         """Updates the given jobs with the new status. The caller must have obtained model locks on the job models.
@@ -877,23 +907,6 @@ class Job(models.Model):
 
 class JobExecutionManager(models.Manager):
     """Provides additional methods for handling job executions."""
-
-    def complete_job_exe(self, job_exe, when):
-        """Updates the given job execution and its job to COMPLETED. The caller must have obtained model locks on the
-        job execution and job models (in that order).
-
-        :param job_exe: The job execution (with related job model) to complete
-        :type job_exe: :class:`job.models.JobExecution`
-        :param when: The time that the job execution was completed
-        :type when: :class:`datetime.datetime`
-        """
-
-        job_exe.status = 'COMPLETED'
-        job_exe.ended = when
-        job_exe.save()
-
-        # Update job model
-        Job.objects.complete_job(job_exe.job, when, JobResults(job_exe.results))
 
     def get_exes(self, started=None, ended=None, statuses=None, job_type_ids=None, job_type_names=None,
                  job_type_categories=None, node_ids=None, order=None):
@@ -1451,6 +1464,15 @@ class JobExecutionOutput(models.Model):
     output = django.contrib.postgres.fields.JSONField(default=dict)
 
     created = models.DateTimeField(auto_now_add=True)
+
+    def get_output(self):
+        """Returns the output for this job execution
+
+        :returns: The output for this job execution
+        :rtype: :class:`job.configuration.results.job_results.JobResults`
+        """
+
+        return JobResults(self.output)
 
     class Meta(object):
         """Meta information for the database"""
