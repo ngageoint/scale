@@ -63,11 +63,11 @@ class IngestTriggerCondition(object):
         condition_met = True
         file_data_types = source_file.get_data_type_tags()
 
-        if self._data_types:
-            condition_met = self._data_types <= file_data_types
         if self._not_data_types:
             condition_met = True not in [tag in file_data_types for tag in self._not_data_types]
         if self._any_data_types:
             condition_met = True in [tag in file_data_types for tag in self._any_data_types]
+        if self._data_types:
+            condition_met = self._data_types <= file_data_types
 
         return condition_met
