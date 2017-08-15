@@ -112,6 +112,7 @@ class ParseTriggerRuleConfiguration(RecipeTriggerRuleConfiguration):
             self.convert_parse_trigger_rule_config()
 
         self._populate_default_values()
+        self._vaildate_data_types()
 
     def convert_parse_trigger_rule_config(self):
         """Convert a previous Parse Trigger Rule schema to the 1.1 schema
@@ -212,3 +213,12 @@ class ParseTriggerRuleConfiguration(RecipeTriggerRuleConfiguration):
             self._dict['condition']['any_of_data_types'] = []
         if 'not_data_types' not in self._dict['condition']:
             self._dict['condition']['not_data_types'] = []
+
+    def _vaildate_data_types(self):
+        """Cross-checks each of the three data_type lists to ensure no rules contridict one another.
+        """
+        inclusive_data_tags = set(self._dict['condition']['data_types'] + self._dict['condition']['any_of_data_types'])
+        for exclude_tag in self._dict['condition']['not_data_types']:
+            if exclude_tag in inclusive_data_tags:
+                raise InvalidTriggerRule("The provided data_type rules for tag `%s` contain a contradiction" %
+                                         exclude_tag)
