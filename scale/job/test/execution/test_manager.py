@@ -29,10 +29,12 @@ class TestJobExecutionManager(TransactionTestCase):
         self.agent_id = 'agent'
         self.node_model_1 = node_test_utils.create_node()
         self.job_exe_model_1 = job_test_utils.create_job_exe(status='RUNNING', node=self.node_model_1)
-        self.job_exe_1 = RunningJobExecution(self.agent_id, self.job_exe_model_1)
+        self.job_exe_1 = RunningJobExecution(self.agent_id, self.job_exe_model_1, self.job_exe_model_1.job.job_type,
+                                             self.job_exe_model_1.get_execution_configuration())
         self.node_model_2 = node_test_utils.create_node()
         self.job_exe_model_2 = job_test_utils.create_job_exe(status='RUNNING', node=self.node_model_2)
-        self.job_exe_2 = RunningJobExecution(self.agent_id, self.job_exe_model_2)
+        self.job_exe_2 = RunningJobExecution(self.agent_id, self.job_exe_model_2, self.job_exe_model_2.job.job_type,
+                                             self.job_exe_model_2.get_execution_configuration())
 
         self.job_exe_mgr = JobExecutionManager()
 
@@ -53,8 +55,8 @@ class TestJobExecutionManager(TransactionTestCase):
 
         # Both executions should be in the manager and ready
         self.assertEqual(len(self.job_exe_mgr.get_running_job_exes()), 2)
-        self.assertIsNotNone(self.job_exe_mgr.get_running_job_exe(self.job_exe_1.id))
-        self.assertIsNotNone(self.job_exe_mgr.get_running_job_exe(self.job_exe_2.id))
+        self.assertIsNotNone(self.job_exe_mgr.get_running_job_exe(self.job_exe_1.cluster_id))
+        self.assertIsNotNone(self.job_exe_mgr.get_running_job_exe(self.job_exe_2.cluster_id))
 
     def test_handle_task_timeout(self):
         """Tests calling handle_task_timeout() successfully"""
