@@ -435,7 +435,7 @@ class ExecutionConfiguration(object):
         """
 
         for task_dict in self._configuration['tasks']:
-            if task_dict['type'] == task_type:
+            if task_dict['type'] == task_type and 'resources' in task_dict:
                 return Resources(task_dict['resources']).get_node_resources()
         return None
 
@@ -464,7 +464,7 @@ class ExecutionConfiguration(object):
         """
 
         for task_dict in self._configuration['tasks']:
-            if task_dict['type'] == task_type:
+            if task_dict['type'] == task_type and 'task_id' in task_dict:
                 return task_dict['task_id']
         return None
 
@@ -521,8 +521,9 @@ class ExecutionConfiguration(object):
         workspaces = []
         for task_dict in self._configuration['tasks']:
             if task_dict['type'] == task_type:
-                for name, workspace_dict in task_dict['workspaces'].items():
-                    workspaces.append(TaskWorkspace(name, workspace_dict['mode']))
+                if 'workspaces' in task_dict:
+                    for name, workspace_dict in task_dict['workspaces'].items():
+                        workspaces.append(TaskWorkspace(name, workspace_dict['mode']))
         return workspaces
 
     def set_input_files(self, input_files):
