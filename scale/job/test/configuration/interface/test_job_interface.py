@@ -910,39 +910,6 @@ class TestJobInterfacePreSteps(TestCase):
         job_command_arguments = job_interface.populate_command_argument_settings(command_arguments, job_config, job_exe)
         self.assertEqual(job_command_arguments, config_key_value, 'expected a different command from pre_steps')
 
-    @patch('scheduler.vault.manager.SecretsManager.retrieve_job_type_secrets')
-    def test_required_settings_in_command(self, mock_secrets_mgr):
-        mock_secrets_mgr.return_value = {
-            'setting1': 'secret_val'
-        }
-
-        job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
-
-        job_interface_dict['version'] = '1.3'
-        job_interface_dict['command_arguments'] = '${setting1} ${setting2}'
-        job_interface_dict['settings'] = [{
-            'name': 'setting1',
-            'required': True,
-            'secret': True,
-        }, {
-            'name': 'setting2',
-            'required': True,
-        }]
-
-        command_arguments = job_interface_dict['command_arguments']
-        config_key_values = ['secret_val', 'required_value2']
-        job_config_json = {'version': '1.1', 'job_task': {'settings': [{'name': 'setting2',
-                                                                        'value': config_key_values[1]}]}}
-        job_config = ExecutionConfiguration(job_config_json)
-
-        job_interface = JobInterface(job_interface_dict)
-        job_type = job_test_utils.create_job_type(interface=job_interface_dict)
-
-        job_command_arguments = job_interface.populate_command_argument_settings(command_arguments, job_config, job_type)
-        self.assertEqual(job_command_arguments,
-                         ' '.join(config_key_values),
-                         'expected a different command from pre_steps')
-
     def test_optional_settings_in_command(self):
         job_interface_dict, job_data_dict, job_environment_dict = self._get_simple_interface_data_env()
 

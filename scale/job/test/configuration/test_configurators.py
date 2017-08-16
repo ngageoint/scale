@@ -50,8 +50,7 @@ class TestQueuedExecutionConfigurator(TestCase):
         input_2_val = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'input_2', file_1.file_name)
         input_3_val = os.path.join(SCALE_JOB_EXE_INPUT_PATH, 'input_3')
         expected_args = '-a my_val -b %s %s ${job_output_dir}' % (input_2_val, input_3_val)
-        expected_env_vars = {'INPUT_1': 'my_val', 'INPUT_2': input_2_val, 'INPUT_3': input_3_val,
-                             'job_output_dir': SCALE_JOB_EXE_OUTPUT_PATH, 'OUTPUT_DIR': SCALE_JOB_EXE_OUTPUT_PATH}
+        expected_env_vars = {'INPUT_1': 'my_val', 'INPUT_2': input_2_val, 'INPUT_3': input_3_val}
         expected_output_workspaces = {'output_1': workspace.name}
         job_type = job_test_utils.create_job_type(interface=interface_dict)
         job = job_test_utils.create_job(job_type=job_type, data=data_dict, status='QUEUED')
@@ -102,10 +101,8 @@ class TestQueuedExecutionConfigurator(TestCase):
         exe_config = configurator.configure_queued_job(ingest.job)
 
         config_dict = exe_config.get_dict()
-        print 'Old Ingest config:'
-        print str(config_dict)
-        print 'Expected config:'
-        print str(expected_config)
+        # Make sure the dict validates
+        ExecutionConfiguration(config_dict)
         self.assertDictEqual(config_dict, expected_config)
 
     def test_configure_queued_job_ingest_with_new_workspace(self):
@@ -193,10 +190,6 @@ class TestQueuedExecutionConfigurator(TestCase):
         config_dict = exe_config.get_dict()
         # Make sure the dict validates
         ExecutionConfiguration(config_dict)
-        print 'Strike config:'
-        print str(config_dict)
-        print 'Expected config:'
-        print str(expected_config)
         self.assertDictEqual(config_dict, expected_config)
 
     def test_configure_queued_job_scan(self):
@@ -268,7 +261,7 @@ class TestScheduledExecutionConfigurator(TestCase):
         job = Queue.objects.queue_new_job(job_type, JobData(data_dict), trigger_test_utils.create_trigger_event())
         resources = job.get_resources()
         main_resources = resources.copy()
-        main_resources.subtract(NodeResources([Disk(job.input_file_size)]))
+        main_resources.subtract(NodeResources([Disk(job.disk_in_required)]))
         post_resources = resources.copy()
         post_resources.remove_resource('disk')
         # Get job info off of the queue

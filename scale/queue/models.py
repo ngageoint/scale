@@ -365,7 +365,7 @@ class QueueManager(models.Manager):
                 Recipe.objects.complete_recipe(handler.recipe.id, when)
 
     @transaction.atomic
-    def handle_job_failure(self, job_id, exe_num, when, error=None):
+    def handle_job_failure(self, job_id, exe_num, when, error):
         """Handles the failure of a job. The number of the job's running execution is provided to resolve race
         conditions. If the job has tries remaining, it is put back on the queue. Otherwise it is marked failed. All
         database changes occur in an atomic transaction.
@@ -379,9 +379,6 @@ class QueueManager(models.Manager):
         :param error: The error that caused the failure
         :type error: :class:`error.models.Error`
         """
-
-        if not error:
-            error = Error.objects.get_unknown_error()
 
         job = Job.objects.get_locked_job(job_id)
         # If the status isn't RUNNING or the execution number has changed, this update is obsolete

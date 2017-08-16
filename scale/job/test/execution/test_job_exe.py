@@ -140,7 +140,7 @@ class TestRunningJobExecution(TestCase):
         self.assertFalse(self.running_job_exe.is_next_task_ready())
 
     def test_failed_normal_job_execution(self):
-        """Tests running through a normal job execution that fails"""
+        """Tests running through a normal job execution that fails with an unknown error"""
 
         self.assertFalse(self.running_job_exe.is_finished())
         self.assertTrue(self.running_job_exe.is_next_task_ready())
@@ -194,7 +194,8 @@ class TestRunningJobExecution(TestCase):
         self.running_job_exe.task_update(update)
         self.assertTrue(self.running_job_exe.is_finished())
         self.assertEqual(self.running_job_exe.status, 'FAILED')
-        self.assertIsNotNone(self.running_job_exe.error)
+        self.assertEqual(self.running_job_exe.error_category, 'SYSTEM')
+        self.assertEqual(self.running_job_exe.error.name, 'unknown')
         self.assertFalse(self.running_job_exe.is_next_task_ready())
 
     def test_timed_out_launch(self):

@@ -308,6 +308,8 @@ class RunningJobExecution(object):
             if self._current_task and self._current_task.id == task_update.task_id:
                 when = now()
                 error = self._current_task.determine_error(task_update)
+                if not error:
+                    error = Error.objects.get_unknown_error()
                 self._current_task = None
                 self._set_final_status('FAILED', when, error)
 

@@ -401,6 +401,21 @@ class ExecutionConfiguration(object):
                     workspace_names.add(file_dict['workspace_name'])
         return list(workspace_names)
 
+    def get_mounts(self, task_type):
+        """Returns the mounts for the given task type
+
+        :param task_type: The task type
+        :type task_type: string
+        :returns: The dict of mount names mapping to volume names
+        :rtype: dict
+        """
+
+        for task_dict in self._configuration['tasks']:
+            if task_dict['type'] == task_type:
+                if 'mounts' in task_dict:
+                    return task_dict['mounts']
+        return {}
+
     def get_named_docker_volumes(self):
         """Returns the names of all (non-host) Docker volumes
 
@@ -694,6 +709,9 @@ class ExecutionConfiguration(object):
         :param volumes: The list of volumes
         :type volumes: list
         """
+
+        if not volumes:
+            return
 
         if 'volumes' in task_dict:
             task_volumes = task_dict['volumes']

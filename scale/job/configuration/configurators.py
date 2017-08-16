@@ -200,11 +200,9 @@ class QueuedExecutionConfigurator(object):
 
         # Configure Scan workspace based on current configuration
         if job.job_type.name == 'scale-scan':
+            scan_id = data.get_property_values(['Scan ID'])['Scan ID']
             from ingest.models import Scan
-            try:
-                scan = Scan.objects.get(job_id=job.id)
-            except Scan.DoesNotExist:
-                scan = Scan.objects.get(dry_run_job_id=job.id)
+            scan = Scan.objects.get(id=scan_id)
             workspace_name = scan.get_scan_configuration().get_workspace()
             workspaces[workspace_name] = TaskWorkspace(workspace_name, MODE_RW)
 

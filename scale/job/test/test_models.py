@@ -16,8 +16,7 @@ from job.configuration.data.exceptions import InvalidConnection
 from job.configuration.data.job_data import JobData
 from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.job_interface import JobInterface
-from job.configuration.json.execution.exe_config import MODE_RO, MODE_RW
-from job.models import Job, JobExecution, JobType, JobTypeRevision
+from job.models import Job, JobExecution, JobInputFile, JobType, JobTypeRevision
 from node.resources.json.resources import Resources
 from trigger.models import TriggerRule
 
@@ -72,8 +71,8 @@ class TestJobManager(TransactionTestCase):
         workspace_1 = storage_test_utils.create_workspace()
         workspace_2 = storage_test_utils.create_workspace()
         workspace_3 = storage_test_utils.create_workspace()
-        file_1 = storage_test_utils.create_file(workspace=workspace_1)
-        file_2 = storage_test_utils.create_file(workspace=workspace_2)
+        file_1 = storage_test_utils.create_file(workspace=workspace_1, file_size=1000.0)
+        file_2 = storage_test_utils.create_file(workspace=workspace_2, file_size=3000.0)
         interface = {
             'version': '1.0',
             'command': 'my_command',
@@ -113,31 +112,18 @@ class TestJobManager(TransactionTestCase):
 
         job = Job.objects.get(id=job.id)
 
-        # Check that the correct workspaces are configured for the job
-        # Make sure both workspaces will be used for the pre-task in read-only mode
-        pre_task_workspaces = job.get_execution_configuration().get_pre_task_workspaces()
-        self.assertEqual(len(pre_task_workspaces), 2)
-        name_set = set()
-        for workspace in pre_task_workspaces:
-            name_set.add(workspace.name)
-            self.assertEqual(workspace.mode, MODE_RO)
-        self.assertSetEqual(name_set, {workspace_1.name, workspace_2.name})
-        # Make sure both workspaces will be used for the job-task in read-only mode
-        job_task_workspaces = job.get_execution_configuration().get_job_task_workspaces()
-        self.assertEqual(len(job_task_workspaces), 2)
-        name_set = set()
-        for workspace in job_task_workspaces:
-            name_set.add(workspace.name)
-            self.assertEqual(workspace.mode, MODE_RO)
-        self.assertSetEqual(name_set, {workspace_1.name, workspace_2.name})
-        # Make sure all input and output workspaces will be used for the post-task and they are in read-write mode
-        post_task_workspaces = job.get_execution_configuration().get_post_task_workspaces()
-        self.assertEqual(len(post_task_workspaces), 3)
-        name_set = set()
-        for workspace in post_task_workspaces:
-            name_set.add(workspace.name)
-            self.assertEqual(workspace.mode, MODE_RW)
-        self.assertSetEqual(name_set, {workspace_1.name, workspace_2.name, workspace_3.name})
+        # Make sure input file size is calculated and set
+        self.assertEqual(job.disk_in_required, file_1.file_size + file_2.file_size)
+        # Make sure job input file models are created
+        job_input_files = JobInputFile.objects.filter(job_id=job.id)
+        self.assertEqual(len(job_input_files), 2)
+        for job_input_file in job_input_files:
+            if job_input_file.job_input == 'Input 1':
+                self.assertEqual(job_input_file.input_file_id, file_1.id)
+            elif job_input_file.job_input == 'Input 2':
+                self.assertEqual(job_input_file.input_file_id, file_2.id)
+            else:
+                self.fail('Invalid input name: %s' % job_input_file.job_input)
 
     def test_populate_job_data_extra_inputs(self):
         """Tests calling JobManager.populate_job_data() with extra inputs"""

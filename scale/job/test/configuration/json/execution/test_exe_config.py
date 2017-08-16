@@ -47,7 +47,7 @@ class TestExecutionConfiguration(TestCase):
                     'resources': {'cpu': 1.0},
                     'args': 'foo ${INPUT_1} ${JOB_OUTPUT_DIR}',
                     'env_vars': {'ENV_VAR_NAME': 'ENV_VAR_VALUE'},
-                    'workspaces': {'WORKSPACE_NAME': {'mode': 'ro', 'volume_name': None}},
+                    'workspaces': {'WORKSPACE_NAME': {'mode': 'ro'}},
                     'mounts': {'MOUNT_NAME': 'MOUNT_VOLUME_NAME'},
                     'settings': {'SETTING_NAME': 'SETTING_VALUE'},
                     'volumes': {

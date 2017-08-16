@@ -582,26 +582,9 @@ class JobInterface(object):
         :type exe_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         """
 
-        # TODO: this currently checks mount container paths to detect if required mounts have been provided to this
-        # execution. After the execution configuration gets refactored (with mount configurations added) we can directly
-        # check the mount names included
-        interface_mounts = self.definition['mounts']
-
-        for mount in interface_mounts:
-            mount_name = mount['name']
-            container_path = mount['path']
-            mount_is_required = mount['required']
-
-            if mount_is_required:
-                mount_is_provided = False
-                for docker_param in exe_configuration.get_job_task_docker_params():
-                    if docker_param.flag == 'volume':
-                        param_path = docker_param.value.split(':')[1]
-                        if container_path == param_path:
-                            mount_is_provided = True
-                            break
-                if not mount_is_provided:
-                    raise MissingMount('Required mount %s was not provided' % mount_name)
+        for name, mount_volume in exe_configuration.get_mounts('main'):
+            if mount_volume is None:
+                raise MissingMount('Required mount %s was not provided' % name)
 
     def validate_populated_settings(self, exe_configuration):
         """Ensures that all required settings are defined in the execution configuration
@@ -610,16 +593,9 @@ class JobInterface(object):
         :type exe_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         """
 
-        interface_settings = self.definition['settings']
-        config_setting_names = [setting.name for setting in exe_configuration.get_settings('main')]
-
-        for setting in interface_settings:
-            setting_name = setting['name']
-            setting_is_required = setting['required']
-
-            if setting_is_required:
-                if setting_name not in config_setting_names:
-                    raise MissingSetting('Required setting %s was not provided' % setting_name)
+        for name, value in exe_configuration.get_settings('main'):
+            if value is None:
+                raise MissingSetting('Required setting %s was not provided' % name)
 
     def _check_env_var_uniqueness(self):
         """Ensures all the enviornmental variable names are unique, and throws a

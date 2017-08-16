@@ -29,8 +29,8 @@ class TestPostJobSteps(TransactionTestCase):
 
         cmd = 'command'
         cmd_args = 'args'
-        interface = {'version': '1.0', 'command': cmd, 'command_arguments': cmd_args, 'inputs': [],
-                     'outputs': [{'name': 'arg1'}, {'name': 'arg2'}]}
+        interface = {'version': '1.0', 'command': cmd, 'command_arguments': cmd_args, 'input_data': [],
+                     'output_data': [{'name': 'arg1'}, {'name': 'arg2'}]}
 
         self.job_type = job_utils.create_job_type(name='Test', version='1.0', interface=interface)
         self.event = TriggerEvent.objects.create_trigger_event('TEST', None, {}, now())
