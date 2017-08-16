@@ -929,9 +929,24 @@ class Job(models.Model):
 class JobExecutionManager(models.Manager):
     """Provides additional methods for handling job executions."""
 
+    def get_details(self, job_exe_id):
+        """Gets additional details for the given job execution model based on related model attributes.
+
+        :param job_exe_id: The unique identifier of the job execution.
+        :type job_exe_id: int
+        :returns: The job execution with extra related attributes.
+        :rtype: :class:`job.models.JobExecution`
+        """
+        job_exe = JobExecution.objects.all().select_related(
+            'job', 'job__job_type', 'job__error', 'job__event', 'job__event__rule', 'node', 'error'
+        )
+        job_exe = job_exe.defer('stdout', 'stderr')
+        job_exe = job_exe.get(pk=job_exe_id)
+        return job_exe
+
     def get_exes(self, started=None, ended=None, statuses=None, job_type_ids=None, job_type_names=None,
                  job_type_categories=None, node_ids=None, order=None):
-        """Returns a list of jobs within the given time range.
+        """Returns a list of job executions within the given time range.
 
         :param started: Query job executions updated after this amount of time.
         :type started: :class:`datetime.datetime`
@@ -954,23 +969,24 @@ class JobExecutionManager(models.Manager):
         """
 
         # Fetch a list of job executions
-        job_exes = JobExecution.objects.all().select_related('job', 'job__job_type', 'node', 'error')
+        job_exes = JobExecution.objects.all().select_related('job', 'job_type', 'node', 'jobexecutionend__error')
         job_exes = job_exes.defer('stdout', 'stderr')
 
         # Apply time range filtering
         if started:
-            job_exes = job_exes.filter(last_modified__gte=started)
+            job_exes = job_exes.filter(created__gte=started)
         if ended:
-            job_exes = job_exes.filter(last_modified__lte=ended)
+            job_exes = job_exes.filter(created__lte=ended)
 
+        # TODO: how to handle RUNNING?
         if statuses:
-            job_exes = job_exes.filter(status__in=statuses)
+            job_exes = job_exes.filter(job_executionend__status__in=statuses)
         if job_type_ids:
-            job_exes = job_exes.filter(job__job_type_id__in=job_type_ids)
+            job_exes = job_exes.filter(job_type_id__in=job_type_ids)
         if job_type_names:
-            job_exes = job_exes.filter(job__job_type__name__in=job_type_names)
+            job_exes = job_exes.filter(job_type__name__in=job_type_names)
         if job_type_categories:
-            job_exes = job_exes.filter(job__job_type__category__in=job_type_categories)
+            job_exes = job_exes.filter(job_type__category__in=job_type_categories)
         if node_ids:
             job_exes = job_exes.filter(node_id__in=node_ids)
 
@@ -978,47 +994,8 @@ class JobExecutionManager(models.Manager):
         if order:
             job_exes = job_exes.order_by(*order)
         else:
-            job_exes = job_exes.order_by('last_modified')
+            job_exes = job_exes.order_by('created')
         return job_exes
-
-    def get_details(self, job_exe_id):
-        """Gets additional details for the given job execution model based on related model attributes.
-
-        :param job_exe_id: The unique identifier of the job execution.
-        :type job_exe_id: int
-        :returns: The job execution with extra related attributes.
-        :rtype: :class:`job.models.JobExecution`
-        """
-        job_exe = JobExecution.objects.all().select_related(
-            'job', 'job__job_type', 'job__error', 'job__event', 'job__event__rule', 'node', 'error'
-        )
-        job_exe = job_exe.defer('stdout', 'stderr')
-        job_exe = job_exe.get(pk=job_exe_id)
-        return job_exe
-
-    def get_locked_job_exe(self, job_exe_id):
-        """Returns the job execution with the given ID with a model lock obtained
-
-        :param job_exe_id: The job execution ID
-        :type job_exe_id: int
-        :returns: The job execution model with a model lock
-        :rtype: :class:`job.models.JobExecution`
-        """
-
-        return self.select_for_update().defer('stdout', 'stderr').get(pk=job_exe_id)
-
-    def get_logs(self, job_exe_id):
-        """Gets additional details for the given job execution model based on related model attributes.
-
-        :param job_exe_id: The unique identifier of the job execution.
-        :type job_exe_id: int
-        :returns: The job execution with extra related attributes.
-        :rtype: :class:`job.models.JobExecution`
-        """
-        job_exe = JobExecution.objects.all().select_related('job', 'job__job_type', 'node', 'error')
-        job_exe = job_exe.get(pk=job_exe_id)
-
-        return job_exe
 
     def get_job_exe_with_job_and_job_type(self, job_id, exe_num):
         """Gets a job execution with its related job and job_type models populated using only one database query
@@ -1050,6 +1027,30 @@ class JobExecutionManager(models.Manager):
                 results[job_exe.job_id] = job_exe
 
         return results
+
+    def get_locked_job_exe(self, job_exe_id):
+        """Returns the job execution with the given ID with a model lock obtained
+
+        :param job_exe_id: The job execution ID
+        :type job_exe_id: int
+        :returns: The job execution model with a model lock
+        :rtype: :class:`job.models.JobExecution`
+        """
+
+        return self.select_for_update().defer('stdout', 'stderr').get(pk=job_exe_id)
+
+    def get_logs(self, job_exe_id):
+        """Gets additional details for the given job execution model based on related model attributes.
+
+        :param job_exe_id: The unique identifier of the job execution.
+        :type job_exe_id: int
+        :returns: The job execution with extra related attributes.
+        :rtype: :class:`job.models.JobExecution`
+        """
+        job_exe = JobExecution.objects.all().select_related('job', 'job__job_type', 'node', 'error')
+        job_exe = job_exe.get(pk=job_exe_id)
+
+        return job_exe
 
     def get_running_job_exes(self):
         """Returns all job executions that are currently RUNNING on a node
