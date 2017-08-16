@@ -121,9 +121,6 @@ RUN bash -c 'if [[ ${BUILDNUM}x != x ]]; then sed "s/___BUILDNUM___/+${BUILDNUM}
 COPY scale/pip/docs.txt /tmp/
 COPY scale-ui /tmp/ui
 
-# temp workaround to install nodejs dependecy.  remove when centon 7.4 released
-RUN rpm -ivh https://kojipkgs.fedoraproject.org//packages/http-parser/2.7.1/3.el7/x86_64/http-parser-2.7.1-3.el7.x86_64.rpm
-
 RUN yum install -y nodejs \
  && cd /tmp/ui \
  && tar xf node_modules.tar.gz \
