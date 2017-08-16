@@ -395,9 +395,10 @@ class ExecutionConfiguration(object):
         """
 
         workspace_names = set()
-        for file_list in self._configuration['input_files'].values():
-            for file_dict in file_list:
-                workspace_names.add(file_dict['workspace_name'])
+        if 'input_files' in self._configuration:
+            for file_list in self._configuration['input_files'].values():
+                for file_dict in file_list:
+                    workspace_names.add(file_dict['workspace_name'])
         return list(workspace_names)
 
     def get_named_docker_volumes(self):
@@ -543,14 +544,15 @@ class ExecutionConfiguration(object):
             file_list = []
             for input_file in input_files[input_name]:
                 file_dict = {'id': input_file.id, 'type': input_file.file_type,
-                             'workspace_name': input_file.workspace_name, 'workspace_path': input_file.file_path,
+                             'workspace_name': input_file.workspace_name, 'workspace_path': input_file.workspace_path,
                              'is_deleted': input_file.is_deleted}
                 if input_file.local_file_name:
                     file_dict['local_file_name'] = input_file.local_file_name
                 file_list.append(file_dict)
             files_dict[input_name] = file_list
 
-        self._configuration['input_files'] = files_dict
+        if files_dict:
+            self._configuration['input_files'] = files_dict
 
     def set_output_workspaces(self, output_workspaces):
         """Sets the given output workspaces in the configuration
@@ -559,7 +561,8 @@ class ExecutionConfiguration(object):
         :type output_workspaces: dict
         """
 
-        self._configuration['output_workspaces'] = output_workspaces
+        if output_workspaces:
+            self._configuration['output_workspaces'] = output_workspaces
 
     def set_task_ids(self, cluster_id):
         """Sets the IDs for all of the tasks

@@ -14,6 +14,7 @@ from job.execution.container import get_job_exe_input_vol_name, get_job_exe_outp
     get_workspace_volume_name, SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
 from job.execution.tasks.post_task import POST_TASK_COMMAND_ARGS
 from job.execution.tasks.pre_task import PRE_TASK_COMMAND_ARGS
+from job.models import JobTypeRevision
 from job.tasks.pull_task import create_pull_command
 from job.test import utils as job_test_utils
 from node.resources.node_resources import NodeResources
@@ -24,6 +25,8 @@ from trigger.test import utils as trigger_test_utils
 
 
 class TestQueuedExecutionConfigurator(TestCase):
+
+    fixtures = ['ingest_job_types.json']
 
     def setUp(self):
         django.setup()
@@ -76,9 +79,13 @@ class TestQueuedExecutionConfigurator(TestCase):
         workspace_1 = storage_test_utils.create_workspace()
         workspace_2 = storage_test_utils.create_workspace()
         from ingest.test import utils as ingest_test_utils
+        from ingest.models import Ingest
         ingest = ingest_test_utils.create_ingest(workspace=workspace_1, new_workspace=workspace_2)
+        ingest_job_type = Ingest.objects.get_ingest_job_type()
+        ingest_rev_2 = JobTypeRevision.objects.get(job_type=ingest_job_type, revision_num=2)
         data = JobData()
         data.add_property_input('Ingest ID', str(ingest.id))
+        ingest.job.job_type_rev_id = ingest_rev_2.id  # Job has old revision (2nd) of ingest job type
         ingest.job.data = data.get_dict()
         ingest.job.status = 'QUEUED'
         ingest.job.save()
@@ -95,6 +102,10 @@ class TestQueuedExecutionConfigurator(TestCase):
         exe_config = configurator.configure_queued_job(ingest.job)
 
         config_dict = exe_config.get_dict()
+        print 'Old Ingest config:'
+        print str(config_dict)
+        print 'Expected config:'
+        print str(expected_config)
         self.assertDictEqual(config_dict, expected_config)
 
     def test_configure_queued_job_ingest_with_new_workspace(self):
@@ -104,7 +115,8 @@ class TestQueuedExecutionConfigurator(TestCase):
         workspace_2 = storage_test_utils.create_workspace()
         from ingest.models import Ingest
         from ingest.test import utils as ingest_test_utils
-        ingest = ingest_test_utils.create_ingest(workspace=workspace_1, new_workspace=workspace_2)
+        scan = ingest_test_utils.create_scan()
+        ingest = ingest_test_utils.create_ingest(scan=scan, workspace=workspace_1, new_workspace=workspace_2)
         Ingest.objects.start_ingest_tasks([ingest])
 
         expected_args = 'scale_ingest -i %s' % str(ingest.id)
@@ -129,7 +141,8 @@ class TestQueuedExecutionConfigurator(TestCase):
         workspace_1 = storage_test_utils.create_workspace()
         from ingest.models import Ingest
         from ingest.test import utils as ingest_test_utils
-        ingest = ingest_test_utils.create_ingest(workspace=workspace_1)
+        scan = ingest_test_utils.create_scan()
+        ingest = ingest_test_utils.create_ingest(scan=scan, workspace=workspace_1)
         Ingest.objects.start_ingest_tasks([ingest])
 
         expected_args = 'scale_ingest -i %s' % str(ingest.id)
@@ -151,10 +164,13 @@ class TestQueuedExecutionConfigurator(TestCase):
     def test_configure_queued_job_strike(self):
         """Tests successfully calling configure_queued_job() on a Strike job"""
 
-        workspace = storage_test_utils.create_workspace()
-        configuration = {'version': '1.0', 'mount': 'host:/my/path', 'transfer_suffix': '_tmp',
-                         'files_to_ingest': [{'filename_regex': '.*txt', 'workspace_name': workspace.name,
-                                              'workspace_path': 'wksp/path'}]}
+        wksp_config_1 = {'version': '1.0', 'broker': {'type': 'host', 'host_path': '/my/path'}}
+        workspace_1 = storage_test_utils.create_workspace(json_config=wksp_config_1)
+        wksp_config_2 = {'version': '1.0', 'broker': {'type': 'host', 'host_path': '/other/my/path'}}
+        workspace_2 = storage_test_utils.create_workspace(json_config=wksp_config_2)
+        configuration = {'version': '2.0', 'workspace': workspace_1.name,
+                         'monitor': {'type': 'dir-watcher', 'transfer_suffix': '_tmp'},
+                         'files_to_ingest': [{'filename_regex': '.*txt', 'new_workspace': workspace_2.name}]}
         from ingest.test import utils as ingest_test_utils
         strike = ingest_test_utils.create_strike(configuration=configuration)
         data = JobData()
@@ -165,7 +181,7 @@ class TestQueuedExecutionConfigurator(TestCase):
 
         expected_args = 'scale_strike -i %s' % str(strike.id)
         expected_env_vars = {'STRIKE ID': str(strike.id)}
-        expected_workspaces = {workspace.name: {'mode': 'rw'}}
+        expected_workspaces = {workspace_1.name: {'mode': 'rw'}, workspace_2.name: {'mode': 'rw'}}
         expected_config = {'version': '2.0', 'tasks': [{'type': 'main', 'args': expected_args,
                                                         'env_vars': expected_env_vars,
                                                         'workspaces': expected_workspaces}]}
@@ -177,6 +193,10 @@ class TestQueuedExecutionConfigurator(TestCase):
         config_dict = exe_config.get_dict()
         # Make sure the dict validates
         ExecutionConfiguration(config_dict)
+        print 'Strike config:'
+        print str(config_dict)
+        print 'Expected config:'
+        print str(expected_config)
         self.assertDictEqual(config_dict, expected_config)
 
     def test_configure_queued_job_scan(self):

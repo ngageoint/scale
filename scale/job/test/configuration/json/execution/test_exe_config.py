@@ -47,19 +47,19 @@ class TestExecutionConfiguration(TestCase):
                     'resources': {'cpu': 1.0},
                     'args': 'foo ${INPUT_1} ${JOB_OUTPUT_DIR}',
                     'env_vars': {'ENV_VAR_NAME': 'ENV_VAR_VALUE'},
-                    'workspaces': {'WORKSPACE_NAME': {'mode': 'RO', 'volume_name': None}},
+                    'workspaces': {'WORKSPACE_NAME': {'mode': 'ro', 'volume_name': None}},
                     'mounts': {'MOUNT_NAME': 'MOUNT_VOLUME_NAME'},
                     'settings': {'SETTING_NAME': 'SETTING_VALUE'},
                     'volumes': {
                         'VOLUME_NAME_1': {
                             'container_path': '/the/container/path',
-                            'mode': 'RO',
+                            'mode': 'ro',
                             'type': 'host',
                             'host_path': '/the/host/path'
                         },
                         'VOLUME_NAME_2': {
                             'container_path': '/the/other/container/path',
-                            'mode': 'RW',
+                            'mode': 'rw',
                             'type': 'volume',
                             'driver': 'SUPER_DRIVER_5000',
                             'driver_opts': {'turbo': 'yes-pleez'}

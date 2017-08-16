@@ -322,6 +322,8 @@ class RunningJobExecution(object):
             if not self._current_task or self._current_task.id != task_update.task_id:
                 return
 
-            self._current_task.update_task_id_for_lost_task()  # Note: This changes the task ID!
-            self._remaining_tasks.insert(0, self._current_task)
+            if self._status == 'RUNNING':
+                # Re-run lost task with new task ID if the job execution is still running
+                self._current_task.update_task_id_for_lost_task()  # Note: This changes the task ID!
+                self._remaining_tasks.insert(0, self._current_task)
             self._current_task = None

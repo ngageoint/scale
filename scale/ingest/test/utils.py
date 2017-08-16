@@ -26,10 +26,7 @@ def create_ingest(file_name='test.txt', status='TRANSFERRING', transfer_started=
     if status not in ['QUEUED', 'TRANSFERRING', 'INGESTING'] and not ingest_ended:
         ingest_ended = timezone.now()
 
-    try:
-        job_type = Ingest.objects.get_ingest_job_type()
-    except:
-        job_type = job_utils.create_job_type()
+    job_type = Ingest.objects.get_ingest_job_type()
     job = job_utils.create_job(job_type=job_type)
 
     return Ingest.objects.create(file_name=file_name, file_size=source_file.file_size, status=status, job=job,
@@ -55,7 +52,8 @@ def create_strike(name=None, title=None, description=None, configuration=None, j
                          'files_to_ingest': [{'filename_regex': '.*txt', 'workspace_name': workspace.name,
                                               'workspace_path': 'wksp/path'}]}
     if not job:
-        job = job_utils.create_job()
+        job_type = Strike.objects.get_strike_job_type()
+        job = job_utils.create_job(job_type=job_type)
 
     return Strike.objects.create(name=name, title=title, description=description, configuration=configuration, job=job)
 

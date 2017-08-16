@@ -370,6 +370,7 @@ class TestRunningJobExecution(TestCase):
         self.running_job_exe.execution_timed_out(job_task, when_timed_out)
         self.assertFalse(self.running_job_exe.is_finished())  # Not finished until killed  task update arrives
         self.assertEqual(self.running_job_exe.status, 'FAILED')
+        self.assertEqual(self.running_job_exe.error_category, 'ALGORITHM')
         self.assertEqual(self.running_job_exe.error.name, 'timeout')
         self.assertEqual(self.running_job_exe.finished, when_timed_out)
         self.assertFalse(self.running_job_exe.is_next_task_ready())
@@ -381,7 +382,7 @@ class TestRunningJobExecution(TestCase):
         self.running_job_exe.task_update(update)
         self.assertTrue(self.running_job_exe.is_finished())
         self.assertEqual(self.running_job_exe.status, 'FAILED')
-        self.assertEqual(self.running_job_exe.error_category, 'SYSTEM')
+        self.assertEqual(self.running_job_exe.error_category, 'ALGORITHM')
         self.assertEqual(self.running_job_exe.error.name, 'timeout')
         self.assertEqual(self.running_job_exe.finished, when_timed_out)
         self.assertFalse(self.running_job_exe.is_next_task_ready())
