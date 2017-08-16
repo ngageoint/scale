@@ -132,7 +132,7 @@ class RunningJobExecution(object):
         job_exe_end = JobExecutionEnd()
         job_exe_end.job_exe_id = self.id
         job_exe_end.job_id = self.job_id
-        job_exe_end.job_type = self.job_type_id
+        job_exe_end.job_type_id = self.job_type_id
         job_exe_end.exe_num = self.exe_num
         job_exe_end.status = self._status
         if self._error:
@@ -143,16 +143,18 @@ class RunningJobExecution(object):
         job_exe_end.ended = self._finished
         return job_exe_end
 
-    def execution_canceled(self):
+    def execution_canceled(self, when):
         """Cancels this job execution and returns the current task
 
+        :param when: The time that the execution was canceled
+        :type when: :class:`datetime.datetime`
         :returns: The current task, possibly None
         :rtype: :class:`job.tasks.base_task.Task`
         """
 
         with self._lock:
             task = self._current_task
-            self._set_final_status('CANCELED', now())
+            self._set_final_status('CANCELED', when)
             return task
 
     def execution_lost(self, when):

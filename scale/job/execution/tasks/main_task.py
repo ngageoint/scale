@@ -38,7 +38,7 @@ class MainTask(JobExecutionTask):
             else:
                 self._docker_image = job_type.docker_image
             self._docker_params = configuration.get_docker_params('main')
-            self._is_docker_privileged = job_type.is_docker_privileged
+            self._is_docker_privileged = job_type.docker_privileged
         self._command_arguments = configuration.get_args('main')
         if job_type.is_long_running:
             self._running_timeout_threshold = None

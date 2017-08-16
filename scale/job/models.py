@@ -282,22 +282,22 @@ class JobManager(models.Manager):
         input_file_ids = job.get_job_data().get_input_file_ids()
         input_files = ScaleFile.objects.filter(id__in=input_file_ids)
         input_files = input_files.select_related('workspace', 'job_type', 'job', 'job_exe')
-        input_files = input_files.defer('workspace__json_config', 'job__data', 'job__configuration', 'job__results',
-                                        'job_exe__environment', 'job_exe__configuration', 'job_exe__job_metrics',
-                                        'job_exe__stdout', 'job_exe__stderr', 'job_exe__results',
-                                        'job_exe__results_manifest', 'job_type__interface', 'job_type__docker_params',
-                                        'job_type__configuration', 'job_type__error_mapping')
+        input_files = input_files.defer('workspace__json_config', 'job__data', 'job__results', 'job_exe__environment',
+                                        'job_exe__configuration', 'job_exe__job_metrics', 'job_exe__stdout',
+                                        'job_exe__stderr', 'job_exe__results', 'job_exe__results_manifest',
+                                        'job_type__interface', 'job_type__docker_params', 'job_type__configuration',
+                                        'job_type__error_mapping')
         input_files = input_files.prefetch_related('countries')
         input_files = input_files.order_by('id').distinct('id')
 
         # Attempt to get related products
         output_files = ScaleFile.objects.filter(job=job)
         output_files = output_files.select_related('workspace', 'job_type', 'job', 'job_exe')
-        output_files = output_files.defer('workspace__json_config', 'job__data', 'job__configuration', 'job__results',
-                                          'job_exe__environment', 'job_exe__configuration', 'job_exe__job_metrics',
-                                          'job_exe__stdout', 'job_exe__stderr', 'job_exe__results',
-                                          'job_exe__results_manifest', 'job_type__interface', 'job_type__docker_params',
-                                          'job_type__configuration', 'job_type__error_mapping')
+        output_files = output_files.defer('workspace__json_config', 'job__data', 'job__results', 'job_exe__environment',
+                                          'job_exe__configuration', 'job_exe__job_metrics', 'job_exe__stdout',
+                                          'job_exe__stderr', 'job_exe__results', 'job_exe__results_manifest',
+                                          'job_type__interface', 'job_type__docker_params', 'job_type__configuration',
+                                          'job_type__error_mapping')
         output_files = output_files.prefetch_related('countries')
         output_files = output_files.order_by('id').distinct('id')
 

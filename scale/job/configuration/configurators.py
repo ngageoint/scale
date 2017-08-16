@@ -282,10 +282,9 @@ class ScheduledExecutionConfigurator(object):
         for task_type in config.get_task_types():
             # Configure env vars describing allocated task resources
             env_vars = {}
-            resources_json = config.get_resources(task_type).get_json()
-            for name, value in resources_json.get_dict().items():
-                env_name = 'ALLOCATED_%s' % normalize_env_var_name(name)
-                env_vars[env_name] = value
+            for resource in config.get_resources(task_type).resources:
+                env_name = 'ALLOCATED_%s' % normalize_env_var_name(resource.name)
+                env_vars[env_name] = str(resource.value)  # Assumes scalar resources
 
             # Configure workspace volumes
             workspace_volumes = {}
@@ -385,7 +384,7 @@ class ScheduledExecutionConfigurator(object):
 
         config.create_tasks(['pull', 'pre', 'main', 'post'])
         config.add_to_task('pull', args=create_pull_command(job_type.docker_image))
-        env_vars = {'SCALE_JOB_ID': job_exe.job_id, 'SCALE_EXE_NUM': job_exe.exe_num}
+        env_vars = {'SCALE_JOB_ID': str(job_exe.job_id), 'SCALE_EXE_NUM': str(job_exe.exe_num)}
         config.add_to_task('pre', args=PRE_TASK_COMMAND_ARGS, env_vars=env_vars)
         config.add_to_task('post', args=POST_TASK_COMMAND_ARGS, env_vars=env_vars)
 
@@ -494,7 +493,7 @@ class ScheduledExecutionConfigurator(object):
         for _config in [config, config_with_secrets]:
             for task_type in _config.get_task_types():
                 env_vars = {}
-                for name, value in _config.get_settings(task_type):
+                for name, value in _config.get_settings(task_type).items():
                     env_name = normalize_env_var_name(name)
                     env_vars[env_name] = value
                 _config.add_to_task(task_type, env_vars=env_vars)
@@ -504,9 +503,9 @@ class ScheduledExecutionConfigurator(object):
             existing_volumes = set()
             for task_type in _config.get_task_types():
                 docker_params = []
-                for name, value in _config.get_env_vars(task_type):
+                for name, value in _config.get_env_vars(task_type).items():
                     docker_params.append(DockerParameter('env', '%s=%s' % (name, value)))
-                for name, volume in _config.get_volumes(task_type):
+                for name, volume in _config.get_volumes(task_type).items():
                     docker_params.append(volume.to_docker_param(is_created=(name in existing_volumes)))
                     existing_volumes.add(name)
                 _config.add_to_task(task_type, docker_params=docker_params)
@@ -515,7 +514,7 @@ class ScheduledExecutionConfigurator(object):
         # Configure docker parameters listed in job type
         if job_type.docker_params:
             docker_params = []
-            for key, value in job_type.docker_params:
+            for key, value in job_type.docker_params.items():
                 docker_params.append(DockerParameter(key, value))
             if docker_params:
                 config.add_to_task('main', docker_params=docker_params)

@@ -12,7 +12,8 @@ from job.configuration.exceptions import InvalidExecutionConfiguration
 from job.configuration.json.execution import exe_config_1_1 as previous_version
 from job.configuration.volume import Volume, MODE_RO, MODE_RW
 from job.configuration.workspace import TaskWorkspace
-from node.resources.json.resources import Resources
+from node.resources.node_resources import NodeResources
+from node.resources.resource import ScalarResource
 
 logger = logging.getLogger(__name__)
 
@@ -436,7 +437,10 @@ class ExecutionConfiguration(object):
 
         for task_dict in self._configuration['tasks']:
             if task_dict['type'] == task_type and 'resources' in task_dict:
-                return Resources(task_dict['resources']).get_node_resources()
+                resources = []
+                for name, value in task_dict['resources'].items():
+                    resources.append(ScalarResource(name, value))
+                return NodeResources(resources)
         return None
 
     def get_settings(self, task_type):
@@ -653,7 +657,10 @@ class ExecutionConfiguration(object):
         :type resources: :class:`node.resources.node_resources.NodeResources`
         """
 
-        task_dict['resources'] = resources.get_json().get_dict()
+        resources_dict = {}
+        for resource in resources.resources:
+            resources_dict[resource.name] = resource.value  # Assumes scalar resource
+        task_dict['resources'] = resources_dict
 
     @staticmethod
     def _add_settings_to_task(task_dict, settings):

@@ -180,12 +180,13 @@ class JobExecutionManager(object):
 
         canceled_tasks = []
         finished_job_exes = []
+        when_canceled = now()
         with self._lock:
             for running_job_exe in self._running_job_exes.values():
                 job_model = job_models[running_job_exe.job_id]
                 # If the job has been canceled or the job has a newer execution, this execution must be canceled
                 if job_model.status == 'CANCELED' or job_model.num_exes > running_job_exe.exe_num:
-                    task = running_job_exe.execution_canceled()
+                    task = running_job_exe.execution_canceled(when_canceled)
                     if task:
                         # Since it has an outstanding task, we do not remove the canceled job execution at this point.
                         # We wait for the status update of the killed task to come back so that job execution cleanup

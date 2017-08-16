@@ -12,6 +12,7 @@ from job.configuration.results.exceptions import InvalidResultsManifest, Missing
 from job.configuration.results.job_results import JobResults
 from job.configuration.results.results_manifest.results_manifest import ResultsManifest
 from job.management.commands.scale_post_steps import Command as PostCommand
+from job.models import JobExecution
 from job.test import utils as job_utils
 from trigger.models import TriggerEvent
 
@@ -28,12 +29,14 @@ class TestPostJobSteps(TransactionTestCase):
 
         cmd = 'command'
         cmd_args = 'args'
-        interface = {'version': '1.0', 'command': cmd, 'command_arguments': cmd_args, 'inputs': [], 'outputs': [{'name': 'arg1'}, {'name': 'arg2'}]}
+        interface = {'version': '1.0', 'command': cmd, 'command_arguments': cmd_args, 'inputs': [],
+                     'outputs': [{'name': 'arg1'}, {'name': 'arg2'}]}
 
         self.job_type = job_utils.create_job_type(name='Test', version='1.0', interface=interface)
         self.event = TriggerEvent.objects.create_trigger_event('TEST', None, {}, now())
         self.job = job_utils.create_job(job_type=self.job_type, event=self.event, status='RUNNING')
-        self.job_exe = job_utils.create_job_exe(job=self.job, status='RUNNING', command_arguments=cmd_args, queued=now())
+        self.running_job_exe = job_utils.create_running_job_exe(job=self.job)
+        self.job_exe = JobExecution.objects.get(id=self.running_job_exe.id)
 
     @patch('job.management.commands.scale_post_steps.JobExecution.objects')
     def test_scale_post_steps_successful(self, mock_job_exe_manager):
