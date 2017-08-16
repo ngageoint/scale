@@ -730,7 +730,10 @@ class ExecutionConfiguration(object):
             task_dict['workspaces'] = task_workspaces
 
         for name, volume in wksp_volumes:
-            task_workspaces[name] = {'mode': volume.mode, 'volume_name': volume.name}
+            wksp_dict = {'mode': volume.mode}
+            if volume.name:
+                wksp_dict['volume_name'] = volume.name
+            task_workspaces[name] = wksp_dict
         ExecutionConfiguration._add_volumes_to_task(task_dict, wksp_volumes.values())
 
     @staticmethod

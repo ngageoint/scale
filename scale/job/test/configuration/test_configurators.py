@@ -85,7 +85,7 @@ class TestQueuedExecutionConfigurator(TestCase):
         ingest_rev_2 = JobTypeRevision.objects.get(job_type=ingest_job_type, revision_num=2)
         data = JobData()
         data.add_property_input('Ingest ID', str(ingest.id))
-        ingest.job.job_type_rev_id = ingest_rev_2.id  # Job has old revision (2nd) of ingest job type
+        ingest.job.job_type_rev = ingest_rev_2  # Job has old revision (2nd) of ingest job type
         ingest.job.data = data.get_dict()
         ingest.job.status = 'QUEUED'
         ingest.job.save()
@@ -181,7 +181,7 @@ class TestQueuedExecutionConfigurator(TestCase):
 
         expected_args = 'scale_strike -i %s' % str(strike.id)
         expected_env_vars = {'STRIKE ID': str(strike.id)}
-        expected_workspaces = {workspace_1.name: {'mode': 'rw'}, workspace_2.name: {'mode': 'rw'}}
+        expected_workspaces = {workspace_1.name: {'mode': 'rw'}}
         expected_config = {'version': '2.0', 'tasks': [{'type': 'main', 'args': expected_args,
                                                         'env_vars': expected_env_vars,
                                                         'workspaces': expected_workspaces}]}
