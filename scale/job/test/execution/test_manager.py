@@ -8,7 +8,7 @@ from django.utils.timezone import now
 
 import job.test.utils as job_test_utils
 import node.test.utils as node_test_utils
-from error.models import CACHED_BUILTIN_ERRORS
+from error.models import CACHED_ERRORS
 from job.execution.manager import JobExecutionManager
 from job.models import Job
 from job.tasks.update import TaskStatusUpdate
@@ -23,7 +23,7 @@ class TestJobExecutionManager(TransactionTestCase):
         django.setup()
 
         # Clear error cache so test works correctly
-        CACHED_BUILTIN_ERRORS.clear()
+        CACHED_ERRORS.clear()
 
         self.agent_id = 'agent'
         self.node_model_1 = node_test_utils.create_node()

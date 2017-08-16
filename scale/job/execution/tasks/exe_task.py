@@ -80,10 +80,10 @@ class JobExecutionTask(Task):
         # instead. This method is inaccurate if no TASK_RUNNING update happens to be received.
         if not self._has_started:
             if self._uses_docker:
-                return Error.objects.get_builtin_error('docker-task-launch')
+                return Error.objects.get_error('docker-task-launch')
             else:
-                return Error.objects.get_builtin_error('task-launch')
+                return Error.objects.get_error('task-launch')
         else:
             if task_update.reason == 'REASON_EXECUTOR_TERMINATED' and self._uses_docker:
-                return Error.objects.get_builtin_error('docker-terminated')
+                return Error.objects.get_error('docker-terminated')
         return None

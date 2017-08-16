@@ -48,7 +48,7 @@ class PullTask(JobExecutionTask):
             if self._task_id != task_update.task_id:
                 return None
 
-            return Error.objects.get_builtin_error('pull')
+            return Error.objects.get_error('pull')
 
     def get_resources(self):
         """See :meth:`job.tasks.base_task.Task.get_resources`

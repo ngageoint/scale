@@ -92,6 +92,7 @@ class ScaleScheduler(MesosScheduler):
 
         # Initial database sync
         logger.info('Performing initial sync with Scale database')
+        Error.objects.cache_builtin_errors()
         job_exe_mgr.init_with_database()
         job_type_mgr.sync_with_database()
         scheduler_mgr.sync_with_database()
@@ -455,8 +456,7 @@ class ScaleScheduler(MesosScheduler):
                     tasks_to_reconcile.append(task)
             else:
                 # Fail any executions that the scheduler has lost
-                Queue.objects.handle_job_failure(job_exe.id, now(), [],
-                                                 Error.objects.get_builtin_error('scheduler-lost'))
+                Queue.objects.handle_job_failure(job_exe.id, now(), [], Error.objects.get_error('scheduler-lost'))
 
         # Send tasks to reconciliation thread
         recon_mgr.add_tasks(tasks_to_reconcile)

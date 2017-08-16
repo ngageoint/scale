@@ -71,8 +71,8 @@ class TestJobManager(TransactionTestCase):
         workspace_1 = storage_test_utils.create_workspace()
         workspace_2 = storage_test_utils.create_workspace()
         workspace_3 = storage_test_utils.create_workspace()
-        file_1 = storage_test_utils.create_file(workspace=workspace_1, file_size=1000.0)
-        file_2 = storage_test_utils.create_file(workspace=workspace_2, file_size=3000.0)
+        file_1 = storage_test_utils.create_file(workspace=workspace_1, file_size=10240.0)
+        file_2 = storage_test_utils.create_file(workspace=workspace_2, file_size=102400.0)
         interface = {
             'version': '1.0',
             'command': 'my_command',
@@ -113,7 +113,7 @@ class TestJobManager(TransactionTestCase):
         job = Job.objects.get(id=job.id)
 
         # Make sure input file size is calculated and set
-        self.assertEqual(job.disk_in_required, file_1.file_size + file_2.file_size)
+        self.assertEqual(job.disk_in_required, 110)  # Convert from file bytes to MiB to get 110 value
         # Make sure job input file models are created
         job_input_files = JobInputFile.objects.filter(job_id=job.id)
         self.assertEqual(len(job_input_files), 2)

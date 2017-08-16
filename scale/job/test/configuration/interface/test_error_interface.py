@@ -4,7 +4,7 @@ import django
 from django.test import TestCase
 
 import error.test.utils as error_test_utils
-from error.models import CACHED_BUILTIN_ERRORS
+from error.models import CACHED_ERRORS
 from job.configuration.interface.error_interface import ErrorInterface
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 
@@ -59,7 +59,7 @@ class TestErrorInterfaceValidate(TestCase):
         """Tests that general algorithm error is returned when a non-registered name is found in the mapping"""
 
         # Clear error cache so test works correctly
-        CACHED_BUILTIN_ERRORS.clear()
+        CACHED_ERRORS.clear()
 
         error_interface_dict = {
             'version': '1.0',
@@ -80,7 +80,7 @@ class TestErrorInterfaceValidate(TestCase):
         """Tests that custom error is returned when a non-registered name is found in the mapping"""
 
         # Clear error cache so test works correctly
-        CACHED_BUILTIN_ERRORS.clear()
+        CACHED_ERRORS.clear()
 
         error_interface_dict = {
             'version': '1.0',

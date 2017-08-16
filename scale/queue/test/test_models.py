@@ -16,11 +16,10 @@ import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import source.test.utils as source_test_utils
 import trigger.test.utils as trigger_test_utils
-from error.models import CACHED_BUILTIN_ERRORS, Error
+from error.models import CACHED_ERRORS, Error
 from job.configuration.results.job_results import JobResults
 from job.configuration.results.results_manifest.results_manifest import ResultsManifest
 from job.models import Job, JobExecution
-from node.resources.json.resources import Resources
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Cpus, Disk, Mem
 from queue.job_exe import QueuedJobExecution
@@ -113,7 +112,7 @@ class TestQueueManager(TransactionTestCase):
     def setUp(self):
         django.setup()
 
-        CACHED_BUILTIN_ERRORS.clear()  # Clear error cache since the error models keep getting rolled back
+        CACHED_ERRORS.clear()  # Clear error cache since the error models keep getting rolled back
 
     def test_get_queue_fifo(self):
         """Tests calling QueueManager.get_queue() in FIFO mode"""
@@ -174,7 +173,7 @@ class TestQueueManager(TransactionTestCase):
         job_type = job_test_utils.create_job_type(max_tries=2)
         job = job_test_utils.create_job(job_type=job_type, status='RUNNING', num_exes=1)
         job_exe = job_test_utils.create_job_exe(job=job, status='RUNNING')
-        error = Error.objects.get_builtin_error('database-operation')
+        error = Error.objects.get_error('database-operation')
 
         # Call method to test
         Queue.objects.handle_job_failure(job_exe.id, now(), [], error=error)
@@ -214,7 +213,7 @@ class TestQueueManager(TransactionTestCase):
         job_type = job_test_utils.create_job_type(max_tries=2)
         job = job_test_utils.create_job(job_type=job_type, status='RUNNING', num_exes=1)
         job_exe = job_test_utils.create_job_exe(job=job, status='RUNNING')
-        error = Error.objects.get_builtin_error('database-operation')
+        error = Error.objects.get_error('database-operation')
 
         Job.objects.supersede_jobs([job], now())
 

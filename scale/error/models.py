@@ -7,14 +7,21 @@ from django.db import models, transaction
 logger = logging.getLogger(__name__)
 
 
-CACHED_BUILTIN_ERRORS = {}  # {Name: Error model}
+CACHED_ERRORS = {}  # {Name: Error model}
 
 
 class ErrorManager(models.Manager):
     """Provides additional methods for handling errors"""
 
-    def get_builtin_error(self, name):
-        """Returns the builtin error with the given name
+    def cache_builtin_errors(self):
+        """Queries all errors that are built into the system and caches them for fast retrieval
+        """
+
+        for error in self.filter(is_builtin=True).iterator:
+            CACHED_ERRORS[error.name] = error
+
+    def get_error(self, name):
+        """Returns the error with the given name, using the cache if able to prevent database accesses
 
         :param name: The name of the error
         :type name: string
@@ -22,10 +29,10 @@ class ErrorManager(models.Manager):
         :rtype: :class:`error.models.Error`
         """
 
-        if name not in CACHED_BUILTIN_ERRORS:
+        if name not in CACHED_ERRORS:
             error = Error.objects.get(name=name)
-            CACHED_BUILTIN_ERRORS[name] = error
-        return CACHED_BUILTIN_ERRORS[name]
+            CACHED_ERRORS[name] = error
+        return CACHED_ERRORS[name]
 
     def get_unknown_error(self):
         """Returns the error for an unknown cause
@@ -33,7 +40,7 @@ class ErrorManager(models.Manager):
         :returns: The unknown error
         :rtype: :class:`error.models.Error`
         """
-        return self.get_builtin_error('unknown')
+        return self.get_error('unknown')
 
     def get_errors(self, started=None, ended=None, order=None):
         """Returns a list of errors within the given time range.

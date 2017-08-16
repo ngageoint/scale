@@ -164,7 +164,7 @@ class RunningJobExecution(object):
         :type when: :class:`datetime.datetime`
         """
 
-        error = Error.objects.get_builtin_error('node-lost')
+        error = Error.objects.get_error('node-lost')
 
         with self._lock:
             self._current_task = None
@@ -183,7 +183,7 @@ class RunningJobExecution(object):
             error_name = task.timeout_error_name
         else:
             error_name = 'launch-timeout'
-        error = Error.objects.get_builtin_error(error_name)
+        error = Error.objects.get_error(error_name)
 
         with self._lock:
             self._set_final_status('FAILED', when, error)

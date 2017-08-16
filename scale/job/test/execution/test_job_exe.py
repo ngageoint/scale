@@ -7,9 +7,7 @@ from django.test import TestCase
 from django.utils.timezone import now
 
 import job.test.utils as job_test_utils
-from error.models import Error, CACHED_BUILTIN_ERRORS
-from job.execution.job_exe import RunningJobExecution
-from job.models import JobExecution
+from error.models import Error, CACHED_ERRORS
 from job.tasks.base_task import RUNNING_RECON_THRESHOLD
 from job.tasks.manager import TaskManager
 from job.tasks.update import TaskStatusUpdate
@@ -648,7 +646,7 @@ class TestRunningJobExecution(TestCase):
         """Tests running through a job execution where a pre-task fails to launch"""
 
         # Clear error cache so test works correctly
-        CACHED_BUILTIN_ERRORS.clear()
+        CACHED_ERRORS.clear()
 
         # Start, run, and complete pull-task
         task = self.running_job_exe.start_next_task()
@@ -684,7 +682,7 @@ class TestRunningJobExecution(TestCase):
         """Tests running through a job execution where a Docker-based job-task fails to launch"""
 
         # Clear error cache so test works correctly
-        CACHED_BUILTIN_ERRORS.clear()
+        CACHED_ERRORS.clear()
 
         # Start, run, and complete pull-task
         task = self.running_job_exe.start_next_task()
@@ -739,7 +737,7 @@ class TestRunningJobExecution(TestCase):
         """Tests running through a job execution where a post-task fails to launch"""
 
         # Clear error cache so test works correctly
-        CACHED_BUILTIN_ERRORS.clear()
+        CACHED_ERRORS.clear()
 
         # Start, run, and complete pull-task
         task = self.running_job_exe.start_next_task()
@@ -813,7 +811,7 @@ class TestRunningJobExecution(TestCase):
         """Tests running through a job execution where the Docker image pull fails"""
 
         # Clear error cache so test works correctly
-        CACHED_BUILTIN_ERRORS.clear()
+        CACHED_ERRORS.clear()
 
         # Start pull-task
         task = self.running_job_exe.start_next_task()
@@ -844,7 +842,7 @@ class TestRunningJobExecution(TestCase):
         """
 
         # Clear error cache so test works correctly
-        CACHED_BUILTIN_ERRORS.clear()
+        CACHED_ERRORS.clear()
 
         # Start, run, and complete pull-task
         task = self.running_job_exe.start_next_task()
@@ -908,7 +906,7 @@ class TestRunningJobExecution(TestCase):
         """Tests running through a job execution where a Docker container terminates"""
 
         # Clear error cache so test works correctly
-        CACHED_BUILTIN_ERRORS.clear()
+        CACHED_ERRORS.clear()
 
         # Start, run, and complete pull-task
         task = self.running_job_exe.start_next_task()
