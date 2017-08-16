@@ -134,7 +134,7 @@ class TestIngestTriggerConditionIsConditionMet(TestCase):
 
         self.assertEqual(condition.is_condition_met(source_file), True)
 
-    def test_had_all_data_types(self):
+    def test_has_all_data_types(self):
         """
         Tests calling IngestTriggerCondition.is_condition_met() with a source file that has all three data type
         conditions
@@ -146,3 +146,27 @@ class TestIngestTriggerConditionIsConditionMet(TestCase):
         source_file.add_data_type_tag('B')
 
         self.assertEqual(condition.is_condition_met(source_file), True)
+
+    def test_no_any_data_types(self):
+        """
+        Tests calling IngestTriggerCondition.is_condition_met() with a source file that has no match with 
+        any_of_data_types
+        """
+
+        condition = IngestTriggerCondition(None, set([]), set(['A', 'B', 'C']), set([]))
+        source_file = source_test_utils.create_source(media_type='text/plain')
+        source_file.add_data_type_tag('F')
+
+        self.assertEqual(condition.is_condition_met(source_file), False)
+
+    def test_has_not_data_types(self):
+        """
+        Tests calling IngestTriggerCondition.is_condition_met() with a source file that a match with 
+        not_data_types
+        """
+
+        condition = IngestTriggerCondition(None, set([]), set([]), set(['A', 'B', 'C']))
+        source_file = source_test_utils.create_source(media_type='text/plain')
+        source_file.add_data_type_tag('A')
+
+        self.assertEqual(condition.is_condition_met(source_file), False)
