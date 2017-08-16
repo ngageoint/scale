@@ -45,9 +45,24 @@ class ParseTriggerCondition(object):
         :rtype: str
         """
 
+        data_types_str = 'data type(s) '
+        data_types_str_len = len(data_types_str)
+
+        if self._data_types:
+            data_types_str += str(list(self._data_types))
+        if self._any_data_types:
+            if len(data_types_str) > data_types_str_len:
+                data_types_str += ' and '
+            data_types_str += '[' + ' or '.join(self._any_data_types) + ']'
+        if self._not_data_types:
+            if len(data_types_str) > data_types_str_len:
+                data_types_str += ' and '
+            data_types_str += '[' + ' or '.join(self._not_data_types) + ']'
+        if len(data_types_str) == data_types_str_len:
+            data_types_str = 'all media types'
+
         media_type = 'media type %s' % self._media_type if self._media_type else 'all media types'
-        data_types = 'data type(s) %s' % str(list(self._data_types)) if self._data_types else 'all data types'
-        return 'Parse rule for %s and %s was triggered' % (media_type, data_types)
+        return 'Parse rule for %s and %s was triggered' % (media_type, data_types_str)
 
     def is_condition_met(self, source_file):
         """Indicates whether the given parsed source file meets this parse trigger condition
