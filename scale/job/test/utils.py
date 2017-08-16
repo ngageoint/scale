@@ -1,16 +1,19 @@
 """Defines utility methods for testing jobs and job types"""
 from __future__ import unicode_literals
 
+import datetime
+
 import django.utils.timezone as timezone
 
 import trigger.test.utils as trigger_test_utils
+from job.configuration.configurators import QueuedExecutionConfigurator, ScheduledExecutionConfigurator
 from job.configuration.data.exceptions import InvalidConnection
-from job.configuration.json.execution.exe_config import ExecutionConfiguration
+from job.execution.job_exe import RunningJobExecution
 from job.models import Job, JobExecution, JobType, JobTypeRevision, TaskUpdate
 from job.tasks.update import TaskStatusUpdate
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
-from node.resources.node_resources import NodeResources
 from node.test import utils as node_utils
+from storage.models import ScaleFile, Workspace
 from trigger.handler import TriggerRuleHandler, register_trigger_rule_handler
 
 
@@ -81,7 +84,7 @@ register_trigger_rule_handler(MockErrorTriggerRuleHandler())
 
 def create_job(job_type=None, event=None, status='PENDING', error=None, data=None, num_exes=0, queued=None,
                started=None, ended=None, last_status_change=None, priority=100, results=None, superseded_job=None,
-               delete_superseded=True, is_superseded=False, superseded=None):
+               delete_superseded=True, is_superseded=False, superseded=None, input_file_size=10.0):
     """Creates a job model for unit testing
 
     :returns: The job model
@@ -121,49 +124,9 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, data=Non
     job.results = results
     job.is_superseded = is_superseded
     job.superseded = superseded
+    job.disk_in_required = input_file_size
     job.save()
     return job
-
-
-def create_job_exe(job_type=None, job=None, status='RUNNING', configuration=None, error=None,
-                   command_arguments='test_arg', timeout=None, node=None, created=None, queued=None, started=None,
-                   pre_started=None, pre_completed=None, job_started=None, job_completed=None, post_started=None,
-                   post_completed=None, ended=None, last_modified=None, input_file_size=0.0, resources=None):
-    """Creates a job execution model for unit testing
-
-    :returns: The job execution model
-    :rtype: :class:`job.models.JobExecution`
-    """
-
-    when = timezone.now()
-    if not job:
-        job = create_job(job_type=job_type)
-    if not configuration:
-        configuration = ExecutionConfiguration().get_dict()
-    if not timeout:
-        timeout = job.timeout
-    if not node:
-        node = node_utils.create_node()
-    if not created:
-        created = when
-    if not queued:
-        queued = when
-    if not started:
-        started = when
-    if not last_modified:
-        last_modified = when
-    if not resources:
-        resources = NodeResources()
-
-    job_exe = JobExecution.objects.create(job=job, status=status, error=error, configuration=configuration,
-                                          resources=resources.get_json().get_dict(), input_file_size=input_file_size,
-                                          command_arguments=command_arguments, timeout=timeout, node=node,
-                                          created=created, queued=queued, started=started, pre_started=pre_started,
-                                          pre_completed=pre_completed, job_started=job_started,
-                                          job_completed=job_completed, post_started=post_started,
-                                          post_completed=post_completed, ended=ended, last_modified=last_modified)
-    job_exe.set_cluster_id('1234', job.id, job.num_exes)
-    return job_exe
 
 
 def create_job_type(name=None, version=None, category=None, interface=None, priority=50, timeout=3600, max_tries=3,
@@ -307,3 +270,55 @@ def create_task_status_update(task_id, agent_id, status, when, exit_code=None, r
     if exit_code:
         update.exit_code = exit_code
     return update
+
+
+def create_running_job_exe(agent_id='agent_1', job_type=None, job=None, node=None, timeout=None, input_file_size=10.0,
+                           queued=None, started=None):
+    """Creates a running job execution for unit testing
+
+    :returns: The running job execution
+    :rtype: :class:`job.execution.job_exe.RunningJobExecution`
+    """
+
+    when = timezone.now()
+    if not job:
+        job = create_job(job_type=job_type, input_file_size=input_file_size)
+    job_type = job.job_type
+
+    # Configuration that occurs at queue time
+    input_files = {}
+    input_file_ids = job.get_job_data().get_input_file_ids()
+    if input_file_ids:
+        for input_file in ScaleFile.objects.get_files(input_file_ids):
+            input_files[input_file.id] = input_file
+    exe_config = QueuedExecutionConfigurator(input_files).configure_queued_job(job)
+
+    job_exe = JobExecution()
+    job_exe.set_cluster_id('1234', job.id, job.num_exes)
+    job_exe.job = job
+    job_exe.job_type = job.job_type
+    job_exe.exe_num = job.num_exes
+    if not node:
+        node = node_utils.create_node()
+    job_exe.node = node
+    if not timeout:
+        timeout = job.timeout
+    job_exe.timeout = timeout
+    job_exe.input_file_size = input_file_size
+    job_exe.resources = job.get_resources().get_json().get_dict()
+    job_exe.configuration = exe_config.get_dict()
+    if not queued:
+        queued = when
+    job_exe.queued = queued
+    if not started:
+        started = when + datetime.timedelta(seconds=1)
+    job_exe.started = started
+    job_exe.save()
+
+    # Configuration that occurs at schedule time
+    workspaces = {}
+    for workspace in Workspace.objects.all():
+        workspaces[workspace.name] = workspace
+    secret_config = ScheduledExecutionConfigurator(workspaces).configure_scheduled_job(job_exe, job_type,
+                                                                                       job_type.get_job_interface())
+    return RunningJobExecution(agent_id, job_exe, job_type, secret_config)

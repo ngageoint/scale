@@ -256,7 +256,7 @@ class ScheduledExecutionConfigurator(object):
         if job_type.is_system:
             ScheduledExecutionConfigurator._configure_system_job(config, job_exe)
         else:
-            ScheduledExecutionConfigurator._configure_regular_job(config, job_exe)
+            ScheduledExecutionConfigurator._configure_regular_job(config, job_exe, job_type)
 
         # Configure items that apply to all tasks
         self._configure_all_tasks(config, job_exe)
@@ -371,7 +371,7 @@ class ScheduledExecutionConfigurator(object):
         config.add_to_task('main', mount_volumes=mount_volumes)
 
     @staticmethod
-    def _configure_regular_job(config, job_exe):
+    def _configure_regular_job(config, job_exe, job_type):
         """Configures the given execution as a regular (non-system) job by adding pre and post tasks,
         input/output mounts, etc
 
@@ -379,10 +379,12 @@ class ScheduledExecutionConfigurator(object):
         :type config: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         :param job_exe: The job execution model being scheduled
         :type job_exe: :class:`job.models.JobExecution`
+        :param job_type: The job type model
+        :type job_type: :class:`job.models.JobType`
         """
 
         config.create_tasks(['pull', 'pre', 'main', 'post'])
-        config.add_to_task('pull', args=create_pull_command(job_exe.get_docker_image()))
+        config.add_to_task('pull', args=create_pull_command(job_type.docker_image))
         env_vars = {'SCALE_JOB_ID': job_exe.job_id, 'SCALE_EXE_NUM': job_exe.exe_num}
         config.add_to_task('pre', args=PRE_TASK_COMMAND_ARGS, env_vars=env_vars)
         config.add_to_task('post', args=POST_TASK_COMMAND_ARGS, env_vars=env_vars)
