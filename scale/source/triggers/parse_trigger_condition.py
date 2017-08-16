@@ -76,14 +76,14 @@ class ParseTriggerCondition(object):
         if self._media_type and self._media_type != source_file.media_type:
             return False
 
-        condition_met = True
+        data_type_checks = []
         file_data_types = source_file.get_data_type_tags()
 
-        if self._data_types:
-            condition_met = self._data_types <= file_data_types
-        if self._not_data_types:
-            condition_met = True not in [tag in file_data_types for tag in self._not_data_types]
         if self._any_data_types:
-            condition_met = True in [tag in file_data_types for tag in self._any_data_types]
+            data_type_checks.append(True in [tag in file_data_types for tag in self._any_data_types])
+        if self._data_types:
+            data_type_checks.append(self._data_types <= file_data_types)
+        if self._not_data_types:
+            data_type_checks.append(True not in [tag in file_data_types for tag in self._not_data_types])
 
-        return condition_met
+        return False not in data_type_checks if data_type_checks else True
