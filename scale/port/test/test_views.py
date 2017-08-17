@@ -579,10 +579,12 @@ class TestConfigurationViewImport(TestCase):
         }
 
         trigger_rule_config = {
-            'version': '1.0',
+            'version': '1.1',
             'condition': {
                 'media_type': 'text/plain',
                 'data_types': [],
+                'any_of_data_types': [],
+                'not_data_types': [],
             },
             'data': {
                 'input_data_name': 'input_file',
@@ -785,10 +787,12 @@ class TestConfigurationViewImport(TestCase):
         job_type = job_test_utils.create_job_type()
 
         trigger_rule_config = {
-            'version': '1.0',
+            'version': '1.1',
             'condition': {
                 'media_type': 'image/jpg',
                 'data_types': ['ABC'],
+                'any_of_data_types': [],
+                'not_data_types': [],
             },
             'data': {
                 'input_data_name': 'input_file2',
@@ -1159,10 +1163,12 @@ class TestConfigurationViewImport(TestCase):
         }
 
         trigger_rule_config = {
-            'version': '1.0',
+            'version': '1.1',
             'condition': {
                 'media_type': 'text/plain',
                 'data_types': [],
+                'any_of_data_types': [],
+                'not_data_types': [],
             },
             'data': {
                 'input_data_name': 'input_file',
@@ -1293,10 +1299,12 @@ class TestConfigurationViewImport(TestCase):
         recipe_type = recipe_test_utils.create_recipe_type()
 
         trigger_rule_config = {
-            'version': '1.0',
+            'version': '1.1',
             'condition': {
                 'media_type': 'image/jpg',
                 'data_types': ['ABC'],
+                'any_of_data_types': [],
+                'not_data_types': [],
             },
             'data': {
                 'input_data_name': 'input_file2',
@@ -1586,10 +1594,12 @@ class TestConfigurationViewImport(TestCase):
         }
 
         trigger_rule_config = {
-            'version': '1.0',
+            'version': '1.1',
             'condition': {
                 'media_type': 'text/plain',
                 'data_types': [],
+                'any_of_data_types': [],
+                'not_data_types': [],
             },
             'data': {
                 'input_data_name': 'input_file',

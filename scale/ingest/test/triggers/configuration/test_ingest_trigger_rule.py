@@ -31,6 +31,12 @@ class TestIngestTriggerRuleConfigurationInit(TestCase):
         json_str = '{"condition": {"media_type": "text/plain", "data_types": ["A", "B"]}}'
         self.assertRaises(InvalidTriggerRule, IngestTriggerRuleConfiguration, INGEST_TYPE, json.loads(json_str))
 
+    def test_invalid_data_types(self):
+        """Tests creating a IngestTriggerRuleConfiguration with an invalid data_type rule configuration"""
+
+        json_str = '{"condition": {"media_type": "text/plain", "data": {"input_data_name": "my_input", "workspace_name": "my_workspace"}, "data_types": ["A", "B"]}, "not_data_types": ["A", "C"], "not_data_types": ["A"]}'
+        self.assertRaises(InvalidTriggerRule, IngestTriggerRuleConfiguration, INGEST_TYPE, json.loads(json_str))
+
 
 class TestIngestTriggerRuleConfigurationValidate(TestCase):
     def setUp(self):
