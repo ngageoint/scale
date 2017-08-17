@@ -113,9 +113,9 @@ A valid ingest trigger rule configuration is a JSON document with the following 
 
     **any_of_data_types**: JSON array
     
-        The *any_of_data_types* field is an optional list of data type strings. If an ingested file has **any** tagged 
-        data type that is listed here, the rule will trigger. If not provided, the field defaults to [] and no data 
-        types are required.
+        The *any_of_data_types* field is an optional list of data type strings. An ingested file must have at least one 
+        of the data types that are listed here tagged to the file in order to trigger this rule. If not provided, the 
+        field defaults to [] and no data types are required.
 
     **not_data_types**: JSON array
     
@@ -241,9 +241,9 @@ A valid parse trigger rule configuration is a JSON document with the following s
 
     **any_of_data_types**: JSON array
     
-        The *any_of_data_types* field is an optional list of data type strings. If a parsed file has **any** tagged data 
-        type that is listed here, the rule will trigger. If not provided, the field defaults to [] and no data types 
-        are required.
+        The *any_of_data_types* field is an optional list of data type strings. An ingested file must have at least one 
+        of the data types that are listed here tagged to the file in order to trigger this rule. If not provided, the 
+        field defaults to [] and no data types are required.
 
     **not_data_types**: JSON array
     
