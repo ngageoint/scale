@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 import copy
 import datetime
+import time
 
 import django
 import django.utils.timezone as timezone
@@ -71,8 +72,8 @@ class TestJobManager(TransactionTestCase):
         workspace_1 = storage_test_utils.create_workspace()
         workspace_2 = storage_test_utils.create_workspace()
         workspace_3 = storage_test_utils.create_workspace()
-        file_1 = storage_test_utils.create_file(workspace=workspace_1, file_size=10240.0)
-        file_2 = storage_test_utils.create_file(workspace=workspace_2, file_size=102400.0)
+        file_1 = storage_test_utils.create_file(workspace=workspace_1, file_size=10485760.0)
+        file_2 = storage_test_utils.create_file(workspace=workspace_2, file_size=104857600.0)
         interface = {
             'version': '1.0',
             'command': 'my_command',
@@ -387,8 +388,11 @@ class TestJobExecutionManager(TransactionTestCase):
 
         self.job_1a = job_test_utils.create_job(job_type=self.job_type_1)
         job_test_utils.create_job_exe(job=self.job_1a, status='FAILED')
+        time.sleep(.01)
         job_test_utils.create_job_exe(job=self.job_1a, status='FAILED')
+        time.sleep(.01)
         job_test_utils.create_job_exe(job=self.job_1a, status='COMPLETED')
+        time.sleep(.01)
         self.last_run_1a = job_test_utils.create_job_exe(job=self.job_1a, status='RUNNING')
 
         self.job_1b = job_test_utils.create_job(job_type=self.job_type_1, status='FAILED')
@@ -396,8 +400,11 @@ class TestJobExecutionManager(TransactionTestCase):
 
         self.job_2a = job_test_utils.create_job(job_type=self.job_type_2)
         job_test_utils.create_job_exe(job=self.job_2a, status='FAILED')
+        time.sleep(.01)
         job_test_utils.create_job_exe(job=self.job_2a, status='FAILED')
+        time.sleep(.01)
         job_test_utils.create_job_exe(job=self.job_2a, status='COMPLETED')
+        time.sleep(.01)
         self.last_run_2a = job_test_utils.create_job_exe(job=self.job_2a, status='RUNNING')
 
         self.job_2b = job_test_utils.create_job(job_type=self.job_type_2)

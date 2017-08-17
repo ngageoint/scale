@@ -2341,15 +2341,11 @@ class TestJobsWithExecutionView(TransactionTestCase):
         self.job_type_2 = job_test_utils.create_job_type()
 
         self.job_1a = job_test_utils.create_job(job_type=self.job_type_1, status='COMPLETED')
-        job_test_utils.create_job_exe(job=self.job_1a, status='FAILED',
-                                      created=now() - datetime.timedelta(hours=3))
+        job_test_utils.create_job_exe(job=self.job_1a, status='FAILED')
         time.sleep(.01)
-        job_test_utils.create_job_exe(job=self.job_1a, status='FAILED',
-                                      created=now() - datetime.timedelta(hours=2))
+        job_test_utils.create_job_exe(job=self.job_1a, status='FAILED')
         time.sleep(.01)
-        job_test_utils.create_job_exe(job=self.job_1a, status='COMPLETED',
-                                      created=now() - datetime.timedelta(hours=1),
-                                      last_modified=now() - datetime.timedelta(hours=1))
+        job_test_utils.create_job_exe(job=self.job_1a, status='COMPLETED')
         time.sleep(.01)
         self.last_run_1a = job_test_utils.create_job_exe(job=self.job_1a, status='RUNNING')
 
@@ -2359,16 +2355,11 @@ class TestJobsWithExecutionView(TransactionTestCase):
 
         self.job_2a = job_test_utils.create_job(job_type=self.job_type_2, status='RUNNING')
         time.sleep(.01)
-        job_test_utils.create_job_exe(job=self.job_2a, status='FAILED',
-                                      created=now() - datetime.timedelta(hours=3),
-                                      last_modified=now() - datetime.timedelta(hours=2))
+        job_test_utils.create_job_exe(job=self.job_2a, status='FAILED')
         time.sleep(.01)
-        job_test_utils.create_job_exe(job=self.job_2a, status='FAILED',
-                                      created=now() - datetime.timedelta(hours=2),
-                                      last_modified=now() - datetime.timedelta(hours=1))
+        job_test_utils.create_job_exe(job=self.job_2a, status='FAILED')
         time.sleep(.01)
-        job_test_utils.create_job_exe(job=self.job_2a, status='COMPLETED',
-                                      created=now() - datetime.timedelta(hours=1))
+        job_test_utils.create_job_exe(job=self.job_2a, status='COMPLETED')
         time.sleep(.01)
         self.last_run_2a = job_test_utils.create_job_exe(job=self.job_2a, status='RUNNING')
 
@@ -2494,25 +2485,18 @@ class TestJobExecutionsView(TransactionTestCase):
         self.job_type_2 = job_test_utils.create_job_type()
 
         self.job_1 = job_test_utils.create_job(job_type=self.job_type_1, status='COMPLETED')
-        self.job_exe_1a = job_test_utils.create_job_exe(job=self.job_1, status='FAILED',
-                                                        created=now() - datetime.timedelta(hours=3))
-        self.job_exe_1b = job_test_utils.create_job_exe(job=self.job_1, status='FAILED',
-                                                        created=now() - datetime.timedelta(hours=2))
-        self.job_exe_1c = job_test_utils.create_job_exe(job=self.job_1, status='FAILED',
-                                                        created=now() - datetime.timedelta(hours=1),
-                                                        last_modified=now() - datetime.timedelta(hours=1))
+        self.job_exe_1a = job_test_utils.create_job_exe(job=self.job_1, status='FAILED')
+        self.job_exe_1b = job_test_utils.create_job_exe(job=self.job_1, status='FAILED')
+        self.job_exe_1c = job_test_utils.create_job_exe(job=self.job_1, status='FAILED')
         self.last_exe_1 = job_test_utils.create_job_exe(job=self.job_1, status='RUNNING')
 
         self.job_2 = job_test_utils.create_job(job_type=self.job_type_1, status='FAILED')
         self.last_exe_2 = job_test_utils.create_job_exe(job=self.job_2, status='FAILED')
 
         job_3 = job_test_utils.create_job(job_type=self.job_type_2, status='RUNNING')
-        job_test_utils.create_job_exe(job=job_3, status='FAILED', created=now() - datetime.timedelta(hours=3),
-                                      last_modified=now() - datetime.timedelta(hours=2))
-        job_test_utils.create_job_exe(job=job_3, status='FAILED', created=now() - datetime.timedelta(hours=2),
-                                      last_modified=now() - datetime.timedelta(hours=1))
-        job_test_utils.create_job_exe(job=job_3, status='COMPLETED',
-                                      created=now() - datetime.timedelta(hours=1))
+        job_test_utils.create_job_exe(job=job_3, status='FAILED')
+        job_test_utils.create_job_exe(job=job_3, status='FAILED')
+        job_test_utils.create_job_exe(job=job_3, status='COMPLETED')
         job_test_utils.create_job_exe(job=job_3, status='RUNNING')
 
         job_4 = job_test_utils.create_job(job_type=self.job_type_2, status='COMPLETED')

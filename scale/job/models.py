@@ -264,7 +264,7 @@ class JobManager(models.Manager):
 
         # Attempt to get related job executions
         job_exes = JobExecution.objects.filter(job=job).select_related('job', 'node', 'error')
-        job.job_exes = job_exes.defer('job__data', 'job__configuration', 'job__results').order_by('-created')
+        job.job_exes = job_exes.defer('job__data', 'job__results').order_by('-created')
 
         # Attempt to get related recipe
         # Use a localized import to make higher level application dependencies optional
@@ -981,7 +981,7 @@ class JobExecutionManager(models.Manager):
 
         # TODO: how to handle RUNNING?
         if statuses:
-            job_exes = job_exes.filter(job_executionend__status__in=statuses)
+            job_exes = job_exes.filter(jobexecutionend__status__in=statuses)
         if job_type_ids:
             job_exes = job_exes.filter(job_type_id__in=job_type_ids)
         if job_type_names:
@@ -1374,6 +1374,24 @@ class JobExecution(models.Model):
         db_table = 'job_exe'
 
 
+class JobExecutionEndManager(models.Manager):
+    """Provides additional methods for handling job execution ends."""
+
+    def get_recent_job_exe_end_metrics(self, when):
+        """Returns the recent job_exe_end models that were COMPLETED or FAILED after the given time. The related
+        job_exe, job_type, and error models will be populated.
+
+        :param when: Returns executions that finished after this time
+        :type when: :class:`datetime.datetime`
+        :returns: The list of job_exe_end models with related job_exe, job_type, and error models
+        :rtype: list
+        """
+
+        job_exe_end_query = self.select_related('job_exe', 'job_type', 'error')
+        job_exe_end_query = job_exe_end_query.filter(status__in=['COMPLETED', 'FAILED'], ended__gte=when)
+        return job_exe_end_query
+
+
 class JobExecutionEnd(models.Model):
     """Represents the end of a job execution, including the execution's final status and end time
 
@@ -1422,6 +1440,8 @@ class JobExecutionEnd(models.Model):
     started = models.DateTimeField(blank=True, db_index=True, null=True)
     ended = models.DateTimeField(db_index=True)
     created = models.DateTimeField(auto_now_add=True)
+
+    objects = JobExecutionEndManager()
 
     class Meta(object):
         """Meta information for the database"""

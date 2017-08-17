@@ -31,7 +31,7 @@ class Command(BaseCommand):
         """
 
         job_id = int(os.environ.get('SCALE_JOB_ID'))
-        exe_num = int(os.environ.get('SCALE_JOB_ID'))
+        exe_num = int(os.environ.get('SCALE_EXE_NUM'))
 
         logger.info('Command starting: scale_pre_steps - Job ID: %d, Execution Number: %d', job_id, exe_num)
         try:
