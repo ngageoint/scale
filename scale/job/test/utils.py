@@ -243,6 +243,8 @@ def create_job_exe(job_type=None, job=None, exe_num=None, node=None, timeout=Non
         job_exe_output.output = output.get_dict()
         job_exe_output.save()
 
+    return job_exe
+
 
 def create_job_type(name=None, version=None, category=None, interface=None, priority=50, timeout=3600, max_tries=3,
                     max_scheduled=None, cpus=1.0, mem=1.0, disk=1.0, error_mapping=None, is_active=True,

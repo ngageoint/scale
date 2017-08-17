@@ -2485,10 +2485,10 @@ class TestJobExecutionsView(TransactionTestCase):
         self.job_type_2 = job_test_utils.create_job_type()
 
         self.job_1 = job_test_utils.create_job(job_type=self.job_type_1, status='COMPLETED')
-        self.job_exe_1a = job_test_utils.create_job_exe(job=self.job_1, status='FAILED')
-        self.job_exe_1b = job_test_utils.create_job_exe(job=self.job_1, status='FAILED')
-        self.job_exe_1c = job_test_utils.create_job_exe(job=self.job_1, status='FAILED')
-        self.last_exe_1 = job_test_utils.create_job_exe(job=self.job_1, status='RUNNING')
+        self.job_exe_1a = job_test_utils.create_job_exe(job=self.job_1, exe_num=1, status='FAILED')
+        self.job_exe_1b = job_test_utils.create_job_exe(job=self.job_1, exe_num=2, status='FAILED')
+        self.job_exe_1c = job_test_utils.create_job_exe(job=self.job_1, exe_num=3, status='FAILED')
+        self.last_exe_1 = job_test_utils.create_job_exe(job=self.job_1, exe_num=4, status='RUNNING')
 
         self.job_2 = job_test_utils.create_job(job_type=self.job_type_1, status='FAILED')
         self.last_exe_2 = job_test_utils.create_job_exe(job=self.job_2, status='FAILED')

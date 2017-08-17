@@ -43,7 +43,7 @@ class TestPostJobSteps(TransactionTestCase):
         """Tests successfully executing scale_post_steps."""
 
         # Set up mocks
-        mock_env_vars.return_value = 1
+        mock_env_vars.return_value = '1'
         mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.get_job_interface.return_value.perform_post_steps.return_value = RESULTS
         mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.id = self.job_exe.id
 

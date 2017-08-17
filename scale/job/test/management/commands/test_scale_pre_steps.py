@@ -98,7 +98,7 @@ class TestPreJobSteps(TransactionTestCase):
         """Tests executing scale_pre_steps when an IO error occurs."""
 
         # Set up mocks
-        mock_env_vars.return_value = 1
+        mock_env_vars.return_value = '1'
         mock_job_exe.objects.get_job_exe_with_job_and_job_type.return_value.get_job_interface.return_value.perform_pre_steps.side_effect = IOError()
 
         # Call method to test
