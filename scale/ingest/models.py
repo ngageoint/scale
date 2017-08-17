@@ -307,7 +307,8 @@ class IngestManager(models.Manager):
             data = JobData()
             data.add_property_input('ingest_id', str(ingest_id))
             data.add_property_input('workspace', ingest.workspace.name)
-            data.add_property_input('new_workspace', ingest.new_workspace.name)
+            if ingest.new_workspace:
+                data.add_property_input('new_workspace', ingest.new_workspace.name)
 
             ingest_job = Queue.objects.queue_new_job(ingest_job_type, data, event)
 

@@ -60,7 +60,6 @@ class Command(BaseCommand):
             else:
                 logger.exception('Error performing pre-job steps')
                 print str(ex)
-                ex.
             sys.exit(exit_code)
 
         logger.info('Command completed: scale_pre_steps')

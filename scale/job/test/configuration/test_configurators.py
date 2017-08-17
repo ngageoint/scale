@@ -282,7 +282,8 @@ class TestScheduledExecutionConfigurator(TestCase):
                 mock_secrets_mgr.retrieve_job_type_secrets = MagicMock()
                 mock_secrets_mgr.retrieve_job_type_secrets.return_value = {'s_2': 's_2_secret'}
             configurator = ScheduledExecutionConfigurator(workspaces)
-            exe_config_with_secrets = configurator.configure_scheduled_job(job_exe_model, job_type, queue.interface)
+            exe_config_with_secrets = configurator.configure_scheduled_job(job_exe_model, job_type,
+                                                                           queue.get_job_interface())
 
         # Expected results
         input_wksp_vol_name = get_workspace_volume_name(job_exe_model, input_workspace.name)
@@ -451,7 +452,8 @@ class TestScheduledExecutionConfigurator(TestCase):
                 mock_secrets_mgr.retrieve_job_type_secrets = MagicMock()
                 mock_secrets_mgr.retrieve_job_type_secrets.return_value = {}
             configurator = ScheduledExecutionConfigurator({})
-            exe_config_with_secrets = configurator.configure_scheduled_job(job_exe_model, job_type, queue.interface)
+            exe_config_with_secrets = configurator.configure_scheduled_job(job_exe_model, job_type,
+                                                                           queue.get_job_interface())
 
         # Ensure configuration is valid
         ExecutionConfiguration(exe_config_with_secrets.get_dict())
