@@ -352,29 +352,6 @@ class TestJob(TestCase):
         self.assertEqual(job.max_tries, 15)
 
 
-class TestJobExecution(TestCase):
-
-    def setUp(self):
-        django.setup()
-
-    def test_configure_docker_params_shared_memory(self):
-        """Tests running JobExecution.configure_docker_params() with shared memory"""
-
-        job_type = job_test_utils.create_job_type()
-        job_type.shared_mem_required = 1024.0
-        job_type.save()
-        job_exe = job_test_utils.create_job_exe(job_type=job_type)
-        job_exe.configure_docker_params({}, [])
-
-        found_shm_size = False
-        for docker_param in job_exe.get_execution_configuration().get_job_task_docker_params():
-            if docker_param.flag == 'shm-size':
-                found_shm_size = True
-                self.assertEqual(docker_param.value, '1024m')
-                break
-        self.assertTrue(found_shm_size)
-
-
 class TestJobExecutionManager(TransactionTestCase):
     """Tests for the job execution model manager"""
 

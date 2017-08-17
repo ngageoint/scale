@@ -582,7 +582,7 @@ class JobInterface(object):
         :type exe_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         """
 
-        for name, mount_volume in exe_configuration.get_mounts('main'):
+        for name, mount_volume in exe_configuration.get_mounts('main').items():
             if mount_volume is None:
                 raise MissingMount('Required mount %s was not provided' % name)
 
@@ -593,7 +593,7 @@ class JobInterface(object):
         :type exe_configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         """
 
-        for name, value in exe_configuration.get_settings('main'):
+        for name, value in exe_configuration.get_settings('main').items():
             if value is None:
                 raise MissingSetting('Required setting %s was not provided' % name)
 

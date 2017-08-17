@@ -31,7 +31,7 @@ class TestExecutionConfiguration(TestCase):
                 'INPUT_1': [{
                     'id': 1234,
                     'type': 'PRODUCT',
-                    'workspace_id': 123,
+                    'workspace_name': 'wksp-name',
                     'workspace_path': 'the/workspace/path/file.json',
                     'local_file_name': 'file_abcdfeg.json',
                     'is_deleted': False,

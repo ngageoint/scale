@@ -19,6 +19,7 @@ from job.tasks.pull_task import create_pull_command
 from job.test import utils as job_test_utils
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Disk
+from node.test import utils as node_test_utils
 from storage.container import get_workspace_volume_path
 from storage.test import utils as storage_test_utils
 from trigger.test import utils as trigger_test_utils
@@ -114,7 +115,7 @@ class TestQueuedExecutionConfigurator(TestCase):
         from ingest.test import utils as ingest_test_utils
         scan = ingest_test_utils.create_scan()
         ingest = ingest_test_utils.create_ingest(scan=scan, workspace=workspace_1, new_workspace=workspace_2)
-        Ingest.objects.start_ingest_tasks([ingest])
+        Ingest.objects.start_ingest_tasks([ingest], scan_id=scan.id)
 
         expected_args = 'scale_ingest -i %s' % str(ingest.id)
         expected_env_vars = {'INGEST_ID': str(ingest.id)}
@@ -140,7 +141,7 @@ class TestQueuedExecutionConfigurator(TestCase):
         from ingest.test import utils as ingest_test_utils
         scan = ingest_test_utils.create_scan()
         ingest = ingest_test_utils.create_ingest(scan=scan, workspace=workspace_1)
-        Ingest.objects.start_ingest_tasks([ingest])
+        Ingest.objects.start_ingest_tasks([ingest], scan_id=scan.id)
 
         expected_args = 'scale_ingest -i %s' % str(ingest.id)
         expected_env_vars = {'INGEST_ID': str(ingest.id)}
@@ -229,6 +230,7 @@ class TestScheduledExecutionConfigurator(TestCase):
         """Tests successfully calling configure_scheduled_job() on a regular (non-system) job"""
 
         framework_id = '1234'
+        node = node_test_utils.create_node()
         broker_dict = {'version': '1.0', 'broker': {'type': 'host', 'host_path': '/w_1/host/path'}}
         input_workspace = storage_test_utils.create_workspace(json_config=broker_dict)
         broker_dict = {'version': '1.0', 'broker': {'type': 's3', 'bucket_name': 'bucket1',
@@ -267,10 +269,11 @@ class TestScheduledExecutionConfigurator(TestCase):
         # Get job info off of the queue
         queue = Queue.objects.get(job_id=job.id)
         queued_job_exe = QueuedJobExecution(queue)
+        queued_job_exe.scheduled('agent_1', node.id, resources)
         job_exe_model = queued_job_exe.create_job_exe_model(framework_id, now())
 
         # Test method
-        with patch('django.con.settings') as mock_settings:
+        with patch('django.conf.settings') as mock_settings:
             with patch('scheduler.vault.manager.secrets_mgr') as mock_secrets_mgr:
                 mock_settings.LOGGING_ADDRESS = None  # Ignore logging settings, there's enough in this unit test
                 mock_settings.DATABASES = {'default': {'SCALE_DB_NAME': 'TEST_NAME', 'SCALE_DB_USER': 'TEST_USER',
@@ -420,3 +423,46 @@ class TestScheduledExecutionConfigurator(TestCase):
         ExecutionConfiguration(exe_config_with_secrets.get_dict())
         # Compare results, including secrets
         self.assertDictEqual(exe_config_with_secrets.get_dict(), expected_config)
+
+    def test_configure_scheduled_job_shared_mem(self):
+        """Tests successfully calling configure_scheduled_job() with a job using shared memory"""
+
+        framework_id = '1234'
+        node = node_test_utils.create_node()
+        job_type = job_test_utils.create_job_type()
+        job_type.shared_mem_required = 1024.0
+        job_type.save()
+        from queue.job_exe import QueuedJobExecution
+        from queue.models import Queue
+        job = Queue.objects.queue_new_job(job_type, JobData({}), trigger_test_utils.create_trigger_event())
+        # Get job info off of the queue
+        queue = Queue.objects.get(job_id=job.id)
+        queued_job_exe = QueuedJobExecution(queue)
+        queued_job_exe.scheduled('agent_1', node.id, job.get_resources())
+        job_exe_model = queued_job_exe.create_job_exe_model(framework_id, now())
+
+        # Test method
+        with patch('django.conf.settings') as mock_settings:
+            with patch('scheduler.vault.manager.secrets_mgr') as mock_secrets_mgr:
+                mock_settings.LOGGING_ADDRESS = None  # Ignore logging settings, there's enough in this unit test
+                mock_settings.DATABASES = {'default': {'SCALE_DB_NAME': 'TEST_NAME', 'SCALE_DB_USER': 'TEST_USER',
+                                                       'SCALE_DB_PASS': 'TEST_PASSWORD', 'SCALE_DB_HOST': 'TEST_HOST',
+                                                       'SCALE_DB_PORT': 'TEST_PORT'}}
+                mock_secrets_mgr.retrieve_job_type_secrets = MagicMock()
+                mock_secrets_mgr.retrieve_job_type_secrets.return_value = {}
+            configurator = ScheduledExecutionConfigurator({})
+            exe_config_with_secrets = configurator.configure_scheduled_job(job_exe_model, job_type, queue.interface)
+
+        # Ensure configuration is valid
+        ExecutionConfiguration(exe_config_with_secrets.get_dict())
+        # Compare results
+        found_shm_size = False
+        for param in exe_config_with_secrets.get_docker_params('main'):
+            if param.flag == 'shm-size':
+                found_shm_size = True
+                self.assertEqual(param.value, '1024m')
+                break
+        self.assertTrue(found_shm_size)
+        env_vars = exe_config_with_secrets.get_env_vars('main')
+        self.assertTrue('ALLOCATED_SHARED_MEM' in env_vars)
+        self.assertEqual(env_vars['ALLOCATED_SHARED_MEM'], '1024.0')
