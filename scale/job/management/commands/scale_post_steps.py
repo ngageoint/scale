@@ -51,6 +51,7 @@ class Command(BaseCommand):
                 exit_code = err.exit_code
             else:
                 logger.exception('Error performing post-job steps')
+            print str(ex)
             sys.exit(exit_code)
 
         logger.info('Command completed: scale_post_steps')

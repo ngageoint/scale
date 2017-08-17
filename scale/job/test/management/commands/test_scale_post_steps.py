@@ -63,7 +63,7 @@ class TestPostJobSteps(TransactionTestCase):
         """Tests executing scale_post_steps when a database error occurs."""
 
         # Set up mocks
-        mock_env_vars.return_value = 1
+        mock_env_vars.return_value = '1'
         mock_db.side_effect = DatabaseError()
 
         # Call method to test
@@ -80,7 +80,7 @@ class TestPostJobSteps(TransactionTestCase):
         """Tests executing scale_post_steps when a database operation error occurs."""
 
         # Set up mocks
-        mock_env_vars.return_value = 1
+        mock_env_vars.return_value = '1'
         mock_db.side_effect = OperationalError()
 
         # Call method to test
@@ -97,7 +97,7 @@ class TestPostJobSteps(TransactionTestCase):
         """Tests executing scale_post_steps when an IO error occurs."""
 
         # Set up mocks
-        mock_env_vars.return_value = 1
+        mock_env_vars.return_value = '1'
         mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.get_job_interface.return_value.perform_post_steps.side_effect = IOError()
 
         # Call method to test
@@ -114,7 +114,7 @@ class TestPostJobSteps(TransactionTestCase):
         """Tests executing scale_post_steps when an invalid manifest occurs."""
 
         # Set up mocks
-        mock_env_vars.return_value = 1
+        mock_env_vars.return_value = '1'
         mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.get_job_interface.return_value.perform_post_steps.side_effect = InvalidResultsManifest('')
 
         # Call method to test
@@ -131,7 +131,7 @@ class TestPostJobSteps(TransactionTestCase):
         """Tests executing scale_post_steps when a missing output manifest occurs."""
 
         # Set up mocks
-        mock_env_vars.return_value = 1
+        mock_env_vars.return_value = '1'
         mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.get_job_interface.return_value.perform_post_steps.side_effect = MissingRequiredOutput('')
 
         # Call method to test
@@ -147,7 +147,7 @@ class TestPostJobSteps(TransactionTestCase):
         """Tests successfully executing scale_post_steps."""
 
         # Set up mocks
-        mock_env_vars.return_value = 1
+        mock_env_vars.return_value = '1'
         mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.stdout = 'something'
         mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.stderr = None
         mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.get_job_interface.return_value.perform_post_steps.return_value = RESULTS

@@ -48,7 +48,7 @@ class TestPreJobSteps(TransactionTestCase):
         """Tests successfully executing scale_pre_steps."""
 
         # Set up mocks
-        mock_env_vars.return_value = 1
+        mock_env_vars.return_value = '1'
 
         # Call method to test
         cmd = PreCommand()
@@ -64,7 +64,7 @@ class TestPreJobSteps(TransactionTestCase):
         """Tests executing scale_pre_steps when a database error occurs."""
 
         # Set up mocks
-        mock_env_vars.return_value = 1
+        mock_env_vars.return_value = '1'
         mock_db.side_effect = DatabaseError()
 
         # Call method to test
@@ -81,7 +81,7 @@ class TestPreJobSteps(TransactionTestCase):
         """Tests executing scale_pre_steps when a database operation error occurs."""
 
         # Set up mocks
-        mock_env_vars.return_value = 1
+        mock_env_vars.return_value = '1'
         mock_db.side_effect = OperationalError()
 
         # Call method to test
