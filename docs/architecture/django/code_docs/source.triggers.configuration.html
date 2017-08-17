@@ -238,6 +238,12 @@
 <dd><p>Bases: <a class="reference internal" href="recipe.triggers.configuration.html#recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration" title="recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration"><code class="xref py py-class docutils literal"><span class="pre">recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration</span></code></a></p>
 <p>Represents a rule that triggers when parsed source files meet the defined conditions</p>
 <dl class="method">
+<dt id="source.triggers.configuration.parse_trigger_rule.ParseTriggerRuleConfiguration.convert_parse_trigger_rule_config">
+<code class="descname">convert_parse_trigger_rule_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.triggers.configuration.parse_trigger_rule.ParseTriggerRuleConfiguration.convert_parse_trigger_rule_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a previous Parse Trigger Rule schema to the 1.1 schema</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="source.triggers.configuration.parse_trigger_rule.ParseTriggerRuleConfiguration.get_condition">
 <code class="descname">get_condition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.triggers.configuration.parse_trigger_rule.ParseTriggerRuleConfiguration.get_condition" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the condition for this parse trigger rule</p>
@@ -300,6 +306,84 @@
 <dl class="method">
 <dt id="source.triggers.configuration.parse_trigger_rule.ParseTriggerRuleConfiguration.validate_trigger_for_recipe">
 <code class="descname">validate_trigger_for_recipe</code><span class="sig-paren">(</span><em>recipe_definition</em><span class="sig-paren">)</span><a class="headerlink" href="#source.triggers.configuration.parse_trigger_rule.ParseTriggerRuleConfiguration.validate_trigger_for_recipe" title="Permalink to this definition">¶</a></dt>
+<dd><p>See :meth:
+<cite>recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration.validate_trigger_for_recipe</cite></p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-source.triggers.configuration.parse_trigger_rule_1_0">
+<span id="source-triggers-configuration-parse-trigger-rule-1-0-module"></span><h2>source.triggers.configuration.parse_trigger_rule_1_0 module<a class="headerlink" href="#module-source.triggers.configuration.parse_trigger_rule_1_0" title="Permalink to this headline">¶</a></h2>
+<p>Defines the configuration for a parse trigger</p>
+<dl class="class">
+<dt id="source.triggers.configuration.parse_trigger_rule_1_0.ParseTriggerRuleConfiguration">
+<em class="property">class </em><code class="descclassname">source.triggers.configuration.parse_trigger_rule_1_0.</code><code class="descname">ParseTriggerRuleConfiguration</code><span class="sig-paren">(</span><em>trigger_rule_type</em>, <em>configuration</em><span class="sig-paren">)</span><a class="headerlink" href="#source.triggers.configuration.parse_trigger_rule_1_0.ParseTriggerRuleConfiguration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="recipe.triggers.configuration.html#recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration" title="recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration"><code class="xref py py-class docutils literal"><span class="pre">recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration</span></code></a></p>
+<p>Represents a rule that triggers when parsed source files meet the defined conditions</p>
+<dl class="method">
+<dt id="source.triggers.configuration.parse_trigger_rule_1_0.ParseTriggerRuleConfiguration.get_condition">
+<code class="descname">get_condition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.triggers.configuration.parse_trigger_rule_1_0.ParseTriggerRuleConfiguration.get_condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the condition for this parse trigger rule</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The trigger condition</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="source.triggers.html#source.triggers.parse_trigger_condition.ParseTriggerCondition" title="source.triggers.parse_trigger_condition.ParseTriggerCondition"><code class="xref py py-class docutils literal"><span class="pre">source.triggers.parse_trigger_condition.ParseTriggerCondition</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.triggers.configuration.parse_trigger_rule_1_0.ParseTriggerRuleConfiguration.get_input_data_name">
+<code class="descname">get_input_data_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.triggers.configuration.parse_trigger_rule_1_0.ParseTriggerRuleConfiguration.get_input_data_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the name of the input data that the parsed file should be passed to</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The input data name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.triggers.configuration.parse_trigger_rule_1_0.ParseTriggerRuleConfiguration.get_workspace_name">
+<code class="descname">get_workspace_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.triggers.configuration.parse_trigger_rule_1_0.ParseTriggerRuleConfiguration.get_workspace_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the name of the workspace to use for the triggered job/recipe</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The workspace name</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.triggers.configuration.parse_trigger_rule_1_0.ParseTriggerRuleConfiguration.validate">
+<code class="descname">validate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#source.triggers.configuration.parse_trigger_rule_1_0.ParseTriggerRuleConfiguration.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="trigger.configuration.html#trigger.configuration.trigger_rule.TriggerRuleConfiguration.validate" title="trigger.configuration.trigger_rule.TriggerRuleConfiguration.validate"><code class="xref py py-meth docutils literal"><span class="pre">trigger.configuration.trigger_rule.TriggerRuleConfiguration.validate()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.triggers.configuration.parse_trigger_rule_1_0.ParseTriggerRuleConfiguration.validate_trigger_for_job">
+<code class="descname">validate_trigger_for_job</code><span class="sig-paren">(</span><em>job_interface</em><span class="sig-paren">)</span><a class="headerlink" href="#source.triggers.configuration.parse_trigger_rule_1_0.ParseTriggerRuleConfiguration.validate_trigger_for_job" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="job.triggers.configuration.html#job.triggers.configuration.trigger_rule.JobTriggerRuleConfiguration.validate_trigger_for_job" title="job.triggers.configuration.trigger_rule.JobTriggerRuleConfiguration.validate_trigger_for_job"><code class="xref py py-meth docutils literal"><span class="pre">job.triggers.configuration.trigger_rule.JobTriggerRuleConfiguration.validate_trigger_for_job()</span></code></a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="source.triggers.configuration.parse_trigger_rule_1_0.ParseTriggerRuleConfiguration.validate_trigger_for_recipe">
+<code class="descname">validate_trigger_for_recipe</code><span class="sig-paren">(</span><em>recipe_definition</em><span class="sig-paren">)</span><a class="headerlink" href="#source.triggers.configuration.parse_trigger_rule_1_0.ParseTriggerRuleConfiguration.validate_trigger_for_recipe" title="Permalink to this definition">¶</a></dt>
 <dd><p>See <a class="reference internal" href="recipe.triggers.configuration.html#recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration.validate_trigger_for_recipe" title="recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration.validate_trigger_for_recipe"><code class="xref py py-meth docutils literal"><span class="pre">recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration.validate_trigger_for_recipe()</span></code></a></p>
 </dd></dl>
 
