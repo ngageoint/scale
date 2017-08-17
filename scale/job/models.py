@@ -969,7 +969,8 @@ class JobExecutionManager(models.Manager):
         """
 
         # Fetch a list of job executions
-        job_exes = JobExecution.objects.all().select_related('job', 'job_type', 'node', 'jobexecutionend__error')
+        job_exes = JobExecution.objects.all().select_related('job', 'job_type', 'node', 'jobexecutionend__error',
+                                                             'jobexecutionoutput')
         job_exes = job_exes.defer('stdout', 'stderr')
 
         # Apply time range filtering

@@ -275,7 +275,7 @@ class JobExecutionSerializer(JobExecutionBaseSerializer):
 
     job = JobBaseSerializer()
     node = NodeBaseSerializerV4()
-    error = ErrorBaseSerializer()
+    error = ErrorBaseSerializer(source='jobexecutionend.error')
 
 
 class JobExecutionDetailsSerializer(JobExecutionSerializer):
@@ -285,7 +285,7 @@ class JobExecutionDetailsSerializer(JobExecutionSerializer):
 
     job = JobSerializer()
     node = NodeSerializerV4()
-    error = ErrorSerializer()
+    error = ErrorSerializer(source='jobexecutionend.error')
 
     environment = serializers.JSONField(default=dict)
     cpus_scheduled = serializers.FloatField()
@@ -294,9 +294,9 @@ class JobExecutionDetailsSerializer(JobExecutionSerializer):
     disk_out_scheduled = serializers.FloatField()
     disk_total_scheduled = serializers.FloatField()
 
-    results = serializers.JSONField(default=dict)
+    results = serializers.JSONField(default=dict, source='jobexecutionoutput.output')
 
-    results_manifest = serializers.JSONField(default=dict)
+    results_manifest = serializers.JSONField(default=dict, source='jobexecutionoutput.output_manifest')
 
 
 class JobExecutionLogSerializer(JobExecutionSerializer):
