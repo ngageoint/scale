@@ -1,4 +1,4 @@
-"""Defines the configuration for an ingest trigger"""
+"""Defines the configuration for a parse trigger"""
 from __future__ import unicode_literals
 
 import logging
@@ -6,50 +6,37 @@ import logging
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
-from ingest.triggers.ingest_trigger_condition import IngestTriggerCondition
-from ingest.triggers.configuration import ingest_trigger_rule_1_0 as previous_ingest_trigger_config
 from job.configuration.data.job_connection import JobConnection
 from recipe.configuration.data.recipe_connection import RecipeConnection
 from recipe.triggers.configuration.trigger_rule import RecipeTriggerRuleConfiguration
+from source.triggers.parse_trigger_condition import ParseTriggerCondition
 from storage.models import Workspace
 from trigger.configuration.exceptions import InvalidTriggerRule
 
+
 logger = logging.getLogger(__name__)
 
-SCHEMA_VERSION = '1.1'
 
-INGEST_TRIGGER_SCHEMA = {
+PARSE_TRIGGER_SCHEMA = {
     "type": "object",
     "required": ["data"],
     "additionalProperties": False,
     "properties": {
         "version": {
-            "description": "Version of the ingest trigger schema",
+            "description": "Version of the parse trigger schema",
             "type": "string",
         },
         "condition": {
-            "description": "Condition for an ingested file to trigger an event",
+            "description": "Condition for a parsed file to trigger an event",
             "type": "object",
             "additionalProperties": False,
             "properties": {
                 "media_type": {
-                    "description": "Media type required by an ingested file to trigger an event",
+                    "description": "Media type required by a parsed file to trigger an event",
                     "type": "string",
                 },
                 "data_types": {
-                    "description": "Data types required by an ingested file to trigger an event",
-                    "type": "array",
-                    "items": {"$ref": "#/definitions/data_type_tag"}
-                },
-                "any_of_data_types": {
-                    "description": "Array of Data types with at least one match required by a parsed file to "
-                                   "trigger an event",
-                    "type": "array",
-                    "items": {"$ref": "#/definitions/data_type_tag"}
-                },
-                "not_data_types": {
-                    "description": "Array of Data types with at least one match required by a parsed file to "
-                                   "not trigger an event",
+                    "description": "Data types required by a parsed file to trigger an event",
                     "type": "array",
                     "items": {"$ref": "#/definitions/data_type_tag"}
                 },
@@ -62,7 +49,7 @@ INGEST_TRIGGER_SCHEMA = {
             "additionalProperties": False,
             "properties": {
                 "input_data_name": {
-                    "description": "The name of the job/recipe input data to pass the ingested file to",
+                    "description": "The name of the job/recipe input data to pass the parsed file to",
                     "type": "string",
                 },
                 "workspace_name": {
@@ -81,53 +68,39 @@ INGEST_TRIGGER_SCHEMA = {
 }
 
 
-class IngestTriggerRuleConfiguration(RecipeTriggerRuleConfiguration):
-    """Represents a rule that triggers when ingested source files meet the defined conditions
+class ParseTriggerRuleConfiguration(RecipeTriggerRuleConfiguration):
+    """Represents a rule that triggers when parsed source files meet the defined conditions
     """
 
     def __init__(self, trigger_rule_type, configuration):
-        """Creates an ingest trigger from the given configuration
+        """Creates a parse trigger from the given configuration
 
         :param trigger_rule_type: The trigger rule type
         :type trigger_rule_type: str
-        :param configuration: The ingest trigger configuration
+        :param configuration: The parse trigger configuration
         :type configuration: dict
 
         :raises trigger.configuration.exceptions.InvalidTriggerRule: If the configuration is invalid
         """
 
-        super(IngestTriggerRuleConfiguration, self).__init__(trigger_rule_type, configuration)
+        super(ParseTriggerRuleConfiguration, self).__init__(trigger_rule_type, configuration)
 
         try:
-            validate(configuration, INGEST_TRIGGER_SCHEMA)
+            validate(configuration, PARSE_TRIGGER_SCHEMA)
         except ValidationError as validation_error:
             raise InvalidTriggerRule(validation_error)
 
-        if 'version' not in self._dict:
-            self._dict['version'] = SCHEMA_VERSION
-
-        if self._dict['version'] != SCHEMA_VERSION:
-            self.convert_ingest_trigger_rule_config()
-
         self._populate_default_values()
-        self._validate_data_types()
 
-    def convert_ingest_trigger_rule_config(self):
-        """Convert a previous Ingest Trigger Rule schema to the 1.1 schema
-        """
-
-        previous = previous_ingest_trigger_config.IngestTriggerRuleConfiguration(self.trigger_rule_type, self._dict)
-        self._dict = previous.get_dict()
-
-        self._dict['version'] = SCHEMA_VERSION
-        self._dict['condition']['any_of_data_types'] = []
-        self._dict['condition']['not_data_types'] = []
+        version = self._dict['version']
+        if version != '1.0':
+            raise InvalidTriggerRule('%s is an unsupported version number' % version)
 
     def get_condition(self):
-        """Returns the condition for this ingest trigger rule
+        """Returns the condition for this parse trigger rule
 
         :return: The trigger condition
-        :rtype: :class:`ingest.triggers.ingest_trigger_condition.IngestTriggerCondition`
+        :rtype: :class:`source.triggers.parse_trigger_condition.ParseTriggerCondition`
         """
 
         media_type = None
@@ -136,13 +109,10 @@ class IngestTriggerRuleConfiguration(RecipeTriggerRuleConfiguration):
 
         data_types = set(self._dict['condition']['data_types'])
 
-        any_data_types = set(self._dict['condition']['any_of_data_types'])
-        not_data_types = set(self._dict['condition']['not_data_types'])
-
-        return IngestTriggerCondition(media_type, data_types, any_data_types, not_data_types)
+        return ParseTriggerCondition(media_type, data_types)
 
     def get_input_data_name(self):
-        """Returns the name of the input data that the ingested file should be passed to
+        """Returns the name of the input data that the parsed file should be passed to
 
         :return: The input data name
         :rtype: str
@@ -183,8 +153,7 @@ class IngestTriggerRuleConfiguration(RecipeTriggerRuleConfiguration):
         return job_interface.validate_connection(connection)
 
     def validate_trigger_for_recipe(self, recipe_definition):
-        """See :meth:
-        `recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration.validate_trigger_for_recipe`
+        """See :meth:`recipe.triggers.configuration.trigger_rule.RecipeTriggerRuleConfiguration.validate_trigger_for_recipe`
         """
 
         input_file_name = self.get_input_data_name()
@@ -202,7 +171,7 @@ class IngestTriggerRuleConfiguration(RecipeTriggerRuleConfiguration):
         """
 
         if 'version' not in self._dict:
-            self._dict['version'] = '1.1'
+            self._dict['version'] = '1.0'
 
         if 'condition' not in self._dict:
             self._dict['condition'] = {}
@@ -210,16 +179,3 @@ class IngestTriggerRuleConfiguration(RecipeTriggerRuleConfiguration):
             self._dict['condition']['media_type'] = ''
         if 'data_types' not in self._dict['condition']:
             self._dict['condition']['data_types'] = []
-        if 'any_of_data_types' not in self._dict['condition']:
-            self._dict['condition']['any_of_data_types'] = []
-        if 'not_data_types' not in self._dict['condition']:
-            self._dict['condition']['not_data_types'] = []
-
-    def _validate_data_types(self):
-        """Cross-checks each of the three data_type lists to ensure no rules contradict one another.
-        """
-        inclusive_data_tags = set(self._dict['condition']['data_types'] + self._dict['condition']['any_of_data_types'])
-        for exclude_tag in self._dict['condition']['not_data_types']:
-            if exclude_tag in inclusive_data_tags:
-                raise InvalidTriggerRule("The provided data_type rules for tag `%s` contain a contradiction" %
-                                         exclude_tag)

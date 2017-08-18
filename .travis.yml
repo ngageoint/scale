@@ -23,7 +23,7 @@ install:
 - if [ "${BUILD_DOCS}" == "true" ]; then pip install -q -r scale/pip/docs.txt -r scale/pip/production.txt; fi
 script: 
 - ./travis-build.sh
-- ./push-docs.sh
+- if [ "${BUILD_DOCS}" == "true" ]; then ./push-docs.sh; fi
 
 branches:
   only:

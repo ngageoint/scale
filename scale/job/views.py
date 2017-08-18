@@ -162,7 +162,7 @@ class JobTypesView(ListCreateAPIView):
                                                            configuration=configuration, secrets=secrets,
                                                            **extra_fields)
 
-        except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection, 
+        except (InvalidJobField, InvalidTriggerType, InvalidTriggerRule, InvalidConnection,
                 InvalidSecretsConfiguration, ValueError) as ex:
             logger.exception('Unable to create new job type: %s', name)
             raise BadParameter(unicode(ex))
