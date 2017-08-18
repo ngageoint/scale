@@ -1,9 +1,8 @@
-[![Join the chat at https://gitter.im/ngageoint/scale](https://badges.gitter.im/ngageoint/scale.svg)](https://gitter.im/ngageoint/scale?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-Master [![Build Status](https://travis-ci.org/ngageoint/scale.svg?branch=master)](https://travis-ci.org/ngageoint/scale)
-
 Scale
 =====
+[![Join the chat at https://gitter.im/ngageoint/scale](https://badges.gitter.im/ngageoint/scale.svg)](https://gitter.im/ngageoint/scale?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Build Status](https://travis-ci.org/ngageoint/scale.svg?branch=master)](https://travis-ci.org/ngageoint/scale)
+
 Scale is a system that provides management of automated processing on a cluster of machines. It allows
 users to define jobs, which can be any type of script or algorithm. These jobs run on ingested source
 data and produce product files. The produced products can be disseminated to appropriate users and/or
