@@ -987,7 +987,7 @@ class JobExecutionManager(models.Manager):
                 for status in ['COMPLETED', 'FAILED', 'CANCELED']:
                     if status not in statuses:
                         exclude_statues.append(status)
-                job_exes = job_exes.exclude(jobexecutionend__status__in=statuses)
+                job_exes = job_exes.exclude(jobexecutionend__status__in=exclude_statues)
             job_exes = job_exes.filter(jobexecutionend__status__in=statuses)
         if job_type_ids:
             job_exes = job_exes.filter(job_type_id__in=job_type_ids)
