@@ -782,7 +782,7 @@ class ScanManager(models.Manager):
         scan_type = self.get_scan_job_type()
 
         job_data = JobData()
-        job_data.add_property_input('Scan ID', unicode(scan.id))
+        job_data.add_property_input('Scan ID', str(scan.id))
         job_data.add_property_input('Dry Run', str(dry_run))
         event_description = {'scan_id': scan.id}
 

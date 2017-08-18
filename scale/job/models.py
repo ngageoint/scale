@@ -1356,7 +1356,10 @@ class JobExecution(models.Model):
         :rtype: string
         """
 
-        return self.jobexecutionend.status if self.jobexecutionend else 'RUNNING'
+        try:
+            return self.jobexecutionend.status
+        except JobExecutionEnd.DoesNotExist:
+            return 'RUNNING'
 
     @staticmethod
     def parse_cluster_id(task_id):

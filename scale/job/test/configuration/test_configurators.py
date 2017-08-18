@@ -118,7 +118,8 @@ class TestQueuedExecutionConfigurator(TestCase):
         Ingest.objects.start_ingest_tasks([ingest], scan_id=scan.id)
 
         expected_args = 'scale_ingest -i %s' % str(ingest.id)
-        expected_env_vars = {'INGEST_ID': str(ingest.id)}
+        expected_env_vars = {'INGEST_ID': str(ingest.id), 'WORKSPACE': workspace_1.name,
+                             'NEW_WORKSPACE': workspace_2.name}
         expected_workspaces = {workspace_1.name: {'mode': 'rw'}, workspace_2.name: {'mode': 'rw'}}
         expected_config = {'version': '2.0', 'tasks': [{'type': 'main', 'args': expected_args,
                                                         'env_vars': expected_env_vars,
@@ -129,12 +130,12 @@ class TestQueuedExecutionConfigurator(TestCase):
         exe_config = configurator.configure_queued_job(ingest.job)
 
         config_dict = exe_config.get_dict()
-        # Make sure the dict validates
-        ExecutionConfiguration(config_dict)
         print 'Config is:'
         print str(config_dict)
         print 'Expected config is:'
         print str(expected_config)
+        # Make sure the dict validates
+        ExecutionConfiguration(config_dict)
         self.assertDictEqual(config_dict, expected_config)
 
     def test_configure_queued_job_ingest_without_new_workspace(self):
@@ -148,7 +149,7 @@ class TestQueuedExecutionConfigurator(TestCase):
         Ingest.objects.start_ingest_tasks([ingest], scan_id=scan.id)
 
         expected_args = 'scale_ingest -i %s' % str(ingest.id)
-        expected_env_vars = {'INGEST_ID': str(ingest.id)}
+        expected_env_vars = {'INGEST_ID': str(ingest.id), 'WORKSPACE': workspace_1.name}
         expected_workspaces = {workspace_1.name: {'mode': 'rw'}}
         expected_config = {'version': '2.0', 'tasks': [{'type': 'main', 'args': expected_args,
                                                         'env_vars': expected_env_vars,
@@ -208,8 +209,8 @@ class TestQueuedExecutionConfigurator(TestCase):
         scan = ingest_test_utils.create_scan(configuration=configuration)
         scan = Scan.objects.queue_scan(scan.id, False)
 
-        expected_args = 'scale_scan -i %s' % str(scan.id)
-        expected_env_vars = {'SCAN ID': str(scan.id), 'DRY RUN': 'False'}
+        expected_args = 'scale_scan -i %s -d False' % str(scan.id)
+        expected_env_vars = {'SCAN ID': str(scan.id), 'DRY RUN': str(False)}
         expected_workspaces = {workspace.name: {'mode': 'rw'}}
         expected_config = {'version': '2.0', 'tasks': [{'type': 'main', 'args': expected_args,
                                                         'env_vars': expected_env_vars,
