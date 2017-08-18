@@ -51,7 +51,6 @@ class Command(BaseCommand):
                 exit_code = err.exit_code
             else:
                 logger.exception('Error performing post-job steps')
-            print str(ex)
             sys.exit(exit_code)
 
         logger.info('Command completed: scale_post_steps')
@@ -93,7 +92,7 @@ class Command(BaseCommand):
             job_exe_output = JobExecutionOutput()
             job_exe_output.job_exe_id = job_exe.id
             job_exe_output.job_id = job_exe.job_id
-            job_exe_output.job_type_id = job_exe.job.job_type_id
+            job_exe_output.job_type_id = job_exe.job_type_id
             job_exe_output.exe_num = job_exe.exe_num
             job_exe_output.output_manifest = results_manifest.get_json_dict()
             job_exe_output.output = job_results.get_dict()

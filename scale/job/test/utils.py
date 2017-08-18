@@ -175,7 +175,7 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, data=Non
 
 
 def create_job_exe(job_type=None, job=None, exe_num=None, node=None, timeout=None, input_file_size=10.0, queued=None,
-                   started=None, status='COMPLETED', error=None, ended=None, output=None, output_manifest=None):
+                   started=None, status='RUNNING', error=None, ended=None, output=None, output_manifest=None):
     """Creates a job_exe model for unit testing, may also create job_exe_end and job_exe_output models depending on
     status
 

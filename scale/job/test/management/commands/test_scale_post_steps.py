@@ -35,7 +35,7 @@ class TestPostJobSteps(TransactionTestCase):
         self.job_type = job_utils.create_job_type(name='Test', version='1.0', interface=interface)
         self.event = TriggerEvent.objects.create_trigger_event('TEST', None, {}, now())
         self.job = job_utils.create_job(job_type=self.job_type, event=self.event, status='RUNNING')
-        self.job_exe = job_utils.create_job_exe(job=self.job)
+        self.job_exe = job_utils.create_job_exe(job=self.job, status='RUNNING')
 
     @patch('job.management.commands.scale_post_steps.JobExecution.objects')
     @patch('os.environ.get')
@@ -48,6 +48,9 @@ class TestPostJobSteps(TransactionTestCase):
         mock_env_vars.side_effect = get_env_vars
         mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.job_type.get_job_interface.return_value.perform_post_steps.return_value = RESULTS
         mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.id = self.job_exe.id
+        mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.job_id = self.job_exe.job_id
+        mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.job_type_id = self.job_exe.job_type_id
+        mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.exe_num = self.job_exe.exe_num
 
         # Call method to test
         cmd = PostCommand()
@@ -166,6 +169,9 @@ class TestPostJobSteps(TransactionTestCase):
         mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.stderr = None
         mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.job_type.get_job_interface.return_value.perform_post_steps.return_value = RESULTS
         mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.id = self.job_exe.id
+        mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.job_id = self.job_exe.job_id
+        mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.job_type_id = self.job_exe.job_type_id
+        mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.exe_num = self.job_exe.exe_num
 
         # Call method to test
         cmd = PostCommand()

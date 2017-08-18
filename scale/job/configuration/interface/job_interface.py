@@ -925,17 +925,14 @@ class JobInterface(object):
                 param_pattern = '\$\{([^\}]*\:)?' + re.escape(param_name) + '\}'
                 pattern_prog = re.compile(param_pattern)
 
-                print 'ret_str: %s' % str(ret_str)
                 match_obj = pattern_prog.search(ret_str)
                 if match_obj:
-                    ret_str = param_value
+                    ret_str = param_value if param_value else ''
                     break
 
             if ret_str == env_var['value']:
-                env_var['value'] = ''
-            else:
-                env_var['value'] = ret_str
-            env_var_dict[env_var['name']] = env_var['value']
+                ret_str = ''
+            env_var_dict[env_var['name']] = ret_str
 
         return env_var_dict
 

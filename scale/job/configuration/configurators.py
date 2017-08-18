@@ -492,8 +492,9 @@ class ScheduledExecutionConfigurator(object):
             for task_type in _config.get_task_types():
                 env_vars = {}
                 for name, value in _config.get_settings(task_type).items():
-                    env_name = normalize_env_var_name(name)
-                    env_vars[env_name] = value
+                    if value is not None:
+                        env_name = normalize_env_var_name(name)
+                        env_vars[env_name] = value
                 _config.add_to_task(task_type, env_vars=env_vars)
 
         # Configure Docker parameters for env vars and Docker volumes
