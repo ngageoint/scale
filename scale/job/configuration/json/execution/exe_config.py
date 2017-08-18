@@ -747,7 +747,7 @@ class ExecutionConfiguration(object):
             task_workspaces = {}
             task_dict['workspaces'] = task_workspaces
 
-        for name, volume in wksp_volumes:
+        for name, volume in wksp_volumes.items():
             wksp_dict = {'mode': volume.mode}
             if volume.name:
                 wksp_dict['volume_name'] = volume.name

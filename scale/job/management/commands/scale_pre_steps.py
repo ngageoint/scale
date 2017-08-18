@@ -37,7 +37,7 @@ class Command(BaseCommand):
         try:
             job_exe = self._get_job_exe(job_id, exe_num)
 
-            job_interface = job_exe.get_job_interface()
+            job_interface = job_exe.job_type.get_job_interface()
             exe_config = job_exe.get_execution_configuration()
             logger.info('Validating mounts...')
             job_interface.validate_populated_mounts(exe_config)
@@ -59,7 +59,6 @@ class Command(BaseCommand):
                 exit_code = err.exit_code
             else:
                 logger.exception('Error performing pre-job steps')
-                print str(ex)
             sys.exit(exit_code)
 
         logger.info('Command completed: scale_pre_steps')

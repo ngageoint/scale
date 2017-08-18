@@ -50,7 +50,7 @@ class TestPreJobSteps(TransactionTestCase):
         # Set up mocks
         def get_env_vars(name):
             return str(self.job.id) if name == 'SCALE_JOB_ID' else str(self.job_exe.exe_num)
-        mock_env_vars.return_value = get_env_vars
+        mock_env_vars.side_effect = get_env_vars
 
         # Call method to test
         cmd = PreCommand()
@@ -68,7 +68,7 @@ class TestPreJobSteps(TransactionTestCase):
         # Set up mocks
         def get_env_vars(name):
             return str(self.job.id) if name == 'SCALE_JOB_ID' else str(self.job_exe.exe_num)
-        mock_env_vars.return_value = get_env_vars
+        mock_env_vars.side_effect = get_env_vars
         mock_db.side_effect = DatabaseError()
 
         # Call method to test
@@ -87,7 +87,7 @@ class TestPreJobSteps(TransactionTestCase):
         # Set up mocks
         def get_env_vars(name):
             return str(self.job.id) if name == 'SCALE_JOB_ID' else str(self.job_exe.exe_num)
-        mock_env_vars.return_value = get_env_vars
+        mock_env_vars.side_effect = get_env_vars
         mock_db.side_effect = OperationalError()
 
         # Call method to test
@@ -106,8 +106,8 @@ class TestPreJobSteps(TransactionTestCase):
         # Set up mocks
         def get_env_vars(name):
             return str(self.job.id) if name == 'SCALE_JOB_ID' else str(self.job_exe.exe_num)
-        mock_env_vars.return_value = get_env_vars
-        mock_job_exe.objects.get_job_exe_with_job_and_job_type.return_value.get_job_interface.return_value.perform_pre_steps.side_effect = IOError()
+        mock_env_vars.side_effect = get_env_vars
+        mock_job_exe.objects.get_job_exe_with_job_and_job_type.return_value.job_type.get_job_interface.return_value.perform_pre_steps.side_effect = IOError()
 
         # Call method to test
         cmd = PreCommand()

@@ -130,10 +130,6 @@ class TestQueuedExecutionConfigurator(TestCase):
         exe_config = configurator.configure_queued_job(ingest.job)
 
         config_dict = exe_config.get_dict()
-        print 'Config is:'
-        print str(config_dict)
-        print 'Expected config is:'
-        print str(expected_config)
         # Make sure the dict validates
         ExecutionConfiguration(config_dict)
         self.assertDictEqual(config_dict, expected_config)

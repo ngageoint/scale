@@ -45,8 +45,8 @@ class TestPostJobSteps(TransactionTestCase):
         # Set up mocks
         def get_env_vars(name):
             return str(self.job.id) if name == 'SCALE_JOB_ID' else str(self.job_exe.exe_num)
-        mock_env_vars.return_value = get_env_vars
-        mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.get_job_interface.return_value.perform_post_steps.return_value = RESULTS
+        mock_env_vars.side_effect = get_env_vars
+        mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.job_type.get_job_interface.return_value.perform_post_steps.return_value = RESULTS
         mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.id = self.job_exe.id
 
         # Call method to test
@@ -54,7 +54,7 @@ class TestPostJobSteps(TransactionTestCase):
         cmd.run_from_argv(['manage.py', 'scale_post_steps'])
 
         # Check results
-        job_exe_output = JobExecutionOutput.objects.get(job_exe_id= self.job_exe.id)
+        job_exe_output = JobExecutionOutput.objects.get(job_exe_id=self.job_exe.id)
         self.assertDictEqual(job_exe_output.get_output().get_dict(), JOB_RESULTS.get_dict())
         self.assertDictEqual(job_exe_output.output_manifest, RESULTS_MANIFEST.get_json_dict())
 
@@ -67,7 +67,7 @@ class TestPostJobSteps(TransactionTestCase):
         # Set up mocks
         def get_env_vars(name):
             return str(self.job.id) if name == 'SCALE_JOB_ID' else str(self.job_exe.exe_num)
-        mock_env_vars.return_value = get_env_vars
+        mock_env_vars.side_effect = get_env_vars
         mock_db.side_effect = DatabaseError()
 
         # Call method to test
@@ -86,7 +86,7 @@ class TestPostJobSteps(TransactionTestCase):
         # Set up mocks
         def get_env_vars(name):
             return str(self.job.id) if name == 'SCALE_JOB_ID' else str(self.job_exe.exe_num)
-        mock_env_vars.return_value = get_env_vars
+        mock_env_vars.side_effect = get_env_vars
         mock_db.side_effect = OperationalError()
 
         # Call method to test
@@ -105,8 +105,8 @@ class TestPostJobSteps(TransactionTestCase):
         # Set up mocks
         def get_env_vars(name):
             return str(self.job.id) if name == 'SCALE_JOB_ID' else str(self.job_exe.exe_num)
-        mock_env_vars.return_value = get_env_vars
-        mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.get_job_interface.return_value.perform_post_steps.side_effect = IOError()
+        mock_env_vars.side_effect = get_env_vars
+        mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.job_type.get_job_interface.return_value.perform_post_steps.side_effect = IOError()
 
         # Call method to test
         cmd = PostCommand()
@@ -124,8 +124,8 @@ class TestPostJobSteps(TransactionTestCase):
         # Set up mocks
         def get_env_vars(name):
             return str(self.job.id) if name == 'SCALE_JOB_ID' else str(self.job_exe.exe_num)
-        mock_env_vars.return_value = get_env_vars
-        mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.get_job_interface.return_value.perform_post_steps.side_effect = InvalidResultsManifest('')
+        mock_env_vars.side_effect = get_env_vars
+        mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.job_type.get_job_interface.return_value.perform_post_steps.side_effect = InvalidResultsManifest('')
 
         # Call method to test
         cmd = PostCommand()
@@ -143,8 +143,8 @@ class TestPostJobSteps(TransactionTestCase):
         # Set up mocks
         def get_env_vars(name):
             return str(self.job.id) if name == 'SCALE_JOB_ID' else str(self.job_exe.exe_num)
-        mock_env_vars.return_value = get_env_vars
-        mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.get_job_interface.return_value.perform_post_steps.side_effect = MissingRequiredOutput('')
+        mock_env_vars.side_effect = get_env_vars
+        mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.job_type.get_job_interface.return_value.perform_post_steps.side_effect = MissingRequiredOutput('')
 
         # Call method to test
         cmd = PostCommand()
@@ -161,10 +161,10 @@ class TestPostJobSteps(TransactionTestCase):
         # Set up mocks
         def get_env_vars(name):
             return str(self.job.id) if name == 'SCALE_JOB_ID' else str(self.job_exe.exe_num)
-        mock_env_vars.return_value = get_env_vars
+        mock_env_vars.side_effect = get_env_vars
         mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.stdout = 'something'
         mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.stderr = None
-        mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.get_job_interface.return_value.perform_post_steps.return_value = RESULTS
+        mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.job_type.get_job_interface.return_value.perform_post_steps.return_value = RESULTS
         mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.id = self.job_exe.id
 
         # Call method to test
