@@ -131,6 +131,10 @@ class TestQueuedExecutionConfigurator(TestCase):
         config_dict = exe_config.get_dict()
         # Make sure the dict validates
         ExecutionConfiguration(config_dict)
+        print 'Config is:'
+        print str(config_dict)
+        print 'Expected config is:'
+        print str(expected_config)
         self.assertDictEqual(config_dict, expected_config)
 
     def test_configure_queued_job_ingest_without_new_workspace(self):
@@ -202,7 +206,7 @@ class TestQueuedExecutionConfigurator(TestCase):
         from ingest.models import Scan
         from ingest.test import utils as ingest_test_utils
         scan = ingest_test_utils.create_scan(configuration=configuration)
-        Scan.objects.queue_scan(scan.id, False)
+        scan = Scan.objects.queue_scan(scan.id, False)
 
         expected_args = 'scale_scan -i %s' % str(scan.id)
         expected_env_vars = {'SCAN ID': str(scan.id), 'DRY RUN': 'False'}

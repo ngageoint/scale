@@ -774,7 +774,7 @@ class ExecutionConfiguration(object):
             if workspace.name in task_workspaces:
                 # Only replace existing workspace if upgrading mode from RO to RW
                 existing_workspace = task_workspaces[workspace.name]
-                if existing_workspace.mode == MODE_RW or workspace.mode == MODE_RO:
+                if existing_workspace['mode'] == MODE_RW or workspace.mode == MODE_RO:
                     continue
             workspace_dict = {'mode': workspace.mode}
             if workspace.volume_name:

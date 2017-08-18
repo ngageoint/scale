@@ -979,8 +979,15 @@ class JobExecutionManager(models.Manager):
         if ended:
             job_exes = job_exes.filter(created__lte=ended)
 
-        # TODO: how to handle RUNNING?
         if statuses:
+            if 'RUNNING' in statuses:
+                # This is a special case where we have to use exclusion so that running executions (no job_exe_end) are
+                # included
+                exclude_statues = []
+                for status in ['COMPLETED', 'FAILED', 'CANCELED']:
+                    if status not in statuses:
+                        exclude_statues.append(status)
+                job_exes = job_exes.exclude(jobexecutionend__status__in=statuses)
             job_exes = job_exes.filter(jobexecutionend__status__in=statuses)
         if job_type_ids:
             job_exes = job_exes.filter(job_type_id__in=job_type_ids)
@@ -1341,6 +1348,15 @@ class JobExecution(models.Model):
         """
 
         return Resources(self.resources).get_node_resources()
+
+    def get_status(self):
+        """Returns the status of this job execution
+
+        :returns: The status of the job execution
+        :rtype: string
+        """
+
+        return self.jobexecutionend.status if self.jobexecutionend else 'RUNNING'
 
     @staticmethod
     def parse_cluster_id(task_id):

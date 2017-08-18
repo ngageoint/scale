@@ -168,7 +168,7 @@ class JobRevisionSerializer(JobSerializer):
 
 class JobExecutionBaseSerializer(ModelIdSerializer):
     """Converts job execution model fields to REST output"""
-    status = serializers.ChoiceField(choices=JobExecutionEnd.JOB_EXE_STATUSES)
+    status = serializers.CharField(source='get_status')
     command_arguments = serializers.CharField()
     timeout = serializers.IntegerField()
 
