@@ -282,7 +282,7 @@ class ScheduledExecutionConfigurator(object):
             env_vars = {}
             for resource in config.get_resources(task_type).resources:
                 env_name = 'ALLOCATED_%s' % normalize_env_var_name(resource.name)
-                env_vars[env_name] = str(resource.value)  # Assumes scalar resources
+                env_vars[env_name] = '%.1f' % resource.value  # Assumes scalar resources
 
             # Configure workspace volumes
             workspace_volumes = {}

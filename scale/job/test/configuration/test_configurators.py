@@ -282,9 +282,9 @@ class TestScheduledExecutionConfigurator(TestCase):
                                                        'SCALE_DB_PORT': 'TEST_PORT'}}
                 mock_secrets_mgr.retrieve_job_type_secrets = MagicMock()
                 mock_secrets_mgr.retrieve_job_type_secrets.return_value = {'s_2': 's_2_secret'}
-            configurator = ScheduledExecutionConfigurator(workspaces)
-            exe_config_with_secrets = configurator.configure_scheduled_job(job_exe_model, job_type,
-                                                                           queue.get_job_interface())
+                configurator = ScheduledExecutionConfigurator(workspaces)
+                exe_config_with_secrets = configurator.configure_scheduled_job(job_exe_model, job_type,
+                                                                               queue.get_job_interface())
 
         # Expected results
         input_wksp_vol_name = get_workspace_volume_name(job_exe_model, input_workspace.name)
@@ -301,15 +301,18 @@ class TestScheduledExecutionConfigurator(TestCase):
         expected_input_files = queue.get_execution_configuration().get_dict()['input_files']
         expected_output_workspaces = {'output_1': output_workspace.name}
         expected_pull_task = {'task_id': '%s_pull' % job_exe_model.get_cluster_id(), 'type': 'pull',
-                              'resources': resources.get_json().get_dict(),
+                              'resources': {'cpus': resources.cpus, 'mem': resources.mem, 'disk': resources.disk},
                               'args': create_pull_command(job_type.docker_image),
-                              'env_vars': {'SCALE_JOB_ID': str(job.id), 'SCALE_EXE_NUM': str(job.num_exes),
-                                           'ALLOCATED_CPU': str(resources.cpus), 'ALLOCATED_MEM': str(resources.mem),
-                                           'ALLOCATED_DISK': str(resources.disk)}}
+                              'env_vars': {'ALLOCATED_CPUS': str(resources.cpus), 'ALLOCATED_MEM': str(resources.mem),
+                                           'ALLOCATED_DISK': str(resources.disk)},
+                              'docker_params': [{'flag': 'env', 'value': 'ALLOCATED_CPUS=%.1f' % resources.cpus},
+                                                {'flag': 'env', 'value': 'ALLOCATED_MEM=%.1f' % resources.mem},
+                                                {'flag': 'env', 'value': 'ALLOCATED_DISK=%.1f' % resources.disk}]}
         expected_pre_task = {'task_id': '%s_pre' % job_exe_model.get_cluster_id(), 'type': 'pre',
-                             'resources': resources.get_json().get_dict(), 'args': PRE_TASK_COMMAND_ARGS,
+                             'resources': {'cpus': resources.cpus, 'mem': resources.mem, 'disk': resources.disk},
+                             'args': PRE_TASK_COMMAND_ARGS,
                              'env_vars': {'SCALE_JOB_ID': str(job.id), 'SCALE_EXE_NUM': str(job.num_exes),
-                                          'ALLOCATED_CPU': str(resources.cpus), 'ALLOCATED_MEM': str(resources.mem),
+                                          'ALLOCATED_CPUS': str(resources.cpus), 'ALLOCATED_MEM': str(resources.mem),
                                           'ALLOCATED_DISK': str(resources.disk), 'SCALE_DB_NAME': 'TEST_NAME',
                                           'SCALE_DB_USER': 'TEST_USER', 'SCALE_DB_PASS': 'TEST_PASSWORD',
                                           'SCALE_DB_HOST': 'TEST_HOST', 'SCALE_DB_PORT': 'TEST_PORT'},
@@ -326,9 +329,9 @@ class TestScheduledExecutionConfigurator(TestCase):
                                                            'type': 'volume'}},
                              'docker_params': [{'flag': 'env', 'value': 'SCALE_JOB_ID=%d' % job.id},
                                                {'flag': 'env', 'value': 'SCALE_EXE_NUM=%d' % job.num_exes},
-                                               {'flag': 'env', 'value': 'ALLOCATED_CPU=%d' % resources.cpus},
-                                               {'flag': 'env', 'value': 'ALLOCATED_MEM=%d' % resources.mem},
-                                               {'flag': 'env', 'value': 'ALLOCATED_DISK=%d' % resources.disk},
+                                               {'flag': 'env', 'value': 'ALLOCATED_CPUS=%.1f' % resources.cpus},
+                                               {'flag': 'env', 'value': 'ALLOCATED_MEM=%.1f' % resources.mem},
+                                               {'flag': 'env', 'value': 'ALLOCATED_DISK=%.1f' % resources.disk},
                                                {'flag': 'env', 'value': 'SCALE_DB_NAME=TEST_NAME'},
                                                {'flag': 'env', 'value': 'SCALE_DB_USER=TEST_USER'},
                                                {'flag': 'env', 'value': 'SCALE_DB_PASS=TEST_PASSWORD'},
@@ -342,9 +345,11 @@ class TestScheduledExecutionConfigurator(TestCase):
                                                                            (output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH)}
                                                ]}
         expected_pst_task = {'task_id': '%s_post' % job_exe_model.get_cluster_id(), 'type': 'post',
-                             'resources': resources.get_json().get_dict(), 'args': POST_TASK_COMMAND_ARGS,
+                             'resources': {'cpus': post_resources.cpus, 'mem': post_resources.mem,
+                                           'disk': post_resources.disk},
+                             'args': POST_TASK_COMMAND_ARGS,
                              'env_vars': {'SCALE_JOB_ID': str(job.id), 'SCALE_EXE_NUM': str(job.num_exes),
-                                          'ALLOCATED_CPU': str(post_resources.cpus),
+                                          'ALLOCATED_CPUS': str(post_resources.cpus),
                                           'ALLOCATED_MEM': str(post_resources.mem),
                                           'ALLOCATED_DISK': str(post_resources.disk), 'SCALE_DB_NAME': 'TEST_NAME',
                                           'SCALE_DB_USER': 'TEST_USER', 'SCALE_DB_PASS': 'TEST_PASSWORD',
@@ -363,9 +368,9 @@ class TestScheduledExecutionConfigurator(TestCase):
                                                            'type': 'volume'}},
                              'docker_params': [{'flag': 'env', 'value': 'SCALE_JOB_ID=%d' % job.id},
                                                {'flag': 'env', 'value': 'SCALE_EXE_NUM=%d' % job.num_exes},
-                                               {'flag': 'env', 'value': 'ALLOCATED_CPU=%d' % post_resources.cpus},
-                                               {'flag': 'env', 'value': 'ALLOCATED_MEM=%d' % post_resources.mem},
-                                               {'flag': 'env', 'value': 'ALLOCATED_DISK=%d' % post_resources.disk},
+                                               {'flag': 'env', 'value': 'ALLOCATED_CPUS=%.1f' % post_resources.cpus},
+                                               {'flag': 'env', 'value': 'ALLOCATED_MEM=%.1f' % post_resources.mem},
+                                               {'flag': 'env', 'value': 'ALLOCATED_DISK=%.1f' % post_resources.disk},
                                                {'flag': 'env', 'value': 'SCALE_DB_NAME=TEST_NAME'},
                                                {'flag': 'env', 'value': 'SCALE_DB_USER=TEST_USER'},
                                                {'flag': 'env', 'value': 'SCALE_DB_PASS=TEST_PASSWORD'},
@@ -379,13 +384,14 @@ class TestScheduledExecutionConfigurator(TestCase):
                                                                            (output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH)}
                                                ]}
         expected_main_task = {'task_id': '%s_main' % job_exe_model.get_cluster_id(), 'type': 'main',
-                              'resources': main_resources.get_json().get_dict(),
+                              'resources': {'cpus': main_resources.cpus, 'mem': main_resources.mem,
+                                            'disk': main_resources.disk},
                               'args': '-a my_val -b %s %s s_1_value %s' %
                                       (input_2_val, input_3_val, SCALE_JOB_EXE_OUTPUT_PATH),
                               'env_vars': {'INPUT_1': 'my_val', 'INPUT_2': input_2_val, 'INPUT_3': input_3_val,
                                            'job_output_dir': SCALE_JOB_EXE_OUTPUT_PATH,
                                            'OUTPUT_DIR': SCALE_JOB_EXE_OUTPUT_PATH, 'my_special_env': 's_2_secret',
-                                           'ALLOCATED_CPU': str(main_resources.cpus),
+                                           'ALLOCATED_CPUS': str(main_resources.cpus),
                                            'ALLOCATED_MEM': str(main_resources.mem),
                                            'ALLOCATED_DISK': str(main_resources.disk)},
                               'workspaces': {input_workspace.name: {'mode': 'ro', 'volume_name': input_wksp_vol_name}},
@@ -406,9 +412,9 @@ class TestScheduledExecutionConfigurator(TestCase):
                                                 {'flag': 'env', 'value': 'job_output_dir=%s' % SCALE_JOB_EXE_OUTPUT_PATH},
                                                 {'flag': 'env', 'value': 'OUTPUT_DIR=%s' % SCALE_JOB_EXE_OUTPUT_PATH},
                                                 {'flag': 'env', 'value': 'my_special_env=s_2_secret'},
-                                                {'flag': 'env', 'value': 'ALLOCATED_CPU=%d' % main_resources.cpus},
-                                                {'flag': 'env', 'value': 'ALLOCATED_MEM=%d' % main_resources.mem},
-                                                {'flag': 'env', 'value': 'ALLOCATED_DISK=%d' % main_resources.disk},
+                                                {'flag': 'env', 'value': 'ALLOCATED_CPUS=%.1f' % main_resources.cpus},
+                                                {'flag': 'env', 'value': 'ALLOCATED_MEM=%.1f' % main_resources.mem},
+                                                {'flag': 'env', 'value': 'ALLOCATED_DISK=%.1f' % main_resources.disk},
                                                 {'flag': 'volume',
                                                  'value': '/w_1/host/path:%s:ro' % input_wksp_vol_path},
                                                 {'flag': 'volume',
@@ -426,6 +432,10 @@ class TestScheduledExecutionConfigurator(TestCase):
         # Ensure configuration is valid
         ExecutionConfiguration(exe_config_with_secrets.get_dict())
         # Compare results, including secrets
+        print 'Config is:'
+        print str(exe_config_with_secrets.get_dict())
+        print 'Expected config is:'
+        print str(expected_config)
         self.assertDictEqual(exe_config_with_secrets.get_dict(), expected_config)
 
     def test_configure_scheduled_job_shared_mem(self):
