@@ -10,7 +10,7 @@ import django.utils.timezone as timezone
 from django.db import transaction
 
 from error.models import Error
-from job.models import Job, JobExecution, JobType
+from job.models import Job, JobExecution, JobExecutionEnd, JobType
 from ingest.models import Ingest, Strike
 from metrics.registry import MetricsPlotData, MetricsType, MetricsTypeGroup, MetricsTypeFilter
 
@@ -77,18 +77,17 @@ class MetricsErrorManager(models.Manager):
         ended = datetime.datetime.combine(date, datetime.time.max).replace(tzinfo=timezone.utc)
 
         # Fetch all the job executions with an error for the requested day
-        job_exes = JobExecution.objects.filter(error__is_builtin=True, ended__gte=started, ended__lte=ended)
-        job_exes = job_exes.select_related('error')
-        job_exes = job_exes.defer('environment', 'results', 'results_manifest', 'stdout', 'stderr')
+        job_exe_ends = JobExecutionEnd.objects.filter(error__is_builtin=True, ended__gte=started, ended__lte=ended)
+        job_exe_ends = job_exe_ends.select_related('error')
 
         # Calculate the overall counts based on job status
         entry_map = {}
-        for job_exe in job_exes.iterator():
-            if job_exe.error not in entry_map:
-                entry = MetricsError(error=job_exe.error, occurred=date, created=timezone.now())
+        for job_exe_end in job_exe_ends.iterator():
+            if job_exe_end.error not in entry_map:
+                entry = MetricsError(error=job_exe_end.error, occurred=date, created=timezone.now())
                 entry.total_count = 0
-                entry_map[job_exe.error] = entry
-            entry = entry_map[job_exe.error]
+                entry_map[job_exe_end.error] = entry
+            entry = entry_map[job_exe_end.error]
             entry.total_count += 1
 
         # Save the new metrics to the database
@@ -444,7 +443,7 @@ class MetricsJobTypeManager(models.Manager):
 
         # Fetch all the jobs relevant for metrics
         jobs = Job.objects.filter(status__in=['CANCELED', 'COMPLETED', 'FAILED'], ended__gte=started, ended__lte=ended)
-        jobs = jobs.select_related('job_type', 'error').defer('data', 'configuration', 'results')
+        jobs = jobs.select_related('job_type', 'error').defer('data', 'results')
 
         # Calculate the overall counts based on job status
         entry_map = {}

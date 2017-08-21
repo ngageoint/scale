@@ -67,12 +67,6 @@ class TestMetricsError(TestCase):
             job=job1, error=error, status=job1.status,
             queued=datetime.datetime(2015, 1, 1, tzinfo=utc),
             started=datetime.datetime(2015, 1, 1, 0, 10, 2, tzinfo=utc),
-            pre_started=datetime.datetime(2015, 1, 1, 0, 30, 4, tzinfo=utc),
-            pre_completed=datetime.datetime(2015, 1, 1, 1, 6, tzinfo=utc),
-            job_started=datetime.datetime(2015, 1, 1, 1, 40, 8, tzinfo=utc),
-            job_completed=datetime.datetime(2015, 1, 1, 2, 30, 10, tzinfo=utc),
-            post_started=datetime.datetime(2015, 1, 1, 3, 30, 12, tzinfo=utc),
-            post_completed=datetime.datetime(2015, 1, 1, 4, 40, 14, tzinfo=utc),
             ended=datetime.datetime(2015, 1, 1, 6, 0, 16, tzinfo=utc),
         )
         job2 = job_test_utils.create_job(error=error, status='FAILED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
@@ -80,25 +74,22 @@ class TestMetricsError(TestCase):
             job=job2, error=error, status=job2.status,
             queued=datetime.datetime(2015, 1, 1, tzinfo=utc),
             started=datetime.datetime(2015, 1, 1, 2, 10, 2, tzinfo=utc),
-            pre_started=datetime.datetime(2015, 1, 1, 4, 30, 4, tzinfo=utc),
-            pre_completed=datetime.datetime(2015, 1, 1, 6, 0, 8, tzinfo=utc),
-            job_started=datetime.datetime(2015, 1, 1, 8, 40, 14, tzinfo=utc),
-            job_completed=datetime.datetime(2015, 1, 1, 10, 30, 22, tzinfo=utc),
-            post_started=datetime.datetime(2015, 1, 1, 12, 30, 32, tzinfo=utc),
-            post_completed=datetime.datetime(2015, 1, 1, 14, 40, 44, tzinfo=utc),
             ended=datetime.datetime(2015, 1, 1, 16, 0, 58, tzinfo=utc),
         )
 
         sys_error = error_test_utils.create_error(category='SYSTEM', is_builtin=True)
-        job3a = job_test_utils.create_job(error=sys_error, status='FAILED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
+        job3a = job_test_utils.create_job(error=sys_error, status='FAILED', ended=datetime.datetime(2015, 1, 1,
+                                                                                                    tzinfo=utc))
         job_test_utils.create_job_exe(job=job3a, status=job3a.status, ended=job3a.ended, error=sys_error)
 
         data_error = error_test_utils.create_error(category='DATA', is_builtin=True)
-        job3b = job_test_utils.create_job(error=data_error, status='FAILED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
+        job3b = job_test_utils.create_job(error=data_error, status='FAILED', ended=datetime.datetime(2015, 1, 1,
+                                                                                                     tzinfo=utc))
         job_test_utils.create_job_exe(job=job3b, status=job3b.status, ended=job3b.ended, error=data_error)
 
         algo_error = error_test_utils.create_error(category='ALGORITHM', is_builtin=True)
-        job3c = job_test_utils.create_job(error=algo_error, status='FAILED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
+        job3c = job_test_utils.create_job(error=algo_error, status='FAILED', ended=datetime.datetime(2015, 1, 1,
+                                                                                                     tzinfo=utc))
         job_test_utils.create_job_exe(job=job3c, status=job3c.status, ended=job3c.ended, error=algo_error)
 
         MetricsError.objects.calculate(datetime.date(2015, 1, 1))
@@ -156,6 +147,8 @@ class TestMetricsError(TestCase):
 class TestMetricsIngest(TestCase):
     """Tests the MetricsIngest model logic."""
 
+    fixtures = ['ingest_job_types.json']
+
     def setUp(self):
         django.setup()
 
@@ -205,7 +198,8 @@ class TestMetricsIngest(TestCase):
     def test_calculate_repeated(self):
         """Tests regenerating metrics for a date that already has metrics."""
         strike = ingest_test_utils.create_strike()
-        ingest_test_utils.create_ingest(strike=strike, status='INGESTED', ingest_ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
+        ingest_test_utils.create_ingest(strike=strike, status='INGESTED', ingest_ended=datetime.datetime(2015, 1, 1,
+                                                                                                         tzinfo=utc))
 
         MetricsIngest.objects.calculate(datetime.date(2015, 1, 1))
         MetricsIngest.objects.calculate(datetime.date(2015, 1, 1))
@@ -339,8 +333,10 @@ class TestMetricsIngest(TestCase):
     def test_get_plot_data_filtered(self):
         """Tests getting the metrics plot data with filters."""
         strike = ingest_test_utils.create_strike()
-        metrics_test_utils.create_ingest(strike=strike, occurred=datetime.datetime(2015, 1, 1, tzinfo=utc), ingested_count=1)
-        metrics_test_utils.create_ingest(strike=strike, occurred=datetime.datetime(2015, 1, 20, tzinfo=utc), ingested_count=1)
+        metrics_test_utils.create_ingest(strike=strike, occurred=datetime.datetime(2015, 1, 1, tzinfo=utc),
+                                         ingested_count=1)
+        metrics_test_utils.create_ingest(strike=strike, occurred=datetime.datetime(2015, 1, 20, tzinfo=utc),
+                                         ingested_count=1)
         metrics_test_utils.create_ingest(occurred=datetime.datetime(2015, 1, 1, tzinfo=utc), ingested_count=1)
 
         plot_data = MetricsIngest.objects.get_plot_data(started=datetime.date(2015, 1, 1),
