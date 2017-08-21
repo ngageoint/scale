@@ -1023,7 +1023,9 @@ class JobExecutionManager(models.Manager):
             pass
 
         logger.warning('Job execution with number %d not found, querying for last job execution', exe_num)
-        return self.select_related('job__job_type', 'job__job_type_rev').filter(job_id=job_id).order('-id')[0]
+        job_exe = self.select_related('job__job_type', 'job__job_type_rev').filter(job_id=job_id).order('-id')[0]
+        logger.info('Found job execution with ID %d', job_exe.id)
+        return job_exe
 
     def get_latest(self, jobs):
         """Gets the latest job execution associated with each given job.
