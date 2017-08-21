@@ -975,9 +975,9 @@ class JobExecutionManager(models.Manager):
 
         # Apply time range filtering
         if started:
-            job_exes = job_exes.filter(created__gte=started)
+            job_exes = job_exes.filter(last_modified__gte=started)
         if ended:
-            job_exes = job_exes.filter(created__lte=ended)
+            job_exes = job_exes.filter(last_modified__lte=ended)
 
         if statuses:
             if 'RUNNING' in statuses:
@@ -1399,6 +1399,7 @@ class JobExecution(models.Model):
     class Meta(object):
         """Meta information for the database"""
         db_table = 'job_exe'
+        index_together = ['job', 'exe_num']
 
 
 class JobExecutionEndManager(models.Manager):
@@ -1466,13 +1467,14 @@ class JobExecutionEnd(models.Model):
     queued = models.DateTimeField()
     started = models.DateTimeField(blank=True, db_index=True, null=True)
     ended = models.DateTimeField(db_index=True)
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True, db_index=True)
 
     objects = JobExecutionEndManager()
 
     class Meta(object):
         """Meta information for the database"""
         db_table = 'job_exe_end'
+        index_together = ['job', 'exe_num']
 
 
 class JobExecutionOutput(models.Model):
@@ -1504,7 +1506,7 @@ class JobExecutionOutput(models.Model):
     output_manifest = django.contrib.postgres.fields.JSONField(blank=True, null=True)
     output = django.contrib.postgres.fields.JSONField(default=dict)
 
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True, db_index=True)
 
     def get_output(self):
         """Returns the output for this job execution
@@ -1518,6 +1520,7 @@ class JobExecutionOutput(models.Model):
     class Meta(object):
         """Meta information for the database"""
         db_table = 'job_exe_output'
+        index_together = ['job', 'exe_num']
 
 
 class JobInputFile(models.Model):
