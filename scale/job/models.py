@@ -988,7 +988,8 @@ class JobExecutionManager(models.Manager):
                     if status not in statuses:
                         exclude_statues.append(status)
                 job_exes = job_exes.exclude(jobexecutionend__status__in=exclude_statues)
-            job_exes = job_exes.filter(jobexecutionend__status__in=statuses)
+            else:
+                job_exes = job_exes.filter(jobexecutionend__status__in=statuses)
         if job_type_ids:
             job_exes = job_exes.filter(job_type_id__in=job_type_ids)
         if job_type_names:
@@ -1016,8 +1017,13 @@ class JobExecutionManager(models.Manager):
         :rtype: :class:`job.models.JobExecution`
         """
 
-        qry = self.select_related('job__job_type', 'job__job_type_rev').defer('stdout', 'stderr')
-        return qry.get(job_id=job_id, exe_num=exe_num)
+        try:
+            return self.select_related('job__job_type', 'job__job_type_rev').get(job_id=job_id, exe_num=exe_num)
+        except JobExecution.DoesNotExist:
+            pass
+
+        logger.warning('Job execution with number %d not found, querying for last job execution', exe_num)
+        return self.select_related('job__job_type', 'job__job_type_rev').filter(job_id=job_id).order('-id')[0]
 
     def get_latest(self, jobs):
         """Gets the latest job execution associated with each given job.

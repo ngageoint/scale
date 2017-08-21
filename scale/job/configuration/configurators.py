@@ -291,7 +291,7 @@ class ScheduledExecutionConfigurator(object):
                 # TODO: Should refactor workspace broker to return a Volume object and remove BrokerVolume
                 if workspace_model.volume:
                     vol_name = get_workspace_volume_name(job_exe, task_workspace.name)
-                    cont_path = get_workspace_volume_path(vol_name)
+                    cont_path = get_workspace_volume_path(workspace_model.name)
                     if workspace_model.volume.host:
                         host_path = workspace_model.volume.remote_path
                         volume = Volume(vol_name, cont_path, task_workspace.mode, is_host=True, host_path=host_path)
@@ -382,7 +382,7 @@ class ScheduledExecutionConfigurator(object):
 
         config.create_tasks(['pull', 'pre', 'main', 'post'])
         config.add_to_task('pull', args=create_pull_command(job_type.docker_image))
-        env_vars = {'SCALE_JOB_ID': str(job_exe.job_id), 'SCALE_EXE_NUM': str(job_exe.exe_num)}
+        env_vars = {'SCALE_JOB_ID': unicode(job_exe.job_id), 'SCALE_EXE_NUM': unicode(job_exe.exe_num)}
         config.add_to_task('pre', args=PRE_TASK_COMMAND_ARGS, env_vars=env_vars)
         config.add_to_task('post', args=POST_TASK_COMMAND_ARGS, env_vars=env_vars)
 
@@ -399,7 +399,7 @@ class ScheduledExecutionConfigurator(object):
 
         # Configure output workspaces
         output_workspaces = {}
-        for output_workspace in config.get_input_workspace_names():
+        for output_workspace in config.get_output_workspace_names():
             output_workspaces[output_workspace] = TaskWorkspace(output_workspace, MODE_RW)
         config.add_to_task('post', workspaces=output_workspaces)
 
@@ -479,7 +479,8 @@ class ScheduledExecutionConfigurator(object):
                                 value = '*****'
                     else:
                         value = job_config.get_setting_value(name)
-                    task_settings[name] = value
+                    if setting['required'] or value is not None:
+                        task_settings[name] = value
                 # TODO: command args and env var replacement from the interface should be removed once Scale drops
                 # support for old-style job types
                 args = config._get_task_dict('main')['args']
