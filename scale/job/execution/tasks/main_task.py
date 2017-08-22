@@ -46,6 +46,7 @@ class MainTask(JobExecutionTask):
             self._running_timeout_threshold = datetime.timedelta(seconds=job_exe.timeout)
 
         # Set job execution task fields
+        self.task_type = 'main'
         # Determine error to use if this task times out
         if job_type.name in JOB_TYPE_TIMEOUT_ERRORS:
             self.timeout_error_name = JOB_TYPE_TIMEOUT_ERRORS[job_type.name]

@@ -35,6 +35,7 @@ class PullTask(JobExecutionTask):
         self._running_timeout_threshold = datetime.timedelta(minutes=30)
 
         # Set job execution task fields
+        self.task_type = 'pull'
         self.timeout_error_name = 'pull-timeout'
 
         # Private fields for this class

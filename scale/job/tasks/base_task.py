@@ -76,6 +76,7 @@ class Task(object):
         self._has_timed_out = False
         self._has_ended = False
         self._ended = None
+        self.final_status = None
         self._exit_code = None
 
         # These values will vary by different task subclasses
@@ -149,6 +150,26 @@ class Task(object):
         return self._docker_params
 
     @property
+    def ended(self):
+        """When this task ended, possibly None
+
+        :returns: When this task ended
+        :rtype: :class:`datetime.datetime`
+        """
+
+        return self._ended
+
+    @property
+    def exit_code(self):
+        """Returns the exit code for this task, possibly None
+
+        :returns: The exit code
+        :rtype: int
+        """
+
+        return self._exit_code
+
+    @property
     def has_been_launched(self):
         """Indicates whether this task has been launched
 
@@ -179,6 +200,16 @@ class Task(object):
         return self._has_started
 
     @property
+    def has_timed_out(self):
+        """Indicates whether this task has timed out
+
+        :returns: True if this task has timed out, False otherwise
+        :rtype: bool
+        """
+
+        return self._has_timed_out
+
+    @property
     def id(self):
         """Returns the unique ID of the task
 
@@ -197,6 +228,16 @@ class Task(object):
         """
 
         return self._is_docker_privileged
+
+    @property
+    def launched(self):
+        """When this task launched, possibly None
+
+        :returns: When this task launched
+        :rtype: :class:`datetime.datetime`
+        """
+
+        return self._launched
 
     @property
     def name(self):
@@ -239,7 +280,7 @@ class Task(object):
         """
 
         with self._lock:
-            if not self._has_been_launched or self._has_ended:
+            if not self._has_been_launched or self._has_timed_out or self._has_ended:
                 return self._has_timed_out
 
             if self._has_started:
@@ -256,8 +297,6 @@ class Task(object):
 
             if timed_out:
                 self._has_timed_out = True
-                self._has_ended = True
-                self._ended = when
 
             return self._has_timed_out
 
@@ -335,6 +374,7 @@ class Task(object):
                 # Mark task as having ended
                 self._has_ended = True
                 self._ended = task_update.timestamp
+                self.final_status = task_update.status
                 self._exit_code = task_update.exit_code
 
     def _create_scale_image_name(self):

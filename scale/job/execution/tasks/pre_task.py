@@ -38,6 +38,7 @@ class PreTask(JobExecutionTask):
         self._running_timeout_threshold = datetime.timedelta(hours=1)
 
         # Set job execution task fields
+        self.task_type = 'pre'
         self.timeout_error_name = 'pre-timeout'
 
         # Private fields for this class

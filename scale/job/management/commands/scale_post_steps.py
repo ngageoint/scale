@@ -94,6 +94,5 @@ class Command(BaseCommand):
             job_exe_output.job_id = job_exe.job_id
             job_exe_output.job_type_id = job_exe.job_type_id
             job_exe_output.exe_num = job_exe.exe_num
-            job_exe_output.output_manifest = results_manifest.get_json_dict()
             job_exe_output.output = job_results.get_dict()
             job_exe_output.save()

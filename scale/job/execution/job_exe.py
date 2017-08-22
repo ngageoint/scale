@@ -7,6 +7,7 @@ import threading
 from django.utils.timezone import now
 
 from error.models import Error
+from job.execution.tasks.json.results.task_results import TaskResults
 from job.execution.tasks.main_task import MainTask
 from job.execution.tasks.post_task import PostTask
 from job.execution.tasks.pre_task import PreTask
@@ -129,11 +130,15 @@ class RunningJobExecution(object):
         :rtype: :class:`job.models.JobExecutionEnd`
         """
 
+        task_results = TaskResults()
+        task_results.add_task_results(self._all_tasks)
+
         job_exe_end = JobExecutionEnd()
         job_exe_end.job_exe_id = self.id
         job_exe_end.job_id = self.job_id
         job_exe_end.job_type_id = self.job_type_id
         job_exe_end.exe_num = self.exe_num
+        job_exe_end.task_results = task_results.get_dict()
         job_exe_end.status = self._status
         if self._error:
             job_exe_end.error_id = self._error.id

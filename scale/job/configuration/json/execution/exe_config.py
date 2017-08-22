@@ -80,18 +80,6 @@ EXE_CONFIG_SCHEMA = {
                 'is_deleted': {
                     'type': 'boolean',
                 },
-                'data_started': {
-                    'type': 'string',
-                },
-                'data_ended': {
-                    'type': 'string',
-                },
-                'source_started': {
-                    'type': 'string',
-                },
-                'source_ended': {
-                    'type': 'string',
-                },
             },
         },
         'task': {

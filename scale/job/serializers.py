@@ -296,7 +296,7 @@ class JobExecutionDetailsSerializer(JobExecutionSerializer):
 
     results = serializers.JSONField(default=dict, source='jobexecutionoutput.output')
 
-    results_manifest = serializers.JSONField(default=dict, source='jobexecutionoutput.output_manifest')
+    results_manifest = serializers.JSONField(default=dict)
 
 
 class JobExecutionLogSerializer(JobExecutionSerializer):

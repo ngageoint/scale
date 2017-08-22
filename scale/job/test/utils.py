@@ -12,6 +12,7 @@ from job.configuration.data.exceptions import InvalidConnection
 from job.configuration.json.execution.exe_config import ExecutionConfiguration
 from job.configuration.results.job_results import JobResults
 from job.execution.job_exe import RunningJobExecution
+from job.execution.tasks.json.results.task_results import TaskResults
 from job.models import Job, JobExecution, JobExecutionEnd, JobExecutionOutput, JobType, JobTypeRevision, TaskUpdate
 from job.tasks.update import TaskStatusUpdate
 from job.triggers.configuration.trigger_rule import JobTriggerRuleConfiguration
@@ -175,7 +176,7 @@ def create_job(job_type=None, event=None, status='PENDING', error=None, data=Non
 
 
 def create_job_exe(job_type=None, job=None, exe_num=None, node=None, timeout=None, input_file_size=10.0, queued=None,
-                   started=None, status='RUNNING', error=None, ended=None, output=None, output_manifest=None):
+                   started=None, status='RUNNING', error=None, ended=None, output=None, task_results=None):
     """Creates a job_exe model for unit testing, may also create job_exe_end and job_exe_output models depending on
     status
 
@@ -218,6 +219,9 @@ def create_job_exe(job_type=None, job=None, exe_num=None, node=None, timeout=Non
         job_exe_end.job = job
         job_exe_end.job_type = job_type
         job_exe_end.exe_num = exe_num
+        if not task_results:
+            task_results = TaskResults()
+        job_exe_end.task_results = task_results.get_dict()
         job_exe_end.status = status
         if status == 'FAILED' and not error:
             error = error_test_utils.create_error()
@@ -236,8 +240,6 @@ def create_job_exe(job_type=None, job=None, exe_num=None, node=None, timeout=Non
         job_exe_output.job = job
         job_exe_output.job_type = job_type
         job_exe_output.exe_num = exe_num
-        if output_manifest:
-            job_exe_output.output_manifest = output_manifest.get_dict()
         if not output:
             output = JobResults()
         job_exe_output.output = output.get_dict()

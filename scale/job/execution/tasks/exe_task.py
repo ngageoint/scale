@@ -42,6 +42,7 @@ class JobExecutionTask(Task):
         self._lost_count = 0
 
         # Sub-classes should set this
+        self.task_type = None
         self.timeout_error_name = None
 
     @abstractmethod

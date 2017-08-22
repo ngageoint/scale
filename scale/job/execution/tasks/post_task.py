@@ -38,6 +38,7 @@ class PostTask(JobExecutionTask):
         self._running_timeout_threshold = datetime.timedelta(hours=1)
 
         # Set job execution task fields
+        self.task_type = 'post'
         self.timeout_error_name = 'post-timeout'
 
         # Private fields for this class

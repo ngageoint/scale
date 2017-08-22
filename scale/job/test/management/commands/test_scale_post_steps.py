@@ -59,7 +59,6 @@ class TestPostJobSteps(TransactionTestCase):
         # Check results
         job_exe_output = JobExecutionOutput.objects.get(job_exe_id=self.job_exe.id)
         self.assertDictEqual(job_exe_output.get_output().get_dict(), JOB_RESULTS.get_dict())
-        self.assertDictEqual(job_exe_output.output_manifest, RESULTS_MANIFEST.get_json_dict())
 
     @patch('job.management.commands.scale_post_steps.sys.exit')
     @patch('job.management.commands.scale_post_steps.JobExecution.objects.select_related')
@@ -180,4 +179,3 @@ class TestPostJobSteps(TransactionTestCase):
         # Check results
         job_exe_output = JobExecutionOutput.objects.get(job_exe_id= self.job_exe.id)
         self.assertDictEqual(job_exe_output.get_output().get_dict(), JOB_RESULTS.get_dict())
-        self.assertDictEqual(job_exe_output.output_manifest, RESULTS_MANIFEST.get_json_dict())

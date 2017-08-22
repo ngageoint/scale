@@ -7,11 +7,12 @@ from django.test import TestCase
 from django.utils.timezone import now
 
 import job.test.utils as job_test_utils
-from error.models import Error, CACHED_ERRORS
+from error.models import CACHED_ERRORS
 from job.tasks.base_task import RUNNING_RECON_THRESHOLD
 from job.tasks.manager import TaskManager
 from job.tasks.update import TaskStatusUpdate
 from scheduler.models import Scheduler
+from util.parse import datetime_to_string
 
 
 class TestRunningJobExecution(TestCase):
@@ -38,13 +39,15 @@ class TestRunningJobExecution(TestCase):
 
         # Start pull-task
         task = self.running_job_exe.start_next_task()
-        self.task_mgr.launch_tasks([task], now())
+        pull_task_launch = now()
+        self.task_mgr.launch_tasks([task], pull_task_launch)
         pull_task_id = task.id
         self.assertFalse(self.running_job_exe.is_finished())
         self.assertFalse(self.running_job_exe.is_next_task_ready())
 
         # Pull-task running
-        pull_task_started = now() - timedelta(minutes=5)  # Lots of time so now() called at completion is in future
+        # Lots of time so now() called at completion is in future
+        pull_task_started = pull_task_launch - timedelta(minutes=5)
         update = job_test_utils.create_task_status_update(pull_task_id, 'agent', TaskStatusUpdate.RUNNING,
                                                           pull_task_started)
         self.task_mgr.handle_task_update(update)
@@ -55,7 +58,7 @@ class TestRunningJobExecution(TestCase):
         # Complete pull-task
         pull_task_completed = pull_task_started + timedelta(seconds=1)
         update = job_test_utils.create_task_status_update(pull_task_id, 'agent', TaskStatusUpdate.FINISHED,
-                                                          pull_task_completed)
+                                                          pull_task_completed, exit_code=0)
         self.task_mgr.handle_task_update(update)
         self.running_job_exe.task_update(update)
         self.assertFalse(self.running_job_exe.is_finished())
@@ -63,13 +66,14 @@ class TestRunningJobExecution(TestCase):
 
         # Start pre-task
         task = self.running_job_exe.start_next_task()
-        self.task_mgr.launch_tasks([task], now())
+        pre_task_launch = pull_task_completed + timedelta(seconds=1)
+        self.task_mgr.launch_tasks([task], pre_task_launch)
         pre_task_id = task.id
         self.assertFalse(self.running_job_exe.is_finished())
         self.assertFalse(self.running_job_exe.is_next_task_ready())
 
         # Pre-task running
-        pre_task_started = pull_task_completed + timedelta(seconds=1)
+        pre_task_started = pre_task_launch + timedelta(seconds=1)
         update = job_test_utils.create_task_status_update(pre_task_id, 'agent', TaskStatusUpdate.RUNNING,
                                                           pre_task_started)
         self.task_mgr.handle_task_update(update)
@@ -88,13 +92,14 @@ class TestRunningJobExecution(TestCase):
 
         # Start job-task
         task = self.running_job_exe.start_next_task()
-        self.task_mgr.launch_tasks([task], now())
+        job_task_launch = pre_task_completed + timedelta(seconds=1)
+        self.task_mgr.launch_tasks([task], job_task_launch)
         job_task_id = task.id
         self.assertFalse(self.running_job_exe.is_finished())
         self.assertFalse(self.running_job_exe.is_next_task_ready())
 
         # Job-task running
-        job_task_started = pre_task_completed + timedelta(seconds=1)
+        job_task_started = job_task_launch + timedelta(seconds=1)
         update = job_test_utils.create_task_status_update(job_task_id, 'agent', TaskStatusUpdate.RUNNING,
                                                           job_task_started)
         self.task_mgr.handle_task_update(update)
@@ -113,13 +118,14 @@ class TestRunningJobExecution(TestCase):
 
         # Start post-task
         task = self.running_job_exe.start_next_task()
-        self.task_mgr.launch_tasks([task], now())
+        post_task_launch = job_task_completed + timedelta(seconds=1)
+        self.task_mgr.launch_tasks([task], post_task_launch)
         post_task_id = task.id
         self.assertFalse(self.running_job_exe.is_finished())
         self.assertFalse(self.running_job_exe.is_next_task_ready())
 
         # Post-task running
-        post_task_started = job_task_completed + timedelta(seconds=1)
+        post_task_started = post_task_launch + timedelta(seconds=1)
         update = job_test_utils.create_task_status_update(post_task_id, 'agent', TaskStatusUpdate.RUNNING,
                                                           post_task_started)
         self.task_mgr.handle_task_update(update)
@@ -136,6 +142,33 @@ class TestRunningJobExecution(TestCase):
         self.assertTrue(self.running_job_exe.is_finished())
         self.assertEqual(self.running_job_exe.status, 'COMPLETED')
         self.assertFalse(self.running_job_exe.is_next_task_ready())
+
+        job_exe_end = self.running_job_exe.create_job_exe_end_model()
+        self.assertEqual(job_exe_end.status, 'COMPLETED')
+        expected_task_results = {'version': '2.0',
+                                 'tasks': [{'task_id': pull_task_id, 'type': 'pull', 'was_launched': True,
+                                            'launched': datetime_to_string(pull_task_launch), 'was_started': True,
+                                            'started': datetime_to_string(pull_task_started), 'was_timed_out': False,
+                                            'ended': datetime_to_string(pull_task_completed), 'status': 'FINISHED',
+                                            'exit_code': 0},
+                                           {'task_id': pre_task_id, 'type': 'pre', 'was_launched': True,
+                                            'launched': datetime_to_string(pre_task_launch), 'was_started': True,
+                                            'started': datetime_to_string(pre_task_started), 'was_timed_out': False,
+                                            'ended': datetime_to_string(pre_task_completed), 'status': 'FINISHED',
+                                            'exit_code': 1},
+                                           {'task_id': job_task_id, 'type': 'pull', 'was_launched': True,
+                                            'launched': datetime_to_string(job_task_launch), 'was_started': True,
+                                            'started': datetime_to_string(job_task_started), 'was_timed_out': False,
+                                            'ended': datetime_to_string(job_task_completed), 'status': 'FINISHED',
+                                            'exit_code': 2},
+                                           {'task_id': post_task_id, 'type': 'pull', 'was_launched': True,
+                                            'launched': datetime_to_string(post_task_launch), 'was_started': True,
+                                            'started': datetime_to_string(post_task_started), 'was_timed_out': False,
+                                            'ended': datetime_to_string(post_task_completed), 'status': 'FINISHED',
+                                            'exit_code': 3}]}
+        self.assertDictEqual(job_exe_end.get_task_results().get_dict(), expected_task_results)
+        print 'Task results:'
+        print str(job_exe_end.get_task_results().get_dict())
 
     def test_failed_normal_job_execution(self):
         """Tests running through a normal job execution that fails with an unknown error"""
