@@ -145,30 +145,36 @@ class TestRunningJobExecution(TestCase):
 
         job_exe_end = self.running_job_exe.create_job_exe_end_model()
         self.assertEqual(job_exe_end.status, 'COMPLETED')
-        expected_task_results = {'version': '2.0',
+        expected_task_results = {'version': '1.0',
                                  'tasks': [{'task_id': pull_task_id, 'type': 'pull', 'was_launched': True,
-                                            'launched': datetime_to_string(pull_task_launch), 'was_started': True,
-                                            'started': datetime_to_string(pull_task_started), 'was_timed_out': False,
-                                            'ended': datetime_to_string(pull_task_completed), 'status': 'FINISHED',
-                                            'exit_code': 0},
+                                            str('launched'): datetime_to_string(pull_task_launch),
+                                            str('was_started'): True,
+                                            str('started'): datetime_to_string(pull_task_started),
+                                            str('was_timed_out'): False,
+                                            str('ended'): datetime_to_string(pull_task_completed),
+                                            str('status'): 'FINISHED', str('exit_code'): 0},
                                            {'task_id': pre_task_id, 'type': 'pre', 'was_launched': True,
-                                            'launched': datetime_to_string(pre_task_launch), 'was_started': True,
-                                            'started': datetime_to_string(pre_task_started), 'was_timed_out': False,
-                                            'ended': datetime_to_string(pre_task_completed), 'status': 'FINISHED',
-                                            'exit_code': 1},
-                                           {'task_id': job_task_id, 'type': 'pull', 'was_launched': True,
-                                            'launched': datetime_to_string(job_task_launch), 'was_started': True,
-                                            'started': datetime_to_string(job_task_started), 'was_timed_out': False,
-                                            'ended': datetime_to_string(job_task_completed), 'status': 'FINISHED',
-                                            'exit_code': 2},
-                                           {'task_id': post_task_id, 'type': 'pull', 'was_launched': True,
-                                            'launched': datetime_to_string(post_task_launch), 'was_started': True,
-                                            'started': datetime_to_string(post_task_started), 'was_timed_out': False,
-                                            'ended': datetime_to_string(post_task_completed), 'status': 'FINISHED',
-                                            'exit_code': 3}]}
+                                            str('launched'): datetime_to_string(pre_task_launch),
+                                            str('was_started'): True,
+                                            str('started'): datetime_to_string(pre_task_started),
+                                            str('was_timed_out'): False,
+                                            str('ended'): datetime_to_string(pre_task_completed),
+                                            str('status'): 'FINISHED', str('exit_code'): 1},
+                                           {'task_id': job_task_id, 'type': 'main', 'was_launched': True,
+                                            str('launched'): datetime_to_string(job_task_launch),
+                                            str('was_started'): True,
+                                            str('started'): datetime_to_string(job_task_started),
+                                            str('was_timed_out'): False,
+                                            str('ended'): datetime_to_string(job_task_completed),
+                                            str('status'): 'FINISHED', str('exit_code'): 2},
+                                           {'task_id': post_task_id, 'type': 'post', 'was_launched': True,
+                                            str('launched'): datetime_to_string(post_task_launch),
+                                            str('was_started'): True,
+                                            str('started'): datetime_to_string(post_task_started),
+                                            str('was_timed_out'): False,
+                                            str('ended'): datetime_to_string(post_task_completed),
+                                            str('status'): 'FINISHED', str('exit_code'): 3}]}
         self.assertDictEqual(job_exe_end.get_task_results().get_dict(), expected_task_results)
-        print 'Task results:'
-        print str(job_exe_end.get_task_results().get_dict())
 
     def test_failed_normal_job_execution(self):
         """Tests running through a normal job execution that fails with an unknown error"""

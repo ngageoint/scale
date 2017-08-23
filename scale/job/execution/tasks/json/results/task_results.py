@@ -125,7 +125,7 @@ class TaskResults(object):
                 if task.has_started:
                     task_dict.update(started=datetime_to_string(task.started), was_timed_out=task.has_timed_out,
                                      ended=datetime_to_string(task.ended), status=task.final_status)
-                    if task.exit_code:
+                    if task.exit_code is not None:
                         task_dict.update(exit_code=task.exit_code)
             task_list.append(task_dict)
 

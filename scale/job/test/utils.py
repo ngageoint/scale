@@ -397,6 +397,6 @@ def create_task_status_update(task_id, agent_id, status, when, exit_code=None, r
     task_update_model.reason = reason
     update = TaskStatusUpdate(task_update_model, agent_id, data)
     update.status = status
-    if exit_code:
+    if exit_code is not None:
         update.exit_code = exit_code
     return update
