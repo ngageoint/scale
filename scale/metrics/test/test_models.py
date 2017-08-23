@@ -9,8 +9,10 @@ import ingest.test.utils as ingest_test_utils
 import job.test.utils as job_test_utils
 import source.test.utils as source_test_utils
 import metrics.test.utils as metrics_test_utils
+from job.execution.tasks.json.results.task_results import TaskResults
 from metrics.models import MetricsError, MetricsIngest, MetricsJobType
 from metrics.registry import MetricsTypeColumn
+from util.parse import datetime_to_string
 
 
 class TestMetricsError(TestCase):
@@ -401,30 +403,52 @@ class TestMetricsJobType(TestCase):
         """Tests calculating individual statistics for a metrics entry."""
         job_type = job_test_utils.create_job_type()
         job1 = job_test_utils.create_job(job_type=job_type, status='COMPLETED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
+        task_results_dict = {'version': '1.0',
+                             'tasks': [{'task_id': '1', 'type': 'pre', 'was_launched': True,
+                                        'started': datetime_to_string(datetime.datetime(2015, 1, 1, 0, 30, 4, tzinfo=utc)),
+                                        'ended': datetime_to_string(datetime.datetime(2015, 1, 1, 1, 6, tzinfo=utc))},
+                                       {'task_id': '2', 'type': 'main', 'was_launched': True,
+                                        'started': datetime_to_string(datetime.datetime(2015, 1, 1, 1, 40, 8, tzinfo=utc)),
+                                        'ended': datetime_to_string(datetime.datetime(2015, 1, 1, 2, 30, 10, tzinfo=utc))},
+                                       {'task_id': '3', 'type': 'post', 'was_launched': True,
+                                        'started': datetime_to_string(datetime.datetime(2015, 1, 1, 3, 30, 12, tzinfo=utc)),
+                                        'ended': datetime_to_string(datetime.datetime(2015, 1, 1, 4, 40, 14, tzinfo=utc))}]}
         job_test_utils.create_job_exe(
             job=job1, status=job1.status,
             queued=datetime.datetime(2015, 1, 1, tzinfo=utc),
             started=datetime.datetime(2015, 1, 1, 0, 10, 2, tzinfo=utc),
-            pre_started=datetime.datetime(2015, 1, 1, 0, 30, 4, tzinfo=utc),
-            pre_completed=datetime.datetime(2015, 1, 1, 1, 6, tzinfo=utc),
-            job_started=datetime.datetime(2015, 1, 1, 1, 40, 8, tzinfo=utc),
-            job_completed=datetime.datetime(2015, 1, 1, 2, 30, 10, tzinfo=utc),
-            post_started=datetime.datetime(2015, 1, 1, 3, 30, 12, tzinfo=utc),
-            post_completed=datetime.datetime(2015, 1, 1, 4, 40, 14, tzinfo=utc),
+            # pre_started=datetime.datetime(2015, 1, 1, 0, 30, 4, tzinfo=utc),
+            # pre_completed=datetime.datetime(2015, 1, 1, 1, 6, tzinfo=utc),
+            # job_started=datetime.datetime(2015, 1, 1, 1, 40, 8, tzinfo=utc),
+            # job_completed=datetime.datetime(2015, 1, 1, 2, 30, 10, tzinfo=utc),
+            # post_started=datetime.datetime(2015, 1, 1, 3, 30, 12, tzinfo=utc),
+            # post_completed=datetime.datetime(2015, 1, 1, 4, 40, 14, tzinfo=utc),
             ended=datetime.datetime(2015, 1, 1, 6, 0, 16, tzinfo=utc),
+            task_results=TaskResults(task_results_dict)
         )
         job2 = job_test_utils.create_job(job_type=job_type, status='COMPLETED', ended=datetime.datetime(2015, 1, 1, tzinfo=utc))
+        task_results_dict = {'version': '1.0',
+                             'tasks': [{'task_id': '1', 'type': 'pre', 'was_launched': True,
+                                        'started': datetime_to_string(datetime.datetime(2015, 1, 1, 4, 30, 4, tzinfo=utc)),
+                                        'ended': datetime_to_string(datetime.datetime(2015, 1, 1, 6, 0, 8, tzinfo=utc))},
+                                       {'task_id': '2', 'type': 'main', 'was_launched': True,
+                                        'started': datetime_to_string(datetime.datetime(2015, 1, 1, 8, 40, 14, tzinfo=utc)),
+                                        'ended': datetime_to_string(datetime.datetime(2015, 1, 1, 10, 30, 22, tzinfo=utc))},
+                                       {'task_id': '3', 'type': 'post', 'was_launched': True,
+                                        'started': datetime_to_string(datetime.datetime(2015, 1, 1, 12, 30, 32, tzinfo=utc)),
+                                        'ended': datetime_to_string(datetime.datetime(2015, 1, 1, 14, 40, 44, tzinfo=utc))}]}
         job_test_utils.create_job_exe(
             job=job2, status=job2.status,
             queued=datetime.datetime(2015, 1, 1, tzinfo=utc),
             started=datetime.datetime(2015, 1, 1, 2, 10, 2, tzinfo=utc),
-            pre_started=datetime.datetime(2015, 1, 1, 4, 30, 4, tzinfo=utc),
-            pre_completed=datetime.datetime(2015, 1, 1, 6, 0, 8, tzinfo=utc),
-            job_started=datetime.datetime(2015, 1, 1, 8, 40, 14, tzinfo=utc),
-            job_completed=datetime.datetime(2015, 1, 1, 10, 30, 22, tzinfo=utc),
-            post_started=datetime.datetime(2015, 1, 1, 12, 30, 32, tzinfo=utc),
-            post_completed=datetime.datetime(2015, 1, 1, 14, 40, 44, tzinfo=utc),
+            # pre_started=datetime.datetime(2015, 1, 1, 4, 30, 4, tzinfo=utc),
+            # pre_completed=datetime.datetime(2015, 1, 1, 6, 0, 8, tzinfo=utc),
+            # job_started=datetime.datetime(2015, 1, 1, 8, 40, 14, tzinfo=utc),
+            # job_completed=datetime.datetime(2015, 1, 1, 10, 30, 22, tzinfo=utc),
+            # post_started=datetime.datetime(2015, 1, 1, 12, 30, 32, tzinfo=utc),
+            # post_completed=datetime.datetime(2015, 1, 1, 14, 40, 44, tzinfo=utc),
             ended=datetime.datetime(2015, 1, 1, 16, 0, 58, tzinfo=utc),
+            task_results=TaskResults(task_results_dict)
         )
 
         sys_error = error_test_utils.create_error(category='SYSTEM')

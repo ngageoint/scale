@@ -1,6 +1,7 @@
 """Defines the JSON schema for describing task results"""
 from __future__ import unicode_literals
 
+from django.utils import dateparse
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
@@ -137,6 +138,23 @@ class TaskResults(object):
         """
 
         return self._task_results
+
+    def get_task_run_length(self, task_type):
+        """Returns the run time length for the given task type, possibly None
+
+        :param task_type: The task type
+        :type task_type: string
+        :returns: The task run time length
+        :rtype: :class:`datetime.timedelta`:
+        """
+
+        for task_dict in self._task_results['tasks']:
+            if task_dict['type'] == task_type:
+                if 'started' in task_dict and 'ended' in task_dict:
+                    started = dateparse.parse_datetime(task_dict['started'])
+                    ended = dateparse.parse_datetime(task_dict['ended'])
+                    return ended - started
+        return None
 
     def _populate_default_values(self):
         """Populates any missing JSON fields that have default values
