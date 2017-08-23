@@ -336,7 +336,7 @@ class QueueManager(models.Manager):
 
         job = Job.objects.get_locked_job(job_id)
         # If the status isn't RUNNING or the execution number has changed, this update is obsolete
-        if job.status != 'RUNNING' or job.exe_num != exe_num:
+        if job.status != 'RUNNING' or job.num_exes != exe_num:
             return
 
         Job.objects.complete_job(job, when)
@@ -382,7 +382,7 @@ class QueueManager(models.Manager):
 
         job = Job.objects.get_locked_job(job_id)
         # If the status isn't RUNNING or the execution number has changed, this update is obsolete
-        if job.status != 'RUNNING' or job.exe_num != exe_num:
+        if job.status != 'RUNNING' or job.num_exes != exe_num:
             return
 
         # Need related job_type and job_type_rev models

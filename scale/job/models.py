@@ -70,7 +70,7 @@ class JobManager(models.Manager):
         job.last_status_change = when
 
         # Query output from completed job execution
-        job_exe_output = JobExecutionOutput.objects.get(job_id=job.id, exe_num=job.exe_num)
+        job_exe_output = JobExecutionOutput.objects.get(job_id=job.id, exe_num=job.num_exes)
         job.results = job_exe_output.get_output().get_dict()
 
         job.save()
@@ -614,11 +614,11 @@ class JobManager(models.Manager):
         jobs_to_update = []
         jobs_to_update_no_status = []  # These are jobs that need to be updated, but without a status change
         for locked_job in self.get_locked_jobs(jobs.keys()):
-            exe_num = jobs[locked_job.exe_num]
-            if locked_job.exe_num != exe_num:
+            exe_num = jobs[locked_job.id]
+            if locked_job.num_exes != exe_num:
                 # If the execution number has changed, this update is obsolete
                 continue
-            if locked_job.exe_num.status == 'QUEUED':
+            if locked_job.status == 'QUEUED':
                 jobs_to_update.append(locked_job.id)
             else:
                 # The job has already received its final status update, don't update status
@@ -908,7 +908,7 @@ class Job(models.Model):
         :rtype: bool
         """
 
-        return self.status in ['PENDING', 'CANCELED', 'FAILED']
+        return self.status not in ['QUEUED', 'COMPLETED']
     is_ready_to_queue = property(_is_ready_to_queue)
 
     def _is_ready_to_requeue(self):

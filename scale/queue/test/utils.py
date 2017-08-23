@@ -26,7 +26,7 @@ def create_job_load(job_type=None, measured=None, pending_count=0, queued_count=
                                   total_count=pending_count + queued_count + running_count)
 
 
-def create_queue(job_type=None, priority=1, cpus_required=1.0, mem_required=512.0, disk_in_required=200.0,
+def create_queue(job_type=None, priority=1, timeout=3600, cpus_required=1.0, mem_required=512.0, disk_in_required=200.0,
                  disk_out_required=100.0, disk_total_required=300.0, queued=timezone.now()):
     """Creates a queue model for unit testing
 
@@ -34,6 +34,8 @@ def create_queue(job_type=None, priority=1, cpus_required=1.0, mem_required=512.
     :type job_type: :class:`job.models.JobType`
     :param priority: The priority
     :type priority: int
+    :param timeout: The timeout
+    :type timeout: int
     :param cpus_required: The CPUs required in MiB
     :type cpus_required: float
     :param mem_required: The memory required in MiB
@@ -52,6 +54,7 @@ def create_queue(job_type=None, priority=1, cpus_required=1.0, mem_required=512.
     resources = NodeResources([Cpus(cpus_required), Mem(mem_required), Disk(disk_total_required)])
 
     return Queue.objects.create(job_type=job.job_type, job=job, exe_num=job.num_exes, priority=priority,
-                                input_file_size=disk_in_required, interface=job.get_job_interface().get_dict(),
+                                timeout=timeout, input_file_size=disk_in_required,
+                                interface=job.get_job_interface().get_dict(),
                                 configuration=ExecutionConfiguration().get_dict(),
                                 resources=resources.get_json().get_dict(), queued=queued)
