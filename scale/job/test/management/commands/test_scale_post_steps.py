@@ -38,12 +38,12 @@ class TestPostJobSteps(TransactionTestCase):
         self.job_exe = job_utils.create_job_exe(job=self.job, status='RUNNING')
 
     @patch('job.management.commands.scale_post_steps.JobExecution.objects')
-    @patch('os.environ.get')
+    @patch('job.management.commands.scale_post_steps.os.environ.get')
     def test_scale_post_steps_successful(self, mock_env_vars, mock_job_exe_manager):
         """Tests successfully executing scale_post_steps."""
 
         # Set up mocks
-        def get_env_vars(name):
+        def get_env_vars(name, *args, **kwargs):
             return str(self.job.id) if name == 'SCALE_JOB_ID' else str(self.job_exe.exe_num)
         mock_env_vars.side_effect = get_env_vars
         mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.job_type.get_job_interface.return_value.perform_post_steps.return_value = RESULTS
@@ -62,12 +62,12 @@ class TestPostJobSteps(TransactionTestCase):
 
     @patch('job.management.commands.scale_post_steps.sys.exit')
     @patch('job.management.commands.scale_post_steps.JobExecution.objects.select_related')
-    @patch('os.environ.get')
+    @patch('job.management.commands.scale_post_steps.os.environ.get')
     def test_scale_post_steps_database_error(self, mock_env_vars, mock_db, mock_sys_exit):
         """Tests executing scale_post_steps when a database error occurs."""
 
         # Set up mocks
-        def get_env_vars(name):
+        def get_env_vars(name, *args, **kwargs):
             return str(self.job.id) if name == 'SCALE_JOB_ID' else str(self.job_exe.exe_num)
         mock_env_vars.side_effect = get_env_vars
         mock_db.side_effect = DatabaseError()
@@ -81,12 +81,12 @@ class TestPostJobSteps(TransactionTestCase):
 
     @patch('job.management.commands.scale_post_steps.sys.exit')
     @patch('job.management.commands.scale_post_steps.JobExecution.objects.select_related')
-    @patch('os.environ.get')
+    @patch('job.management.commands.scale_post_steps.os.environ.get')
     def test_scale_post_steps_database_operation_error(self, mock_env_vars, mock_db, mock_sys_exit):
         """Tests executing scale_post_steps when a database operation error occurs."""
 
         # Set up mocks
-        def get_env_vars(name):
+        def get_env_vars(name, *args, **kwargs):
             return str(self.job.id) if name == 'SCALE_JOB_ID' else str(self.job_exe.exe_num)
         mock_env_vars.side_effect = get_env_vars
         mock_db.side_effect = OperationalError()
@@ -100,12 +100,12 @@ class TestPostJobSteps(TransactionTestCase):
 
     @patch('job.management.commands.scale_post_steps.sys.exit')
     @patch('job.management.commands.scale_post_steps.JobExecution.objects')
-    @patch('os.environ.get')
+    @patch('job.management.commands.scale_post_steps.os.environ.get')
     def test_scale_post_steps_io_error(self, mock_env_vars, mock_job_exe_manager, mock_sys_exit):
         """Tests executing scale_post_steps when an IO error occurs."""
 
         # Set up mocks
-        def get_env_vars(name):
+        def get_env_vars(name, *args, **kwargs):
             return str(self.job.id) if name == 'SCALE_JOB_ID' else str(self.job_exe.exe_num)
         mock_env_vars.side_effect = get_env_vars
         mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.job_type.get_job_interface.return_value.perform_post_steps.side_effect = IOError()
@@ -119,12 +119,12 @@ class TestPostJobSteps(TransactionTestCase):
 
     @patch('job.management.commands.scale_post_steps.sys.exit')
     @patch('job.management.commands.scale_post_steps.JobExecution.objects')
-    @patch('os.environ.get')
+    @patch('job.management.commands.scale_post_steps.os.environ.get')
     def test_scale_post_steps_invalid_manifest_error(self, mock_env_vars, mock_job_exe_manager, mock_sys_exit):
         """Tests executing scale_post_steps when an invalid manifest occurs."""
 
         # Set up mocks
-        def get_env_vars(name):
+        def get_env_vars(name, *args, **kwargs):
             return str(self.job.id) if name == 'SCALE_JOB_ID' else str(self.job_exe.exe_num)
         mock_env_vars.side_effect = get_env_vars
         mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.job_type.get_job_interface.return_value.perform_post_steps.side_effect = InvalidResultsManifest('')
@@ -138,12 +138,12 @@ class TestPostJobSteps(TransactionTestCase):
 
     @patch('job.management.commands.scale_post_steps.sys.exit')
     @patch('job.management.commands.scale_post_steps.JobExecution.objects')
-    @patch('os.environ.get')
+    @patch('job.management.commands.scale_post_steps.os.environ.get')
     def test_scale_post_steps_missing_manifest_output_error(self, mock_env_vars, mock_job_exe_manager, mock_sys_exit):
         """Tests executing scale_post_steps when a missing output manifest occurs."""
 
         # Set up mocks
-        def get_env_vars(name):
+        def get_env_vars(name, *args, **kwargs):
             return str(self.job.id) if name == 'SCALE_JOB_ID' else str(self.job_exe.exe_num)
         mock_env_vars.side_effect = get_env_vars
         mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.job_type.get_job_interface.return_value.perform_post_steps.side_effect = MissingRequiredOutput('')
@@ -156,12 +156,12 @@ class TestPostJobSteps(TransactionTestCase):
         mock_sys_exit.assert_called_with(MissingRequiredOutput('').exit_code)
 
     @patch('job.management.commands.scale_post_steps.JobExecution.objects')
-    @patch('os.environ.get')
+    @patch('job.management.commands.scale_post_steps.os.environ.get')
     def test_scale_post_steps_no_stderr(self, mock_env_vars, mock_job_exe_manager):
         """Tests successfully executing scale_post_steps."""
 
         # Set up mocks
-        def get_env_vars(name):
+        def get_env_vars(name, *args, **kwargs):
             return str(self.job.id) if name == 'SCALE_JOB_ID' else str(self.job_exe.exe_num)
         mock_env_vars.side_effect = get_env_vars
         mock_job_exe_manager.get_job_exe_with_job_and_job_type.return_value.stdout = 'something'

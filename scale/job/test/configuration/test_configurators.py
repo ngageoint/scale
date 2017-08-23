@@ -437,8 +437,19 @@ class TestScheduledExecutionConfigurator(TestCase):
 
         # Ensure configuration is valid
         ExecutionConfiguration(exe_config_with_secrets.get_dict())
-        # Compare results with secrets
-        self.assertDictEqual(exe_config_with_secrets.get_dict(), expected_config)
+        # Compare results including secrets, but convert Docker param lists to sets so order is ignored
+        config_with_secrets_dict = exe_config_with_secrets.get_dict()
+        for task_dict in config_with_secrets_dict['tasks']:
+            docker_params_set = set()
+            for docker_param in task_dict['docker_params']:
+                docker_params_set.add('%s=%s' % (docker_param['flag'], docker_param['value']))
+            task_dict['docker_params'] = docker_params_set
+        for task_dict in expected_config['tasks']:
+            docker_params_set = set()
+            for docker_param in task_dict['docker_params']:
+                docker_params_set.add('%s=%s' % (docker_param['flag'], docker_param['value']))
+            task_dict['docker_params'] = docker_params_set
+        self.assertDictEqual(config_with_secrets_dict, expected_config)
 
     def test_configure_scheduled_job_shared_mem(self):
         """Tests successfully calling configure_scheduled_job() with a job using shared memory"""

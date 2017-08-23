@@ -42,13 +42,13 @@ class TestPreJobSteps(TransactionTestCase):
         self.job = job_utils.create_job(job_type=self.job_type, event=self.event, status='RUNNING')
         self.job_exe = job_utils.create_job_exe(job=self.job, status='RUNNING', timeout=timeout, queued=now())
 
-    @patch('job.management.commands.scale_post_steps.sys.exit')
-    @patch('os.environ.get')
+    @patch('job.management.commands.scale_pre_steps.sys.exit')
+    @patch('job.management.commands.scale_pre_steps.os.environ.get')
     def test_scale_pre_steps_successful(self, mock_env_vars, mock_sysexit):
         """Tests successfully executing scale_pre_steps."""
 
         # Set up mocks
-        def get_env_vars(name):
+        def get_env_vars(name, *args, **kwargs):
             return str(self.job.id) if name == 'SCALE_JOB_ID' else str(self.job_exe.exe_num)
         mock_env_vars.side_effect = get_env_vars
 
@@ -61,12 +61,12 @@ class TestPreJobSteps(TransactionTestCase):
 
     @patch('job.management.commands.scale_pre_steps.sys.exit')
     @patch('job.management.commands.scale_pre_steps.JobExecution.objects.select_related')
-    @patch('os.environ.get')
+    @patch('job.management.commands.scale_pre_steps.os.environ.get')
     def test_scale_pre_steps_database_error(self, mock_env_vars, mock_db, mock_sys_exit):
         """Tests executing scale_pre_steps when a database error occurs."""
 
         # Set up mocks
-        def get_env_vars(name):
+        def get_env_vars(name, *args, **kwargs):
             return str(self.job.id) if name == 'SCALE_JOB_ID' else str(self.job_exe.exe_num)
         mock_env_vars.side_effect = get_env_vars
         mock_db.side_effect = DatabaseError()
@@ -80,12 +80,12 @@ class TestPreJobSteps(TransactionTestCase):
 
     @patch('job.management.commands.scale_pre_steps.sys.exit')
     @patch('job.management.commands.scale_pre_steps.JobExecution.objects.select_related')
-    @patch('os.environ.get')
+    @patch('job.management.commands.scale_pre_steps.os.environ.get')
     def test_scale_pre_steps_database_operation_error(self, mock_env_vars, mock_db, mock_sys_exit):
         """Tests executing scale_pre_steps when a database operation error occurs."""
 
         # Set up mocks
-        def get_env_vars(name):
+        def get_env_vars(name, *args, **kwargs):
             return str(self.job.id) if name == 'SCALE_JOB_ID' else str(self.job_exe.exe_num)
         mock_env_vars.side_effect = get_env_vars
         mock_db.side_effect = OperationalError()
@@ -99,12 +99,12 @@ class TestPreJobSteps(TransactionTestCase):
 
     @patch('job.management.commands.scale_pre_steps.sys.exit')
     @patch('job.management.commands.scale_pre_steps.JobExecution')
-    @patch('os.environ.get')
+    @patch('job.management.commands.scale_pre_steps.os.environ.get')
     def test_scale_pre_steps_io_error(self, mock_env_vars, mock_job_exe, mock_sys_exit):
         """Tests executing scale_pre_steps when an IO error occurs."""
 
         # Set up mocks
-        def get_env_vars(name):
+        def get_env_vars(name, *args, **kwargs):
             return str(self.job.id) if name == 'SCALE_JOB_ID' else str(self.job_exe.exe_num)
         mock_env_vars.side_effect = get_env_vars
         mock_job_exe.objects.get_job_exe_with_job_and_job_type.return_value.job_type.get_job_interface.return_value.perform_pre_steps.side_effect = IOError()
