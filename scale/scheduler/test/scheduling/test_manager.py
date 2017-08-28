@@ -152,7 +152,8 @@ class TestSchedulingManager(TestCase):
         job_type_with_limit = job_test_utils.create_job_type()
         job_type_with_limit.max_scheduled = 4
         job_type_with_limit.save()
-        job_exe_1 = job_test_utils.create_job_exe(job_type=job_type_with_limit, status='RUNNING')
+        running_job_exe_1 = job_test_utils.create_running_job_exe(agent_id=self.agent_1.agent_id,
+                                                                  job_type=job_type_with_limit)
         queue_test_utils.create_queue(job_type=job_type_with_limit)
         queue_test_utils.create_queue(job_type=job_type_with_limit)
         queue_test_utils.create_queue(job_type=job_type_with_limit)
@@ -161,7 +162,7 @@ class TestSchedulingManager(TestCase):
         queue_test_utils.create_queue(job_type=job_type_with_limit)
         job_type_mgr.sync_with_database()
         # One job of this type is already running
-        job_exe_mgr.schedule_job_exes([RunningJobExecution(self.agent_1.agent_id, job_exe_1)])
+        job_exe_mgr.schedule_job_exes([running_job_exe_1])
 
         offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
                                 NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now())

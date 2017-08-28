@@ -309,7 +309,7 @@ def create_job_type(name=None, version=None, category=None, interface=None, prio
 
 
 def create_running_job_exe(agent_id='agent_1', job_type=None, job=None, node=None, timeout=None, input_file_size=10.0,
-                           queued=None, started=None):
+                           queued=None, started=None, resources=None, priority=None):
     """Creates a running job execution for unit testing
 
     :returns: The running job execution
@@ -341,7 +341,9 @@ def create_running_job_exe(agent_id='agent_1', job_type=None, job=None, node=Non
         timeout = job.timeout
     job_exe.timeout = timeout
     job_exe.input_file_size = input_file_size
-    job_exe.resources = job.get_resources().get_json().get_dict()
+    if not resources:
+        resources = job.get_resources()
+    job_exe.resources = resources.get_json().get_dict()
     job_exe.configuration = exe_config.get_dict()
     if not queued:
         queued = when
@@ -351,13 +353,16 @@ def create_running_job_exe(agent_id='agent_1', job_type=None, job=None, node=Non
     job_exe.started = started
     job_exe.save()
 
+    if not priority:
+        priority = job.priority
+
     # Configuration that occurs at schedule time
     workspaces = {}
     for workspace in Workspace.objects.all():
         workspaces[workspace.name] = workspace
     secret_config = ScheduledExecutionConfigurator(workspaces).configure_scheduled_job(job_exe, job_type,
                                                                                        job_type.get_job_interface())
-    return RunningJobExecution(agent_id, job_exe, job_type, secret_config)
+    return RunningJobExecution(agent_id, job_exe, job_type, secret_config, priority)
 
 
 def create_task_status_update(task_id, agent_id, status, when, exit_code=None, reason=None, source=None, message=None,

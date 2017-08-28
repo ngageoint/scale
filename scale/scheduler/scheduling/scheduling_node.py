@@ -201,14 +201,14 @@ class SchedulingNode(object):
             if not isinstance(running_task, JobExecutionTask):
                 available_resources.subtract(running_task.get_resources())
         for running_job_exe in self._running_job_exes:  # Remove resources for existing jobs of equal/higher priority
-            if running_job_exe.priority <= job_exe.queue.priority:
+            if running_job_exe.priority <= job_exe.priority:
                 task = running_job_exe.current_task
                 if not task:
                     task = running_job_exe.next_task()
                 if task:
                     available_resources.subtract(task.get_resources())
         for queued_job_exe in self._allocated_queued_job_exes:  # Remove resources for new jobs of equal/higher priority
-            if queued_job_exe.queue.priority <= job_exe.queue.priority:
+            if queued_job_exe.priority <= job_exe.priority:
                 available_resources.subtract(queued_job_exe.required_resources)
 
         # If there are enough resources (unused plus used by lower priority jobs) to eventually run this job, then

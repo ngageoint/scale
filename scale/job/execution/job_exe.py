@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 class RunningJobExecution(object):
     """This class represents a currently running job execution. This class is thread-safe."""
 
-    def __init__(self, agent_id, job_exe, job_type, configuration):
+    def __init__(self, agent_id, job_exe, job_type, configuration, priority):
         """Constructor
 
         :param agent_id: The ID of the agent on which the execution is running
@@ -33,6 +33,8 @@ class RunningJobExecution(object):
         :type job_type: :class:`job.models.JobType`
         :param configuration: The job execution configuration, including secret values
         :type configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        :param priority: The priority of the job execution
+        :type priority: int
         """
 
         # Public, read-only info
@@ -42,6 +44,7 @@ class RunningJobExecution(object):
         self.exe_num = job_exe.exe_num
         self.job_type_id = job_exe.job_type_id
         self.node_id = job_exe.node_id
+        self.priority = priority
         self.queued = job_exe.queued
         self.started = job_exe.started
         self.docker_volumes = configuration.get_named_docker_volumes()

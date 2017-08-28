@@ -377,13 +377,14 @@ class SchedulingManager(object):
                 queue_ids.append(queued_job_exe.id)
                 if queued_job_exe.is_canceled:
                     job_exe_model = canceled_models[queued_job_exe.id]
-                    canceled_job_exe_end_models.append(job_exe_model.create_canceled_job_exe_end_model())
+                    canceled_job_exe_end_models.append(job_exe_model.create_canceled_job_exe_end_model(started))
                 else:
                     agent_id = queued_job_exe.scheduled_agent_id
                     job_exe_model = scheduled_models[queued_job_exe.id][0]
                     job_type = job_types[job_exe_model.job_type_id]
                     config = scheduled_models[queued_job_exe.id][1]  # May contain secrets!
-                    running_job_exe = RunningJobExecution(agent_id, job_exe_model, job_type, config)
+                    priority = queued_job_exe.priority
+                    running_job_exe = RunningJobExecution(agent_id, job_exe_model, job_type, config, priority)
                     job_exe_nums[running_job_exe.job_id] = running_job_exe.exe_num
                     if running_job_exe.node_id in running_job_exes:
                         running_job_exes[running_job_exe.node_id].append(running_job_exe)
@@ -486,7 +487,8 @@ class SchedulingManager(object):
 
         try:
             scheduled_job_exes = self._process_queue(available_nodes, job_types, job_type_limits, job_type_resources)
-            running_job_exes = self._process_scheduled_job_executions(framework_id, scheduled_job_exes, workspaces)
+            running_job_exes = self._process_scheduled_job_executions(framework_id, scheduled_job_exes, job_types,
+                                                                      workspaces)
             all_running_job_exes = []
             for node_id in running_job_exes:
                 all_running_job_exes.extend(running_job_exes[node_id])

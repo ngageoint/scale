@@ -17,7 +17,7 @@ class ErrorManager(models.Manager):
         """Queries all errors that are built into the system and caches them for fast retrieval
         """
 
-        for error in self.filter(is_builtin=True).iterator:
+        for error in self.filter(is_builtin=True).iterator():
             CACHED_ERRORS[error.name] = error
 
     def get_error(self, name):

@@ -274,9 +274,9 @@ class TestNodeManager(TestCase):
             node._image_pull_completed()
             node._update_state()
 
-        job_exe = job_test_utils.create_job_exe(node=self.node_1)
+        job_exe = job_test_utils.create_running_job_exe(agent_id=self.agent_1, node=self.node_1)
         # Add a job execution to clean up and get the cleanup task for it
-        cleanup_mgr.add_job_execution(RunningJobExecution('agent', job_exe))
+        cleanup_mgr.add_job_execution(job_exe)
         tasks = node_mgr.get_next_tasks(when)
         self.assertEqual(len(tasks), 1)
         task = tasks[0]
