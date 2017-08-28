@@ -127,7 +127,7 @@ class IngestManager(models.Manager):
         ingests = self.select_related('strike', 'scan', 'workspace', 'new_workspace', 'job')
         ingests = ingests.select_related('source_file', 'source_file__workspace')
         ingests = ingests.defer('strike__configuration', 'scan__configuration', 'workspace__json_config')
-        ingests = ingests.defer('new_workspace__json_config', 'job__data', 'job__configuration', 'job__results')
+        ingests = ingests.defer('new_workspace__json_config', 'job__data', 'job__results')
         ingests = ingests.defer('source_file__workspace__json_config')
 
         # Apply time range filtering
@@ -907,7 +907,6 @@ class StrikeManager(models.Manager):
         job_data.add_property_input('Strike ID', unicode(strike.id))
         event_description = {'strike_id': strike.id}
         event = TriggerEvent.objects.create_trigger_event('STRIKE_CREATED', None, event_description, now())
-        strike.save()  # Need to save Strike model before job can be configured and queued
         strike.job = Queue.objects.queue_new_job(strike_type, job_data, event)
         strike.save()
 

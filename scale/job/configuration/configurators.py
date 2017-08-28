@@ -193,8 +193,9 @@ class QueuedExecutionConfigurator(object):
 
         # Configure Strike workspace based on current configuration
         if job.job_type.name == 'scale-strike':
+            strike_id = data.get_property_values(['Strike ID'])['Strike ID']
             from ingest.models import Strike
-            strike = Strike.objects.get(job_id=job.id)
+            strike = Strike.objects.get(id=strike_id)
             workspace_name = strike.get_strike_configuration().get_workspace()
             workspaces[workspace_name] = TaskWorkspace(workspace_name, MODE_RW)
 

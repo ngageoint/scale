@@ -309,7 +309,7 @@ def create_job_type(name=None, version=None, category=None, interface=None, prio
 
 
 def create_running_job_exe(agent_id='agent_1', job_type=None, job=None, node=None, timeout=None, input_file_size=10.0,
-                           queued=None, started=None, resources=None, priority=None):
+                           queued=None, started=None, resources=None, priority=None, num_exes=1):
     """Creates a running job execution for unit testing
 
     :returns: The running job execution
@@ -318,7 +318,7 @@ def create_running_job_exe(agent_id='agent_1', job_type=None, job=None, node=Non
 
     when = timezone.now()
     if not job:
-        job = create_job(job_type=job_type, input_file_size=input_file_size)
+        job = create_job(job_type=job_type, input_file_size=input_file_size, num_exes=num_exes)
     job_type = job.job_type
 
     # Configuration that occurs at queue time

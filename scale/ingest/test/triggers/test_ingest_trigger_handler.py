@@ -9,7 +9,7 @@ import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import trigger.test.utils as trigger_test_utils
 from ingest.triggers.ingest_trigger_handler import IngestTriggerHandler
-from job.models import JobExecution
+from job.models import Job
 from queue.models import Queue
 from storage.models import ScaleFile
 
@@ -118,7 +118,7 @@ class TestIngestTriggerHandlerProcessIngestedSourceFile(TransactionTestCase):
 
         # Check results
         queue_1 = Queue.objects.get(job_type=self.job_type_1.id)
-        job_1 = Job.object.get(id=queue_1.job_id)
+        job_1 = Job.objects.get(id=queue_1.job_id)
         self.assertEqual(job_1.data['input_data'][0]['name'], self.input_name)
         self.assertEqual(job_1.data['input_data'][0]['file_id'], self.source_file.id)
 
@@ -146,7 +146,7 @@ class TestIngestTriggerHandlerProcessIngestedSourceFile(TransactionTestCase):
 
         # Check results...ensure first job is queued
         queue_1 = Queue.objects.get(job_type=self.job_type_2.id)
-        job_1 = Job.object.get(id=queue_1.job_id)
+        job_1 = Job.objects.get(id=queue_1.job_id)
         self.assertEqual(job_1.data['input_data'][0]['name'], self.input_name)
         self.assertEqual(job_1.data['input_data'][0]['file_id'], self.source_file.id)
         self.assertEqual(job_1.data['output_data'][0]['name'], self.output_name)

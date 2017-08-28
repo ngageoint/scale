@@ -406,7 +406,7 @@ class TestRunningJobExecution(TestCase):
         self.task_mgr.handle_task_update(update)
         self.running_job_exe.task_update(update)
         self.running_job_exe.execution_timed_out(job_task, when_timed_out)
-        self.assertFalse(self.running_job_exe.is_finished())  # Not finished until killed  task update arrives
+        self.assertFalse(self.running_job_exe.is_finished())  # Not finished until killed task update arrives
         self.assertEqual(self.running_job_exe.status, 'FAILED')
         self.assertEqual(self.running_job_exe.error_category, 'ALGORITHM')
         self.assertEqual(self.running_job_exe.error.name, 'timeout')
