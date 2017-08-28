@@ -318,9 +318,9 @@ class TestJob(TestCase):
     def test_is_ready_to_queue(self):
         """Tests checking the job status for queue eligibility."""
         self.assertTrue(Job(status='PENDING').is_ready_to_queue)
-        self.assertFalse(Job(status='BLOCKED').is_ready_to_queue)
+        self.assertTrue(Job(status='BLOCKED').is_ready_to_queue)
         self.assertFalse(Job(status='QUEUED').is_ready_to_queue)
-        self.assertFalse(Job(status='RUNNING').is_ready_to_queue)
+        self.assertTrue(Job(status='RUNNING').is_ready_to_queue)
         self.assertTrue(Job(status='FAILED').is_ready_to_queue)
         self.assertFalse(Job(status='COMPLETED').is_ready_to_queue)
         self.assertTrue(Job(status='CANCELED').is_ready_to_queue)

@@ -907,6 +907,7 @@ class StrikeManager(models.Manager):
         job_data.add_property_input('Strike ID', unicode(strike.id))
         event_description = {'strike_id': strike.id}
         event = TriggerEvent.objects.create_trigger_event('STRIKE_CREATED', None, event_description, now())
+        strike.save()  # Need to save Strike model before job can be configured and queued
         strike.job = Queue.objects.queue_new_job(strike_type, job_data, event)
         strike.save()
 

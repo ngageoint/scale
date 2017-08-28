@@ -107,7 +107,7 @@ class TestNfsBrokerLoadConfiguration(TestCase):
         volume = broker.volume
         self.assertEqual(volume.driver, 'nfs')
         self.assertEqual(volume.host, False)
-        self.assertEqual(volume.remote_path, 'host/dir')  # No : character in path for Docker NFS volume
+        self.assertEqual(volume.remote_path, 'host:/dir')
 
 
 class TestNfsBrokerMoveFiles(TestCase):
