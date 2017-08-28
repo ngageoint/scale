@@ -17,7 +17,7 @@ class NodeDetailsSerializerV4(NodeSerializerV4):
 
             cpus_scheduled = serializers.FloatField()
             mem_scheduled = serializers.FloatField()
-            disk_in_scheduled = serializers.FloatField()
+            disk_in_scheduled = serializers.FloatField(source='input_file_size')
             disk_out_scheduled = serializers.FloatField()
             disk_total_scheduled = serializers.FloatField()
 
@@ -53,7 +53,7 @@ class NodeStatusSerializer(serializers.Serializer):
 
             cpus_scheduled = serializers.FloatField()
             mem_scheduled = serializers.FloatField()
-            disk_in_scheduled = serializers.FloatField()
+            disk_in_scheduled = serializers.FloatField(source='input_file_size')
             disk_out_scheduled = serializers.FloatField()
             disk_total_scheduled = serializers.FloatField()
 

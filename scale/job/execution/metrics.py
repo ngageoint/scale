@@ -457,7 +457,7 @@ class TotalJobExeMetrics(object):
         oldest_time = self._finished_metrics_over_time.time_blocks[0].start
         blank_config = ExecutionConfiguration()
         for job_exe_end in JobExecutionEnd.objects.get_recent_job_exe_end_metrics(oldest_time):
-            running_job_exe = RunningJobExecution('', job_exe_end.job_exe, job_exe_end.job_type, blank_config)
+            running_job_exe = RunningJobExecution('', job_exe_end.job_exe, job_exe_end.job_type, blank_config, 0)
             running_job_exe._set_final_status(job_exe_end.status, job_exe_end.ended, job_exe_end.error)
             self._finished_metrics.add_job_execution(running_job_exe)
             self._finished_metrics_over_time.add_job_execution(running_job_exe)
