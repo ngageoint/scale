@@ -96,9 +96,9 @@ A valid execution configuration is a JSON document with the following structure:
     The *tasks* field is an optional JSON array of objects that describe each task in the execution. Each task object
     has the following fields:
 
-    **task_id**: JSON number
+    **task_id**: JSON string
 
-        The *task_id* field is an optional integer defining the unique Scale ID for the task.
+        The *task_id* field is an optional string defining the unique Scale ID for the task.
 
     **type**: JSON string
 
