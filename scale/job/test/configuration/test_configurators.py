@@ -224,8 +224,108 @@ class TestQueuedExecutionConfigurator(TestCase):
 
 class TestScheduledExecutionConfigurator(TestCase):
 
+    fixtures = ['ingest_job_types.json']
+
     def setUp(self):
         django.setup()
+
+    def test_configure_scheduled_job_ingest(self):
+        """Tests successfully calling configure_scheduled_job() on an ingest job"""
+
+        framework_id = '1234'
+        node = node_test_utils.create_node()
+        broker_dict = {'version': '1.0', 'broker': {'type': 'host', 'host_path': '/w_1/host/path'}}
+        workspace = storage_test_utils.create_workspace(json_config=broker_dict)
+        broker_dict = {'version': '1.0', 'broker': {'type': 's3', 'bucket_name': 'bucket1',
+                                                    'host_path': '/w_2/host/path', 'region_name': 'us-east-1'}}
+        new_workspace = storage_test_utils.create_workspace(json_config=broker_dict)
+        workspaces = {workspace.name: workspace, new_workspace.name: new_workspace}
+        from ingest.models import Ingest
+        from ingest.test import utils as ingest_test_utils
+        scan = ingest_test_utils.create_scan()
+        ingest_job_type = Ingest.objects.get_ingest_job_type()
+        ingest = ingest_test_utils.create_ingest(scan=scan, workspace=workspace, new_workspace=new_workspace)
+        Ingest.objects.start_ingest_tasks([ingest], scan_id=scan.id)
+
+        job = ingest.job
+        resources = job.get_resources()
+        # Get job info off of the queue
+        from queue.job_exe import QueuedJobExecution
+        from queue.models import Queue
+        queue = Queue.objects.get(job_id=job.id)
+        queued_job_exe = QueuedJobExecution(queue)
+        queued_job_exe.scheduled('agent_1', node.id, resources)
+        job_exe_model = queued_job_exe.create_job_exe_model(framework_id, now())
+
+        # Test method
+        with patch('job.configuration.configurators.settings') as mock_settings:
+            mock_settings.LOGGING_ADDRESS = None  # Ignore logging settings
+            mock_settings.DATABASES = {'default': {'NAME': 'TEST_NAME', 'USER': 'TEST_USER',
+                                                   'PASSWORD': 'TEST_PASSWORD', 'HOST': 'TEST_HOST',
+                                                   'PORT': 'TEST_PORT'}}
+            configurator = ScheduledExecutionConfigurator(workspaces)
+            exe_config_with_secrets = configurator.configure_scheduled_job(job_exe_model, ingest_job_type,
+                                                                           queue.get_job_interface())
+
+        # Expected results
+        wksp_vol_name = get_workspace_volume_name(job_exe_model, workspace.name)
+        wksp_vol_path = get_workspace_volume_path(workspace.name)
+        new_wksp_vol_name = get_workspace_volume_name(job_exe_model, new_workspace.name)
+        new_wksp_vol_path = get_workspace_volume_path(new_workspace.name)
+
+        expected_main_task = {'task_id': '%s_main' % job_exe_model.get_cluster_id(), 'type': 'main',
+                              'resources': {'cpus': resources.cpus, 'mem': resources.mem, 'disk': resources.disk},
+                              'args': 'scale_ingest -i %s' % unicode(ingest.id),
+                              'env_vars': {'ALLOCATED_CPUS': unicode(resources.cpus),
+                                           'ALLOCATED_MEM': unicode(resources.mem),
+                                           'ALLOCATED_DISK': unicode(resources.disk), 'SCALE_DB_NAME': 'TEST_NAME',
+                                           'SCALE_DB_USER': 'TEST_USER', 'SCALE_DB_PASS': 'TEST_PASSWORD',
+                                           'SCALE_DB_HOST': 'TEST_HOST', 'SCALE_DB_PORT': 'TEST_PORT',
+                                           'INGEST_ID': unicode(ingest.id), 'WORKSPACE': workspace.name,
+                                           'NEW_WORKSPACE': new_workspace.name},
+                              'workspaces': {workspace.name: {'mode': 'rw', 'volume_name': wksp_vol_name},
+                                             new_workspace.name: {'mode': 'rw', 'volume_name': new_wksp_vol_name}},
+                              'settings': {'SCALE_DB_NAME': 'TEST_NAME', 'SCALE_DB_USER': 'TEST_USER',
+                                           'SCALE_DB_PASS': 'TEST_PASSWORD', 'SCALE_DB_HOST': 'TEST_HOST',
+                                           'SCALE_DB_PORT': 'TEST_PORT'},
+                              'volumes': {wksp_vol_name: {'container_path': wksp_vol_path, 'mode': 'rw', 'type': 'host',
+                                                          'host_path': '/w_1/host/path'},
+                                          new_wksp_vol_name: {'container_path': new_wksp_vol_path, 'mode': 'rw',
+                                                              'type': 'host', 'host_path': '/w_2/host/path'}},
+                              'docker_params': [{'flag': 'env', 'value': 'SCALE_DB_USER=TEST_USER'},
+                                                {'flag': 'env', 'value': 'SCALE_DB_NAME=TEST_NAME'},
+                                                {'flag': 'env', 'value': 'ALLOCATED_MEM=%.1f' % resources.mem},
+                                                {'flag': 'env', 'value': 'ALLOCATED_CPUS=%.1f' % resources.cpus},
+                                                {'flag': 'env', 'value': 'SCALE_DB_HOST=TEST_HOST'},
+                                                {'flag': 'env', 'value': 'ALLOCATED_DISK=%.1f' % resources.disk},
+                                                {'flag': 'env', 'value': 'SCALE_DB_PASS=TEST_PASSWORD'},
+                                                {'flag': 'env', 'value': 'SCALE_DB_PORT=TEST_PORT'},
+                                                {'flag': 'env', 'value': 'INGEST_ID=%s' % unicode(ingest.id)},
+                                                {'flag': 'env', 'value': 'WORKSPACE=%s' % workspace.name},
+                                                {'flag': 'env', 'value': 'NEW_WORKSPACE=%s' % new_workspace.name},
+                                                {'flag': 'volume',
+                                                 'value': '/w_1/host/path:%s:rw' % wksp_vol_path},
+                                                {'flag': 'volume',
+                                                 'value': '/w_2/host/path:%s:rw' % new_wksp_vol_path},
+                                               ]}
+        expected_config = {'version': '2.0', 'tasks': [expected_main_task]}
+
+        # Ensure configuration is valid
+        ExecutionConfiguration(exe_config_with_secrets.get_dict())
+        # Compare results including secrets, but convert Docker param lists to sets so order is ignored
+        config_with_secrets_dict = exe_config_with_secrets.get_dict()
+        for task_dict in config_with_secrets_dict['tasks']:
+            docker_params_set = set()
+            for docker_param in task_dict['docker_params']:
+                docker_params_set.add('%s=%s' % (docker_param['flag'], docker_param['value']))
+            task_dict['docker_params'] = docker_params_set
+        for task_dict in expected_config['tasks']:
+            docker_params_set = set()
+            for docker_param in task_dict['docker_params']:
+                docker_params_set.add('%s=%s' % (docker_param['flag'], docker_param['value']))
+            task_dict['docker_params'] = docker_params_set
+        self.maxDiff = None
+        self.assertDictEqual(config_with_secrets_dict, expected_config)
 
     def test_configure_scheduled_job_regular(self):
         """Tests successfully calling configure_scheduled_job() on a regular (non-system) job"""
