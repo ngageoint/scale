@@ -198,37 +198,6 @@ class JobLoad(models.Model):
         db_table = 'job_load'
 
 
-class QueueEventProcessor(object):
-    """Base class used to process queue events."""
-    __metaclass__ = abc.ABCMeta
-
-    def process_queued(self, job_exe, is_initial):
-        """Callback when a new job execution is queued that sub-classes have registered to process.
-
-        :param job_exe: The new job execution that requires processing.
-        :type job_exe: :class:`job.models.JobExecution`
-        :param is_initial: Whether or not this is the first time the associated job has been queued.
-        :type is_initial: bool
-        """
-        raise NotImplemented()
-
-    def process_completed(self, job_exe):
-        """Callback when an existing job execution completed successfully that sub-classes have registered to process.
-
-        :param job_exe: The new job execution that requires processing.
-        :type job_exe: :class:`job.models.JobExecution`
-        """
-        raise NotImplemented()
-
-    def process_failed(self, job_exe):
-        """Callback when an existing job execution failed that sub-classes have registered to process.
-
-        :param job_exe: The new job execution that requires processing.
-        :type job_exe: :class:`job.models.JobExecution`
-        """
-        raise NotImplemented()
-
-
 class QueueStatus(object):
     """Represents queue status statistics.
 
@@ -251,9 +220,6 @@ class QueueStatus(object):
 class QueueManager(models.Manager):
     """Provides additional methods for managing the queue
     """
-
-    # List of queue event processor class definitions
-    _processors = []
 
     def get_queue(self, order_mode, ignore_job_type_ids=None):
         """Returns the list of queue models sorted according to their priority first, and then according to the provided
@@ -522,17 +488,6 @@ class QueueManager(models.Manager):
 
         return self.queue_new_recipe(recipe_type, data, event)
 
-    def register_processor(self, processor_class):
-        """Registers the given processor class to be called when job executions change status.
-
-        Processors from other applications can be registered during their ready() method.
-
-        :param processor_class: The processor class to invoke when the associated status change occurs.
-        :type processor_class: :class:`job.clock.ClockProcessor`
-        """
-        logger.debug('Registering queue processor: %s', processor_class)
-        self._processors.append(processor_class)
-
     @transaction.atomic
     def requeue_jobs(self, job_ids, priority=None):
         """Re-queues the jobs with the given IDs. Any job that is not in a valid state for being re-queued or is
@@ -698,7 +653,7 @@ class Queue(models.Model):
         return ExecutionConfiguration(self.configuration)
 
     def get_job_interface(self):
-        """Returns the interface for this job
+        """Returns the interface for this queued job
 
         :returns: The job interface
         :rtype: :class:`job.configuration.interface.job_interface.JobInterface`
@@ -707,7 +662,7 @@ class Queue(models.Model):
         return JobInterface(self.interface)
 
     def get_resources(self):
-        """Returns the resources required by this job execution
+        """Returns the resources required by this queued job
 
         :returns: The required resources
         :rtype: :class:`node.resources.node_resources.NodeResources`

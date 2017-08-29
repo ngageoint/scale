@@ -366,7 +366,6 @@ class JobManager(models.Manager):
         # Job models are always locked in order of ascending ID to prevent deadlocks
         return list(self.select_for_update().filter(id__in=job_ids).order_by('id').iterator())
 
-    # TODO: might be able to remove this
     def get_locked_jobs_with_related(self, job_ids):
         """Gets the job models for the given IDs with model locks obtained and related job_type and job_type_rev models
 
