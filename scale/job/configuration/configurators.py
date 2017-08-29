@@ -258,7 +258,7 @@ class ScheduledExecutionConfigurator(object):
             ScheduledExecutionConfigurator._configure_regular_job(config, job_exe, job_type)
 
         # Configure items that apply to all tasks
-        self._configure_all_tasks(config, job_exe)
+        self._configure_all_tasks(config, job_exe, job_type)
 
         # Configure secrets
         config_with_secrets = self._configure_secrets(config, job_exe, job_type, interface)
@@ -266,13 +266,15 @@ class ScheduledExecutionConfigurator(object):
         job_exe.configuration = config.get_dict()
         return config_with_secrets
 
-    def _configure_all_tasks(self, config, job_exe):
+    def _configure_all_tasks(self, config, job_exe, job_type):
         """Configures the given execution with items that apply to all tasks
 
         :param config: The execution configuration
         :type config: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         :param job_exe: The job execution model being scheduled
         :type job_exe: :class:`job.models.JobExecution`
+        :param job_type: The job type model
+        :type job_type: :class:`job.models.JobType`
         """
 
         config.set_task_ids(job_exe.get_cluster_id())
@@ -314,7 +316,7 @@ class ScheduledExecutionConfigurator(object):
             # Must explicitly specify RFC3164 to ensure compatibility with logstash in Docker 1.11+
             syslog_format = DockerParameter('log-opt', 'syslog-format=rfc3164')
             log_address = DockerParameter('log-opt', 'syslog-address=%s' % settings.LOGGING_ADDRESS)
-            if not job_exe.is_system:
+            if not job_type.is_system:
                 pre_task_tag = DockerParameter('log-opt', 'tag=%s' % config.get_task_id('pre'))
                 config.add_to_task('pre', docker_params=[log_driver, syslog_format, log_address, pre_task_tag])
                 post_task_tag = DockerParameter('log-opt', 'tag=%s' % config.get_task_id('post'))

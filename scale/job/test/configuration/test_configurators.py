@@ -326,6 +326,71 @@ class TestScheduledExecutionConfigurator(TestCase):
             task_dict['docker_params'] = docker_params_set
         self.assertDictEqual(config_with_secrets_dict, expected_config)
 
+    def test_configure_scheduled_job_logging(self):
+        """Tests successfully calling configure_scheduled_job() and checks Docker logging parameters"""
+
+        framework_id = '1234'
+        node = node_test_utils.create_node()
+        interface_dict = {'version': '1.4', 'command': 'foo', 'command_arguments': '', 'env_vars': [], 'settings': [],
+                          'input_data': [], 'output_data': []}
+        data_dict = {'input_data': [], 'output_data': []}
+        job_type = job_test_utils.create_job_type(interface=interface_dict)
+        from queue.job_exe import QueuedJobExecution
+        from queue.models import Queue
+        job = Queue.objects.queue_new_job(job_type, JobData(data_dict), trigger_test_utils.create_trigger_event())
+        resources = job.get_resources()
+        # Get job info off of the queue
+        queue = Queue.objects.get(job_id=job.id)
+        queued_job_exe = QueuedJobExecution(queue)
+        queued_job_exe.scheduled('agent_1', node.id, resources)
+        job_exe_model = queued_job_exe.create_job_exe_model(framework_id, now())
+
+        # Test method
+        with patch('job.configuration.configurators.settings') as mock_settings:
+            with patch('job.configuration.configurators.secrets_mgr') as mock_secrets_mgr:
+                mock_settings.LOGGING_ADDRESS = 'test-logging-address'
+                mock_settings.DATABASES = {'default': {'NAME': 'TEST_NAME', 'USER': 'TEST_USER',
+                                                       'PASSWORD': 'TEST_PASSWORD', 'HOST': 'TEST_HOST',
+                                                       'PORT': 'TEST_PORT'}}
+                mock_secrets_mgr.retrieve_job_type_secrets = MagicMock()
+                mock_secrets_mgr.retrieve_job_type_secrets.return_value = {}
+                configurator = ScheduledExecutionConfigurator({})
+                exe_config_with_secrets = configurator.configure_scheduled_job(job_exe_model, job_type,
+                                                                               queue.get_job_interface())
+
+        # Ensure configuration is valid
+        ExecutionConfiguration(exe_config_with_secrets.get_dict())
+
+        # Check config for logging parameters
+        for task_type in exe_config_with_secrets.get_task_types():
+            if task_type == 'pull':
+                continue  # Ignore pull tasks which are not Docker tasks
+            found_log_driver = False
+            found_syslog_format = False
+            found_syslog_address = False
+            found_tag = False
+            for docker_param in exe_config_with_secrets.get_docker_params(task_type):
+                if docker_param.flag == 'log-driver':
+                    self.assertEqual(docker_param.value, 'syslog')
+                    found_log_driver = True
+                elif docker_param.flag == 'log-opt':
+                    array = docker_param.value.split('=')
+                    opt_name = array[0]
+                    opt_value = array[1]
+                    if opt_name == 'syslog-format':
+                        self.assertEqual(opt_value, 'rfc3164')
+                        found_syslog_format = True
+                    elif opt_name == 'syslog-address':
+                        self.assertEqual(opt_value, 'test-logging-address')
+                        found_syslog_address = True
+                    elif opt_name == 'tag':
+                        self.assertEqual(opt_value, exe_config_with_secrets.get_task_id(task_type))
+                        found_tag = True
+            self.assertTrue(found_log_driver)
+            self.assertTrue(found_syslog_format)
+            self.assertTrue(found_syslog_address)
+            self.assertTrue(found_tag)
+
     def test_configure_scheduled_job_regular(self):
         """Tests successfully calling configure_scheduled_job() on a regular (non-system) job"""
 
