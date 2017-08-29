@@ -11,7 +11,7 @@ import django.utils.html
 from django.conf import settings
 from django.db import models, transaction
 from django.db.models import Q
-from django.utils import timezone
+from django.utils import dateparse, timezone
 
 import util.parse
 from error.models import Error
@@ -938,11 +938,34 @@ class JobExecutionManager(models.Manager):
         :returns: The job execution with extra related attributes.
         :rtype: :class:`job.models.JobExecution`
         """
+
         job_exe = JobExecution.objects.all().select_related(
-            'job', 'job__job_type', 'job__error', 'job__event', 'job__event__rule', 'node', 'error'
+            'job', 'job__job_type', 'job__error', 'job__event', 'job__event__rule', 'node', 'error', 'jobexecutionend',
+            'jobexecutionoutput'
         )
         job_exe = job_exe.defer('stdout', 'stderr')
         job_exe = job_exe.get(pk=job_exe_id)
+
+        # Populate old task fields with data from task results JSON
+        try:
+            if job_exe.jobexecutionend:
+                for task_dict in job_exe.jobexecutionend.get_task_results().get_dict()['tasks']:
+                    if task_dict['was_started']:
+                        if task_dict['type'] == 'pre':
+                            job_exe.pre_started = dateparse.parse_datetime(task_dict['started'])
+                            job_exe.pre_completed = dateparse.parse_datetime(task_dict['ended'])
+                            job_exe.pre_exit_code = task_dict['exit_code']
+                        elif task_dict['type'] == 'main':
+                            job_exe.job_started = dateparse.parse_datetime(task_dict['started'])
+                            job_exe.job_completed = dateparse.parse_datetime(task_dict['ended'])
+                            job_exe.job_exit_code = task_dict['exit_code']
+                        elif task_dict['type'] == 'post':
+                            job_exe.post_started = dateparse.parse_datetime(task_dict['started'])
+                            job_exe.post_completed = dateparse.parse_datetime(task_dict['ended'])
+                            job_exe.post_exit_code = task_dict['exit_code']
+        except JobExecutionEnd.DoesNotExist:
+            pass
+
         return job_exe
 
     def get_exes(self, started=None, ended=None, statuses=None, job_type_ids=None, job_type_names=None,
@@ -1045,17 +1068,6 @@ class JobExecutionManager(models.Manager):
 
         return results
 
-    def get_locked_job_exe(self, job_exe_id):
-        """Returns the job execution with the given ID with a model lock obtained
-
-        :param job_exe_id: The job execution ID
-        :type job_exe_id: int
-        :returns: The job execution model with a model lock
-        :rtype: :class:`job.models.JobExecution`
-        """
-
-        return self.select_for_update().defer('stdout', 'stderr').get(pk=job_exe_id)
-
     def get_logs(self, job_exe_id):
         """Gets additional details for the given job execution model based on related model attributes.
 
@@ -1078,87 +1090,6 @@ class JobExecutionManager(models.Manager):
 
         job_exe_qry = JobExecution.objects.defer('stdout', 'stderr')
         return job_exe_qry.filter(status='RUNNING')
-
-    def queue_job_exes(self, jobs, when):
-        """Creates, saves, and returns new job executions for the given queued jobs. The caller must have obtained model
-        locks on the job models. Any jobs that are not queued will be ignored. All jobs should have their related
-        job_type and job_type_rev models populated.
-
-        :param jobs: The queued jobs
-        :type jobs: [:class:`job.models.Job`]
-        :param when: The time that the jobs are queued
-        :type when: :class:`datetime.datetime`
-        :returns: The new queued job execution models
-        :rtype: [:class:`job.models.JobExecution`]
-        """
-
-        job_ids = set()
-        job_exes = []
-        for job in jobs:
-            if job.status != 'QUEUED':
-                continue
-
-            job_ids.add(job.id)
-            job_exe = JobExecution()
-            job_exe.job = job
-            job_exe.timeout = job.timeout
-            job_exe.queued = when
-            job_exe.created = when
-            # Fill in job execution command argument string with data that doesn't require pre-task
-            interface = job.get_job_interface()
-            data = job.get_job_data()
-            job_exe.command_arguments = interface.populate_command_argument_properties(data)
-            job_exe.configuration = job.configuration
-            job_exes.append(job_exe)
-
-        if not job_exes:
-            return []
-
-        # Create job executions and re-query to get ID fields
-        self.bulk_create(job_exes)
-        return list(self.filter(job_id__in=job_ids, status='QUEUED').iterator())
-
-    def update_status(self, job_exes, status, when, error=None):
-        """Updates the given job executions and jobs with the new status. The caller must have obtained model locks on
-        the job execution and job models (in that order).
-
-        :param job_exes: The job executions (with related job models) to update
-        :type job_exes: [:class:`job.models.JobExecution`]
-        :param status: The new status
-        :type status: string
-        :param when: The time that the status change occurred
-        :type when: :class:`datetime.datetime`
-        :param error: The error that caused the failure (required if status is FAILED, should be None otherwise)
-        :type error: :class:`error.models.Error`
-        """
-
-        if status == 'QUEUED':
-            raise Exception('QUEUED is an invalid status transition for job executions, use queue_job_exes()')
-        if status == 'RUNNING':
-            raise Exception('update_status() cannot set a job execution to RUNNING, use schedule_job_executions()')
-        if status == 'FAILED' and not error:
-            raise Exception('An error is required when status is FAILED')
-        if not status == 'FAILED' and error:
-            raise Exception('Status %s is invalid with an error' % status)
-
-        modified = timezone.now()
-
-        # Update job execution models in memory and collect job execution IDs
-        job_exe_ids = set()
-        jobs = []
-        for job_exe in job_exes:
-            job_exe_ids.add(job_exe.id)
-            jobs.append(job_exe.job)
-            job_exe.status = status
-            job_exe.ended = when
-            job_exe.error = error
-            job_exe.last_modified = modified
-
-        # Update job execution models in database with single query
-        self.filter(id__in=job_exe_ids).update(status=status, ended=when, error=error, last_modified=modified)
-
-        # Update job models
-        Job.objects.update_status(jobs, status, when, error)
 
 
 class JobExecution(models.Model):
@@ -1272,9 +1203,9 @@ class JobExecution(models.Model):
         return self.cluster_id
 
     def get_execution_configuration(self):
-        """Returns the execution configuration for this job
+        """Returns the configuration for this job execution
 
-        :returns: The execution configuration for this job
+        :returns: The configuration for this job execution
         :rtype: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         """
 
