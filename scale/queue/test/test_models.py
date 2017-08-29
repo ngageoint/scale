@@ -23,7 +23,7 @@ from job.models import Job, JobExecution, JobExecutionOutput
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Cpus, Disk, Mem
 from queue.job_exe import QueuedJobExecution
-from queue.models import JobLoad, Queue, QueueEventProcessor, QUEUE_ORDER_FIFO, QUEUE_ORDER_LIFO
+from queue.models import JobLoad, Queue, QUEUE_ORDER_FIFO, QUEUE_ORDER_LIFO
 from recipe.configuration.data.recipe_data import RecipeData
 from recipe.configuration.definition.recipe_definition import RecipeDefinition
 from recipe.handlers.graph_delta import RecipeGraphDelta
@@ -413,10 +413,6 @@ class TestQueueManagerHandleJobCompletion(TransactionTestCase):
         }
         self.data = RecipeData(data)
 
-        # Register a fake processor
-        self.mock_processor = MagicMock(QueueEventProcessor)
-        Queue.objects.register_processor(lambda: self.mock_processor)
-
     def test_successful_with_partial_recipe(self):
         """Tests calling QueueManager.handle_job_completion() successfully with a job in a recipe."""
 
@@ -593,10 +589,6 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
             'workspace_id': workspace.id,
         }
         self.data = RecipeData(data)
-
-        # Register a fake processor
-        self.mock_processor = MagicMock(QueueEventProcessor)
-        Queue.objects.register_processor(lambda: self.mock_processor)
 
     def test_successful(self):
         """Tests calling QueueManager.queue_new_recipe() successfully."""
@@ -821,10 +813,6 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
         # Job IDs to re-queue
         self.job_ids = [self.standalone_failed_job.id, self.standalone_canceled_job.id,
                         self.standalone_completed_job.id, self.job_a_1.id, self.job_b_2.id]
-
-        # Register a fake processor
-        self.mock_processor = MagicMock(QueueEventProcessor)
-        Queue.objects.register_processor(lambda: self.mock_processor)
 
     def test_successful(self):
         """Tests calling QueueManager.requeue_jobs() successfully"""
