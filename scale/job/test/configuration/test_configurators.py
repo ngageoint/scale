@@ -324,7 +324,6 @@ class TestScheduledExecutionConfigurator(TestCase):
             for docker_param in task_dict['docker_params']:
                 docker_params_set.add('%s=%s' % (docker_param['flag'], docker_param['value']))
             task_dict['docker_params'] = docker_params_set
-        self.maxDiff = None
         self.assertDictEqual(config_with_secrets_dict, expected_config)
 
     def test_configure_scheduled_job_regular(self):
@@ -529,7 +528,7 @@ class TestScheduledExecutionConfigurator(TestCase):
                                                  'value': '/w_1/host/path:%s:ro' % input_wksp_vol_path},
                                                 {'flag': 'volume', 'value': '%s:%s:ro' %
                                                                             (input_vol_name, SCALE_JOB_EXE_INPUT_PATH)}
-                                                ]}
+                                               ]}
         expected_config = {'version': '2.0',
                            'input_files': expected_input_files,
                            'output_workspaces': expected_output_workspaces,
@@ -550,6 +549,140 @@ class TestScheduledExecutionConfigurator(TestCase):
                 docker_params_set.add('%s=%s' % (docker_param['flag'], docker_param['value']))
             task_dict['docker_params'] = docker_params_set
         self.assertDictEqual(config_with_secrets_dict, expected_config)
+
+    def test_configure_scheduled_job_secrets(self):
+        """Tests successfully calling configure_scheduled_job() and checks to make sure secrets are appropriately
+        handled
+        """
+
+        framework_id = '1234'
+        node = node_test_utils.create_node()
+        interface_dict = {'version': '1.4', 'command': 'foo',
+                          'command_arguments': '',
+                          'env_vars': [{'name': 'my_special_env', 'value': '${s_2}'}],
+                          'settings': [{'name': 's_1', 'secret': True}, {'name': 's_2', 'secret': True},
+                                       {'name': 's_3'}],
+                          'input_data': [], 'output_data': []}
+        data_dict = {'input_data': [], 'output_data': []}
+        job_type_config_dict = {'version': '2.0', 'settings': {'s_3': 's_3_value'}}
+        job_type = job_test_utils.create_job_type(interface=interface_dict, configuration=job_type_config_dict)
+        from queue.job_exe import QueuedJobExecution
+        from queue.models import Queue
+        job = Queue.objects.queue_new_job(job_type, JobData(data_dict), trigger_test_utils.create_trigger_event())
+        resources = job.get_resources()
+        # Get job info off of the queue
+        queue = Queue.objects.get(job_id=job.id)
+        queued_job_exe = QueuedJobExecution(queue)
+        queued_job_exe.scheduled('agent_1', node.id, resources)
+        job_exe_model = queued_job_exe.create_job_exe_model(framework_id, now())
+
+        # Test method
+        with patch('job.configuration.configurators.settings') as mock_settings:
+            with patch('job.configuration.configurators.secrets_mgr') as mock_secrets_mgr:
+                mock_settings.LOGGING_ADDRESS = None  # Ignore logging settings
+                mock_settings.DATABASES = {'default': {'NAME': 'TEST_NAME', 'USER': 'TEST_USER',
+                                                       'PASSWORD': 'TEST_PASSWORD', 'HOST': 'TEST_HOST',
+                                                       'PORT': 'TEST_PORT'}}
+                mock_secrets_mgr.retrieve_job_type_secrets = MagicMock()
+                mock_secrets_mgr.retrieve_job_type_secrets.return_value = {'s_1': 's_1_secret', 's_2': 's_2_secret'}
+                configurator = ScheduledExecutionConfigurator({})
+                exe_config_with_secrets = configurator.configure_scheduled_job(job_exe_model, job_type,
+                                                                               queue.get_job_interface())
+
+        expected_pre_secret_settings = {'SCALE_DB_NAME': 'TEST_NAME', 'SCALE_DB_USER': 'TEST_USER',
+                                        'SCALE_DB_PASS': 'TEST_PASSWORD', 'SCALE_DB_HOST': 'TEST_HOST',
+                                        'SCALE_DB_PORT': 'TEST_PORT'}
+        expected_pre_censored_settings = {'SCALE_DB_NAME': '*****', 'SCALE_DB_USER': '*****', 'SCALE_DB_PASS': '*****',
+                                          'SCALE_DB_HOST': '*****', 'SCALE_DB_PORT': '*****'}
+        expected_pre_secret_env_vars = {'SCALE_DB_NAME': 'TEST_NAME', 'SCALE_DB_USER': 'TEST_USER',
+                                        'SCALE_DB_PASS': 'TEST_PASSWORD', 'SCALE_DB_HOST': 'TEST_HOST',
+                                        'SCALE_DB_PORT': 'TEST_PORT'}
+        expected_pre_censored_env_vars = {'SCALE_DB_NAME': '*****', 'SCALE_DB_USER': '*****', 'SCALE_DB_PASS': '*****',
+                                          'SCALE_DB_HOST': '*****', 'SCALE_DB_PORT': '*****'}
+        expected_main_secret_settings = {'s_1': 's_1_secret', 's_2': 's_2_secret', 's_3': 's_3_value'}
+        expected_main_censored_settings = {'s_1': '*****', 's_2': '*****', 's_3': 's_3_value'}
+        expected_main_secret_env_vars = {'S_1': 's_1_secret', 'S_2': 's_2_secret', 'S_3': 's_3_value',
+                                         'my_special_env': 's_2_secret'}
+        expected_main_censored_env_vars = {'S_1': '*****', 'S_2': '*****', 'S_3': 's_3_value',
+                                           'my_special_env': '*****'}
+
+        # Ensure secrets configuration is valid
+        ExecutionConfiguration(exe_config_with_secrets.get_dict())
+
+        # Check config with secrets
+        did_pre_task = False
+        did_main_task = False
+        for task_dict in exe_config_with_secrets.get_dict()['tasks']:
+            if task_dict['type'] == 'pre':
+                for setting_name, setting_value in task_dict['settings'].items():
+                    if setting_name in expected_pre_secret_settings:
+                        expected_value = expected_pre_secret_settings[setting_name]
+                        self.assertEqual(setting_value, expected_value)
+                        del expected_pre_secret_settings[setting_name]
+                for env_name, env_value in task_dict['env_vars'].items():
+                    if env_name in expected_pre_secret_env_vars:
+                        expected_value = expected_pre_secret_env_vars[env_name]
+                        self.assertEqual(env_value, expected_value)
+                        del expected_pre_secret_env_vars[env_name]
+                self.assertDictEqual(expected_pre_secret_settings, {}, 'Config did not contain some expected settings')
+                self.assertDictEqual(expected_pre_secret_env_vars, {}, 'Config did not contain some expected env vars')
+                did_pre_task = True
+            elif task_dict['type'] == 'main':
+                for setting_name, setting_value in task_dict['settings'].items():
+                    if setting_name in expected_main_secret_settings:
+                        expected_value = expected_main_secret_settings[setting_name]
+                        self.assertEqual(setting_value, expected_value)
+                        del expected_main_secret_settings[setting_name]
+                for env_name, env_value in task_dict['env_vars'].items():
+                    if env_name in expected_main_secret_env_vars:
+                        expected_value = expected_main_secret_env_vars[env_name]
+                        self.assertEqual(env_value, expected_value)
+                        del expected_main_secret_env_vars[env_name]
+                self.assertDictEqual(expected_main_secret_settings, {}, 'Config did not contain some expected settings')
+                self.assertDictEqual(expected_main_secret_env_vars, {}, 'Config did not contain some expected env vars')
+                did_main_task = True
+        self.assertTrue(did_pre_task)
+        self.assertTrue(did_main_task)
+
+        # Check censored config
+        did_pre_task = False
+        did_main_task = False
+        exe_config_censored = job_exe_model.get_execution_configuration()
+        for task_dict in exe_config_censored.get_dict()['tasks']:
+            if task_dict['type'] == 'pre':
+                for setting_name, setting_value in task_dict['settings'].items():
+                    if setting_name in expected_pre_censored_settings:
+                        expected_value = expected_pre_censored_settings[setting_name]
+                        self.assertEqual(setting_value, expected_value)
+                        del expected_pre_censored_settings[setting_name]
+                for env_name, env_value in task_dict['env_vars'].items():
+                    if env_name in expected_pre_censored_env_vars:
+                        expected_value = expected_pre_censored_env_vars[env_name]
+                        self.assertEqual(env_value, expected_value)
+                        del expected_pre_censored_env_vars[env_name]
+                self.assertDictEqual(expected_pre_censored_settings, {},
+                                     'Config did not contain some expected settings')
+                self.assertDictEqual(expected_pre_censored_env_vars, {},
+                                     'Config did not contain some expected env vars')
+                did_pre_task = True
+            elif task_dict['type'] == 'main':
+                for setting_name, setting_value in task_dict['settings'].items():
+                    if setting_name in expected_main_censored_settings:
+                        expected_value = expected_main_censored_settings[setting_name]
+                        self.assertEqual(setting_value, expected_value)
+                        del expected_main_censored_settings[setting_name]
+                for env_name, env_value in task_dict['env_vars'].items():
+                    if env_name in expected_main_censored_env_vars:
+                        expected_value = expected_main_censored_env_vars[env_name]
+                        self.assertEqual(env_value, expected_value)
+                        del expected_main_censored_env_vars[env_name]
+                self.assertDictEqual(expected_main_censored_settings, {},
+                                     'Config did not contain some expected settings')
+                self.assertDictEqual(expected_main_censored_env_vars, {},
+                                     'Config did not contain some expected env vars')
+                did_main_task = True
+        self.assertTrue(did_pre_task)
+        self.assertTrue(did_main_task)
 
     def test_configure_scheduled_job_shared_mem(self):
         """Tests successfully calling configure_scheduled_job() with a job using shared memory"""
