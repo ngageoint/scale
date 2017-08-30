@@ -26,6 +26,7 @@ from scheduler.resources.manager import resource_mgr
 from scheduler.scheduling.scheduling_node import SchedulingNode
 from scheduler.sync.job_type_manager import job_type_mgr
 from scheduler.sync.workspace_manager import workspace_mgr
+from scheduler.tasks.manager import system_task_mgr
 from util.retry import retry_database_query
 
 # Warning threshold for queue processing duration
@@ -77,9 +78,16 @@ class SchedulingManager(object):
         nodes = self._prepare_nodes(tasks, running_job_exes, when)
         fulfilled_nodes = self._schedule_waiting_tasks(nodes, running_job_exes, when)
 
-        job_type_limits = self._calculate_job_type_limits(job_types, running_job_exes)
-        job_exe_count = self._schedule_new_job_exes(framework_id, fulfilled_nodes, job_types, job_type_limits,
-                                                    job_type_resources, workspaces)
+        sys_tasks_scheduled = self._schedule_system_tasks(fulfilled_nodes)
+
+        job_exe_count = 0
+        if sys_tasks_scheduled:
+            # Only schedule new job executions if all needed system tasks have been scheduled
+            job_type_limits = self._calculate_job_type_limits(job_types, running_job_exes)
+            job_exe_count = self._schedule_new_job_exes(framework_id, fulfilled_nodes, job_types, job_type_limits,
+                                                        job_type_resources, workspaces)
+        else:
+            logger.warning('No new jobs scheduled due to waiting system tasks')
 
         if framework_id != scheduler_mgr.framework_id:
             logger.warning('Scheduler framework ID changed, skipping task launch')
@@ -517,6 +525,19 @@ class SchedulingManager(object):
                 node.reset_new_job_exes()
 
         return job_exe_count
+
+    def _schedule_system_tasks(self, nodes):
+        """Schedules all system tasks for which there are sufficient resources and indicates whether all system tasks
+        were able to be scheduled
+
+        :param nodes: The dict of scheduling nodes stored by node ID where every node has fulfilled all waiting tasks
+        :type nodes: dict
+        :returns: True if all system tasks were scheduled as needed, False otherwise
+        :rtype: bool
+        """
+
+        # TODO: implement, make sure to log number and resources of waiting system tasks
+        return True
 
     def _schedule_waiting_tasks(self, nodes, running_job_exes, when):
         """Schedules all waiting tasks for which there are sufficient resources and updates the resource manager with

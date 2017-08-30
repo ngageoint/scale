@@ -65,7 +65,7 @@ class Task(object):
         # Basic attributes
         self._task_id = task_id
         self._task_name = task_name
-        self._agent_id = agent_id
+        self.agent_id = agent_id
         self._container_name = None
         self._lock = threading.Lock()
         self._has_been_launched = False
@@ -88,16 +88,6 @@ class Task(object):
         self._command_arguments = None
         self._running_timeout_threshold = BASE_RUNNING_TIMEOUT_THRESHOLD
         self._staging_timeout_threshold = BASE_STAGING_TIMEOUT_THRESHOLD
-
-    @property
-    def agent_id(self):
-        """Returns the ID of the agent that the task is running on
-
-        :returns: The agent ID
-        :rtype: string
-        """
-
-        return self._agent_id
 
     @property
     def command(self):

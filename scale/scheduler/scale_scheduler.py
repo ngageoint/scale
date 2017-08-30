@@ -31,6 +31,7 @@ from scheduler.resources.offer import ResourceOffer
 from scheduler.sync.job_type_manager import job_type_mgr
 from scheduler.sync.workspace_manager import workspace_mgr
 from scheduler.task.manager import task_update_mgr
+from scheduler.tasks.manager import system_task_mgr
 from scheduler.threads.recon import ReconciliationThread
 from scheduler.threads.schedule import SchedulingThread
 from scheduler.threads.scheduler_status import SchedulerStatusThread
@@ -308,8 +309,9 @@ class ScaleScheduler(MesosScheduler):
                 if task:
                     recon_mgr.add_tasks([task])
         else:
-            # Not a job task, so must be a node task
+            # Not a job task, so must be either a node or system task
             node_mgr.handle_task_update(task_update)
+            system_task_mgr.handle_task_update(task_update)
 
         scheduler_mgr.add_task_update_counts(was_task_finished, was_job_finished)
 

@@ -123,6 +123,25 @@ class SchedulingNode(object):
                 result = True
         return result
 
+    def accept_system_task(self, system_task):
+        """Asks the node if it can accept the given system task
+
+        :param system_task: The system task
+        :type system_task: :class:`job.tasks.base_task.Task`
+        :returns: True if the system task was accepted, False otherwise
+        :rtype: bool
+        """
+
+        task_resources = system_task.get_resources()
+        if self._remaining_resources.is_sufficient_to_meet(task_resources):
+            system_task.agent_id = self.agent_id  # Must set agent ID for task
+            self.allocated_tasks.append(system_task)
+            self.allocated_resources.add(task_resources)
+            self._remaining_resources.subtract(task_resources)
+            return True
+
+        return False
+
     def add_allocated_offers(self, offers):
         """Adds the resource offers that have been allocated to run this node's tasks. If the offer resources are not
         enough to cover the current allocation, job executions and tasks are removed as necessary.
