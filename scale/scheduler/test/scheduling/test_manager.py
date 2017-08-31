@@ -22,6 +22,7 @@ from scheduler.resources.manager import resource_mgr
 from scheduler.resources.offer import ResourceOffer
 from scheduler.scheduling.manager import SchedulingManager
 from scheduler.sync.job_type_manager import job_type_mgr
+from scheduler.tasks.manager import system_task_mgr
 
 
 class TestSchedulingManager(TestCase):
@@ -50,6 +51,8 @@ class TestSchedulingManager(TestCase):
             node._initial_cleanup_completed()
             node._is_image_pulled = True
             node._update_state()
+        # Ignore system tasks
+        system_task_mgr._is_db_update_completed = True
 
         self.queue_1 = queue_test_utils.create_queue(cpus_required=4.0, mem_required=1024.0, disk_in_required=100.0,
                                                      disk_out_required=200.0, disk_total_required=300.0)
@@ -114,6 +117,7 @@ class TestSchedulingManager(TestCase):
         Scheduler.objects.update(is_paused=True)
         scheduler_mgr.sync_with_database()
         node_mgr.sync_with_database(scheduler_mgr.config)  # Updates nodes with paused scheduler
+        system_task_mgr._is_db_update_completed = False  # Make sure system tasks don't get scheduled
 
         scheduling_manager = SchedulingManager()
         num_tasks = scheduling_manager.perform_scheduling(self._driver, now())
@@ -197,3 +201,23 @@ class TestSchedulingManager(TestCase):
         job_exe_1 = JobExecution.objects.get(job_id=self.queue_1.job_id)
         job_exe_end_1 = JobExecutionEnd.objects.get(job_exe_id=job_exe_1.id)
         self.assertEqual(job_exe_end_1.status, 'CANCELED')
+
+    @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
+    def test_schedule_system_tasks(self, mock_taskinfo):
+        """Tests successfully calling perform_scheduling() when scheduling system tasks"""
+        mock_taskinfo.return_value = MagicMock()
+
+        offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
+                                NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now())
+        offer_2 = ResourceOffer('offer_2', self.agent_2.agent_id, self.framework_id,
+                                NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now())
+        resource_mgr.add_new_offers([offer_1, offer_2])
+
+        # Clear the queue
+        Queue.objects.all().delete()
+        # Set us up to schedule a database update task
+        system_task_mgr._is_db_update_completed = False
+        scheduling_manager = SchedulingManager()
+
+        num_tasks = scheduling_manager.perform_scheduling(self._driver, now())
+        self.assertEqual(num_tasks, 1)  # Schedule database update task

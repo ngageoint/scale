@@ -78,7 +78,7 @@ class SchedulingManager(object):
         nodes = self._prepare_nodes(tasks, running_job_exes, when)
         fulfilled_nodes = self._schedule_waiting_tasks(nodes, running_job_exes, when)
 
-        sys_tasks_scheduled = self._schedule_system_tasks(fulfilled_nodes, job_type_resources)
+        sys_tasks_scheduled = self._schedule_system_tasks(fulfilled_nodes, job_type_resources, when)
 
         job_exe_count = 0
         if sys_tasks_scheduled:
@@ -527,7 +527,7 @@ class SchedulingManager(object):
 
         return job_exe_count
 
-    def _schedule_system_tasks(self, nodes, job_type_resources):
+    def _schedule_system_tasks(self, nodes, job_type_resources, when):
         """Schedules all system tasks for which there are sufficient resources and indicates whether all system tasks
         were able to be scheduled
 
@@ -535,6 +535,8 @@ class SchedulingManager(object):
         :type nodes: dict
         :param job_type_resources: The list of all of the job type resource requirements
         :type job_type_resources: list
+        :param when: The current time
+        :type when: :class:`datetime.datetime`
         :returns: True if all system tasks were scheduled as needed, False otherwise
         :rtype: bool
         """
@@ -545,7 +547,7 @@ class SchedulingManager(object):
         waiting_tasks = 0
         waiting_resources = NodeResources()
 
-        for task in system_task_mgr.get_tasks_to_schedule():
+        for task in system_task_mgr.get_tasks_to_schedule(when):
             task_scheduled = False
             best_scheduling_node = None
             best_scheduling_score = None
@@ -563,7 +565,7 @@ class SchedulingManager(object):
             if best_scheduling_node:
                 if best_scheduling_node.accept_system_task(task):
                     task_scheduled = True
-                    node_ids.add(best_scheduling_node.id)
+                    node_ids.add(best_scheduling_node.node_id)
 
             if task_scheduled:
                 scheduled_tasks += 1
