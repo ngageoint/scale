@@ -78,7 +78,7 @@ class SchedulingManager(object):
         nodes = self._prepare_nodes(tasks, running_job_exes, when)
         fulfilled_nodes = self._schedule_waiting_tasks(nodes, running_job_exes, when)
 
-        sys_tasks_scheduled = self._schedule_system_tasks(fulfilled_nodes)
+        sys_tasks_scheduled = self._schedule_system_tasks(fulfilled_nodes, job_type_resources)
 
         job_exe_count = 0
         if sys_tasks_scheduled:
@@ -87,6 +87,7 @@ class SchedulingManager(object):
             job_exe_count = self._schedule_new_job_exes(framework_id, fulfilled_nodes, job_types, job_type_limits,
                                                         job_type_resources, workspaces)
         else:
+            # TODO: this is a good place for a scheduler warning in the status JSON
             logger.warning('No new jobs scheduled due to waiting system tasks')
 
         if framework_id != scheduler_mgr.framework_id:
@@ -526,18 +527,55 @@ class SchedulingManager(object):
 
         return job_exe_count
 
-    def _schedule_system_tasks(self, nodes):
+    def _schedule_system_tasks(self, nodes, job_type_resources):
         """Schedules all system tasks for which there are sufficient resources and indicates whether all system tasks
         were able to be scheduled
 
         :param nodes: The dict of scheduling nodes stored by node ID where every node has fulfilled all waiting tasks
         :type nodes: dict
+        :param job_type_resources: The list of all of the job type resource requirements
+        :type job_type_resources: list
         :returns: True if all system tasks were scheduled as needed, False otherwise
         :rtype: bool
         """
 
-        # TODO: implement, make sure to log number and resources of waiting system tasks
-        return True
+        node_ids = set()
+        scheduled_tasks = 0
+        scheduled_resources = NodeResources()
+        waiting_tasks = 0
+        waiting_resources = NodeResources()
+
+        for task in system_task_mgr.get_tasks_to_schedule():
+            task_scheduled = False
+            best_scheduling_node = None
+            best_scheduling_score = None
+            for node in nodes.values():
+                # Check node for scheduling this system task
+                score = node.score_system_task_for_scheduling(task, job_type_resources)
+                if score is not None:
+                    # System task could be scheduled on this node, check its score
+                    if best_scheduling_node is None or score < best_scheduling_score:
+                        # This is the best node for scheduling so far
+                        best_scheduling_node = node
+                        best_scheduling_score = score
+
+            # Schedule the system task on the best node
+            if best_scheduling_node:
+                if best_scheduling_node.accept_system_task(task):
+                    task_scheduled = True
+                    node_ids.add(best_scheduling_node.id)
+
+            if task_scheduled:
+                scheduled_tasks += 1
+                scheduled_resources.add(task.get_resources())
+            else:
+                waiting_tasks += 1
+                waiting_resources.add(task.get_resources())
+
+        logger.info('Scheduled %d system task(s) with %s on %d node(s)', scheduled_tasks, scheduled_resources,
+                    len(node_ids))
+        logger.warning('%d system task(s) with %s are waiting to be scheduled', waiting_tasks, waiting_resources)
+        return waiting_tasks == 0
 
     def _schedule_waiting_tasks(self, nodes, running_job_exes, when):
         """Schedules all waiting tasks for which there are sufficient resources and updates the resource manager with

@@ -237,6 +237,15 @@ class Node(object):
 
         return self._state not in [Node.DEPRECATED, Node.OFFLINE]
 
+    def is_ready_for_system_task(self):
+        """Indicates whether this node is ready to launch a new system task
+
+        :returns: True if this node is ready to launch a new system task, False otherwise
+        :rtype: bool
+        """
+
+        return self._state == Node.READY
+
     def should_be_removed(self):
         """Indicates whether this node should be removed from the scheduler. If the node is no longer active and is also
         no longer online, there's no reason for the scheduler to continue to track it.
