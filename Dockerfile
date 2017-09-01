@@ -53,6 +53,9 @@ ARG GOSU_URL=https://github.com/tianon/gosu/releases/download/1.9/gosu-amd64
 ## By default install epel-release, if our base image already includes this we can set to 0
 ARG EPEL_INSTALL=1
 
+## By default build the docs
+ARG BUILD_DOCS=1
+
 # setup the scale user and sudo so mounts, etc. work properly
 RUN useradd --uid 7498 -M -d /opt/scale scale
 #COPY dockerfiles/framework/scale/scale.sudoers /etc/sudoers.d/scale
@@ -138,10 +141,7 @@ RUN yum install -y nodejs \
  && mkdir /opt/scale/ui \
  && cd /opt/scale/ui \
  && tar xvf /tmp/ui/deploy/scale-ui-master.tar.gz \
- && pip install -r /tmp/docs.txt \
- && make -C /opt/scale/docs code_docs html \
- # cleanup unneeded pip packages and cache
- && pip uninstall -y -r /tmp/docs.txt \
+ && if [ $BUILD_DOCS -eq 1 ]; then pip install -r /tmp/docs.txt; make -C /opt/scale/docs code_docs html; pip uninstall -y -r /tmp/docs.txt; fi \
  && yum -y history undo last \
  && yum clean all \
  && rm -fr /tmp/*

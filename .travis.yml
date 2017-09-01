@@ -40,7 +40,7 @@ install:
 
 script: 
 - ./travis-build.sh
-- if [ "${BUILD_DOCKER}" == "true" ]; then docker build .; fi
+- if [ "${BUILD_DOCKER}" == "true" ]; then docker build --build-arg BUILD_DOCS=0 .; fi
 - if [ "${BUILD_DOCS}" == "true" ]; then ./push-docs.sh; fi
 
 branches:
