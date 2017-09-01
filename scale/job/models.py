@@ -379,6 +379,15 @@ class JobManager(models.Manager):
 
         return list(self.select_related('job_type', 'job_type_rev').filter(id__in=job_ids).iterator())
 
+    def get_running_jobs(self):
+        """Returns all jobs that are currently RUNNING
+
+        :returns: The list of RUNNING jobs
+        :rtype: list
+        """
+
+        return self.filter(status='RUNNING').defer('data', 'results')
+
     def increment_max_tries(self, jobs):
         """Increments the max_tries of the given jobs to be one greater than their current number of executions. The
         caller must have obtained model locks on the job models.
@@ -1079,16 +1088,6 @@ class JobExecutionManager(models.Manager):
         job_exe = job_exe.get(pk=job_exe_id)
 
         return job_exe
-
-    def get_running_job_exes(self):
-        """Returns all job executions that are currently RUNNING on a node
-
-        :returns: The list of RUNNING job executions
-        :rtype: list of :class:`job.models.JobExecution`
-        """
-
-        job_exe_qry = JobExecution.objects.defer('stdout', 'stderr')
-        return job_exe_qry.filter(status='RUNNING')
 
 
 class JobExecution(models.Model):

@@ -2,20 +2,20 @@
 from __future__ import unicode_literals
 
 import logging
-import os
+import signal
 import sys
 
 from django.core.management.base import BaseCommand
 
-from error.exceptions import ScaleError, get_error_by_exception
-from job.models import JobExecution
-from util.retry import retry_database_query
+from scheduler.database.updater import DatabaseUpdater
+from util.exceptions import TerminatedCommand
 
 
 logger = logging.getLogger(__name__)
 
 
 GENERAL_FAIL_EXIT_CODE = 1
+SIGTERM_EXIT_CODE = 2
 
 
 class Command(BaseCommand):
@@ -24,18 +24,40 @@ class Command(BaseCommand):
 
     help = 'Performs a Scale database update'
 
+    def __init__(self):
+        """Constructor
+        """
+
+        super(Command, self).__init__()
+
+        self._updater = DatabaseUpdater()
+
     def handle(self, *args, **options):
         """See :meth:`django.core.management.base.BaseCommand.handle`.
 
         This method starts the command.
         """
 
-        logger.info('Starting Scale database update...')
+        # Register a listener to handle clean shutdowns
+        signal.signal(signal.SIGTERM, self._onsigterm)
+
+        logger.info('Starting Scale database update')
         try:
-            # TODO: implement, make sure to do sigterm
-            pass
+            self._updater.update()
+        except TerminatedCommand:
+            logger.warning('Scale database update stopped, exiting with code %d', SIGTERM_EXIT_CODE)
+            sys.exit(SIGTERM_EXIT_CODE)
         except Exception as ex:
-            logger.exception('Error performing Scale database update')
+            logger.exception('Scale database update encountered error, exiting with code %d', GENERAL_FAIL_EXIT_CODE)
             sys.exit(GENERAL_FAIL_EXIT_CODE)
 
         logger.info('Completed Scale database update')
+
+    def _onsigterm(self, signum, _frame):
+        """See signal callback registration: :py:func:`signal.signal`.
+
+        This callback performs a clean shutdown when a TERM signal is received.
+        """
+
+        logger.info('Scale database update received sigterm, telling updater to stop')
+        self._updater.stop()
