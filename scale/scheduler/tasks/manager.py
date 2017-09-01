@@ -10,6 +10,7 @@ from django.utils.timezone import now
 from job.tasks.update import TaskStatusUpdate
 from scheduler.manager import scheduler_mgr
 from scheduler.tasks.db_update_task import DatabaseUpdateTask
+from util.parse import datetime_to_string
 
 
 logger = logging.getLogger(__name__)
@@ -30,6 +31,22 @@ class SystemTaskManager(object):
         self._when_db_update_completed = None
 
         self._lock = threading.Lock()
+
+    def generate_status_json(self, status_dict):
+        """Generates the portion of the status JSON that describes system-level information
+
+        :param status_dict: The status JSON dict
+        :type status_dict: dict
+        """
+
+        with self._lock:
+            is_db_update_completed = self._is_db_update_completed
+            when_db_update_completed = self._when_db_update_completed
+
+        db_update_dict = {'is_completed': is_db_update_completed}
+        if when_db_update_completed:
+            db_update_dict['completed'] = datetime_to_string(when_db_update_completed)
+        status_dict['system'] = {'database_update': db_update_dict}
 
     def get_tasks_to_kill(self):
         """Returns a list of system tasks that need to be killed as soon as possible

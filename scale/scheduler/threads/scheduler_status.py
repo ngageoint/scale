@@ -11,6 +11,7 @@ from scheduler.models import Scheduler
 from scheduler.node.manager import node_mgr
 from scheduler.resources.manager import resource_mgr
 from scheduler.sync.job_type_manager import job_type_mgr
+from scheduler.tasks.manager import system_task_mgr
 from scheduler.threads.base_thread import BaseSchedulerThread
 from util.parse import datetime_to_string
 
@@ -43,6 +44,7 @@ class SchedulerStatusThread(BaseSchedulerThread):
 
         status_dict = {'timestamp': datetime_to_string(when)}
         scheduler_mgr.generate_status_json(status_dict)
+        system_task_mgr.generate_status_json(status_dict)
         node_mgr.generate_status_json(status_dict)
         resource_mgr.generate_status_json(status_dict)
         job_exe_mgr.generate_status_json(status_dict['nodes'], when)
