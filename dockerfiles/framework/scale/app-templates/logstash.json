@@ -38,12 +38,12 @@
     },
     "healthChecks": [
         {
-            "protocol": "HTTP",
-            "path": "/",
-            "gracePeriodSeconds": 5,
-            "intervalSeconds": 10,
+            "protocol": "MESOS_HTTP",
+            "path": "/"
+            "gracePeriodSeconds": 300,
+            "intervalSeconds": 30,
             "portIndex": 1,
-            "timeoutSeconds": 10,
+            "timeoutSeconds": 15,
             "maxConsecutiveFailures": 3
         }
     ],
