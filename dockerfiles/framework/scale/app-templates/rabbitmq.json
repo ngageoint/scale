@@ -32,12 +32,12 @@
     },
     "healthChecks": [
         {
-            "protocol": "TCP",
+            "protocol": "MESOS_TCP",
             "gracePeriodSeconds": 300,
-            "intervalSeconds": 60,
-            "timeoutSeconds": 20,
-            "maxConsecutiveFailures": 3,
-            "portIndex": 0
+            "intervalSeconds": 30,
+            "portIndex": 0,
+            "timeoutSeconds": 15,
+            "maxConsecutiveFailures": 3
         }
     ],
     "uris": []

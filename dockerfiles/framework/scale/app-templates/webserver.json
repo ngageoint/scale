@@ -43,12 +43,12 @@
     },
     "healthChecks": [
         {
-            "path": "/api/v4/version/",
-            "protocol": "TCP",
+            "path": "/api/v5/version/",
+            "protocol": "MESOS_HTTP",
             "gracePeriodSeconds": 300,
-            "intervalSeconds": 20,
+            "intervalSeconds": 30,
             "portIndex": 0,
-            "timeoutSeconds": 20,
+            "timeoutSeconds": 15,
             "maxConsecutiveFailures": 3
         }
     ],
