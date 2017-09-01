@@ -60,7 +60,7 @@ RUN useradd --uid 7498 -M -d /opt/scale scale
 # install required packages for scale execution
 COPY dockerfiles/framework/scale/mesos-0.25.0-py2.7-linux-x86_64.egg /tmp/
 COPY dockerfiles/framework/scale/*shim.sh /tmp/
-COPY dockerfiles/framework/scale/marathon-python /tmp/
+COPY dockerfiles/framework/scale/marathon-python /tmp/marathon-python
 COPY scale/pip/production.txt /tmp/
 RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
  && yum install -y \
