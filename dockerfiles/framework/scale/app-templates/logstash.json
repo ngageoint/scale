@@ -39,7 +39,7 @@
     "healthChecks": [
         {
             "protocol": "MESOS_HTTP",
-            "path": "/"
+            "path": "/",
             "gracePeriodSeconds": 300,
             "intervalSeconds": 30,
             "portIndex": 1,
