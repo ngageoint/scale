@@ -9,6 +9,7 @@ addons:
     packages:
       - libgdal-dev
       - libproj-dev
+
 matrix:
   include:
     - os: linux
@@ -21,6 +22,12 @@ matrix:
 
     - os: linux
       env: BUILD_DOCS='true'
+      
+    - os: linux
+      env: BUILD_DOCKER='true'
+      sudo: required
+      services: 
+        - docker
 
 cache: pip
 
@@ -30,8 +37,10 @@ filter_secrets: false
 install:
 - if [ "${RUN_TESTS}" == "true" ]; then pip install -q -r scale/pip/requirements.txt; fi
 - if [ "${BUILD_DOCS}" == "true" ]; then pip install -q -r scale/pip/docs.txt -r scale/pip/production.txt; fi
+
 script: 
 - ./travis-build.sh
+- if [ "${BUILD_DOCKER}" == "true" ]; then docker build --build-arg BUILD_DOCS=0 .; fi
 - if [ "${BUILD_DOCS}" == "true" ]; then ./push-docs.sh; fi
 
 branches:
