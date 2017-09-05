@@ -225,7 +225,7 @@ class JobExecutionManager(object):
         # TODO: saving job_exe_end models here for now, later these models should get stored and sent via messaging
         # backend in a background thread
         job_exe_end = running_job_exe.create_job_exe_end_model()
-        job_exe_end.save()
+        job_exe_end.save(force_insert=True)
 
         # TODO: handling job completion and failure here for now, later these will be sent via messaging backend in a
         # background thread
