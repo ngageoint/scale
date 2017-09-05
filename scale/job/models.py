@@ -70,8 +70,13 @@ class JobManager(models.Manager):
         job.last_status_change = when
 
         # Query output from completed job execution
-        job_exe_output = JobExecutionOutput.objects.get(job_id=job.id, exe_num=job.num_exes)
-        job.results = job_exe_output.get_output().get_dict()
+        try:
+            job_exe_output = JobExecutionOutput.objects.get(job_id=job.id, exe_num=job.num_exes)
+            job.results = job_exe_output.get_output().get_dict()
+        except JobExecutionOutput.DoesNotExist:
+            # This will work for now (system jobs do not have output), but will need to be changed once the saving of
+            # output becomes asynchronous
+            job.results = JobResults()
 
         job.save()
 

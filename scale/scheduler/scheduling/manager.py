@@ -574,9 +574,11 @@ class SchedulingManager(object):
                 waiting_tasks += 1
                 waiting_resources.add(task.get_resources())
 
-        logger.info('Scheduled %d system task(s) with %s on %d node(s)', scheduled_tasks, scheduled_resources,
-                    len(node_ids))
-        logger.warning('%d system task(s) with %s are waiting to be scheduled', waiting_tasks, waiting_resources)
+        if scheduled_tasks:
+            logger.info('Scheduled %d system task(s) with %s on %d node(s)', scheduled_tasks, scheduled_resources,
+                        len(node_ids))
+        if waiting_tasks:
+            logger.warning('%d system task(s) with %s are waiting to be scheduled', waiting_tasks, waiting_resources)
         return waiting_tasks == 0
 
     def _schedule_waiting_tasks(self, nodes, running_job_exes, when):
