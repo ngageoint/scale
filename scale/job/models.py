@@ -959,6 +959,16 @@ class JobExecutionManager(models.Manager):
         job_exe = job_exe.defer('stdout', 'stderr')
         job_exe = job_exe.get(pk=job_exe_id)
 
+        # Populate command arguments
+        job_exe.command_arguments = job_exe.get_execution_configuration().get_args('main')
+
+        # Populate resource fields
+        resources = job_exe.get_resources()
+        job_exe.cpus_scheduled = resources.cpus
+        job_exe.mem_scheduled = resources.mem
+        job_exe.disk_total_scheduled = resources.disk
+        job_exe.disk_out_scheduled = job_exe.disk_total_scheduled - job_exe.input_file_size
+
         # Populate old task fields with data from task results JSON
         try:
             if job_exe.jobexecutionend:

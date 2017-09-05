@@ -187,8 +187,8 @@ class JobExecutionBaseSerializer(ModelIdSerializer):
     created = serializers.DateTimeField()
     queued = serializers.DateTimeField()
     started = serializers.DateTimeField()
-    ended = serializers.DateTimeField()
-    last_modified = serializers.DateTimeField()
+    ended = serializers.DateTimeField(source='jobexecutionend.ended')
+    last_modified = serializers.DateTimeField(source='created')
 
     job = ModelIdSerializer()
     node = ModelIdSerializer()
