@@ -10,8 +10,10 @@ from django.utils.timezone import now
 from job.configuration.configurators import QueuedExecutionConfigurator
 from job.configuration.data.job_data import JobData
 from job.configuration.interface.job_interface import JobInterface
+from job.configuration.json.job.job_config import JobConfiguration
+from node.resources.json.resources import Resources
 from node.resources.node_resources import NodeResources
-from node.resources.resource import Disk, Mem
+from node.resources.resource import Cpus, Disk, Mem
 
 MIN_MEM = 128.0
 MIN_DISK = 0.0
@@ -25,7 +27,7 @@ def get_job_data(self):
 
     return JobData(self.data)
 
-def get_job_interface(self):
+def job_get_job_interface(self):
     """Returns the interface for this job
 
     :returns: The interface for this job
@@ -34,7 +36,7 @@ def get_job_interface(self):
 
     return JobInterface(self.job_type_rev.interface)
 
-def get_resources(self):
+def job_get_resources(self):
     """Returns the resources required for this job
 
     :returns: The required resources
@@ -61,6 +63,49 @@ def get_resources(self):
     resources.add(NodeResources([Mem(memory_required), Disk(disk_out_required + disk_in_required)]))
     return resources
 
+def get_job_configuration(self):
+    """Returns default job configuration for this job type
+
+    :returns: The default job configuration for this job type
+    :rtype: :class:`job.configuration.json.job.job_config.JobConfiguration`
+    """
+
+    return JobConfiguration(self.configuration)
+
+def job_type_get_job_interface(self):
+    """Returns the interface for running jobs of this type
+
+    :returns: The job interface for this type
+    :rtype: :class:`job.configuration.interface.job_interface.JobInterface`
+    """
+
+    return JobInterface(self.interface)
+
+def job_type_get_resources(self):
+    """Returns the resources required for jobs of this type
+
+    :returns: The required resources
+    :rtype: :class:`node.resources.node_resources.NodeResources`
+    """
+
+    resources = Resources(self.custom_resources).get_node_resources()
+    resources.remove_resource('cpus')
+    resources.remove_resource('mem')
+    resources.remove_resource('disk')
+    cpus = max(self.cpus_required, 0.25)
+    resources.add(NodeResources([Cpus(cpus)]))
+    return resources
+
+def get_secrets_key(self):
+    """Returns the reference key for job type secrets stored in the secrets backend.
+
+    :returns: The job_type name and version concatenated
+    :rtype: str
+    """
+
+    return '-'.join([self.name, self.version]).replace('.', '_')
+
+
 
 class Migration(migrations.Migration):
 
@@ -77,6 +122,7 @@ class Migration(migrations.Migration):
         # Go through all of the queued job models and re-populate the queue table
         when_queued = now()
         Job = apps.get_model('job', 'Job')
+        JobType = apps.get_model('job', 'JobType')
         JobExecution = apps.get_model('job', 'JobExecution')
         FileAncestryLink = apps.get_model('product', 'FileAncestryLink')
         Queue = apps.get_model('queue', 'Queue')
@@ -84,8 +130,14 @@ class Migration(migrations.Migration):
 
         # Attach needed methods to Job model
         Job.get_job_data = get_job_data
-        Job.get_job_interface = get_job_interface
-        Job.get_resources = get_resources
+        Job.get_job_interface = job_get_job_interface
+        Job.get_resources = job_get_resources
+
+        # Attach needed methods to JobType model
+        JobType.get_job_configuration = get_job_configuration
+        JobType.get_job_interface = job_type_get_job_interface
+        JobType.get_resources = job_type_get_resources
+        JobType.get_secrets_key = get_secrets_key
 
         total_count = Job.objects.filter(status='QUEUED').count()
         print 'Populating new queue table for %s queued jobs' % str(total_count)
