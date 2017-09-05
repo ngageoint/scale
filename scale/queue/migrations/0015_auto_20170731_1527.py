@@ -16,27 +16,45 @@ from node.resources.resource import Disk, Mem
 MIN_MEM = 128.0
 MIN_DISK = 0.0
 
-def get_resources(job):
+def get_job_data(self):
+    """Returns the data for this job
+
+    :returns: The data for this job
+    :rtype: :class:`job.configuration.data.job_data.JobData`
+    """
+
+    return JobData(self.data)
+
+def get_job_interface(self):
+    """Returns the interface for this job
+
+    :returns: The interface for this job
+    :rtype: :class:`job.configuration.interface.job_interface.JobInterface`
+    """
+
+    return JobInterface(self.job_type_rev.interface)
+
+def get_resources(self):
     """Returns the resources required for this job
 
     :returns: The required resources
     :rtype: :class:`node.resources.node_resources.NodeResources`
     """
 
-    resources = job.job_type.get_resources()
+    resources = self.job_type.get_resources()
 
     # Calculate memory required in MiB rounded up to the nearest whole MiB
-    multiplier = job.job_type.mem_mult_required
-    const = job.job_type.mem_const_required
-    disk_in_required = job.disk_in_required
+    multiplier = self.job_type.mem_mult_required
+    const = self.job_type.mem_const_required
+    disk_in_required = self.disk_in_required
     if not disk_in_required:
         disk_in_required = 0.0
     memory_mb = long(math.ceil(multiplier * disk_in_required + const))
     memory_required = max(memory_mb, MIN_MEM)
 
     # Calculate output space required in MiB rounded up to the nearest whole MiB
-    multiplier = job.job_type.disk_out_mult_required
-    const = job.job_type.disk_out_const_required
+    multiplier = self.job_type.disk_out_mult_required
+    const = self.job_type.disk_out_const_required
     output_size_mb = long(math.ceil(multiplier * disk_in_required + const))
     disk_out_required = max(output_size_mb, MIN_DISK)
 
@@ -63,6 +81,12 @@ class Migration(migrations.Migration):
         FileAncestryLink = apps.get_model('product', 'FileAncestryLink')
         Queue = apps.get_model('queue', 'Queue')
         ScaleFile = apps.get_model('storage', 'ScaleFile')
+
+        # Attach needed methods to Job model
+        Job.get_job_data = get_job_data
+        Job.get_job_interface = get_job_interface
+        Job.get_resources = get_resources
+
         total_count = Job.objects.filter(status='QUEUED').count()
         print 'Populating new queue table for %s queued jobs' % str(total_count)
         done_count = 0
@@ -78,7 +102,7 @@ class Migration(migrations.Migration):
             input_files = {}
             input_file_ids = set()
             for job in job_qry:
-                input_file_ids.update(JobData(job.data).get_input_file_ids())
+                input_file_ids.update(job.get_job_data().get_input_file_ids())
 
             if input_file_ids:
                 for input_file in ScaleFile.objects.get_files(input_file_ids):
@@ -98,9 +122,9 @@ class Migration(migrations.Migration):
                 queue.is_canceled = False
                 queue.priority = job.priority
                 queue.timeout = job.timeout
-                queue.interface = JobInterface(job.job_type_rev.interface).get_dict()
+                queue.interface = job.get_job_interface().get_dict()
                 queue.configuration = config.get_dict()
-                queue.resources = get_resources(job).get_json().get_dict()
+                queue.resources = job.get_resources().get_json().get_dict()
                 queue.queued = when_queued
                 queues.append(queue)
 
