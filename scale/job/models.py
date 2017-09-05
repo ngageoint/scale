@@ -76,7 +76,7 @@ class JobManager(models.Manager):
         except JobExecutionOutput.DoesNotExist:
             # This will work for now (system jobs do not have output), but will need to be changed once the saving of
             # output becomes asynchronous
-            job.results = JobResults()
+            job.results = JobResults().get_dict()
 
         job.save()
 
