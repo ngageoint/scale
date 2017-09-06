@@ -38,11 +38,13 @@ RESOURCES_SCHEMA = {
 class Resources(object):
     """Represents the schema for a set of resources"""
 
-    def __init__(self, resources=None):
+    def __init__(self, resources=None, validate=True):
         """Creates a resources object from the given dict
 
         :param resources: The resources dict
         :type resources: dict
+        :param validate: Whether to perform validation on the JSON schema
+        :type validate: bool
 
         :raises :class:`node.resources.exceptions.InvalidResources`: If the given resources dict is invalid
         """
@@ -58,7 +60,8 @@ class Resources(object):
             raise InvalidResources('%s is an invalid version' % self._resources['version'])
 
         try:
-            validate(resources, RESOURCES_SCHEMA)
+            if validate:
+                validate(resources, RESOURCES_SCHEMA)
         except ValidationError as validation_error:
             raise InvalidResources(validation_error)
 

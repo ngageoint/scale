@@ -432,9 +432,6 @@ class SchedulingManager(object):
         :rtype: bool
         """
 
-        # TODO: remove
-        started = now()
-
         best_scheduling_node = None
         best_scheduling_score = None
         best_reservation_node = None
@@ -469,11 +466,6 @@ class SchedulingManager(object):
         # Could not schedule job execution, reserve a node to run this execution if possible
         if best_reservation_node:
             del nodes[best_reservation_node.node_id]
-
-        # TODO: remove
-        duration = now() - started
-        msg = '_schedule_new_job_exe() took %.3f seconds'
-        logger.info(msg, duration.total_seconds())
 
         return False
 

@@ -650,7 +650,7 @@ class Queue(models.Model):
         :rtype: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         """
 
-        return ExecutionConfiguration(self.configuration)
+        return ExecutionConfiguration(self.configuration, validate=False)
 
     def get_job_interface(self):
         """Returns the interface for this queued job
@@ -659,7 +659,7 @@ class Queue(models.Model):
         :rtype: :class:`job.configuration.interface.job_interface.JobInterface`
         """
 
-        return JobInterface(self.interface)
+        return JobInterface(self.interface, validate=False)
 
     def get_resources(self):
         """Returns the resources required by this queued job
@@ -668,7 +668,7 @@ class Queue(models.Model):
         :rtype: :class:`node.resources.node_resources.NodeResources`
         """
 
-        return Resources(self.resources).get_node_resources()
+        return Resources(self.resources, validate=False).get_node_resources()
 
     class Meta(object):
         """meta information for the db"""
