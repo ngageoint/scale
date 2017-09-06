@@ -221,13 +221,13 @@ class ExecutionConfiguration(object):
     """Represents a job execution configuration
     """
 
-    def __init__(self, configuration=None, validate=True):
+    def __init__(self, configuration=None, do_validate=True):
         """Creates an execution configuration from the given JSON dict
 
         :param configuration: The JSON dictionary
         :type configuration: dict
-        :param validate: Whether to perform validation on the JSON schema
-        :type validate: bool
+        :param do_validate: Whether to perform validation on the JSON schema
+        :type do_validate: bool
 
         :raises :class:`job.configuration.exceptions.InvalidExecutionConfiguration`: If the JSON is invalid
         """
@@ -245,7 +245,7 @@ class ExecutionConfiguration(object):
         self._populate_default_values()
 
         try:
-            if validate:
+            if do_validate:
                 validate(configuration, EXE_CONFIG_SCHEMA)
         except ValidationError as validation_error:
             raise InvalidExecutionConfiguration(validation_error)

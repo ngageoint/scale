@@ -202,14 +202,14 @@ JOB_INTERFACE_SCHEMA = {
 class JobInterface(object):
     """Represents the interface for executing a job"""
 
-    def __init__(self, definition, validate=True):
+    def __init__(self, definition, do_validate=True):
         """Creates a job interface from the given definition. If the definition is invalid, a
         :class:`job.configuration.interface.exceptions.InvalidInterfaceDefinition` exception will be thrown.
 
         :param definition: The interface definition
         :type definition: dict
-        :param validate: Whether to perform validation on the JSON schema
-        :type validate: bool
+        :param do_validate: Whether to perform validation on the JSON schema
+        :type do_validate: bool
         """
 
         self.definition = definition
@@ -230,7 +230,7 @@ class JobInterface(object):
             self.convert_interface(definition)
 
         try:
-            if validate:
+            if do_validate:
                 validate(definition, JOB_INTERFACE_SCHEMA)
         except ValidationError as validation_error:
             raise InvalidInterfaceDefinition(validation_error)
