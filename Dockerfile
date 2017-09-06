@@ -2,7 +2,7 @@ FROM centos:centos7
 MAINTAINER Scale Developers <https://github.com/ngageoint/scale>
 
 LABEL \
-    VERSION="5.1.0-snapshot" \
+    VERSION="5.1.1-snapshot" \
     RUN="docker run -d geoint/scale scale_scheduler" \
     SOURCE="https://github.com/ngageoint/scale" \
     DESCRIPTION="Processing framework for containerized algorithms" \
@@ -53,6 +53,9 @@ ARG GOSU_URL=https://github.com/tianon/gosu/releases/download/1.9/gosu-amd64
 ## By default install epel-release, if our base image already includes this we can set to 0
 ARG EPEL_INSTALL=1
 
+## By default build the docs
+ARG BUILD_DOCS=1
+
 # setup the scale user and sudo so mounts, etc. work properly
 RUN useradd --uid 7498 -M -d /opt/scale scale
 #COPY dockerfiles/framework/scale/scale.sudoers /etc/sudoers.d/scale
@@ -82,10 +85,11 @@ RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
          make \
  && yum install -y \
          gcc \
+         wget \
          python-devel \
  # Shim in any environment specific configuration from script
  && sh /tmp/env-shim.sh \
- && pip install marathon==0.8.14 mesos.interface==0.25.0 protobuf==2.5.0 requests \
+ && pip install marathon==0.9.1 mesos.interface==0.25.0 protobuf==2.5.0 requests \
  && easy_install /tmp/*.egg \
  && pip install -r /tmp/production.txt \
  && curl -o /usr/bin/gosu -fsSL ${GOSU_URL} \
@@ -130,10 +134,7 @@ RUN yum install -y nodejs \
  && mkdir /opt/scale/ui \
  && cd /opt/scale/ui \
  && tar xvf /tmp/ui/deploy/scale-ui-master.tar.gz \
- && pip install -r /tmp/docs.txt \
- && make -C /opt/scale/docs code_docs html \
- # cleanup unneeded pip packages and cache
- && pip uninstall -y -r /tmp/docs.txt \
+ && if [ $BUILD_DOCS -eq 1 ]; then pip install -r /tmp/docs.txt; make -C /opt/scale/docs code_docs html; pip uninstall -y -r /tmp/docs.txt; fi \
  && yum -y history undo last \
  && yum clean all \
  && rm -fr /tmp/*

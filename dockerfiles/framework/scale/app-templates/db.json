@@ -26,11 +26,11 @@
     },
     "healthChecks": [
         {
-            "protocol": "TCP",
+            "protocol": "MESOS_TCP",
             "gracePeriodSeconds": 300,
-            "intervalSeconds": 20,
+            "intervalSeconds": 30,
             "portIndex": 0,
-            "timeoutSeconds": 20,
+            "timeoutSeconds": 15,
             "maxConsecutiveFailures": 3
         }
     ],
