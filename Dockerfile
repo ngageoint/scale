@@ -63,7 +63,6 @@ RUN useradd --uid 7498 -M -d /opt/scale scale
 # install required packages for scale execution
 COPY dockerfiles/framework/scale/mesos-0.25.0-py2.7-linux-x86_64.egg /tmp/
 COPY dockerfiles/framework/scale/*shim.sh /tmp/
-COPY dockerfiles/framework/scale/marathon-python /tmp/marathon-python
 COPY scale/pip/production.txt /tmp/
 RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
  && yum install -y \
@@ -90,13 +89,7 @@ RUN if [ $EPEL_INSTALL -eq 1 ]; then yum install -y epel-release; fi\
          python-devel \
  # Shim in any environment specific configuration from script
  && sh /tmp/env-shim.sh \
- # Stupid Marathon breaking APIs again, so we have to patch marathon python
- && cd /tmp/marathon-python \
- && python setup.py install \
- && cd - \
- # Revert to using marathon python package when PR is in and a release is made.
- #&& pip install marathon==0.8.14 \
- && pip install mesos.interface==0.25.0 protobuf==2.5.0 requests \
+ && pip install marathon==0.9.1 mesos.interface==0.25.0 protobuf==2.5.0 requests \
  && easy_install /tmp/*.egg \
  && pip install -r /tmp/production.txt \
  && curl -o /usr/bin/gosu -fsSL ${GOSU_URL} \
