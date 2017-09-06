@@ -169,9 +169,11 @@ class JobExecutionManager(object):
         """
 
         job_ids = []
+        running_job_exes = []
         with self._lock:
             for running_job_exe in self._running_job_exes.values():
                 job_ids.append(running_job_exe.job_id)
+                running_job_exes.append(running_job_exe)
 
         # Query job models from database to check if any running executions have been canceled
         job_models = {}
@@ -182,7 +184,7 @@ class JobExecutionManager(object):
         finished_job_exes = []
         when_canceled = now()
         with self._lock:
-            for running_job_exe in self._running_job_exes.values():
+            for running_job_exe in running_job_exes:
                 job_model = job_models[running_job_exe.job_id]
                 # If the job has been canceled or the job has a newer execution, this execution must be canceled
                 if job_model.status == 'CANCELED' or job_model.num_exes > running_job_exe.exe_num:
