@@ -2139,7 +2139,8 @@ class JobTypeManager(models.Manager):
         # Scrub configuration for secrets
         if job_type.configuration:
             configuration = JobConfiguration(job_type.configuration)
-            configuration.validate(job_type.interface)
+            interface = JobInterface(job_type.interface)
+            configuration.validate(interface.get_dict())
             job_type.configuration = configuration.get_dict()
 
         # Add recent performance statistics
