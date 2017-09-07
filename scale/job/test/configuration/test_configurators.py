@@ -503,11 +503,11 @@ class TestScheduledExecutionConfigurator(TestCase):
                                                {'flag': 'env', 'value': 'ALLOCATED_DISK=%.1f' % resources.disk},
                                                {'flag': 'env', 'value': 'SCALE_DB_PASS=TEST_PASSWORD'},
                                                {'flag': 'env', 'value': 'SCALE_DB_PORT=TEST_PORT'},
-                                               {'flag': 'volume', 'value': '$(docker volume create --name %s):%s:rw' %
+                                               {'flag': 'volume', 'value': '%s:%s:rw' %
                                                                            (output_vol_name, SCALE_JOB_EXE_OUTPUT_PATH)},
                                                {'flag': 'volume',
                                                 'value': '/w_1/host/path:%s:ro' % input_wksp_vol_path},
-                                               {'flag': 'volume', 'value': '$(docker volume create --name %s):%s:rw' %
+                                               {'flag': 'volume', 'value': '%s:%s:rw' %
                                                                            (input_vol_name, SCALE_JOB_EXE_INPUT_PATH)}
 
                                                ]}

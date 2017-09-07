@@ -51,6 +51,11 @@ class Volume(object):
             # Host mount is special, use host path for volume name
             volume_name = self.host_path
         else:
+            # TODO: this is a hack, right now embedding volume create commands will fail when passed through Mesos, this
+            # means that we need to just have Docker create the volumes implicitly with no driver or opt params
+            # available to us
+            is_created = True
+
             if is_created:
                 # Re-use existing volume
                 volume_name = self.name

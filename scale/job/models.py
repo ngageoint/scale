@@ -973,7 +973,7 @@ class JobExecutionManager(models.Manager):
         try:
             if job_exe.jobexecutionend:
                 for task_dict in job_exe.jobexecutionend.get_task_results().get_dict()['tasks']:
-                    if task_dict['was_started']:
+                    if 'was_started' in task_dict and task_dict['was_started']:
                         if task_dict['type'] == 'pre':
                             job_exe.pre_started = dateparse.parse_datetime(task_dict['started'])
                             job_exe.pre_completed = dateparse.parse_datetime(task_dict['ended'])
