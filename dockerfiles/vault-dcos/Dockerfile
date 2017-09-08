@@ -1,8 +1,10 @@
-FROM alpine
+ARG IMAGE=alpine
+FROM $IMAGE
 
 ENV VAULT_VERSION 0.7.0
+ARG VAULT_ZIP=https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip
 
-ADD https://releases.hashicorp.com/vault/${VAULT_VERSION}/vault_${VAULT_VERSION}_linux_amd64.zip vault.zip
+ADD $VAULT_ZIP vault.zip
 RUN apk add --update unzip openssl ca-certificates curl && \
     unzip vault.zip && \
     rm vault.zip && \
