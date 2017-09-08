@@ -1,4 +1,5 @@
-FROM centos:centos7
+ARG IMAGE=centos:centos7
+FROM $IMAGE
 MAINTAINER Scale Developers <https://github.com/ngageoint/scale>
 
 LABEL \

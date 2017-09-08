@@ -45,8 +45,6 @@ echo -e "\nChange the revision on master"
 tput sgr0
 sed -i "" -e "s/^VERSION = version_info_t.*$/VERSION = version_info_t($1, $2, $3, '-snapshot')/" scale/scale/__init__.py
 sed -i "" -e "s/^VERSION = version_info_t.*$/VERSION = version_info_t($1, $2, $3, '-snapshot___BUILDNUM___')/" scale/scale/__init__.py.template
-sed -i "" -e 's/VERSION="[^"]*"/VERSION="'$1'.'$2'.'$3'-snapshot"/g' Dockerfile
-sed -i "" -e 's/VERSION="[^"]*"/VERSION="'$1'.'$2'.'$3'-snapshot"/g' dockerfiles/logstash-elastic-ha/Dockerfile
 grep "VERSION = " scale/scale/__init__.py scale/scale/__init__.py.template
 grep "VERSION=" Dockerfile dockerfiles/logstash-elastic-ha/Dockerfile
 
@@ -66,8 +64,6 @@ echo -e "\nChange the revision on the release"
 tput sgr0
 sed -i "" -e "s/^VERSION = version_info_t.*$/VERSION = version_info_t($1, $2, $3, '')/" scale/scale/__init__.py
 sed -i "" -e "s/^VERSION = version_info_t.*$/VERSION = version_info_t($1, $2, $3, '___BUILDNUM___')/" scale/scale/__init__.py.template
-sed -i "" -e 's/VERSION="[^"]*"/VERSION="'$1'.'$2'.'$3'"/g' Dockerfile
-sed -i "" -e 's/VERSION="[^"]*"/VERSION="'$1'.'$2'.'$3'"/g' dockerfiles/logstash-elastic-ha/Dockerfile
 grep "VERSION = " scale/scale/__init__.py scale/scale/__init__.py.template
 grep "VERSION=" Dockerfile dockerfiles/logstash-elastic-ha/Dockerfile
 
