@@ -31,6 +31,20 @@ if [ "${BUILD_DOCS}" == "true" ]
 then
     cd $root/scale/docs
     make code_docs html
+    cd $root
+    ./push-docs.sh
 fi
+
+if [ "${BUILD_DOCKER}" == "true" ]
+then
+    cd $root
+    # Use DIND to build test because version in Travis doesn't support ARG / FROM
+    docker run --privileged --name dind -d docker:stable-dind
+    docker run --volume $root:/scale --link dind \
+        -e DOCKER_HOST=tcp://dind:2375 \
+        docker:stable \
+        docker build --build-arg BUILD_DOCS=0 /scale
+fi
+
 
 cd $root
