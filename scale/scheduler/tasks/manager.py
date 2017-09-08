@@ -30,6 +30,8 @@ class SystemTaskManager(object):
         self._last_db_update_task_failure = None
         self._when_db_update_completed = None
 
+        self._services = []
+
         self._lock = threading.Lock()
 
     def generate_status_json(self, status_dict):
@@ -55,7 +57,13 @@ class SystemTaskManager(object):
         :rtype: list
         """
 
-        return []
+        tasks = []
+
+        with self._lock:
+            for service in self._services:
+                tasks.extend(service.get_tasks_to_kill())
+
+        return tasks
 
     def get_tasks_to_schedule(self, when):
         """Returns a list of system tasks that need to be scheduled as soon as possible
@@ -77,6 +85,9 @@ class SystemTaskManager(object):
 
             if self._db_update_task and not self._db_update_task.has_been_launched:
                 tasks.append(self._db_update_task)
+
+            for service in self._services:
+                tasks.extend(service.get_tasks_to_schedule())
 
         return tasks
 
@@ -105,6 +116,9 @@ class SystemTaskManager(object):
                     self._db_update_task = None
                 if self._db_update_task and self._db_update_task.has_ended:
                     self._db_update_task = None
+            else:
+                for service in self._services:
+                    service.handle_task_update(task_update)
 
 
 system_task_mgr = SystemTaskManager()
