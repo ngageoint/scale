@@ -277,6 +277,111 @@
 </ul>
 </div>
 </div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-job.test.configuration.test_configurators">
+<span id="job-test-configuration-test-configurators-module"></span><h2>job.test.configuration.test_configurators module<a class="headerlink" href="#module-job.test.configuration.test_configurators" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="job.test.configuration.test_configurators.TestQueuedExecutionConfigurator">
+<em class="property">class </em><code class="descclassname">job.test.configuration.test_configurators.</code><code class="descname">TestQueuedExecutionConfigurator</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.test_configurators.TestQueuedExecutionConfigurator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="attribute">
+<dt id="job.test.configuration.test_configurators.TestQueuedExecutionConfigurator.fixtures">
+<code class="descname">fixtures</code><em class="property"> = [u'ingest_job_types.json']</em><a class="headerlink" href="#job.test.configuration.test_configurators.TestQueuedExecutionConfigurator.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.test_configurators.TestQueuedExecutionConfigurator.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.test_configurators.TestQueuedExecutionConfigurator.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.test_configurators.TestQueuedExecutionConfigurator.test_configure_queued_job_ingest_with_new_workspace">
+<code class="descname">test_configure_queued_job_ingest_with_new_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.test_configurators.TestQueuedExecutionConfigurator.test_configure_queued_job_ingest_with_new_workspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling configure_queued_job() on an ingest job with a new workspace</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.test_configurators.TestQueuedExecutionConfigurator.test_configure_queued_job_ingest_without_new_workspace">
+<code class="descname">test_configure_queued_job_ingest_without_new_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.test_configurators.TestQueuedExecutionConfigurator.test_configure_queued_job_ingest_without_new_workspace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling configure_queued_job() on an ingest job without a new workspace</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.test_configurators.TestQueuedExecutionConfigurator.test_configure_queued_job_old_ingest">
+<code class="descname">test_configure_queued_job_old_ingest</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.test_configurators.TestQueuedExecutionConfigurator.test_configure_queued_job_old_ingest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling configure_queued_job() on an old (before revision 3) ingest job</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.test_configurators.TestQueuedExecutionConfigurator.test_configure_queued_job_regular">
+<code class="descname">test_configure_queued_job_regular</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.test_configurators.TestQueuedExecutionConfigurator.test_configure_queued_job_regular" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling configure_queued_job() on a regular (non-system) job</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.test_configurators.TestQueuedExecutionConfigurator.test_configure_queued_job_scan">
+<code class="descname">test_configure_queued_job_scan</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.test_configurators.TestQueuedExecutionConfigurator.test_configure_queued_job_scan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling configure_queued_job() on a Scan job</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.test_configurators.TestQueuedExecutionConfigurator.test_configure_queued_job_strike">
+<code class="descname">test_configure_queued_job_strike</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.test_configurators.TestQueuedExecutionConfigurator.test_configure_queued_job_strike" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling configure_queued_job() on a Strike job</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.test.configuration.test_configurators.TestScheduledExecutionConfigurator">
+<em class="property">class </em><code class="descclassname">job.test.configuration.test_configurators.</code><code class="descname">TestScheduledExecutionConfigurator</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.test_configurators.TestScheduledExecutionConfigurator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="attribute">
+<dt id="job.test.configuration.test_configurators.TestScheduledExecutionConfigurator.fixtures">
+<code class="descname">fixtures</code><em class="property"> = [u'ingest_job_types.json']</em><a class="headerlink" href="#job.test.configuration.test_configurators.TestScheduledExecutionConfigurator.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.test_configurators.TestScheduledExecutionConfigurator.setUp">
+<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.test_configurators.TestScheduledExecutionConfigurator.setUp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.test_configurators.TestScheduledExecutionConfigurator.test_configure_scheduled_job_ingest">
+<code class="descname">test_configure_scheduled_job_ingest</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.test_configurators.TestScheduledExecutionConfigurator.test_configure_scheduled_job_ingest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling configure_scheduled_job() on an ingest job</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.test_configurators.TestScheduledExecutionConfigurator.test_configure_scheduled_job_logging">
+<code class="descname">test_configure_scheduled_job_logging</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.test_configurators.TestScheduledExecutionConfigurator.test_configure_scheduled_job_logging" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling configure_scheduled_job() and checks Docker logging parameters</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.test_configurators.TestScheduledExecutionConfigurator.test_configure_scheduled_job_regular">
+<code class="descname">test_configure_scheduled_job_regular</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.test_configurators.TestScheduledExecutionConfigurator.test_configure_scheduled_job_regular" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling configure_scheduled_job() on a regular (non-system) job</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.test_configurators.TestScheduledExecutionConfigurator.test_configure_scheduled_job_secrets">
+<code class="descname">test_configure_scheduled_job_secrets</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.test_configurators.TestScheduledExecutionConfigurator.test_configure_scheduled_job_secrets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling configure_scheduled_job() and checks to make sure secrets are appropriately
+handled</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.test.configuration.test_configurators.TestScheduledExecutionConfigurator.test_configure_scheduled_job_shared_mem">
+<code class="descname">test_configure_scheduled_job_shared_mem</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.configuration.test_configurators.TestScheduledExecutionConfigurator.test_configure_scheduled_job_shared_mem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests successfully calling configure_scheduled_job() with a job using shared memory</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-job.test.configuration">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-job.test.configuration" title="Permalink to this headline">¶</a></h2>
 </div>

@@ -19,14 +19,6 @@ product\.test\.test\_models module
     :undoc-members:
     :show-inheritance:
 
-product\.test\.test\_queue\_processor module
---------------------------------------------
-
-.. automodule:: product.test.test_queue_processor
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 product\.test\.test\_views module
 ---------------------------------
 

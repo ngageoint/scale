@@ -346,6 +346,24 @@ those tasks are added to the given waiting list.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="scheduler.scheduling.scheduling_node.SchedulingNode.accept_system_task">
+<code class="descname">accept_system_task</code><span class="sig-paren">(</span><em>system_task</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scheduling.scheduling_node.SchedulingNode.accept_system_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Asks the node if it can accept the given system task</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>system_task</strong> (<a class="reference internal" href="job.tasks.html#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a>) &#8211; The system task</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if the system task was accepted, False otherwise</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="scheduler.scheduling.scheduling_node.SchedulingNode.add_allocated_offers">
 <code class="descname">add_allocated_offers</code><span class="sig-paren">(</span><em>offers</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scheduling.scheduling_node.SchedulingNode.add_allocated_offers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds the resource offers that have been allocated to run this node&#8217;s tasks. If the offer resources are not
@@ -423,6 +441,31 @@ scheduling. If the job execution cannot be scheduled on this node, None is retur
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The integer score indicating how good of a fit this job execution is for this node, possibly None</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">int</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scheduler.scheduling.scheduling_node.SchedulingNode.score_system_task_for_scheduling">
+<code class="descname">score_system_task_for_scheduling</code><span class="sig-paren">(</span><em>system_task</em>, <em>job_type_resources</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.scheduling.scheduling_node.SchedulingNode.score_system_task_for_scheduling" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an integer score (lower is better) indicating how well the given system task fits on this node for
+scheduling. If the system task cannot be scheduled on this node, None is returned.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>system_task</strong> (<a class="reference internal" href="job.tasks.html#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a>) &#8211; The system task to score</li>
+<li><strong>job_type_resources</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The list of all of the job type resource requirements</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The integer score indicating how good of a fit this system task is for this node, possibly None</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">int</p>

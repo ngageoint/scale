@@ -29,14 +29,6 @@ product\.models module
     :undoc-members:
     :show-inheritance:
 
-product\.queue\_processor module
---------------------------------
-
-.. automodule:: product.queue_processor
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 product\.serializers module
 ---------------------------
 

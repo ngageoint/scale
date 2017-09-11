@@ -19,6 +19,14 @@ job\.execution\.container module
     :undoc-members:
     :show-inheritance:
 
+job\.execution\.exceptions module
+---------------------------------
+
+.. automodule:: job.execution.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 job\.execution\.job\_exe module
 -------------------------------
 

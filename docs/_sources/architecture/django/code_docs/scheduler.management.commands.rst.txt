@@ -12,6 +12,14 @@ scheduler\.management\.commands\.load\_all\_data module
     :undoc-members:
     :show-inheritance:
 
+scheduler\.management\.commands\.scale\_db\_update module
+---------------------------------------------------------
+
+.. automodule:: scheduler.management.commands.scale_db_update
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 scheduler\.management\.commands\.scale\_scheduler module
 --------------------------------------------------------
 

@@ -582,6 +582,22 @@ the job data.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="job.configuration.data.job_data.JobData.get_input_file_ids_by_input">
+<code class="descname">get_input_file_ids_by_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.data.job_data.JobData.get_input_file_ids_by_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the list of file IDs for each input that holds files</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Dict where each file input name maps to its list of file IDs</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.configuration.data.job_data.JobData.get_input_file_info">
 <code class="descname">get_input_file_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.data.job_data.JobData.get_input_file_info" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a set of scale file identifiers and input names for each file in the job input data.</p>
@@ -608,6 +624,22 @@ the job data.</p>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">List of workspace IDs</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[int]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.data.job_data.JobData.get_output_workspaces">
+<code class="descname">get_output_workspaces</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.data.job_data.JobData.get_output_workspaces" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dict of the output parameter names mapped to their output workspace ID</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A dict mapping output parameters to workspace IDs</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
 </tr>
 </tbody>
 </table>

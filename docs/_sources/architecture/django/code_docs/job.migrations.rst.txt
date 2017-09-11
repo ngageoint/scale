@@ -236,6 +236,22 @@ job\.migrations\.0029\_auto\_20170707\_1034 module
     :undoc-members:
     :show-inheritance:
 
+job\.migrations\.0030\_remove\_job\_configuration module
+--------------------------------------------------------
+
+.. automodule:: job.migrations.0030_remove_job_configuration
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.migrations\.0031\_auto\_20170822\_1544 module
+--------------------------------------------------
+
+.. automodule:: job.migrations.0031_auto_20170822_1544
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

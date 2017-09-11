@@ -599,6 +599,21 @@ class built by <code class="docutils literal"><span class="pre">create_forward_m
 </dd></dl>
 
 <dl class="attribute">
+<dt id="error.models.Error.jobexecutionend_set">
+<code class="descname">jobexecutionend_set</code><a class="headerlink" href="#error.models.Error.jobexecutionend_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Accessor to the related objects manager on the reverse side of a
+many-to-one relation.</p>
+<p>In the example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">related_name</span><span class="o">=</span><span class="s1">&#39;children&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">parent.children</span></code> is a <code class="docutils literal"><span class="pre">ReverseManyToOneDescriptor</span></code> instance.</p>
+<p>Most of the implementation is delegated to a dynamically defined manager
+class built by <code class="docutils literal"><span class="pre">create_forward_many_to_many_manager()</span></code> defined below.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="error.models.Error.last_modified">
 <code class="descname">last_modified</code><a class="headerlink" href="#error.models.Error.last_modified" title="Permalink to this definition">¶</a></dt>
 <dd><p>A wrapper for a deferred-loading field. When the value is read from this
@@ -670,6 +685,12 @@ object the first time, the query is executed.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.db.models.manager.Manager</span></code></p>
 <p>Provides additional methods for handling errors</p>
 <dl class="method">
+<dt id="error.models.ErrorManager.cache_builtin_errors">
+<code class="descname">cache_builtin_errors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#error.models.ErrorManager.cache_builtin_errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Queries all errors that are built into the system and caches them for fast retrieval</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="error.models.ErrorManager.create_error">
 <code class="descname">create_error</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#error.models.ErrorManager.create_error" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new error in the database.</p>
@@ -693,24 +714,6 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="error.models.ErrorManager.get_builtin_error">
-<code class="descname">get_builtin_error</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#error.models.ErrorManager.get_builtin_error" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the builtin error with the given name</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>string</em>) &#8211; The name of the error</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The error with the given name</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="error.models.ErrorManager.get_by_natural_key">
 <code class="descname">get_by_natural_key</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#error.models.ErrorManager.get_by_natural_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>Django method to retrieve an error for the given natural key</p>
@@ -721,6 +724,24 @@ object the first time, the query is executed.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) &#8211; The name of the error</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The error defined by the natural key</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="error.models.ErrorManager.get_error">
+<code class="descname">get_error</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#error.models.ErrorManager.get_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the error with the given name, using the cache if able to prevent database accesses</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>string</em>) &#8211; The name of the error</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The error with the given name</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#error.models.Error" title="error.models.Error"><code class="xref py py-class docutils literal"><span class="pre">error.models.Error</span></code></a></td>
 </tr>

@@ -100,6 +100,30 @@ queue\.migrations\.0012\_auto\_20170616\_1101 module
     :undoc-members:
     :show-inheritance:
 
+queue\.migrations\.0013\_auto\_20170720\_1702 module
+----------------------------------------------------
+
+.. automodule:: queue.migrations.0013_auto_20170720_1702
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+queue\.migrations\.0014\_queue module
+-------------------------------------
+
+.. automodule:: queue.migrations.0014_queue
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+queue\.migrations\.0015\_auto\_20170731\_1527 module
+----------------------------------------------------
+
+.. automodule:: queue.migrations.0015_auto_20170731_1527
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

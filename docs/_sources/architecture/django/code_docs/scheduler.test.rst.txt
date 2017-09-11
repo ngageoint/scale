@@ -9,6 +9,7 @@ Subpackages
     scheduler.test.node
     scheduler.test.scheduling
     scheduler.test.sync
+    scheduler.test.tasks
 
 Submodules
 ----------

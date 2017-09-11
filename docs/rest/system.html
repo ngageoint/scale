@@ -256,6 +256,14 @@ provide.</td>
 <td>JSON Object</td>
 <td>The current scheduler state, with a title and description</td>
 </tr>
+<tr class="row-even"><td>system</td>
+<td>JSON Object</td>
+<td>System information</td>
+</tr>
+<tr class="row-odd"><td>system.database_update</td>
+<td>JSON Object</td>
+<td>Information on if and when the current Scale database update completed</td>
+</tr>
 <tr class="row-even"><td>num_offers</td>
 <td>Integer</td>
 <td>Number of resource offers currently held by Scale</td>
@@ -312,17 +320,12 @@ category.</td>
          <span class="s2">&quot;tasks_launched_per_sec&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
          <span class="s2">&quot;offers_launched_per_sec&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
          <span class="s2">&quot;tasks_finished_per_sec&quot;</span><span class="o">:</span> <span class="mf">0.0</span>
-      <span class="p">},</span>
-      <span class="s2">&quot;hostname&quot;</span><span class="o">:</span> <span class="s2">&quot;scheduler-host.domain.com&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;mesos&quot;</span><span class="o">:</span> <span class="p">{</span>
-         <span class="s2">&quot;framework_id&quot;</span><span class="o">:</span> <span class="s2">&quot;1234&quot;</span><span class="p">,</span>
-         <span class="s2">&quot;master_hostname&quot;</span><span class="o">:</span> <span class="s2">&quot;192.168.1.1&quot;</span><span class="p">,</span>
-         <span class="s2">&quot;master_port&quot;</span><span class="o">:</span> <span class="mi">5050</span>
-      <span class="p">},</span>
-      <span class="s2">&quot;state&quot;</span><span class="o">:</span> <span class="p">{</span>
-         <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;READY&quot;</span><span class="p">,</span>
-         <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Ready&quot;</span><span class="p">,</span>
-         <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Scheduler is ready to run new jobs.&quot;</span>
+      <span class="p">}</span>
+   <span class="p">},</span>
+   <span class="s2">&quot;system&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="s2">&quot;database_update&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;is_completed&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+         <span class="s2">&quot;completed&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span>
       <span class="p">}</span>
    <span class="p">},</span>
    <span class="s2">&quot;num_offers&quot;</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>

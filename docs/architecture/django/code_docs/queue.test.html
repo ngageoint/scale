@@ -344,13 +344,13 @@ retried</p>
 <dl class="method">
 <dt id="queue.test.test_models.TestQueueManagerHandleJobCancellation.test_exception_with_canceled_job">
 <code class="descname">test_exception_with_canceled_job</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerHandleJobCancellation.test_exception_with_canceled_job" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling QueueManager.handle_job_cancellation() with a canceled job that results in an exception.</p>
+<dd><p>Tests calling QueueManager.handle_job_cancellation() with a canceled job.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="queue.test.test_models.TestQueueManagerHandleJobCancellation.test_exception_with_completed_job">
 <code class="descname">test_exception_with_completed_job</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerHandleJobCancellation.test_exception_with_completed_job" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling QueueManager.handle_job_cancellation() with a completed job that results in an exception.</p>
+<dd><p>Tests calling QueueManager.handle_job_cancellation() with a completed job.</p>
 </dd></dl>
 
 <dl class="method">
@@ -455,23 +455,6 @@ retried</p>
 <dt id="queue.test.test_models.TestQueueManagerRequeueJobs.test_successful">
 <code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerRequeueJobs.test_successful" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests calling QueueManager.requeue_jobs() successfully</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="queue.test.test_models.TestQueueManagerScheduleJobExecutions">
-<em class="property">class </em><code class="descclassname">queue.test.test_models.</code><code class="descname">TestQueueManagerScheduleJobExecutions</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerScheduleJobExecutions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
-<dl class="method">
-<dt id="queue.test.test_models.TestQueueManagerScheduleJobExecutions.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerScheduleJobExecutions.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="queue.test.test_models.TestQueueManagerScheduleJobExecutions.test_successful">
-<code class="descname">test_successful</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.test_models.TestQueueManagerScheduleJobExecutions.test_successful" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests calling QueueManager.schedule_job_executions() successfully.</p>
 </dd></dl>
 
 </dd></dl>
@@ -724,7 +707,7 @@ retried</p>
 
 <dl class="function">
 <dt id="queue.test.utils.create_queue">
-<code class="descclassname">queue.test.utils.</code><code class="descname">create_queue</code><span class="sig-paren">(</span><em>job_type=None</em>, <em>priority=1</em>, <em>cpus_required=1.0</em>, <em>mem_required=512.0</em>, <em>disk_in_required=200.0</em>, <em>disk_out_required=100.0</em>, <em>disk_total_required=300.0</em>, <em>queued=datetime.datetime(2017</em>, <em>9</em>, <em>8</em>, <em>17</em>, <em>46</em>, <em>1</em>, <em>182115</em>, <em>tzinfo=&lt;UTC&gt;)</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.utils.create_queue" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">queue.test.utils.</code><code class="descname">create_queue</code><span class="sig-paren">(</span><em>job_type=None</em>, <em>priority=1</em>, <em>timeout=3600</em>, <em>cpus_required=1.0</em>, <em>mem_required=512.0</em>, <em>disk_in_required=200.0</em>, <em>disk_out_required=100.0</em>, <em>disk_total_required=300.0</em>, <em>queued=datetime.datetime(2017</em>, <em>9</em>, <em>11</em>, <em>15</em>, <em>25</em>, <em>29</em>, <em>627643</em>, <em>tzinfo=&lt;UTC&gt;)</em><span class="sig-paren">)</span><a class="headerlink" href="#queue.test.utils.create_queue" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a queue model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -733,6 +716,7 @@ retried</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>job_type</strong> (<a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>) &#8211; The job type</li>
 <li><strong>priority</strong> (<em>int</em>) &#8211; The priority</li>
+<li><strong>timeout</strong> (<em>int</em>) &#8211; The timeout</li>
 <li><strong>cpus_required</strong> (<em>float</em>) &#8211; The CPUs required in MiB</li>
 <li><strong>mem_required</strong> (<em>float</em>) &#8211; The memory required in MiB</li>
 <li><strong>disk_in_required</strong> (<em>float</em>) &#8211; The input disk space required in MiB</li>

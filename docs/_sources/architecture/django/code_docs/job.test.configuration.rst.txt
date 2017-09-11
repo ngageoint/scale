@@ -11,6 +11,18 @@ Subpackages
     job.test.configuration.json
     job.test.configuration.results
 
+Submodules
+----------
+
+job\.test\.configuration\.test\_configurators module
+----------------------------------------------------
+
+.. automodule:: job.test.configuration.test_configurators
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
 Module contents
 ---------------
 

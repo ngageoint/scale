@@ -841,6 +841,11 @@
 <dt id="ingest.test.test_views.TestStrikeDetailsView">
 <em class="property">class </em><code class="descclassname">ingest.test.test_views.</code><code class="descname">TestStrikeDetailsView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikeDetailsView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="attribute">
+<dt id="ingest.test.test_views.TestStrikeDetailsView.fixtures">
+<code class="descname">fixtures</code><em class="property"> = [u'ingest_job_types.json']</em><a class="headerlink" href="#ingest.test.test_views.TestStrikeDetailsView.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="ingest.test.test_views.TestStrikeDetailsView.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikeDetailsView.setUp" title="Permalink to this definition">¶</a></dt>
@@ -918,6 +923,11 @@
 <dt id="ingest.test.test_views.TestStrikesView">
 <em class="property">class </em><code class="descclassname">ingest.test.test_views.</code><code class="descname">TestStrikesView</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikesView" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
+<dl class="attribute">
+<dt id="ingest.test.test_views.TestStrikesView.fixtures">
+<code class="descname">fixtures</code><em class="property"> = [u'ingest_job_types.json']</em><a class="headerlink" href="#ingest.test.test_views.TestStrikesView.fixtures" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="ingest.test.test_views.TestStrikesView.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.test_views.TestStrikesView.setUp" title="Permalink to this definition">¶</a></dt>
@@ -955,7 +965,7 @@
 <p>Defines utility methods for testing ingests</p>
 <dl class="function">
 <dt id="ingest.test.utils.create_ingest">
-<code class="descclassname">ingest.test.utils.</code><code class="descname">create_ingest</code><span class="sig-paren">(</span><em>file_name=u'test.txt'</em>, <em>status=u'TRANSFERRING'</em>, <em>transfer_started=None</em>, <em>transfer_ended=None</em>, <em>ingest_started=None</em>, <em>ingest_ended=None</em>, <em>data_started=None</em>, <em>data_ended=None</em>, <em>workspace=None</em>, <em>strike=None</em>, <em>scan=None</em>, <em>source_file=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.utils.create_ingest" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">ingest.test.utils.</code><code class="descname">create_ingest</code><span class="sig-paren">(</span><em>file_name=u'test.txt'</em>, <em>status=u'TRANSFERRING'</em>, <em>transfer_started=None</em>, <em>transfer_ended=None</em>, <em>ingest_started=None</em>, <em>ingest_ended=None</em>, <em>data_started=None</em>, <em>data_ended=None</em>, <em>workspace=None</em>, <em>new_workspace=None</em>, <em>strike=None</em>, <em>scan=None</em>, <em>source_file=None</em><span class="sig-paren">)</span><a class="headerlink" href="#ingest.test.utils.create_ingest" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">

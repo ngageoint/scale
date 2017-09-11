@@ -260,22 +260,6 @@
 <em class="property">class </em><code class="descclassname">job.tasks.base_task.</code><code class="descname">Task</code><span class="sig-paren">(</span><em>task_id</em>, <em>task_name</em>, <em>agent_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.tasks.base_task.Task" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Abstract base class for a task</p>
-<dl class="attribute">
-<dt id="job.tasks.base_task.Task.agent_id">
-<code class="descname">agent_id</code><a class="headerlink" href="#job.tasks.base_task.Task.agent_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the ID of the agent that the task is running on</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The agent ID</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 <dl class="method">
 <dt id="job.tasks.base_task.Task.check_timeout">
 <code class="descname">check_timeout</code><span class="sig-paren">(</span><em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#job.tasks.base_task.Task.check_timeout" title="Permalink to this definition">¶</a></dt>
@@ -369,7 +353,39 @@ timeout threshold</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The Docker parameters</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="job.configuration.html#job.configuration.job_parameter.DockerParam" title="job.configuration.job_parameter.DockerParam"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.job_parameter.DockerParam</span></code></a>]</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.tasks.base_task.Task.ended">
+<code class="descname">ended</code><a class="headerlink" href="#job.tasks.base_task.Task.ended" title="Permalink to this definition">¶</a></dt>
+<dd><p>When this task ended, possibly None</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">When this task ended</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.tasks.base_task.Task.exit_code">
+<code class="descname">exit_code</code><a class="headerlink" href="#job.tasks.base_task.Task.exit_code" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the exit code for this task, possibly None</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The exit code</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
 </tr>
 </tbody>
 </table>
@@ -440,6 +456,22 @@ timeout threshold</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="job.tasks.base_task.Task.has_timed_out">
+<code class="descname">has_timed_out</code><a class="headerlink" href="#job.tasks.base_task.Task.has_timed_out" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this task has timed out</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if this task has timed out, False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="job.tasks.base_task.Task.id">
 <code class="descname">id</code><a class="headerlink" href="#job.tasks.base_task.Task.id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the unique ID of the task</p>
@@ -480,6 +512,22 @@ timeout threshold</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The time that the task was launched</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="job.tasks.base_task.Task.launched">
+<code class="descname">launched</code><a class="headerlink" href="#job.tasks.base_task.Task.launched" title="Permalink to this definition">¶</a></dt>
+<dd><p>When this task launched, possibly None</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">When this task launched</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code></td>
 </tr>
 </tbody>
 </table>

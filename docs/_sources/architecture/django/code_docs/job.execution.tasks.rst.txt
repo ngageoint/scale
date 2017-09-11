@@ -1,6 +1,13 @@
 job\.execution\.tasks package
 =============================
 
+Subpackages
+-----------
+
+.. toctree::
+
+    job.execution.tasks.json
+
 Submodules
 ----------
 
@@ -20,10 +27,10 @@ job\.execution\.tasks\.exe\_task module
     :undoc-members:
     :show-inheritance:
 
-job\.execution\.tasks\.job\_task module
----------------------------------------
+job\.execution\.tasks\.main\_task module
+----------------------------------------
 
-.. automodule:: job.execution.tasks.job_task
+.. automodule:: job.execution.tasks.main_task
     :members:
     :undoc-members:
     :show-inheritance:

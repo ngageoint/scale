@@ -276,12 +276,30 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="job.test.configuration.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="job.test.configuration.html#module-job.test.configuration.test_configurators">job.test.configuration.test_configurators module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="job.test.configuration.html#module-job.test.configuration">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="job.test.execution.html">job.test.execution package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="job.test.execution.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="job.test.execution.tasks.html">job.test.execution.tasks package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="job.test.execution.tasks.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="job.test.execution.tasks.json.html">job.test.execution.tasks.json package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="job.test.execution.tasks.json.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="job.test.execution.tasks.json.results.html">job.test.execution.tasks.json.results package</a><ul>
+<li class="toctree-l8"><a class="reference internal" href="job.test.execution.tasks.json.results.html#submodules">Submodules</a></li>
+<li class="toctree-l8"><a class="reference internal" href="job.test.execution.tasks.json.results.html#module-job.test.execution.tasks.json.results.test_task_results">job.test.execution.tasks.json.results.test_task_results module</a></li>
+<li class="toctree-l8"><a class="reference internal" href="job.test.execution.tasks.json.results.html#module-job.test.execution.tasks.json.results">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="job.test.execution.tasks.json.html#module-job.test.execution.tasks.json">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.execution.tasks.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.execution.tasks.html#module-job.test.execution.tasks.test_post_task">job.test.execution.tasks.test_post_task module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="job.test.execution.tasks.html#module-job.test.execution.tasks.test_pre_task">job.test.execution.tasks.test_pre_task module</a></li>
@@ -527,23 +545,6 @@
 </dd></dl>
 
 <dl class="class">
-<dt id="job.test.test_models.TestJobExecution">
-<em class="property">class </em><code class="descclassname">job.test.test_models.</code><code class="descname">TestJobExecution</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobExecution" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<dl class="method">
-<dt id="job.test.test_models.TestJobExecution.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobExecution.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="job.test.test_models.TestJobExecution.test_configure_docker_params_shared_memory">
-<code class="descname">test_configure_docker_params_shared_memory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobExecution.test_configure_docker_params_shared_memory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests running JobExecution.configure_docker_params() with shared memory</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
 <dt id="job.test.test_models.TestJobExecutionManager">
 <em class="property">class </em><code class="descclassname">job.test.test_models.</code><code class="descname">TestJobExecutionManager</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobExecutionManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TransactionTestCase</span></code></p>
@@ -567,31 +568,6 @@
 <dt id="job.test.test_models.TestJobExecutionManager.test_get_latest_job_exes_with_a_filter">
 <code class="descname">test_get_latest_job_exes_with_a_filter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobExecutionManager.test_get_latest_job_exes_with_a_filter" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="method">
-<dt id="job.test.test_models.TestJobExecutionManager.test_schedule_job_executions">
-<code class="descname">test_schedule_job_executions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobExecutionManager.test_schedule_job_executions" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="job.test.test_models.TestJobExecutionManager.test_schedule_job_executions_ingest_docker_params">
-<code class="descname">test_schedule_job_executions_ingest_docker_params</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobExecutionManager.test_schedule_job_executions_ingest_docker_params" title="Permalink to this definition">¶</a></dt>
-<dd><p>Testing scheduling a job execution and checking Docker params for an ingest job</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.test.test_models.TestJobExecutionManager.test_schedule_job_executions_non_system_docker_params_host_broker">
-<code class="descname">test_schedule_job_executions_non_system_docker_params_host_broker</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobExecutionManager.test_schedule_job_executions_non_system_docker_params_host_broker" title="Permalink to this definition">¶</a></dt>
-<dd><p>Testing scheduling a job execution and checking Docker params for a non-system job that only uses a host
-broker for input</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="job.test.test_models.TestJobExecutionManager.test_schedule_job_executions_non_system_docker_params_nfs_broker">
-<code class="descname">test_schedule_job_executions_non_system_docker_params_nfs_broker</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.test_models.TestJobExecutionManager.test_schedule_job_executions_non_system_docker_params_nfs_broker" title="Permalink to this definition">¶</a></dt>
-<dd><p>Testing scheduling a job execution and checking Docker params for a non-system job that uses an NFS broker
-for input and output</p>
-</dd></dl>
 
 </dd></dl>
 
@@ -1739,7 +1715,7 @@ for input and output</p>
 
 <dl class="function">
 <dt id="job.test.utils.create_job">
-<code class="descclassname">job.test.utils.</code><code class="descname">create_job</code><span class="sig-paren">(</span><em>job_type=None</em>, <em>event=None</em>, <em>status=u'PENDING'</em>, <em>error=None</em>, <em>data=None</em>, <em>num_exes=0</em>, <em>queued=None</em>, <em>started=None</em>, <em>ended=None</em>, <em>last_status_change=None</em>, <em>priority=100</em>, <em>results=None</em>, <em>superseded_job=None</em>, <em>delete_superseded=True</em>, <em>is_superseded=False</em>, <em>superseded=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.create_job" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">job.test.utils.</code><code class="descname">create_job</code><span class="sig-paren">(</span><em>job_type=None</em>, <em>event=None</em>, <em>status=u'PENDING'</em>, <em>error=None</em>, <em>data=None</em>, <em>num_exes=0</em>, <em>queued=None</em>, <em>started=None</em>, <em>ended=None</em>, <em>last_status_change=None</em>, <em>priority=100</em>, <em>results=None</em>, <em>superseded_job=None</em>, <em>delete_superseded=True</em>, <em>is_superseded=False</em>, <em>superseded=None</em>, <em>input_file_size=10.0</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.create_job" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a job model for unit testing</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1755,15 +1731,16 @@ for input and output</p>
 
 <dl class="function">
 <dt id="job.test.utils.create_job_exe">
-<code class="descclassname">job.test.utils.</code><code class="descname">create_job_exe</code><span class="sig-paren">(</span><em>job_type=None</em>, <em>job=None</em>, <em>status=u'RUNNING'</em>, <em>configuration=None</em>, <em>error=None</em>, <em>command_arguments=u'test_arg'</em>, <em>timeout=None</em>, <em>node=None</em>, <em>created=None</em>, <em>queued=None</em>, <em>started=None</em>, <em>pre_started=None</em>, <em>pre_completed=None</em>, <em>job_started=None</em>, <em>job_completed=None</em>, <em>post_started=None</em>, <em>post_completed=None</em>, <em>ended=None</em>, <em>last_modified=None</em>, <em>input_file_size=0.0</em>, <em>resources=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.create_job_exe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a job execution model for unit testing</p>
+<code class="descclassname">job.test.utils.</code><code class="descname">create_job_exe</code><span class="sig-paren">(</span><em>job_type=None</em>, <em>job=None</em>, <em>exe_num=None</em>, <em>node=None</em>, <em>timeout=None</em>, <em>input_file_size=10.0</em>, <em>queued=None</em>, <em>started=None</em>, <em>status=u'RUNNING'</em>, <em>error=None</em>, <em>ended=None</em>, <em>output=None</em>, <em>task_results=None</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.create_job_exe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a job_exe model for unit testing, may also create job_exe_end and job_exe_output models depending on
+status</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The job execution model</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The job_exe model</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.execution.html#job.execution.job_exe.RunningJobExecution" title="job.execution.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe.RunningJobExecution</span></code></a></td>
 </tr>
 </tbody>
 </table>
@@ -1780,6 +1757,22 @@ for input and output</p>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The job type model</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="job.test.utils.create_running_job_exe">
+<code class="descclassname">job.test.utils.</code><code class="descname">create_running_job_exe</code><span class="sig-paren">(</span><em>agent_id=u'agent_1'</em>, <em>job_type=None</em>, <em>job=None</em>, <em>node=None</em>, <em>timeout=None</em>, <em>input_file_size=10.0</em>, <em>queued=None</em>, <em>started=None</em>, <em>resources=None</em>, <em>priority=None</em>, <em>num_exes=1</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.utils.create_running_job_exe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a running job execution for unit testing</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The running job execution</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="job.execution.html#job.execution.job_exe.RunningJobExecution" title="job.execution.job_exe.RunningJobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.execution.job_exe.RunningJobExecution</span></code></a></td>
 </tr>
 </tbody>
 </table>

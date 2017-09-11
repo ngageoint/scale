@@ -339,7 +339,7 @@ returned. For a failure exit code with no mapping, the given default error is re
 <p>Defines the interface for executing a job</p>
 <dl class="class">
 <dt id="job.configuration.interface.job_interface.JobInterface">
-<em class="property">class </em><code class="descclassname">job.configuration.interface.job_interface.</code><code class="descname">JobInterface</code><span class="sig-paren">(</span><em>definition</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">job.configuration.interface.job_interface.</code><code class="descname">JobInterface</code><span class="sig-paren">(</span><em>definition</em>, <em>do_validate=True</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Represents the interface for executing a job</p>
 <dl class="method">
@@ -427,6 +427,14 @@ pre-steps have not been performed</p>
 <code class="descname">get_command</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.get_command" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the command
 :return: the command
+:rtype: str</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.configuration.interface.job_interface.JobInterface.get_command_args">
+<code class="descname">get_command_args</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.get_command_args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the command arguments
+:return: the command args
 :rtype: str</p>
 </dd></dl>
 
@@ -546,23 +554,17 @@ populated with the settings from the exe_configuration.</p>
 
 <dl class="method">
 <dt id="job.configuration.interface.job_interface.JobInterface.populate_env_vars_arguments">
-<code class="descname">populate_env_vars_arguments</code><span class="sig-paren">(</span><em>exe_configuration</em>, <em>job_type</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.populate_env_vars_arguments" title="Permalink to this definition">¶</a></dt>
+<code class="descname">populate_env_vars_arguments</code><span class="sig-paren">(</span><em>param_replacements</em><span class="sig-paren">)</span><a class="headerlink" href="#job.configuration.interface.job_interface.JobInterface.populate_env_vars_arguments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Populates the environment variables with the requested values.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>exe_configuration</strong> (<a class="reference internal" href="job.configuration.json.execution.html#job.configuration.json.execution.exe_config.ExecutionConfiguration" title="job.configuration.json.execution.exe_config.ExecutionConfiguration"><code class="xref py py-class docutils literal"><span class="pre">job.configuration.json.execution.exe_config.ExecutionConfiguration</span></code></a>) &#8211; The execution configuration</li>
-<li><strong>job_type</strong> (<a class="reference internal" href="job.html#job.models.JobType" title="job.models.JobType"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobType</span></code></a>) &#8211; The job type definition</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>param_replacements</strong> (<em>dict</em>) &#8211; The parameter replacements</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">env_vars populated with values</p>
-</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">env_vars populated with values</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dict</p>
-</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
 </tr>
 </tbody>
 </table>

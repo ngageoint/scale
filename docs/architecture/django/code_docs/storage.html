@@ -1448,16 +1448,16 @@ workspace field populated.</p>
 <dl class="method">
 <dt id="storage.models.ScaleFileManager.get_files">
 <code class="descname">get_files</code><span class="sig-paren">(</span><em>file_ids</em><span class="sig-paren">)</span><a class="headerlink" href="#storage.models.ScaleFileManager.get_files" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the files with the given IDs. The files will have their related workspace field populated.</p>
+<dd><p>Returns the files with the given IDs. Each scale_file model will have its related workspace field populated.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a><em>[</em><em>int</em><em>]</em>) &#8211; The file IDs</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>file_ids</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The file IDs</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The files that match the given IDs</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The scale_file models that match the given IDs</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">[<a class="reference internal" href="#storage.models.ScaleFile" title="storage.models.ScaleFile"><code class="xref py py-class docutils literal"><span class="pre">storage.models.ScaleFile</span></code></a>]</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
 </tr>
 </tbody>
 </table>

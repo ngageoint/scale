@@ -1,0 +1,348 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Task Results &mdash; Scale 5.1.1-snapshot documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="Scale 5.1.1-snapshot documentation" href="../../index.html"/>
+        <link rel="up" title="Jobs and Recipes" href="index.html"/>
+        <link rel="next" title="ElasticSearch Logs" href="../logs.html"/>
+        <link rel="prev" title="Resources" href="resources.html"/>
+    <link href="../../_static/style.css" rel="stylesheet" type="text/css">
+
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Scale
+          
+
+          
+            
+            <img src="../../_static/scale3-transparent-128.png" class="logo" />
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                5.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../overview/index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cli/index.html">Command Line Client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../algorithm_integration/index.html">Algorithm Integration into Scale</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Architecture</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Jobs and Recipes</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="batch_definition.html">Batch Definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="error_interface.html">Errors Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job_interface.html">Job Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job_configuration.html">Job Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="job_data.html">Job Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="exe_configuration.html">Execution Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe_definition.html">Recipe Definition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="recipe_data.html">Recipe Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="resources.html">Resources</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Task Results</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#task-results-specification-version-1-0">Task Results Specification Version 1.0</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../logs.html">ElasticSearch Logs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../messaging.html">Messaging System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../port.html">Import/Export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../scan.html">Scan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../strike.html">Strike</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../triggers.html">Triggers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../workspaces.html">Workspaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../django/index.html">Django/Code Base</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../rest/index.html">REST API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install/index.html">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../development/index.html">Development</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Scale</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Architecture</a> &raquo;</li>
+        
+          <li><a href="index.html">Jobs and Recipes</a> &raquo;</li>
+        
+      <li>Task Results</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/architecture/jobs/task_results.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="task-results">
+<span id="architecture-jobs-task-results"></span><h1>Task Results<a class="headerlink" href="#task-results" title="Permalink to this headline">¶</a></h1>
+<p>The task results JSON document describes the results of all tasks once a job execution has finished (reached a terminal
+state).</p>
+<div class="section" id="task-results-specification-version-1-0">
+<span id="architecture-jobs-task-results-spec"></span><h2>Task Results Specification Version 1.0<a class="headerlink" href="#task-results-specification-version-1-0" title="Permalink to this headline">¶</a></h2>
+<p>A valid task results is a JSON document with the following structure:</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="s2">&quot;version&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+   <span class="s2">&quot;tasks&quot;</span><span class="o">:</span> <span class="p">[{</span>
+      <span class="s2">&quot;task_id&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+      <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+      <span class="s2">&quot;was_launched&quot;</span><span class="o">:</span> <span class="nx">BOOLEAN</span><span class="p">,</span>
+      <span class="s2">&quot;launched&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+      <span class="s2">&quot;was_started&quot;</span><span class="o">:</span> <span class="nx">BOOLEAN</span><span class="p">,</span>
+      <span class="s2">&quot;started&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+      <span class="s2">&quot;was_timed_out&quot;</span><span class="o">:</span> <span class="nx">BOOLEAN</span><span class="p">,</span>
+      <span class="s2">&quot;ended&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+      <span class="s2">&quot;status&quot;</span><span class="o">:</span> <span class="nx">STRING</span><span class="p">,</span>
+      <span class="s2">&quot;exit_code&quot;</span><span class="o">:</span> <span class="nx">INTEGER</span>
+   <span class="p">}]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>version</strong>: JSON string</p>
+<blockquote>
+<div><p>The <em>version</em> is an optional string value that defines the version of the configuration specification used. This
+allows updates to be made to the specification while maintaining backwards compatibility by allowing Scale to
+recognize an older version and convert it to the current version. The default value for <em>version</em> if it is not
+included is the latest version, which is currently 1.0.</p>
+<p>Scale must recognize the version number as valid for the job to work. The only valid execution configuration version
+is <code class="docutils literal"><span class="pre">&quot;1.0&quot;</span></code>.</p>
+</div></blockquote>
+<p><strong>tasks</strong>: JSON array</p>
+<blockquote>
+<div><p>The <em>tasks</em> field is an optional JSON array of objects that describe each task in the execution. Each task object
+has the following fields:</p>
+<p><strong>task_id</strong>: JSON string</p>
+<blockquote>
+<div>The <em>task_id</em> field is a required string defining the unique Scale ID for the task.</div></blockquote>
+<p><strong>type</strong>: JSON string</p>
+<blockquote>
+<div>The <em>type</em> field is a required string defining the type of the task and only has the following valid values:
+&#8220;pull&#8221;, &#8220;pre&#8221;, &#8220;main&#8221;, or &#8220;post&#8221;.</div></blockquote>
+<p><strong>was_launched</strong>: JSON boolean</p>
+<blockquote>
+<div>The <em>was_launched</em> field is a required boolean that indicates whether the task was launched.</div></blockquote>
+<p><strong>launched</strong>: JSON string</p>
+<blockquote>
+<div>The <em>launched</em> field is an optional string that is an ISO-8601 datetime describing when the task was launched.</div></blockquote>
+<p><strong>was_started</strong>: JSON boolean</p>
+<blockquote>
+<div>The <em>was_started</em> field is an optional boolean that indicates whether the task started running.</div></blockquote>
+<p><strong>started</strong>: JSON string</p>
+<blockquote>
+<div>The <em>started</em> field is an optional string that is an ISO-8601 datetime describing when the task started running.</div></blockquote>
+<p><strong>was_timed_out</strong>: JSON boolean</p>
+<blockquote>
+<div>The <em>was_timed_out</em> field is an optional boolean that indicates whether the task timed out.</div></blockquote>
+<p><strong>ended</strong>: JSON string</p>
+<blockquote>
+<div>The <em>ended</em> field is an optional string that is an ISO-8601 datetime describing when the task ended.</div></blockquote>
+<p><strong>status</strong>: JSON string</p>
+<blockquote>
+<div>The <em>status</em> field is an optional string that describes the final status of the task. The valid values are
+&#8220;FAILED&#8221;, &#8220;COMPLETED&#8221;, and &#8220;CANCELED&#8221;.</div></blockquote>
+<p><strong>exit_code</strong>: JSON number</p>
+<blockquote>
+<div>The <em>exit_code</em> field is an optional integer that describes the exit code returned by the task execution.</div></blockquote>
+</div></blockquote>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../logs.html" class="btn btn-neutral float-right" title="ElasticSearch Logs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="resources.html" class="btn btn-neutral" title="Resources" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, NGA.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'5.1.1-snapshot',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

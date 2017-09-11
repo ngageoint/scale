@@ -1,0 +1,22 @@
+job\.execution\.tasks\.json\.results package
+============================================
+
+Submodules
+----------
+
+job\.execution\.tasks\.json\.results\.task\_results module
+----------------------------------------------------------
+
+.. automodule:: job.execution.tasks.json.results.task_results
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: job.execution.tasks.json.results
+    :members:
+    :undoc-members:
+    :show-inheritance:

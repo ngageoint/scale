@@ -1,0 +1,22 @@
+scheduler\.database package
+===========================
+
+Submodules
+----------
+
+scheduler\.database\.updater module
+-----------------------------------
+
+.. automodule:: scheduler.database.updater
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: scheduler.database
+    :members:
+    :undoc-members:
+    :show-inheritance:

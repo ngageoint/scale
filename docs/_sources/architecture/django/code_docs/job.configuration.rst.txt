@@ -14,6 +14,22 @@ Subpackages
 Submodules
 ----------
 
+job\.configuration\.configurators module
+----------------------------------------
+
+.. automodule:: job.configuration.configurators
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.configuration\.docker\_param module
+----------------------------------------
+
+.. automodule:: job.configuration.docker_param
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 job\.configuration\.exceptions module
 -------------------------------------
 
@@ -22,10 +38,10 @@ job\.configuration\.exceptions module
     :undoc-members:
     :show-inheritance:
 
-job\.configuration\.job\_parameter module
------------------------------------------
+job\.configuration\.input\_file module
+--------------------------------------
 
-.. automodule:: job.configuration.job_parameter
+.. automodule:: job.configuration.input_file
     :members:
     :undoc-members:
     :show-inheritance:
@@ -34,6 +50,14 @@ job\.configuration\.volume module
 ---------------------------------
 
 .. automodule:: job.configuration.volume
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+job\.configuration\.workspace module
+------------------------------------
+
+.. automodule:: job.configuration.workspace
     :members:
     :undoc-members:
     :show-inheritance:

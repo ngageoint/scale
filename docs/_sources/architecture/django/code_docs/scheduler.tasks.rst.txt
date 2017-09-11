@@ -1,0 +1,38 @@
+scheduler\.tasks package
+========================
+
+Submodules
+----------
+
+scheduler\.tasks\.db\_update\_task module
+-----------------------------------------
+
+.. automodule:: scheduler.tasks.db_update_task
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+scheduler\.tasks\.manager module
+--------------------------------
+
+.. automodule:: scheduler.tasks.manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+scheduler\.tasks\.system\_task module
+-------------------------------------
+
+.. automodule:: scheduler.tasks.system_task
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: scheduler.tasks
+    :members:
+    :undoc-members:
+    :show-inheritance:

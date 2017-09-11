@@ -1,0 +1,22 @@
+scheduler\.test\.tasks package
+==============================
+
+Submodules
+----------
+
+scheduler\.test\.tasks\.test\_manager module
+--------------------------------------------
+
+.. automodule:: scheduler.test.tasks.test_manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: scheduler.test.tasks
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -129,7 +129,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-product.apps">product.apps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-product.models">product.models module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-product.queue_processor">product.queue_processor module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-product.serializers">product.serializers module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-product.urls">product.urls module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-product.views">product.views module</a></li>
@@ -243,6 +242,7 @@
 <li class="toctree-l2"><a class="reference internal" href="product.migrations.html#module-product.migrations.0007_fileancestrylink_batch">product.migrations.0007_fileancestrylink_batch module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="product.migrations.html#module-product.migrations.0008_auto_20170221_1413">product.migrations.0008_auto_20170221_1413 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="product.migrations.html#module-product.migrations.0009_auto_20170301_1130">product.migrations.0009_auto_20170301_1130 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="product.migrations.html#module-product.migrations.0010_auto_20170727_1349">product.migrations.0010_auto_20170727_1349 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="product.migrations.html#module-product.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -258,7 +258,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="product.test.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="product.test.html#module-product.test.test_models">product.test.test_models module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="product.test.html#module-product.test.test_queue_processor">product.test.test_queue_processor module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="product.test.html#module-product.test.test_views">product.test.test_views module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="product.test.html#module-product.test.utils">product.test.utils module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="product.test.html#module-product.test">Module contents</a></li>
@@ -558,7 +557,8 @@ made in an atomic transaction.</p>
 <li><strong>parent_ids</strong> (<em>set of int</em>) &#8211; Set of parent file IDs</li>
 <li><strong>child_ids</strong> (<em>set of int</em>) &#8211; Set of child file IDs. Passing None can be used to link input files to jobs and recipes
 without any derived products.</li>
-<li><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>) &#8211; The job execution that is creating the file links</li>
+<li><strong>job</strong> (<a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>) &#8211; The job that is creating the file links</li>
+<li><strong>job_exe_id</strong> (<em>int</em>) &#8211; The job execution that is creating the file links</li>
 </ul>
 </td>
 </tr>
@@ -809,7 +809,8 @@ atomic transaction.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>job_exe</strong> (<a class="reference internal" href="job.html#job.models.JobExecution" title="job.models.JobExecution"><code class="xref py py-class docutils literal"><span class="pre">job.models.JobExecution</span></code></a>) &#8211; The locked job execution model with related job model</li>
+<li><strong>job_exe_id</strong> (<em>int</em>) &#8211; The job execution ID</li>
+<li><strong>job</strong> (<a class="reference internal" href="job.html#job.models.Job" title="job.models.Job"><code class="xref py py-class docutils literal"><span class="pre">job.models.Job</span></code></a>) &#8211; The locked job model</li>
 <li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; When the products were published</li>
 </ul>
 </td>
@@ -861,38 +862,6 @@ storing the file, media_type, output_name)</li>
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-product.queue_processor">
-<span id="product-queue-processor-module"></span><h2>product.queue_processor module<a class="headerlink" href="#module-product.queue_processor" title="Permalink to this headline">¶</a></h2>
-<p>Defines the QueueEventProcessor for generating file ancestry links as job executions change status.</p>
-<dl class="class">
-<dt id="product.queue_processor.ProductProcessor">
-<em class="property">class </em><code class="descclassname">product.queue_processor.</code><code class="descname">ProductProcessor</code><a class="headerlink" href="#product.queue_processor.ProductProcessor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="queue.html#queue.models.QueueEventProcessor" title="queue.models.QueueEventProcessor"><code class="xref py py-class docutils literal"><span class="pre">queue.models.QueueEventProcessor</span></code></a></p>
-<p>This class creates file ancestry links when a job execution is queued or completed.</p>
-<dl class="method">
-<dt id="product.queue_processor.ProductProcessor.process_completed">
-<code class="descname">process_completed</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#product.queue_processor.ProductProcessor.process_completed" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <a class="reference internal" href="queue.html#queue.models.QueueEventProcessor.process_completed" title="queue.models.QueueEventProcessor.process_completed"><code class="xref py py-meth docutils literal"><span class="pre">queue.models.QueueEventProcessor.process_completed()</span></code></a>.</p>
-<p>Creates file ancestry links for all products generated by a job execution, including the source file ancestry.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="product.queue_processor.ProductProcessor.process_failed">
-<code class="descname">process_failed</code><span class="sig-paren">(</span><em>job_exe</em><span class="sig-paren">)</span><a class="headerlink" href="#product.queue_processor.ProductProcessor.process_failed" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <a class="reference internal" href="queue.html#queue.models.QueueEventProcessor.process_failed" title="queue.models.QueueEventProcessor.process_failed"><code class="xref py py-meth docutils literal"><span class="pre">queue.models.QueueEventProcessor.process_failed()</span></code></a>.</p>
-<p>Not used by this class.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="product.queue_processor.ProductProcessor.process_queued">
-<code class="descname">process_queued</code><span class="sig-paren">(</span><em>job_exe</em>, <em>is_initial</em><span class="sig-paren">)</span><a class="headerlink" href="#product.queue_processor.ProductProcessor.process_queued" title="Permalink to this definition">¶</a></dt>
-<dd><p>See <a class="reference internal" href="queue.html#queue.models.QueueEventProcessor.process_queued" title="queue.models.QueueEventProcessor.process_queued"><code class="xref py py-meth docutils literal"><span class="pre">queue.models.QueueEventProcessor.process_queued()</span></code></a>.</p>
-<p>Creates file ancestry links for all source files and their ancestry needed to run the job execution.</p>
 </dd></dl>
 
 </dd></dl>

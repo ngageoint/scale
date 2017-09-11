@@ -918,6 +918,22 @@ well as run-time information retrieved from Mesos. This class is thread-safe.</p
 </table>
 </dd></dl>
 
+<dl class="method">
+<dt id="scheduler.node.node_class.Node.is_ready_for_system_task">
+<code class="descname">is_ready_for_system_task</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.node.node_class.Node.is_ready_for_system_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether this node is ready to launch a new system task</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if this node is ready to launch a new system task, False otherwise</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="scheduler.node.node_class.Node.paused_desc">
 <code class="descname">paused_desc</code><em class="property"> = u'Node is paused, so no new jobs will be scheduled. Existing jobs will continue to run.'</em><a class="headerlink" href="#scheduler.node.node_class.Node.paused_desc" title="Permalink to this definition">¶</a></dt>

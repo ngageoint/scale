@@ -20,6 +20,14 @@ job\.configuration\.json\.execution\.exe\_config\_1\_0 module
     :undoc-members:
     :show-inheritance:
 
+job\.configuration\.json\.execution\.exe\_config\_1\_1 module
+-------------------------------------------------------------
+
+.. automodule:: job.configuration.json.execution.exe_config_1_1
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

@@ -129,7 +129,6 @@
 <li class="toctree-l4"><a class="reference internal" href="product.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="product.html#module-product.apps">product.apps module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="product.html#module-product.models">product.models module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="product.html#module-product.queue_processor">product.queue_processor module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="product.html#module-product.serializers">product.serializers module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="product.html#module-product.urls">product.urls module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="product.html#module-product.views">product.views module</a></li>
@@ -445,39 +444,6 @@ unpublished</p>
 <dt id="product.test.test_models.TestProductFileManagerUploadFiles.test_uuid_use_properties">
 <code class="descname">test_uuid_use_properties</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_models.TestProductFileManagerUploadFiles.test_uuid_use_properties" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tests setting UUIDs on products with different property values.</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-product.test.test_queue_processor">
-<span id="product-test-test-queue-processor-module"></span><h2>product.test.test_queue_processor module<a class="headerlink" href="#module-product.test.test_queue_processor" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="product.test.test_queue_processor.TestProductProcessor">
-<em class="property">class </em><code class="descclassname">product.test.test_queue_processor.</code><code class="descname">TestProductProcessor</code><span class="sig-paren">(</span><em>methodName='runTest'</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_queue_processor.TestProductProcessor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">django.test.testcases.TestCase</span></code></p>
-<p>Tests handling queue events when job executions change state.</p>
-<dl class="method">
-<dt id="product.test.test_queue_processor.TestProductProcessor.setUp">
-<code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_queue_processor.TestProductProcessor.setUp" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="product.test.test_queue_processor.TestProductProcessor.test_completed">
-<code class="descname">test_completed</code><span class="sig-paren">(</span><em>*args</em>, <em>**keywargs</em><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_queue_processor.TestProductProcessor.test_completed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests products are published when a job is completed.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="product.test.test_queue_processor.TestProductProcessor.test_queued_initial">
-<code class="descname">test_queued_initial</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_queue_processor.TestProductProcessor.test_queued_initial" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests file ancestry links are created for input files when a job is first queued.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="product.test.test_queue_processor.TestProductProcessor.test_queued_repeat">
-<code class="descname">test_queued_repeat</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#product.test.test_queue_processor.TestProductProcessor.test_queued_repeat" title="Permalink to this definition">¶</a></dt>
-<dd><p>Tests nothing is done when a job is queued more than once.</p>
 </dd></dl>
 
 </dd></dl>
