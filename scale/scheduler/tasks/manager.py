@@ -10,6 +10,7 @@ from django.utils.timezone import now
 from job.tasks.update import TaskStatusUpdate
 from scheduler.manager import scheduler_mgr
 from scheduler.tasks.db_update_task import DatabaseUpdateTask
+from scheduler.tasks.services.messaging.messaging_service import MessagingService
 from util.parse import datetime_to_string
 
 
@@ -30,7 +31,7 @@ class SystemTaskManager(object):
         self._last_db_update_task_failure = None
         self._when_db_update_completed = None
 
-        self._services = []
+        self._services = [MessagingService()]
 
         self._lock = threading.Lock()
 

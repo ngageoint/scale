@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from queue.models import DEFAULT_QUEUE_ORDER
 
 
-DEFAULT_NUM_MESSAGE_HANDLERS = 2
+DEFAULT_NUM_MESSAGE_HANDLERS = 0
 
 
 class SchedulerConfiguration(object):

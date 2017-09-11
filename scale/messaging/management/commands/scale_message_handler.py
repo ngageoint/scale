@@ -25,7 +25,7 @@ class Command(BaseCommand):
 
         This method starts the command.
         """
-        logger.info('Command starting: scale_process_messages')
+        logger.info('Command starting: scale_message_handler')
 
         self.running = True
 
@@ -38,7 +38,7 @@ class Command(BaseCommand):
         while self.running:
             manager.receive_messages()
 
-        logger.info('Command completed: scale_process_messages')
+        logger.info('Command completed: scale_message_handler')
 
     def interupt(self, signum, frame):
         logger.info('Halting queue processing as a result of signal: {}'.format(signum))

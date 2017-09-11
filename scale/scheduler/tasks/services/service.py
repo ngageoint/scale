@@ -19,7 +19,7 @@ class Service(object):
         """Constructor
         """
 
-        self._name = 'base'  # Override this in sub-classes
+        self._name = 'Base'  # Override this in sub-classes
         self._tasks = {}  # {Task ID: Task}
 
     def get_actual_task_count(self):
@@ -49,7 +49,7 @@ class Service(object):
         tasks_to_kill = []
         num_tasks_to_kill = max(self.get_actual_task_count() - self.get_desired_task_count(), 0)
         if num_tasks_to_kill > 0:
-            logger.info('Scaling down %s service, killing %d task(s)', self._name, num_tasks_to_kill)
+            logger.info('%s service is over-scheduled, killing %d task(s)', self._name, num_tasks_to_kill)
             for task in self._tasks.values()[:num_tasks_to_kill]:
                 tasks_to_kill.append(task)
         return tasks_to_kill
@@ -65,7 +65,7 @@ class Service(object):
 
         num_tasks_to_create = max(self.get_desired_task_count() - self.get_actual_task_count(), 0)
         if num_tasks_to_create > 0:
-            logger.info('Scaling up %s service, creating %d task(s)', self._name, num_tasks_to_create)
+            logger.info('%s service is under-scheduled, creating %d task(s)', self._name, num_tasks_to_create)
             for _ in range(num_tasks_to_create):
                 new_task = self._create_service_task()
                 self._tasks[new_task.id] = new_task
