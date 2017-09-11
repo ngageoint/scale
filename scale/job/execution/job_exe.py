@@ -133,7 +133,7 @@ class RunningJobExecution(object):
         :rtype: :class:`job.models.JobExecutionEnd`
         """
 
-        task_results = TaskResults()
+        task_results = TaskResults(do_validate=False)
         task_results.add_task_results(self._all_tasks)
 
         job_exe_end = JobExecutionEnd()

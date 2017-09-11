@@ -1195,7 +1195,7 @@ class JobExecution(models.Model):
         job_exe_end.job_id = self.job_id
         job_exe_end.job_type_id = self.job_type_id
         job_exe_end.exe_num = self.exe_num
-        job_exe_end.task_results = TaskResults().get_dict()
+        job_exe_end.task_results = TaskResults(do_validate=False).get_dict()
         job_exe_end.status = 'CANCELED'
         job_exe_end.queued = self.queued
         job_exe_end.started = None
@@ -1222,7 +1222,7 @@ class JobExecution(models.Model):
         :rtype: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         """
 
-        return ExecutionConfiguration(self.configuration)
+        return ExecutionConfiguration(self.configuration, do_validate=False)
 
     def get_log_json(self, include_stdout=True, include_stderr=True, since=None):
         """Get log data from elasticsearch as a dict (from the raw JSON).
@@ -1303,7 +1303,7 @@ class JobExecution(models.Model):
         :rtype: :class:`node.resources.node_resources.NodeResources`
         """
 
-        return Resources(self.resources).get_node_resources()
+        return Resources(self.resources, do_validate=False).get_node_resources()
 
     def get_status(self):
         """Returns the status of this job execution
@@ -1430,7 +1430,7 @@ class JobExecutionEnd(models.Model):
         :rtype: :class:`job.execution.tasks.json.results.task_results.TaskResults`
         """
 
-        return TaskResults(self.task_results)
+        return TaskResults(self.task_results, do_validate=False)
 
     class Meta(object):
         """Meta information for the database"""
