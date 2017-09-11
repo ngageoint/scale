@@ -301,7 +301,7 @@ class ExecutionConfiguration(object):
         :rtype: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         """
 
-        return ExecutionConfiguration(deepcopy(self._configuration))
+        return ExecutionConfiguration(deepcopy(self._configuration), do_validate=False)
 
     def create_tasks(self, task_types):
         """Makes sure that tasks with the given types are created and in the given order. If an already existing task
