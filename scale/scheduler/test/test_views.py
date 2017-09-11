@@ -48,14 +48,16 @@ class TestSchedulerView(TestCase):
 
         json_data = {
             'is_paused': True,
+            'num_message_handlers': 10
         }
 
         url = rest_util.get_url('/scheduler/')
         response = self.client.patch(url, json.dumps(json_data), 'application/json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK, response.content)
 
         result = json.loads(response.content)
         self.assertEqual(result['is_paused'], True)
+        self.assertEqual(result['num_message_handlers'], 10)
 
     def test_update_scheduler_no_fields(self):
         """Test calling the Update Scheduler method with no fields."""
