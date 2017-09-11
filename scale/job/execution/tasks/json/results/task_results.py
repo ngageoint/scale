@@ -86,11 +86,13 @@ class TaskResults(object):
     """Represents the task results for a job execution
     """
 
-    def __init__(self, task_results=None):
+    def __init__(self, task_results=None, do_validate=True):
         """Creates task results from the given JSON dict
 
         :param task_results: The JSON dictionary
         :type task_results: dict
+        :param do_validate: Whether to perform validation on the JSON schema
+        :type do_validate: bool
         :raises :class:`job.execution.exceptions.InvalidTaskResults`: If the JSON is invalid
         """
 
@@ -107,7 +109,8 @@ class TaskResults(object):
         self._populate_default_values()
 
         try:
-            validate(task_results, TASK_RESULTS_SCHEMA)
+            if do_validate:
+                validate(task_results, TASK_RESULTS_SCHEMA)
         except ValidationError as validation_error:
             raise InvalidTaskResults(validation_error)
 
