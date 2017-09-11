@@ -9,7 +9,6 @@ from django.utils.timezone import now
 import error.test.utils as error_test_utils
 import job.test.utils as job_test_utils
 import node.test.utils as node_test_utils
-from job.execution.job_exe import RunningJobExecution
 from job.execution.metrics import FinishedJobExeMetricsOverTime, TotalJobExeMetrics
 
 
@@ -132,28 +131,17 @@ class TestTotalJobExeMetrics(TestCase):
         node_model_2 = node_test_utils.create_node()
         job_type_1 = job_test_utils.create_job_type()
         job_type_2 = job_test_utils.create_job_type()
-        job_exe_model_1 = job_test_utils.create_job_exe(job_type=job_type_1, status='RUNNING', node=node_model_1)
-        job_exe_model_2 = job_test_utils.create_job_exe(job_type=job_type_1, status='RUNNING', node=node_model_1)
-        job_exe_model_3 = job_test_utils.create_job_exe(job_type=job_type_1, status='RUNNING', node=node_model_1)
-        job_exe_model_4 = job_test_utils.create_job_exe(job_type=job_type_2, status='RUNNING', node=node_model_1)
-        job_exe_model_5 = job_test_utils.create_job_exe(job_type=job_type_1, status='RUNNING', node=node_model_2)
-        job_exe_model_6 = job_test_utils.create_job_exe(job_type=job_type_1, status='RUNNING', node=node_model_2)
-        job_exe_model_7 = job_test_utils.create_job_exe(job_type=job_type_2, status='RUNNING', node=node_model_2)
-        job_exe_model_8 = job_test_utils.create_job_exe(job_type=job_type_2, status='RUNNING', node=node_model_2)
-        job_exe_model_9 = job_test_utils.create_job_exe(job_type=job_type_2, status='RUNNING', node=node_model_2)
-        job_exe_model_10 = job_test_utils.create_job_exe(job_type=job_type_2, status='RUNNING', node=node_model_2)
-        job_exe_model_11 = job_test_utils.create_job_exe(job_type=job_type_2, status='RUNNING', node=node_model_2)
-        job_exe_1 = RunningJobExecution('agent', job_exe_model_1)
-        job_exe_2 = RunningJobExecution('agent', job_exe_model_2)
-        job_exe_3 = RunningJobExecution('agent', job_exe_model_3)
-        job_exe_4 = RunningJobExecution('agent', job_exe_model_4)
-        job_exe_5 = RunningJobExecution('agent', job_exe_model_5)
-        job_exe_6 = RunningJobExecution('agent', job_exe_model_6)
-        job_exe_7 = RunningJobExecution('agent', job_exe_model_7)
-        job_exe_8 = RunningJobExecution('agent', job_exe_model_8)
-        job_exe_9 = RunningJobExecution('agent', job_exe_model_9)
-        job_exe_10 = RunningJobExecution('agent', job_exe_model_10)
-        job_exe_11 = RunningJobExecution('agent', job_exe_model_11)
+        job_exe_1 = job_test_utils.create_running_job_exe(agent_id='agent', job_type=job_type_1, node=node_model_1)
+        job_exe_2 = job_test_utils.create_running_job_exe(agent_id='agent', job_type=job_type_1, node=node_model_1)
+        job_exe_3 = job_test_utils.create_running_job_exe(agent_id='agent', job_type=job_type_1, node=node_model_1)
+        job_exe_4 = job_test_utils.create_running_job_exe(agent_id='agent', job_type=job_type_2, node=node_model_1)
+        job_exe_5 = job_test_utils.create_running_job_exe(agent_id='agent', job_type=job_type_1, node=node_model_2)
+        job_exe_6 = job_test_utils.create_running_job_exe(agent_id='agent', job_type=job_type_1, node=node_model_2)
+        job_exe_7 = job_test_utils.create_running_job_exe(agent_id='agent', job_type=job_type_2, node=node_model_2)
+        job_exe_8 = job_test_utils.create_running_job_exe(agent_id='agent', job_type=job_type_2, node=node_model_2)
+        job_exe_9 = job_test_utils.create_running_job_exe(agent_id='agent', job_type=job_type_2, node=node_model_2)
+        job_exe_10 = job_test_utils.create_running_job_exe(agent_id='agent', job_type=job_type_2, node=node_model_2)
+        job_exe_11 = job_test_utils.create_running_job_exe(agent_id='agent', job_type=job_type_2, node=node_model_2)
 
         # NOTE: This unit test is about to get CRAZY. I apologize for the complexity, but this is needed for a
         # thorough testing
@@ -192,9 +180,9 @@ class TestTotalJobExeMetrics(TestCase):
 
         # Finish some job executions
         end_time_1 = now()
-        job_exe_1._set_finished_status('COMPLETED', end_time_1)
-        job_exe_2._set_finished_status('FAILED', end_time_1, error=self.data_error)
-        job_exe_4._set_finished_status('FAILED', end_time_1, error=self.alg_error)
+        job_exe_1._set_final_status('COMPLETED', end_time_1)
+        job_exe_2._set_final_status('FAILED', end_time_1, error=self.data_error)
+        job_exe_4._set_final_status('FAILED', end_time_1, error=self.alg_error)
         self.metrics.job_exe_finished(job_exe_1)
         self.metrics.job_exe_finished(job_exe_2)
         self.metrics.job_exe_finished(job_exe_4)
@@ -239,13 +227,13 @@ class TestTotalJobExeMetrics(TestCase):
 
         # Finish some job executions (all executions still on node 2)
         end_time_2 = end_time_1 + FinishedJobExeMetricsOverTime.BLOCK_LENGTH
-        job_exe_5._set_finished_status('COMPLETED', end_time_2)
-        job_exe_6._set_finished_status('COMPLETED', end_time_2)
-        job_exe_7._set_finished_status('COMPLETED', end_time_2)
-        job_exe_8._set_finished_status('COMPLETED', end_time_2)
-        job_exe_9._set_finished_status('COMPLETED', end_time_2)
-        job_exe_10._set_finished_status('COMPLETED', end_time_2)
-        job_exe_11._set_finished_status('COMPLETED', end_time_2)
+        job_exe_5._set_final_status('COMPLETED', end_time_2)
+        job_exe_6._set_final_status('COMPLETED', end_time_2)
+        job_exe_7._set_final_status('COMPLETED', end_time_2)
+        job_exe_8._set_final_status('COMPLETED', end_time_2)
+        job_exe_9._set_final_status('COMPLETED', end_time_2)
+        job_exe_10._set_final_status('COMPLETED', end_time_2)
+        job_exe_11._set_final_status('COMPLETED', end_time_2)
         self.metrics.job_exe_finished(job_exe_5)
         self.metrics.job_exe_finished(job_exe_6)
         self.metrics.job_exe_finished(job_exe_7)

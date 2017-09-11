@@ -16,15 +16,14 @@ import recipe.test.utils as recipe_test_utils
 import storage.test.utils as storage_test_utils
 import source.test.utils as source_test_utils
 import trigger.test.utils as trigger_test_utils
-from error.models import CACHED_BUILTIN_ERRORS, Error
+from error.models import CACHED_ERRORS, Error
 from job.configuration.results.job_results import JobResults
 from job.configuration.results.results_manifest.results_manifest import ResultsManifest
-from job.models import Job, JobExecution
-from node.resources.json.resources import Resources
+from job.models import Job, JobExecution, JobExecutionOutput
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Cpus, Disk, Mem
 from queue.job_exe import QueuedJobExecution
-from queue.models import JobLoad, Queue, QueueEventProcessor, QUEUE_ORDER_FIFO, QUEUE_ORDER_LIFO
+from queue.models import JobLoad, Queue, QUEUE_ORDER_FIFO, QUEUE_ORDER_LIFO
 from recipe.configuration.data.recipe_data import RecipeData
 from recipe.configuration.definition.recipe_definition import RecipeDefinition
 from recipe.handlers.graph_delta import RecipeGraphDelta
@@ -113,7 +112,7 @@ class TestQueueManager(TransactionTestCase):
     def setUp(self):
         django.setup()
 
-        CACHED_BUILTIN_ERRORS.clear()  # Clear error cache since the error models keep getting rolled back
+        CACHED_ERRORS.clear()  # Clear error cache since the error models keep getting rolled back
 
     def test_get_queue_fifo(self):
         """Tests calling QueueManager.get_queue() in FIFO mode"""
@@ -127,10 +126,10 @@ class TestQueueManager(TransactionTestCase):
         first = True
         for queue in Queue.objects.get_queue(QUEUE_ORDER_FIFO):
             if first:
-                self.assertEqual(queue.job_exe_id, queue_1.job_exe_id)
+                self.assertEqual(queue.id, queue_1.id)
                 first = False
             else:
-                self.assertEqual(queue.job_exe_id, queue_2.job_exe_id)
+                self.assertEqual(queue.id, queue_2.id)
 
     def test_get_queue_lifo(self):
         """Tests calling QueueManager.get_queue() in LIFO mode"""
@@ -144,48 +143,40 @@ class TestQueueManager(TransactionTestCase):
         first = True
         for queue in Queue.objects.get_queue(QUEUE_ORDER_LIFO):
             if first:
-                self.assertEqual(queue.job_exe_id, queue_2.job_exe_id)
+                self.assertEqual(queue.id, queue_2.id)
                 first = False
             else:
-                self.assertEqual(queue.job_exe_id, queue_1.job_exe_id)
+                self.assertEqual(queue.id, queue_1.id)
 
     def test_handle_job_failure(self):
         """Tests calling QueueManager.handle_job_failure() when the job fails"""
 
         job_type = job_test_utils.create_job_type(max_tries=1)
         job = job_test_utils.create_job(job_type=job_type, status='RUNNING', num_exes=1)
-        job_exe = job_test_utils.create_job_exe(job=job, status='RUNNING')
+        unknown_error = Error.objects.get_unknown_error()
 
         # Call method to test
-        Queue.objects.handle_job_failure(job_exe.id, now(), [])
+        Queue.objects.handle_job_failure(job.id, job.num_exes, now(), error=unknown_error)
 
-        # Make sure job and execution are failed
+        # Make sure job is failed
         job = Job.objects.get(pk=job.id)
-        job_exe = JobExecution.objects.get(pk=job_exe.id)
-        unknown_error = Error.objects.get_unknown_error()
         self.assertEqual(job.status, 'FAILED')
         self.assertEqual(job.error_id, unknown_error.id)
-        self.assertEqual(job_exe.status, 'FAILED')
-        self.assertEqual(job_exe.error_id, unknown_error.id)
 
     def test_handle_job_failure_retry(self):
         """Tests calling QueueManager.handle_job_failure() when the job retries"""
 
         job_type = job_test_utils.create_job_type(max_tries=2)
         job = job_test_utils.create_job(job_type=job_type, status='RUNNING', num_exes=1)
-        job_exe = job_test_utils.create_job_exe(job=job, status='RUNNING')
-        error = Error.objects.get_builtin_error('database-operation')
+        error = Error.objects.get_error('database-operation')
 
         # Call method to test
-        Queue.objects.handle_job_failure(job_exe.id, now(), [], error=error)
+        Queue.objects.handle_job_failure(job.id, job.num_exes, now(), error=error)
 
-        # Make sure execution failed and job retried
+        # Make sure job retried
         job = Job.objects.get(pk=job.id)
-        job_exe = JobExecution.objects.get(pk=job_exe.id)
         self.assertEqual(job.status, 'QUEUED')
         self.assertIsNone(job.error)
-        self.assertEqual(job_exe.status, 'FAILED')
-        self.assertEqual(job_exe.error_id, error.id)
 
     def test_handle_job_failure_no_retry(self):
         """Tests calling QueueManager.handle_job_failure() when the job should not retry because the error should not be
@@ -194,41 +185,33 @@ class TestQueueManager(TransactionTestCase):
 
         job_type = job_test_utils.create_job_type(max_tries=2)
         job = job_test_utils.create_job(job_type=job_type, status='RUNNING', num_exes=1)
-        job_exe = job_test_utils.create_job_exe(job=job, status='RUNNING')
         error = Error.objects.get_unknown_error()
 
         # Call method to test
-        Queue.objects.handle_job_failure(job_exe.id, now(), [], error=error)
+        Queue.objects.handle_job_failure(job.id, job.num_exes, now(), error=error)
 
-        # Make sure job and execution are failed
+        # Make sure job is failed
         job = Job.objects.get(pk=job.id)
-        job_exe = JobExecution.objects.get(pk=job_exe.id)
         self.assertEqual(job.status, 'FAILED')
         self.assertEqual(job.error_id, error.id)
-        self.assertEqual(job_exe.status, 'FAILED')
-        self.assertEqual(job_exe.error_id, error.id)
 
     def test_handle_job_failure_superseded(self):
         """Tests calling QueueManager.handle_job_failure() when the job should not retry because it is superseded"""
 
         job_type = job_test_utils.create_job_type(max_tries=2)
         job = job_test_utils.create_job(job_type=job_type, status='RUNNING', num_exes=1)
-        job_exe = job_test_utils.create_job_exe(job=job, status='RUNNING')
-        error = Error.objects.get_builtin_error('database-operation')
+        error = Error.objects.get_error('database-operation')
 
         Job.objects.supersede_jobs([job], now())
 
         # Call method to test
-        Queue.objects.handle_job_failure(job_exe.id, now(), [], error=error)
+        Queue.objects.handle_job_failure(job.id, job.num_exes, now(), error=error)
 
-        # Make sure job and execution are failed
+        # Make sure job is failed
         job = Job.objects.get(pk=job.id)
-        job_exe = JobExecution.objects.get(pk=job_exe.id)
         self.assertEqual(job.status, 'FAILED')
         self.assertEqual(job.error_id, error.id)
         self.assertTrue(job.is_superseded)
-        self.assertEqual(job_exe.status, 'FAILED')
-        self.assertEqual(job_exe.error_id, error.id)
 
 
 class TestQueueManagerHandleJobCancellation(TransactionTestCase):
@@ -245,10 +228,9 @@ class TestQueueManagerHandleJobCancellation(TransactionTestCase):
         # Call method to test
         Queue.objects.handle_job_cancellation(job.id, now())
 
-        # Make sure job is canceled (there should be no job executions)
+        # Make sure job is canceled
         final_job = Job.objects.get(pk=job.id)
         self.assertEqual(final_job.status, 'CANCELED')
-        self.assertEqual(JobExecution.objects.filter(job_id=job.id).count(), 0)
 
     def test_successful_with_blocked_job(self):
         """Tests calling QueueManager.handle_job_cancellation() successfully with a blocked job."""
@@ -259,87 +241,87 @@ class TestQueueManagerHandleJobCancellation(TransactionTestCase):
         # Call method to test
         Queue.objects.handle_job_cancellation(job.id, now())
 
-        # Make sure job is canceled (there should be no job executions)
+        # Make sure job is canceled
         final_job = Job.objects.get(pk=job.id)
         self.assertEqual(final_job.status, 'CANCELED')
-        self.assertEqual(JobExecution.objects.filter(job_id=job.id).count(), 0)
 
     def test_successful_with_queued_job(self):
         """Tests calling QueueManager.handle_job_cancellation() successfully with a queued job."""
 
         # Queue the job
         job = job_test_utils.create_job()
-        job_exe = Queue.objects._queue_jobs([job])[0]
-        job_exe_id = job_exe.id
+        Queue.objects._queue_jobs([job])
 
         # Call method to test
         Queue.objects.handle_job_cancellation(job.id, now())
 
-        # Make sure job is canceled and queue model is gone
+        # Make sure job is canceled and queue model is marked canceled
         final_job = Job.objects.get(pk=job.id)
-        final_job_exe = JobExecution.objects.get(pk=job_exe_id)
         self.assertEqual(final_job.status, 'CANCELED')
-        self.assertEqual(final_job_exe.status, 'CANCELED')
-        self.assertEqual(Queue.objects.filter(job_exe_id=job_exe_id).count(), 0)
+        self.assertTrue(Queue.objects.get(job_id=job.id).is_canceled)
 
     def test_successful_with_running_job(self):
         """Tests calling QueueManager.handle_job_cancellation() successfully with a running job."""
 
         # Create the running job
-        job_exe = job_test_utils.create_job_exe()
+        job = job_test_utils.create_job(status='RUNNING')
 
         # Call method to test
-        Queue.objects.handle_job_cancellation(job_exe.job_id, now())
+        Queue.objects.handle_job_cancellation(job.id, now())
 
         # Make sure job is canceled
-        final_job = Job.objects.get(pk=job_exe.job_id)
-        final_job_exe = JobExecution.objects.get(pk=job_exe.id)
+        final_job = Job.objects.get(pk=job.id)
         self.assertEqual(final_job.status, 'CANCELED')
-        self.assertEqual(final_job_exe.status, 'CANCELED')
 
     def test_successful_with_failed_job(self):
         """Tests calling QueueManager.handle_job_cancellation() successfully with a failed job."""
 
         # Create the failed job
         job = job_test_utils.create_job(status='FAILED')
-        job_test_utils.create_job_exe(job=job, status='FAILED')
+        job_test_utils.create_job_exe(job=job, exe_num=1, status='FAILED')
         time.sleep(0.001)
-        job_test_utils.create_job_exe(job=job, status='FAILED')
+        job_test_utils.create_job_exe(job=job, exe_num=2, status='FAILED')
         time.sleep(0.001)
         job_exe_3 = job_test_utils.create_job_exe(job=job, status='FAILED')
 
         # Call method to test
         Queue.objects.handle_job_cancellation(job.id, now())
 
-        # Make sure job is canceled (execution stays FAILED)
+        # Make sure job is canceled
         final_job = Job.objects.get(pk=job.id)
-        final_job_exe = JobExecution.objects.get(pk=job_exe_3.id)
         self.assertEqual(final_job.status, 'CANCELED')
-        self.assertEqual(final_job_exe.status, 'FAILED')
 
     def test_exception_with_completed_job(self):
-        """Tests calling QueueManager.handle_job_cancellation() with a completed job that results in an exception."""
+        """Tests calling QueueManager.handle_job_cancellation() with a completed job."""
 
         # Create the completed job
         job = job_test_utils.create_job(status='COMPLETED')
-        job_test_utils.create_job_exe(job=job, status='FAILED')
+        job_test_utils.create_job_exe(job=job, exe_num=1, status='FAILED')
         time.sleep(0.001)
-        job_test_utils.create_job_exe(job=job, status='COMPLETED')
+        job_test_utils.create_job_exe(job=job, exe_num=2, status='COMPLETED')
 
         # Call method to test
-        self.assertRaises(Exception, Queue.objects.handle_job_cancellation, job.id, now())
+        Queue.objects.handle_job_cancellation(job.id, now())
+
+        # Make sure job is still completed
+        final_job = Job.objects.get(pk=job.id)
+        self.assertEqual(final_job.status, 'COMPLETED')
 
     def test_exception_with_canceled_job(self):
-        """Tests calling QueueManager.handle_job_cancellation() with a canceled job that results in an exception."""
+        """Tests calling QueueManager.handle_job_cancellation() with a canceled job."""
 
         # Create the canceled job
         job = job_test_utils.create_job(status='CANCELED')
-        job_test_utils.create_job_exe(job=job, status='FAILED')
+        job_test_utils.create_job_exe(job=job, exe_num=1, status='FAILED')
         time.sleep(0.001)
-        job_test_utils.create_job_exe(job=job, status='CANCELED')
+        job_test_utils.create_job_exe(job=job, exe_num=2, status='CANCELED')
 
         # Call method to test
-        self.assertRaises(Exception, Queue.objects.handle_job_cancellation, job.id, now())
+        Queue.objects.handle_job_cancellation(job.id, now())
+
+        # Make sure job is still canceled
+        final_job = Job.objects.get(pk=job.id)
+        self.assertEqual(final_job.status, 'CANCELED')
 
 
 class TestQueueManagerHandleJobCompletion(TransactionTestCase):
@@ -431,10 +413,6 @@ class TestQueueManagerHandleJobCompletion(TransactionTestCase):
         }
         self.data = RecipeData(data)
 
-        # Register a fake processor
-        self.mock_processor = MagicMock(QueueEventProcessor)
-        Queue.objects.register_processor(lambda: self.mock_processor)
-
     def test_successful_with_partial_recipe(self):
         """Tests calling QueueManager.handle_job_completion() successfully with a job in a recipe."""
 
@@ -443,22 +421,24 @@ class TestQueueManagerHandleJobCompletion(TransactionTestCase):
 
         # Fake out completing Job 1
         job_1 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe.id, job_name='Job 1').job
-        job_exe_1 = JobExecution.objects.get(job_id=job_1.id)
+        job_exe_1 = job_test_utils.create_job_exe(job=job_1, status='RUNNING')
         output_file_1 = product_test_utils.create_product(job_exe=job_exe_1, workspace=self.workspace)
         output_file_2 = product_test_utils.create_product(job_exe=job_exe_1, workspace=self.workspace)
 
         results = JobResults()
         results.add_file_list_parameter('Test Output 1', [output_file_1.id, output_file_2.id])
-        JobExecution.objects.post_steps_results(job_exe_1.id, results, ResultsManifest())
+        job_exe_output_1 = JobExecutionOutput()
+        job_exe_output_1.job_exe_id = job_exe_1.id
+        job_exe_output_1.job_id = job_exe_1.job_id
+        job_exe_output_1.job_type_id = job_exe_1.job_type_id
+        job_exe_output_1.exe_num = job_exe_1.exe_num
+        job_exe_output_1.output = results.get_dict()
+        job_exe_output_1.save()
 
         Job.objects.filter(pk=job_1.id).update(status='RUNNING')
-        JobExecution.objects.filter(pk=job_exe_1.id).update(status='RUNNING')
 
         # Call method to test
-        Queue.objects.handle_job_completion(job_exe_1.id, now(), [])
-
-        # Make sure processor was called
-        self.assertTrue(self.mock_processor.process_completed.called)
+        Queue.objects.handle_job_completion(job_1.id, job_1.num_exes, now())
 
         # Make sure Job 2 in the recipe is successfully queued
         recipe_job_2 = RecipeJob.objects.select_related('job', 'recipe').get(recipe_id=handler.recipe.id,
@@ -474,37 +454,44 @@ class TestQueueManagerHandleJobCompletion(TransactionTestCase):
 
         # Fake out completing Job 1
         job_1 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe.id, job_name='Job 1').job
-        job_exe_1 = JobExecution.objects.get(job_id=job_1.id)
+        job_exe_1 = job_test_utils.create_job_exe(job=job_1, status='RUNNING')
         output_file_1 = product_test_utils.create_product(job_exe=job_exe_1, workspace=self.workspace)
         output_file_2 = product_test_utils.create_product(job_exe=job_exe_1, workspace=self.workspace)
 
         results = JobResults()
         results.add_file_list_parameter('Test Output 1', [output_file_1.id, output_file_2.id])
-        JobExecution.objects.post_steps_results(job_exe_1.id, results, ResultsManifest())
+        job_exe_output_1 = JobExecutionOutput()
+        job_exe_output_1.job_exe_id = job_exe_1.id
+        job_exe_output_1.job_id = job_exe_1.job_id
+        job_exe_output_1.job_type_id = job_exe_1.job_type_id
+        job_exe_output_1.exe_num = job_exe_1.exe_num
+        job_exe_output_1.output = results.get_dict()
+        job_exe_output_1.save()
 
         Job.objects.filter(pk=job_1.id).update(status='RUNNING')
-        JobExecution.objects.filter(pk=job_exe_1.id).update(status='RUNNING')
 
-        Queue.objects.handle_job_completion(job_exe_1.id, now(), [])
+        Queue.objects.handle_job_completion(job_1.id, job_1.num_exes, now())
 
         # Fake out completing Job 2
         job_2 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe.id, job_name='Job 2').job
-        job_exe_2 = JobExecution.objects.get(job_id=job_2.id)
+        job_exe_2 = job_test_utils.create_job_exe(job=job_2, status='RUNNING')
         output_file_1 = product_test_utils.create_product(job_exe=job_exe_2, workspace=self.workspace)
         output_file_2 = product_test_utils.create_product(job_exe=job_exe_2, workspace=self.workspace)
 
         results = JobResults()
         results.add_file_list_parameter('Test Output 2', [output_file_1.id, output_file_2.id])
-        JobExecution.objects.post_steps_results(job_exe_2.id, results, ResultsManifest())
+        job_exe_output_2 = JobExecutionOutput()
+        job_exe_output_2.job_exe_id = job_exe_2.id
+        job_exe_output_2.job_id = job_exe_2.job_id
+        job_exe_output_2.job_type_id = job_exe_2.job_type_id
+        job_exe_output_2.exe_num = job_exe_2.exe_num
+        job_exe_output_2.output = results.get_dict()
+        job_exe_output_2.save()
 
         Job.objects.filter(pk=job_2.id).update(status='RUNNING')
-        JobExecution.objects.filter(pk=job_exe_2.id).update(status='RUNNING')
 
         # Call method to test
-        Queue.objects.handle_job_completion(job_exe_2.id, now(), [])
-
-        # Make sure processor was called
-        self.assertEqual(self.mock_processor.process_completed.call_count, 2)
+        Queue.objects.handle_job_completion(job_2.id, job_2.num_exes, now())
 
         # Make sure final recipe attributes are updated
         recipe = Recipe.objects.get(pk=handler.recipe.id)
@@ -603,10 +590,6 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         }
         self.data = RecipeData(data)
 
-        # Register a fake processor
-        self.mock_processor = MagicMock(QueueEventProcessor)
-        Queue.objects.register_processor(lambda: self.mock_processor)
-
     def test_successful(self):
         """Tests calling QueueManager.queue_new_recipe() successfully."""
 
@@ -616,10 +599,6 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         recipe_job_1 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe.id, job_name='Job 1')
         self.assertEqual(recipe_job_1.job.job_type.id, self.job_type_1.id)
         self.assertEqual(recipe_job_1.job.status, 'QUEUED')
-
-        # Make sure processor was called
-        job_exe_1 = JobExecution.objects.get(job=recipe_job_1.job)
-        self.assertTrue(self.mock_processor.process_queued.called_with(job_exe_1, True))
 
         recipe_job_2 = RecipeJob.objects.select_related('job').get(recipe_id=handler.recipe.id, job_name='Job 2')
         self.assertEqual(recipe_job_2.job.job_type.id, self.job_type_2.id)
@@ -649,14 +628,11 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         recipe = Recipe.objects.get(id=handler.recipe.id)
         recipe_job_1 = RecipeJob.objects.select_related('job')
         recipe_job_1 = recipe_job_1.get(recipe_id=handler.recipe.id, job_name='Job 1')
-        job_exe_1 = JobExecution.objects.get(job_id=recipe_job_1.job_id)
-        queued_job_exe = QueuedJobExecution(Queue.objects.get(job_exe_id=job_exe_1.id))
-        queued_job_exe.accepted('agent', node.id, NodeResources([Cpus(10), Mem(1000), Disk(2000)]))
-        Queue.objects.schedule_job_executions('123', [queued_job_exe], {})
+        Job.objects.update_jobs_to_running({recipe_job_1.job.id: recipe_job_1.job.num_exes}, now())
         results = JobResults()
         results.add_file_list_parameter('Test Output 1', [product_test_utils.create_product().id])
-        JobExecution.objects.filter(id=job_exe_1.id).update(results=results.get_dict())
-        Queue.objects.handle_job_completion(job_exe_1.id, now(), [])
+        job_test_utils.create_job_exe(job=recipe_job_1.job, status='COMPLETED', output=results)
+        Queue.objects.handle_job_completion(recipe_job_1.job_id, recipe_job_1.job.num_exes, now())
 
         # Create a new recipe type that has a new version of job 2 (job 1 is identical)
         new_job_type_2 = job_test_utils.create_job_type(name=self.job_type_2.name, version='New Version',
@@ -724,16 +700,16 @@ class TestQueueManagerQueueNewRecipe(TransactionTestCase):
         self.assertTrue(new_recipe_job_2.is_original)
 
         # Complete both the old and new job 2 and check that only the new recipe completes
-        job_exe_2 = JobExecution.objects.get(job_id=recipe_job_2.job_id)
-        queued_job_exe_2 = QueuedJobExecution(Queue.objects.get(job_exe_id=job_exe_2.id))
-        queued_job_exe_2.accepted('agent', node.id, NodeResources([Cpus(10), Mem(1000), Disk(2000)]))
-        Queue.objects.schedule_job_executions('123', [queued_job_exe_2], {})
-        Queue.objects.handle_job_completion(job_exe_2.id, now(), [])
-        new_job_exe_2 = JobExecution.objects.get(job_id=new_recipe_job_2.job_id)
-        new_queued_job_exe_2 = QueuedJobExecution(Queue.objects.get(job_exe_id=new_job_exe_2.id))
-        new_queued_job_exe_2.accepted('agent', node.id, NodeResources([Cpus(10), Mem(1000), Disk(2000)]))
-        Queue.objects.schedule_job_executions('123', [new_queued_job_exe_2], {})
-        Queue.objects.handle_job_completion(new_job_exe_2.id, now(), [])
+        Job.objects.update_jobs_to_running({recipe_job_2.job.id: recipe_job_2.job.num_exes}, now())
+        results = JobResults()
+        results.add_file_list_parameter('Test Output 2', [product_test_utils.create_product().id])
+        job_test_utils.create_job_exe(job=recipe_job_2.job, status='COMPLETED', output=results)
+        Queue.objects.handle_job_completion(recipe_job_2.job_id, recipe_job_2.job.num_exes, now())
+        Job.objects.update_jobs_to_running({new_recipe_job_2.job.id: new_recipe_job_2.job.num_exes}, now())
+        results = JobResults()
+        results.add_file_list_parameter('Test Output 2', [product_test_utils.create_product().id])
+        job_test_utils.create_job_exe(job=new_recipe_job_2.job, status='COMPLETED', output=results)
+        Queue.objects.handle_job_completion(new_recipe_job_2.job_id, new_recipe_job_2.job.num_exes, now())
         recipe = Recipe.objects.get(id=recipe.id)
         new_recipe = Recipe.objects.get(id=new_recipe.id)
         self.assertIsNone(recipe.completed)
@@ -838,10 +814,6 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
         self.job_ids = [self.standalone_failed_job.id, self.standalone_canceled_job.id,
                         self.standalone_completed_job.id, self.job_a_1.id, self.job_b_2.id]
 
-        # Register a fake processor
-        self.mock_processor = MagicMock(QueueEventProcessor)
-        Queue.objects.register_processor(lambda: self.mock_processor)
-
     def test_successful(self):
         """Tests calling QueueManager.requeue_jobs() successfully"""
 
@@ -876,40 +848,3 @@ class TestQueueManagerRequeueJobs(TransactionTestCase):
         self.assertEqual(job_b_2.status, 'BLOCKED')
         job_b_3 = Job.objects.get(id=self.job_b_3.id)
         self.assertEqual(job_b_3.status, 'BLOCKED')
-
-
-class TestQueueManagerScheduleJobExecutions(TransactionTestCase):
-
-    def setUp(self):
-        django.setup()
-
-        self.node = node_test_utils.create_node()
-        self.job_type_1 = job_test_utils.create_job_type()
-        # job_exe_2 has an invalid JSON and will not schedule correctly
-        self.job_type_2 = job_test_utils.create_job_type(configuration={'INVALID': 'SCHEMA'})
-        self.queue_1 = queue_test_utils.create_queue(job_type=self.job_type_1)
-        self.queue_2 = queue_test_utils.create_queue(job_type=self.job_type_2)
-        self.job_exe_1 = self.queue_1.job_exe
-        self.job_exe_2 = self.queue_2.job_exe
-
-    def test_successful(self):
-        """Tests calling QueueManager.schedule_job_executions() successfully."""
-
-        queued_job_exe_1 = QueuedJobExecution(self.queue_1)
-        queued_job_exe_1.accepted('agent', self.node.id, Resources(self.queue_1.resources).get_node_resources())
-        queued_job_exe_2 = QueuedJobExecution(self.queue_2)
-        queued_job_exe_2.accepted('agent', self.node.id, Resources(self.queue_2.resources).get_node_resources())
-
-        scheduled_job_exes = Queue.objects.schedule_job_executions('framework-123',
-                                                                   [queued_job_exe_1, queued_job_exe_2], {})
-        # Only job_exe_1 should have scheduled since job_exe_2 has an invalid job type configuration JSON
-        self.assertEqual(len(scheduled_job_exes), 1)
-        self.assertEqual(scheduled_job_exes[0].id, self.job_exe_1.id)
-        # job_exe_1 should be RUNNING
-        self.assertEqual(Queue.objects.filter(job_exe_id=self.job_exe_1.id).count(), 0)
-        self.assertEqual(JobExecution.objects.get(id=self.job_exe_1.id).status, 'RUNNING')
-        self.assertEqual(Job.objects.get(id=self.job_exe_1.job_id).status, 'RUNNING')
-        # job_exe_2 should be QUEUED
-        self.assertEqual(Queue.objects.filter(job_exe_id=self.job_exe_2.id).count(), 1)
-        self.assertEqual(JobExecution.objects.get(id=self.job_exe_2.id).status, 'QUEUED')
-        self.assertEqual(Job.objects.get(id=self.job_exe_2.job_id).status, 'QUEUED')

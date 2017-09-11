@@ -85,7 +85,7 @@ class TestFileAncestryLinkManagerCreateFileAncestryLinks(TestCase):
         batch = batch_test_utils.create_batch()
         BatchRecipe.objects.create(batch_id=batch.id, recipe_id=recipe_job.recipe.id)
         BatchJob.objects.create(batch_id=batch.id, job_id=job_exe.job_id)
-        FileAncestryLink.objects.create_file_ancestry_links(parent_ids, None, job_exe)
+        FileAncestryLink.objects.create_file_ancestry_links(parent_ids, None, job_exe.job, job_exe.id)
 
         link = FileAncestryLink.objects.get(job_exe=job_exe)
         self.assertEqual(link.recipe_id, recipe_job.recipe_id)
@@ -97,7 +97,7 @@ class TestFileAncestryLinkManagerCreateFileAncestryLinks(TestCase):
         parent_ids = [self.file_4.id, self.file_6.id, self.file_7.id]
         job_exe = job_test_utils.create_job_exe()
         recipe_test_utils.create_recipe_job(job=job_exe.job)
-        FileAncestryLink.objects.create_file_ancestry_links(parent_ids, None, job_exe)
+        FileAncestryLink.objects.create_file_ancestry_links(parent_ids, None, job_exe.job, job_exe.id)
 
         direct_qry = FileAncestryLink.objects.filter(descendant__isnull=True, job_exe=job_exe,
                                                      ancestor_job__isnull=True)
@@ -120,7 +120,7 @@ class TestFileAncestryLinkManagerCreateFileAncestryLinks(TestCase):
         child_ids = [file_8.id]
         job_exe = job_test_utils.create_job_exe()
         recipe_test_utils.create_recipe_job(job=job_exe.job)
-        FileAncestryLink.objects.create_file_ancestry_links(parent_ids, child_ids, job_exe)
+        FileAncestryLink.objects.create_file_ancestry_links(parent_ids, child_ids, job_exe.job, job_exe.id)
 
         direct_qry = FileAncestryLink.objects.filter(descendant=file_8, job_exe=job_exe, ancestor_job__isnull=True)
         self.assertEqual(direct_qry.count(), 3)
@@ -143,10 +143,10 @@ class TestFileAncestryLinkManagerCreateFileAncestryLinks(TestCase):
         recipe_test_utils.create_recipe_job(job=job_exe.job)
 
         # First create only the input files
-        FileAncestryLink.objects.create_file_ancestry_links(parent_ids, None, job_exe)
+        FileAncestryLink.objects.create_file_ancestry_links(parent_ids, None, job_exe.job, job_exe.id)
 
         # Replace the inputs with the new links for both inputs and products
-        FileAncestryLink.objects.create_file_ancestry_links(parent_ids, child_ids, job_exe)
+        FileAncestryLink.objects.create_file_ancestry_links(parent_ids, child_ids, job_exe.job, job_exe.id)
 
         # Make sure the old entries were deleted
         old_direct_qry = FileAncestryLink.objects.filter(descendant__isnull=True, job_exe=job_exe,
@@ -241,7 +241,7 @@ class TestProductFileManager(TestCase):
         """Tests calling ProductFileManager.publish_products() successfully"""
 
         when = now()
-        ProductFile.objects.publish_products(self.job_exe, when)
+        ProductFile.objects.publish_products(self.job_exe, self.job_exe.job, when)
 
         product_1 = ScaleFile.objects.get(id=self.product_1.id)
         product_2 = ScaleFile.objects.get(id=self.product_2.id)
@@ -261,7 +261,7 @@ class TestProductFileManager(TestCase):
 
         self.job_exe.job.is_superseded = True
         when = now()
-        ProductFile.objects.publish_products(self.job_exe, when)
+        ProductFile.objects.publish_products(self.job_exe, self.job_exe.job, when)
 
         product_1 = ScaleFile.objects.get(id=self.product_1.id)
         product_2 = ScaleFile.objects.get(id=self.product_2.id)
@@ -301,7 +301,7 @@ class TestProductFileManager(TestCase):
         product_3_b = prod_test_utils.create_product(job_exe=job_exe_3)
 
         when = now()
-        ProductFile.objects.publish_products(job_exe_3, when)
+        ProductFile.objects.publish_products(job_exe_3, job_3, when)
 
         # Make sure products from Job 1 and Job 2 are unpublished
         product_1_a = ScaleFile.objects.get(id=product_1_a.id)
@@ -358,7 +358,7 @@ class TestProductFileManager(TestCase):
 
         # Publish new products
         when = now()
-        ProductFile.objects.publish_products(self.job_exe, when)
+        ProductFile.objects.publish_products(self.job_exe, self.job_exe.job, when)
 
         # Check old products to make sure they are superseded
         product_a = ScaleFile.objects.get(id=product_a.id)

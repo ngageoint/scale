@@ -10,7 +10,7 @@ def get_invalid_manifest_error():
     :returns: The invalid results error
     :rtype: :class:`error.models.Error`
     """
-    return Error.objects.get_builtin_error('invalid-results-manifest')
+    return Error.objects.get_error('invalid-results-manifest')
 
 
 def get_missing_output_error():
@@ -20,4 +20,4 @@ def get_missing_output_error():
     :rtype: :class:`error.models.Error`
     """
 
-    return Error.objects.get_builtin_error('missing-required-output')
+    return Error.objects.get_error('missing-required-output')

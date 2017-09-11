@@ -17,7 +17,7 @@ class IngestConfig(AppConfig):
         """
 
         # Register ingest job type timeout error
-        from job.execution.tasks.job_task import JOB_TYPE_TIMEOUT_ERRORS
+        from job.execution.tasks.main_task import JOB_TYPE_TIMEOUT_ERRORS
         JOB_TYPE_TIMEOUT_ERRORS['scale-ingest'] = 'ingest-timeout'
 
         from ingest.triggers.ingest_trigger_handler import IngestTriggerHandler

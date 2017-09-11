@@ -30,3 +30,9 @@ class ScaleLogicBug(Exception):
     """Exception that indicates a critical Scale logic bug has occurred"""
 
     pass
+
+
+class TerminatedCommand(Exception):
+    """Exception that can be thrown to indicate that a Scale command recieved a SIGTERM signal"""
+
+    pass

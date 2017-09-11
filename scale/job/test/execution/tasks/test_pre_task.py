@@ -7,6 +7,7 @@ from django.utils.timezone import now
 import job.test.utils as job_test_utils
 from error.exceptions import ScaleDatabaseError, ScaleIOError, ScaleOperationalError
 from job.configuration.exceptions import MissingSetting
+from job.configuration.json.execution.exe_config import ExecutionConfiguration
 from job.execution.tasks.pre_task import PreTask
 from job.tasks.update import TaskStatusUpdate
 
@@ -27,7 +28,10 @@ class TestPreTask(TestCase):
         scale_errors = [ScaleDatabaseError(), ScaleIOError(), ScaleOperationalError(), MissingSetting('')]
 
         for scale_error in scale_errors:
-            task = PreTask('agent_1', self.job_exe)
+            config = ExecutionConfiguration()
+            config.create_tasks(['pre'])
+            config.set_task_ids(self.job_exe.get_cluster_id())
+            task = PreTask('agent_1', self.job_exe, self.job_exe.job_type, config)
             update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.RUNNING, now())
             task.update(update)
             update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.FAILED, now(),

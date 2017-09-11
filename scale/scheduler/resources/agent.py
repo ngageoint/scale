@@ -79,6 +79,9 @@ class AgentResources(object):
         if self._offer_resources.is_sufficient_to_meet(resources):
             # We have enough resources to meet the request, so keep allocating offers until we get enough
             while not allocated_resources.is_sufficient_to_meet(resources):
+                if len(available_offer_ids) == 0:
+                    # We unexpectedly ran out of offers (can occur due to resource rounding error)
+                    break
                 offer_id = available_offer_ids.pop()
                 offer = self._offers[offer_id]
                 allocated_offers[offer_id] = offer

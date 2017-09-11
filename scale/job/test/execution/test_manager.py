@@ -8,10 +8,9 @@ from django.utils.timezone import now
 
 import job.test.utils as job_test_utils
 import node.test.utils as node_test_utils
-from error.models import CACHED_BUILTIN_ERRORS
-from job.execution.job_exe import RunningJobExecution
+from error.models import CACHED_ERRORS
 from job.execution.manager import JobExecutionManager
-from job.models import JobExecution
+from job.models import Job
 from job.tasks.update import TaskStatusUpdate
 
 
@@ -24,15 +23,13 @@ class TestJobExecutionManager(TransactionTestCase):
         django.setup()
 
         # Clear error cache so test works correctly
-        CACHED_BUILTIN_ERRORS.clear()
+        CACHED_ERRORS.clear()
 
         self.agent_id = 'agent'
         self.node_model_1 = node_test_utils.create_node()
-        self.job_exe_model_1 = job_test_utils.create_job_exe(status='RUNNING', node=self.node_model_1)
-        self.job_exe_1 = RunningJobExecution(self.agent_id, self.job_exe_model_1)
+        self.job_exe_1 = job_test_utils.create_running_job_exe(agent_id=self.agent_id, node=self.node_model_1)
         self.node_model_2 = node_test_utils.create_node()
-        self.job_exe_model_2 = job_test_utils.create_job_exe(status='RUNNING', node=self.node_model_2)
-        self.job_exe_2 = RunningJobExecution(self.agent_id, self.job_exe_model_2)
+        self.job_exe_2 = job_test_utils.create_running_job_exe(agent_id=self.agent_id, node=self.node_model_2)
 
         self.job_exe_mgr = JobExecutionManager()
 
@@ -53,8 +50,8 @@ class TestJobExecutionManager(TransactionTestCase):
 
         # Both executions should be in the manager and ready
         self.assertEqual(len(self.job_exe_mgr.get_running_job_exes()), 2)
-        self.assertIsNotNone(self.job_exe_mgr.get_running_job_exe(self.job_exe_1.id))
-        self.assertIsNotNone(self.job_exe_mgr.get_running_job_exe(self.job_exe_2.id))
+        self.assertIsNotNone(self.job_exe_mgr.get_running_job_exe(self.job_exe_1.cluster_id))
+        self.assertIsNotNone(self.job_exe_mgr.get_running_job_exe(self.job_exe_2.cluster_id))
 
     def test_handle_task_timeout(self):
         """Tests calling handle_task_timeout() successfully"""
@@ -120,7 +117,7 @@ class TestJobExecutionManager(TransactionTestCase):
         self.job_exe_mgr.handle_task_update(update)
 
         # Cancel job_exe_1 and have manager sync with database
-        JobExecution.objects.update_status([self.job_exe_model_1], 'CANCELED', now())
+        Job.objects.update_jobs_to_canceled([self.job_exe_1.job_id], now())
         tasks_to_kill = self.job_exe_mgr.sync_with_database()
 
         self.assertEqual(self.job_exe_1.status, 'CANCELED')

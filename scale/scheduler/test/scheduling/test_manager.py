@@ -8,6 +8,7 @@ from mock import MagicMock, patch
 
 from job.execution.job_exe import RunningJobExecution
 from job.execution.manager import job_exe_mgr
+from job.models import JobExecution, JobExecutionEnd
 from job.test import utils as job_test_utils
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Cpus, Disk, Mem
@@ -21,6 +22,7 @@ from scheduler.resources.manager import resource_mgr
 from scheduler.resources.offer import ResourceOffer
 from scheduler.scheduling.manager import SchedulingManager
 from scheduler.sync.job_type_manager import job_type_mgr
+from scheduler.tasks.manager import system_task_mgr
 
 
 class TestSchedulingManager(TestCase):
@@ -49,6 +51,8 @@ class TestSchedulingManager(TestCase):
             node._initial_cleanup_completed()
             node._is_image_pulled = True
             node._update_state()
+        # Ignore system tasks
+        system_task_mgr._is_db_update_completed = True
 
         self.queue_1 = queue_test_utils.create_queue(cpus_required=4.0, mem_required=1024.0, disk_in_required=100.0,
                                                      disk_out_required=200.0, disk_total_required=300.0)
@@ -68,8 +72,13 @@ class TestSchedulingManager(TestCase):
         resource_mgr.add_new_offers([offer_1, offer_2])
 
         scheduling_manager = SchedulingManager()
+
         num_tasks = scheduling_manager.perform_scheduling(self._driver, now())
         self.assertEqual(num_tasks, 2)  # Schedule both queued job executions
+        # Ensure job execution models are created and queue models are deleted
+        self.assertEqual(JobExecution.objects.filter(job_id=self.queue_1.job_id).count(), 1)
+        self.assertEqual(JobExecution.objects.filter(job_id=self.queue_2.job_id).count(), 1)
+        self.assertEqual(Queue.objects.filter(id__in=[self.queue_1.id, self.queue_2.id]).count(), 0)
 
     @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
     def test_node_with_new_agent_id(self, mock_taskinfo):
@@ -108,10 +117,14 @@ class TestSchedulingManager(TestCase):
         Scheduler.objects.update(is_paused=True)
         scheduler_mgr.sync_with_database()
         node_mgr.sync_with_database(scheduler_mgr.config)  # Updates nodes with paused scheduler
+        system_task_mgr._is_db_update_completed = False  # Make sure system tasks don't get scheduled
 
         scheduling_manager = SchedulingManager()
         num_tasks = scheduling_manager.perform_scheduling(self._driver, now())
         self.assertEqual(num_tasks, 0)
+        self.assertEqual(JobExecution.objects.filter(job_id=self.queue_1.job_id).count(), 0)
+        self.assertEqual(JobExecution.objects.filter(job_id=self.queue_2.job_id).count(), 0)
+        self.assertEqual(Queue.objects.filter(id__in=[self.queue_1.id, self.queue_2.id]).count(), 2)
 
     @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
     def test_paused_job_type(self, mock_taskinfo):
@@ -130,6 +143,9 @@ class TestSchedulingManager(TestCase):
         scheduling_manager = SchedulingManager()
         num_tasks = scheduling_manager.perform_scheduling(self._driver, now())
         self.assertEqual(num_tasks, 1)  # Schedule queued job execution that is not paused
+        self.assertEqual(JobExecution.objects.filter(job_id=self.queue_1.job_id).count(), 0)
+        self.assertEqual(JobExecution.objects.filter(job_id=self.queue_2.job_id).count(), 1)
+        self.assertEqual(Queue.objects.filter(id__in=[self.queue_1.id, self.queue_2.id]).count(), 1)
 
     @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
     def test_job_type_limit(self, mock_taskinfo):
@@ -140,7 +156,8 @@ class TestSchedulingManager(TestCase):
         job_type_with_limit = job_test_utils.create_job_type()
         job_type_with_limit.max_scheduled = 4
         job_type_with_limit.save()
-        job_exe_1 = job_test_utils.create_job_exe(job_type=job_type_with_limit, status='RUNNING')
+        running_job_exe_1 = job_test_utils.create_running_job_exe(agent_id=self.agent_1.agent_id,
+                                                                  job_type=job_type_with_limit)
         queue_test_utils.create_queue(job_type=job_type_with_limit)
         queue_test_utils.create_queue(job_type=job_type_with_limit)
         queue_test_utils.create_queue(job_type=job_type_with_limit)
@@ -149,7 +166,7 @@ class TestSchedulingManager(TestCase):
         queue_test_utils.create_queue(job_type=job_type_with_limit)
         job_type_mgr.sync_with_database()
         # One job of this type is already running
-        job_exe_mgr.schedule_job_exes([RunningJobExecution(self.agent_1.agent_id, job_exe_1)])
+        job_exe_mgr.schedule_job_exes([running_job_exe_1])
 
         offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
                                 NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now())
@@ -160,3 +177,47 @@ class TestSchedulingManager(TestCase):
         scheduling_manager = SchedulingManager()
         num_tasks = scheduling_manager.perform_scheduling(self._driver, now())
         self.assertEqual(num_tasks, 3)  # One is already running, should only be able to schedule 3 more
+
+    @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
+    def test_canceled_queue_model(self, mock_taskinfo):
+        """Tests successfully calling perform_scheduling() when a queue model has been canceled"""
+        mock_taskinfo.return_value = MagicMock()
+
+        offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
+                                NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now())
+        offer_2 = ResourceOffer('offer_2', self.agent_2.agent_id, self.framework_id,
+                                NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now())
+        resource_mgr.add_new_offers([offer_1, offer_2])
+        self.queue_1.is_canceled = True
+        self.queue_1.save()
+
+        scheduling_manager = SchedulingManager()
+        num_tasks = scheduling_manager.perform_scheduling(self._driver, now())
+        self.assertEqual(num_tasks, 1)  # Scheduled non-canceled queued job execution
+        # queue_1 should be canceled, queue_2 should be running, queue should be empty now
+        self.assertEqual(JobExecution.objects.filter(job_id=self.queue_1.job_id).count(), 1)
+        self.assertEqual(JobExecution.objects.filter(job_id=self.queue_2.job_id).count(), 1)
+        self.assertEqual(Queue.objects.filter(id__in=[self.queue_1.id, self.queue_2.id]).count(), 0)
+        job_exe_1 = JobExecution.objects.get(job_id=self.queue_1.job_id)
+        job_exe_end_1 = JobExecutionEnd.objects.get(job_exe_id=job_exe_1.id)
+        self.assertEqual(job_exe_end_1.status, 'CANCELED')
+
+    @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
+    def test_schedule_system_tasks(self, mock_taskinfo):
+        """Tests successfully calling perform_scheduling() when scheduling system tasks"""
+        mock_taskinfo.return_value = MagicMock()
+
+        offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
+                                NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now())
+        offer_2 = ResourceOffer('offer_2', self.agent_2.agent_id, self.framework_id,
+                                NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now())
+        resource_mgr.add_new_offers([offer_1, offer_2])
+
+        # Clear the queue
+        Queue.objects.all().delete()
+        # Set us up to schedule a database update task
+        system_task_mgr._is_db_update_completed = False
+        scheduling_manager = SchedulingManager()
+
+        num_tasks = scheduling_manager.perform_scheduling(self._driver, now())
+        self.assertEqual(num_tasks, 1)  # Schedule database update task

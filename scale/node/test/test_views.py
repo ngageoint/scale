@@ -209,16 +209,25 @@ class TestNodesStatusView(TransactionTestCase):
         data_error = error_test_utils.create_error(category='DATA')
         system_error = error_test_utils.create_error(category='SYSTEM')
 
-        job_test_utils.create_job_exe(job=self.job, status='FAILED', error=data_error, node=self.node2,
-                                      created=now() - timedelta(hours=3), job_completed=now() - timedelta(hours=2))
-        job_test_utils.create_job_exe(job=self.job, status='FAILED', error=system_error, node=self.node2,
-                                      created=now() - timedelta(hours=3), job_completed=now() - timedelta(hours=2))
-        job_test_utils.create_job_exe(job=self.job, status='FAILED', error=system_error, node=self.node1,
-                                      created=now() - timedelta(hours=2), job_completed=now() - timedelta(hours=1))
-        job_test_utils.create_job_exe(job=self.job, status='COMPLETED', node=self.node1,
-                                      created=now() - timedelta(hours=1), job_completed=now())
-        job_test_utils.create_job_exe(job=self.job, status='RUNNING', node=self.node3,
-                                      created=now())
+        job_exe_1 = job_test_utils.create_job_exe(job=self.job, status='FAILED', error=data_error, node=self.node2)
+        job_exe_1.created = now() - timedelta(hours=3)
+        job_exe_1.job_completed = now() - timedelta(hours=2)
+        job_exe_1.save()
+        job_exe_2 = job_test_utils.create_job_exe(job=self.job, status='FAILED', error=system_error, node=self.node2)
+        job_exe_2.created = now() - timedelta(hours=3)
+        job_exe_2.job_completed = now() - timedelta(hours=2)
+        job_exe_2.save()
+        job_exe_3 = job_test_utils.create_job_exe(job=self.job, status='FAILED', error=system_error, node=self.node1)
+        job_exe_3.created = now() - timedelta(hours=2)
+        job_exe_3.job_completed = now() - timedelta(hours=1)
+        job_exe_3.save()
+        job_exe_4 = job_test_utils.create_job_exe(job=self.job, status='COMPLETED', node=self.node1)
+        job_exe_4.created = now() - timedelta(hours=1)
+        job_exe_4.job_completed = now()
+        job_exe_4.save()
+        job_exe_5 = job_test_utils.create_job_exe(job=self.job, status='RUNNING', node=self.node3)
+        job_exe_5.created = now()
+        job_exe_5.save()
 
     # TODO: remove when REST API v4 is removed
     @patch('mesos_api.api.get_slaves')

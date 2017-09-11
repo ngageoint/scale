@@ -9,8 +9,7 @@ import django.utils.timezone as timezone
 from django.db import transaction
 
 import storage.geospatial_utils as geo_utils
-from job.models import JobManager
-from recipe.models import Recipe, RecipeManager
+from recipe.models import Recipe
 from storage.brokers.broker import FileUpload
 from storage.models import ScaleFile
 from util.parse import parse_datetime
@@ -24,7 +23,7 @@ class FileAncestryLinkManager(models.Manager):
     """
 
     @transaction.atomic
-    def create_file_ancestry_links(self, parent_ids, child_ids, job_exe):
+    def create_file_ancestry_links(self, parent_ids, child_ids, job, job_exe_id):
         """Creates the appropriate file ancestry links for the given parent and child files. All database changes are
         made in an atomic transaction.
 
@@ -33,24 +32,26 @@ class FileAncestryLinkManager(models.Manager):
         :param child_ids: Set of child file IDs. Passing None can be used to link input files to jobs and recipes
             without any derived products.
         :type child_ids: set of int
-        :param job_exe: The job execution that is creating the file links
-        :type job_exe: :class:`job.models.JobExecution`
+        :param job: The job that is creating the file links
+        :type job: :class:`job.models.Job`
+        :param job_exe_id: The job execution that is creating the file links
+        :type job_exe_id: int
         """
 
         new_links = []
         created = timezone.now()
 
-        # Delete any previous file ancestry links for the given execution
-        # This overrides any file input links that were created when the execution was first queued
-        FileAncestryLink.objects.filter(job_exe=job_exe).delete()
+        # Delete any previous file ancestry links for the given job
+        # This overrides any file input links that were created when the job first received its input data
+        FileAncestryLink.objects.filter(job_id=job.id).delete()
 
         # Not all jobs have a recipe so attempt to get one if applicable
-        job_recipe = Recipe.objects.get_recipe_for_job(job_exe.job_id)
+        job_recipe = Recipe.objects.get_recipe_for_job(job.id)
 
         # See if this job is in a batch
         from batch.models import BatchJob
         try:
-            batch_id = BatchJob.objects.get(job_id=job_exe.job_id).batch_id
+            batch_id = BatchJob.objects.get(job_id=job.id).batch_id
         except BatchJob.DoesNotExist:
             batch_id = None
 
@@ -75,8 +76,8 @@ class FileAncestryLinkManager(models.Manager):
                 link.descendant_id = child_id
 
                 # Set references to the current execution
-                link.job_exe_id = job_exe.id
-                link.job = job_exe.job
+                link.job_exe_id = job_exe_id
+                link.job = job
                 link.batch_id = batch_id
                 new_links.append(link)
 
@@ -95,8 +96,8 @@ class FileAncestryLinkManager(models.Manager):
                 link.descendant_id = child_id
 
                 # Set references to the current execution
-                link.job_exe_id = job_exe.id
-                link.job = job_exe.job
+                link.job_exe_id = job_exe_id
+                link.job = job
                 link.batch_id = batch_id
 
                 if job_recipe:
@@ -166,7 +167,8 @@ class FileAncestryLink(models.Model):
     descendant = models.ForeignKey('storage.ScaleFile', blank=True, null=True, on_delete=models.PROTECT,
                                    related_name='ancestors')
 
-    job_exe = models.ForeignKey('job.JobExecution', on_delete=models.PROTECT, related_name='job_exe_file_links')
+    job_exe = models.ForeignKey('job.JobExecution', blank=True, null=True, on_delete=models.PROTECT,
+                                related_name='job_exe_file_links')
     job = models.ForeignKey('job.Job', on_delete=models.PROTECT, related_name='job_file_links')
     recipe = models.ForeignKey('recipe.Recipe', blank=True, on_delete=models.PROTECT, null=True,
                                related_name='recipe_file_links')
@@ -239,9 +241,9 @@ class ProductFileManager(models.GeoManager):
         # Fetch a list of product files
         products = ScaleFile.objects.filter(file_type='PRODUCT', has_been_published=True)
         products = products.select_related('workspace', 'job_type', 'job', 'job_exe', 'recipe', 'recipe_type', 'batch')
-        products = products.defer('workspace__json_config', 'job__data', 'job__configuration', 'job__results',
-                                  'job_exe__environment', 'job_exe__configuration', 'job_exe__job_metrics',
-                                  'job_exe__stdout', 'job_exe__stderr', 'job_exe__results', 'job_exe__results_manifest',
+        products = products.defer('workspace__json_config', 'job__data', 'job__results', 'job_exe__environment',
+                                  'job_exe__configuration', 'job_exe__job_metrics', 'job_exe__stdout',
+                                  'job_exe__stderr', 'job_exe__results', 'job_exe__results_manifest',
                                   'job_type__interface', 'job_type__docker_params', 'job_type__configuration',
                                   'job_type__error_mapping', 'recipe__data', 'recipe_type__definition', 
                                   'batch__definition')
@@ -451,27 +453,29 @@ class ProductFileManager(models.GeoManager):
             product_lists[link.descendant_id].append(source_files[link.ancestor_id])
 
     @transaction.atomic
-    def publish_products(self, job_exe, when):
+    def publish_products(self, job_exe_id, job, when):
         """Publishes all of the products produced by the given job execution. All database changes will be made in an
         atomic transaction.
 
-        :param job_exe: The locked job execution model with related job model
-        :type job_exe: :class:`job.models.JobExecution`
+        :param job_exe_id: The job execution ID
+        :type job_exe_id: int
+        :param job: The locked job model
+        :type job: :class:`job.models.Job`
         :param when: When the products were published
         :type when: :class:`datetime.datetime`
         """
 
         # Don't publish products if the job is already superseded
-        if job_exe.job.is_superseded:
+        if job.is_superseded:
             return
 
         # Unpublish any products created by jobs that are superseded by this job
-        if job_exe.job.root_superseded_job_id:
-            self.unpublish_products(job_exe.job.root_superseded_job_id, when)
+        if job.root_superseded_job_id:
+            self.unpublish_products(job.root_superseded_job_id, when)
 
         # Grab UUIDs from new products to be published
         uuids = []
-        for product_file in self.filter(job_exe_id=job_exe.id):
+        for product_file in self.filter(job_exe_id=job_exe_id):
             uuids.append(product_file.uuid)
 
         # Supersede products with the same UUIDs (a given UUID should only appear once in the product API calls)
@@ -480,7 +484,7 @@ class ProductFileManager(models.GeoManager):
             query.update(is_published=False, is_superseded=True, superseded=when, last_modified=timezone.now())
 
         # Publish this job execution's products
-        self.filter(job_exe_id=job_exe.id).update(has_been_published=True, is_published=True, published=when,
+        self.filter(job_exe_id=job_exe_id).update(has_been_published=True, is_published=True, published=when,
                                                   last_modified=timezone.now())
 
     def unpublish_products(self, root_job_id, when):

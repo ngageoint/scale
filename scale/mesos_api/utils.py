@@ -32,8 +32,6 @@ def create_task_update_model(status):
 
     task_update = TaskUpdate()
     task_update.task_id = get_status_task_id(status)
-    if task_update.task_id.startswith(JOB_TASK_ID_PREFIX):
-        task_update.job_exe_id = JobExecution.get_job_exe_id(task_update.task_id)
     task_update.status = get_status_state(status)
     task_update.timestamp = get_status_timestamp(status)
     task_update.source = get_status_source(status)

@@ -61,8 +61,6 @@ class TestTask(TestCase):
         task = ImplementedTask(task_id, task_name, agent_id)
         timed_out = task.check_timeout(time_1)
         self.assertFalse(timed_out)
-        self.assertFalse(task.has_ended)
-        self.assertIsNone(task._ended)
         self.assertFalse(task._has_timed_out)
 
         # Check that launched (still staging) task is not timed out before threshold
@@ -72,8 +70,6 @@ class TestTask(TestCase):
         task.launch(time_1)
         timed_out = task.check_timeout(time_before_threshold)
         self.assertFalse(timed_out)
-        self.assertFalse(task.has_ended)
-        self.assertIsNone(task._ended)
         self.assertFalse(task._has_timed_out)
 
         # Check that launched (still staging) task is timed out after threshold
@@ -83,8 +79,6 @@ class TestTask(TestCase):
         task.launch(time_1)
         timed_out = task.check_timeout(time_after_threshold)
         self.assertTrue(timed_out)
-        self.assertTrue(task.has_ended)
-        self.assertEquals(task._ended, time_after_threshold)
         self.assertTrue(task._has_timed_out)
 
         # Check that launched (still staging) task is not timed out if there is no threshold
@@ -94,8 +88,6 @@ class TestTask(TestCase):
         task.launch(time_1)
         timed_out = task.check_timeout(time_after_threshold)
         self.assertFalse(timed_out)
-        self.assertFalse(task.has_ended)
-        self.assertIsNone(task._ended)
         self.assertFalse(task._has_timed_out)
 
         # Check that running task is not timed out before threshold
@@ -107,8 +99,6 @@ class TestTask(TestCase):
         task.update(update)
         timed_out = task.check_timeout(time_before_threshold)
         self.assertFalse(timed_out)
-        self.assertFalse(task.has_ended)
-        self.assertIsNone(task._ended)
         self.assertFalse(task._has_timed_out)
 
         # Check that running task is timed out after threshold
@@ -120,8 +110,6 @@ class TestTask(TestCase):
         task.update(update)
         timed_out = task.check_timeout(time_after_threshold)
         self.assertTrue(timed_out)
-        self.assertTrue(task.has_ended)
-        self.assertEquals(task._ended, time_after_threshold)
         self.assertTrue(task._has_timed_out)
 
         # Check that running task is not timed out if there is no threshold
@@ -133,6 +121,4 @@ class TestTask(TestCase):
         task.update(update)
         timed_out = task.check_timeout(time_after_threshold)
         self.assertFalse(timed_out)
-        self.assertFalse(task.has_ended)
-        self.assertIsNone(task._ended)
         self.assertFalse(task._has_timed_out)

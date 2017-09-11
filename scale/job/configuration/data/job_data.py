@@ -195,6 +195,21 @@ class JobData(object):
                 file_ids.update(data_input['file_ids'])
         return file_ids
 
+    def get_input_file_ids_by_input(self):
+        """Returns the list of file IDs for each input that holds files
+
+        :returns: Dict where each file input name maps to its list of file IDs
+        :rtype: dict
+        """
+
+        file_ids = {}
+        for data_input in self.data_dict['input_data']:
+            if 'file_id' in data_input:
+                file_ids[data_input['name']] = [data_input['file_id']]
+            elif 'file_ids' in data_input:
+                file_ids[data_input['name']] = data_input['file_ids']
+        return file_ids
+
     def get_input_file_info(self):
         """Returns a set of scale file identifiers and input names for each file in the job input data.
 
@@ -225,6 +240,21 @@ class JobData(object):
             workspace_ids.add(workspace_id)
 
         return list(workspace_ids)
+
+    def get_output_workspaces(self):
+        """Returns a dict of the output parameter names mapped to their output workspace ID
+
+        :returns: A dict mapping output parameters to workspace IDs
+        :rtype: dict
+        """
+
+        workspaces = {}
+        for name in self.data_outputs_by_name:
+            file_output = self.data_outputs_by_name[name]
+            workspace_id = file_output['workspace_id']
+            workspaces[name] = workspace_id
+
+        return workspaces
 
     def get_property_values(self, property_names):
         """Retrieves the values contained in this job data for the given property names. If no value is available for a

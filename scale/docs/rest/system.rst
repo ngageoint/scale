@@ -40,6 +40,10 @@ These services provide access to general system information.
 +--------------------------+-------------------+--------------------------------------------------------------------------------+
 | scheduler.state          | JSON Object       | The current scheduler state, with a title and description                      |
 +--------------------------+-------------------+--------------------------------------------------------------------------------+
+| system                   | JSON Object       | System information                                                             |
++--------------------------+-------------------+--------------------------------------------------------------------------------+
+| system.database_update   | JSON Object       | Information on if and when the current Scale database update completed         |
++--------------------------+-------------------+--------------------------------------------------------------------------------+
 | num_offers               | Integer           | Number of resource offers currently held by Scale                              |
 +--------------------------+-------------------+--------------------------------------------------------------------------------+
 | resources                | JSON Object       | Describes the resource totals across all of Scale's nodes. Each resource name  |
@@ -82,17 +86,12 @@ These services provide access to general system information.
 |            "tasks_launched_per_sec": 0.0,                                                                                     |
 |            "offers_launched_per_sec": 0.0,                                                                                    |
 |            "tasks_finished_per_sec": 0.0                                                                                      |
-|         },                                                                                                                    |
-|         "hostname": "scheduler-host.domain.com",                                                                              |
-|         "mesos": {                                                                                                            |
-|            "framework_id": "1234",                                                                                            |
-|            "master_hostname": "192.168.1.1",                                                                                  |
-|            "master_port": 5050                                                                                                |
-|         },                                                                                                                    |
-|         "state": {                                                                                                            |
-|            "name": "READY",                                                                                                   |
-|            "title": "Ready",                                                                                                  |
-|            "description": "Scheduler is ready to run new jobs."                                                               |
+|         }                                                                                                                     |
+|      },                                                                                                                       |
+|      "system": {                                                                                                              |
+|         "database_update": {                                                                                                  |
+|            "is_completed": true,                                                                                              |
+|            "completed": "1970-01-01T00:00:00Z"                                                                                |
 |         }                                                                                                                     |
 |      },                                                                                                                       |
 |      "num_offers": 4,                                                                                                         |

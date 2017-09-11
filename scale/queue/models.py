@@ -9,14 +9,17 @@ import django.contrib.postgres.fields
 from django.db import models, transaction
 
 from error.models import Error
+from job.configuration.configurators import QueuedExecutionConfigurator
 from job.configuration.data.exceptions import InvalidData
 from job.configuration.data.job_data import JobData
+from job.configuration.interface.job_interface import JobInterface
 from job.configuration.json.execution.exe_config import ExecutionConfiguration
-from job.execution.job_exe import RunningJobExecution
 from job.models import Job, JobType
 from job.models import JobExecution
 from node.resources.json.resources import Resources
+from product.models import ProductFile
 from recipe.models import Recipe
+from storage.models import ScaleFile
 from trigger.models import TriggerEvent
 
 logger = logging.getLogger(__name__)
@@ -195,37 +198,6 @@ class JobLoad(models.Model):
         db_table = 'job_load'
 
 
-class QueueEventProcessor(object):
-    """Base class used to process queue events."""
-    __metaclass__ = abc.ABCMeta
-
-    def process_queued(self, job_exe, is_initial):
-        """Callback when a new job execution is queued that sub-classes have registered to process.
-
-        :param job_exe: The new job execution that requires processing.
-        :type job_exe: :class:`job.models.JobExecution`
-        :param is_initial: Whether or not this is the first time the associated job has been queued.
-        :type is_initial: bool
-        """
-        raise NotImplemented()
-
-    def process_completed(self, job_exe):
-        """Callback when an existing job execution completed successfully that sub-classes have registered to process.
-
-        :param job_exe: The new job execution that requires processing.
-        :type job_exe: :class:`job.models.JobExecution`
-        """
-        raise NotImplemented()
-
-    def process_failed(self, job_exe):
-        """Callback when an existing job execution failed that sub-classes have registered to process.
-
-        :param job_exe: The new job execution that requires processing.
-        :type job_exe: :class:`job.models.JobExecution`
-        """
-        raise NotImplemented()
-
-
 class QueueStatus(object):
     """Represents queue status statistics.
 
@@ -248,9 +220,6 @@ class QueueStatus(object):
 class QueueManager(models.Manager):
     """Provides additional methods for managing the queue
     """
-
-    # List of queue event processor class definitions
-    _processors = []
 
     def get_queue(self, order_mode, ignore_job_type_ids=None):
         """Returns the list of queue models sorted according to their priority first, and then according to the provided
@@ -308,145 +277,103 @@ class QueueManager(models.Manager):
         :type when: :class:`datetime.datetime`
         """
 
-        # Acquire model lock on latest job execution
-        job_exe_qry = JobExecution.objects.select_for_update().defer('stdout', 'stderr').filter(job_id=job_id)
-        job_exe = job_exe_qry.order_by('-created').first()
+        Job.objects.update_jobs_to_canceled([job_id], when)
 
-        # Acquire model lock on job
-        job = Job.objects.get_locked_job(job_id)
-
-        # Get latest job execution again to ensure no new job execution was just created
-        job_exe_2 = JobExecution.objects.defer('stdout', 'stderr').filter(job_id=job_id).order_by('-created').first()
-
-        # It's possible that a new latest job execution was created between obtaining the job_exe and job locks above.
-        # If this happens (should be quite rare), we need to abort the cancellation
-        job_exe_id = job_exe.id if job_exe else None
-        job_exe_2_id = job_exe_2.id if job_exe_2 else None
-        if job_exe_id != job_exe_2_id:
-            raise Exception('Job could not be canceled due to a rare status conflict. Please try again.')
-
-        if not job.can_be_canceled:
-            raise Exception('Job cannot be canceled when in status %s' % job.status)
-
-        if job_exe and not job_exe.is_finished:
-            # Stop the current job execution, removing it from the queue if applicable
-            if job_exe.status == 'QUEUED':
-                Queue.objects.filter(job_exe_id=job_exe.id).delete()
-            JobExecution.objects.update_status([job_exe], 'CANCELED', when)
-        else:
-            # Latest job execution was finished, so just mark the job as CANCELED
-            Job.objects.update_status([job], 'CANCELED', when)
+        self._cancel_queued_jobs([job_id])
 
         # If this job is in a recipe, update dependent jobs so that they are BLOCKED
-        handler = Recipe.objects.get_recipe_handler_for_job(job.id)
+        handler = Recipe.objects.get_recipe_handler_for_job(job_id)
         if handler:
             jobs_to_blocked = handler.get_blocked_jobs()
             Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
 
     @transaction.atomic
-    def handle_job_completion(self, job_exe_id, when, tasks):
-        """Handles the successful completion of a job. All database changes occur in an atomic transaction.
+    def handle_job_completion(self, job_id, exe_num, when):
+        """Handles the successful completion of a job. The number of the job's running execution is provided to resolve
+        race conditions. All database changes occur in an atomic transaction.
 
-        :param job_exe_id: The ID of the job execution that successfully completed
-        :type job_exe_id: int
-        :param when: When the job execution was completed
+        :param job_id: The job ID
+        :type job_id: int
+        :param exe_num: The job's execution number
+        :type exe_num: int
+        :param when: When the job was completed
         :type when: :class:`datetime.datetime`
-        :param tasks: The list of this job's tasks
-        :type tasks: [:class:`job.tasks.base_task.Task`]
         """
 
-        job_exe = JobExecution.objects.get_locked_job_exe(job_exe_id)
-        if job_exe.status != 'RUNNING':
-            # If this job execution is no longer running, ignore completion
+        job = Job.objects.get_locked_job(job_id)
+        # If the status isn't RUNNING or the execution number has changed, this update is obsolete
+        if job.status != 'RUNNING' or job.num_exes != exe_num:
             return
-        job_exe.job = Job.objects.get_locked_job(job_exe.job_id)
-        for task in tasks:
-            task.populate_job_exe_model(job_exe)
-        JobExecution.objects.complete_job_exe(job_exe, when)
 
-        # Execute any registered processors from other applications
-        for processor_class in self._processors:
-            try:
-                processor = processor_class()
-                processor.process_completed(job_exe)
-            except:
-                logger.exception('Unable to call queue processor for completed job execution: %s -> %s',
-                                 processor_class, job_exe_id)
+        Job.objects.complete_job(job, when)
+
+        # Publish this job's products
+        # TODO: we should eventually refactor how product publishing is handled
+        job_exe = JobExecution.objects.get(job_id=job_id, exe_num=exe_num)
+        ProductFile.objects.publish_products(job_exe.id, job, job.ended)
 
         # If this job is in a recipe, queue any jobs in the recipe that have their job dependencies completed
-        handler = Recipe.objects.get_recipe_handler_for_job(job_exe.job_id)
+        handler = Recipe.objects.get_recipe_handler_for_job(job_id)
         if handler:
-            if not job_exe.job.is_superseded:  # Do not queue dependent jobs for superseded jobs
+            if not job.is_superseded:  # Do not queue dependent jobs for superseded jobs
                 jobs_to_queue = []
                 for job_tuple in handler.get_existing_jobs_to_queue():
-                    job = job_tuple[0]
+                    job_to_queue = job_tuple[0]
                     job_data = job_tuple[1]
                     try:
-                        Job.objects.populate_job_data(job, job_data)
+                        Job.objects.populate_job_data(job_to_queue, job_data)
                     except InvalidData as ex:
                         raise Exception('Scale created invalid job data: %s' % str(ex))
-                    jobs_to_queue.append(job)
+                    jobs_to_queue.append(job_to_queue)
                 if jobs_to_queue:
                     self._queue_jobs(jobs_to_queue)
             if handler.is_completed():
                 Recipe.objects.complete_recipe(handler.recipe.id, when)
 
     @transaction.atomic
-    def handle_job_failure(self, job_exe_id, when, tasks, error=None):
-        """Handles the failure of a job execution. If the job has tries remaining, it is put back on the queue.
-        Otherwise it is marked failed. All database changes occur in an atomic transaction.
+    def handle_job_failure(self, job_id, exe_num, when, error):
+        """Handles the failure of a job. The number of the job's running execution is provided to resolve race
+        conditions. If the job has tries remaining, it is put back on the queue. Otherwise it is marked failed. All
+        database changes occur in an atomic transaction.
 
-        :param job_exe_id: The ID of the job execution that failed
-        :type job_exe_id: int
-        :param when: When the failure occurred
+        :param job_id: The job ID
+        :type job_id: int
+        :param exe_num: The job's execution number
+        :type exe_num: int
+        :param when: When the job was completed
         :type when: :class:`datetime.datetime`
-        :param tasks: The list of this job's tasks
-        :type tasks: [:class:`job.tasks.base_task.Task`]
         :param error: The error that caused the failure
         :type error: :class:`error.models.Error`
         """
 
-        if not error:
-            error = Error.objects.get_unknown_error()
-
-        job_exe = JobExecution.objects.get_locked_job_exe(job_exe_id)
-        if job_exe.status != 'RUNNING':
-            # If this job execution is no longer running, ignore failure
+        job = Job.objects.get_locked_job(job_id)
+        # If the status isn't RUNNING or the execution number has changed, this update is obsolete
+        if job.status != 'RUNNING' or job.num_exes != exe_num:
             return
-        job_exe.job = Job.objects.get_locked_job(job_exe.job_id)
-        for task in tasks:
-            task.populate_job_exe_model(job_exe)
-        JobExecution.objects.update_status([job_exe], 'FAILED', when, error)
-        # TODO: extra save here to capture task info, re-work this as part of the architecture refactor
-        job_exe.save()
 
-        # Execute any registered processors from other applications
-        for processor_class in self._processors:
-            try:
-                processor = processor_class()
-                processor.process_failed(job_exe)
-            except:
-                logger.exception('Unable to call queue processor for failed job execution: %s -> %s', processor_class,
-                                 job_exe_id)
+        # Need related job_type and job_type_rev models
+        # TODO: refactor this as part of the move to the messaging backend
+        job = Job.objects.select_related('job_type', 'job_type_rev').get(id=job_id)
 
         # Re-try job if error supports re-try and there are more tries left
-        retry = error.should_be_retried and job_exe.job.num_exes < job_exe.job.max_tries
+        retry = error.should_be_retried and job.num_exes < job.max_tries
         # Also re-try long running jobs
-        retry = retry or job_exe.job.job_type.is_long_running
+        retry = retry or job.job_type.is_long_running
         # Do not re-try superseded jobs
-        retry = retry and not job_exe.job.is_superseded
+        retry = retry and not job.is_superseded
 
         if retry:
-            self._queue_jobs([job_exe.job])
+            self._queue_jobs([job])
         else:
+            Job.objects.fail_job(job, when, error)
             # If this job is in a recipe, update dependent jobs so that they are BLOCKED
-            handler = Recipe.objects.get_recipe_handler_for_job(job_exe.job_id)
+            handler = Recipe.objects.get_recipe_handler_for_job(job_id)
             if handler:
                 jobs_to_blocked = handler.get_blocked_jobs()
                 Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
 
     @transaction.atomic
-    def queue_new_job(self, job_type, data, event, configuration=None):
+    def queue_new_job(self, job_type, data, event):
         """Creates a new job for the given type and data. The new job is immediately placed on the queue. The new job,
         job_exe, and queue models are saved in the database in an atomic transaction.
 
@@ -456,8 +383,6 @@ class QueueManager(models.Manager):
         :type data: :class:`job.configuration.data.job_data.JobData`
         :param event: The event that triggered the creation of this job
         :type event: :class:`trigger.models.TriggerEvent`
-        :param configuration: The optional initial execution configuration
-        :type configuration: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
         :returns: The new queued job
         :rtype: :class:`job.models.Job`
 
@@ -465,9 +390,6 @@ class QueueManager(models.Manager):
         """
 
         job = Job.objects.create_job(job_type, event)
-        if not configuration:
-            configuration = ExecutionConfiguration()
-        job.configuration = configuration.get_dict()
         job.save()
 
         # No lock needed for this job since it doesn't exist outside this transaction yet
@@ -488,16 +410,15 @@ class QueueManager(models.Manager):
         :type job_type: :class:`job.models.JobType`
         :param data: JSON description defining the job data to run on
         :type data: dict
-        :returns: The ID of the new job and the ID of the job execution
-        :rtype: tuple of (int, int)
+        :returns: The ID of the new job
+        :rtype: int
         """
 
         description = {'user': 'Anonymous'}
         event = TriggerEvent.objects.create_trigger_event('USER', None, description, timezone.now())
 
         job_id = self.queue_new_job(job_type, JobData(data), event).id
-        job_exe = JobExecution.objects.get(job_id=job_id, status='QUEUED')
-        return job_id, job_exe.id
+        return job_id
 
     @transaction.atomic
     def queue_new_recipe(self, recipe_type, data, event, superseded_recipe=None, delta=None, superseded_jobs=None,
@@ -539,7 +460,7 @@ class QueueManager(models.Manager):
                 raise Exception('Scale created invalid job data: %s' % str(ex))
             jobs_to_queue.append(job)
         if jobs_to_queue:
-            self._queue_jobs(jobs_to_queue, priority)
+            self._queue_jobs(jobs_to_queue, priority=priority)
 
         return handler
 
@@ -567,17 +488,6 @@ class QueueManager(models.Manager):
 
         return self.queue_new_recipe(recipe_type, data, event)
 
-    def register_processor(self, processor_class):
-        """Registers the given processor class to be called when job executions change status.
-
-        Processors from other applications can be registered during their ready() method.
-
-        :param processor_class: The processor class to invoke when the associated status change occurs.
-        :type processor_class: :class:`job.clock.ClockProcessor`
-        """
-        logger.debug('Registering queue processor: %s', processor_class)
-        self._processors.append(processor_class)
-
     @transaction.atomic
     def requeue_jobs(self, job_ids, priority=None):
         """Re-queues the jobs with the given IDs. Any job that is not in a valid state for being re-queued or is
@@ -589,7 +499,7 @@ class QueueManager(models.Manager):
         :type priority: int
         """
 
-        jobs_to_requeue = Job.objects.get_locked_jobs(job_ids)
+        jobs_to_requeue = Job.objects.get_locked_jobs_with_related(job_ids)
         all_valid_job_ids = []
         jobs_to_queue = []
         jobs_to_blocked = []
@@ -609,7 +519,7 @@ class QueueManager(models.Manager):
         # Update jobs that are being re-queued
         if jobs_to_queue:
             Job.objects.increment_max_tries(jobs_to_queue)
-            self._queue_jobs(jobs_to_queue, priority)
+            self._queue_jobs(jobs_to_queue, priority=priority)
         when = timezone.now()
         if jobs_to_blocked:
             Job.objects.update_status(jobs_to_blocked, 'BLOCKED', when)
@@ -620,156 +530,145 @@ class QueueManager(models.Manager):
         if jobs_to_pending:
             Job.objects.update_status(jobs_to_pending, 'PENDING', when)
 
-    @transaction.atomic
-    def schedule_job_executions(self, framework_id, job_executions, workspaces):
-        """Schedules the given job executions on the provided nodes and resources. The corresponding queue models will
-        be deleted from the database. All database changes occur in an atomic transaction.
+    def _cancel_queued_jobs(self, job_ids):
+        """Marks the queued job executions for the given jobs as canceled
 
-        :param framework_id: The scheduling framework ID
-        :type framework_id: string
-        :param job_executions: A list of queued job executions that have been given nodes and resources on which to run
-        :type job_executions: list[:class:`queue.job_exe.QueuedJobExecution`]
-        :param workspaces: A dict of all workspaces stored by name
-        :type workspaces: {string: :class:`storage.models.Workspace`}
-        :returns: The scheduled job executions
-        :rtype: list[:class:`job.execution.job_exe.RunningJobExecution`]
+        :param job_ids: The list of job IDs being canceled
+        :type job_ids: list
         """
 
-        if not job_executions:
-            return []
+        self.filter(job_id__in=job_ids).update(is_canceled=True)
 
-        job_exe_ids = []
-        for job_execution in job_executions:
-            job_exe_ids.append(job_execution.id)
+    def _queue_jobs(self, jobs, input_files=None, priority=None):
+        """Queues the given jobs. The caller must have obtained model locks on the job models in an atomic transaction.
+        Any jobs that are not in a valid status for being queued, are without job data, or are superseded will be
+        ignored. All jobs should have their related job_type and job_type_rev models populated. All scale_file models
+        should have their related workspace field populated. If the scale_file models are not provided, they will be
+        queried.
 
-        # Lock corresponding job executions
-        job_exes = {}
-        for job_exe in JobExecution.objects.select_for_update().filter(id__in=job_exe_ids).order_by('id'):
-            job_exes[job_exe.id] = job_exe
-
-        # Set up job executions to schedule
-        executions_to_schedule = []
-        for job_execution in job_executions:
-            node_id = job_execution.provided_node_id
-            agent_id = job_execution.provided_agent_id
-            resources = job_execution.provided_resources
-            input_file_size = job_execution.input_file_size
-            job_exe = job_exes[job_execution.id]
-
-            # Ignore executions that are no longer queued (executions may have been changed since queue model was last
-            # queried)
-            if job_exe.status != 'QUEUED':
-                continue
-
-            executions_to_schedule.append((job_exe, node_id, resources, input_file_size, agent_id))
-
-        # Schedule job executions
-        scheduled_job_exes = []
-        job_exe_ids_scheduled = []
-        for job_exe in JobExecution.objects.schedule_job_executions(framework_id, executions_to_schedule, workspaces):
-            scheduled_job_exes.append(RunningJobExecution(job_exe.agent_id, job_exe))
-            job_exe_ids_scheduled.append(job_exe.id)
-
-        # Clear the scheduled job executions from the queue
-        Queue.objects.filter(job_exe_id__in=job_exe_ids_scheduled).delete()
-
-        return scheduled_job_exes
-
-    def _queue_jobs(self, jobs, priority=None):
-        """Queues the given jobs and returns the new queued job executions. The caller must have obtained model locks on
-        the job models. Any jobs that are not in a valid status for being queued, are without job data, or are
-        superseded will be ignored. All jobs should have their related job_type and job_type_rev models populated.
-
-        :param jobs: The jobs to put on the queue
-        :type jobs: [:class:`job.models.Job`]
+        :param jobs: The job models to put on the queue
+        :type jobs: list
+        :param input_files: The dict of Scale file models stored by ID
+        :type input_files: dict
         :param priority: An optional argument to reset the jobs' priority before they are queued
         :type priority: int
-        :returns: The new queued job execution models
-        :rtype: [:class:`job.models.JobExecution`]
         """
 
         when_queued = timezone.now()
 
-        job_exes = Job.objects.queue_jobs(jobs, when_queued, priority)
+        # Set job models to QUEUED
+        queued_jobs = Job.objects.queue_jobs(jobs, when_queued, priority)
 
-        # Execute any registered processors from other applications
-        for processor_class in self._processors:
-            processor = processor_class()
-            for job_exe in job_exes:
-                processor.process_queued(job_exe, job_exe.job.num_exes == 1)
+        if not input_files:
+            # Query for all input files
+            input_files = {}
+            input_file_ids = set()
+            for job in queued_jobs:
+                input_file_ids.update(job.get_job_data().get_input_file_ids())
+            if input_file_ids:
+                for input_file in ScaleFile.objects.get_files(input_file_ids):
+                    input_files[input_file.id] = input_file
 
+        # Bulk create queue models
         queues = []
-        for job_exe in job_exes:
+        configurator = QueuedExecutionConfigurator(input_files)
+        for job in queued_jobs:
+            config = configurator.configure_queued_job(job)
+
             queue = Queue()
-            queue.job_exe = job_exe
-            queue.job = job_exe.job
-            queue.job_type = job_exe.job.job_type
-            queue.priority = job_exe.job.priority
-            queue.input_file_size = job_exe.job.disk_in_required if job_exe.job.disk_in_required else 0.0
-            queue.configuration = job_exe.job.configuration
-            queue.resources = job_exe.job.get_resources().get_json().get_dict()
+            queue.job_type = job.job_type
+            queue.job = job
+            queue.exe_num = job.num_exes
+            queue.input_file_size = job.disk_in_required if job.disk_in_required else 0.0
+            queue.is_canceled = False
+            queue.priority = job.priority
+            queue.timeout = job.timeout
+            queue.interface = job.get_job_interface().get_dict()
+            queue.configuration = config.get_dict()
+            queue.resources = job.get_resources().get_json().get_dict()
             queue.queued = when_queued
             queues.append(queue)
 
-        if not queues:
-            return []
-
-        self.bulk_create(queues)
-        return job_exes
+        if queues:
+            self.bulk_create(queues)
 
 
 class Queue(models.Model):
-    """Represents a job that is queued to be run on a node
+    """Represents a job execution that is queued and ready to be run on a node
 
-    :keyword job_exe: The job execution that has been queued
-    :type job_exe: :class:`django.db.models.ForeignKey`
+    :keyword job_type: The type of this job
+    :type job_type: :class:`django.db.models.ForeignKey`
     :keyword job: The job that has been queued
     :type job: :class:`django.db.models.ForeignKey`
-    :keyword job_type: The type of this job execution
-    :type job_type: :class:`django.db.models.ForeignKey`
+    :keyword exe_num: The number for this job execution
+    :type exe_num: :class:`django.db.models.IntegerField`
 
-    :keyword priority: The priority of the job (lower number is higher priority)
-    :type priority: :class:`django.db.models.IntegerField`
     :keyword input_file_size: The amount of disk space in MiB required for input files for this job
     :type input_file_size: :class:`django.db.models.FloatField`
+    :keyword is_canceled: Whether this queued job execution has been canceled
+    :type is_canceled: :class:`django.db.models.BooleanField`
+    :keyword priority: The priority of the job (lower number is higher priority)
+    :type priority: :class:`django.db.models.IntegerField`
+    :keyword timeout: The maximum amount of time to allow this execution to run before being killed (in seconds)
+    :type timeout: :class:`django.db.models.IntegerField`
 
-    :keyword configuration: JSON description describing the configuration for how the job should be run
+    :keyword interface: JSON description describing the job's interface
+    :type interface: :class:`django.contrib.postgres.fields.JSONField`
+    :keyword configuration: JSON description describing the execution configuration for how the job should be run
     :type configuration: :class:`django.contrib.postgres.fields.JSONField`
     :keyword resources: JSON description describing the resources required for this job
     :type resources: :class:`django.contrib.postgres.fields.JSONField`
 
     :keyword created: When the queue model was created
     :type created: :class:`django.db.models.DateTimeField`
-    :keyword queued: When the job execution was placed onto the queue
+    :keyword queued: When the job was placed onto the queue
     :type queued: :class:`django.db.models.DateTimeField`
-    :keyword last_modified: When the queue model was last modified
-    :type last_modified: :class:`django.db.models.DateTimeField`
     """
 
-    job_exe = models.OneToOneField('job.JobExecution', primary_key=True, on_delete=models.PROTECT)
-    job = models.ForeignKey('job.Job', on_delete=models.PROTECT)
     job_type = models.ForeignKey('job.JobType', on_delete=models.PROTECT)
+    job = models.ForeignKey('job.Job', on_delete=models.PROTECT)
+    exe_num = models.IntegerField()
 
-    priority = models.IntegerField(db_index=True)
     input_file_size = models.FloatField()
+    is_canceled = models.BooleanField(default=False)
+    priority = models.IntegerField(db_index=True)
+    timeout = models.IntegerField()
 
+    interface = django.contrib.postgres.fields.JSONField(default=dict)
     configuration = django.contrib.postgres.fields.JSONField(default=dict)
     resources = django.contrib.postgres.fields.JSONField(default=dict)
 
     created = models.DateTimeField(auto_now_add=True)
     queued = models.DateTimeField()
-    last_modified = models.DateTimeField(auto_now=True)
 
     objects = QueueManager()
 
+    def get_execution_configuration(self):
+        """Returns the execution configuration for this queued job
+
+        :returns: The execution configuration for this queued job
+        :rtype: :class:`job.configuration.json.execution.exe_config.ExecutionConfiguration`
+        """
+
+        return ExecutionConfiguration(self.configuration, do_validate=False)
+
+    def get_job_interface(self):
+        """Returns the interface for this queued job
+
+        :returns: The job interface
+        :rtype: :class:`job.configuration.interface.job_interface.JobInterface`
+        """
+
+        return JobInterface(self.interface, do_validate=False)
+
     def get_resources(self):
-        """Returns the resources required by this job execution
+        """Returns the resources required by this queued job
 
         :returns: The required resources
         :rtype: :class:`node.resources.node_resources.NodeResources`
         """
 
-        return Resources(self.resources).get_node_resources()
+        return Resources(self.resources, do_validate=False).get_node_resources()
 
     class Meta(object):
         """meta information for the db"""

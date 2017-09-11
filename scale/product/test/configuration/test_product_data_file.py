@@ -105,7 +105,8 @@ class TestProductDataFileStoreStoreFiles(TransactionTestCase):
 
         self.assertDictEqual(results, {local_path_1: long(1), local_path_2: long(2), local_path_3: long(3),
                                        local_path_4: long(4)})
-        mock_create_file_ancestry_links.assert_called_once_with(parent_ids, {1, 2, 3, 4}, self.job_exe)
+        mock_create_file_ancestry_links.assert_called_once_with(parent_ids, {1, 2, 3, 4}, self.job_exe.job,
+                                                                self.job_exe.id)
 
     @patch('product.models.FileAncestryLink.objects.create_file_ancestry_links')
     @patch('product.models.ProductFile.objects.upload_files')

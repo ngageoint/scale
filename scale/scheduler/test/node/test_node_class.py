@@ -30,7 +30,7 @@ class TestNode(TestCase):
         self.scheduler = Scheduler()
         self.node_agent = 'agent_1'
         self.node = node_test_utils.create_node(hostname='host_1', slave_id=self.node_agent)
-        self.job_exe = job_test_utils.create_job_exe(node=self.node)
+        self.job_exe = job_test_utils.create_running_job_exe(agent_id=self.node_agent, node=self.node)
         self.task_mgr = TaskManager()
 
     @patch('scheduler.node.conditions.now')
@@ -200,12 +200,11 @@ class TestNode(TestCase):
         self.assertListEqual([], node.get_next_tasks(when))
 
         # Add job execution and complete task to clean it up
-        job_exe = RunningJobExecution('agent', self.job_exe)
-        node.add_job_execution(job_exe)
+        node.add_job_execution(self.job_exe)
         task = node.get_next_tasks(when)[0]
         self.assertTrue(task.id.startswith(CLEANUP_TASK_ID_PREFIX))
         self.assertFalse(task.is_initial_cleanup)
-        self.assertListEqual(task.job_exes, [job_exe])
+        self.assertListEqual(task.job_exes, [self.job_exe])
         self.task_mgr.launch_tasks([task], now())
         update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.RUNNING, now())
         self.task_mgr.handle_task_update(update)

@@ -12,6 +12,7 @@ from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
 from job.tasks.manager import task_mgr
 from scheduler.node.manager import node_mgr
 from scheduler.recon.manager import recon_mgr
+from scheduler.tasks.manager import system_task_mgr
 from scheduler.threads.base_thread import BaseSchedulerThread
 
 
@@ -61,8 +62,20 @@ class TaskHandlingThread(BaseSchedulerThread):
 
         when = now()
 
+        self._kill_tasks()
         self._timeout_tasks(when)
         self._reconcile_tasks(when)
+
+    def _kill_tasks(self):
+        """Sends kill messages for any tasks that need to be stopped
+        """
+
+        for task in system_task_mgr.get_tasks_to_kill():
+            # Send kill message for system task
+            pb_task_to_kill = mesos_pb2.TaskID()
+            pb_task_to_kill.value = task.id
+            logger.info('Killing task %s', task.id)
+            self._driver.killTask(pb_task_to_kill)
 
     def _reconcile_tasks(self, when):
         """Sends any tasks that need to be reconciled to the reconciliation manager
