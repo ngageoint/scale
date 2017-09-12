@@ -30,6 +30,11 @@ class MessageHandlerTask(SystemTask):
         self._add_messaging_docker_params()
         self._command_arguments = 'scale_message_handler'
 
+        # System task properties
+        self.task_type = 'message-handler'
+        self.title = 'Message Handler'
+        self.description = 'Processes messages from Scale\'s backend messaging system'
+
     def get_resources(self):
         """See :meth:`job.tasks.base_task.Task.get_resources`
         """

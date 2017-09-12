@@ -34,6 +34,11 @@ class SystemTask(Task):
         self._command_arguments = None
         self._running_timeout_threshold = None
 
+        # System task properties that sub-classes should override
+        self.task_type = None
+        self.title = task_name
+        self.description = None
+
     def _add_database_docker_params(self):
         """Adds the necessary Docker parameters to this task to provide the Scale database connection settings
         """
