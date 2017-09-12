@@ -19,8 +19,25 @@ class Service(object):
         """Constructor
         """
 
-        self._name = 'Base'  # Override this in sub-classes
+        # Override these in sub-classes
+        self._name = 'base'
+        self._title = 'Base'
+        self._description = None
+
         self._tasks = {}  # {Task ID: Task}
+
+    def generate_status_json(self):
+        """Generates the portion of the status JSON that describes this service
+
+        :returns: The dict containing the status for this service
+        :rtype: dict
+        """
+
+        actual_count = self.get_actual_task_count()
+        desired_count = self.get_desired_task_count()
+
+        return {'name': self._name, 'title': self._title, 'description': self._description,
+                'actual_count': actual_count, 'desired_count': desired_count}
 
     def get_actual_task_count(self):
         """Returns the actual number of tasks currently running for this service
@@ -49,7 +66,7 @@ class Service(object):
         tasks_to_kill = []
         num_tasks_to_kill = max(self.get_actual_task_count() - self.get_desired_task_count(), 0)
         if num_tasks_to_kill > 0:
-            logger.info('%s service is over-scheduled, killing %d task(s)', self._name, num_tasks_to_kill)
+            logger.info('%s service is over-scheduled, killing %d task(s)', self._title, num_tasks_to_kill)
             for task in self._tasks.values()[:num_tasks_to_kill]:
                 tasks_to_kill.append(task)
         return tasks_to_kill
@@ -65,7 +82,7 @@ class Service(object):
 
         num_tasks_to_create = max(self.get_desired_task_count() - self.get_actual_task_count(), 0)
         if num_tasks_to_create > 0:
-            logger.info('%s service is under-scheduled, creating %d task(s)', self._name, num_tasks_to_create)
+            logger.info('%s service is under-scheduled, creating %d task(s)', self._title, num_tasks_to_create)
             for _ in range(num_tasks_to_create):
                 new_task = self._create_service_task()
                 self._tasks[new_task.id] = new_task
@@ -89,13 +106,13 @@ class Service(object):
         task = self._tasks[task_update.task_id]
 
         if task_update.status == TaskStatusUpdate.FINISHED:
-            logger.info('%s service: task completed', self._name)
+            logger.info('%s service: task completed', self._title)
         elif task_update.status == TaskStatusUpdate.FAILED:
-            logger.warning('%s service: task failed', self._name)
+            logger.warning('%s service: task failed', self._title)
         elif task_update.status == TaskStatusUpdate.KILLED:
-            logger.info('%s service: task killed', self._name)
+            logger.info('%s service: task killed', self._title)
         elif task_update.status == TaskStatusUpdate.LOST:
-            logger.warning('%s service: task lost', self._name)
+            logger.warning('%s service: task lost', self._title)
 
         if task.has_ended:
             del self._tasks[task.id]

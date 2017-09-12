@@ -42,14 +42,18 @@ class SystemTaskManager(object):
         :type status_dict: dict
         """
 
+        services_list = []
         with self._lock:
             is_db_update_completed = self._is_db_update_completed
             when_db_update_completed = self._when_db_update_completed
+            for service in self._services:
+                services_list.append(service.generate_status_json())
 
         db_update_dict = {'is_completed': is_db_update_completed}
         if when_db_update_completed:
             db_update_dict['completed'] = datetime_to_string(when_db_update_completed)
-        status_dict['system'] = {'database_update': db_update_dict}
+
+        status_dict['system'] = {'database_update': db_update_dict, 'services': services_list}
 
     def get_tasks_to_kill(self):
         """Returns a list of system tasks that need to be killed as soon as possible

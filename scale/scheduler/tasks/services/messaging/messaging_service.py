@@ -19,7 +19,9 @@ class MessagingService(Service):
 
         super(MessagingService, self).__init__()
 
-        self._name = 'Messaging'
+        self._name = 'messaging'
+        self._title = 'Messaging'
+        self._description = 'Processes the backend messaging system'
 
     def get_desired_task_count(self):
         """See :meth:`scheduler.tasks.services.service.Service.get_desired_task_count`"""
