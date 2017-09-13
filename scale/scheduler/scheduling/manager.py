@@ -287,7 +287,7 @@ class SchedulingManager(object):
             scheduling_nodes[scheduling_node.node_id] = scheduling_node
         return scheduling_nodes
 
-    def _process_queue(self, nodes, job_types, job_type_limits, job_type_resources):
+    def _process_queue(self, nodes, job_types, job_type_limits, job_type_resources, workspaces):
         """Retrieves the top of the queue and schedules new job executions on available nodes as resources and limits
         allow
 
@@ -299,6 +299,8 @@ class SchedulingManager(object):
         :type job_type_limits: dict
         :param job_type_resources: The list of all of the job type resource requirements
         :type job_type_resources: list
+        :param workspaces: A dict of all workspaces stored by name
+        :type workspaces: dict
         :returns: The list of queued job executions that were scheduled
         :rtype: list
         """
@@ -319,8 +321,17 @@ class SchedulingManager(object):
             if not nodes:
                 break
 
-            # Check limit for this execution's job type
+            # Make sure execution's job type and workspaces have been synced to the scheduler
             job_type_id = queue.job_type_id
+            if job_type_id not in job_types:
+                continue
+            workspace_names = job_exe.configuration.get_input_workspace_names()
+            workspace_names.extend(job_exe.configuration.get_output_workspace_names())
+            for name in workspace_names:
+                if name not in workspaces:
+                    continue
+
+            # Check limit for this execution's job type
             if job_type_id in job_type_limits and job_type_limits[job_type_id] < 1:
                 continue
 
@@ -495,7 +506,8 @@ class SchedulingManager(object):
                 available_nodes[node.node_id] = node
 
         try:
-            scheduled_job_exes = self._process_queue(available_nodes, job_types, job_type_limits, job_type_resources)
+            scheduled_job_exes = self._process_queue(available_nodes, job_types, job_type_limits, job_type_resources,
+                                                     workspaces)
             running_job_exes = self._process_scheduled_job_executions(framework_id, scheduled_job_exes, job_types,
                                                                       workspaces)
             all_running_job_exes = []
