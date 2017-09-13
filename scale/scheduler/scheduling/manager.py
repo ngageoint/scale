@@ -327,9 +327,11 @@ class SchedulingManager(object):
                 continue
             workspace_names = job_exe.configuration.get_input_workspace_names()
             workspace_names.extend(job_exe.configuration.get_output_workspace_names())
+            missing_workspace = False
             for name in workspace_names:
-                if name not in workspaces:
-                    continue
+                missing_workspace = missing_workspace or name not in workspaces
+            if missing_workspace:
+                continue
 
             # Check limit for this execution's job type
             if job_type_id in job_type_limits and job_type_limits[job_type_id] < 1:
