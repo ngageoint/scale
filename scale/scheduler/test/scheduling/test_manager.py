@@ -32,6 +32,7 @@ class TestSchedulingManager(TestCase):
 
         self.framework_id = '1234'
         Scheduler.objects.initialize_scheduler()
+        Scheduler.objects.update(num_message_handlers=0)  # Prevent message handler tasks from scheduling
         self._driver = MagicMock()
 
         scheduler_mgr.sync_with_database()
@@ -217,7 +218,11 @@ class TestSchedulingManager(TestCase):
         Queue.objects.all().delete()
         # Set us up to schedule a database update task
         system_task_mgr._is_db_update_completed = False
+        # Set us up to schedule 2 message handler tasks
+        Scheduler.objects.update(num_message_handlers=2)
+        scheduler_mgr.sync_with_database()
+
         scheduling_manager = SchedulingManager()
 
         num_tasks = scheduling_manager.perform_scheduling(self._driver, now())
-        self.assertEqual(num_tasks, 1)  # Schedule database update task
+        self.assertEqual(num_tasks, 3)  # Schedule database update task and 2 message handler tasks

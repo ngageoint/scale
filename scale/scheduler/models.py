@@ -144,6 +144,7 @@ class Scheduler(models.Model):
     )
 
     is_paused = models.BooleanField(default=False)
+    num_message_handlers = models.IntegerField(default=2)
     queue_mode = models.CharField(choices=QUEUE_MODES, default=QUEUE_ORDER_FIFO, max_length=50)
     status = django.contrib.postgres.fields.JSONField(default=dict)
     master_hostname = models.CharField(max_length=250, default='localhost')

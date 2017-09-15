@@ -4,7 +4,9 @@ from __future__ import unicode_literals
 import logging
 import threading
 
+from job.tasks.node_task import NodeTask
 from job.tasks.update import TaskStatusUpdate
+from scheduler.tasks.system_task import SystemTask
 
 
 logger = logging.getLogger(__name__)
@@ -19,6 +21,50 @@ class TaskManager(object):
 
         self._tasks = {}  # {Task ID: Task}
         self._lock = threading.Lock()
+
+    def generate_status_json(self, nodes_list):
+        """Generates the portion of the status JSON that describes the currently running node and system tasks
+
+        :param nodes_list: The list of nodes within the status JSON
+        :type nodes_list: list
+        """
+
+        node_tasks = {}  # {Agent ID: [task]}
+        system_tasks = {}  # {Agent ID: [task]}
+
+        with self._lock:
+            for task in self._tasks.values():
+                if isinstance(task, NodeTask):
+                    if task.agent_id in node_tasks:
+                        node_tasks[task.agent_id].append(task)
+                    else:
+                        node_tasks[task.agent_id] = [task]
+                elif isinstance(task, SystemTask):
+                    if task.agent_id in system_tasks:
+                        system_tasks[task.agent_id].append(task)
+                    else:
+                        system_tasks[task.agent_id] = [task]
+
+        for node_dict in nodes_list:
+            agent_id = node_dict['agent_id']
+            if agent_id in node_tasks:
+                task_dicts = {}  # {task type: task dict}
+                for task in node_tasks[agent_id]:
+                    if task.task_type in task_dicts:
+                        task_dicts[task.task_type]['count'] += 1
+                    else:
+                        task_dicts[task.task_type] = {'type': task.task_type, 'title': task.title,
+                                                      'description': task.description, 'count': 1}
+                node_dict['node_tasks'] = task_dicts.values()
+            if agent_id in system_tasks:
+                task_dicts = {}  # {task type: task dict}
+                for task in system_tasks[agent_id]:
+                    if task.task_type in task_dicts:
+                        task_dicts[task.task_type]['count'] += 1
+                    else:
+                        task_dicts[task.task_type] = {'type': task.task_type, 'title': task.title,
+                                                      'description': task.description, 'count': 1}
+                node_dict['system_tasks'] = task_dicts.values()
 
     def get_all_tasks(self):
         """Returns all of current tasks

@@ -1,8 +1,6 @@
 """Defines the class for a database update task"""
 from __future__ import unicode_literals
 
-import datetime
-
 from job.tasks.base_task import AtomicCounter
 from node.resources.node_resources import NodeResources
 from node.resources.resource import Cpus, Mem
@@ -29,6 +27,11 @@ class DatabaseUpdateTask(SystemTask):
 
         self._add_database_docker_params()
         self._command_arguments = 'scale_db_update'
+
+        # System task properties
+        self.task_type = 'db-update'
+        self.title = 'Database Update'
+        self.description = 'Updates the Scale database to the current version'
 
     def get_resources(self):
         """See :meth:`job.tasks.base_task.Task.get_resources`

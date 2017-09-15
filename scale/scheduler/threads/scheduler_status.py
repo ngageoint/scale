@@ -6,6 +6,7 @@ import datetime
 from django.utils.timezone import now
 
 from job.execution.manager import job_exe_mgr
+from job.tasks.manager import task_mgr
 from scheduler.manager import scheduler_mgr
 from scheduler.models import Scheduler
 from scheduler.node.manager import node_mgr
@@ -48,5 +49,6 @@ class SchedulerStatusThread(BaseSchedulerThread):
         node_mgr.generate_status_json(status_dict)
         resource_mgr.generate_status_json(status_dict)
         job_exe_mgr.generate_status_json(status_dict['nodes'], when)
+        task_mgr.generate_status_json(status_dict['nodes'])
         job_type_mgr.generate_status_json(status_dict)
         Scheduler.objects.all().update(status=status_dict)

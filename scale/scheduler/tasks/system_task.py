@@ -34,8 +34,13 @@ class SystemTask(Task):
         self._command_arguments = None
         self._running_timeout_threshold = None
 
+        # System task properties that sub-classes should override
+        self.task_type = None
+        self.title = task_name
+        self.description = None
+
     def _add_database_docker_params(self):
-        """Adds the necessary Docker parameters to this task to provide the Scale database connections settings
+        """Adds the necessary Docker parameters to this task to provide the Scale database connection settings
         """
 
         db = settings.DATABASES['default']
@@ -46,3 +51,18 @@ class SystemTask(Task):
                      DockerParameter('env', 'SCALE_DB_PORT=%s' % db['PORT'])]
 
         self._docker_params.extend(db_params)
+
+    def _add_messaging_docker_params(self):
+        """Adds the necessary Docker parameters to this task to provide the backend messaging connection settings
+        """
+
+        broker_url = settings.BROKER_URL
+        queue_name = settings.QUEUE_NAME
+        messaging_params = []
+
+        if broker_url:
+            messaging_params.append(DockerParameter('env', 'SCALE_BROKER_URL=%s' % broker_url))
+        if queue_name:
+            messaging_params.append(DockerParameter('env', 'SCALE_QUEUE_NAME=%s' % queue_name))
+
+        self._docker_params.extend(messaging_params)

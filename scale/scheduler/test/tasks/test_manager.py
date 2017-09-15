@@ -5,11 +5,11 @@ import datetime
 import django
 from django.test import TestCase
 from django.utils.timezone import now
-from mock import patch
 
 from job.tasks.manager import TaskManager
 from job.tasks.update import TaskStatusUpdate
 from job.test import utils as job_test_utils
+from scheduler.manager import scheduler_mgr
 from scheduler.tasks.db_update_task import DB_UPDATE_TASK_ID_PREFIX
 from scheduler.tasks.manager import SystemTaskManager
 
@@ -22,6 +22,9 @@ class TestSystemTaskManager(TestCase):
         self.agent_id = 'agent_1'
         self.system_task_mgr = SystemTaskManager()
         self.task_mgr = TaskManager()
+
+        # Make sure messaging service is "off" for these tests
+        scheduler_mgr.config.num_message_handlers = 0
 
     def test_handle_completed_db_update_task(self):
         """Tests handling completed database update task"""
