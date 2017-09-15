@@ -6,7 +6,6 @@ from django.test import TestCase
 from django.utils.timezone import now
 from mock import MagicMock, patch
 
-from job.execution.job_exe import RunningJobExecution
 from job.execution.manager import job_exe_mgr
 from job.models import JobExecution, JobExecutionEnd
 from job.test import utils as job_test_utils
@@ -122,6 +121,66 @@ class TestSchedulingManager(TestCase):
 
         scheduling_manager = SchedulingManager()
         num_tasks = scheduling_manager.perform_scheduling(self._driver, now())
+        self.assertEqual(num_tasks, 0)
+        self.assertEqual(JobExecution.objects.filter(job_id=self.queue_1.job_id).count(), 0)
+        self.assertEqual(JobExecution.objects.filter(job_id=self.queue_2.job_id).count(), 0)
+        self.assertEqual(Queue.objects.filter(id__in=[self.queue_1.id, self.queue_2.id]).count(), 2)
+
+    @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
+    def test_missing_job_types(self, mock_taskinfo):
+        """Tests calling perform_scheduling() when a queued job type has not been synced to the scheduler"""
+        mock_taskinfo.return_value = MagicMock()
+
+        offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
+                                NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now())
+        offer_2 = ResourceOffer('offer_2', self.agent_2.agent_id, self.framework_id,
+                                NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now())
+        resource_mgr.add_new_offers([offer_1, offer_2])
+
+        scheduling_manager = SchedulingManager()
+
+        # Clear out job type manager for scheduling
+        with patch('scheduler.scheduling.manager.job_type_mgr.get_job_types') as mock_get_job_types:
+            mock_get_job_types.return_value = {}
+            num_tasks = scheduling_manager.perform_scheduling(self._driver, now())
+
+        # Nothing should be scheduled
+        self.assertEqual(num_tasks, 0)
+        self.assertEqual(JobExecution.objects.filter(job_id=self.queue_1.job_id).count(), 0)
+        self.assertEqual(JobExecution.objects.filter(job_id=self.queue_2.job_id).count(), 0)
+        self.assertEqual(Queue.objects.filter(id__in=[self.queue_1.id, self.queue_2.id]).count(), 2)
+
+    @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
+    def test_missing_workspace(self, mock_taskinfo):
+        """Tests calling perform_scheduling() when a queued job's workspace has not been synced to the scheduler"""
+        mock_taskinfo.return_value = MagicMock()
+
+        offer_1 = ResourceOffer('offer_1', self.agent_1.agent_id, self.framework_id,
+                                NodeResources([Cpus(2.0), Mem(1024.0), Disk(1024.0)]), now())
+        offer_2 = ResourceOffer('offer_2', self.agent_2.agent_id, self.framework_id,
+                                NodeResources([Cpus(25.0), Mem(2048.0), Disk(2048.0)]), now())
+        resource_mgr.add_new_offers([offer_1, offer_2])
+
+        # Add workspaces to the queued jobs
+        queue_1 = Queue.objects.get(id=self.queue_1.id)
+        config = queue_1.get_execution_configuration()
+        config.set_output_workspaces({'my_output': 'my_workspace'})
+        queue_1.configuration = config.get_dict()
+        queue_1.save()
+        queue_2 = Queue.objects.get(id=self.queue_2.id)
+        config = queue_2.get_execution_configuration()
+        config.set_output_workspaces({'my_output': 'my_workspace'})
+        queue_2.configuration = config.get_dict()
+        queue_2.save()
+
+        scheduling_manager = SchedulingManager()
+
+        # Clear out workspace manager for scheduling
+        with patch('scheduler.scheduling.manager.workspace_mgr.get_workspaces') as mock_get_workspaces:
+            mock_get_workspaces.return_value = {}
+            num_tasks = scheduling_manager.perform_scheduling(self._driver, now())
+
+        # Nothing should be scheduled
         self.assertEqual(num_tasks, 0)
         self.assertEqual(JobExecution.objects.filter(job_id=self.queue_1.job_id).count(), 0)
         self.assertEqual(JobExecution.objects.filter(job_id=self.queue_2.job_id).count(), 0)

@@ -17,6 +17,7 @@ class QueuedJobExecution(object):
 
         self.id = queue.id
         self.is_canceled = queue.is_canceled
+        self.configuration = queue.get_execution_configuration()
         self.interface = queue.get_job_interface()
         self.priority = queue.priority
         self.required_resources = queue.get_resources()
@@ -43,7 +44,7 @@ class QueuedJobExecution(object):
         job_exe.exe_num = self._queue.exe_num
         job_exe.timeout = self._queue.timeout
         job_exe.input_file_size = self._queue.input_file_size
-        job_exe.configuration = self._queue.get_execution_configuration().get_dict()
+        job_exe.configuration = self.configuration.get_dict()
         job_exe.queued = self._queue.queued
 
         if self.is_canceled:
