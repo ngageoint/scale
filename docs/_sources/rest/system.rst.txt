@@ -44,6 +44,8 @@ These services provide access to general system information.
 +--------------------------+-------------------+--------------------------------------------------------------------------------+
 | system.database_update   | JSON Object       | Information on if and when the current Scale database update completed         |
 +--------------------------+-------------------+--------------------------------------------------------------------------------+
+| system.services          | Array             | List of services, with name, title, description, and task counts               |
++--------------------------+-------------------+--------------------------------------------------------------------------------+
 | num_offers               | Integer           | Number of resource offers currently held by Scale                              |
 +--------------------------+-------------------+--------------------------------------------------------------------------------+
 | resources                | JSON Object       | Describes the resource totals across all of Scale's nodes. Each resource name  |
@@ -66,6 +68,12 @@ These services provide access to general system information.
 | nodes.warnings           | Array             | List of node warning objects, with a title, description, and when the warning  |
 |                          |                   | began and was last updated                                                     |
 +--------------------------+-------------------+--------------------------------------------------------------------------------+
+| nodes.node_tasks         | Array             | List of node tasks running on the node, with a type, title, description, and   |
+|                          |                   | count                                                                          |
++--------------------------+-------------------+--------------------------------------------------------------------------------+
+| nodes.system_tasks       | Array             | List of system tasks running on the node, with a type, title, description, and |
+|                          |                   | count                                                                          |
++--------------------------+-------------------+--------------------------------------------------------------------------------+
 | nodes.job_executions     | JSON Object       | The job executions related to this node. The *running* field describes the     |
 |                          |                   | jobs currently running on the node, with a total count and count per job type. |
 |                          |                   | The *completed* field describes job executions that have completed on the node |
@@ -86,13 +94,33 @@ These services provide access to general system information.
 |            "tasks_launched_per_sec": 0.0,                                                                                     |
 |            "offers_launched_per_sec": 0.0,                                                                                    |
 |            "tasks_finished_per_sec": 0.0                                                                                      |
+|         },                                                                                                                    |
+|         "hostname": "scheduler-host.com",                                                                                     |
+|         "mesos": {                                                                                                            |
+|            "framework_id": "framework-1234",                                                                                  |
+|            "master_hostname": "192.168.1.1",                                                                                  |
+|            "master_port": 5050                                                                                                |
+|         },                                                                                                                    |
+|         "state": {                                                                                                            |
+|            "name": "READY",                                                                                                   |
+|            "title": "Ready",                                                                                                  |
+|            "description": "Scheduler is ready to run new jobs."                                                               |
 |         }                                                                                                                     |
 |      },                                                                                                                       |
 |      "system": {                                                                                                              |
 |         "database_update": {                                                                                                  |
 |            "is_completed": true,                                                                                              |
 |            "completed": "1970-01-01T00:00:00Z"                                                                                |
-|         }                                                                                                                     |
+|         },                                                                                                                    |
+|         "services": [                                                                                                         |
+|            {                                                                                                                  |
+|               "name": "messaging",                                                                                            |
+|               "title": "Messaging",                                                                                           |
+|               "description": "Processes the backend messaging system",                                                        |
+|               "actual_count": 1,                                                                                              |
+|               "desired_count": 1                                                                                              |
+|            }                                                                                                                  |
+|         ]                                                                                                                     |
 |      },                                                                                                                       |
 |      "num_offers": 4,                                                                                                         |
 |      "resources": {                                                                                                           |
@@ -163,6 +191,22 @@ These services provide access to general system information.
 |                  "description": "My Warning Description",                                                                     |
 |                  "started": "1970-01-01T00:00:00Z",                                                                           |
 |                  "last_updated": "1970-01-01T00:00:00Z"                                                                       |
+|               }                                                                                                               |
+|            ],                                                                                                                 |
+|            "node_tasks": [                                                                                                    |
+|               {                                                                                                               |
+|                  "type": "cleanup",                                                                                           |
+|                  "title": "Node Cleanup",                                                                                     |
+|                  "description": "Performs Docker container and volume cleanup on the node",                                   |
+|                  "count": 1                                                                                                   |
+|               }                                                                                                               |
+|            ],                                                                                                                 |
+|            "system_tasks": [                                                                                                  |
+|               {                                                                                                               |
+|                  "type": "message-handler",                                                                                   |
+|                  "title": "Message Handler",                                                                                  |
+|                  "description": "Processes messages from Scale's backend messaging system",                                   |
+|                  "count": 1                                                                                                   |
 |               }                                                                                                               |
 |            ],                                                                                                                 |
 |            "num_offers": 1,                                                                                                   |

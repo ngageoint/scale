@@ -52,6 +52,14 @@ scheduler\.migrations\.0006\_scheduler\_status module
     :undoc-members:
     :show-inheritance:
 
+scheduler\.migrations\.0007\_scheduler\_num\_message\_handlers module
+---------------------------------------------------------------------
+
+.. automodule:: scheduler.migrations.0007_scheduler_num_message_handlers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

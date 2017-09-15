@@ -205,119 +205,107 @@ There should be one and only one scheduler entry in the database and it is used 
 <table border="1" class="docutils" id="rest-scheduler-details">
 <colgroup>
 <col width="17%" />
+<col width="1%" />
 <col width="16%" />
-<col width="67%" />
+<col width="66%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head" colspan="3"><strong>Get Scheduler</strong></th>
+<tr class="row-odd"><th class="head" colspan="4"><strong>Get Scheduler</strong></th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td colspan="3">Returns data for the scheduler</td>
+<tr class="row-even"><td colspan="4">Returns data for the scheduler</td>
 </tr>
-<tr class="row-odd"><td colspan="3"><strong>GET</strong> /scheduler/</td>
+<tr class="row-odd"><td colspan="4"><strong>GET</strong> /scheduler/</td>
 </tr>
-<tr class="row-even"><td colspan="3"><strong>Successful Response</strong></td>
+<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
 </tr>
 <tr class="row-odd"><td><strong>Status</strong></td>
-<td colspan="2">200 OK</td>
+<td colspan="3">200 OK</td>
 </tr>
 <tr class="row-even"><td><strong>Content Type</strong></td>
-<td colspan="2"><em>application/json</em></td>
+<td colspan="3"><em>application/json</em></td>
 </tr>
-<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-even"><td>is_paused</td>
+<tr class="row-even"><td colspan="2">is_paused</td>
 <td>Boolean</td>
 <td>True if the scheduler is paused. This functions like individually pausing
 all nodes but maintains separated state so toggling this back to unpaused
 results in the previous individual node pause state.</td>
 </tr>
-<tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-odd"><td colspan="2">num_message_handlers</td>
+<td>Integer</td>
+<td>The number of message handlers to have scheduled</td>
+</tr>
+<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="nx">False</span><span class="p">,</span>
+    <span class="s2">&quot;num_message_handlers&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 </td>
-</tr>
-<tr class="row-even"><td colspan="3"><strong>Error Responses</strong></td>
-</tr>
-<tr class="row-odd"><td><strong>Status</strong></td>
-<td colspan="2">500 INTERNAL SERVER ERROR</td>
-</tr>
-<tr class="row-even"><td><strong>Content Type</strong></td>
-<td colspan="2"><em>text/plain</em></td>
-</tr>
-<tr class="row-odd"><td colspan="3">An internal error occurred, often this will indicate a missing database entry.</td>
 </tr>
 </tbody>
 </table>
 <table border="1" class="docutils" id="rest-scheduler-update">
 <colgroup>
 <col width="17%" />
+<col width="1%" />
 <col width="16%" />
-<col width="67%" />
+<col width="66%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head" colspan="3"><strong>Update Scheduler</strong></th>
+<tr class="row-odd"><th class="head" colspan="4"><strong>Update Scheduler</strong></th>
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td colspan="3">Update one or more fields for the scheduler.</td>
+<tr class="row-even"><td colspan="4">Update one or more fields for the scheduler.</td>
 </tr>
-<tr class="row-odd"><td colspan="3"><dl class="first last docutils">
+<tr class="row-odd"><td colspan="4"><dl class="first last docutils">
 <dt><strong>PATCH</strong> /scheduler/</dt>
 <dd>All fields are optional and additional fields are not tolerated.</dd>
 </dl>
 </td>
 </tr>
 <tr class="row-even"><td><strong>Content Type</strong></td>
-<td colspan="2"><em>application/json</em></td>
+<td colspan="3"><em>application/json</em></td>
 </tr>
-<tr class="row-odd"><td colspan="3"><strong>JSON Fields</strong></td>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-even"><td>is_paused</td>
+<tr class="row-even"><td colspan="2">is_paused</td>
 <td>Boolean</td>
 <td>(Optional) True if the scheduler should be paused, false to resume.</td>
 </tr>
-<tr class="row-odd"><td colspan="3"><strong>Successful Response</strong></td>
+<tr class="row-odd"><td colspan="4">num_message_handlers | Integer           | (Optional) The number of message handlers to have scheduled</td>
 </tr>
-<tr class="row-even"><td><strong>Status</strong></td>
-<td colspan="2">201 CREATED</td>
+<tr class="row-even"><td colspan="4"><strong>Successful Response</strong></td>
 </tr>
-<tr class="row-odd"><td><strong>Location</strong></td>
-<td colspan="2">URL pointing to the scheduler information (should be the same as the request URL)</td>
+<tr class="row-odd"><td><strong>Status</strong></td>
+<td colspan="3">200 OK</td>
 </tr>
 <tr class="row-even"><td><strong>Content Type</strong></td>
-<td colspan="2"><em>application/json</em></td>
+<td colspan="3"><em>application/json</em></td>
 </tr>
-<tr class="row-odd"><td colspan="3">Response format is identical to GET but contains the updated data.</td>
+<tr class="row-odd"><td colspan="4"><strong>JSON Fields</strong></td>
 </tr>
-<tr class="row-even"><td colspan="3"><strong>JSON Fields</strong></td>
-</tr>
-<tr class="row-odd"><td>is_paused</td>
+<tr class="row-even"><td colspan="2">is_paused</td>
 <td>Boolean</td>
 <td>True if the scheduler is paused. This functions like individually pausing
 all nodes but maintains separated state so toggling this back to unpaused
 results in the previous individual node pause state.</td>
 </tr>
-<tr class="row-even"><td colspan="3"><strong>Error Responses</strong></td>
+<tr class="row-odd"><td colspan="2">num_message_handlers</td>
+<td>Integer</td>
+<td>The number of message handlers to have scheduled</td>
 </tr>
-<tr class="row-odd"><td><strong>Status</strong></td>
-<td colspan="2">400 BAD REQUEST</td>
-</tr>
-<tr class="row-even"><td><strong>Content Type</strong></td>
-<td colspan="2"><em>text/plain</em></td>
-</tr>
-<tr class="row-odd"><td colspan="3">Unexpected fields were specified. An error message lists them. Or no fields were specified.</td>
-</tr>
-<tr class="row-even"><td><strong>Status</strong></td>
-<td colspan="2">500 INTERNAL SERVER ERROR</td>
-</tr>
-<tr class="row-odd"><td><strong>Content Type</strong></td>
-<td colspan="2"><em>text/plain</em></td>
-</tr>
-<tr class="row-even"><td colspan="3">An internal error occurred, often this will indicate a missing database entry.</td>
+<tr class="row-even"><td colspan="4"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;is_paused&quot;</span><span class="o">:</span> <span class="nx">False</span><span class="p">,</span>
+    <span class="s2">&quot;num_message_handlers&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</td>
 </tr>
 </tbody>
 </table>

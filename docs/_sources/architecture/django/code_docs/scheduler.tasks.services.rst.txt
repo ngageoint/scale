@@ -1,0 +1,29 @@
+scheduler\.tasks\.services package
+==================================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    scheduler.tasks.services.messaging
+
+Submodules
+----------
+
+scheduler\.tasks\.services\.service module
+------------------------------------------
+
+.. automodule:: scheduler.tasks.services.service
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: scheduler.tasks.services
+    :members:
+    :undoc-members:
+    :show-inheritance:

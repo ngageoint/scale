@@ -283,6 +283,50 @@
 <div class="section" id="module-job.test.tasks.test_manager">
 <span id="job-test-tasks-test-manager-module"></span><h2>job.test.tasks.test_manager module<a class="headerlink" href="#module-job.test.tasks.test_manager" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
+<dt id="job.test.tasks.test_manager.ImplementedNodeTask">
+<em class="property">class </em><code class="descclassname">job.test.tasks.test_manager.</code><code class="descname">ImplementedNodeTask</code><span class="sig-paren">(</span><em>task_id</em>, <em>task_name</em>, <em>agent_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.tasks.test_manager.ImplementedNodeTask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="job.tasks.html#job.tasks.node_task.NodeTask" title="job.tasks.node_task.NodeTask"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.node_task.NodeTask</span></code></a></p>
+<dl class="method">
+<dt id="job.test.tasks.test_manager.ImplementedNodeTask.get_resources">
+<code class="descname">get_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.tasks.test_manager.ImplementedNodeTask.get_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the resources that are required/have been scheduled for this task</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The scheduled resources for this task</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="node.resources.html#node.resources.node_resources.NodeResources" title="node.resources.node_resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.node_resources.NodeResources</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="job.test.tasks.test_manager.ImplementedSystemTask">
+<em class="property">class </em><code class="descclassname">job.test.tasks.test_manager.</code><code class="descname">ImplementedSystemTask</code><span class="sig-paren">(</span><em>task_id</em>, <em>task_name</em>, <em>agent_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.tasks.test_manager.ImplementedSystemTask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="scheduler.tasks.html#scheduler.tasks.system_task.SystemTask" title="scheduler.tasks.system_task.SystemTask"><code class="xref py py-class docutils literal"><span class="pre">scheduler.tasks.system_task.SystemTask</span></code></a></p>
+<dl class="method">
+<dt id="job.test.tasks.test_manager.ImplementedSystemTask.get_resources">
+<code class="descname">get_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.tasks.test_manager.ImplementedSystemTask.get_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the resources that are required/have been scheduled for this task</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The scheduled resources for this task</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="node.resources.html#node.resources.node_resources.NodeResources" title="node.resources.node_resources.NodeResources"><code class="xref py py-class docutils literal"><span class="pre">node.resources.node_resources.NodeResources</span></code></a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="job.test.tasks.test_manager.ImplementedTask">
 <em class="property">class </em><code class="descclassname">job.test.tasks.test_manager.</code><code class="descname">ImplementedTask</code><span class="sig-paren">(</span><em>task_id</em>, <em>task_name</em>, <em>agent_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.test.tasks.test_manager.ImplementedTask" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="job.tasks.html#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a></p>
@@ -313,6 +357,12 @@
 <dt id="job.test.tasks.test_manager.TestTaskManager.setUp">
 <code class="descname">setUp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.tasks.test_manager.TestTaskManager.setUp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="job.test.tasks.test_manager.TestTaskManager.test_generate_status_json">
+<code class="descname">test_generate_status_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.test.tasks.test_manager.TestTaskManager.test_generate_status_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests calling TaskManager.generate_status_json()</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="job.test.tasks.test_manager.TestTaskManager.test_handle_task_update">

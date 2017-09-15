@@ -622,7 +622,7 @@ timeout threshold</p>
 <dl class="class">
 <dt id="job.tasks.health_task.HealthTask">
 <em class="property">class </em><code class="descclassname">job.tasks.health_task.</code><code class="descname">HealthTask</code><span class="sig-paren">(</span><em>framework_id</em>, <em>agent_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.tasks.health_task.HealthTask" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#job.tasks.node_task.NodeTask" title="job.tasks.node_task.NodeTask"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.node_task.NodeTask</span></code></a></p>
 <p>Represents a task that performs a health check on a node. This class is thread-safe.</p>
 <dl class="attribute">
 <dt id="job.tasks.health_task.HealthTask.BAD_DAEMON_CODE">
@@ -656,6 +656,20 @@ timeout threshold</p>
 <em class="property">class </em><code class="descclassname">job.tasks.manager.</code><code class="descname">TaskManager</code><a class="headerlink" href="#job.tasks.manager.TaskManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>This class manages all currently running tasks. This class is thread-safe.</p>
+<dl class="method">
+<dt id="job.tasks.manager.TaskManager.generate_status_json">
+<code class="descname">generate_status_json</code><span class="sig-paren">(</span><em>nodes_list</em><span class="sig-paren">)</span><a class="headerlink" href="#job.tasks.manager.TaskManager.generate_status_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the portion of the status JSON that describes the currently running node and system tasks</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nodes_list</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The list of nodes within the status JSON</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="job.tasks.manager.TaskManager.get_all_tasks">
 <code class="descname">get_all_tasks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.tasks.manager.TaskManager.get_all_tasks" title="Permalink to this definition">¶</a></dt>
@@ -761,13 +775,24 @@ timeout threshold</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-job.tasks.node_task">
+<span id="job-tasks-node-task-module"></span><h2>job.tasks.node_task module<a class="headerlink" href="#module-job.tasks.node_task" title="Permalink to this headline">¶</a></h2>
+<p>Defines the abstract base class for all node tasks</p>
+<dl class="class">
+<dt id="job.tasks.node_task.NodeTask">
+<em class="property">class </em><code class="descclassname">job.tasks.node_task.</code><code class="descname">NodeTask</code><span class="sig-paren">(</span><em>task_id</em>, <em>task_name</em>, <em>agent_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.tasks.node_task.NodeTask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a></p>
+<p>Abstract base class for a node task</p>
+</dd></dl>
+
+</div>
 <div class="section" id="module-job.tasks.pull_task">
 <span id="job-tasks-pull-task-module"></span><h2>job.tasks.pull_task module<a class="headerlink" href="#module-job.tasks.pull_task" title="Permalink to this headline">¶</a></h2>
 <p>Defines the class for a Docker pull task</p>
 <dl class="class">
 <dt id="job.tasks.pull_task.PullTask">
 <em class="property">class </em><code class="descclassname">job.tasks.pull_task.</code><code class="descname">PullTask</code><span class="sig-paren">(</span><em>framework_id</em>, <em>agent_id</em><span class="sig-paren">)</span><a class="headerlink" href="#job.tasks.pull_task.PullTask" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#job.tasks.node_task.NodeTask" title="job.tasks.node_task.NodeTask"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.node_task.NodeTask</span></code></a></p>
 <p>Represents a task that pulls Docker images from the registry. This class is thread-safe.</p>
 <dl class="method">
 <dt id="job.tasks.pull_task.PullTask.get_resources">

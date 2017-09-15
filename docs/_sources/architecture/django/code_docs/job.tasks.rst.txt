@@ -28,6 +28,14 @@ job\.tasks\.manager module
     :undoc-members:
     :show-inheritance:
 
+job\.tasks\.node\_task module
+-----------------------------
+
+.. automodule:: job.tasks.node_task
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 job\.tasks\.pull\_task module
 -----------------------------
 

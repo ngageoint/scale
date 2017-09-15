@@ -264,11 +264,15 @@ provide.</td>
 <td>JSON Object</td>
 <td>Information on if and when the current Scale database update completed</td>
 </tr>
-<tr class="row-even"><td>num_offers</td>
+<tr class="row-even"><td>system.services</td>
+<td>Array</td>
+<td>List of services, with name, title, description, and task counts</td>
+</tr>
+<tr class="row-odd"><td>num_offers</td>
 <td>Integer</td>
 <td>Number of resource offers currently held by Scale</td>
 </tr>
-<tr class="row-odd"><td>resources</td>
+<tr class="row-even"><td>resources</td>
 <td>JSON Object</td>
 <td>Describes the resource totals across all of Scale&#8217;s nodes. Each resource name
 is a key and its corresponding object breaks down the resource into several
@@ -278,29 +282,39 @@ the node and may be offered to Scale soon, <em>unavailable</em> resources are us
 other tasks and cannot be used by Scale, and <em>total</em> resources are the total
 amounts for the node.</td>
 </tr>
-<tr class="row-even"><td>job_types</td>
+<tr class="row-odd"><td>job_types</td>
 <td>Array</td>
 <td>List of job type objects, with a few basic fields</td>
 </tr>
-<tr class="row-odd"><td>nodes</td>
+<tr class="row-even"><td>nodes</td>
 <td>Array</td>
 <td>List of node objects, with a few basic fields including the current node state</td>
 </tr>
-<tr class="row-even"><td>nodes.state</td>
+<tr class="row-odd"><td>nodes.state</td>
 <td>JSON Object</td>
 <td>The current node state, with a title and description</td>
 </tr>
-<tr class="row-odd"><td>nodes.errors</td>
+<tr class="row-even"><td>nodes.errors</td>
 <td>Array</td>
 <td>List of node error objects, with a title, description, and when the error
 began and was last updated</td>
 </tr>
-<tr class="row-even"><td>nodes.warnings</td>
+<tr class="row-odd"><td>nodes.warnings</td>
 <td>Array</td>
 <td>List of node warning objects, with a title, description, and when the warning
 began and was last updated</td>
 </tr>
-<tr class="row-odd"><td>nodes.job_executions</td>
+<tr class="row-even"><td>nodes.node_tasks</td>
+<td>Array</td>
+<td>List of node tasks running on the node, with a type, title, description, and
+count</td>
+</tr>
+<tr class="row-odd"><td>nodes.system_tasks</td>
+<td>Array</td>
+<td>List of system tasks running on the node, with a type, title, description, and
+count</td>
+</tr>
+<tr class="row-even"><td>nodes.job_executions</td>
 <td>JSON Object</td>
 <td>The job executions related to this node. The <em>running</em> field describes the
 jobs currently running on the node, with a total count and count per job type.
@@ -309,7 +323,7 @@ in the last 3 hours, with a total count and count per job type. The <em>failed</
 field is similar to <em>completed</em>, just with failed executions grouped by error
 category.</td>
 </tr>
-<tr class="row-even"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
+<tr class="row-odd"><td colspan="3"><div class="first last highlight-javascript"><div class="highlight"><pre><span></span><span class="p">{</span>
    <span class="s2">&quot;timestamp&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
    <span class="s2">&quot;scheduler&quot;</span><span class="o">:</span> <span class="p">{</span>
       <span class="s2">&quot;metrics&quot;</span><span class="o">:</span> <span class="p">{</span>
@@ -320,13 +334,33 @@ category.</td>
          <span class="s2">&quot;tasks_launched_per_sec&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
          <span class="s2">&quot;offers_launched_per_sec&quot;</span><span class="o">:</span> <span class="mf">0.0</span><span class="p">,</span>
          <span class="s2">&quot;tasks_finished_per_sec&quot;</span><span class="o">:</span> <span class="mf">0.0</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;hostname&quot;</span><span class="o">:</span> <span class="s2">&quot;scheduler-host.com&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;mesos&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;framework_id&quot;</span><span class="o">:</span> <span class="s2">&quot;framework-1234&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;master_hostname&quot;</span><span class="o">:</span> <span class="s2">&quot;192.168.1.1&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;master_port&quot;</span><span class="o">:</span> <span class="mi">5050</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;state&quot;</span><span class="o">:</span> <span class="p">{</span>
+         <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;READY&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Ready&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Scheduler is ready to run new jobs.&quot;</span>
       <span class="p">}</span>
    <span class="p">},</span>
    <span class="s2">&quot;system&quot;</span><span class="o">:</span> <span class="p">{</span>
       <span class="s2">&quot;database_update&quot;</span><span class="o">:</span> <span class="p">{</span>
          <span class="s2">&quot;is_completed&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
          <span class="s2">&quot;completed&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span>
-      <span class="p">}</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;services&quot;</span><span class="o">:</span> <span class="p">[</span>
+         <span class="p">{</span>
+            <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;messaging&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Messaging&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Processes the backend messaging system&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;actual_count&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;desired_count&quot;</span><span class="o">:</span> <span class="mi">1</span>
+         <span class="p">}</span>
+      <span class="p">]</span>
    <span class="p">},</span>
    <span class="s2">&quot;num_offers&quot;</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
    <span class="s2">&quot;resources&quot;</span><span class="o">:</span> <span class="p">{</span>
@@ -397,6 +431,22 @@ category.</td>
                <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;My Warning Description&quot;</span><span class="p">,</span>
                <span class="s2">&quot;started&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span><span class="p">,</span>
                <span class="s2">&quot;last_updated&quot;</span><span class="o">:</span> <span class="s2">&quot;1970-01-01T00:00:00Z&quot;</span>
+            <span class="p">}</span>
+         <span class="p">],</span>
+         <span class="s2">&quot;node_tasks&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+               <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;cleanup&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Node Cleanup&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Performs Docker container and volume cleanup on the node&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">1</span>
+            <span class="p">}</span>
+         <span class="p">],</span>
+         <span class="s2">&quot;system_tasks&quot;</span><span class="o">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+               <span class="s2">&quot;type&quot;</span><span class="o">:</span> <span class="s2">&quot;message-handler&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;Message Handler&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;description&quot;</span><span class="o">:</span> <span class="s2">&quot;Processes messages from Scale&#39;s backend messaging system&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;count&quot;</span><span class="o">:</span> <span class="mi">1</span>
             <span class="p">}</span>
          <span class="p">],</span>
          <span class="s2">&quot;num_offers&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>

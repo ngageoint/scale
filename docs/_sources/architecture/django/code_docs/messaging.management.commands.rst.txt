@@ -12,10 +12,10 @@ messaging\.management\.commands\.scale\_echo\_message module
     :undoc-members:
     :show-inheritance:
 
-messaging\.management\.commands\.scale\_process\_messages module
-----------------------------------------------------------------
+messaging\.management\.commands\.scale\_message\_handler module
+---------------------------------------------------------------
 
-.. automodule:: messaging.management.commands.scale_process_messages
+.. automodule:: messaging.management.commands.scale_message_handler
     :members:
     :undoc-members:
     :show-inheritance:

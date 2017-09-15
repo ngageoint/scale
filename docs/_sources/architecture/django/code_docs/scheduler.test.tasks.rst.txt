@@ -1,6 +1,13 @@
 scheduler\.test\.tasks package
 ==============================
 
+Subpackages
+-----------
+
+.. toctree::
+
+    scheduler.test.tasks.services
+
 Submodules
 ----------
 

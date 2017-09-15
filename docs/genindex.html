@@ -780,7 +780,7 @@
 </li>
         <li><a href="architecture/django/code_docs/messaging.management.commands.html#messaging.management.commands.scale_echo_message.Command">(class in messaging.management.commands.scale_echo_message)</a>
 </li>
-        <li><a href="architecture/django/code_docs/messaging.management.commands.html#messaging.management.commands.scale_process_messages.Command">(class in messaging.management.commands.scale_process_messages)</a>
+        <li><a href="architecture/django/code_docs/messaging.management.commands.html#messaging.management.commands.scale_message_handler.Command">(class in messaging.management.commands.scale_message_handler)</a>
 </li>
         <li><a href="architecture/django/code_docs/messaging.management.commands.html#messaging.management.commands.scale_send_message.Command">(class in messaging.management.commands.scale_send_message)</a>
 </li>
@@ -1528,6 +1528,8 @@
 </li>
         <li><a href="architecture/django/code_docs/scheduler.migrations.html#scheduler.migrations.0006_scheduler_status.Migration.dependencies">(scheduler.migrations.0006_scheduler_status.Migration attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/scheduler.migrations.html#scheduler.migrations.0007_scheduler_num_message_handlers.Migration.dependencies">(scheduler.migrations.0007_scheduler_num_message_handlers.Migration attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/shared_resource.migrations.html#shared_resource.migrations.0001_initial.Migration.dependencies">(shared_resource.migrations.0001_initial.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/shared_resource.migrations.html#shared_resource.migrations.0002_auto_20170412_1225.Migration.dependencies">(shared_resource.migrations.0002_auto_20170412_1225.Migration attribute)</a>
@@ -2202,6 +2204,8 @@
 </li>
         <li><a href="architecture/django/code_docs/job.execution.html#job.execution.metrics.TotalJobExeMetrics.generate_status_json">(job.execution.metrics.TotalJobExeMetrics method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.manager.TaskManager.generate_status_json">(job.tasks.manager.TaskManager method)</a>
+</li>
         <li><a href="architecture/django/code_docs/node.resources.html#node.resources.node_resources.NodeResources.generate_status_json">(node.resources.node_resources.NodeResources method)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.html#scheduler.manager.SchedulerManager.generate_status_json">(scheduler.manager.SchedulerManager method)</a>
@@ -2219,6 +2223,8 @@
         <li><a href="architecture/django/code_docs/scheduler.sync.html#scheduler.sync.job_type_manager.JobTypeManager.generate_status_json">(scheduler.sync.job_type_manager.JobTypeManager method)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.tasks.html#scheduler.tasks.manager.SystemTaskManager.generate_status_json">(scheduler.tasks.manager.SystemTaskManager method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/scheduler.tasks.services.html#scheduler.tasks.services.service.Service.generate_status_json">(scheduler.tasks.services.service.Service method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/storage.html#storage.serializers.GeoJsonField">GeoJsonField (class in storage.serializers)</a>
@@ -2258,6 +2264,8 @@
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.models.RecipeTypeManager.get_active_trigger_rules">get_active_trigger_rules() (recipe.models.RecipeTypeManager method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.tasks.services.html#scheduler.tasks.services.service.Service.get_actual_task_count">get_actual_task_count() (scheduler.tasks.services.service.Service method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.html#util.broker.BrokerDetails.get_address">get_address() (util.broker.BrokerDetails method)</a>
 </li>
@@ -2349,6 +2357,12 @@
 </li>
       <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.handler.RecipeHandler.get_dependent_job_ids">get_dependent_job_ids() (recipe.handlers.handler.RecipeHandler method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/scheduler.tasks.services.messaging.html#scheduler.tasks.services.messaging.messaging_service.MessagingService.get_desired_task_count">get_desired_task_count() (scheduler.tasks.services.messaging.messaging_service.MessagingService method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/scheduler.tasks.services.html#scheduler.tasks.services.service.Service.get_desired_task_count">(scheduler.tasks.services.service.Service method)</a>
+</li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.BatchManager.get_details">get_details() (batch.models.BatchManager method)</a>
 
       <ul>
@@ -3074,11 +3088,17 @@
 </li>
         <li><a href="architecture/django/code_docs/job.test.tasks.html#job.test.tasks.test_base_task.ImplementedTask.get_resources">(job.test.tasks.test_base_task.ImplementedTask method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.test.tasks.html#job.test.tasks.test_manager.ImplementedNodeTask.get_resources">(job.test.tasks.test_manager.ImplementedNodeTask method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.test.tasks.html#job.test.tasks.test_manager.ImplementedSystemTask.get_resources">(job.test.tasks.test_manager.ImplementedSystemTask method)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.test.tasks.html#job.test.tasks.test_manager.ImplementedTask.get_resources">(job.test.tasks.test_manager.ImplementedTask method)</a>
 </li>
         <li><a href="architecture/django/code_docs/queue.html#queue.models.Queue.get_resources">(queue.models.Queue method)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.tasks.html#scheduler.tasks.db_update_task.DatabaseUpdateTask.get_resources">(scheduler.tasks.db_update_task.DatabaseUpdateTask method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/scheduler.tasks.services.messaging.html#scheduler.tasks.services.messaging.message_handler_task.MessageHandlerTask.get_resources">(scheduler.tasks.services.messaging.message_handler_task.MessageHandlerTask method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.html#job.models.JobTypeRevisionManager.get_revision">get_revision() (job.models.JobTypeRevisionManager method)</a>
@@ -3218,11 +3238,19 @@
       <li><a href="architecture/django/code_docs/job.configuration.json.execution.html#job.configuration.json.execution.exe_config.ExecutionConfiguration.get_task_types">get_task_types() (job.configuration.json.execution.exe_config.ExecutionConfiguration method)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.tasks.html#scheduler.tasks.manager.SystemTaskManager.get_tasks_to_kill">get_tasks_to_kill() (scheduler.tasks.manager.SystemTaskManager method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/scheduler.tasks.services.html#scheduler.tasks.services.service.Service.get_tasks_to_kill">(scheduler.tasks.services.service.Service method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.manager.TaskManager.get_tasks_to_reconcile">get_tasks_to_reconcile() (job.tasks.manager.TaskManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.tasks.html#scheduler.tasks.manager.SystemTaskManager.get_tasks_to_schedule">get_tasks_to_schedule() (scheduler.tasks.manager.SystemTaskManager method)</a>
+
+      <ul>
+        <li><a href="architecture/django/code_docs/scheduler.tasks.services.html#scheduler.tasks.services.service.Service.get_tasks_to_schedule">(scheduler.tasks.services.service.Service method)</a>
 </li>
+      </ul></li>
       <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.manager.TaskManager.get_timeout_tasks">get_timeout_tasks() (job.tasks.manager.TaskManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.graph.RecipeGraph.get_topological_order">get_topological_order() (recipe.handlers.graph.RecipeGraph method)</a>
@@ -3340,7 +3368,7 @@
 </li>
         <li><a href="architecture/django/code_docs/messaging.management.commands.html#messaging.management.commands.scale_echo_message.Command.handle">(messaging.management.commands.scale_echo_message.Command method)</a>
 </li>
-        <li><a href="architecture/django/code_docs/messaging.management.commands.html#messaging.management.commands.scale_process_messages.Command.handle">(messaging.management.commands.scale_process_messages.Command method)</a>
+        <li><a href="architecture/django/code_docs/messaging.management.commands.html#messaging.management.commands.scale_message_handler.Command.handle">(messaging.management.commands.scale_message_handler.Command method)</a>
 </li>
         <li><a href="architecture/django/code_docs/messaging.management.commands.html#messaging.management.commands.scale_send_message.Command.handle">(messaging.management.commands.scale_send_message.Command method)</a>
 </li>
@@ -3406,6 +3434,8 @@
 </li>
         <li><a href="architecture/django/code_docs/scheduler.tasks.html#scheduler.tasks.manager.SystemTaskManager.handle_task_update">(scheduler.tasks.manager.SystemTaskManager method)</a>
 </li>
+        <li><a href="architecture/django/code_docs/scheduler.tasks.services.html#scheduler.tasks.services.service.Service.handle_task_update">(scheduler.tasks.services.service.Service method)</a>
+</li>
       </ul></li>
       <li><a href="architecture/django/code_docs/error.html#error.handlers.DatabaseLogHandler.handleError">handleError() (error.handlers.DatabaseLogHandler method)</a>
 </li>
@@ -3470,7 +3500,7 @@
 </li>
         <li><a href="architecture/django/code_docs/messaging.management.commands.html#messaging.management.commands.scale_echo_message.Command.help">(messaging.management.commands.scale_echo_message.Command attribute)</a>
 </li>
-        <li><a href="architecture/django/code_docs/messaging.management.commands.html#messaging.management.commands.scale_process_messages.Command.help">(messaging.management.commands.scale_process_messages.Command attribute)</a>
+        <li><a href="architecture/django/code_docs/messaging.management.commands.html#messaging.management.commands.scale_message_handler.Command.help">(messaging.management.commands.scale_message_handler.Command attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/messaging.management.commands.html#messaging.management.commands.scale_send_message.Command.help">(messaging.management.commands.scale_send_message.Command attribute)</a>
 </li>
@@ -3590,6 +3620,10 @@
       <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeConditions.IMAGE_PULL_ERR">IMAGE_PULL_ERR (scheduler.node.conditions.NodeConditions attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.Node.IMAGE_PULL_ERR_THRESHOLD">IMAGE_PULL_ERR_THRESHOLD (scheduler.node.node_class.Node attribute)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.test.tasks.html#job.test.tasks.test_manager.ImplementedNodeTask">ImplementedNodeTask (class in job.test.tasks.test_manager)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.test.tasks.html#job.test.tasks.test_manager.ImplementedSystemTask">ImplementedSystemTask (class in job.test.tasks.test_manager)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.tasks.html#job.test.tasks.test_base_task.ImplementedTask">ImplementedTask (class in job.test.tasks.test_base_task)</a>
 
@@ -3765,10 +3799,10 @@
 </li>
       <li><a href="architecture/django/code_docs/ingest.triggers.html#module-ingest.triggers.ingest_trigger_condition">ingest.triggers.ingest_trigger_condition (module)</a>
 </li>
-      <li><a href="architecture/django/code_docs/ingest.triggers.html#module-ingest.triggers.ingest_trigger_handler">ingest.triggers.ingest_trigger_handler (module)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="architecture/django/code_docs/ingest.triggers.html#module-ingest.triggers.ingest_trigger_handler">ingest.triggers.ingest_trigger_handler (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/ingest.html#module-ingest.urls">ingest.urls (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#module-ingest.views">ingest.views (module)</a>
@@ -3869,7 +3903,7 @@
         <li><a href="architecture/django/code_docs/queue.html#queue.models.Queue.interface">(queue.models.Queue attribute)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/messaging.management.commands.html#messaging.management.commands.scale_process_messages.Command.interupt">interupt() (messaging.management.commands.scale_process_messages.Command method)</a>
+      <li><a href="architecture/django/code_docs/messaging.management.commands.html#messaging.management.commands.scale_message_handler.Command.interupt">interupt() (messaging.management.commands.scale_message_handler.Command method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.html#util.exceptions.InvalidAWSCredentials">InvalidAWSCredentials</a>
 </li>
@@ -4292,6 +4326,8 @@
       <li><a href="architecture/django/code_docs/job.tasks.html#module-job.tasks.health_task">job.tasks.health_task (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.tasks.html#module-job.tasks.manager">job.tasks.manager (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.tasks.html#module-job.tasks.node_task">job.tasks.node_task (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.tasks.html#module-job.tasks.pull_task">job.tasks.pull_task (module)</a>
 </li>
@@ -5137,6 +5173,8 @@
         <li><a href="architecture/django/code_docs/job.html#job.models.TaskUpdate.message">(job.models.TaskUpdate attribute)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/scheduler.tasks.services.messaging.html#scheduler.tasks.services.messaging.message_handler_task.MessageHandlerTask">MessageHandlerTask (class in scheduler.tasks.services.messaging.message_handler_task)</a>
+</li>
       <li><a href="architecture/django/code_docs/messaging.html#module-messaging">messaging (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/messaging.html#module-messaging.apps">messaging.apps (module)</a>
@@ -5159,7 +5197,7 @@
 </li>
       <li><a href="architecture/django/code_docs/messaging.management.commands.html#module-messaging.management.commands.scale_echo_message">messaging.management.commands.scale_echo_message (module)</a>
 </li>
-      <li><a href="architecture/django/code_docs/messaging.management.commands.html#module-messaging.management.commands.scale_process_messages">messaging.management.commands.scale_process_messages (module)</a>
+      <li><a href="architecture/django/code_docs/messaging.management.commands.html#module-messaging.management.commands.scale_message_handler">messaging.management.commands.scale_message_handler (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/messaging.management.commands.html#module-messaging.management.commands.scale_send_message">messaging.management.commands.scale_send_message (module)</a>
 </li>
@@ -5192,6 +5230,8 @@
       <li><a href="architecture/django/code_docs/messaging.backends.html#messaging.backends.backend.MessagingBackend">MessagingBackend (class in messaging.backends.backend)</a>
 </li>
       <li><a href="architecture/django/code_docs/messaging.html#messaging.apps.MessagingConfig">MessagingConfig (class in messaging.apps)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.tasks.services.messaging.html#scheduler.tasks.services.messaging.messaging_service.MessagingService">MessagingService (class in scheduler.tasks.services.messaging.messaging_service)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.meta_data">meta_data (storage.models.ScaleFile attribute)</a>
 </li>
@@ -5558,6 +5598,8 @@
 </li>
         <li><a href="architecture/django/code_docs/scheduler.migrations.html#scheduler.migrations.0006_scheduler_status.Migration">(class in scheduler.migrations.0006_scheduler_status)</a>
 </li>
+        <li><a href="architecture/django/code_docs/scheduler.migrations.html#scheduler.migrations.0007_scheduler_num_message_handlers.Migration">(class in scheduler.migrations.0007_scheduler_num_message_handlers)</a>
+</li>
         <li><a href="architecture/django/code_docs/shared_resource.migrations.html#shared_resource.migrations.0001_initial.Migration">(class in shared_resource.migrations.0001_initial)</a>
 </li>
         <li><a href="architecture/django/code_docs/shared_resource.migrations.html#shared_resource.migrations.0002_auto_20170412_1225.Migration">(class in shared_resource.migrations.0002_auto_20170412_1225)</a>
@@ -5809,10 +5851,10 @@
 </li>
       <li><a href="architecture/django/code_docs/node.migrations.html#module-node.migrations.0003_node_is_paused_errors">node.migrations.0003_node_is_paused_errors (module)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/node.migrations.html#module-node.migrations.0004_auto_20170524_1639">node.migrations.0004_auto_20170524_1639 (module)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/node.html#module-node.models">node.models (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/node.html#node.models.Node.MultipleObjectsReturned">Node.MultipleObjectsReturned</a>
@@ -5919,6 +5961,8 @@
 </li>
       <li><a href="architecture/django/code_docs/node.html#node.views.NodesView">NodesView (class in node.views)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.tasks.html#job.tasks.node_task.NodeTask">NodeTask (class in job.tasks.node_task)</a>
+</li>
       <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.conditions.NodeWarning">NodeWarning (class in scheduler.node.conditions)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.node.html#scheduler.node.node_class.Node.NORMAL_HEALTH_THRESHOLD">NORMAL_HEALTH_THRESHOLD (scheduler.node.node_class.Node attribute)</a>
@@ -5928,6 +5972,8 @@
       <li><a href="architecture/django/code_docs/job.configuration.html#job.configuration.configurators.normalize_env_var_name">normalize_env_var_name() (in module job.configuration.configurators)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.num_exes">num_exes (job.models.Job attribute)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.html#scheduler.models.Scheduler.num_message_handlers">num_message_handlers (scheduler.models.Scheduler attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -6247,6 +6293,8 @@
         <li><a href="architecture/django/code_docs/scheduler.migrations.html#scheduler.migrations.0005_scheduler_queue_mode.Migration.operations">(scheduler.migrations.0005_scheduler_queue_mode.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.migrations.html#scheduler.migrations.0006_scheduler_status.Migration.operations">(scheduler.migrations.0006_scheduler_status.Migration attribute)</a>
+</li>
+        <li><a href="architecture/django/code_docs/scheduler.migrations.html#scheduler.migrations.0007_scheduler_num_message_handlers.Migration.operations">(scheduler.migrations.0007_scheduler_num_message_handlers.Migration attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/shared_resource.migrations.html#shared_resource.migrations.0001_initial.Migration.operations">(shared_resource.migrations.0001_initial.Migration attribute)</a>
 </li>
@@ -7707,6 +7755,8 @@
 </li>
       <li><a href="architecture/django/code_docs/scheduler.migrations.html#module-scheduler.migrations.0006_scheduler_status">scheduler.migrations.0006_scheduler_status (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/scheduler.migrations.html#module-scheduler.migrations.0007_scheduler_num_message_handlers">scheduler.migrations.0007_scheduler_num_message_handlers (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/scheduler.html#module-scheduler.models">scheduler.models (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.html#scheduler.models.Scheduler.MultipleObjectsReturned">Scheduler.MultipleObjectsReturned</a>
@@ -7759,6 +7809,16 @@
 </li>
       <li><a href="architecture/django/code_docs/scheduler.tasks.html#module-scheduler.tasks.manager">scheduler.tasks.manager (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/scheduler.tasks.services.html#module-scheduler.tasks.services">scheduler.tasks.services (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.tasks.services.messaging.html#module-scheduler.tasks.services.messaging">scheduler.tasks.services.messaging (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.tasks.services.messaging.html#module-scheduler.tasks.services.messaging.message_handler_task">scheduler.tasks.services.messaging.message_handler_task (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.tasks.services.messaging.html#module-scheduler.tasks.services.messaging.messaging_service">scheduler.tasks.services.messaging.messaging_service (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.tasks.services.html#module-scheduler.tasks.services.service">scheduler.tasks.services.service (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/scheduler.tasks.html#module-scheduler.tasks.system_task">scheduler.tasks.system_task (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.html#module-scheduler.test">scheduler.test (module)</a>
@@ -7784,6 +7844,12 @@
       <li><a href="architecture/django/code_docs/scheduler.test.sync.html#module-scheduler.test.sync.test_workspace_manager">scheduler.test.sync.test_workspace_manager (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.tasks.html#module-scheduler.test.tasks">scheduler.test.tasks (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.test.tasks.services.html#module-scheduler.test.tasks.services">scheduler.test.tasks.services (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.test.tasks.services.messaging.html#module-scheduler.test.tasks.services.messaging">scheduler.test.tasks.services.messaging (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.test.tasks.services.messaging.html#module-scheduler.test.tasks.services.messaging.test_messaging_service">scheduler.test.tasks.services.messaging.test_messaging_service (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.test.tasks.html#module-scheduler.test.tasks.test_manager">scheduler.test.tasks.test_manager (module)</a>
 </li>
@@ -7981,6 +8047,8 @@
         <li><a href="architecture/django/code_docs/storage.html#storage.views.WorkspacesView.serializer_class">(storage.views.WorkspacesView attribute)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/scheduler.tasks.services.html#scheduler.tasks.services.service.Service">Service (class in scheduler.tasks.services.service)</a>
+</li>
       <li><a href="architecture/django/code_docs/scheduler.resources.html#scheduler.resources.manager.ResourceManager.set_agent_shortages">set_agent_shortages() (scheduler.resources.manager.ResourceManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.set_basic_fields">set_basic_fields() (storage.models.ScaleFile method)</a>
@@ -8405,6 +8473,8 @@
         <li><a href="architecture/django/code_docs/scheduler.test.sync.html#scheduler.test.sync.test_scheduler_manager.TestSchedulerManager.setUp">(scheduler.test.sync.test_scheduler_manager.TestSchedulerManager method)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.test.sync.html#scheduler.test.sync.test_workspace_manager.TestWorkspaceManager.setUp">(scheduler.test.sync.test_workspace_manager.TestWorkspaceManager method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/scheduler.test.tasks.services.messaging.html#scheduler.test.tasks.services.messaging.test_messaging_service.TestMessagingService.setUp">(scheduler.test.tasks.services.messaging.test_messaging_service.TestMessagingService method)</a>
 </li>
         <li><a href="architecture/django/code_docs/scheduler.test.tasks.html#scheduler.test.tasks.test_manager.TestSystemTaskManager.setUp">(scheduler.test.tasks.test_manager.TestSystemTaskManager method)</a>
 </li>
@@ -9872,7 +9942,11 @@
       <li><a href="architecture/django/code_docs/job.test.execution.html#job.test.execution.test_manager.TestJobExecutionManager.test_generate_status_json">test_generate_status_json() (job.test.execution.test_manager.TestJobExecutionManager method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/job.test.tasks.html#job.test.tasks.test_manager.TestTaskManager.test_generate_status_json">(job.test.tasks.test_manager.TestTaskManager method)</a>
+</li>
         <li><a href="architecture/django/code_docs/scheduler.test.node.html#scheduler.test.node.test_node_class.TestNode.test_generate_status_json">(scheduler.test.node.test_node_class.TestNode method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/scheduler.test.tasks.services.messaging.html#scheduler.test.tasks.services.messaging.test_messaging_service.TestMessagingService.test_generate_status_json">(scheduler.test.tasks.services.messaging.test_messaging_service.TestMessagingService method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/product.test.configuration.html#product.test.configuration.test_product_data_file.TestProductDataFileStoreStoreFiles.test_geo_metadata">test_geo_metadata() (product.test.configuration.test_product_data_file.TestProductDataFileStoreStoreFiles method)</a>
@@ -10017,6 +10091,10 @@
 </li>
       <li><a href="architecture/django/code_docs/source.test.html#source.test.test_models.TestSourceFileManager.test_get_sources_data_time">test_get_sources_data_time() (source.test.test_models.TestSourceFileManager method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/scheduler.test.tasks.services.messaging.html#scheduler.test.tasks.services.messaging.test_messaging_service.TestMessagingService.test_get_tasks_to_kill">test_get_tasks_to_kill() (scheduler.test.tasks.services.messaging.test_messaging_service.TestMessagingService method)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.test.tasks.services.messaging.html#scheduler.test.tasks.services.messaging.test_messaging_service.TestMessagingService.test_get_tasks_to_schedule">test_get_tasks_to_schedule() (scheduler.test.tasks.services.messaging.test_messaging_service.TestMessagingService method)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.test.handlers.html#recipe.test.handlers.test_graph.TestRecipeGraph.test_get_topological_order">test_get_topological_order() (recipe.test.handlers.test_graph.TestRecipeGraph method)</a>
 </li>
       <li><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_views.TestMetricPlotView.test_groups">test_groups() (metrics.test.test_views.TestMetricPlotView method)</a>
@@ -10077,6 +10155,8 @@
 
       <ul>
         <li><a href="architecture/django/code_docs/job.test.tasks.html#job.test.tasks.test_manager.TestTaskManager.test_handle_task_update">(job.test.tasks.test_manager.TestTaskManager method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/scheduler.test.tasks.services.messaging.html#scheduler.test.tasks.services.messaging.test_messaging_service.TestMessagingService.test_handle_task_update">(scheduler.test.tasks.services.messaging.test_messaging_service.TestMessagingService method)</a>
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/ingest.test.triggers.html#ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet.test_has_all_data_types">test_has_all_data_types() (ingest.test.triggers.test_ingest_trigger_condition.TestIngestTriggerConditionIsConditionMet method)</a>
@@ -11029,12 +11109,12 @@
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_post">test_parse_int_post() (util.test.test_rest.TestRest method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_zero">test_parse_int_zero() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_parse_stdout">test_parse_stdout() (job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_parse_stdout_required">test_parse_stdout_required() (job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_string">test_parse_string() (util.test.test_rest.TestRest method)</a>
@@ -12412,6 +12492,8 @@
       <li><a href="architecture/django/code_docs/messaging.test.html#messaging.test.test_backends.TestMessagingBackend">TestMessagingBackend (class in messaging.test.test_backends)</a>
 </li>
       <li><a href="architecture/django/code_docs/messaging.test.html#messaging.test.test_apps.TestMessagingConfig">TestMessagingConfig (class in messaging.test.test_apps)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.test.tasks.services.messaging.html#scheduler.test.tasks.services.messaging.test_messaging_service.TestMessagingService">TestMessagingService (class in scheduler.test.tasks.services.messaging.test_messaging_service)</a>
 </li>
       <li><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_views.TestMetricDetailsView">TestMetricDetailsView (class in metrics.test.test_views)</a>
 </li>

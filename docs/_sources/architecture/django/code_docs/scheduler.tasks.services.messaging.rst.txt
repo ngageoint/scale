@@ -1,0 +1,30 @@
+scheduler\.tasks\.services\.messaging package
+=============================================
+
+Submodules
+----------
+
+scheduler\.tasks\.services\.messaging\.message\_handler\_task module
+--------------------------------------------------------------------
+
+.. automodule:: scheduler.tasks.services.messaging.message_handler_task
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+scheduler\.tasks\.services\.messaging\.messaging\_service module
+----------------------------------------------------------------
+
+.. automodule:: scheduler.tasks.services.messaging.messaging_service
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: scheduler.tasks.services.messaging
+    :members:
+    :undoc-members:
+    :show-inheritance:

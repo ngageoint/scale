@@ -267,6 +267,7 @@
 <li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0004_auto_20170209_1616">scheduler.migrations.0004_auto_20170209_1616 module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0005_scheduler_queue_mode">scheduler.migrations.0005_scheduler_queue_mode module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0006_scheduler_status">scheduler.migrations.0006_scheduler_status module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations.0007_scheduler_num_message_handlers">scheduler.migrations.0007_scheduler_num_message_handlers module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.migrations.html#module-scheduler.migrations">Module contents</a></li>
 </ul>
 </li>
@@ -314,6 +315,25 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="scheduler.tasks.html">scheduler.tasks package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="scheduler.tasks.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="scheduler.tasks.services.html">scheduler.tasks.services package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.tasks.services.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="scheduler.tasks.services.messaging.html">scheduler.tasks.services.messaging package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="scheduler.tasks.services.messaging.html#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="scheduler.tasks.services.messaging.html#module-scheduler.tasks.services.messaging.message_handler_task">scheduler.tasks.services.messaging.message_handler_task module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="scheduler.tasks.services.messaging.html#module-scheduler.tasks.services.messaging.messaging_service">scheduler.tasks.services.messaging.messaging_service module</a></li>
+<li class="toctree-l6"><a class="reference internal" href="scheduler.tasks.services.messaging.html#module-scheduler.tasks.services.messaging">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.tasks.services.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.tasks.services.html#module-scheduler.tasks.services.service">scheduler.tasks.services.service module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.tasks.services.html#module-scheduler.tasks.services">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.tasks.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.tasks.html#module-scheduler.tasks.db_update_task">scheduler.tasks.db_update_task module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="scheduler.tasks.html#module-scheduler.tasks.manager">scheduler.tasks.manager module</a></li>
@@ -346,6 +366,22 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="scheduler.test.tasks.html">scheduler.test.tasks package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="scheduler.test.tasks.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="scheduler.test.tasks.services.html">scheduler.test.tasks.services package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="scheduler.test.tasks.services.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="scheduler.test.tasks.services.messaging.html">scheduler.test.tasks.services.messaging package</a><ul>
+<li class="toctree-l8"><a class="reference internal" href="scheduler.test.tasks.services.messaging.html#submodules">Submodules</a></li>
+<li class="toctree-l8"><a class="reference internal" href="scheduler.test.tasks.services.messaging.html#module-scheduler.test.tasks.services.messaging.test_messaging_service">scheduler.test.tasks.services.messaging.test_messaging_service module</a></li>
+<li class="toctree-l8"><a class="reference internal" href="scheduler.test.tasks.services.messaging.html#module-scheduler.test.tasks.services.messaging">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="scheduler.test.tasks.services.html#module-scheduler.test.tasks.services">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.test.tasks.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.test.tasks.html#module-scheduler.test.tasks.test_manager">scheduler.test.tasks.test_manager module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="scheduler.test.tasks.html#module-scheduler.test.tasks">Module contents</a></li>
@@ -669,6 +705,13 @@ object the first time, the query is executed.</p>
 </dd></dl>
 
 <dl class="attribute">
+<dt id="scheduler.models.Scheduler.num_message_handlers">
+<code class="descname">num_message_handlers</code><a class="headerlink" href="#scheduler.models.Scheduler.num_message_handlers" title="Permalink to this definition">¶</a></dt>
+<dd><p>A wrapper for a deferred-loading field. When the value is read from this
+object the first time, the query is executed.</p>
+</dd></dl>
+
+<dl class="attribute">
 <dt id="scheduler.models.Scheduler.objects">
 <code class="descname">objects</code><em class="property"> = &lt;scheduler.models.SchedulerManager object&gt;</em><a class="headerlink" href="#scheduler.models.Scheduler.objects" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -932,7 +975,7 @@ fails during that time.</p>
 <p>Meta class used to define what is serialized and how</p>
 <dl class="attribute">
 <dt id="scheduler.serializers.SchedulerSerializer.Meta.fields">
-<code class="descname">fields</code><em class="property"> = (u'is_paused',)</em><a class="headerlink" href="#scheduler.serializers.SchedulerSerializer.Meta.fields" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fields</code><em class="property"> = (u'is_paused', u'num_message_handlers')</em><a class="headerlink" href="#scheduler.serializers.SchedulerSerializer.Meta.fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -1007,7 +1050,7 @@ fails during that time.</p>
 
 <dl class="attribute">
 <dt id="scheduler.views.SchedulerView.update_fields">
-<code class="descname">update_fields</code><em class="property"> = (u'is_paused',)</em><a class="headerlink" href="#scheduler.views.SchedulerView.update_fields" title="Permalink to this definition">¶</a></dt>
+<code class="descname">update_fields</code><em class="property"> = (u'is_paused', u'num_message_handlers')</em><a class="headerlink" href="#scheduler.views.SchedulerView.update_fields" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

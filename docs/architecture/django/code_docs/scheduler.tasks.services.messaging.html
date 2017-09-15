@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>scheduler.tasks package &mdash; Scale 5.1.1-snapshot documentation</title>
+  <title>scheduler.tasks.services.messaging package &mdash; Scale 5.1.1-snapshot documentation</title>
   
 
   
@@ -38,9 +38,9 @@
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
     <link rel="top" title="Scale 5.1.1-snapshot documentation" href="../../../index.html"/>
-        <link rel="up" title="scheduler package" href="scheduler.html"/>
-        <link rel="next" title="scheduler.tasks.services package" href="scheduler.tasks.services.html"/>
-        <link rel="prev" title="scheduler.task package" href="scheduler.task.html"/>
+        <link rel="up" title="scheduler.tasks.services package" href="scheduler.tasks.services.html"/>
+        <link rel="next" title="scheduler.test package" href="scheduler.test.html"/>
+        <link rel="prev" title="scheduler.tasks.services package" href="scheduler.tasks.services.html"/>
     <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
 
 
@@ -208,13 +208,17 @@
         
           <li><a href="scheduler.html">scheduler package</a> &raquo;</li>
         
-      <li>scheduler.tasks package</li>
+          <li><a href="scheduler.tasks.html">scheduler.tasks package</a> &raquo;</li>
+        
+          <li><a href="scheduler.tasks.services.html">scheduler.tasks.services package</a> &raquo;</li>
+        
+      <li>scheduler.tasks.services.messaging package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../../../_sources/architecture/django/code_docs/scheduler.tasks.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../../_sources/architecture/django/code_docs/scheduler.tasks.services.messaging.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -227,142 +231,48 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="scheduler-tasks-package">
-<h1>scheduler.tasks package<a class="headerlink" href="#scheduler-tasks-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="scheduler.tasks.services.html">scheduler.tasks.services package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="scheduler.tasks.services.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="scheduler.tasks.services.messaging.html">scheduler.tasks.services.messaging package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="scheduler.tasks.services.messaging.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="scheduler.tasks.services.messaging.html#module-scheduler.tasks.services.messaging.message_handler_task">scheduler.tasks.services.messaging.message_handler_task module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="scheduler.tasks.services.messaging.html#module-scheduler.tasks.services.messaging.messaging_service">scheduler.tasks.services.messaging.messaging_service module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="scheduler.tasks.services.messaging.html#module-scheduler.tasks.services.messaging">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="scheduler.tasks.services.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="scheduler.tasks.services.html#module-scheduler.tasks.services.service">scheduler.tasks.services.service module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="scheduler.tasks.services.html#module-scheduler.tasks.services">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
+  <div class="section" id="scheduler-tasks-services-messaging-package">
+<h1>scheduler.tasks.services.messaging package<a class="headerlink" href="#scheduler-tasks-services-messaging-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-scheduler.tasks.db_update_task">
-<span id="scheduler-tasks-db-update-task-module"></span><h2>scheduler.tasks.db_update_task module<a class="headerlink" href="#module-scheduler.tasks.db_update_task" title="Permalink to this headline">¶</a></h2>
-<p>Defines the class for a database update task</p>
+<div class="section" id="module-scheduler.tasks.services.messaging.message_handler_task">
+<span id="scheduler-tasks-services-messaging-message-handler-task-module"></span><h2>scheduler.tasks.services.messaging.message_handler_task module<a class="headerlink" href="#module-scheduler.tasks.services.messaging.message_handler_task" title="Permalink to this headline">¶</a></h2>
+<p>Defines the class for a message handler task</p>
 <dl class="class">
-<dt id="scheduler.tasks.db_update_task.DatabaseUpdateTask">
-<em class="property">class </em><code class="descclassname">scheduler.tasks.db_update_task.</code><code class="descname">DatabaseUpdateTask</code><span class="sig-paren">(</span><em>framework_id</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.tasks.db_update_task.DatabaseUpdateTask" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#scheduler.tasks.system_task.SystemTask" title="scheduler.tasks.system_task.SystemTask"><code class="xref py py-class docutils literal"><span class="pre">scheduler.tasks.system_task.SystemTask</span></code></a></p>
-<p>Represents a task that updates the Scale database. This class is thread-safe.</p>
+<dt id="scheduler.tasks.services.messaging.message_handler_task.MessageHandlerTask">
+<em class="property">class </em><code class="descclassname">scheduler.tasks.services.messaging.message_handler_task.</code><code class="descname">MessageHandlerTask</code><span class="sig-paren">(</span><em>framework_id</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.tasks.services.messaging.message_handler_task.MessageHandlerTask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="scheduler.tasks.html#scheduler.tasks.system_task.SystemTask" title="scheduler.tasks.system_task.SystemTask"><code class="xref py py-class docutils literal"><span class="pre">scheduler.tasks.system_task.SystemTask</span></code></a></p>
+<p>Represents a task that runs a message handler for processing the backend messaging system. This class is
+thread-safe.</p>
 <dl class="method">
-<dt id="scheduler.tasks.db_update_task.DatabaseUpdateTask.get_resources">
-<code class="descname">get_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.tasks.db_update_task.DatabaseUpdateTask.get_resources" title="Permalink to this definition">¶</a></dt>
+<dt id="scheduler.tasks.services.messaging.message_handler_task.MessageHandlerTask.get_resources">
+<code class="descname">get_resources</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.tasks.services.messaging.message_handler_task.MessageHandlerTask.get_resources" title="Permalink to this definition">¶</a></dt>
 <dd><p>See <a class="reference internal" href="job.tasks.html#job.tasks.base_task.Task.get_resources" title="job.tasks.base_task.Task.get_resources"><code class="xref py py-meth docutils literal"><span class="pre">job.tasks.base_task.Task.get_resources()</span></code></a></p>
 </dd></dl>
 
 </dd></dl>
 
 </div>
-<div class="section" id="module-scheduler.tasks.manager">
-<span id="scheduler-tasks-manager-module"></span><h2>scheduler.tasks.manager module<a class="headerlink" href="#module-scheduler.tasks.manager" title="Permalink to this headline">¶</a></h2>
-<p>Defines the class that manages system tasks</p>
+<div class="section" id="module-scheduler.tasks.services.messaging.messaging_service">
+<span id="scheduler-tasks-services-messaging-messaging-service-module"></span><h2>scheduler.tasks.services.messaging.messaging_service module<a class="headerlink" href="#module-scheduler.tasks.services.messaging.messaging_service" title="Permalink to this headline">¶</a></h2>
+<p>Defines the messaging service that handles the backend messaging</p>
 <dl class="class">
-<dt id="scheduler.tasks.manager.SystemTaskManager">
-<em class="property">class </em><code class="descclassname">scheduler.tasks.manager.</code><code class="descname">SystemTaskManager</code><a class="headerlink" href="#scheduler.tasks.manager.SystemTaskManager" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>This class manages all Scale system tasks. This class is thread-safe.</p>
-<dl class="attribute">
-<dt id="scheduler.tasks.manager.SystemTaskManager.DATABASE_UPDATE_ERR_THRESHOLD">
-<code class="descname">DATABASE_UPDATE_ERR_THRESHOLD</code><em class="property"> = datetime.timedelta(0, 120)</em><a class="headerlink" href="#scheduler.tasks.manager.SystemTaskManager.DATABASE_UPDATE_ERR_THRESHOLD" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
+<dt id="scheduler.tasks.services.messaging.messaging_service.MessagingService">
+<em class="property">class </em><code class="descclassname">scheduler.tasks.services.messaging.messaging_service.</code><code class="descname">MessagingService</code><a class="headerlink" href="#scheduler.tasks.services.messaging.messaging_service.MessagingService" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="scheduler.tasks.services.html#scheduler.tasks.services.service.Service" title="scheduler.tasks.services.service.Service"><code class="xref py py-class docutils literal"><span class="pre">scheduler.tasks.services.service.Service</span></code></a></p>
+<p>Service that handles the backend messaging</p>
 <dl class="method">
-<dt id="scheduler.tasks.manager.SystemTaskManager.generate_status_json">
-<code class="descname">generate_status_json</code><span class="sig-paren">(</span><em>status_dict</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.tasks.manager.SystemTaskManager.generate_status_json" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates the portion of the status JSON that describes system-level information</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>status_dict</strong> (<em>dict</em>) &#8211; The status JSON dict</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="scheduler.tasks.manager.SystemTaskManager.get_tasks_to_kill">
-<code class="descname">get_tasks_to_kill</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.tasks.manager.SystemTaskManager.get_tasks_to_kill" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a list of system tasks that need to be killed as soon as possible</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of system tasks to kill</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="scheduler.tasks.manager.SystemTaskManager.get_tasks_to_schedule">
-<code class="descname">get_tasks_to_schedule</code><span class="sig-paren">(</span><em>when</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.tasks.manager.SystemTaskManager.get_tasks_to_schedule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a list of system tasks that need to be scheduled as soon as possible</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The current time</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of system tasks to schedule</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="scheduler.tasks.manager.SystemTaskManager.handle_task_update">
-<code class="descname">handle_task_update</code><span class="sig-paren">(</span><em>task_update</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.tasks.manager.SystemTaskManager.handle_task_update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Handles the given task update</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>task_update</strong> (<a class="reference internal" href="job.tasks.html#job.tasks.update.TaskStatusUpdate" title="job.tasks.update.TaskStatusUpdate"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.update.TaskStatusUpdate</span></code></a>) &#8211; The task update</td>
-</tr>
-</tbody>
-</table>
+<dt id="scheduler.tasks.services.messaging.messaging_service.MessagingService.get_desired_task_count">
+<code class="descname">get_desired_task_count</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.tasks.services.messaging.messaging_service.MessagingService.get_desired_task_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>See <a class="reference internal" href="scheduler.tasks.services.html#scheduler.tasks.services.service.Service.get_desired_task_count" title="scheduler.tasks.services.service.Service.get_desired_task_count"><code class="xref py py-meth docutils literal"><span class="pre">scheduler.tasks.services.service.Service.get_desired_task_count()</span></code></a></p>
 </dd></dl>
 
 </dd></dl>
 
 </div>
-<div class="section" id="module-scheduler.tasks.system_task">
-<span id="scheduler-tasks-system-task-module"></span><h2>scheduler.tasks.system_task module<a class="headerlink" href="#module-scheduler.tasks.system_task" title="Permalink to this headline">¶</a></h2>
-<p>Defines the abstract base class for all system tasks</p>
-<dl class="class">
-<dt id="scheduler.tasks.system_task.SystemTask">
-<em class="property">class </em><code class="descclassname">scheduler.tasks.system_task.</code><code class="descname">SystemTask</code><span class="sig-paren">(</span><em>task_id</em>, <em>task_name</em><span class="sig-paren">)</span><a class="headerlink" href="#scheduler.tasks.system_task.SystemTask" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="job.tasks.html#job.tasks.base_task.Task" title="job.tasks.base_task.Task"><code class="xref py py-class docutils literal"><span class="pre">job.tasks.base_task.Task</span></code></a></p>
-<p>Abstract base class for a system task</p>
-</dd></dl>
-
-</div>
-<div class="section" id="module-scheduler.tasks">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-scheduler.tasks" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-scheduler.tasks.services.messaging">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-scheduler.tasks.services.messaging" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -376,10 +286,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="scheduler.tasks.services.html" class="btn btn-neutral float-right" title="scheduler.tasks.services package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="scheduler.test.html" class="btn btn-neutral float-right" title="scheduler.test package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="scheduler.task.html" class="btn btn-neutral" title="scheduler.task package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="scheduler.tasks.services.html" class="btn btn-neutral" title="scheduler.tasks.services package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
