@@ -54,7 +54,7 @@ class CreateJobExecutionEnd(CommandMessage):
         for job_exe_end in self._job_exe_ends:
             job_exe_end_dict = {'id': job_exe_end.job_exe_id, 'job_id': job_exe_end.job_id,
                                 'job_type_id': job_exe_end.job_type_id, 'exe_num': job_exe_end.exe_num,
-                                'tasks_results': job_exe_end.tasks_results, 'status': job_exe_end.status,
+                                'task_results': job_exe_end.task_results, 'status': job_exe_end.status,
                                 'queued': datetime_to_string(job_exe_end.queued),
                                 'ended': datetime_to_string(job_exe_end.ended)}
             if job_exe_end.error_id:
@@ -100,7 +100,8 @@ class CreateJobExecutionEnd(CommandMessage):
 
         # See if any of the job_exe_end models already exist
         job_exe_ids = [job_exe_end.job_exe_id for job_exe_end in self._job_exe_ends]
-        existing_ids = set(model.job_exe_id for model in JobExecutionEnd.objects.filter(job_exe_id__in=job_exe_ids))
+        job_exe_end_qry = JobExecutionEnd.objects.filter(job_exe_id__in=job_exe_ids).only('job_exe_id')
+        existing_ids = set(model.job_exe_id for model in job_exe_end_qry)
 
         # Filter out job_exe_end models that already exist
         models_to_create = []
