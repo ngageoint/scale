@@ -92,3 +92,61 @@ class TestCreateJobExecutionEnd(TestCase):
         self.assertEqual(job_exe_ends[2].status, 'FAILED')
         self.assertEqual(job_exe_ends[3].status, 'FAILED')
         self.assertEqual(job_exe_ends[4].status, 'COMPLETED')
+
+    def test_execute(self):
+        """Tests calling CreateJobExecutionEnd.execute() successfully"""
+
+        # Add 3 job_exe_end models to messages 1, 2, and 3
+        message_1 = CreateJobExecutionEnd()
+        message_2 = CreateJobExecutionEnd()
+        message_3 = CreateJobExecutionEnd()
+        job_exe_ids = []
+        for _ in range(3):
+            job_exe = job_test_utils.create_running_job_exe()
+            job_exe_ids.append(job_exe.id)
+            while not job_exe.is_finished():
+                task = job_exe.start_next_task()
+                task.launch(now())
+                update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.RUNNING,
+                                                                  now())
+                task.update(update)
+                job_exe.task_update(update)
+                update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.FINISHED,
+                                                                  now())
+                task.update(update)
+                job_exe.task_update(update)
+            message_1.add_job_exe_end(job_exe.create_job_exe_end_model())
+            message_2.add_job_exe_end(job_exe.create_job_exe_end_model())
+            message_3.add_job_exe_end(job_exe.create_job_exe_end_model())
+
+        # Execute message 1 with 3 job_exe_end models
+        message_1.execute()
+        self.assertEqual(JobExecutionEnd.objects.filter(job_exe_id__in=job_exe_ids).count(), 3)
+
+        # Add more job_exe_end models to messages 1 and 2
+        while message_2.can_fit_more():
+            job_exe = job_test_utils.create_running_job_exe()
+            job_exe_ids.append(job_exe.id)
+            while not job_exe.is_finished():
+                task = job_exe.start_next_task()
+                task.launch(now())
+                update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.RUNNING,
+                                                                  now())
+                task.update(update)
+                job_exe.task_update(update)
+                update = job_test_utils.create_task_status_update(task.id, task.agent_id, TaskStatusUpdate.FINISHED,
+                                                                  now())
+                task.update(update)
+                job_exe.task_update(update)
+            message_2.add_job_exe_end(job_exe.create_job_exe_end_model())
+            message_3.add_job_exe_end(job_exe.create_job_exe_end_model())
+
+        # Execute message 2 with same 3 job_exe_end models from before, plus new ones
+        # Old models should not cause an error and only new ones should get created
+        message_2.execute()
+        self.assertEqual(JobExecutionEnd.objects.filter(job_exe_id__in=job_exe_ids).count(), len(job_exe_ids))
+
+        # Execute message 3 with all old models
+        # Old models should not cause an error and no new ones should get created
+        message_3.execute()
+        self.assertEqual(JobExecutionEnd.objects.filter(job_exe_id__in=job_exe_ids).count(), len(job_exe_ids))
