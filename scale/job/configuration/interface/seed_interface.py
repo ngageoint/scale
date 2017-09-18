@@ -399,12 +399,6 @@ class SeedInterface(object):
 
         self._populate_default_values()
 
-        # Define shortcut members to access Seed objects
-        self._interface = self.definition['job']['interface']
-        self._scalar_resources = self.definition['job']['resources']['scalar']
-        self._maintainer = self.definition['job']['maintainer']
-        self._errors = self.definition['job']['errors']
-
         self._check_for_name_collisions()
         self._check_mount_name_uniqueness()
 
@@ -446,58 +440,6 @@ class SeedInterface(object):
         for file_output_name in self.get_file_output_names():
             job_data.add_output(file_output_name, workspace_id)
 
-    def fully_populate_command_argument(self, job_data, job_environment, job_exe_id):
-        """Return a fully populated command arguments string. If pre-steps are necessary
-        (see are_pre_steps_needed), they should be run before this.  populated with information
-        from the job_data, job_environment, job_input_dir, and job_output_dir.This gets the properties and
-        input_files from the job_data, the shared_resources from the job_environment, and ${input}
-        ${output_dir} from the work_dir.
-        Throws a :class:`job.configuration.interface.exceptions.InvalidEnvironment` if the necessary
-        pre-steps have not been performed
-
-        :param job_data: The job data
-        :type job_data: :class:`job.configuration.data.job_data.JobData`
-        :param job_environment: The job environment
-        :type job_environment: dict
-        :param job_exe_id: The job execution ID
-        :type job_exe_id: int
-        """
-
-        command_arguments = self.populate_command_argument_properties(job_data)
-        param_replacements = {}
-
-        for input_data in self.definition['input_data']:
-            input_name = input_data['name']
-            input_type = input_data['type']
-            input_required = input_data['required']
-            if input_type == 'file':
-                param_dir = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name)
-                if os.path.isdir(param_dir):
-                    file_path = self._get_one_file_from_directory(param_dir)
-                    param_replacements[input_name] = file_path
-                elif input_required:
-                    raise InvalidData('Unable to create run command. Expected required file in %s' % param_dir)
-                else:
-                    param_replacements[input_name] = ''
-
-            elif input_type == 'files':
-                param_dir = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name)
-                if os.path.isdir(param_dir):
-                    param_replacements[input_name] = param_dir
-                elif input_required:
-                    raise InvalidData('Unable to create run command. Expected required files in %s' % param_dir)
-                else:
-                    param_replacements[input_name] = ''
-
-        param_replacements['job_output_dir'] = SCALE_JOB_EXE_OUTPUT_PATH
-
-        command_arguments = self._replace_command_parameters(command_arguments, param_replacements)
-
-        # Remove extra whitespace
-        command_arguments = ' '.join(command_arguments.split())
-
-        return command_arguments
-
     def get_command(self):
         """Gets the command
         :return: the command
@@ -513,6 +455,53 @@ class SeedInterface(object):
         """
 
         return self.definition['command_arguments']
+
+    def get_interface(self):
+        """Gets the interface for the Seed job
+
+        :return: the interface object
+        :rtype: dict
+        """
+
+        return self.definition['job']['interface']
+
+    def get_output_files(self):
+        """Gets the list of output files defined in the interface
+
+        Commonly used when matching globs to capture output files
+
+        :return: the output file definitions for job
+        :rtype: list
+        """
+
+        return self.get_interface()['outputs']['files']
+
+    def get_scalar_resources(self):
+        """Gets the scalar resources defined the Seed job
+
+        :return: the scalar resources required by job
+        :rtype: list
+        """
+
+        return self.definition['job']['resources']['scalar']
+
+    def get_maintainer(self):
+        """Gets the maintainer details for the Seed job
+
+        :return: the maintainer details of job
+        :rtype: dict
+        """
+
+        return self.definition['job']['maintainer']
+
+    def get_errors(self):
+        """Get the error mapping defined for the Seed job
+
+        :return: the error codes mapped for job
+        :rtype: list
+        """
+
+        return self.definition['job']['errors']
 
     def get_dict(self):
         """Returns the internal dictionary that represents this job interface
@@ -554,10 +543,8 @@ class SeedInterface(object):
         # The capture expressions can be found within interface.outputs.files.pattern
 
 
-        job_def = self.definition['job']
-        if 'interface' in job_def and job_def['interface']:
-            interface =
-        self.definition['interface'][]
+        for output_file in self.get_output_files():
+            # lookup by pattern
 
         manifest_data = {}
         path_to_manifest_file = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, 'results_manifest.json')
