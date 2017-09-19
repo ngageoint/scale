@@ -10,6 +10,7 @@ import job.test.utils as job_test_utils
 import node.test.utils as node_test_utils
 from error.models import CACHED_ERRORS
 from job.execution.manager import JobExecutionManager
+from job.messages.job_exe_end import MAX_NUM
 from job.models import Job
 from job.tasks.update import TaskStatusUpdate
 
@@ -43,15 +44,18 @@ class TestJobExecutionManager(TransactionTestCase):
         for node_dict in json_dict:
             self.assertEqual(node_dict['job_executions']['running']['total'], 1)
 
-    def test_schedule_job_exes(self):
-        """Tests calling schedule_job_exes() successfully"""
+    def test_get_messages_for_canceled_job_exes(self):
+        """Tests calling get_messages() successfully when canceled job_exes have been added"""
 
-        self.job_exe_mgr.schedule_job_exes([self.job_exe_1, self.job_exe_2])
+        job_exe_ends = []
+        for _ in range(int(MAX_NUM * 2.5)):  # Should result in 3 messages
+            job_exe = job_test_utils.create_job_exe()
+            job_exe_ends.append(job_exe.create_canceled_job_exe_end_model(now()))
 
-        # Both executions should be in the manager and ready
-        self.assertEqual(len(self.job_exe_mgr.get_running_job_exes()), 2)
-        self.assertIsNotNone(self.job_exe_mgr.get_running_job_exe(self.job_exe_1.cluster_id))
-        self.assertIsNotNone(self.job_exe_mgr.get_running_job_exe(self.job_exe_2.cluster_id))
+        self.job_exe_mgr.add_canceled_job_exes(job_exe_ends)
+        messages = self.job_exe_mgr.get_messages()
+
+        self.assertEqual(len(messages), 3)
 
     def test_handle_task_timeout(self):
         """Tests calling handle_task_timeout() successfully"""
@@ -105,6 +109,16 @@ class TestJobExecutionManager(TransactionTestCase):
         self.assertEqual(lost_job_exe.id, self.job_exe_1.id)
         self.assertEqual(lost_job_exe.status, 'FAILED')
         self.assertEqual(lost_job_exe._error.name, 'node-lost')
+
+    def test_schedule_job_exes(self):
+        """Tests calling schedule_job_exes() successfully"""
+
+        self.job_exe_mgr.schedule_job_exes([self.job_exe_1, self.job_exe_2])
+
+        # Both executions should be in the manager and ready
+        self.assertEqual(len(self.job_exe_mgr.get_running_job_exes()), 2)
+        self.assertIsNotNone(self.job_exe_mgr.get_running_job_exe(self.job_exe_1.cluster_id))
+        self.assertIsNotNone(self.job_exe_mgr.get_running_job_exe(self.job_exe_2.cluster_id))
 
     def test_sync_with_database(self):
         """Tests calling sync_with_database() successfully"""

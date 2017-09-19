@@ -258,9 +258,9 @@ class TestSchedulingManager(TestCase):
         self.assertEqual(JobExecution.objects.filter(job_id=self.queue_1.job_id).count(), 1)
         self.assertEqual(JobExecution.objects.filter(job_id=self.queue_2.job_id).count(), 1)
         self.assertEqual(Queue.objects.filter(id__in=[self.queue_1.id, self.queue_2.id]).count(), 0)
-        job_exe_1 = JobExecution.objects.get(job_id=self.queue_1.job_id)
-        job_exe_end_1 = JobExecutionEnd.objects.get(job_exe_id=job_exe_1.id)
-        self.assertEqual(job_exe_end_1.status, 'CANCELED')
+        # Job execution manager should have a message for the canceled job execution
+        messages = job_exe_mgr.get_messages()
+        self.assertEqual(len(messages), 1)
 
     @patch('mesos_api.tasks.mesos_pb2.TaskInfo')
     def test_schedule_system_tasks(self, mock_taskinfo):

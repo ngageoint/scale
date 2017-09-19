@@ -416,9 +416,9 @@ class SchedulingManager(object):
             # Update scheduled jobs to RUNNING status
             Job.objects.update_jobs_to_running(job_exe_nums, started)
 
-            # Bulk create the canceled job execution end models
+            # Add canceled job execution end models to manager to be sent to messaging backend
             if canceled_job_exe_end_models:
-                JobExecutionEnd.objects.bulk_create(canceled_job_exe_end_models)
+                job_exe_mgr.add_canceled_job_exes(canceled_job_exe_end_models)
 
             # Delete queue models
             Queue.objects.filter(id__in=queue_ids).delete()
