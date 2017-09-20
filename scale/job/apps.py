@@ -12,7 +12,9 @@ class JobConfig(AppConfig):
     verbose_name = 'Job'
 
     def ready(self):
-        """Registers job errors"""
+        """Registers components related to jobs"""
+
+        # Register job errors
         from error.exceptions import register_error
         from job.configuration.exceptions import MissingMount, MissingSetting
         from job.configuration.results.exceptions import InvalidResultsManifest, MissingRequiredOutput
@@ -21,3 +23,9 @@ class JobConfig(AppConfig):
         register_error(MissingMount(''))
         register_error(MissingRequiredOutput(''))
         register_error(MissingSetting(''))
+
+        # Register job message types
+        from job.messages.job_exe_end import CreateJobExecutionEnd
+        from messaging.messages.factory import add_message_type
+
+        add_message_type(CreateJobExecutionEnd)
