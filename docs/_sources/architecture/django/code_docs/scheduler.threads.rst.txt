@@ -12,6 +12,14 @@ scheduler\.threads\.base\_thread module
     :undoc-members:
     :show-inheritance:
 
+scheduler\.threads\.messaging module
+------------------------------------
+
+.. automodule:: scheduler.threads.messaging
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 scheduler\.threads\.recon module
 --------------------------------
 

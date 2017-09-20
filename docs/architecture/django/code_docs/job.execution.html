@@ -634,6 +634,20 @@ tasks remain.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>This class manages all running and finished job executions. This class is thread-safe.</p>
 <dl class="method">
+<dt id="job.execution.manager.JobExecutionManager.add_canceled_job_exes">
+<code class="descname">add_canceled_job_exes</code><span class="sig-paren">(</span><em>job_exe_ends</em><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.manager.JobExecutionManager.add_canceled_job_exes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the given job_exe_end models for job executions canceled off of the queue</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>job_exe_ends</strong> (<a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list"><em>list</em></a>) &#8211; The job_exe_end models to add</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="job.execution.manager.JobExecutionManager.clear">
 <code class="descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.manager.JobExecutionManager.clear" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clears all data from the manager. This method is intended for testing only.</p>
@@ -652,6 +666,22 @@ tasks remain.</p>
 <li><strong>when</strong> (<code class="xref py py-class docutils literal"><span class="pre">datetime.datetime</span></code>) &#8211; The current time</li>
 </ul>
 </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="job.execution.manager.JobExecutionManager.get_messages">
+<code class="descname">get_messages</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#job.execution.manager.JobExecutionManager.get_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all messages related to job executions that need to be sent</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The list of job-related messages to send</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="ingest.html#ingest.views.IngestsStatusView.list" title="ingest.views.IngestsStatusView.list">list</a></td>
 </tr>
 </tbody>
 </table>

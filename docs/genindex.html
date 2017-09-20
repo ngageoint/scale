@@ -255,6 +255,8 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/storage.brokers.html#storage.brokers.factory.add_broker_type">add_broker_type() (in module storage.brokers.factory)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.execution.html#job.execution.manager.JobExecutionManager.add_canceled_job_exes">add_canceled_job_exes() (job.execution.manager.JobExecutionManager method)</a>
+</li>
       <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.node.RecipeNode.add_child">add_child() (recipe.handlers.node.RecipeNode method)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.html#ingest.models.Ingest.add_data_type_tag">add_data_type_tag() (ingest.models.Ingest method)</a>
@@ -309,6 +311,8 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/recipe.handlers.html#recipe.handlers.graph.RecipeGraph.add_job">add_job() (recipe.handlers.graph.RecipeGraph method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.messages.html#job.messages.job_exe_end.CreateJobExecutionEnd.add_job_exe_end">add_job_exe_end() (job.messages.job_exe_end.CreateJobExecutionEnd method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.metrics.FinishedJobExeMetrics.add_job_execution">add_job_execution() (job.execution.metrics.FinishedJobExeMetrics method)</a>
 
       <ul>
@@ -335,10 +339,10 @@
 </li>
       <li><a href="architecture/django/code_docs/messaging.backends.html#messaging.backends.factory.add_message_backend">add_message_backend() (in module messaging.backends.factory)</a>
 </li>
-      <li><a href="architecture/django/code_docs/messaging.messages.html#messaging.messages.factory.add_message_type">add_message_type() (in module messaging.messages.factory)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="architecture/django/code_docs/messaging.messages.html#messaging.messages.factory.add_message_type">add_message_type() (in module messaging.messages.factory)</a>
+</li>
       <li><a href="architecture/django/code_docs/ingest.strike.monitors.html#ingest.strike.monitors.factory.add_monitor_type">add_monitor_type() (in module ingest.strike.monitors.factory)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.html#scheduler.manager.SchedulerManager.add_new_offer_count">add_new_offer_count() (scheduler.manager.SchedulerManager method)</a>
@@ -698,6 +702,8 @@
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.can_be_canceled">can_be_canceled (job.models.Job attribute)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.messages.html#job.messages.job_exe_end.CreateJobExecutionEnd.can_fit_more">can_fit_more() (job.messages.job_exe_end.CreateJobExecutionEnd method)</a>
 </li>
       <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsJobType.canceled_count">canceled_count (metrics.models.MetricsJobType attribute)</a>
 </li>
@@ -1184,6 +1190,8 @@
 </li>
       </ul></li>
       <li><a href="architecture/django/code_docs/batch.html#batch.models.Batch.created_count">created_count (batch.models.Batch attribute)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.messages.html#job.messages.job_exe_end.CreateJobExecutionEnd">CreateJobExecutionEnd (class in job.messages.job_exe_end)</a>
 </li>
       <li><a href="architecture/django/code_docs/recipe.html#recipe.exceptions.CreateRecipeError">CreateRecipeError</a>
 </li>
@@ -1833,10 +1841,10 @@
 </li>
       <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsJobType.error_algorithm_count">error_algorithm_count (metrics.models.MetricsJobType attribute)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.job_exe.RunningJobExecution.error_category">error_category (job.execution.job_exe.RunningJobExecution attribute)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/metrics.html#metrics.models.MetricsJobType.error_data_count">error_data_count (metrics.models.MetricsJobType attribute)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.html#job.models.Job.error_id">error_id (job.models.Job attribute)</a>
@@ -1901,9 +1909,11 @@
         <li><a href="architecture/django/code_docs/queue.html#queue.models.Queue.exe_num">(queue.models.Queue attribute)</a>
 </li>
       </ul></li>
-      <li><a href="architecture/django/code_docs/messaging.messages.html#messaging.messages.chain.ChainCommandMessage.execute">execute() (messaging.messages.chain.ChainCommandMessage method)</a>
+      <li><a href="architecture/django/code_docs/job.messages.html#job.messages.job_exe_end.CreateJobExecutionEnd.execute">execute() (job.messages.job_exe_end.CreateJobExecutionEnd method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/messaging.messages.html#messaging.messages.chain.ChainCommandMessage.execute">(messaging.messages.chain.ChainCommandMessage method)</a>
+</li>
         <li><a href="architecture/django/code_docs/messaging.messages.html#messaging.messages.echo.EchoCommandMessage.execute">(messaging.messages.echo.EchoCommandMessage method)</a>
 </li>
         <li><a href="architecture/django/code_docs/messaging.messages.html#messaging.messages.fail.FailCommandMessage.execute">(messaging.messages.fail.FailCommandMessage method)</a>
@@ -2065,10 +2075,10 @@
 </li>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.metrics.FinishedJobExeMetricsByNode">FinishedJobExeMetricsByNode (class in job.execution.metrics)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.metrics.FinishedJobExeMetricsOverTime">FinishedJobExeMetricsOverTime (class in job.execution.metrics)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="architecture/django/code_docs/job.execution.html#job.execution.metrics.FinishedJobExeMetricsOverTime.TIME_BLOCK">FinishedJobExeMetricsOverTime.TIME_BLOCK (class in job.execution.metrics)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.CountryData.fips">fips (storage.models.CountryData attribute)</a>
@@ -2128,6 +2138,8 @@
 </li>
         <li><a href="architecture/django/code_docs/job.test.execution.html#job.test.execution.test_manager.TestJobExecutionManager.fixtures">(job.test.execution.test_manager.TestJobExecutionManager attribute)</a>
 </li>
+        <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_job_exe_end.TestCreateJobExecutionEnd.fixtures">(job.test.messages.test_job_exe_end.TestCreateJobExecutionEnd attribute)</a>
+</li>
         <li><a href="architecture/django/code_docs/job.test.html#job.test.test_models.TestJobExecutionManager.fixtures">(job.test.test_models.TestJobExecutionManager attribute)</a>
 </li>
         <li><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsIngest.fixtures">(metrics.test.test_models.TestMetricsIngest attribute)</a>
@@ -2161,9 +2173,11 @@
 </li>
       <li><a href="architecture/django/code_docs/util.html#util.broker.BrokerDetails.from_broker_url">from_broker_url() (util.broker.BrokerDetails static method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/messaging.messages.html#messaging.messages.chain.ChainCommandMessage.from_json">from_json() (messaging.messages.chain.ChainCommandMessage static method)</a>
+      <li><a href="architecture/django/code_docs/job.messages.html#job.messages.job_exe_end.CreateJobExecutionEnd.from_json">from_json() (job.messages.job_exe_end.CreateJobExecutionEnd static method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/messaging.messages.html#messaging.messages.chain.ChainCommandMessage.from_json">(messaging.messages.chain.ChainCommandMessage static method)</a>
+</li>
         <li><a href="architecture/django/code_docs/messaging.messages.html#messaging.messages.echo.EchoCommandMessage.from_json">(messaging.messages.echo.EchoCommandMessage static method)</a>
 </li>
         <li><a href="architecture/django/code_docs/messaging.messages.html#messaging.messages.fail.FailCommandMessage.from_json">(messaging.messages.fail.FailCommandMessage static method)</a>
@@ -2678,6 +2692,8 @@
       <li><a href="architecture/django/code_docs/messaging.messages.html#messaging.messages.factory.get_message_type">get_message_type() (in module messaging.messages.factory)</a>
 </li>
       <li><a href="architecture/django/code_docs/messaging.messages.html#messaging.messages.factory.get_message_types">get_message_types() (in module messaging.messages.factory)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.execution.html#job.execution.manager.JobExecutionManager.get_messages">get_messages() (job.execution.manager.JobExecutionManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/metrics.html#metrics.registry.get_metrics_type">get_metrics_type() (in module metrics.registry)</a>
 
@@ -4249,6 +4265,10 @@
 </li>
       <li><a href="architecture/django/code_docs/job.management.commands.html#module-job.management.commands.scale_pre_steps">job.management.commands.scale_pre_steps (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.messages.html#module-job.messages">job.messages (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.messages.html#module-job.messages.job_exe_end">job.messages.job_exe_end (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.migrations.html#module-job.migrations">job.migrations (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.migrations.html#module-job.migrations.0001_initial">job.migrations.0001_initial (module)</a>
@@ -4398,6 +4418,10 @@
       <li><a href="architecture/django/code_docs/job.test.management.commands.html#module-job.test.management.commands.test_scale_post_steps">job.test.management.commands.test_scale_post_steps (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.management.commands.html#module-job.test.management.commands.test_scale_pre_steps">job.test.management.commands.test_scale_pre_steps (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.test.messages.html#module-job.test.messages">job.test.messages (module)</a>
+</li>
+      <li><a href="architecture/django/code_docs/job.test.messages.html#module-job.test.messages.test_job_exe_end">job.test.messages.test_job_exe_end (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.tasks.html#module-job.test.tasks">job.test.tasks (module)</a>
 </li>
@@ -5232,6 +5256,8 @@
       <li><a href="architecture/django/code_docs/messaging.html#messaging.apps.MessagingConfig">MessagingConfig (class in messaging.apps)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.tasks.services.messaging.html#scheduler.tasks.services.messaging.messaging_service.MessagingService">MessagingService (class in scheduler.tasks.services.messaging.messaging_service)</a>
+</li>
+      <li><a href="architecture/django/code_docs/scheduler.threads.html#scheduler.threads.messaging.MessagingThread">MessagingThread (class in scheduler.threads.messaging)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.html#storage.models.ScaleFile.meta_data">meta_data (storage.models.ScaleFile attribute)</a>
 </li>
@@ -7863,6 +7889,8 @@
 </li>
       <li><a href="architecture/django/code_docs/scheduler.threads.html#module-scheduler.threads.base_thread">scheduler.threads.base_thread (module)</a>
 </li>
+      <li><a href="architecture/django/code_docs/scheduler.threads.html#module-scheduler.threads.messaging">scheduler.threads.messaging (module)</a>
+</li>
       <li><a href="architecture/django/code_docs/scheduler.threads.html#module-scheduler.threads.recon">scheduler.threads.recon (module)</a>
 </li>
       <li><a href="architecture/django/code_docs/scheduler.threads.html#module-scheduler.threads.schedule">scheduler.threads.schedule (module)</a>
@@ -8245,6 +8273,8 @@
         <li><a href="architecture/django/code_docs/job.test.management.commands.html#job.test.management.commands.test_scale_post_steps.TestPostJobSteps.setUp">(job.test.management.commands.test_scale_post_steps.TestPostJobSteps method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.management.commands.html#job.test.management.commands.test_scale_pre_steps.TestPreJobSteps.setUp">(job.test.management.commands.test_scale_pre_steps.TestPreJobSteps method)</a>
+</li>
+        <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_job_exe_end.TestCreateJobExecutionEnd.setUp">(job.test.messages.test_job_exe_end.TestCreateJobExecutionEnd method)</a>
 </li>
         <li><a href="architecture/django/code_docs/job.test.tasks.html#job.test.tasks.test_base_task.TestTask.setUp">(job.test.tasks.test_base_task.TestTask method)</a>
 </li>
@@ -9895,6 +9925,8 @@
 </li>
       <li><a href="architecture/django/code_docs/queue.test.html#queue.test.test_models.TestQueueManagerHandleJobCancellation.test_exception_with_completed_job">test_exception_with_completed_job() (queue.test.test_models.TestQueueManagerHandleJobCancellation method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_job_exe_end.TestCreateJobExecutionEnd.test_execute">test_execute() (job.test.messages.test_job_exe_end.TestCreateJobExecutionEnd method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.test.configuration.interface.html#job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps.test_extra_products_are_fine">test_extra_products_are_fine() (job.test.configuration.interface.test_job_interface.TestJobInterfacePostSteps method)</a>
 </li>
       <li><a href="architecture/django/code_docs/job.test.execution.html#job.test.execution.test_job_exe.TestRunningJobExecution.test_failed_normal_job_execution">test_failed_normal_job_execution() (job.test.execution.test_job_exe.TestRunningJobExecution method)</a>
@@ -10029,6 +10061,8 @@
         <li><a href="architecture/django/code_docs/messaging.test.html#messaging.test.test_messages.TestMessagesFactory.test_get_message_backends">(messaging.test.test_messages.TestMessagesFactory method)</a>
 </li>
       </ul></li>
+      <li><a href="architecture/django/code_docs/job.test.execution.html#job.test.execution.test_manager.TestJobExecutionManager.test_get_messages_for_canceled_job_exes">test_get_messages_for_canceled_job_exes() (job.test.execution.test_manager.TestJobExecutionManager method)</a>
+</li>
       <li><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_models.TestMetricsError.test_get_metrics_type">test_get_metrics_type() (metrics.test.test_models.TestMetricsError method)</a>
 
       <ul>
@@ -10611,6 +10645,8 @@
 </li>
       <li><a href="architecture/django/code_docs/port.test.html#port.test.test_views.TestConfigurationViewExport.test_job_types_system">test_job_types_system() (port.test.test_views.TestConfigurationViewExport method)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_job_exe_end.TestCreateJobExecutionEnd.test_json">test_json() (job.test.messages.test_job_exe_end.TestCreateJobExecutionEnd method)</a>
+</li>
       <li><a href="architecture/django/code_docs/job.test.tasks.html#job.test.tasks.test_manager.TestTaskManager.test_launch_tasks">test_launch_tasks() (job.test.tasks.test_manager.TestTaskManager method)</a>
 </li>
       <li><a href="architecture/django/code_docs/storage.test.brokers.html#storage.test.brokers.test_host_broker.TestHostBrokerListFiles.test_list_a_thousand">test_list_a_thousand() (storage.test.brokers.test_host_broker.TestHostBrokerListFiles method)</a>
@@ -11109,10 +11145,10 @@
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_missing">test_parse_int_missing() (util.test.test_rest.TestRest method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_optional">test_parse_int_optional() (util.test.test_rest.TestRest method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_optional">test_parse_int_optional() (util.test.test_rest.TestRest method)</a>
+</li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_post">test_parse_int_post() (util.test.test_rest.TestRest method)</a>
 </li>
       <li><a href="architecture/django/code_docs/util.test.html#util.test.test_rest.TestRest.test_parse_int_zero">test_parse_int_zero() (util.test.test_rest.TestRest method)</a>
@@ -12309,6 +12345,8 @@
 </li>
       <li><a href="architecture/django/code_docs/storage.test.html#storage.test.test_models.TestCountryData">TestCountryData (class in storage.test.test_models)</a>
 </li>
+      <li><a href="architecture/django/code_docs/job.test.messages.html#job.test.messages.test_job_exe_end.TestCreateJobExecutionEnd">TestCreateJobExecutionEnd (class in job.test.messages.test_job_exe_end)</a>
+</li>
       <li><a href="architecture/django/code_docs/metrics.test.html#metrics.test.test_daily_metrics.TestDailyMetricsProcessor">TestDailyMetricsProcessor (class in metrics.test.test_daily_metrics)</a>
 </li>
       <li><a href="architecture/django/code_docs/ingest.test.scan.scanners.html#ingest.test.scan.scanners.test_dir_scanner.TestDirScanner">TestDirScanner (class in ingest.test.scan.scanners.test_dir_scanner)</a>
@@ -12847,9 +12885,11 @@
       </ul></li>
       <li><a href="architecture/django/code_docs/job.configuration.html#job.configuration.volume.Volume.to_docker_param">to_docker_param() (job.configuration.volume.Volume method)</a>
 </li>
-      <li><a href="architecture/django/code_docs/messaging.messages.html#messaging.messages.chain.ChainCommandMessage.to_json">to_json() (messaging.messages.chain.ChainCommandMessage method)</a>
+      <li><a href="architecture/django/code_docs/job.messages.html#job.messages.job_exe_end.CreateJobExecutionEnd.to_json">to_json() (job.messages.job_exe_end.CreateJobExecutionEnd method)</a>
 
       <ul>
+        <li><a href="architecture/django/code_docs/messaging.messages.html#messaging.messages.chain.ChainCommandMessage.to_json">(messaging.messages.chain.ChainCommandMessage method)</a>
+</li>
         <li><a href="architecture/django/code_docs/messaging.messages.html#messaging.messages.echo.EchoCommandMessage.to_json">(messaging.messages.echo.EchoCommandMessage method)</a>
 </li>
         <li><a href="architecture/django/code_docs/messaging.messages.html#messaging.messages.fail.FailCommandMessage.to_json">(messaging.messages.fail.FailCommandMessage method)</a>

@@ -10,6 +10,7 @@ Subpackages
     job.execution
     job.handlers
     job.management
+    job.messages
     job.migrations
     job.tasks
     job.test
