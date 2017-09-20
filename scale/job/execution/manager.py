@@ -8,7 +8,9 @@ from django.utils.timezone import now
 
 from job.execution.metrics import TotalJobExeMetrics
 from job.execution.tasks.exe_task import JOB_TASK_ID_PREFIX
+from job.messages.job_exe_end import CreateJobExecutionEnd
 from job.models import Job, JobExecution
+
 
 logger = logging.getLogger(__name__)
 
@@ -20,9 +22,20 @@ class JobExecutionManager(object):
         """Constructor
         """
 
+        self._job_exe_end_models = []
         self._running_job_exes = {}  # {Cluster ID: RunningJobExecution}
         self._lock = threading.Lock()
         self._metrics = TotalJobExeMetrics(now())
+
+    def add_canceled_job_exes(self, job_exe_ends):
+        """Adds the given job_exe_end models for job executions canceled off of the queue
+
+        :param job_exe_ends: The job_exe_end models to add
+        :type job_exe_ends: list
+        """
+
+        with self._lock:
+            self._job_exe_end_models.extend(job_exe_ends)
 
     def clear(self):
         """Clears all data from the manager. This method is intended for testing only.
@@ -42,6 +55,30 @@ class JobExecutionManager(object):
 
         with self._lock:
             self._metrics.generate_status_json(nodes_list, when)
+
+    def get_messages(self):
+        """Returns all messages related to job executions that need to be sent
+
+        :returns: The list of job-related messages to send
+        :rtype: list
+        """
+
+        messages = []
+        message = None
+
+        with self._lock:
+            for job_exe_end in self._job_exe_end_models:
+                if not message:
+                    message = CreateJobExecutionEnd()
+                elif not message.can_fit_more():
+                    messages.append(message)
+                    message = CreateJobExecutionEnd()
+                message.add_job_exe_end(job_exe_end)
+            if message:
+                messages.append(message)
+            self._job_exe_end_models = []
+
+        return messages
 
     def get_running_job_exe(self, cluster_id):
         """Returns the running job execution with the given cluster ID, or None if the job execution does not exist

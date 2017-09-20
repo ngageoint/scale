@@ -32,6 +32,7 @@ from scheduler.sync.job_type_manager import job_type_mgr
 from scheduler.sync.workspace_manager import workspace_mgr
 from scheduler.task.manager import task_update_mgr
 from scheduler.tasks.manager import system_task_mgr
+from scheduler.threads.messaging import MessagingThread
 from scheduler.threads.recon import ReconciliationThread
 from scheduler.threads.schedule import SchedulingThread
 from scheduler.threads.scheduler_status import SchedulerStatusThread
@@ -62,6 +63,7 @@ class ScaleScheduler(MesosScheduler):
         self._master_hostname = None
         self._master_port = None
 
+        self._messaging_thread = None
         self._recon_thread = None
         self._scheduler_status_thread = None
         self._scheduling_thread = None
@@ -101,6 +103,11 @@ class ScaleScheduler(MesosScheduler):
         self._fail_lost_jobs()
 
         # Start up background threads
+        self._messaging_thread = MessagingThread()
+        messaging_thread = threading.Thread(target=self._messaging_thread.run)
+        messaging_thread.daemon = True
+        messaging_thread.start()
+
         self._recon_thread = ReconciliationThread()
         recon_thread = threading.Thread(target=self._recon_thread.run)
         recon_thread.daemon = True
@@ -434,6 +441,7 @@ class ScaleScheduler(MesosScheduler):
         """
 
         logger.info('Scheduler shutdown invoked, stopping background threads')
+        self._messaging_thread.shutdown()
         self._recon_thread.shutdown()
         self._scheduler_status_thread.shutdown()
         self._scheduling_thread.shutdown()
