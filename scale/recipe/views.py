@@ -314,6 +314,15 @@ class RecipeDetailsView(RetrieveAPIView):
         return Response(serializer.data)
 
 
+class RecipeInputFilesView(RetrieveAPIView):
+    """This is the endpoint for retrieving details about input files associated with a given recipe."""
+
+    def retrieve(self, request, recipe_id):
+        """
+        """
+        pass
+
+
 class RecipeReprocessView(GenericAPIView):
     """This view is the endpoint for scheduling a reprocess of a recipe"""
     queryset = Recipe.objects.all()

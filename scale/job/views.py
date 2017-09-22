@@ -586,7 +586,7 @@ class JobDetailsView(GenericAPIView):
     def patch(self, request, job_id):
         """Modify job info with a subset of fields
 
-        :param request: the HTTP GET request
+        :param request: the HTTP PATCH request
         :type request: :class:`rest_framework.request.Request`
         :param job_id: The ID for the job.
         :type job_id: int encoded as a str
@@ -611,6 +611,53 @@ class JobDetailsView(GenericAPIView):
         serializer = self.get_serializer(job)
         return Response(serializer.data)
 
+class JobInputFilesView(ListAPIView):
+    """This is the endpoint for retrieving details about input files associated with a job."""
+    queryset = Job.objects.all()
+    serializer_class = JobDetailsSerializer
+
+    def get(self, request, job_id):
+        """Retrieve detailed information about the input files for a job
+
+        -*-*-
+        parameters:
+            - name: job_id
+            description: ID of job that files need to be fetched for
+            required: true
+            type: integer
+            paramType: path
+        responses:
+            "200":
+                description:
+                content:
+                    application/json:
+                        examples:
+                            $ref: JOB_CONFIGURATION_SCHEMA
+        -*-*-
+
+        :param request: the HTTP GET request
+        :type request: :class:`rest_framework.request.Request`
+        :param job_id: The ID for the job.
+        :type job_id: int encoded as a str
+        :rtype: :class:`rest_framework.response.Response`
+        :returns: the HTTP response to send back to the user
+        """
+        started = rest_util.parse_timestamp(request, 'started', required=False)
+        ended = rest_util.parse_timestamp(request, 'ended', required=False)
+        rest_util.check_time_range(started, ended)
+        time_field = rest_util.parse_string(request, 'time_field', required=False,
+                                            accepted_values=ProductFile.VALID_TIME_FIELDS)
+        file_name = rest_util.parse_string(request, 'file_name', required=False)
+        
+        
+        try:
+            input_files = Job.objects.get_details(job_id)
+        except Job.DoesNotExist:
+            raise Http404
+
+        serializer = self.get_serializer(job)
+        return Response(serializer.data)
+        
 
 class JobUpdatesView(ListAPIView):
     """This view is the endpoint for retrieving job updates over a given time range."""

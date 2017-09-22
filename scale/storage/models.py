@@ -217,6 +217,10 @@ class ScaleFileManager(models.Manager):
             wp_file_downloads = wp_dict[wp_id][1]
             workspace.download_files(wp_file_downloads)
 
+    def filter_files(self, ):
+        """"""
+        pass
+  
     def get_files(self, file_ids):
         """Returns the files with the given IDs. The files will have their related workspace field populated.
 
