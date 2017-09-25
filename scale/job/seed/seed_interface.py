@@ -1,6 +1,7 @@
 """Defines the interface for executing a job"""
 from __future__ import unicode_literals
 
+import glob
 import json
 import logging
 import os
@@ -14,9 +15,10 @@ from job.configuration.data.exceptions import InvalidData, InvalidConnection
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.scale_file import ScaleFileDescription
 from job.configuration.exceptions import MissingMount, MissingSetting
-from job.configuration.results.exceptions import InvalidResultsManifest
+from job.configuration.results.exceptions import InvalidResultsManifest, OutputCaptureError
 from job.configuration.results.results_manifest.results_manifest import ResultsManifest
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
+from job.seed.metadata import SeedMetadata
 from scheduler.vault.manager import secrets_mgr
 
 logger = logging.getLogger(__name__)
@@ -543,8 +545,33 @@ class SeedInterface(object):
         # The capture expressions can be found within interface.outputs.files.pattern
 
 
+        files_to_store = {}
+
         for output_file in self.get_output_files():
             # lookup by pattern
+            path_pattern = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, output_file['pattern'])
+            results = glob.glob(path_pattern)
+
+            # Handle required validation
+            if output_file['required'] and len(results) == 0:
+                raise OutputCaptureError("No glob match for pattern '%s' defined for required output files"
+                                         " key '%s'." % (output_file['pattern'], output_file['name']))
+
+            # Check against count to verify we are matching the files as defined.
+            if output_file['count'] is not '*':
+                count = int(output_file['count'])
+                if len(results) is not count:
+                    raise OutputCaptureError("Pattern matched %i, which does not match the output count of %i "
+                                             "identified in interface." % (len(results), count))
+
+            # For files that are detected, check to see if there is side-car metadata files
+            for matched_file in results:
+                metadata_file = os.path.join(matched_file, job.seed.metadata.METADATA_SUFFIX)
+                with open(metadata_file) as metadata_file_handle:
+                    metadata = SeedMetadata(metadata_file_handle.read())
+                    metadata.get_geometry()
+                    metadata.get_time()
+
 
         manifest_data = {}
         path_to_manifest_file = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, 'results_manifest.json')
@@ -956,7 +983,7 @@ class SeedInterface(object):
 
         for output_file in self.definition['interface']['outputs']:
             if 'count' not in output_file:
-                output_file['count'] = "1"
+                output_file['count'] = '1'
             if 'required' not in output_file:
                 output_file['required'] = True
 
