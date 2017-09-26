@@ -3,7 +3,10 @@ from __future__ import unicode_literals
 
 import logging
 
-from job.models import JobExecutionEnd
+from django.db import transaction
+from django.utils.timezone import now
+
+from job.models import Job
 from messaging.messages.message import CommandMessage
 from util.parse import datetime_to_string, parse_datetime
 
@@ -93,6 +96,41 @@ class RunningJobs(CommandMessage):
         """See :meth:`messaging.messages.message.CommandMessage.execute`
         """
 
-        # TODO: implement
+        job_ids = []
+        for job_list in self._running_jobs.values():
+            for job_tuple in job_list:
+                job_ids.append(job_tuple[0])
+
+        with transaction.atomic():
+            # Retrieve locked job models
+            job_models = {}
+            for job in Job.objects.get_locked_jobs(job_ids):
+                job_models[job.id] = job
+
+            when = now()
+            job_ids_for_status_update = []
+            for node_id, job_list in self._running_jobs.items():
+                job_ids_for_node_update = []
+                for job_tuple in job_list:
+                    job_id = job_tuple[0]
+                    exe_num = job_tuple[1]
+                    job_model = job_models[job_id]
+                    if job_model.exe_num != exe_num:
+                        continue  # Execution number does not match so this update is out of date, ignore job
+                    # Execution numbers match, so this job needs to have its node_id set
+                    job_ids_for_node_update.append(job_id)
+                    # Check status because if it is not QUEUED, then this update came too late (after job already
+                    # reached a final status) and we don't want to update status then
+                    if job_model.status == 'QUEUED':
+                        # Job status is still QUEUED, so update to RUNNING
+                        job_ids_for_status_update.append(job_id)
+
+                # Update jobs for this node
+                if job_ids_for_node_update:
+                    Job.objects.update_jobs_node(job_ids_for_node_update, node_id, when)
+
+            # Update jobs that need status set to RUNNING
+            if job_ids_for_status_update:
+                Job.objects.update_jobs_to_running(job_ids_for_status_update, when)
 
         return True
