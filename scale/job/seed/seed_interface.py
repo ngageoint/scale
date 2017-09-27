@@ -6,6 +6,7 @@ import json
 import logging
 import os
 import re
+from collections import namedtuple
 
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
@@ -15,10 +16,9 @@ from job.configuration.data.exceptions import InvalidData, InvalidConnection
 from job.configuration.interface.exceptions import InvalidInterfaceDefinition
 from job.configuration.interface.scale_file import ScaleFileDescription
 from job.configuration.exceptions import MissingMount, MissingSetting
-from job.configuration.results.exceptions import InvalidResultsManifest, OutputCaptureError
-from job.configuration.results.results_manifest.results_manifest import ResultsManifest
+from job.configuration.results.exceptions import OutputCaptureError
 from job.execution.container import SCALE_JOB_EXE_INPUT_PATH, SCALE_JOB_EXE_OUTPUT_PATH
-from job.seed.metadata import SeedMetadata
+from job.seed.metadata import SeedMetadata, METADATA_SUFFIX
 from scheduler.vault.manager import secrets_mgr
 
 logger = logging.getLogger(__name__)
@@ -27,6 +27,9 @@ SCHEMA_VERSION = '0.1.0'
 MODE_RO = 'ro'
 MODE_RW = 'rw'
 
+SeedInputFile = namedtuple('SeedInputFile', ['name', 'media_types', 'multiple', 'required'])
+SeedInputJson = namedtuple('SeedInputJson', ['name', 'type', 'required'])
+SeedOutputFile = namedtuple('SeedOuputFile', ['name', 'media_type', 'multiple', 'required'])
 JOB_INTERFACE_SCHEMA = {
   '$schema': 'http://json-schema.org/draft-04/schema#',
   'type': 'object',
@@ -387,9 +390,10 @@ class SeedInterface(object):
         self.definition = definition
 
         # Tuples used for validation with other classes
-        self._property_validation_dict = {}  # str->bool
-        self._input_file_validation_dict = {}  # str->tuple
-        self._output_file_validation_list = []
+        self._input_json_validation_dict = {}
+        self._input_file_validation_dict = {}
+        self._output_file_validation_dict = {}
+        self._output_json_validation_dict = {}
 
         self._output_file_manifest_dict = {}  # str->bool
 
@@ -419,16 +423,17 @@ class SeedInterface(object):
         """
 
         output_data = self._get_output_data_item_by_name(output_name)
+        # TODO: We are only getting files, but in the future we need to branch for file/json
+
         if output_data:
-            output_type = output_data['type']
-            if output_type in ['file', 'files']:
-                multiple = (output_type == 'files')
-                optional = not output_data['required']
-                media_types = []
-                if 'media_type' in output_data and output_data['media_type']:
-                    media_types.append(output_data['media_type'])
-                # TODO: How do we want to handle down-stream partial handling? Setting to False presently
-                job_conn.add_input_file(input_name, multiple, media_types, optional, False)
+            multiple = False
+            if '*' not in output_data['count']:
+                multiple = int(output_data['count']) > 1
+            optional = not output_data['required']
+            media_types = output_data['mediaTypes']
+
+            # TODO: How do we want to handle down-stream partial handling? Setting to False presently
+            job_conn.add_input_file(input_name, multiple, media_types, optional, False)
 
     def add_workspace_to_data(self, job_data, workspace_id):
         """Adds the given workspace ID to the given job data for every output in this job interface
@@ -467,6 +472,38 @@ class SeedInterface(object):
 
         return self.definition['job']['interface']
 
+    def get_input_files(self):
+        """Gets the list of input files defined in the interface
+
+        :return: the input file definitions for job
+        :rtype: [`SeedInputFile`]
+        """
+
+        input_files = []
+        for input_file in self.get_interface()['inputs']['files']:
+            input_files.append(SeedInputFile(input_file['name'],
+                                             input_file['mediaTypes'],
+                                             input_file['multiple'],
+                                             input_file['required']))
+
+
+        return input_files
+
+    def get_input_json(self):
+        """Gets the list of json defined in the interface
+
+        :return: the input json definitions for job
+        :rtype: ['SeedInputJson`]
+        """
+
+        input_json_list = []
+        for input_json in self.get_interface()['inputs']['json']:
+            input_json_list.append(SeedInputJson(input_json['name'],
+                                             input_json['type'],
+                                             input_json['required']))
+
+        return input_json_list
+
     def get_output_files(self):
         """Gets the list of output files defined in the interface
 
@@ -476,7 +513,17 @@ class SeedInterface(object):
         :rtype: list
         """
 
-        return self.get_interface()['outputs']['files']
+        output_files = []
+        for output_file in self.get_interface()['outputs']['files']:
+            output_files.append(SeedOutputFile(output_file['name'],
+                                               output_file['mediaType'],
+                                               output_file['pattern'],
+                                               # TODO: update to multiple if we go that direction
+                                               output_file['count'],
+                                               output_file['required']))
+
+
+        return output_files
 
     def get_scalar_resources(self):
         """Gets the scalar resources defined the Seed job
@@ -486,6 +533,15 @@ class SeedInterface(object):
         """
 
         return self.definition['job']['resources']['scalar']
+
+    def get_mounts(self):
+        """Gets the mounts defined the Seed job
+
+        :return: the mounts for a job
+        :rtype: list
+        """
+
+        return self.get_interface()['mounts']
 
     def get_maintainer(self):
         """Gets the maintainer details for the Seed job
@@ -522,20 +578,17 @@ class SeedInterface(object):
         """
 
         names = []
-        for output_data in self.definition['output_data']:
-            if output_data['type'] in ['file', 'files']:
-                names.append(output_data['name'])
+        for output_file in self.get_output_files():
+            names.append(output_file['name'])
         return names
 
-    def perform_post_steps(self, job_exe, job_data, stdoutAndStderr):
+    def perform_post_steps(self, job_exe, job_data):
         """Stores the files or JSON output of job and deletes any working directories
 
         :param job_exe: The job execution model with related job and job_type fields
         :type job_exe: :class:`job.models.JobExecution`
         :param job_data: The job data
         :type job_data: :class:`job.configuration.data.job_data.JobData`
-        :param stdoutAndStderr: the standard out from the job execution
-        :type stdoutAndStderr: str
         :return: A tuple of the job results and the results manifest generated by the job execution
         :rtype: (:class:`job.configuration.results.job_results.JobResults`,
             :class:`job.configuration.results.results_manifest.results_manifest.ResultsManifest`)
@@ -545,98 +598,48 @@ class SeedInterface(object):
         # The capture expressions can be found within interface.outputs.files.pattern
 
 
-        files_to_store = {}
+        output_files = {}
 
         for output_file in self.get_output_files():
             # lookup by pattern
-            path_pattern = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, output_file['pattern'])
+            path_pattern = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, output_file.pattern)
             results = glob.glob(path_pattern)
 
             # Handle required validation
-            if output_file['required'] and len(results) == 0:
+            if output_file.required and len(results) == 0:
                 raise OutputCaptureError("No glob match for pattern '%s' defined for required output files"
-                                         " key '%s'." % (output_file['pattern'], output_file['name']))
+                                         " key '%s'." % (output_file.pattern, output_file.name))
 
             # Check against count to verify we are matching the files as defined.
-            if output_file['count'] is not '*':
-                count = int(output_file['count'])
+            if  output_file.count is not '*':
+                count = int(output_file.count)
                 if len(results) is not count:
                     raise OutputCaptureError("Pattern matched %i, which does not match the output count of %i "
                                              "identified in interface." % (len(results), count))
 
+            file_tuples = []
             # For files that are detected, check to see if there is side-car metadata files
             for matched_file in results:
-                metadata_file = os.path.join(matched_file, job.seed.metadata.METADATA_SUFFIX)
-                with open(metadata_file) as metadata_file_handle:
-                    metadata = SeedMetadata(metadata_file_handle.read())
-                    metadata.get_geometry()
-                    metadata.get_time()
+                ouput_file_key = output_file.name
 
+                metadata_file = os.path.join(matched_file, METADATA_SUFFIX)
+                if os.path.isfile(metadata_file):
+                    with open(metadata_file) as metadata_file_handle:
+                        metadata = SeedMetadata(metadata_file_handle.read())
 
-        manifest_data = {}
-        path_to_manifest_file = os.path.join(SCALE_JOB_EXE_OUTPUT_PATH, 'results_manifest.json')
-        if os.path.exists(path_to_manifest_file):
-            logger.info('Opening results manifest...')
-            with open(path_to_manifest_file, 'r') as manifest_file:
-                manifest_data = json.loads(manifest_file.read())
-                logger.info('Results manifest:')
-                logger.info(manifest_data)
-        else:
-            logger.info('No results manifest found')
+                        geometry = metadata.get_geometry()
+                        timestamp = metadata.get_time()
 
-        results_manifest = ResultsManifest(manifest_data)
-        stdout_files = self._get_artifacts_from_stdout(stdoutAndStderr)
-        results_manifest.add_files(stdout_files)
-
-        results_manifest.validate(self._output_file_manifest_dict)
-
-        # For files that are detected, check to see if there is side-car metadata files
-        files_to_store = {}
-        for manifest_file_entry in results_manifest.get_files():
-            param_name = manifest_file_entry['name']
-
-            media_type = None
-            output_data_item = self._get_output_data_item_by_name(param_name)
-            if output_data_item:
-                media_type = output_data_item.get('media_type')
-
-            msg = 'Output %s has invalid/missing file path "%s"'
-            if 'file' in manifest_file_entry:
-                file_entry = manifest_file_entry['file']
-                if not os.path.isfile(file_entry['path']):
-                    raise InvalidResultsManifest(msg % (param_name, file_entry['path']))
-                if 'geo_metadata' in file_entry:
-                    files_to_store[param_name] = (file_entry['path'], media_type, file_entry['geo_metadata'])
+                if geometry and timestamp:
+                    file_tuples.append((matched_file,  output_file.media_type, geometry, timestamp),)
                 else:
-                    files_to_store[param_name] = (file_entry['path'], media_type)
-            elif 'files' in manifest_file_entry:
-                file_tuples = []
-                for file_entry in manifest_file_entry['files']:
-                    if not os.path.isfile(file_entry['path']):
-                        raise InvalidResultsManifest(msg % (param_name, file_entry['path']))
-                    if 'geo_metadata' in file_entry:
-                        file_tuples.append((file_entry['path'], media_type, file_entry['geo_metadata']))
-                    else:
-                        file_tuples.append((file_entry['path'], media_type))
-                files_to_store[param_name] = file_tuples
+                    file_tuples.append((matched_file,  output_file.media_type),)
 
-        # Capture any JSON output provided in seed.ouputs.json
-        job_data_parse_results = {}  # parse results formatted for job_data
-        for parse_result in results_manifest.get_parse_results():
-            filename = parse_result['filename']
-            assert filename not in job_data_parse_results
-            geo_metadata = parse_result.get('geo_metadata', {})
-            geo_json = geo_metadata.get('geo_json', None)
-            data_started = geo_metadata.get('data_started', None)
-            data_ended = geo_metadata.get('data_ended', None)
-            data_types = parse_result.get('data_types', [])
-            new_workspace_path = parse_result.get('new_workspace_path', None)
-            if new_workspace_path:
-                new_workspace_path = os.path.join(new_workspace_path, filename)
-            job_data_parse_results[filename] = (geo_json, data_started, data_ended, data_types, new_workspace_path)
+            output_files[ouput_file_key] = file_tuples
 
-        job_data.save_parse_results(job_data_parse_results)
-        return (job_data.store_output_data_files(files_to_store, job_exe), results_manifest)
+        # TODO: implement JSON capture from seed.ouputs.json
+
+        return job_data.store_output_data_files(output_files, job_exe)
 
     def perform_pre_steps(self, job_data, job_environment):
         """Performs steps prep work before a job can actually be run.  This includes downloading input files.
@@ -649,31 +652,16 @@ class SeedInterface(object):
         retrieve_files_dict = self._create_retrieve_files_dict()
         job_data.setup_job_dir(retrieve_files_dict)
 
-    def populate_env_vars_arguments(self, param_replacements):
-        """Populates the environment variables with the requested values.
-
-        :param param_replacements: The parameter replacements
-        :type param_replacements: dict
-
-        :return: env_vars populated with values
-        :rtype: dict
-        """
-
-        env_vars = self.definition['env_vars']
-        env_vars = self._replace_env_var_parameters(env_vars, param_replacements)
-
-        return env_vars
-
     def validate_connection(self, job_conn):
         """Validates the given job connection to ensure that the connection will provide sufficient data to run a job
         with this interface
 
         :param job_conn: The job data
-        :type job_conn: :class:`job.configuration.data.job_connection.JobConnection`
+        :type job_conn: :class:`job.seed.data.job_connection.JobConnection`
         :returns: A list of warnings discovered during validation.
-        :rtype: list[:class:`job.configuration.data.job_data.ValidationWarning`]
+        :rtype: list[:class:`job.seed.data.job_data.ValidationWarning`]
 
-        :raises :class:`job.configuration.data.exceptions.InvalidConnection`: If there is a configuration problem.
+        :raises :class:`job.seed.data.exceptions.InvalidConnection`: If there is a configuration problem.
         """
 
         warnings = []
@@ -735,16 +723,16 @@ class SeedInterface(object):
         env_vars = ["OUTPUT_DIR"]
 
         env_vars += [normalize_env_var_name(setting['name']) for setting in self._interface['settings']]
-        env_vars += [normalize_env_var_name(files['name']) for files in self._interface['inputs']['files']]
-        env_vars += [normalize_env_var_name(json['name']) for json in self._interface['inputs']['json']]
-        env_vars += [normalize_env_var_name('ALLOCATED_' + resource['name']) for resource in self._scalar_resources]
+        env_vars += [normalize_env_var_name(input_file.name) for input_file in self.get_input_files()]
+        env_vars += [normalize_env_var_name(json['name']) for json in self.get_input_json()]
+        env_vars += [normalize_env_var_name('ALLOCATED_' + resource['name']) for resource in self.get_scalar_resources()]
 
         if len(env_vars) != len(set(env_vars)):
             raise InvalidInterfaceDefinition('Collisions are not allowed between reserved keywords, resources, settings'
                                              'and input names.')
 
     def _create_retrieve_files_dict(self):
-        """creates parameter folders and returns the dict needed to call
+        """Creates parameter folders and returns the dict needed to call
         :classmethod:`job.configuration.data.job_data.JobData.retrieve_files_dict`
 
         :return: a dictionary representing the files to retrieve
@@ -752,14 +740,12 @@ class SeedInterface(object):
         """
 
         retrieve_files_dict = {}
-        for input_data in self.definition['input_data']:
-            input_name = input_data['name']
-            input_type = input_data['type']
-            if input_type in ['file', 'files']:
-                is_multiple = input_type == 'files'
-                partial = input_data['partial']
-                input_path = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name)
-                retrieve_files_dict[input_name] = (is_multiple, input_path, partial)
+        for input_file in self.get_input_files():
+            input_name = input_file.name
+            input_path = os.path.join(SCALE_JOB_EXE_INPUT_PATH, input_name)
+            # TODO: Determine how we are going to address partial support in Seed
+            retrieve_files_dict[input_name] = (input_file.multiple, input_path, False)
+
         return retrieve_files_dict
 
     def _check_mount_name_uniqueness(self):
@@ -768,7 +754,7 @@ class SeedInterface(object):
         """
 
         mounts = []
-        for mount in self._interface['mounts']:
+        for mount in self.get_interface()['mounts']:
             mounts.append(mount['name'])
 
         if len(mounts) != len(set(mounts)):
@@ -776,57 +762,33 @@ class SeedInterface(object):
 
     def _create_validation_dicts(self):
         """Creates the validation dicts required by job_data to perform its validation"""
-        for input_data in self.definition['input_data']:
-            name = input_data['name']
-            required = input_data['required']
-            if input_data['type'] == 'property':
-                self._property_validation_dict[name] = required
-            elif input_data['type'] == 'file':
-                file_desc = ScaleFileDescription()
-                for media_type in input_data['media_types']:
-                    file_desc.add_allowed_media_type(media_type)
-                self._input_file_validation_dict[name] = (required, False, file_desc)
-            elif input_data['type'] == 'files':
-                file_desc = ScaleFileDescription()
-                for media_type in input_data['media_types']:
-                    file_desc.add_allowed_media_type(media_type)
-                self._input_file_validation_dict[name] = (required, True, file_desc)
 
-        for ouput_data in self.definition['output_data']:
-            output_type = ouput_data['type']
-            if output_type in ['file', 'files']:
-                name = ouput_data['name']
-                required = ouput_data['required']
-                self._output_file_validation_list.append(name)
-                self._output_file_manifest_dict[name] = (output_type == 'files', required)
+        # TODO: Nametuple at least would be nice as I have no idea what type of tuple I'm passing around
+        for input_json in self.get_input_json():
+            name = input_json['name']
+            # TODO: we are ignoring json[].type for now
+            self._input_json_validation_dict[name] = input_json['required']
 
-    @staticmethod
-    def _get_artifacts_from_stdout(stdout):
-        """Parses stdout looking for artifacts of the form ARTIFACT:<ouput_name>:<output_path>
-        :param stdout: the standard out from the job execution
-        :type stdout: str
+        for input_file in self.get_input_files():
+            file_desc = ScaleFileDescription()
+            name = input_file.name
+            required = input_file.required
+            multiple = input_file.multiple
+            for media_type in input_file.media_types:
+                file_desc.add_allowed_media_type(media_type)
+            self._input_file_validation_dict[name] = (required, multiple, file_desc)
 
-        :return: a list of artifacts that were found by parsing stdout
-        :rtype: a list of artifact dicts.  each artifact dict has a "name" and either a "path" or "paths
-        see job.configuration.results.manifest.RESULTS_MANIFEST_SCHEMA
-        """
-        artifacts_found = {}
-        artifacts_pattern = '^ARTIFACT:([^:]*):(.*)'
-        for artifact_match in re.findall(artifacts_pattern, stdout, re.MULTILINE):
-            artifact_name = artifact_match[0]
-            artifact_path = artifact_match[1]
-            if artifact_name in artifacts_found:
-                paths = []
-                if 'paths' in artifacts_found[artifact_name]:
-                    paths = artifacts_found[artifact_name]['paths']
-                else:
-                    paths = [artifacts_found[artifact_name]['path']]
-                    artifacts_found[artifact_name].pop('path')
-                paths.append(artifact_path)
-                artifacts_found[artifact_name]['paths'] = paths
-            else:
-                artifacts_found[artifact_name] = {'name': artifact_name, 'path': artifact_path}
-        return artifacts_found.values()
+        for output_file in self.get_output_files():
+            name =  output_file.name
+            required =  output_file.required
+            count =  output_file.count
+            self._output_file_validation_dict[name] = (required, count)
+
+        for output_json in self.get_output_json():
+            name = output_json['name']
+            required = output_json['required']
+            type = output_json['type']
+            self._output_json_validation_dict[name] = (required, type)
 
     @staticmethod
     def _get_one_file_from_directory(dir_path):
@@ -850,9 +812,11 @@ class SeedInterface(object):
         :type data_item_name: str
         """
 
-        for output_data in self.definition['output_data']:
-            if data_item_name == output_data['name']:
-                return output_data
+        # TODO: Handle JSON output
+
+        for output_file in self.get_output_files():
+            if data_item_name ==  output_file.name:
+                return output_file
 
     def _get_settings_values(self, settings, exe_configuration, job_type, censor):
         """
@@ -961,9 +925,9 @@ class SeedInterface(object):
             if 'required' not in input_file:
                 input_file['required'] = True
             if 'mediaType' not in input_file:
-                input_file['media_types'] = []
+                input_file['mediaTypes'] = []
             if 'multiple' not in input_file:
-                input_file['multiple'] = False
+                input_file.multiple = False
             # TODO: Address partial functionality through extended configuration outside of the Seed interface
 
         for input_json in self.definition['inputs']['json']:
