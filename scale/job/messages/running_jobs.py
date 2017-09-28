@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import logging
 
 from django.db import transaction
+from django.utils.timezone import now
 
 from job.models import Job
 from messaging.messages.message import CommandMessage
@@ -49,7 +50,7 @@ class RunningJobs(CommandMessage):
     """Command message that sets RUNNING status for job models
     """
 
-    def __init__(self, started):
+    def __init__(self, started=None):
         """Constructor
 
         :param started: The time that the jobs started running
@@ -57,6 +58,9 @@ class RunningJobs(CommandMessage):
         """
 
         super(RunningJobs, self).__init__('running_jobs')
+
+        if not started:
+            started = now()
 
         self._count = 0
         self._running_jobs = {}  # {Node ID: [(Job ID, Execution Number)]}
